@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!--
+  Globular Cluster Comparator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #about  ·  Epistemic tier(s): 🔬 (cluster props) / ⚠ (IMBH masses)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Globular Cluster Comparator — Omega Centauri Society</title>
+<meta name="description" content="Sortable table of Milky Way globular clusters with published IMBH mass estimates or upper limits. Omega Centauri highlighted.">
+<link rel="canonical" href="https://omegacentauri.me/tools/cluster-comparator.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+
+.directions{background:rgba(13,10,36,.4);border:1px solid var(--teal-mid);border-radius:8px;padding:12px 18px;margin-bottom:24px;font-size:14px;color:var(--text-secondary);display:flex;align-items:flex-start;gap:14px;line-height:1.6}
+.directions .icon{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-bright);padding:3px 9px;border:1px solid var(--teal-mid);border-radius:10px;background:rgba(29,186,144,.06);flex-shrink:0;white-space:nowrap}
+.directions strong{color:var(--text-primary);font-weight:400}
+
+.asof{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px}
+.asof strong{color:var(--text-secondary);font-weight:400}
+
+.table-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px;margin-bottom:24px;overflow-x:auto}
+.table-card table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+.table-card th{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);text-align:left;padding:12px 10px;border-bottom:1px solid var(--border-subtle);cursor:pointer;user-select:none;white-space:nowrap;background:rgba(7,5,21,.3)}
+.table-card th:hover{color:var(--teal-glow)}
+.table-card th .sort-indicator{display:inline-block;margin-left:5px;color:var(--text-dim);font-size:9px}
+.table-card th.active{color:var(--teal-glow)}
+.table-card th.active .sort-indicator{color:var(--teal-glow)}
+.table-card td{padding:14px 10px;border-bottom:1px dotted var(--border-subtle);vertical-align:top;font-family:'Space Mono',monospace;color:var(--text-secondary)}
+.table-card tr:hover td{background:rgba(112,85,212,0.05)}
+.table-card tr.oc-row td{background:rgba(29,186,144,0.06);border-bottom-color:rgba(29,186,144,0.18);position:relative}
+.table-card tr.oc-row td:first-child{border-left:3px solid var(--teal-bright)}
+.table-card tr.oc-row td:first-child .cl-name{color:var(--teal-glow);font-weight:600}
+.cl-name{font-family:'Orbitron',sans-serif;color:var(--text-primary);font-size:14px;display:block;margin-bottom:2px}
+.cl-tag{font-size:10px;color:var(--text-dim);letter-spacing:.04em;text-transform:uppercase}
+.imbh-val{font-family:'Orbitron',sans-serif;font-size:14px}
+.imbh-val.detection{color:var(--teal-glow)}
+.imbh-val.upper{color:var(--amber-bright)}
+.imbh-val.lower{color:var(--purple-glow)}
+.imbh-val.noev{color:var(--text-dim);font-style:italic}
+.imbh-val .symbol{font-size:11px;margin-right:3px;color:var(--text-dim)}
+.imbh-meta{font-size:11px;color:var(--text-dim);margin-top:3px;font-family:'Space Mono',monospace}
+.imbh-meta a{color:var(--purple-glow)}
+
+.detail-card{background:linear-gradient(180deg,rgba(26,16,64,.3),rgba(13,10,36,.5));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 26px;margin-bottom:24px;min-height:60px;position:relative}
+.detail-card.empty{color:var(--text-dim);font-style:italic;text-align:center;padding:8px 14px;font-size:12px;min-height:0;background:rgba(7,5,21,.3);border:1px dashed var(--border-subtle);font-family:'Space Mono',monospace;letter-spacing:.02em;margin-bottom:16px}
+.detail-card .close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.detail-card .close:hover{color:var(--red-bright)}
+.detail-title{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:10px}
+.detail-body{font-size:15px;color:var(--text-secondary);line-height:1.7}
+.detail-body strong{color:var(--text-primary)}
+.detail-cite{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);margin-top:12px}
+.detail-cite a{color:var(--purple-glow)}
+
+.legend-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:24px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.lg-item{display:inline-flex;align-items:center;gap:6px}
+.lg-swatch{width:12px;height:12px;border-radius:2px}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Globular Cluster Comparator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#about">← #about</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Globular Cluster Comparator</h1>
+      <p class="tool-subtitle">Milky Way globular clusters with at least one published IMBH mass estimate or upper limit, side by side. How does Omega Centauri compare to its peers as an IMBH candidate?</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Cluster properties</span>
+      <span class="tier-badge debated">⚠ IMBH masses</span>
+    </div>
+  </header>
+
+  <div class="directions">
+    <span class="icon">How to use</span>
+    <div>
+      <strong>Click any column header</strong> to sort the table by that property (click again to reverse direction).
+      <strong>Click a cluster row</strong> to see the detailed note, the IMBH-estimate citation, and DOI.
+      <strong>Omega Centauri</strong> is always highlighted with a teal border, regardless of sort order.
+    </div>
+  </div>
+
+  <div class="asof">As of <strong id="asof-date">2026-05-14</strong> · <span id="cluster-count">— clusters in table</span></div>
+
+  <div class="legend-row">
+    <span class="lg-item"><span class="lg-swatch" style="background:var(--teal-glow)"></span>Detection</span>
+    <span class="lg-item"><span class="lg-swatch" style="background:var(--amber-bright)"></span>Upper limit</span>
+    <span class="lg-item"><span class="lg-swatch" style="background:var(--purple-glow)"></span>Lower bound</span>
+    <span class="lg-item"><span class="lg-swatch" style="background:var(--text-dim)"></span>No evidence / consistent with zero</span>
+  </div>
+
+  <section class="table-card">
+    <table id="cluster-table">
+      <thead>
+        <tr>
+          <th data-sort="name">Cluster <span class="sort-indicator">↕</span></th>
+          <th data-sort="totalMass">Total mass <span class="sort-indicator">↕</span></th>
+          <th data-sort="halfLightRadius">r_h <span class="sort-indicator">↕</span></th>
+          <th data-sort="ageGyr">Age <span class="sort-indicator">↕</span></th>
+          <th data-sort="imbhValue">IMBH estimate <span class="sort-indicator">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="cluster-rows"></tbody>
+    </table>
+  </section>
+
+  <section class="detail-card empty" id="detail-card">
+    Click a row to see the IMBH-estimate details and citation.
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>Inclusion criterion</h3>
+      <p>Only Milky Way globular clusters with at least one published IMBH mass estimate or upper limit appear in the table. Absence of an IMBH claim ≠ absence of an IMBH — most GCs have never been kinematically resolved at the centre with the precision needed to test the hypothesis, and many lack pulsars suitable for timing constraints. This tool is not a survey of all GCs.</p>
+
+      <h3>The bigger picture</h3>
+      <p>Every cluster in this table has at least one published claim of an IMBH, but very few are uncontested. The pattern across the literature is consistent: initial detections from integral-field stellar kinematics tend to get challenged by subsequent re-analyses with better-resolved cluster centres or independent constraints (radio, pulsar timing). Whether <em>any</em> globular cluster hosts a confirmed IMBH is itself debated. Omega Centauri's Häberle 2024 lower bound is the most recent prominent positive claim; it remains in tension with the Bañares 2025 upper limit derived from the same source.</p>
+
+      <h3>How estimates are categorised</h3>
+      <p>The table assigns each cluster the most recent/canonical claim, but the IMBH literature for any of these objects typically contains contradictory results. Click a row to read the brief context note. For Omega Centauri specifically, the full history is in the <a href="imbh-timeline.html">IMBH Measurement Timeline</a> and the synthesis view is in the <a href="constraint-stacker.html">Constraint Stacker</a>.</p>
+
+      <h3>Data sources</h3>
+      <p>Cluster bulk properties (total mass, half-light radius, age) from Baumgardt &amp; Hilker (2018, MNRAS 478:1520) unless noted. IMBH estimates from individual papers as cited per row. Values curated in <code>tools/data/measurements.js</code> (CC0).</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🌌 The Milky Way's globular cluster census</h3>
+      <p>The Milky Way hosts approximately <strong>157 known globular clusters</strong> (Harris 1996/2010 catalog as updated by Baumgardt &amp; Hilker 2018 and ongoing Gaia work). Of these, only ~10 have published IMBH mass claims or meaningful upper limits — the table here shows the most-cited six. The remaining ~150 are either too distant for kinematic resolution at the centre, lack suitable pulsar populations for timing, or have no published radio non-detections at the relevant sensitivity. Searching for IMBHs in GCs is observationally expensive: each candidate requires HST-tier astrometry over multiple epochs OR access to a southern-hemisphere radio array.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">⚖ The pattern across the six clusters</h3>
+      <p>Every cluster in this table has at least one published detection — and every detection has at least one contesting paper. <strong>NGC 6388</strong> (Lützgendorf 2011 → 1.7×10⁴ M☉) was challenged by Cseh et al. 2010 radio non-detection. <strong>47 Tuc</strong> (Kızıltan 2017 → 2,300 M☉ from pulsar timing) was disputed by Mann et al. 2019 N-body modelling favouring stellar-mass remnants. <strong>M54</strong> (Ibata 2009 → 9,400 M☉) is complicated by being the nuclear cluster of the Sagittarius dwarf galaxy. <strong>M15</strong> (Gerssen 2002 detection → Kirsten &amp; Vlemmings 2012 upper limit). The pattern is consistent: GCs are dense enough to plausibly host IMBHs but kinematically degenerate enough that single-technique detections rarely survive multi-technique scrutiny.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🌟 Why OC stands out</h3>
+      <p>Omega Centauri is the Milky Way's most massive cluster at <strong>4×10⁶ M☉</strong> — five times more massive than the next runner-up (NGC 6388). It is also unusual in hosting <strong>multiple distinct stellar populations</strong> (3+ chemically-distinct subpopulations identified spectroscopically), consistent with it being the stripped nuclear cluster of a dwarf galaxy accreted by the Milky Way long ago. Combined with its relative proximity (5.4 kpc) and southern declination (accessible to MeerKAT, ALMA, VLT), OC is the single best-studied IMBH candidate in the Milky Way and the natural anchor for any IMBH-population mass-function claim.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0 · Data CC0</p>
+    </div>
+  </section>
+</div>
+
+<script src="data/measurements.js"></script>
+<script>
+"use strict";
+function fmtMass(M){if(M===null||M===undefined||!isFinite(M))return'—';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=1000)return Math.round(M).toLocaleString()+' M☉';return Math.round(M)+' M☉'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { sort: 'totalMass', dir: 'desc', selectedId: null };
+function loadHash(){const p=getHash(); if(p.sort)state.sort=p.sort; if(p.dir==='asc'||p.dir==='desc')state.dir=p.dir; if(p.sel)state.selectedId=p.sel}
+function saveHash(){setHash({sort:state.sort, dir:state.dir, sel:state.selectedId||''})}
+
+function imbhSortKey(s) {
+  if (!s) return -Infinity;
+  if (s.value === null || s.value === undefined) return 0;
+  return s.value;
+}
+
+function symbolFor(limitType) {
+  if (limitType === 'upper') return '<';
+  if (limitType === 'lower') return '>';
+  if (limitType === 'detection') return '≈';
+  return '';
+}
+
+function imbhClass(limitType) {
+  return limitType === 'noEvidence' ? 'noev' : limitType;
+}
+
+function render() {
+  const clusters = window.OCS_MEASUREMENTS.clusters.slice();
+  // Sort
+  const sortFn = (a, b) => {
+    let av, bv;
+    if (state.sort === 'name') { av = a.name; bv = b.name; }
+    else if (state.sort === 'imbhValue') { av = imbhSortKey(a.imbhSummary); bv = imbhSortKey(b.imbhSummary); }
+    else { av = a[state.sort]; bv = b[state.sort]; }
+    if (typeof av === 'string') return state.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return state.dir === 'asc' ? av - bv : bv - av;
+  };
+  clusters.sort(sortFn);
+
+  // Render rows
+  const rows = document.getElementById('cluster-rows');
+  rows.innerHTML = '';
+  for (const c of clusters) {
+    const tr = document.createElement('tr');
+    if (c.isOmegaCentauri) tr.className = 'oc-row';
+    tr.dataset.id = c.id;
+
+    const s = c.imbhSummary;
+    const sym = s ? symbolFor(s.limitType) : '';
+    const valDisplay = s
+      ? (s.value !== null
+          ? `<div class="imbh-val ${imbhClass(s.limitType)}"><span class="symbol">${sym}</span>${fmtMass(s.value)}</div>`
+          : `<div class="imbh-val noev">no evidence</div>`)
+      : '—';
+    const meta = s ? `<div class="imbh-meta">${escapeHtml(s.reference)}</div>` : '';
+
+    tr.innerHTML = `
+      <td>
+        <span class="cl-name">${escapeHtml(c.name)}</span>
+        <span class="cl-tag">id: ${escapeHtml(c.id)}</span>
+      </td>
+      <td>${fmtMass(c.totalMass)}</td>
+      <td>${c.halfLightRadius.toFixed(2)} pc</td>
+      <td>${c.ageGyr.toFixed(1)} Gyr</td>
+      <td>${valDisplay}${meta}</td>
+    `;
+    tr.addEventListener('click', () => { state.selectedId = (state.selectedId === c.id) ? null : c.id; saveHash(); render(); });
+    rows.appendChild(tr);
+  }
+
+  // Update sort indicators
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.toggle('active', th.dataset.sort === state.sort);
+    const ind = th.querySelector('.sort-indicator');
+    if (th.dataset.sort === state.sort) ind.textContent = state.dir === 'asc' ? '↑' : '↓';
+    else ind.textContent = '↕';
+  });
+
+  document.getElementById('cluster-count').textContent = `${clusters.length} clusters in table`;
+  renderDetail();
+}
+
+function renderDetail() {
+  const card = document.getElementById('detail-card');
+  if (!state.selectedId) {
+    card.className = 'detail-card empty';
+    card.innerHTML = 'Click a row to see the IMBH-estimate details and citation.';
+    return;
+  }
+  const c = window.OCS_MEASUREMENTS.clusters.find(x => x.id === state.selectedId);
+  if (!c || !c.imbhSummary) {
+    card.className = 'detail-card empty';
+    card.innerHTML = 'No detail available for this cluster.';
+    return;
+  }
+  card.className = 'detail-card';
+  const s = c.imbhSummary;
+  const doiUrl = s.doi ? `https://doi.org/${s.doi}` : '#';
+  const valStr = s.value !== null
+    ? `${symbolFor(s.limitType)} ${fmtMass(s.value)}${s.sigma ? ` (${s.sigma}σ)` : ''}`
+    : 'consistent with zero — no IMBH evidence';
+  card.innerHTML = `
+    <button class="close" aria-label="Close">×</button>
+    <div class="detail-title">${escapeHtml(c.name)}</div>
+    <div class="detail-body">
+      <p><strong>IMBH estimate:</strong> ${escapeHtml(valStr)}</p>
+      <p><strong>Reference:</strong> ${escapeHtml(s.reference)}</p>
+      <p>${escapeHtml(s.note)}</p>
+      <p><strong>Cluster bulk properties:</strong> total mass ${fmtMass(c.totalMass)}, half-light radius ${c.halfLightRadius.toFixed(2)} pc, age ${c.ageGyr.toFixed(1)} Gyr.</p>
+    </div>
+    <div class="detail-cite">DOI: <a href="${doiUrl}" target="_blank" rel="noopener">${s.doi || 'n/a'}</a></div>
+  `;
+  card.querySelector('.close').addEventListener('click', () => { state.selectedId = null; saveHash(); renderDetail(); });
+}
+
+function wire() {
+  document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', () => {
+    if (state.sort === th.dataset.sort) state.dir = (state.dir === 'asc') ? 'desc' : 'asc';
+    else { state.sort = th.dataset.sort; state.dir = 'desc'; }
+    saveHash(); render();
+  }));
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() {
+  if (!window.OCS_MEASUREMENTS) { document.body.innerHTML = '<p style="padding:40px;color:#d04040;font-family:monospace">Failed to load measurements.js</p>'; return; }
+  document.getElementById('asof-date').textContent = window.OCS_MEASUREMENTS.meta.lastUpdated;
+  loadHash(); wire(); render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

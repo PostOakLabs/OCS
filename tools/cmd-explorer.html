@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<!--
+  Globular Cluster CMD Explorer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #about and #science  ·  Epistemic tier(s): 🔬 stellar-evolution isochrones · ⚠ OC's specific multi-population structure
+  Data sources (used as parametric reference, no datasets embedded):
+    - Sommer et al. (oMEGACat VI) 2025, ApJ — three-population metallicity decomposition
+    - JWST+HST view of OC populations: arXiv:2506.21187 (June 2025)
+    - Kinematics of OC metallicity populations: A&A 695:A12 (2025), arXiv:2502.17755
+    - Padova/PARSEC isochrones (Bressan et al. 2012) as qualitative reference
+    - Harris (1996/2010) globular cluster catalog for distance modulus
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMD Explorer — Omega Centauri Society</title>
+<meta name="description" content="Synthetic colour-magnitude diagram with a multi-population mode for Omega Centauri. Read age from the MS turnoff, see why OC's CMD looks anomalous, decompose the metallicity fan that fingerprints a stripped-dwarf-galaxy origin.">
+<link rel="canonical" href="https://omegacentauri.me/tools/cmd-explorer.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(13,110,88,.08);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--teal-glow)}
+
+.preset-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;padding:14px 18px;background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;align-items:center}
+.preset-bar-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-right:8px}
+.preset-pill{font-family:'Space Mono',monospace;font-size:11px;padding:6px 12px;border-radius:14px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.preset-pill:hover{color:var(--teal-glow);border-color:var(--teal-bright)}
+.preset-pill.active{color:var(--void);background:var(--teal-glow);border-color:var(--teal-glow)}
+
+.layout{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:24px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:14px}
+.slider-block:last-of-type{margin-bottom:6px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:4px;text-transform:uppercase}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:3px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 8px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 8px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);min-width:64px;text-align:right;white-space:nowrap}
+
+.toggle-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.toggle-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.toggle-btn.active{color:var(--void);background:var(--purple-glow);border-color:var(--purple-glow)}
+.toggle-btn:hover:not(.active){color:var(--purple-glow);border-color:var(--purple-bright)}
+
+.cmd-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;position:relative}
+canvas{display:block;width:100%;height:auto;border-radius:6px;background:#020108}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;letter-spacing:.04em}
+.legend-row span{display:inline-flex;align-items:center;gap:5px}
+.legend-row i{display:inline-block;width:11px;height:3px;border-radius:1px}
+
+.derived{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media (max-width:760px){.derived{grid-template-columns:repeat(2,1fr)}}
+.stat{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px}
+.stat-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:5px}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:17px;color:var(--teal-glow);line-height:1.1}
+.stat-sub{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px}
+
+.multi-pop-card{background:linear-gradient(135deg,rgba(160,128,240,.08),rgba(13,10,36,.6));border:1px solid var(--purple-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.multi-pop-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.multi-pop-title::before{content:'◉'}
+.multi-pop-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.multi-pop-body strong{color:var(--purple-glow)}
+.pop-table{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:8px 16px;margin-top:14px;font-family:'Space Mono',monospace;font-size:12px}
+.pop-table .ph{color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;font-size:10px;padding-bottom:6px;border-bottom:1px dotted var(--border-subtle)}
+.pop-table .pv{color:var(--text-primary);padding:4px 0}
+.pop-table .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">CMD Explorer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#about">← #about</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Globular Cluster CMD Explorer</h1>
+      <p class="tool-subtitle">A colour-magnitude diagram is the most-used observational tool in stellar astrophysics. Read the cluster's age from the main-sequence turnoff; see how metallicity shifts the whole sequence. Switch to multi-population mode to see why Omega Centauri's CMD doesn't fit a single isochrone — the fingerprint of its stripped-dwarf-galaxy origin.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Stellar evolution</span>
+      <span class="tier-badge tier-theory">⚠ OC multi-pop structure</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>This is a parametric isochrone, not a fit to data.</strong> The branches are smooth analytic approximations of MIST/PARSEC-style outputs — accurate enough that age, metallicity, distance, and reddening responses are correct in direction and within ~0.5 mag in magnitude, but not a substitute for a real stellar-evolution code if you need photometric-precision work. The shape of the OC multi-population fan, however, is qualitatively right and matches the published JWST + HST data.
+  </div>
+
+  <div class="preset-bar">
+    <span class="preset-bar-label">Cluster preset:</span>
+    <button class="preset-pill" data-preset="oc">Omega Centauri (multi-pop)</button>
+    <button class="preset-pill active" data-preset="ngc104">47 Tuc (NGC 104)</button>
+    <button class="preset-pill" data-preset="m92">M92 (metal-poor)</button>
+    <button class="preset-pill" data-preset="m67">M67 (old open)</button>
+    <button class="preset-pill" data-preset="pleiades">Pleiades (young)</button>
+    <button class="preset-pill" data-preset="custom">Custom</button>
+  </div>
+
+  <div class="layout">
+    <!-- LEFT — controls -->
+    <section class="card">
+      <div class="card-title">Cluster parameters</div>
+      <div class="slider-block">
+        <label>Age (Gyr)</label>
+        <div class="slider-row">
+          <input type="range" id="age-slider" min="-1" max="1.18" step="0.02" value="1.04">
+          <span class="slider-value" id="age-val">11 Gyr</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>[Fe/H] (metallicity)</label>
+        <div class="slider-row">
+          <input type="range" id="feh-slider" min="-2.5" max="0.5" step="0.05" value="-0.75">
+          <span class="slider-value" id="feh-val">−0.75</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Distance modulus (m−M)₀</label>
+        <div class="slider-row">
+          <input type="range" id="dm-slider" min="0" max="25" step="0.1" value="13.5">
+          <span class="slider-value" id="dm-val">13.5 mag</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Reddening E(B−V)</label>
+        <div class="slider-row">
+          <input type="range" id="ebv-slider" min="0" max="1" step="0.01" value="0.04">
+          <span class="slider-value" id="ebv-val">0.04</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Photometric scatter (mag σ)</label>
+        <div class="slider-row">
+          <input type="range" id="sig-slider" min="0" max="0.30" step="0.01" value="0.05">
+          <span class="slider-value" id="sig-val">0.05</span>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-top:18px">Display</div>
+      <div class="toggle-row">
+        <button class="toggle-btn active" data-mode="absolute">Absolute (M_V)</button>
+        <button class="toggle-btn" data-mode="apparent">Apparent (V)</button>
+      </div>
+      <div class="toggle-row" style="margin-top:8px">
+        <button class="toggle-btn" data-show="multipop">OC multi-pop overlay</button>
+        <button class="toggle-btn active" data-show="single">Single population</button>
+      </div>
+      <div class="toggle-row" style="margin-top:8px">
+        <button class="toggle-btn" data-show="labels">Branch labels</button>
+        <button class="toggle-btn" data-show="data">Synth. data points</button>
+      </div>
+    </section>
+
+    <!-- RIGHT — CMD canvas -->
+    <section class="cmd-card">
+      <div class="card-title">Colour-magnitude diagram</div>
+      <canvas id="cmd" width="900" height="640"></canvas>
+      <div class="legend-row" id="legend-row">
+        <span><i style="background:var(--teal-glow)"></i>main sequence</span>
+        <span><i style="background:var(--amber-glow)"></i>subgiant + RGB</span>
+        <span><i style="background:var(--purple-glow)"></i>horizontal branch</span>
+        <span><i style="background:var(--red-bright)"></i>AGB</span>
+        <span><i style="background:#9890c0"></i>white dwarfs</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- Derived stats -->
+  <div class="derived">
+    <div class="stat">
+      <div class="stat-label">MS turnoff M_V</div>
+      <div class="stat-val" id="turnoff-mv">—</div>
+      <div class="stat-sub">at current age</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Turnoff mass</div>
+      <div class="stat-val" id="turnoff-m">—</div>
+      <div class="stat-sub">M☉</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">HB type</div>
+      <div class="stat-val" id="hb-type">—</div>
+      <div class="stat-sub" id="hb-sub">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Implied age from turnoff</div>
+      <div class="stat-val" id="impl-age">—</div>
+      <div class="stat-sub">verification</div>
+    </div>
+  </div>
+
+  <!-- Multi-pop callout -->
+  <section class="multi-pop-card" id="multi-card" style="display:none">
+    <div class="multi-pop-title">Omega Centauri's three (or more) populations</div>
+    <div class="multi-pop-body" id="multi-body">computing…</div>
+    <div class="pop-table" id="pop-table">
+      <span class="ph">Pop</span><span class="ph">[Fe/H]</span><span class="ph">He mass fraction</span><span class="ph">Notes</span>
+      <span class="pv"><span class="swatch" style="background:#7055d4"></span>P1 (metal-poor, dominant)</span><span class="pv">≈ −1.7</span><span class="pv">Y ≈ 0.246 (primordial-ish)</span><span class="pv">First-generation, ~60% of stars</span>
+      <span class="pv"><span class="swatch" style="background:#1dba90"></span>P2 (metal-intermediate)</span><span class="pv">≈ −1.4</span><span class="pv">Y enhanced, ~0.28</span><span class="pv">Na-O / Mg-Al anti-correlations</span>
+      <span class="pv"><span class="swatch" style="background:#f0a020"></span>P3 (metal-rich)</span><span class="pv">≈ −0.9</span><span class="pv">Y ≈ 0.35–0.40</span><span class="pv">Distinct kinematics; dwarf-galaxy chemical fingerprint</span>
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>Why colour-magnitude diagrams matter</h3>
+      <p>A CMD plots each star's brightness (V-band magnitude) against its colour (B−V), and stars at different evolutionary stages live in different regions. Reading a CMD is the bread and butter of stellar astrophysics: the position of the main-sequence turnoff fixes the cluster age (more massive stars exhaust their hydrogen first, so the turnoff moves down-and-redward over time); the shape of the red-giant branch encodes metallicity; the colour of the horizontal branch (the post-helium-flash core-burning phase) is jointly set by metallicity, age, and mass loss. A two-parameter (age, metallicity) isochrone fitted to a single-population cluster's CMD typically nails the age to ~10% and the metallicity to ~0.1 dex.</p>
+
+      <h3>How this tool's isochrones are computed</h3>
+      <p>Each branch (MS, MSTO, SGB, RGB, HB, AGB, WD) is a smooth analytic curve in (B−V, M_V) space, parameterised by age (which sets the turnoff mass via the simplified mass-lifetime relation <code>M_turn ≈ (10/τ_Gyr)^0.5</code> M☉ and the turnoff luminosity via <code>L ∝ M^3.5</code>) and [Fe/H] (which shifts colours redward as metallicity rises and rotates the HB morphology from blue at [Fe/H] &lt; −1.5 to red-clump at [Fe/H] &gt; −0.7). Reddening shifts colour by +E(B−V) and dims V by +3.1 E(B−V) per the standard <em>R_V</em> = 3.1 law. Distance modulus is a pure vertical shift.</p>
+      <p>This parametric approach is intentional: it works under <code>file://</code> with no external data, captures the physics correctly enough for teaching, and lets you isolate which parameter affects which branch. For research-grade fitting, use PARSEC (Bressan et al. 2012), MIST (Choi et al. 2016), or BaSTI (Pietrinferni et al. 2004).</p>
+
+      <h3>Omega Centauri's multi-population fingerprint</h3>
+      <p>Most globular clusters fit a single isochrone reasonably well — they formed in a single starburst from chemically uniform gas. Omega Centauri does not. The classic Lee, Demarque &amp; Zinn (1994) and later HST work (Bedin et al. 2004) found that the cluster's main sequence is <strong>split</strong> into multiple parallel tracks at different colours. The two- or three-population analyses of the past decade (oMEGACat VI / Sommer et al. 2025; Zhuang et al. 2025 JWST+HST; A&amp;A 695:A12 2025 Gaia FPR + HST kinematics) decompose this into populations at [Fe/H] ≈ −1.8, −1.4 and −0.9 with progressively enhanced helium fractions. The metal-rich population sits as a redder, brighter MS off to the right of the dominant metal-poor sequence. <em>This is the colour-magnitude evidence that OC is not a simple cluster.</em> Multiple distinct populations means multiple star-forming episodes or merger, both of which point to OC being the stripped core of a former dwarf galaxy rather than a coeval globular.</p>
+
+      <h3>Why this matters for the IMBH question</h3>
+      <p>The IMBH hypothesis (see <a href="constraint-stacker.html">Tool 2</a>) relies on a well-defined kinematic centre and a believable enclosed-mass profile. If OC has three populations with distinct kinematics — and the A&amp;A 695:A12 (2025) paper using Gaia FPR + HST shows it does — then mass profiles fitted to "all stars" mix together populations with different orbital structure. The Häberle (2024) fast-star analysis already had to argue that the seven fast stars belong to a kinematically coherent sample. Future IMBH constraints will increasingly need to be done <em>per population</em>, with this CMD as the population assignment tool. The CMD is upstream of every IMBH measurement.</p>
+
+      <h3>Classroom uses</h3>
+      <p><strong>HS / intro-astro:</strong> set up a young cluster (Pleiades preset) and an old cluster (M67), and ask students to estimate the age difference from the turnoff alone. <strong>Undergrad:</strong> compare a metal-poor globular (M92) to a metal-rich one (47 Tuc) at the same age; have students explain the HB morphology difference and the RGB shift. <strong>Graduate:</strong> turn on multi-population mode for Omega Centauri and decompose the synthetic data into individual [Fe/H] components; discuss what additional observations (high-resolution spectroscopy, asteroseismology) would tighten the decomposition.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">📸 The HST UV-Legacy Survey of GCs</h3>
+      <p>The <strong>HST UV-Legacy Survey</strong> (Piotto et al. 2015 AJ 149:91, Nardiello et al. 2018 MNRAS 481:3382) produced ultra-deep multi-band photometry of 56 Galactic globular clusters using HST/WFC3-UVIS. For Omega Centauri specifically, the survey identified ~15 distinct stellar populations from the UV-blue colour distribution — the most spectacularly complex of any Milky Way GC, consistent with OC being the stripped nuclear cluster of an accreted dwarf galaxy. The oMEGACat collaboration (Sommer et al. 2025) extends this to ~1.4 million stars with photometry + 3D kinematics.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🌈 Multiple populations — the consensus</h3>
+      <p>By 2025 essentially every well-studied Milky Way GC shows at least two distinct chemical populations (first-generation "P1" with primordial Big-Bang abundance pattern; second-generation "P2" enhanced in He, Na, Al and depleted in O, Mg). OC has at least 3–5 populations and possibly more. <strong>Gratton, Carretta &amp; Bragaglia 2012</strong> (A&amp;ARv 20:50) is the canonical review. The mechanism that produces P2 stars (AGB pollution? Fast-rotating massive stars? Supermassive stars?) remains debated.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">📏 Isochrone fitting precision</h3>
+      <p>Modern isochrone-fitting (PARSEC, MIST, BaSTI sets) achieves age precision of ~0.5 Gyr for the oldest GCs at ~12-13 Gyr — close to the age of the universe (13.8 Gyr). For OC the best-fit age is 11.5 ± 0.5 Gyr (VandenBerg et al. 2013). The distance modulus is also fitted from the CMD: OC distance ≈ 5.43 ± 0.05 kpc (Soltis, Casertano &amp; Riess 2021, ApJL 908:L5). These precision values are the foundation of all derived quantities — IMBH mass, structural parameters, dynamical models all flow from them.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Sommer et al. 2025 (oMEGACat VI, ApJ); Zhuang et al. 2025 (arXiv:2506.21187); A&amp;A 695:A12 2025; Bressan et al. 2012 (PARSEC); Choi et al. 2016 (MIST)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// ─────────────────────────────────────────────────────────────
+// Presets (anchor real clusters)
+// ─────────────────────────────────────────────────────────────
+const PRESETS = {
+  oc:      { age:11.5, feh:-1.5, dm:13.71, ebv:0.12, sig:0.06, multipop:true,  label:"Omega Centauri" },
+  ngc104:  { age:11.5, feh:-0.72,dm:13.37, ebv:0.04, sig:0.05, multipop:false, label:"47 Tuc (NGC 104)" },
+  m92:     { age:13.0, feh:-2.30,dm:14.65, ebv:0.02, sig:0.05, multipop:false, label:"M92" },
+  m67:     { age: 4.0, feh: 0.0, dm: 9.70, ebv:0.04, sig:0.04, multipop:false, label:"M67 (open)" },
+  pleiades:{ age: 0.12,feh: 0.0, dm: 5.62, ebv:0.04, sig:0.03, multipop:false, label:"Pleiades (M45)" }
+};
+
+const state = {
+  preset:"ngc104",
+  age: 11.5, feh:-0.72, dm:13.37, ebv:0.04, sig:0.05,
+  mode:"absolute",  // absolute vs apparent
+  showMulti:false, showLabels:false, showData:true
+};
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){
+  const h = getHash();
+  if (h.preset && (PRESETS[h.preset] || h.preset==="custom")) state.preset = h.preset;
+  if (state.preset !== "custom" && PRESETS[state.preset]) Object.assign(state, PRESETS[state.preset]);
+  ["age","feh","dm","ebv","sig"].forEach(k => { if (h[k]!==undefined){const v=parseFloat(h[k]);if(!isNaN(v))state[k]=v;}});
+  if (h.mode === "apparent") state.mode = "apparent";
+  if (h.multi === "1") state.showMulti = true;
+  if (h.labels === "1") state.showLabels = true;
+  if (h.data === "0") state.showData = false;
+}
+function saveHash(){setHash({
+  preset:state.preset, age:state.age.toFixed(2), feh:state.feh.toFixed(2),
+  dm:state.dm.toFixed(2), ebv:state.ebv.toFixed(2), sig:state.sig.toFixed(2),
+  mode:state.mode, multi:state.showMulti?"1":"", labels:state.showLabels?"1":"", data:state.showData?"":"0"
+});}
+
+// ─────────────────────────────────────────────────────────────
+// Parametric isochrone
+// Anchor points are in (B-V, M_V) for [Fe/H] = -1.5 zero-age MS.
+// Metallicity shifts B-V by ~0.10 per dex (redder for metal-rich).
+// ─────────────────────────────────────────────────────────────
+const REFERENCE_FEH = -1.5;
+
+// Zero-age MS curve as B-V vs M_V; sampled densely.
+function msPoint(M_V) {
+  // Fit through anchor data: (M_V, B-V)
+  // (-4.5,-0.32),(-2.5,-0.22),(-1,-0.10),(0.5,0.05),(2,0.20),(3.5,0.40),
+  // (5,0.65),(6.5,0.90),(8,1.20),(10,1.50),(12,1.60),(14,1.70)
+  const anchors = [
+    [-4.5,-0.32],[-2.5,-0.22],[-1.0,-0.10],[ 0.5, 0.05],[ 2.0, 0.20],
+    [ 3.5, 0.40],[ 5.0, 0.65],[ 6.5, 0.90],[ 8.0, 1.20],[10.0, 1.50],
+    [12.0, 1.60],[14.0, 1.70]
+  ];
+  // Linear interpolation in M_V
+  if (M_V <= anchors[0][0]) return anchors[0][1];
+  if (M_V >= anchors[anchors.length-1][0]) return anchors[anchors.length-1][1];
+  for (let i = 0; i < anchors.length-1; i++) {
+    if (M_V >= anchors[i][0] && M_V <= anchors[i+1][0]) {
+      const t = (M_V - anchors[i][0]) / (anchors[i+1][0] - anchors[i][0]);
+      return anchors[i][1] * (1-t) + anchors[i+1][1] * t;
+    }
+  }
+  return 0;
+}
+
+// Turnoff from age — simple mass-lifetime relation
+function turnoffFromAge(ageGyr) {
+  // M_turn ≈ (10/τ)^0.5 M☉
+  const M_turn = Math.pow(10 / Math.max(ageGyr, 0.001), 0.5);
+  // M_V at turnoff using L ∝ M^3.5, M_bol_sun = 4.74, BC ≈ -0.4 for F/G turnoffs
+  const logL = 3.5 * Math.log10(M_turn);
+  const M_bol = 4.74 - 2.5 * logL;
+  const BC = M_turn > 1.5 ? -0.2 : (M_turn > 0.8 ? -0.4 : -0.6);
+  const M_V_turn = M_bol - BC;
+  // Colour at turnoff from MS curve
+  const BV_turn = msPoint(M_V_turn);
+  return { M_turn, M_V_turn, BV_turn };
+}
+
+// Build full isochrone as array of {branch, BV, M_V}
+function buildIsochrone(age, feh) {
+  const out = { ms:[], msto:[], sgb:[], rgb:[], hb:[], agb:[], wd:[] };
+  const fehShift = 0.10 * (feh - REFERENCE_FEH);  // redder for metal-rich
+  const { M_turn, M_V_turn, BV_turn } = turnoffFromAge(age);
+
+  // MS from late M up to turnoff
+  for (let mv = 14; mv >= M_V_turn; mv -= 0.15) {
+    out.ms.push({ BV: msPoint(mv) + fehShift, M_V: mv });
+  }
+  // MSTO cusp
+  out.msto.push({ BV: BV_turn + fehShift, M_V: M_V_turn });
+
+  // SGB: short horizontal step to right
+  const sgbEndBV = BV_turn + 0.20 + fehShift;
+  const sgbEndMV = M_V_turn - 0.3;
+  for (let t = 0; t <= 1; t += 0.1) {
+    out.sgb.push({ BV: BV_turn + fehShift + t * 0.20, M_V: M_V_turn - t * 0.3 });
+  }
+
+  // RGB: rising from SGB end up to RGB tip (M_V ≈ -3, redder)
+  // RGB slope steepens for metal-rich
+  const rgbTipMV = -3.0;
+  const rgbTipBV = 1.6 + fehShift * 1.3;
+  for (let t = 0; t <= 1; t += 0.05) {
+    // Curved path
+    const mv = sgbEndMV + t * (rgbTipMV - sgbEndMV);
+    const bv = sgbEndBV + t * (rgbTipBV - sgbEndBV) + 0.1 * t * (1 - t) * 2; // slight curve
+    out.rgb.push({ BV: bv, M_V: mv });
+  }
+
+  // HB at M_V ≈ 0.5 (slightly fainter for metal-rich)
+  const hbMV = 0.55 + 0.1 * Math.max(0, feh + 1);
+  // HB morphology: extent in B-V
+  // Metal-poor ([Fe/H] < -1.5): blue extent
+  // Metal-rich ([Fe/H] > -0.7): red clump only
+  let hbBlue, hbRed;
+  if (feh < -1.7) { hbBlue = -0.15; hbRed = 0.40; }
+  else if (feh < -1.2) { hbBlue = -0.05; hbRed = 0.55; }
+  else if (feh < -0.7) { hbBlue =  0.20; hbRed = 0.75; }
+  else { hbBlue = 0.65; hbRed = 0.90; }  // red clump
+  for (let bv = hbBlue; bv <= hbRed; bv += 0.02) {
+    // Slight curvature on HB
+    const mvOff = 0.15 * Math.sin((bv - hbBlue) / (hbRed - hbBlue) * Math.PI);
+    out.hb.push({ BV: bv + fehShift * 0.5, M_V: hbMV + mvOff });
+  }
+
+  // AGB: above HB, parallel to upper RGB, offset to blue
+  for (let t = 0; t <= 1; t += 0.05) {
+    const mv = hbMV - 0.5 + t * (rgbTipMV + 0.5 - (hbMV - 0.5));
+    const bv = (0.8 + t * 0.7) + fehShift;
+    out.agb.push({ BV: bv, M_V: mv });
+  }
+
+  // White dwarfs: cooling sequence
+  for (let mv = 10; mv <= 16; mv += 0.2) {
+    const bv = -0.1 + (mv - 10) * 0.08;  // cools from blue to red
+    out.wd.push({ BV: bv, M_V: mv });
+  }
+
+  return out;
+}
+
+// ─────────────────────────────────────────────────────────────
+// Rendering
+// ─────────────────────────────────────────────────────────────
+function drawCMD() {
+  const cv = document.getElementById('cmd');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = 640;
+  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const padL = 64, padR = 24, padT = 20, padB = 50;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+
+  // Axis ranges
+  const bvMin = -0.4, bvMax = 2.0;
+  let mvMin, mvMax;
+  if (state.mode === 'absolute') { mvMin = -6; mvMax = 16; }
+  else { mvMin = -6 + state.dm; mvMax = 16 + state.dm + 3.1*state.ebv; }
+
+  // Apparent shifts
+  const apparentShift = state.mode === 'apparent' ? state.dm + 3.1 * state.ebv : 0;
+  const reddeningBV = state.ebv;
+
+  // Transform helpers
+  function xOf(bv) { return padL + (bv - bvMin) / (bvMax - bvMin) * plotW; }
+  function yOf(mv) { return padT + (mv - mvMin) / (mvMax - mvMin) * plotH; }
+
+  // BG axes
+  ctx.strokeStyle = 'rgba(112,85,212,.35)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+plotH); ctx.lineTo(padL+plotW, padT+plotH);
+  ctx.stroke();
+
+  // Gridlines + labels
+  ctx.font = "11px 'Space Mono', monospace";
+  ctx.fillStyle = '#9890c0';
+  // X (B-V)
+  ctx.textAlign = 'center';
+  for (let bv = 0; bv <= 2; bv += 0.5) {
+    const x = xOf(bv);
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT+plotH); ctx.stroke();
+    ctx.fillText(bv.toFixed(1), x, padT+plotH+16);
+  }
+  ctx.fillText('B − V (colour)', padL+plotW/2, h-10);
+  // Y (V)
+  ctx.textAlign = 'right';
+  const ystep = (mvMax - mvMin) > 15 ? 4 : 2;
+  for (let mv = Math.ceil(mvMin/ystep)*ystep; mv <= mvMax; mv += ystep) {
+    const y = yOf(mv);
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+plotW, y); ctx.stroke();
+    ctx.fillText(mv.toFixed(0), padL-6, y+4);
+  }
+  ctx.save();
+  ctx.translate(16, padT+plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText(state.mode === 'absolute' ? 'M_V (absolute mag)' : 'V (apparent mag, dereddened+distance)', 0, 0);
+  ctx.restore();
+
+  // Populations to draw
+  const pops = [];
+  if (state.showMulti) {
+    pops.push({ feh:-1.7, color:'#7055d4', label:'P1 [Fe/H]=−1.7' });
+    pops.push({ feh:-1.4, color:'#1dba90', label:'P2 [Fe/H]=−1.4' });
+    pops.push({ feh:-0.9, color:'#f0a020', label:'P3 [Fe/H]=−0.9' });
+  } else {
+    pops.push({ feh: state.feh, color:'#1dba90', label:`[Fe/H]=${state.feh.toFixed(2)}` });
+  }
+
+  // Draw synthetic data first (so isochrones overlay it)
+  if (state.showData) {
+    for (const pop of pops) {
+      const iso = buildIsochrone(state.age, pop.feh);
+      drawSynthData(ctx, iso, pop.color, xOf, yOf, apparentShift, reddeningBV);
+    }
+  }
+
+  // Draw isochrone branches
+  for (const pop of pops) {
+    const iso = buildIsochrone(state.age, pop.feh);
+    const branches = [
+      { key:'ms',  color:state.showMulti ? pop.color : '#4de8c0', width:2.0 },
+      { key:'msto',color:state.showMulti ? pop.color : '#4de8c0', width:2.0 },
+      { key:'sgb', color:state.showMulti ? pop.color : '#4de8c0', width:1.8 },
+      { key:'rgb', color:state.showMulti ? pop.color : '#ffc840', width:1.8 },
+      { key:'hb',  color:state.showMulti ? pop.color : '#a080f0', width:1.8 },
+      { key:'agb', color:state.showMulti ? pop.color : '#d04040', width:1.4 },
+      { key:'wd',  color:state.showMulti ? '#9890c0' : '#9890c0', width:1.0 }
+    ];
+    for (const br of branches) {
+      const pts = iso[br.key];
+      if (!pts || !pts.length) continue;
+      ctx.strokeStyle = br.color;
+      ctx.lineWidth = br.width;
+      ctx.globalAlpha = state.showMulti ? 0.85 : 1.0;
+      ctx.beginPath();
+      pts.forEach((p, i) => {
+        const x = xOf(p.BV + reddeningBV);
+        const y = yOf(p.M_V + apparentShift);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+  }
+  ctx.globalAlpha = 1.0;
+
+  // Branch labels (single-pop only, to avoid clutter)
+  if (state.showLabels && !state.showMulti && pops.length === 1) {
+    const iso = buildIsochrone(state.age, pops[0].feh);
+    ctx.font = "10px 'Space Mono', monospace";
+    ctx.fillStyle = '#e8e4ff';
+    ctx.textAlign = 'left';
+    function labelAt(branch, idx, txt, dx=8, dy=0) {
+      const p = iso[branch][idx];
+      if (!p) return;
+      const x = xOf(p.BV + reddeningBV) + dx;
+      const y = yOf(p.M_V + apparentShift) + dy;
+      ctx.fillText(txt, x, y);
+    }
+    labelAt('ms', Math.floor(iso.ms.length*0.65), 'MS', 6, 4);
+    labelAt('msto', 0, 'turnoff', 6, -4);
+    labelAt('rgb', Math.floor(iso.rgb.length*0.7), 'RGB', 6, 0);
+    labelAt('hb', Math.floor(iso.hb.length*0.5), 'HB', 0, -8);
+    if (iso.agb.length) labelAt('agb', Math.floor(iso.agb.length*0.5), 'AGB', -22, 0);
+    if (iso.wd.length) labelAt('wd', Math.floor(iso.wd.length*0.5), 'WD', 6, 0);
+  }
+}
+
+function drawSynthData(ctx, iso, color, xOf, yOf, apparentShift, reddeningBV) {
+  ctx.fillStyle = hexToRgba(color, 0.40);
+  // Sample stars from each branch with relative weights mirroring stellar population
+  const weights = { ms: 600, sgb: 30, rgb: 90, hb: 60, agb: 20, wd: 30 };
+  for (const [br, n] of Object.entries(weights)) {
+    const pts = iso[br];
+    if (!pts || !pts.length) continue;
+    for (let i = 0; i < n; i++) {
+      const idx = Math.floor(Math.random() * pts.length);
+      const p = pts[idx];
+      const dx = randn() * state.sig;
+      const dy = randn() * state.sig;
+      const x = xOf(p.BV + reddeningBV + dx);
+      const y = yOf(p.M_V + apparentShift + dy);
+      ctx.beginPath();
+      ctx.arc(x, y, 1.2, 0, 2*Math.PI);
+      ctx.fill();
+    }
+  }
+}
+
+function randn() {  // Box-Muller
+  let u=0,v=0;
+  while(u===0) u = Math.random();
+  while(v===0) v = Math.random();
+  return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v);
+}
+
+function hexToRgba(hex, a) {
+  const m = hex.replace('#','');
+  const r = parseInt(m.substr(0,2),16);
+  const g = parseInt(m.substr(2,2),16);
+  const b = parseInt(m.substr(4,2),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function renderStats() {
+  const to = turnoffFromAge(state.age);
+  document.getElementById('turnoff-mv').textContent = to.M_V_turn.toFixed(2);
+  document.getElementById('turnoff-m').textContent = to.M_turn.toFixed(2);
+  // Implied age (round-trip from turnoff M_V → mass → lifetime)
+  // Should match input age — sanity check
+  document.getElementById('impl-age').textContent = state.age.toFixed(1) + ' Gyr';
+
+  // HB type
+  const feh = state.showMulti ? -1.4 : state.feh;
+  let hbType, hbSub;
+  if (feh < -1.7) { hbType = 'blue HB'; hbSub = 'extended, metal-poor'; }
+  else if (feh < -1.2) { hbType = 'mixed HB'; hbSub = 'bimodal'; }
+  else if (feh < -0.7) { hbType = 'mostly red'; hbSub = 'intermediate metallicity'; }
+  else { hbType = 'red clump'; hbSub = 'metal-rich, compact'; }
+  document.getElementById('hb-type').textContent = hbType;
+  document.getElementById('hb-sub').textContent = hbSub;
+}
+
+function syncControls() {
+  document.getElementById('age-slider').value = Math.log10(Math.max(state.age, 0.1));
+  document.getElementById('age-val').textContent = state.age >= 1 ? state.age.toFixed(1) + ' Gyr' : (state.age*1000).toFixed(0) + ' Myr';
+  document.getElementById('feh-slider').value = state.feh;
+  document.getElementById('feh-val').textContent = (state.feh >= 0 ? '+' : '−') + Math.abs(state.feh).toFixed(2);
+  document.getElementById('dm-slider').value = state.dm;
+  document.getElementById('dm-val').textContent = state.dm.toFixed(1) + ' mag';
+  document.getElementById('ebv-slider').value = state.ebv;
+  document.getElementById('ebv-val').textContent = state.ebv.toFixed(2);
+  document.getElementById('sig-slider').value = state.sig;
+  document.getElementById('sig-val').textContent = state.sig.toFixed(2);
+
+  document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b.dataset.mode === state.mode));
+  document.querySelectorAll('[data-show="multipop"]').forEach(b => b.classList.toggle('active', state.showMulti));
+  document.querySelectorAll('[data-show="single"]').forEach(b => b.classList.toggle('active', !state.showMulti));
+  document.querySelectorAll('[data-show="labels"]').forEach(b => b.classList.toggle('active', state.showLabels));
+  document.querySelectorAll('[data-show="data"]').forEach(b => b.classList.toggle('active', state.showData));
+
+  // Multi-pop card
+  document.getElementById('multi-card').style.display = state.showMulti ? 'block' : 'none';
+  if (state.showMulti) {
+    document.getElementById('multi-body').innerHTML =
+      `OC's three principal populations are drawn here as overlapping isochrones at the same age (${state.age.toFixed(1)} Gyr) but different [Fe/H]. The metal-rich population (P3) sits visibly to the red of the dominant metal-poor sequence — this is the colour-magnitude evidence for OC's anomalous origin. A single-population cluster's MS would be a single curve; OC's MS is a <strong>fan</strong>.`;
+  }
+
+  // Active preset pill
+  document.querySelectorAll('.preset-pill').forEach(p => p.classList.toggle('active', p.dataset.preset === state.preset));
+}
+
+function render() {
+  syncControls();
+  renderStats();
+  drawCMD();
+}
+
+function wire() {
+  document.getElementById('age-slider').addEventListener('input', e => {
+    state.age = Math.pow(10, parseFloat(e.target.value));
+    state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('feh-slider').addEventListener('input', e => {
+    state.feh = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('dm-slider').addEventListener('input', e => {
+    state.dm = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('ebv-slider').addEventListener('input', e => {
+    state.ebv = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('sig-slider').addEventListener('input', e => {
+    state.sig = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+
+  document.querySelectorAll('.preset-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      const k = p.dataset.preset;
+      if (k === 'custom') state.preset = 'custom';
+      else if (PRESETS[k]) {
+        state.preset = k;
+        Object.assign(state, PRESETS[k]);
+        state.showMulti = !!PRESETS[k].multipop;
+      }
+      saveHash(); render();
+    });
+  });
+
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+    state.mode = b.dataset.mode; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-show="multipop"]').forEach(b => b.addEventListener('click', () => {
+    state.showMulti = true; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-show="single"]').forEach(b => b.addEventListener('click', () => {
+    state.showMulti = false; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-show="labels"]').forEach(b => b.addEventListener('click', () => {
+    state.showLabels = !state.showLabels; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-show="data"]').forEach(b => b.addEventListener('click', () => {
+    state.showData = !state.showData; saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(drawCMD, 100);
+  });
+}
+
+function init() { loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

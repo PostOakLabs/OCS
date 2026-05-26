@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--
+  Falsification & Observational Roadmap Hub
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  This is a *narrative entry point* hub. Mirrors the index.html #falsification
+  and #roadmap sections by giving every criterion a clickable tool.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Falsification &amp; Observational Roadmap — Omega Centauri Society Tools</title>
+<meta name="description" content="Every falsification criterion for the OCS research themes — IMBH, MTH, Fermi — mapped to the tool that computes it and the observation that would move it. The 'how would we know if we're wrong?' hub.">
+<link rel="canonical" href="https://omegacentauri.me/tools/falsification-hub.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(208,64,64,.06),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:48px;padding-bottom:32px;border-bottom:1px dashed var(--border-subtle)}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red-bright);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--red-bright)}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;max-width:920px}
+.hero p{color:var(--text-secondary);font-size:18px;line-height:1.7;max-width:780px;margin-bottom:10px}
+.hero p strong{color:var(--text-primary)}
+.hero-callout{font-family:'Crimson Pro',serif;font-style:italic;color:var(--purple-glow);max-width:780px;margin-top:14px;padding:12px 18px;background:rgba(160,128,240,.05);border-left:2px solid var(--purple-bright);border-radius:0 6px 6px 0}
+
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.toc a{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;padding:7px 14px;border-radius:16px;border:1px solid var(--border-subtle);color:var(--text-secondary)}
+.toc a:hover{color:var(--text-primary);border-color:var(--purple-bright)}
+
+.section{margin-bottom:48px}
+.section-header{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.section-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:10px;background:rgba(208,64,64,.12);color:var(--red-bright);border:1px solid var(--red-mid)}
+.section-tag.purple{background:rgba(160,128,240,.10);color:var(--purple-glow);border-color:var(--purple-bright)}
+.section-tag.teal{background:rgba(29,186,144,.10);color:var(--teal-glow);border-color:var(--teal-bright)}
+.section-tag.amber{background:rgba(240,160,32,.10);color:var(--amber-glow);border-color:var(--amber-mid)}
+.section-header h2{font-family:'Orbitron',sans-serif;font-weight:600;font-size:22px;color:var(--text-primary);letter-spacing:.01em}
+
+.crit-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:880px){.crit-grid{grid-template-columns:1fr}}
+.crit{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s, transform .15s}
+.crit:hover{border-color:var(--purple-bright)}
+.crit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:6px}
+.crit-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--text-dim);padding:3px 8px;border-radius:8px;background:rgba(112,85,212,.08);border:1px solid var(--border-subtle);white-space:nowrap}
+.crit h3{font-family:'Orbitron',sans-serif;font-size:15px;color:var(--text-primary);letter-spacing:.01em;line-height:1.25;flex:1}
+.crit-body{font-family:'Crimson Pro',serif;color:var(--text-secondary);font-size:15px;line-height:1.6}
+.crit-meta{display:flex;flex-direction:column;gap:6px;margin-top:6px;padding-top:10px;border-top:1px dotted var(--border-subtle);font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.crit-meta .lbl{color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase;font-size:9px;margin-bottom:1px}
+.crit-meta a{color:var(--amber-glow);font-weight:600;letter-spacing:.02em}
+.crit-meta a:hover{color:var(--teal-glow)}
+.crit-when{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(13,110,88,.12);color:var(--teal-glow);border:1px solid var(--teal-mid);align-self:flex-start;margin-top:6px}
+.crit-when.future{background:rgba(196,120,0,.10);color:var(--amber-glow);border-color:var(--amber-mid)}
+.crit-when.long{background:rgba(112,85,212,.08);color:var(--purple-glow);border-color:var(--purple-bright)}
+
+/* Timeline bar */
+.timeline-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:28px 32px;margin-bottom:32px}
+.timeline-card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.timeline-card-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:32px;letter-spacing:.04em}
+.timeline-bar-wrap{position:relative;margin-bottom:24px}
+.tl-axis{position:relative;height:30px;border-bottom:1px solid var(--border-subtle);margin-bottom:16px}
+.tl-axis-tick{position:absolute;top:0;bottom:0;width:1px;background:rgba(112,85,212,.3)}
+.tl-axis-label{position:absolute;bottom:6px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em}
+.tl-row{display:flex;align-items:center;gap:14px;height:32px}
+.tl-row-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);width:170px;text-align:right;letter-spacing:.04em}
+.tl-row-bar-wrap{position:relative;flex:1;height:18px;background:rgba(7,5,21,.5);border-radius:4px}
+.tl-bar{position:absolute;height:100%;border-radius:3px;display:flex;align-items:center;padding:0 10px;font-family:'Space Mono',monospace;font-size:10px;color:#000;font-weight:600;letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.tl-bar.now{background:linear-gradient(90deg,var(--teal-bright),var(--teal-glow))}
+.tl-bar.next{background:linear-gradient(90deg,var(--purple-bright),var(--purple-glow))}
+.tl-bar.future{background:linear-gradient(90deg,var(--amber-mid),var(--amber-glow))}
+.tl-bar.unknown{background:linear-gradient(90deg,var(--red-mid),var(--red-bright))}
+.tl-bar.completed{background:linear-gradient(90deg,#5a4090,#7055d4);opacity:.5}
+
+.intro-table{margin-top:14px;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-family:'Space Mono',monospace;font-size:12px}
+.intro-table .lh{color:var(--text-secondary);letter-spacing:.04em;text-align:right}
+.intro-table .lv{color:var(--text-primary)}
+
+.cross-card{background:linear-gradient(135deg,rgba(112,85,212,.08),rgba(13,10,36,.6));border:1px solid var(--purple-bright);border-radius:12px;padding:22px 28px;margin-bottom:24px}
+.cross-card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.cross-card-title::before{content:'⇄'}
+.cross-card p{color:var(--text-secondary);margin-bottom:8px}
+.cross-card a{color:var(--amber-glow)}
+@media (max-width:560px){.hero h1{font-size:26px}.container{padding:28px 18px 60px}.tl-row-label{width:120px;font-size:10px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Falsification &amp; Observational Roadmap</span>
+    <a class="nav-link" href="https://omegacentauri.me/#falsification">← #falsification</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-eyebrow">Tools index · narrative entry · "how would we know if we're wrong?"</div>
+    <h1>Falsification &amp; Observational Roadmap</h1>
+    <p>The main tools index (<a href="/tools/">/tools/</a>) lists everything in the catalogue by topic. This hub lists everything by <strong>what observation would move it</strong>. Every claim the OCS site makes — the IMBH might exist, the Macro Transcension Hypothesis might explain the Fermi silence — is anchored to a number that a future measurement could push out of range. This page maps each criterion to the tool that computes it, the observation that would test it, and the mission or facility expected to deliver that observation.</p>
+    <div class="hero-callout">The site's commitment is to falsifiability. If everything below stays consistent over the next decade, the IMBH and MTH hypotheses earn more credit. If any one row turns red, the picture changes. The tools below are how the bookkeeping is done.</div>
+  </header>
+
+  <nav class="toc">
+    <a href="#imbh">↓ Falsifying the IMBH</a>
+    <a href="#mth">↓ Falsifying the MTH</a>
+    <a href="#fermi">↓ Weakening the Fermi paradox</a>
+    <a href="#timeline">↓ Instrument &amp; mission timeline</a>
+    <a href="#crosslinks">↓ Cross-references</a>
+  </nav>
+
+  <!-- Section: IMBH -->
+  <section class="section" id="imbh">
+    <div class="section-header">
+      <span class="section-tag">criterion set 1</span>
+      <h2>Falsifying the IMBH in Omega Centauri</h2>
+    </div>
+    <div class="crit-grid">
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.1</span><h3>Tighter kinematic upper limit closes the Häberle window</h3></div>
+        <div class="crit-body">If a follow-up kinematic analysis (next-generation HST proper motions, ELT integral field, or GAIA DR4+) places a 3σ upper limit below 8,200 M☉, the Häberle (2024) lower bound becomes irreconcilable with the upper-limit family and one of the two must be wrong. The currently allowed window is already &lt; 2× wide.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="constraint-stacker.html">→ constraint-stacker</a> (the active window)</span>
+          <span><span class="lbl">Observation that moves it</span>VLT MUSE, JWST NIRSpec follow-up; ELT first light</span>
+        </div>
+        <span class="crit-when">2026–2032</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.2</span><h3>JWST detects ADAF accretion signature</h3></div>
+        <div class="crit-body">Chen et al. (2025) placed an upper limit from <em>non-detection</em> at JWST NIRSpec. A confirmed detection of a faint accretion signature (NIR continuum with the right Bondi-ADAF scaling) at OC's core would invert the constraint into a positive measurement of the IMBH mass and feeding rate. Detection-side, not absence-side.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="jwst-accretion.html">→ jwst-accretion</a> (the L–M curve)</span>
+          <span><span class="lbl">Observation that moves it</span>JWST cycle 4+ NIRSpec dedicated time at OC core</span>
+        </div>
+        <span class="crit-when future">2026–2028</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.3</span><h3>SKA pulsar timing tightens upper bound below 5,000 M☉</h3></div>
+        <div class="crit-body">TRAPUM 2026 (Padmanabh et al.) already places &lt; 10⁵ M☉ at 90% CL. SKA-1 pulsar timing should improve this by 2–3 orders of magnitude in M_BH sensitivity by ~2030. If the limit closes through the Häberle window, the IMBH is in trouble.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="pulsar-timing.html">→ pulsar-timing</a> (sensitivity vs. baseline)</span>
+          <span><span class="lbl">Observation that moves it</span>SKA-1 first light, dedicated OC timing campaign</span>
+        </div>
+        <span class="crit-when future">2028–2032</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.4</span><h3>M-σ extrapolation prediction vs. measured kinematics</h3></div>
+        <div class="crit-body">The M-σ scaling extrapolated to OC predicts an IMBH ~10⁵ M☉ — well above every kinematic upper bound. If future cluster-mass / half-light measurements tighten the prediction down to ~10⁴, the tension shrinks. If they push it higher, M-σ stops being a useful guide for globular clusters at all.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="velocity-dispersion.html">→ velocity-dispersion</a> (M-σ predictor)</span>
+          <span><span class="lbl">Observation that moves it</span>oMEGACat data releases; revised half-light radii</span>
+        </div>
+        <span class="crit-when">2025–2027</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.5</span><h3>LISA catches an IMRI from the OC IMBH</h3></div>
+        <div class="crit-body">The cleanest possible confirmation. A stellar-mass compact object spiralling in produces a characteristic-strain trajectory that fixes the primary mass to ~10% precision, independent of every other systematic. arXiv:2501.13466 estimates a few-percent probability per Hubble time per cluster; OC is one of ~150 candidate clusters.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="lisa-emri.html">→ lisa-emri</a> (SNR &amp; trajectory)</span>
+          <span><span class="lbl">Observation that moves it</span>LISA mission, 4-year nominal</span>
+        </div>
+        <span class="crit-when future">~2035 launch</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">1.6</span><h3>Multi-population kinematic decomposition reveals the centre</h3></div>
+        <div class="crit-body">If OC's three metallicity populations have distinct kinematic centres (A&amp;A 695:A12 2025 already finds offsets), the IMBH fast-star analysis must be redone per population, not on the merged sample. The Häberle 7-star result may not survive this scrutiny — or it may emerge stronger.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="cmd-explorer.html">→ cmd-explorer</a> (population assignment)</span>
+          <span><span class="lbl">Observation that moves it</span>oMEGACat VII+; ELT MICADO photometry</span>
+        </div>
+        <span class="crit-when">2026–2030</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- Section: MTH -->
+  <section class="section" id="mth">
+    <div class="section-header">
+      <span class="section-tag purple">criterion set 2</span>
+      <h2>Falsifying the Macro Transcension Hypothesis</h2>
+    </div>
+    <div class="crit-grid">
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.1</span><h3>Unambiguous K-II/K-III infrared excess in a survey volume</h3></div>
+        <div class="crit-body">The MTH explains the Fermi silence by saying civilisations don't build visible megastructures — they compress into ergospheres. A clear Dyson-swarm waste-heat signature from a single galaxy or star (G-HAT-style, but unambiguous) would directly contradict that. None has been found yet, which is consistent with MTH but not unique to it.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="dyson-swarm.html">→ dyson-swarm</a> (G-HAT detectability)</span>
+          <span><span class="lbl">Observation that moves it</span>WISE re-analyses; Roman Space Telescope mid-IR; future IR surveys</span>
+        </div>
+        <span class="crit-when future">2026–2035</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.2</span><h3>Detection of a transmitter at K-II EIRP from OC distance</h3></div>
+        <div class="crit-body">If MTH civilisations exist but are radio-silent, then a detection at OC distance with sufficient EIRP rules out the silence prediction. Current sensitivity (Breakthrough Listen 0.17 W at 0.3 AU; ~10²³ W at 17 kly) only constrains K-II-class transmitters, not Earth-equivalent ones.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="radio-seti.html">→ radio-seti</a> (EIRP threshold curve)</span>
+          <span><span class="lbl">Observation that moves it</span>SKA-1/SKA-2 commensal SETI; Breakthrough Listen extensions</span>
+        </div>
+        <span class="crit-when future">2030–2040</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.3</span><h3>Astrophysical refutation of the ergosphere compute claim</h3></div>
+        <div class="crit-body">The MTH compute argument relies on the Bekenstein-Landauer-Lloyd bounds applied to the ergosphere. If a sharper analysis or experiment (e.g. quantum-information theorems on horizons, gravitational decoherence limits) shows the ergosphere bound is much lower than claimed, MTH compute capacity drops below biological-civ thresholds and the framing loses its punch.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="bekenstein-landauer.html">→ bekenstein-landauer</a> (the bound)</span>
+          <span><span class="lbl">Observation that moves it</span>theoretical refinement; analog-BH lab measurements</span>
+        </div>
+        <span class="crit-when long">indefinite</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.4</span><h3>Aestivation hypothesis explains the silence equally well</h3></div>
+        <div class="crit-body">If the Bennett et al. critique fails on its own terms and Sandberg-style aestivation cleanly explains the Fermi silence at 10³⁰× ops gain, the MTH becomes an unnecessary additional hypothesis — not falsified, just redundant. Occam-pruned.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="aestivation.html">→ aestivation</a> (the gain-vs-wait curve)</span>
+          <span><span class="lbl">Observation that moves it</span>theoretical refinement of cold-reservoir bounds</span>
+        </div>
+        <span class="crit-when long">conceptual, not empirical</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.5</span><h3>BZ extraction power-output ceiling</h3></div>
+        <div class="crit-body">The MTH speculative energy budget assumes Blandford-Znajek can be engineered to extract a large fraction of the rotational energy of a Kerr BH. If detailed simulations show astrophysical caps far below the engineering-fiction limit, the "civilisation around an IMBH" power budget shrinks.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="bz-kardashev.html">→ bz-kardashev</a> (inverse / forward modes)</span>
+          <span><span class="lbl">Observation that moves it</span>GRMHD simulations of jet launching; EHT M87 / Sgr A* spin estimates</span>
+        </div>
+        <span class="crit-when">ongoing</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">2.6</span><h3>Superradiance-driven spin-down rules out IMBH high spin</h3></div>
+        <div class="crit-body">If an ultralight boson exists in the IMBH-resonant mass range (~10⁻¹⁵ eV), the IMBH should already have spun itself down via superradiance. A measurement of high spin (a → 0.9) at the OC IMBH would rule out that boson mass — and a measurement of low spin would be consistent with both "no boson" and "boson exists, BH was spun down."</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="superradiance.html">→ superradiance</a> (boson Regge plane)</span>
+          <span><span class="lbl">Observation that moves it</span>LISA EMRI spin recovery (if signal detected)</span>
+        </div>
+        <span class="crit-when future">~2035 launch</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- Section: Fermi -->
+  <section class="section" id="fermi">
+    <div class="section-header">
+      <span class="section-tag teal">criterion set 3</span>
+      <h2>Weakening (or strengthening) the Fermi paradox</h2>
+    </div>
+    <div class="crit-grid">
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">3.1</span><h3>Second-genesis life found in solar system</h3></div>
+        <div class="crit-body">Bostrom's classic argument: independent abiogenesis on Mars, Europa, or Enceladus pushes the Great Filter <em>ahead</em> of us. Drake MC's prior on f_l (life arises) shifts toward 1, the headline P(N&lt;1) drops, and "the silence is normal" becomes harder to defend.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tools</span><a href="drake-monte-carlo.html">→ drake-monte-carlo</a>, <a href="great-filter.html">→ great-filter</a></span>
+          <span><span class="lbl">Observation that moves it</span>Mars sample return, Europa Clipper / Lander, Enceladus Orbilander</span>
+        </div>
+        <span class="crit-when future">2030–2050</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">3.2</span><h3>Continued non-detection over deeper SETI coverage</h3></div>
+        <div class="crit-body">Every order-of-magnitude improvement in sensitivity that yields no detection strengthens the Fermi observation. Breakthrough Listen 2015–2025 has already tightened the threshold by ~10⁴ over Project Ozma. SKA-2 will add 2–3 more orders of magnitude. Each is a directly-quantifiable update on the prior.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="radio-seti.html">→ radio-seti</a> (sensitivity tracker)</span>
+          <span><span class="lbl">Observation that moves it</span>SKA-1/2; FAST extensions; new survey strategies</span>
+        </div>
+        <span class="crit-when">ongoing</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">3.3</span><h3>Exoplanet biosignatures detected</h3></div>
+        <div class="crit-body">A confirmed atmospheric biosignature (O2 + CH4 disequilibrium with photochemical context, or unambiguous techno-marker like CFCs) within ~100 ly tightens f_l ≈ 1 in the local cosmic neighbourhood, with the same Drake-MC consequences as 3.1. This is most likely to come from JWST cycles 4–8 or future LUVOIR-class missions.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tool</span><a href="drake-monte-carlo.html">→ drake-monte-carlo</a> (prior shift)</span>
+          <span><span class="lbl">Observation that moves it</span>JWST cycles 4+; HWO (Habitable Worlds Observatory) 2040s</span>
+        </div>
+        <span class="crit-when future">2026–2045</span>
+      </article>
+
+      <article class="crit">
+        <div class="crit-head"><span class="crit-num">3.4</span><h3>Time-dilation argument for civilisational lifetime</h3></div>
+        <div class="crit-body">L (civilisation lifetime in years) is the most loosely-bound Drake factor. If MTH-style time dilation lets compact civilisations subjectively persist for orders of magnitude longer than their proper-time existence in flat space, the effective L is much higher and Drake reverts toward larger N — but the silence still needs explaining.</div>
+        <div class="crit-meta">
+          <span><span class="lbl">Tools</span><a href="time-dilation.html">→ time-dilation</a>, <a href="hawking-evaporation.html">→ hawking-evaporation</a></span>
+          <span><span class="lbl">Observation that moves it</span>theoretical / engineering bounds rather than empirical</span>
+        </div>
+        <span class="crit-when long">conceptual</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section" id="timeline">
+    <div class="section-header">
+      <span class="section-tag amber">timeline</span>
+      <h2>Instrument &amp; mission timeline (when each criterion becomes testable)</h2>
+    </div>
+    <div class="timeline-card">
+      <div class="timeline-card-title">Approximate Gantt of observational capabilities</div>
+      <div class="timeline-card-sub">Years 2025–2050. Each bar = an instrument or mission. Hover the tool links above to see which falsification criterion each one bears on.</div>
+      <div class="tl-axis">
+        <span class="tl-axis-tick" style="left:0%"><span class="tl-axis-label">2025</span></span>
+        <span class="tl-axis-tick" style="left:16.66%"><span class="tl-axis-label">2030</span></span>
+        <span class="tl-axis-tick" style="left:33.33%"><span class="tl-axis-label">2035</span></span>
+        <span class="tl-axis-tick" style="left:50%"><span class="tl-axis-label">2040</span></span>
+        <span class="tl-axis-tick" style="left:66.66%"><span class="tl-axis-label">2045</span></span>
+        <span class="tl-axis-tick" style="left:83.33%"><span class="tl-axis-label">2050</span></span>
+        <span class="tl-axis-tick" style="left:100%"></span>
+      </div>
+
+      <div class="tl-row"><div class="tl-row-label">HST / oMEGACat</div><div class="tl-row-bar-wrap"><div class="tl-bar completed" style="left:0%;width:13%">completed → 2027</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">JWST cycles 3–8</div><div class="tl-row-bar-wrap"><div class="tl-bar now" style="left:0%;width:30%">2025–2034</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">MeerKAT TRAPUM</div><div class="tl-row-bar-wrap"><div class="tl-bar now" style="left:0%;width:13%">2025–2028</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">Gaia DR4 / DR5</div><div class="tl-row-bar-wrap"><div class="tl-bar now" style="left:5%;width:18%">DR4 ~2026 / DR5 ~2030</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">ELT first light</div><div class="tl-row-bar-wrap"><div class="tl-bar next" style="left:18%;width:50%">2029–2050</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">SKA-1 first science</div><div class="tl-row-bar-wrap"><div class="tl-bar next" style="left:20%;width:50%">2030+</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">SKA-2 (full array)</div><div class="tl-row-bar-wrap"><div class="tl-bar future" style="left:50%;width:40%">~2040+</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">LISA mission</div><div class="tl-row-bar-wrap"><div class="tl-bar future" style="left:33%;width:25%">2035 launch, 4-yr nominal</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">Mars sample return</div><div class="tl-row-bar-wrap"><div class="tl-bar future" style="left:30%;width:25%">~2033–2040</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">Europa Clipper</div><div class="tl-row-bar-wrap"><div class="tl-bar now" style="left:15%;width:25%">2030 arrival → analysis</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">Habitable Worlds Obs</div><div class="tl-row-bar-wrap"><div class="tl-bar unknown" style="left:60%;width:40%">~2045+</div></div></div>
+      <div class="tl-row"><div class="tl-row-label">Breakthrough Listen +</div><div class="tl-row-bar-wrap"><div class="tl-bar now" style="left:0%;width:33%">2025 → 2035</div></div></div>
+    </div>
+  </section>
+
+  <!-- Crosslinks -->
+  <section class="section" id="crosslinks">
+    <div class="section-header">
+      <span class="section-tag purple">cross-references</span>
+      <h2>Where this hub fits with the rest of the catalogue</h2>
+    </div>
+    <div class="cross-card">
+      <div class="cross-card-title">Other entry points</div>
+      <p><strong>Master tools index:</strong> <a href="/tools/">/tools/</a> — every tool organised by topic. Start here if you don't already have a question in mind.</p>
+      <p><strong>Main site section this mirrors:</strong> <a href="https://omegacentauri.me/#falsification">omegacentauri.me/#falsification</a> — the prose version of the same content. This hub gives every criterion a clickable tool.</p>
+      <p><strong>Research roadmap on main site:</strong> <a href="https://omegacentauri.me/#roadmap">omegacentauri.me/#roadmap</a> — the broader research agenda the falsification criteria support.</p>
+      <p><strong>Reference: the OCS tools spec v1.1</strong> — see <code>/ocs-tools-spec-v1.1.md</code> in the repo for the canonical tool definitions, epistemic-tier rubric, and design constraints.</p>
+    </div>
+  </section>
+
+  <h3 style="font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:24px 0 8px">Real-world reference numbers (as of May 2026)</h3>
+
+  <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright);font-family:'Orbitron',sans-serif;text-transform:uppercase;letter-spacing:.08em">🔬 Why falsifiability matters here</h3>
+  <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px"><strong>Karl Popper 1934</strong> (Logik der Forschung) argued that a scientific hypothesis must make predictions that could in principle be falsified by observation. Many MTH-adjacent claims (sufficiently advanced civilisation at a black hole, aestivating computronium, etc.) are easy to construct but hard to falsify without specific observational predictions. This tool inverts that problem — for each MTH-adjacent claim, list the upcoming observation that would falsify it, the timescale, and the instrument. If no entry exists, the claim isn\'t science yet.</p>
+
+  <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow);font-family:'Orbitron',sans-serif;text-transform:uppercase;letter-spacing:.08em">🛰 Upcoming missions and their MTH relevance</h3>
+  <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px"><strong>SKA-Mid</strong> (~2028 first light): 10× improvement on OC pulsar timing; would tighten IMBH constraint to ~10² M☉ if no signal detected. <strong>ELT</strong> (~2029): ~1 mas/yr astrometry of OC fast stars; would resolve Bañares–Häberle tension definitively. <strong>LISA</strong> (~2035): direct EMRI/IMRI detection from OC if IMBH exists at &gt;1000 M☉. <strong>JWST cycle 4–8</strong>: continued accretion-signature limits. <strong>Vera Rubin LSST</strong> (~2026): comprehensive TDE survey would constrain IMBH activity rate in nearby clusters.</p>
+
+  <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright);font-family:'Orbitron',sans-serif;text-transform:uppercase;letter-spacing:.08em">📅 Predicted falsification timescales</h3>
+  <p style="font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px">OC IMBH existence and mass: <strong>likely resolved by 2032</strong> via ELT astrometry + SKA timing. Aestivation hypothesis: not falsifiable on human timescales (~10²⁰+ yr signature wait). MTH compute-substrate claim: not directly falsifiable but constrained by absence of BH-adjacent technosignatures (Dyson-style IR excess searches, BLC2-class radio surveys). Specific Dyson-swarm constructions: Vera Rubin + future infrared all-sky surveys (SPHEREx 2025+) will rule out partial-swarm fractions &gt; 10⁻⁴ in nearby stars by ~2030.</p>
+
+  <p style="margin-top:30px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);text-align:center">
+    v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Omega Centauri Society
+  </p>
+</div>
+</body>
+</html>

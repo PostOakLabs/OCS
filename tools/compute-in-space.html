@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<!--
+  Compute-in-Space Material & Cooling Footprint Calculator (v1.1)
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.1  ·  Last updated: 2026-05-16
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compute-in-Space Footprint — Omega Centauri Society</title>
+<meta name="description" content="Engineering footprint of large-scale computation in space. Power, cooling, material, build time. Compare engineered Dyson-style scaling against an IMBH ergosphere.">
+<link rel="canonical" href="https://omegacentauri.me/tools/compute-in-space.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--compute-c:#f0a020;--cool-c:#4de8c0;--power-c:#a080f0;--mth-c:#d04040}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:18px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.fiction{color:var(--purple-glow);background:rgba(160,128,240,.07)}
+.directions{background:rgba(13,10,36,.4);border:1px solid var(--teal-mid);border-radius:8px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:var(--text-secondary);display:flex;align-items:flex-start;gap:14px;line-height:1.6}
+.directions .icon{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-bright);padding:3px 9px;border:1px solid var(--teal-mid);border-radius:10px;background:rgba(29,186,144,.06);flex-shrink:0}
+.directions strong{color:var(--text-primary);font-weight:400}
+
+/* ------- Schematic ------- */
+.schematic-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 22px;margin-bottom:20px}
+.sch-svg{display:block;width:100%;max-width:1100px;height:auto;margin:0 auto}
+.sch-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 18px;margin-top:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.sch-legend .swatch{width:11px;height:11px;display:inline-block;margin-right:5px;border-radius:2px;vertical-align:middle}
+
+/* ------- Headline ------- */
+.headline{background:linear-gradient(135deg,rgba(26,16,64,.5),rgba(13,10,36,.4));border:1px solid var(--purple-bright);border-radius:12px;padding:22px 26px;margin-bottom:20px}
+.headline-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.headline-text{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);line-height:1.5}
+.headline-text .v{color:var(--amber-glow);font-weight:600;font-size:20px}
+.headline-sub{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);margin-top:8px;font-style:italic}
+
+/* ------- Input grid: 3 colored bands ------- */
+.input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
+@media (max-width:1000px){.input-grid{grid-template-columns:1fr}}
+.band{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;border-top:3px solid var(--c)}
+.band.compute{--c:var(--compute-c)}
+.band.cool{--c:var(--cool-c)}
+.band.power{--c:var(--power-c)}
+.band-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--c);margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed var(--border-subtle);display:flex;align-items:center;gap:8px}
+.band-title .icon{display:inline-block;width:10px;height:10px;background:var(--c);border-radius:2px}
+
+.band-intro{font-size:13px;color:var(--text-secondary);font-style:italic;line-height:1.55;margin-bottom:12px;padding:10px 12px;background:rgba(7,5,21,.35);border-left:2px solid var(--c);border-radius:0 6px 6px 0}
+.band-intro strong{color:var(--text-primary);font-style:normal;font-weight:400}
+
+.slider-block{margin-bottom:12px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--text-secondary);display:block;margin-bottom:5px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--c,var(--purple-mid)));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--c,var(--purple-glow));cursor:pointer;box-shadow:0 0 8px var(--c,rgba(160,128,240,.5))}
+.slider-row input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--c,var(--purple-glow));cursor:pointer;border:none;box-shadow:0 0 8px var(--c,rgba(160,128,240,.5))}
+.slider-value{font-family:'Space Mono',monospace;font-size:12px;color:var(--c,var(--teal-glow));min-width:110px;text-align:right;white-space:nowrap}
+.slider-value.locked{color:var(--red-bright)}
+.slider-help{font-size:11px;color:var(--text-dim);margin-top:3px;font-style:italic;line-height:1.4}
+.preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:9px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer}
+.preset-btn:hover{color:var(--c,var(--teal-glow));border-color:var(--c,var(--teal-mid))}
+.toggle-row{display:flex;align-items:center;gap:10px;margin-top:6px}
+.tog-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.tog-switch{position:relative;width:40px;height:20px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;cursor:pointer;transition:all .2s}
+.tog-switch::after{content:'';position:absolute;top:1px;left:1px;width:16px;height:16px;background:var(--text-dim);border-radius:50%;transition:all .2s}
+.tog-switch.on{background:rgba(29,186,144,.2);border-color:var(--teal-bright)}
+.tog-switch.on::after{left:21px;background:var(--teal-bright);box-shadow:0 0 6px var(--teal-bright)}
+.pwr-buttons{display:flex;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;margin-bottom:8px}
+.pwr-btn{flex:1;font-family:'Space Mono',monospace;font-size:11px;padding:7px 10px;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;transition:all .15s;border-right:1px solid var(--border-subtle)}
+.pwr-btn:last-child{border-right:none}
+.pwr-btn.active{background:linear-gradient(135deg,var(--purple-mid),var(--power-c));color:var(--text-primary)}
+.pwr-btn:hover:not(.active){color:var(--text-primary)}
+
+/* ------- Outputs section ------- */
+.outputs-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:820px){.outputs-grid{grid-template-columns:1fr}}
+.out-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px}
+.out-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:12px;padding-bottom:8px;border-bottom:1px dashed var(--border-subtle)}
+.out-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dotted var(--border-subtle);gap:12px}
+.out-row:last-child{border-bottom:none}
+.out-row.dim{opacity:.7}
+.out-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);flex:1}
+.out-label .tag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:5px;letter-spacing:.06em}
+.out-label .tag.compute{background:rgba(240,160,32,.12);color:var(--compute-c)}
+.out-label .tag.cool{background:rgba(77,232,192,.12);color:var(--cool-c)}
+.out-label .tag.power{background:rgba(160,128,240,.12);color:var(--power-c)}
+.out-val{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--text-primary);text-align:right;white-space:nowrap}
+.out-val.compute{color:var(--compute-c)}
+.out-val.cool{color:var(--cool-c)}
+.out-val.power{color:var(--power-c)}
+.out-val.warn{color:var(--red-bright)}
+.out-val .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:3px}
+
+/* ------- Strips (mass + Dyson) ------- */
+.strip-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 28px;margin-bottom:20px}
+.strip-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:4px}
+.strip-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:28px;font-style:italic}
+.strip{position:relative;height:14px;margin:40px 0 64px;border-radius:7px}
+.strip.mass{background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--purple-bright),var(--amber-mid),var(--red-mid))}
+.strip.dyson{background:linear-gradient(90deg,var(--teal-dark),var(--teal-bright),var(--amber-bright),var(--red-bright))}
+.tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.22)}
+.tick-label{position:absolute;top:-32px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.tick-label .ref{display:block;color:var(--text-dim);font-size:9px;margin-top:1px}
+.marker{position:absolute;top:-13px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.marker .arrow{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:12px solid currentColor;filter:drop-shadow(0 0 5px currentColor)}
+.marker .label{position:absolute;top:-22px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:10px;color:currentColor;font-weight:600}
+.strip-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px}
+.strip-readout{margin-top:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);line-height:1.7;padding:11px 14px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--amber-bright)}
+.strip-readout .v{color:var(--amber-glow);font-weight:600}
+
+/* ------- MTH callout ------- */
+.mth-card{background:linear-gradient(135deg,rgba(138,32,32,.12),rgba(13,10,36,.4));border:1px solid var(--mth-c);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.mth-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:14px;flex-wrap:wrap}
+.mth-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mth-c)}
+.mth-link{font-family:'Space Mono',monospace;font-size:11px;color:var(--purple-glow);text-transform:uppercase}
+.mth-body{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+@media (max-width:760px){.mth-body{grid-template-columns:1fr}}
+.mth-slider-block label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:5px}
+.mth-slider-row{display:flex;align-items:center;gap:10px}
+.mth-slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--mth-c));height:4px;border-radius:2px;outline:none}
+.mth-slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--mth-c);cursor:pointer;box-shadow:0 0 8px var(--mth-c)}
+.mth-slider-row input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--mth-c);cursor:pointer;border:none;box-shadow:0 0 8px var(--mth-c)}
+.mth-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--mth-c);min-width:120px;text-align:right}
+.mth-text{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--text-primary);line-height:1.5}
+.mth-text .v{color:var(--mth-c);font-weight:600}
+
+/* ------- About ------- */
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:14px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:9px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:12px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:12px}
+
+.mobile-notice{display:none;background:rgba(26,16,64,.5);border:1px solid var(--amber-bright);border-radius:12px;padding:28px;margin-bottom:24px;text-align:center}
+body.is-mobile .mobile-notice{display:block}
+body.is-mobile .schematic-card,body.is-mobile .input-grid,body.is-mobile .outputs-grid,body.is-mobile .strip-card,body.is-mobile .mth-card,body.is-mobile .headline{display:none}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Compute-in-Space Footprint</span>
+    <a class="nav-link" href="https://omegacentauri.me/#compute">← #compute</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+
+  <header class="tool-header">
+    <div>
+      <h1>Compute-in-Space Material &amp; Cooling Footprint</h1>
+      <p class="tool-subtitle">Pick a target compute scale and watch what it would actually take to build it in space — power, cooling, material, deployment time. Then compare engineered Dyson-scale construction against what one IMBH ergosphere does for free.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Established</span>
+      <span class="tier-badge fiction">✦ Engineering fiction</span>
+    </div>
+  </header>
+
+  <div class="mobile-notice">
+    <p style="margin-bottom:8px">Best viewed on desktop or tablet.</p>
+    <a href="#about-this-tool">Read the description instead →</a>
+  </div>
+
+  <div class="directions">
+    <span class="icon">How to use</span>
+    <div>
+      The three coloured panels below set the three coupled engineering subsystems: <strong style="color:var(--compute-c)">amber compute</strong>, <strong style="color:var(--cool-c)">teal cooling</strong>, <strong style="color:var(--power-c)">purple power</strong>. The schematic above redraws to scale; outputs and the mass-comparison strip update live. The red <strong style="color:var(--mth-c)">MTH callout</strong> at the bottom has its own black-hole slider so you can compare your engineered system against any IMBH ergosphere directly.
+    </div>
+  </div>
+
+  <!-- SCHEMATIC -->
+  <section class="schematic-card">
+    <svg class="sch-svg" id="schematic" viewBox="0 0 1100 200" preserveAspectRatio="xMidYMid meet" role="img" aria-label="System schematic"></svg>
+    <div class="sch-legend">
+      <span><span class="swatch" style="background:var(--power-c)"></span>Power collector</span>
+      <span><span class="swatch" style="background:var(--compute-c)"></span>Compute core</span>
+      <span><span class="swatch" style="background:var(--cool-c)"></span>Radiator</span>
+      <span style="color:var(--text-dim)">— area of each box scales as √(actual area) on a log basis</span>
+    </div>
+  </section>
+
+  <!-- HEADLINE -->
+  <section class="headline">
+    <div class="headline-label">Headline result at current settings</div>
+    <div class="headline-text" id="headline">computing…</div>
+    <div class="headline-sub" id="headline-sub">—</div>
+  </section>
+
+  <!-- INPUT BANDS -->
+  <section class="input-grid">
+
+    <!-- COMPUTE BAND -->
+    <div class="band compute">
+      <div class="band-title"><span class="icon"></span>Compute target</div>
+      <div class="band-intro">This is what you want the system to <strong>do</strong>. The scale slider sets total throughput; energy-per-operation sets how thermodynamically efficient each calculation is. Duty cycle is the fraction of time the system actually runs (so lower duty means higher peak power to keep the annual total fixed). Reversible computing lets you slip under the Landauer floor — at the cost of needing more sequential steps per logical operation, which is why real machines don't use it yet.</div>
+      <div class="slider-block">
+        <label>Compute scale N  (× cumulative transistor-era per year)</label>
+        <div class="slider-row">
+          <input type="range" id="n-slider" min="0" max="20" step="0.05" value="6">
+          <span class="slider-value" id="n-val">10⁶</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-n="1">1×</button>
+          <button class="preset-btn" data-n="1e6">10⁶×</button>
+          <button class="preset-btn" data-n="1e12">10¹² Type II</button>
+          <button class="preset-btn" data-n="1e18">10¹⁸ Type III</button>
+        </div>
+        <div class="slider-help">1× = all 1947–2026 transistor compute done in one year (~3×10²¹ ops/s).</div>
+      </div>
+      <div class="slider-block">
+        <label>Energy per op  (J/op, clamped to Landauer floor unless reversible is ON)</label>
+        <div class="slider-row">
+          <input type="range" id="jpop-slider" min="-25" max="-9" step="0.05" value="-12">
+          <span class="slider-value" id="jpop-val">10⁻¹² J/op</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-jpop="1e-12">Today</button>
+          <button class="preset-btn" data-jpop="1e-15">2050</button>
+          <button class="preset-btn" data-jpop="1e-18">2100</button>
+          <button class="preset-btn" data-jpop="1e-21">Landauer @ 300K</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Duty cycle  (% of time computing)</label>
+        <div class="slider-row">
+          <input type="range" id="duty-slider" min="1" max="100" step="1" value="100">
+          <span class="slider-value" id="duty-val">100%</span>
+        </div>
+        <div class="slider-help">Lower duty ⇒ higher peak power needed to keep the annual throughput at N.</div>
+      </div>
+      <div class="toggle-row">
+        <span class="tog-switch" id="reversible-toggle" role="checkbox" aria-checked="false"></span>
+        <span class="tog-label"><strong>Reversible computing</strong> — removes Landauer floor (Bennett 1973; serial-time penalty applies in reality)</span>
+      </div>
+    </div>
+
+    <!-- COOLING BAND -->
+    <div class="band cool">
+      <div class="band-title"><span class="icon"></span>Cooling system</div>
+      <div class="band-intro">Computing produces <strong>heat</strong>; in space, the only way to get rid of it is to radiate it as infrared photons. A hotter radiator dumps more heat per square metre (P ∝ T⁴) but raises the Landauer floor on how cheap each op can be. Active cryocooling pumps heat from cold electronics up to a hotter radiator, but every watt pumped against the temperature gradient costs extra input power (the Carnot tax).</div>
+      <div class="slider-block">
+        <label>Radiator temperature T<sub>rad</sub>  (K)</label>
+        <div class="slider-row">
+          <input type="range" id="trad-slider" min="50" max="500" step="2" value="200">
+          <span class="slider-value" id="trad-val">200 K</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-trad="50">Liquid He (50)</button>
+          <button class="preset-btn" data-trad="100">Deep cryo</button>
+          <button class="preset-btn" data-trad="200">Deep-space</button>
+          <button class="preset-btn" data-trad="300">Room</button>
+          <button class="preset-btn" data-trad="400">Hot rad</button>
+        </div>
+        <div class="slider-help">Higher T ⇒ less radiator area (P ∝ T⁴) but higher Landauer floor on J/op.</div>
+      </div>
+      <div class="slider-block">
+        <label>Compute temperature T<sub>compute</sub>  (active cryocooling target; ≤ T<sub>rad</sub>)</label>
+        <div class="slider-row">
+          <input type="range" id="tcmp-slider" min="1" max="500" step="1" value="200">
+          <span class="slider-value" id="tcmp-val">200 K</span>
+        </div>
+        <div class="slider-help">Drop below T_rad to pump heat against a thermal gradient. Carnot tax adds to total power: extra P = P_compute × (T_rad/T_compute − 1) / η_carnot.</div>
+      </div>
+      <div class="slider-block">
+        <label>Cryocooler Carnot efficiency η<sub>carnot</sub></label>
+        <div class="slider-row">
+          <input type="range" id="eta-c-slider" min="0.01" max="0.5" step="0.01" value="0.10">
+          <span class="slider-value" id="eta-c-val">10%</span>
+        </div>
+        <div class="slider-help">Real cryocoolers typically achieve 5–30% of ideal Carnot efficiency.</div>
+      </div>
+    </div>
+
+    <!-- POWER BAND -->
+    <div class="band power">
+      <div class="band-title"><span class="icon"></span>Power source</div>
+      <div class="band-intro">Where the <strong>energy</strong> comes from. Solar PV is the most mature option but the panel size scales as 1/d² with distance from the Sun. Fusion is bounded by the reactor's specific power (today's best designs sit around 10²–10³ W/kg). BZ extraction from a black hole has effectively zero engineered material cost — the substrate IS the spacetime — but requires having a black hole on hand.</div>
+      <div class="pwr-buttons">
+        <button class="pwr-btn active" data-pwr="solar">☀ Solar PV</button>
+        <button class="pwr-btn" data-pwr="fusion">⚛ Fusion</button>
+        <button class="pwr-btn" data-pwr="bz">⊙ BZ-IMBH</button>
+      </div>
+      <!-- Solar inputs -->
+      <div id="solar-inputs">
+        <div class="slider-block">
+          <label>Solar distance d  (AU)</label>
+          <div class="slider-row">
+            <input type="range" id="d-slider" min="-0.4" max="1.5" step="0.02" value="0">
+            <span class="slider-value" id="d-val">1.00 AU</span>
+          </div>
+          <div class="preset-row">
+            <button class="preset-btn" data-d="0.4">Mercury</button>
+            <button class="preset-btn" data-d="1">Earth</button>
+            <button class="preset-btn" data-d="5.2">Jupiter</button>
+            <button class="preset-btn" data-d="30">Neptune</button>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>Panel efficiency η<sub>pv</sub></label>
+          <div class="slider-row">
+            <input type="range" id="etav-slider" min="0.05" max="0.55" step="0.01" value="0.30">
+            <span class="slider-value" id="etav-val">30%</span>
+          </div>
+        </div>
+      </div>
+      <!-- Fusion inputs -->
+      <div id="fusion-inputs" style="display:none">
+        <div class="slider-block">
+          <label>Fusion reactor power density  (W/kg)</label>
+          <div class="slider-row">
+            <input type="range" id="fpd-slider" min="2" max="6" step="0.05" value="5">
+            <span class="slider-value" id="fpd-val">10⁵ W/kg</span>
+          </div>
+          <div class="slider-help">Speculative aerospace fusion: 10² (ITER ground) → 10⁵ (advanced) → 10⁶+ (engineering fiction).</div>
+        </div>
+      </div>
+      <!-- BZ inputs -->
+      <div id="bz-inputs" style="display:none">
+        <div class="slider-block">
+          <label>IMBH mass for BZ extraction (M<sub>☉</sub>)</label>
+          <div class="slider-row">
+            <input type="range" id="bzm-slider" min="2" max="6" step="0.05" value="3.91">
+            <span class="slider-value" id="bzm-val">8,200 M☉</span>
+          </div>
+          <div class="slider-help">Power source is gravitational — engineered material mass is effectively zero (the BH itself is the substrate). See <a href="bz-kardashev.html">Tool 1</a>.</div>
+        </div>
+      </div>
+
+      <div class="slider-block" style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-subtle)">
+        <label>Launch cadence  (kg/year to orbit — sets deployment time)</label>
+        <div class="slider-row">
+          <input type="range" id="launch-slider" min="6" max="15" step="0.1" value="7">
+          <span class="slider-value" id="launch-val">10⁷ kg/yr</span>
+        </div>
+        <div class="slider-help">Today ~10⁷ kg/yr. Starship-era extrapolation: 10⁹+. Speculative von-Neumann self-replication: 10¹².</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- OUTPUTS -->
+  <section class="outputs-grid">
+    <div class="out-card">
+      <div class="out-title">Compute &amp; Power</div>
+      <div class="out-row"><div class="out-label">Average ops/s <span class="tag compute">compute</span></div><div class="out-val compute" id="o-ops">—</div></div>
+      <div class="out-row"><div class="out-label">Peak ops/s (duty-adjusted) <span class="tag compute">compute</span></div><div class="out-val compute" id="o-peak-ops">—</div></div>
+      <div class="out-row"><div class="out-label">Compute power P_c <span class="tag compute">compute</span></div><div class="out-val compute" id="o-pc">—</div></div>
+      <div class="out-row"><div class="out-label">Cryocooler power P_cryo <span class="tag cool">cool</span></div><div class="out-val cool" id="o-pcryo">—</div></div>
+      <div class="out-row"><div class="out-label">Total power required <span class="tag power">power</span></div><div class="out-val power" id="o-ptot">—</div></div>
+      <div class="out-row dim"><div class="out-label">Landauer floor at T_rad</div><div class="out-val" id="o-floor">—</div></div>
+    </div>
+    <div class="out-card">
+      <div class="out-title">Material &amp; Time</div>
+      <div class="out-row"><div class="out-label">Radiator area <span class="tag cool">cool</span></div><div class="out-val cool" id="o-arad">—</div></div>
+      <div class="out-row"><div class="out-label">Power-collector area <span class="tag power">power</span></div><div class="out-val power" id="o-apw">—</div></div>
+      <div class="out-row"><div class="out-label">Radiator mass <span class="tag cool">cool</span></div><div class="out-val cool" id="o-mrad">—</div></div>
+      <div class="out-row"><div class="out-label">Power-collector mass <span class="tag power">power</span></div><div class="out-val power" id="o-mpw">—</div></div>
+      <div class="out-row"><div class="out-label"><strong>Total mass</strong></div><div class="out-val warn" id="o-mtot">—</div></div>
+      <div class="out-row"><div class="out-label">Build time at launch cadence</div><div class="out-val" id="o-tbuild">—</div></div>
+    </div>
+  </section>
+
+  <!-- MASS STRIP -->
+  <section class="strip-card">
+    <div class="strip-title">⚖ Total mass on a cosmic log scale</div>
+    <div class="strip-sub">Drag the inputs and watch where your engineered mass lands relative to familiar bodies.</div>
+    <div class="strip mass" id="mass-strip">
+      <span class="tick" style="left:5.0%"><span class="tick-label">10⁵·⁶<span class="ref">ISS</span></span></span>
+      <span class="tick" style="left:9.8%"><span class="tick-label">10⁹·⁸<span class="ref">Hoover Dam</span></span></span>
+      <span class="tick" style="left:62.0%"><span class="tick-label">10²⁰·⁴<span class="ref">Vesta</span></span></span>
+      <span class="tick" style="left:65.5%"><span class="tick-label">10²⁰·⁹<span class="ref">Ceres</span></span></span>
+      <span class="tick" style="left:67.0%"><span class="tick-label">10²¹·⁵<span class="ref">Asteroid belt</span></span></span>
+      <span class="tick" style="left:74.0%"><span class="tick-label">10²²·⁴<span class="ref">Earth's crust</span></span></span>
+      <span class="tick" style="left:75.5%"><span class="tick-label">10²²·⁹<span class="ref">Moon</span></span></span>
+      <span class="tick" style="left:77.0%"><span class="tick-label">10²³<span class="ref">Kuiper belt</span></span></span>
+      <span class="marker" id="mass-marker" style="left:50%"><span class="label" id="mass-marker-label">— kg</span><span class="arrow"></span></span>
+    </div>
+    <div class="strip-axis"><span>10⁰ kg</span><span>10¹⁵ kg</span><span>10³⁰ kg</span></div>
+    <div class="strip-readout" id="mass-readout">—</div>
+  </section>
+
+  <!-- DYSON STRIP -->
+  <section class="strip-card">
+    <div class="strip-title">◯ Total surface area as fraction of a 1-AU Dyson sphere</div>
+    <div class="strip-sub">A 1-AU Dyson sphere has surface area 4π(1.5×10¹¹)² ≈ 2.83×10²³ m². Where does your engineered area land?</div>
+    <div class="strip dyson" id="dyson-strip">
+      <span class="tick" style="left:0%"><span class="tick-label">10⁻²⁴<span class="ref">grain of sand</span></span></span>
+      <span class="tick" style="left:25%"><span class="tick-label">10⁻¹⁸<span class="ref">city footprint</span></span></span>
+      <span class="tick" style="left:46%"><span class="tick-label">10⁻¹³<span class="ref">Earth land area</span></span></span>
+      <span class="tick" style="left:54%"><span class="tick-label">10⁻¹¹<span class="ref">Earth full surface</span></span></span>
+      <span class="tick" style="left:75%"><span class="tick-label">10⁻⁶<span class="ref">10⁻⁴%</span></span></span>
+      <span class="tick" style="left:100%"><span class="tick-label">10⁰<span class="ref">full Dyson</span></span></span>
+      <span class="marker" id="dyson-marker" style="left:0%"><span class="label" id="dyson-marker-label">—</span><span class="arrow"></span></span>
+    </div>
+    <div class="strip-axis"><span>10⁻²⁴</span><span>10⁻¹²</span><span>10⁰ (full Dyson)</span></div>
+    <div class="strip-readout" id="dyson-readout">—</div>
+  </section>
+
+  <!-- MTH CALLOUT -->
+  <section class="mth-card">
+    <div class="mth-head">
+      <span class="mth-label">⊙ What an ergosphere does instead</span>
+      <a class="mth-link" href="bekenstein-landauer.html">→ Tool 4 (BLL)</a>
+    </div>
+    <div class="mth-body">
+      <div class="mth-slider-block">
+        <label>Comparison IMBH mass</label>
+        <div class="mth-slider-row">
+          <input type="range" id="mth-m-slider" min="2" max="10" step="0.05" value="3.91">
+          <span class="mth-val" id="mth-m-val">8,200 M☉</span>
+        </div>
+        <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);font-style:italic">Lloyd bound on M·c² rest energy.</div>
+      </div>
+      <div class="mth-text" id="mth-text">computing…</div>
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What the four input bands do</h3>
+      <p><strong>Compute (amber).</strong> Sets how many operations per second you want, what each op costs in energy, what fraction of time you're running (duty cycle), and whether the operations are reversible. Reversible computing (Bennett 1973, Fredkin & Toffoli 1982) avoids the Landauer thermodynamic floor of k_B T ln 2 per irreversible bit erasure, at the cost of needing more steps per logical operation in practice — the tool flags the toggle but doesn't auto-apply a serial-time penalty.</p>
+      <p><strong>Cooling (teal).</strong> Sets the radiator temperature (passive Stefan-Boltzmann) and optionally an active cryocooling target below it. If T_compute &lt; T_rad, the cryocooler has to pump heat against the gradient at a Carnot tax of (T_rad/T_compute − 1) / η_carnot Watts of input per Watt of heat moved.</p>
+      <p><strong>Power (purple).</strong> Three sources. <em>Solar PV</em>: panel area scales as 1/d² with chosen efficiency. <em>Fusion</em>: assumes a reactor with chosen W/kg power density — engineering fiction beyond ~10³ W/kg. <em>BZ-IMBH</em>: gravitational power extraction from a spinning hole; engineered mass goes to zero because the substrate is the black hole itself.</p>
+      <p><strong>MTH callout (red).</strong> Computes Lloyd's bound on the rest-mass energy of any IMBH and shows the ratio to your engineered compute target — concretely, how many of "you" the ergosphere is in compute terms.</p>
+
+      <h3>The math, in one place</h3>
+      <p>Required ops/s = N × 3.17×10²¹ × (1/duty). Energy per op clamped to k_B T_rad ln 2 unless reversible. Compute power P_c = (ops/s) × (J/op). Cryocooler power = P_c × (T_rad/T_compute − 1) / η_carnot (zero if T_compute ≥ T_rad). Total power P_tot = P_c + P_cryo. Radiator area A_rad = P_tot / (0.9 σ T_rad⁴). Power-collector area: solar = P_tot / (S(d) η_pv); fusion = 0 (collector area is moot); BZ = 0. Mass densities: radiator 1.5 kg/m², solar panel 5 kg/m², fusion reactor by power density, BZ source zero. Build time = total mass / launch cadence.</p>
+
+      <h3>What the tool deliberately doesn't model</h3>
+      <p>Structural mass beyond radiators and collectors. Manufacturing energy. Communication latency across the array. Self-replication / von-Neumann manufacturing (which would change "build time" by orders of magnitude). Specific accretion-disk dynamics for BZ extraction (see Tool 1 for that calculation). Beam-down / power transmission losses if collector and compute aren't co-located. Treat absolute numbers as order-of-magnitude correct; treat scaling with N as exact.</p>
+
+      <h3>The MTH connection</h3>
+      <p>The Macro Transcension Hypothesis argues that civilisations near or past Kardashev II would prefer to compress their computation inward toward a black hole rather than expand outward across stars, because the compute capacity per kilogram at the Lloyd bound on M·c² is many orders of magnitude higher than anything engineered substrates can achieve. This tool makes that argument concrete in commensurable units — surface area and material mass — rather than the non-commensurable units (parsecs vs ops/m³) that the v1.0 STEM Compression visualiser used and that the v1.1 spec replaces.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--compute-c)">⚡ Cumulative transistor-era compute (1947 → May 2026)</h3>
+      <p>The transistor was invented at Bell Labs in December 1947. Cumulative transistors ever manufactured is somewhere between <code>10²²</code> and <code>10²⁴</code> — the most-cited industry figure around 2018 was "13 sextillion" (≈ 10²²); another seven years of fab expansion plus the AI accelerator boom puts the 2026 figure closer to <code>10²³</code>. For <em>operations</em>, you have to integrate exponentially growing throughput over time — and because compute doubles every ~1.5–2 years (Koomey's Law for efficiency, Moore's Law for density), the integral is dominated by the most recent few doublings. Current worldwide aggregate compute throughput is roughly <code>10²² ops/s</code> (Hilbert &amp; Lopez 2011 put 2007 at 6.4×10¹⁸ MIPS; ~17 doublings have happened since). Integrated over the past, that totals roughly <code>10²⁹–10³⁰ operations</code> — a number that, if performed in a single year, would require <strong>~3×10²¹ ops/s</strong>. <em>That's the "1×" baseline this tool uses.</em> Today's top supercomputer (El Capitan, late 2024, 1.74 exaFLOPS) does ~1.7×10¹⁸ FLOPS by itself; the Bitcoin network at ~7×10²⁰ hashes/s is roughly 7% of all human compute by raw throughput.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--power-c)">☀ State-of-art solar arrays</h3>
+      <p>Lab record holders for photovoltaic conversion efficiency sit around <strong>47.6%</strong> (NREL six-junction III-V concentrator cell, 2020). Production-grade space cells (Spectrolab XTJ Prime, AzurSpace 4G32C) deliver <strong>32–34% AM0 efficiency</strong> in service. The Roll-Out Solar Arrays (iROSA) installed on the ISS in 2021–2023 deliver ~250 W/m² in LEO at ~33% efficiency and <strong>~150–200 W/kg specific power</strong> — the highest-deployment-grade space arrays currently flying. Best commercial silicon is ~24% (SunPower IBC) at ~5 kg/m². At the tool's defaults (30% efficiency, 1 AU), you get <code>~410 W/m²</code> usable — so a 1 GW orbital datacenter needs about <strong>2.4 km² of panels</strong>, weighing ~12,000 tonnes at iROSA mass density.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--cool-c)">❄ State-of-art radiative cooling</h3>
+      <p>Spacecraft thermal control today is dominated by white-painted aluminum honeycomb panels using Z93 paint (ε ≈ 0.9, α ≈ 0.15) or Optical Solar Reflector quartz tiles (ε ≈ 0.8, α ≈ 0.07). The ISS Photovoltaic Thermal Control radiators dump about <strong>70 kW total</strong> across ~50 m² each, mass ~150 kg per panel — so roughly <code>~1.4 kW/m² at 270 K</code> with <strong>~3 kg/m²</strong> specific mass. The Stefan-Boltzmann ceiling at 200 K (deep-space passive default) is about <code>81 W/m²</code>; at 300 K, ~410 W/m²; at 500 K, ~3,200 W/m². For active cryocooling, the best modern Stirling and pulse-tube coolers achieve <strong>10–30% of Carnot efficiency</strong> at moderate temperature spans. The James Webb sunshield is the gold-standard passive cryocooler — its five-layer kapton-with-aluminum design drops detector temperatures from ~370 K (sun side) to ~40 K (cold side) with no moving parts.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--text-secondary)">💾 State-of-art SSDs &amp; storage</h3>
+      <p>Compute is useless if you can't save the outputs. As of 2025, the largest enterprise SSDs are <strong>Solidigm D5-P5336 (~60 TB)</strong> and Samsung PM1743 (30 TB) in 2.5" form factor, drawing ~10 W idle / ~25 W active. Energy per bit <em>written</em> is around <code>10⁻¹⁰ to 10⁻¹¹ J/bit</code> in current QLC NAND — about <strong>10¹⁰ times above the Landauer floor at 300 K</strong> (3×10⁻²¹ J/bit), so storage is nowhere near its thermodynamic limit. HAMR-based HDDs (Seagate Mozaic 30+, WD UltraSMR 32 TB+) match SSDs on capacity at ~5 W and one-tenth the throughput. Worldwide installed storage at end-2024 is around <code>10²³ bits (~10 ZB)</code> and growing by roughly 5×10²² bits/year. For the MTH framing: storing the <em>output</em> of a 10⁶× Earth-equivalent compute run at modern density would itself require ~3×10⁵ exabytes of new SSD per year — comparable to multiple years of total worldwide flash production.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">⚡ Energy &amp; world context</h3>
+      <p>World electricity consumption averages about <strong>3×10¹² W</strong> (~25,000 TWh/yr ≈ 10²⁰ J/yr). Total world primary energy is ~6×10²⁰ J/yr. Worldwide datacenters currently consume about <code>500 TWh/yr</code> (~1.8×10¹⁸ J/yr, ~2% of electricity) and that share is rising rapidly with AI. The GPT-4 training run was estimated at ~50 GWh = 1.8×10¹⁴ J — about <strong>a single second of worldwide electricity output</strong>. At 1× in this tool (≈ 3×10²¹ ops/s × today's J/op), required power is ~3 GW continuous — roughly one large nuclear plant. At 10⁶×, you're at 3×10¹⁵ W ≈ <strong>5,000 times current world electricity consumption</strong> — which is why the mass-comparison strip starts moving past asteroid-belt territory by that point. The MTH argument is precisely that this is where engineered substrate breaks down and the IMBH ergosphere starts looking like the only sensible option.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-glow)">🎯 Tool defaults, calibrated</h3>
+      <p>At the tool's defaults (N=10⁶, J/op=10⁻¹², T_rad=200 K, solar at 1 AU, 30% PV, 100% duty), you should see roughly: <strong>3 PW</strong> of power, <strong>~40 km² radiators + ~8 km² panels</strong>, <strong>~10¹⁴ kg</strong> of structure (about ten-millionths of Vesta), and a build time of ~10 million years at today's launch cadence of ~10⁷ kg/yr. Slide the launch cadence up to Starship-era 10⁹ kg/yr and that drops to 10⁵ years — still longer than recorded human history. That gap between "scale required" and "deployment cadence achievable" is the practical engineering argument that complements the thermodynamic one — and the reason the ergosphere MTH comparison at the bottom of this tool isn't a rhetorical flourish.</p>
+
+      <p class="meta-line">v1.1 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Stefan 1879 · Landauer 1961 · Bennett 1973 · Lloyd 2000</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const KB=1.381e-23, SIGMA_SB=5.67e-8, LN2=Math.log(2), MSUN=1.989e30, C=2.998e8, HBAR=1.055e-34;
+const SOLAR_FLUX_1AU=1361;
+const RAD_DENSITY=1.5, PV_DENSITY=5, EMISSIVITY=0.9;
+const BASE_OPS_PER_SEC=3.17e21;
+const AU_M=1.496e11;
+const DYSON_AREA=4*Math.PI*AU_M*AU_M;
+const SVG_NS='http://www.w3.org/2000/svg';
+
+const MASS_ANCHORS = [
+  { kg: 4.4e5, name: 'ISS' },
+  { kg: 6.6e9, name: 'Hoover Dam' },
+  { kg: 2.6e20, name: 'Vesta' },
+  { kg: 9.4e20, name: 'Ceres' },
+  { kg: 3e21, name: 'asteroid belt' },
+  { kg: 2.4e22, name: "Earth's crust" },
+  { kg: 7.3e22, name: 'Moon' },
+  { kg: 1e23, name: 'Kuiper belt' },
+  { kg: 6e24, name: 'Earth' }
+];
+
+function sup(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+sup(e)}
+function fmtP(P){return fmtSci(P,2)+' W'}
+function fmtA(A){if(A>=DYSON_AREA)return(A/DYSON_AREA).toFixed(2)+'× Dyson';if(A>=1e6)return fmtSci(A,2)+' m²';if(A>=1)return Math.round(A).toLocaleString()+' m²';return A.toFixed(2)+' m²'}
+function fmtM(M){if(M>=1e3)return fmtSci(M,2)+' kg';if(M>=1)return M.toFixed(1)+' kg';return fmtSci(M,2)+' kg'}
+function fmtT(yr){if(yr<1)return(yr*12).toFixed(2)+' months';if(yr<1e3)return yr.toFixed(1)+' yr';if(yr<1e6)return fmtSci(yr,2)+' yr';return fmtSci(yr/1e6,2)+' Myr'}
+function fmtOps(o){return fmtSci(o,2)+' ops/s'}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function isNarrow(){return window.matchMedia('(max-width: 720px)').matches}
+function applyMobile(){document.body.classList.toggle('is-mobile', isNarrow())}
+window.addEventListener('resize', applyMobile);
+
+const state = {
+  N: 1e6, jpop: 1e-12, duty: 1.0, reversible: false,
+  Trad: 200, Tcmp: 200, etaC: 0.10,
+  pwr: 'solar', d: 1, etaV: 0.30, fpd: 1e5, bzM: 8200,
+  launch: 1e7,
+  mthM: 8200
+};
+function loadHash(){
+  const p=getHash();
+  ['N','jpop','duty','Trad','Tcmp','etaC','d','etaV','fpd','bzM','launch','mthM'].forEach(k=>{
+    if(p[k]){const v=parseFloat(p[k]);if(!isNaN(v))state[k]=v;}
+  });
+  if(p.rev==='1')state.reversible=true;
+  if(p.pwr==='solar'||p.pwr==='fusion'||p.pwr==='bz')state.pwr=p.pwr;
+}
+function saveHash(){
+  const out={N:state.N.toExponential(3),jpop:state.jpop.toExponential(3),duty:state.duty.toFixed(3),
+    rev:state.reversible?'1':'0',Trad:state.Trad.toFixed(1),Tcmp:state.Tcmp.toFixed(1),etaC:state.etaC.toFixed(3),
+    pwr:state.pwr,launch:state.launch.toExponential(2),mthM:state.mthM.toExponential(3)};
+  if(state.pwr==='solar'){out.d=state.d.toFixed(3);out.etaV=state.etaV.toFixed(2);}
+  else if(state.pwr==='fusion')out.fpd=state.fpd.toExponential(2);
+  else out.bzM=state.bzM.toExponential(2);
+  setHash(out);
+}
+
+function landauerFloor(T){return KB*T*LN2}
+function ergoOps(M_sun){return 2 * M_sun * MSUN * C * C / (Math.PI * HBAR)}
+
+function compute(){
+  const floor = landauerFloor(state.Trad);
+  const jpop_eff = state.reversible ? state.jpop : Math.max(state.jpop, floor);
+  const locked = !state.reversible && state.jpop < floor;
+  const avg_ops = state.N * BASE_OPS_PER_SEC;
+  const peak_ops = avg_ops / state.duty;
+  const P_c = peak_ops * jpop_eff;
+  let P_cryo = 0;
+  if(state.Tcmp < state.Trad && state.etaC > 0){
+    P_cryo = P_c * (state.Trad/state.Tcmp - 1) / state.etaC;
+  }
+  const P_tot = P_c + P_cryo;
+  const A_rad = P_tot / (EMISSIVITY*SIGMA_SB*Math.pow(state.Trad,4));
+  let A_pw=0, M_pw=0;
+  if(state.pwr === 'solar'){
+    const S = SOLAR_FLUX_1AU / (state.d*state.d);
+    A_pw = P_tot / (S * state.etaV);
+    M_pw = A_pw * PV_DENSITY;
+  } else if(state.pwr === 'fusion'){
+    A_pw = 0;
+    M_pw = P_tot / state.fpd;
+  } else { // bz
+    A_pw = 0;
+    M_pw = 0; // BH substrate
+  }
+  const M_rad = A_rad * RAD_DENSITY;
+  const M_tot = M_rad + M_pw;
+  const A_tot = A_rad + A_pw;
+  const buildTime = (M_tot > 0 && state.launch > 0) ? (M_tot / state.launch) : 0;
+  return {jpop_eff,locked,floor,avg_ops,peak_ops,P_c,P_cryo,P_tot,A_rad,A_pw,A_tot,M_rad,M_pw,M_tot,buildTime};
+}
+
+/* ---------- SCHEMATIC ---------- */
+function el(t,a={},p=null){const n=document.createElementNS(SVG_NS,t);for(const[k,v]of Object.entries(a)){if(v!=null)n.setAttribute(k,v)}if(p)p.appendChild(n);return n}
+function renderSchematic(c){
+  const svg=document.getElementById('schematic');
+  svg.innerHTML='';
+  // Scale each box: side ∝ √(log10(area+1) / 25) — clip so it doesn't blow up
+  function logSide(area){
+    if(!area || area<=0) return 12;
+    const lg = Math.max(0, Math.log10(area));
+    return Math.min(170, 22 + lg * 7);
+  }
+  const sPw = state.pwr === 'solar' ? logSide(c.A_pw) : (state.pwr === 'fusion' ? 30 + Math.log10(c.M_pw+1)*5 : 18);
+  const sCp = 30 + Math.log10(c.P_c+1)*4;
+  const sRd = logSide(c.A_rad);
+  const cy = 100;
+  // Power collector (left)
+  const pwX = 90;
+  el('rect',{x:pwX-sPw/2,y:cy-sPw/2,width:sPw,height:sPw,fill:'rgba(160,128,240,0.18)',stroke:'#a080f0','stroke-width':2,rx:4},svg);
+  if(state.pwr==='solar'){
+    // grid lines for solar
+    for(let i=1;i<4;i++){
+      el('line',{x1:pwX-sPw/2+sPw*i/4,y1:cy-sPw/2,x2:pwX-sPw/2+sPw*i/4,y2:cy+sPw/2,stroke:'rgba(160,128,240,0.4)','stroke-width':0.5},svg);
+      el('line',{x1:pwX-sPw/2,y1:cy-sPw/2+sPw*i/4,x2:pwX+sPw/2,y2:cy-sPw/2+sPw*i/4,stroke:'rgba(160,128,240,0.4)','stroke-width':0.5},svg);
+    }
+  }
+  const lbl1 = el('text',{x:pwX,y:cy+sPw/2+18,fill:'#a080f0','font-family':'Space Mono, monospace','font-size':11,'text-anchor':'middle'},svg);
+  lbl1.textContent = state.pwr==='solar' ? `${fmtA(c.A_pw)} PV` : state.pwr==='fusion' ? `${fmtM(c.M_pw)} reactor` : 'BH substrate';
+  // Compute core (centre)
+  const cpX = 550;
+  el('rect',{x:cpX-sCp/2,y:cy-sCp/2,width:sCp,height:sCp,fill:'rgba(240,160,32,0.25)',stroke:'#f0a020','stroke-width':2,rx:3},svg);
+  // Inner glow
+  el('rect',{x:cpX-sCp/4,y:cy-sCp/4,width:sCp/2,height:sCp/2,fill:'rgba(255,200,64,0.5)',stroke:'#ffc840','stroke-width':1,rx:2},svg);
+  const lbl2 = el('text',{x:cpX,y:cy+sCp/2+18,fill:'#f0a020','font-family':'Space Mono, monospace','font-size':11,'text-anchor':'middle'},svg);
+  lbl2.textContent = `${fmtP(c.P_c)} compute`;
+  const lbl2b = el('text',{x:cpX,y:cy-sCp/2-8,fill:'#f0a020','font-family':'Space Mono, monospace','font-size':10,'text-anchor':'middle'},svg);
+  lbl2b.textContent = fmtOps(c.avg_ops);
+  // Radiator (right)
+  const rdX = 1010;
+  el('rect',{x:rdX-sRd/2,y:cy-sRd/2,width:sRd,height:sRd,fill:'rgba(77,232,192,0.18)',stroke:'#4de8c0','stroke-width':2,rx:4},svg);
+  // Radiator fins
+  for(let i=1;i<6;i++){
+    el('line',{x1:rdX-sRd/2,y1:cy-sRd/2+sRd*i/6,x2:rdX+sRd/2,y2:cy-sRd/2+sRd*i/6,stroke:'rgba(77,232,192,0.5)','stroke-width':0.6},svg);
+  }
+  const lbl3 = el('text',{x:rdX,y:cy+sRd/2+18,fill:'#4de8c0','font-family':'Space Mono, monospace','font-size':11,'text-anchor':'middle'},svg);
+  lbl3.textContent = `${fmtA(c.A_rad)} @ ${Math.round(state.Trad)}K`;
+  // Flow arrows
+  const drawArrow = (x1,x2,color,label,labelOffset=-12)=>{
+    el('line',{x1,y1:cy,x2:x2-8,y2:cy,stroke:color,'stroke-width':1.8,opacity:0.7},svg);
+    el('polygon',{points:`${x2},${cy} ${x2-8},${cy-4} ${x2-8},${cy+4}`,fill:color,opacity:0.8},svg);
+    const t = el('text',{x:(x1+x2)/2,y:cy+labelOffset,fill:color,'font-family':'Space Mono, monospace','font-size':10,'text-anchor':'middle',opacity:0.8},svg);
+    t.textContent = label;
+  };
+  drawArrow(pwX+sPw/2+5, cpX-sCp/2-2, '#a080f0', state.pwr==='solar'?'electrons':'power');
+  drawArrow(cpX+sCp/2+5, rdX-sRd/2-2, '#4de8c0', 'heat');
+  // Cryo indicator if active
+  if(state.Tcmp < state.Trad){
+    el('rect',{x:cpX-sCp/2-6,y:cy-sCp/2-6,width:sCp+12,height:sCp+12,fill:'none',stroke:'#4de8c0','stroke-width':1,'stroke-dasharray':'3,3',rx:5},svg);
+    const cryoL = el('text',{x:cpX,y:cy-sCp/2-20,fill:'#4de8c0','font-family':'Space Mono, monospace','font-size':9,'text-anchor':'middle'},svg);
+    cryoL.textContent = `cryocooled to ${Math.round(state.Tcmp)}K`;
+  }
+}
+
+/* ---------- READOUTS ---------- */
+function render(){
+  // input readouts
+  document.getElementById('n-val').textContent = '10' + sup(Math.log10(state.N).toFixed(0));
+  document.getElementById('jpop-val').textContent = fmtSci(state.jpop,1) + ' J/op';
+  document.getElementById('duty-val').textContent = (state.duty*100).toFixed(0) + '%';
+  document.getElementById('trad-val').textContent = Math.round(state.Trad) + ' K';
+  document.getElementById('tcmp-val').textContent = Math.round(state.Tcmp) + ' K';
+  document.getElementById('eta-c-val').textContent = (state.etaC*100).toFixed(0) + '%';
+  document.getElementById('d-val').textContent = state.d.toFixed(2) + ' AU';
+  document.getElementById('etav-val').textContent = (state.etaV*100).toFixed(0) + '%';
+  document.getElementById('fpd-val').textContent = fmtSci(state.fpd,1) + ' W/kg';
+  document.getElementById('bzm-val').textContent = fmtSci(state.bzM,1) + ' M☉';
+  document.getElementById('launch-val').textContent = fmtSci(state.launch,1) + ' kg/yr';
+  document.getElementById('mth-m-val').textContent = fmtSci(state.mthM,1) + ' M☉';
+  // Reversible toggle visual
+  document.getElementById('reversible-toggle').classList.toggle('on', state.reversible);
+  // Power-source button states
+  document.querySelectorAll('[data-pwr]').forEach(b=>b.classList.toggle('active', b.dataset.pwr === state.pwr));
+  document.getElementById('solar-inputs').style.display = state.pwr==='solar'?'':'none';
+  document.getElementById('fusion-inputs').style.display = state.pwr==='fusion'?'':'none';
+  document.getElementById('bz-inputs').style.display = state.pwr==='bz'?'':'none';
+
+  const c = compute();
+  // Lock indicator
+  const jVal = document.getElementById('jpop-val');
+  jVal.classList.toggle('locked', c.locked);
+  if(c.locked) jVal.textContent = fmtSci(c.jpop_eff,1) + ' (Landauer)';
+
+  // Outputs
+  document.getElementById('o-ops').innerHTML = fmtSci(c.avg_ops,2) + ' <span class="unit">avg</span>';
+  document.getElementById('o-peak-ops').innerHTML = fmtSci(c.peak_ops,2) + ' <span class="unit">peak</span>';
+  document.getElementById('o-pc').innerHTML = fmtP(c.P_c);
+  document.getElementById('o-pcryo').innerHTML = c.P_cryo > 0 ? fmtP(c.P_cryo) : '0 W (passive)';
+  document.getElementById('o-ptot').innerHTML = fmtP(c.P_tot);
+  document.getElementById('o-floor').innerHTML = fmtSci(c.floor,2) + ' <span class="unit">J/op</span>';
+  document.getElementById('o-arad').innerHTML = fmtA(c.A_rad);
+  document.getElementById('o-apw').innerHTML = state.pwr==='solar' ? fmtA(c.A_pw) : '— (collector area N/A)';
+  document.getElementById('o-mrad').innerHTML = fmtM(c.M_rad);
+  document.getElementById('o-mpw').innerHTML = fmtM(c.M_pw);
+  document.getElementById('o-mtot').innerHTML = fmtM(c.M_tot);
+  document.getElementById('o-tbuild').innerHTML = c.M_tot > 0 ? fmtT(c.buildTime) : '—';
+
+  // Headline
+  let scaleText;
+  let nearest = MASS_ANCHORS[0];
+  for(const a of MASS_ANCHORS){ if(Math.abs(Math.log10(c.M_tot) - Math.log10(a.kg)) < Math.abs(Math.log10(c.M_tot) - Math.log10(nearest.kg))) nearest = a; }
+  if(c.M_tot < 1) scaleText = `effectively zero mass (BZ substrate handles it)`;
+  else if(c.M_tot < 1e6) scaleText = `<span class="v">${fmtM(c.M_tot)}</span> — smaller than the ISS.`;
+  else if(c.M_tot > 6e24) scaleText = `<span class="v">${fmtM(c.M_tot)}</span> — <strong>greater than the mass of Earth.</strong>`;
+  else {
+    const ratio = c.M_tot / nearest.kg;
+    if(ratio > 1) scaleText = `<span class="v">${fmtM(c.M_tot)}</span> — about ${ratio < 100 ? ratio.toFixed(1) : fmtSci(ratio,1)}× the ${nearest.name}.`;
+    else scaleText = `<span class="v">${fmtM(c.M_tot)}</span> — about ${(1/ratio).toFixed(1)}× smaller than the ${nearest.name}.`;
+  }
+  document.getElementById('headline').innerHTML =
+    `Doing <span class="v">${fmtSci(state.N,1)}×</span> Earth-equivalent compute per year requires<br>${scaleText}`;
+  const subBits = [];
+  if(c.locked) subBits.push('Landauer floor active — reversible computing OFF.');
+  if(state.duty < 1) subBits.push(`Peak ${(1/state.duty).toFixed(1)}× higher than average due to ${(state.duty*100).toFixed(0)}% duty cycle.`);
+  if(state.Tcmp < state.Trad) subBits.push(`Cryocooler tax: +${fmtSci(c.P_cryo/c.P_c*100,1)}% of compute power.`);
+  if(state.pwr==='bz') subBits.push('Power from BZ extraction — engineered material mass ≈ 0.');
+  document.getElementById('headline-sub').textContent = subBits.length ? subBits.join(' ') : 'Defaults: 100% duty, passive cooling, solar power at Earth orbit.';
+
+  // Mass strip marker
+  const M_MIN = 0, M_MAX = 30;
+  const massPct = c.M_tot > 0 ? Math.max(0, Math.min(100, (Math.log10(Math.max(c.M_tot,1)) - M_MIN) / (M_MAX - M_MIN) * 100)) : 0;
+  document.getElementById('mass-marker').style.left = massPct + '%';
+  document.getElementById('mass-marker-label').textContent = fmtM(c.M_tot);
+
+  // Dyson strip marker (log of fraction from -24 to 0 → 24 decades)
+  const dysonFrac = c.A_tot / DYSON_AREA;
+  const D_MIN = -24, D_MAX = 0;
+  const dPct = dysonFrac > 0 ? Math.max(0, Math.min(100, (Math.log10(dysonFrac) - D_MIN) / (D_MAX - D_MIN) * 100)) : 0;
+  document.getElementById('dyson-marker').style.left = dPct + '%';
+  let dysonStr;
+  if(dysonFrac >= 1) dysonStr = `${dysonFrac.toFixed(2)}× full Dyson`;
+  else if(dysonFrac >= 0.01) dysonStr = `${(dysonFrac*100).toFixed(2)}%`;
+  else dysonStr = fmtSci(dysonFrac*100,1) + '%';
+  document.getElementById('dyson-marker-label').textContent = dysonStr;
+
+  // Strip readouts
+  const ro = document.getElementById('mass-readout');
+  if(c.M_tot < 1e8) ro.innerHTML = `<span class="v">Within current human launch capacity</span> — could be flown in pieces.`;
+  else if(c.M_tot < 1e18) ro.innerHTML = `Beyond any single constructed object. <span class="v">Asteroid-mining territory.</span>`;
+  else if(c.M_tot < 7e22) ro.innerHTML = `<span class="v">Requires disassembling Vesta, Ceres, or comparable bodies.</span>`;
+  else if(c.M_tot < 6e24) ro.innerHTML = `<span class="v">You would need most of Earth's crust.</span>`;
+  else ro.innerHTML = `<span class="v">Larger than Earth itself.</span> The engineered-compute scenario becomes physically untenable here — this is where MTH "compress inward" becomes thermodynamically forced.`;
+  const dro = document.getElementById('dyson-readout');
+  if(dysonFrac >= 1) dro.innerHTML = `<span class="v">${dysonStr} of a 1-AU Dyson sphere.</span> You'd need to disassemble multiple planets just for the collector surfaces.`;
+  else if(dysonFrac >= 1e-4) dro.innerHTML = `<span class="v">${dysonStr} of a Dyson sphere</span> — getting into Type-II construction territory.`;
+  else dro.innerHTML = `${dysonStr} of a Dyson sphere — well below full Type-II.`;
+
+  // MTH callout
+  const ergo = ergoOps(state.mthM);
+  const ratio = ergo / Math.max(c.peak_ops, 1);
+  document.getElementById('mth-text').innerHTML =
+    `An <strong>${fmtSci(state.mthM,1)} M☉</strong> ergosphere can in principle perform <span class="v">${fmtSci(ergo,2)} ops/s</span> via Lloyd's bound on M·c², with <strong>effectively zero</strong> radiator or panel area. That's <span class="v">${fmtSci(ratio,1)}×</span> your engineered peak.`;
+
+  // Update schematic
+  renderSchematic(c);
+}
+
+/* ---------- WIRING ---------- */
+function wire(){
+  const bindLog = (id, key) => {
+    const e = document.getElementById(id);
+    e.value = Math.log10(state[key]).toFixed(2);
+    e.addEventListener('input', () => { state[key] = Math.pow(10, parseFloat(e.value)); saveHash(); render(); });
+  };
+  const bindLin = (id, key, mult=1) => {
+    const e = document.getElementById(id);
+    e.value = (state[key]*mult).toFixed(mult===1?0:2);
+    e.addEventListener('input', () => { state[key] = parseFloat(e.value)/mult; saveHash(); render(); });
+  };
+  bindLog('n-slider','N'); bindLog('jpop-slider','jpop');
+  bindLin('duty-slider','duty',100);
+  bindLin('trad-slider','Trad'); bindLin('tcmp-slider','Tcmp');
+  const ecs=document.getElementById('eta-c-slider'); ecs.value=state.etaC; ecs.addEventListener('input',()=>{state.etaC=parseFloat(ecs.value);saveHash();render();});
+  bindLog('d-slider','d');
+  const evs=document.getElementById('etav-slider'); evs.value=state.etaV; evs.addEventListener('input',()=>{state.etaV=parseFloat(evs.value);saveHash();render();});
+  bindLog('fpd-slider','fpd');
+  bindLog('bzm-slider','bzM');
+  bindLog('launch-slider','launch');
+  bindLog('mth-m-slider','mthM');
+
+  document.querySelectorAll('[data-n]').forEach(b=>b.addEventListener('click',()=>{state.N=parseFloat(b.dataset.n);document.getElementById('n-slider').value=Math.log10(state.N).toFixed(2);saveHash();render();}));
+  document.querySelectorAll('[data-jpop]').forEach(b=>b.addEventListener('click',()=>{state.jpop=parseFloat(b.dataset.jpop);document.getElementById('jpop-slider').value=Math.log10(state.jpop).toFixed(2);saveHash();render();}));
+  document.querySelectorAll('[data-trad]').forEach(b=>b.addEventListener('click',()=>{state.Trad=parseFloat(b.dataset.trad);document.getElementById('trad-slider').value=state.Trad.toFixed(0);saveHash();render();}));
+  document.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{state.d=parseFloat(b.dataset.d);document.getElementById('d-slider').value=Math.log10(state.d).toFixed(2);saveHash();render();}));
+  document.querySelectorAll('[data-pwr]').forEach(b=>b.addEventListener('click',()=>{state.pwr=b.dataset.pwr;saveHash();render();}));
+
+  document.getElementById('reversible-toggle').addEventListener('click',()=>{state.reversible=!state.reversible;saveHash();render();});
+
+  const at=document.getElementById('about-toggle');
+  const ab=document.getElementById('about-this-tool');
+  at.addEventListener('click',()=>{const o=!ab.classList.contains('open');ab.classList.toggle('open',o);at.classList.toggle('open',o);});
+}
+
+function init(){ loadHash(); applyMobile(); wire(); render(); }
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>

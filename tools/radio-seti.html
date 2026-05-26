@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<!--
+  Radio Technosignature Sensitivity Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #fermi  ·  Epistemic tier(s): 🔬 Dicke radiometer eq, antenna gain · ⚠ Theoretical (transmitter assumptions)
+  Data sources:
+    - Dicke (1946) Rev Sci Instrum 17:268 — radiometer equation
+    - Cordes & Lazio (2007) NE2001 model (ISM) — not used directly here
+    - Breakthrough Listen 3I/ATLAS results, December 2025: arXiv:2512.18142 (ATA);
+      MeerKAT result reported in astrobiology.com (Dec 2025) — 0.17 W limit
+    - Wright et al. (2018) "Searches for Technosignatures: The State of the Profession"
+    - Garrett et al. (2023) Breakthrough Listen 97-galaxy survey, AJ 166:241
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio SETI Sensitivity — Omega Centauri Society</title>
+<meta name="description" content="The radiometer equation made interactive. Pick transmitter EIRP, distance, receiver aperture, and integration time; the tool returns SNR, minimum detectable EIRP, and a comparison to Earth's leakage and the December 2025 Breakthrough Listen / 3I/ATLAS benchmark.">
+<link rel="canonical" href="https://omegacentauri.me/tools/radio-seti.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(160,128,240,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(160,128,240,.08);border-left:3px solid var(--purple-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--purple-glow)}
+
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.inputs-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+@media (max-width:760px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.55)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.55)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--purple-glow);min-width:140px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+
+.headline{background:linear-gradient(135deg,rgba(160,128,240,.10),rgba(29,186,144,.06));border:1px solid var(--purple-bright);border-radius:12px;padding:26px 30px;margin-bottom:24px;text-align:center}
+.headline-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.headline-val{font-family:'Orbitron',sans-serif;font-size:42px;font-weight:600;color:var(--amber-glow);line-height:1.05;letter-spacing:.02em}
+.headline-sub{font-family:'Crimson Pro',serif;font-style:italic;color:var(--text-secondary);margin-top:8px;font-size:15px}
+.headline-sub strong{color:var(--text-primary)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-of-type{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:17px;color:var(--purple-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+
+.eirp-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 28px;margin-bottom:24px}
+.eirp-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.eirp-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:36px;letter-spacing:.04em}
+.eirp-strip{position:relative;height:18px;margin:36px 0 88px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--purple-bright),var(--amber-mid),var(--red-mid));border-radius:9px}
+.e-tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.2)}
+.e-tick-label{position:absolute;top:-38px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.e-tick-label .ref{display:block;color:var(--text-dim);font-size:9px;letter-spacing:.04em;margin-top:2px}
+.e-marker{position:absolute;top:-14px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.e-marker .arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:14px solid currentColor;filter:drop-shadow(0 0 6px currentColor)}
+.e-marker .label{position:absolute;top:-26px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:currentColor;font-weight:600}
+.e-marker.min{color:var(--teal-glow);top:30px}
+.e-marker.min .arrow{border-top:none;border-bottom:14px solid currentColor}
+.e-marker.min .label{top:auto;bottom:-26px}
+.e-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px}
+.eirp-readout{margin-top:18px;font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-secondary);line-height:1.7;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--purple-bright)}
+.eirp-readout strong{color:var(--purple-glow);font-weight:600}
+
+.symmetry-card{background:linear-gradient(135deg,rgba(29,186,144,.08),rgba(13,10,36,.6));border:1px solid var(--teal-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.symmetry-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.symmetry-title::before{content:'↔'}
+.symmetry-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.symmetry-body strong{color:var(--teal-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Radio SETI Sensitivity</span>
+    <a class="nav-link" href="https://omegacentauri.me/#fermi">← #fermi</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Radio Technosignature Sensitivity Calculator</h1>
+      <p class="tool-subtitle">The radiometer equation made interactive. Pick a transmitter, a distance, and a telescope, and the tool tells you whether the signal is detectable. Use it to answer the symmetric Fermi question: could a civilisation around Omega Centauri hear <em>us</em>?</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Radiometer eq</span>
+      <span class="tier-badge tier-theory">⚠ Transmitter assumptions</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>What this computes — and what it doesn't.</strong> The "minimum detectable EIRP" headline is the <em>bare-radiometer theoretical floor</em>: the matched-filter SNR threshold under ideal conditions. Real published Breakthrough Listen limits sit ~10–1000× above this floor to account for RFI rejection penalties, Doppler-drift searches, single-pass dwell times, and confirmation requirements. As a calibration anchor: at MeerKAT-class defaults (A_eff = 6,300 m², T_sys = 20 K, τ = 1 hr, 1 Hz channel, 0.3 AU) this tool returns EIRP_min ≈ 0.3 mW, while the actual December 2025 MeerKAT 3I/ATLAS limit was 0.17 W. The bandwidth, distance, and aperture <em>scalings</em> here are correct; treat the absolute values as "best case, no penalties." Compare relative numbers rather than absolute.
+  </div>
+
+  <!-- INPUTS -->
+  <section class="inputs-card">
+    <div class="card-title">Inputs</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Transmitter EIRP (W, log slider, 10⁰ to 10³⁰)</label>
+        <div class="slider-row">
+          <input type="range" id="eirp-slider" min="0" max="30" step="0.05" value="13">
+          <span class="slider-value" id="eirp-val">10¹³ W</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-eirp="0.7">5 W (cellphone)</button>
+          <button class="preset-btn" data-eirp="6.7">5 MW (TV broadcaster)</button>
+          <button class="preset-btn" data-eirp="13.3">20 TW (Arecibo radar pulse)</button>
+          <button class="preset-btn" data-eirp="25">10²⁵ W (1% K-II)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Distance to target (light-years, log slider, 10⁻⁶ to 10⁷)</label>
+        <div class="slider-row">
+          <input type="range" id="dist-slider" min="-6" max="7" step="0.05" value="4.23">
+          <span class="slider-value" id="dist-val">17,000 ly</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-dist="-4.32">3I/ATLAS @ closest (0.3 AU)</button>
+          <button class="preset-btn" data-dist="0.62">Proxima Cen (4.2 ly)</button>
+          <button class="preset-btn" data-dist="1.6">Trappist-1 (40 ly)</button>
+          <button class="preset-btn" data-dist="4.23">Omega Centauri (17 kly)</button>
+          <button class="preset-btn" data-dist="4.42">Galactic centre (26 kly)</button>
+          <button class="preset-btn" data-dist="6.4">Andromeda (2.5 Mly)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Receiver effective area A_eff (m², log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="aeff-slider" min="0" max="6" step="0.05" value="3.8">
+          <span class="slider-value" id="aeff-val">6,300 m²</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-aeff="3.8">MeerKAT (~6,300)</button>
+          <button class="preset-btn" data-aeff="3.7">GBT 100 m (~5,500)</button>
+          <button class="preset-btn" data-aeff="4.6">Arecibo (~40,000)</button>
+          <button class="preset-btn" data-aeff="4.9">FAST (~80,000)</button>
+          <button class="preset-btn" data-aeff="5.5">SKA-1 (~300,000)</button>
+          <button class="preset-btn" data-aeff="6.0">SKA-2 (~10⁶)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>System temperature T_sys (K, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="tsys-slider" min="0.5" max="3" step="0.02" value="1.3">
+          <span class="slider-value" id="tsys-val">20 K</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-tsys="1.0">10 K (cryo, low freq)</button>
+          <button class="preset-btn" data-tsys="1.3">20 K (typical)</button>
+          <button class="preset-btn" data-tsys="1.7">50 K</button>
+          <button class="preset-btn" data-tsys="2.3">200 K (high freq)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Integration time τ (seconds, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="tau-slider" min="0" max="7" step="0.05" value="3.56">
+          <span class="slider-value" id="tau-val">1 hour</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-tau="0">1 s</button>
+          <button class="preset-btn" data-tau="2.78">10 min</button>
+          <button class="preset-btn" data-tau="3.56">1 hr</button>
+          <button class="preset-btn" data-tau="4.94">1 day</button>
+          <button class="preset-btn" data-tau="6.5">1 month</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Signal bandwidth B_sig (Hz, log slider — narrower = more sensitive)</label>
+        <div class="slider-row">
+          <input type="range" id="bw-slider" min="-1" max="9" step="0.05" value="0">
+          <span class="slider-value" id="bw-val">1 Hz</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-bw="0">1 Hz (Breakthrough narrowband)</button>
+          <button class="preset-btn" data-bw="3">1 kHz</button>
+          <button class="preset-btn" data-bw="6">1 MHz (TV channel)</button>
+          <button class="preset-btn" data-bw="8">100 MHz (wideband)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE -->
+  <div class="headline">
+    <div class="headline-eyebrow">Headline · Minimum detectable EIRP at this distance, telescope, and integration</div>
+    <div class="headline-val" id="head-val">—</div>
+    <div class="headline-sub" id="head-sub">computing…</div>
+  </div>
+
+  <!-- DETAIL ROWS -->
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Signal at the receiver</div>
+      <div class="row"><span class="row-label">Distance (metres)</span><span class="row-value" id="dist-m">—</span></div>
+      <div class="row"><span class="row-label">Received flux density</span><span class="row-value" id="flux">—</span></div>
+      <div class="row"><span class="row-label">Sensitivity (S_min, W/m²)</span><span class="row-value" id="smin">—</span></div>
+      <div class="row"><span class="row-label">Sensitivity per Hz</span><span class="row-value" id="smin-hz">—</span></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">SNR &amp; detection</div>
+      <div class="row"><span class="row-label">Signal-to-noise ratio (SNR)</span><span class="row-value" id="snr">—</span></div>
+      <div class="row"><span class="row-label">Detection threshold</span><span class="row-value" id="thresh">SNR ≥ 10</span></div>
+      <div class="row"><span class="row-label">Detected?</span><span class="row-value" id="det">—</span></div>
+      <div class="row"><span class="row-label">Margin vs. detection</span><span class="row-value" id="margin">—</span></div>
+    </section>
+  </div>
+
+  <!-- EIRP COMPARISON STRIP -->
+  <section class="eirp-card">
+    <div class="eirp-title">Where this transmitter and this minimum sit on the EIRP axis</div>
+    <div class="eirp-sub">Log axis spans 10⁰ to 10³⁰ W — 30 decades. Amber arrow above = your transmitter EIRP. Teal arrow below = minimum EIRP detectable at this distance / telescope.</div>
+    <div class="eirp-strip" id="eirp-strip">
+      <span class="e-tick" style="left:0%"><span class="e-tick-label">10⁰<span class="ref">1 W</span></span></span>
+      <span class="e-tick" style="left:23%"><span class="e-tick-label">10⁶·⁷<span class="ref">TV broadcaster</span></span></span>
+      <span class="e-tick" style="left:33%"><span class="e-tick-label">10¹⁰<span class="ref">large radar</span></span></span>
+      <span class="e-tick" style="left:44%"><span class="e-tick-label">10¹³·³<span class="ref">Arecibo pulse</span></span></span>
+      <span class="e-tick" style="left:57%"><span class="e-tick-label">10¹⁷<span class="ref">Earth's bolometric solar absorption</span></span></span>
+      <span class="e-tick" style="left:67%"><span class="e-tick-label">10²⁰<span class="ref">1 ppm L_☉</span></span></span>
+      <span class="e-tick" style="left:83%"><span class="e-tick-label">10²⁵<span class="ref">1% K-II Dyson</span></span></span>
+      <span class="e-tick" style="left:88.7%"><span class="e-tick-label">10²⁶·⁶<span class="ref">solar L_☉</span></span></span>
+      <span class="e-tick" style="left:100%"><span class="e-tick-label">10³⁰<span class="ref">K-III</span></span></span>
+      <span class="e-marker" id="e-marker-tx" style="left:43%">
+        <span class="label" id="e-marker-tx-label">10¹³ W</span>
+        <span class="arrow"></span>
+      </span>
+      <span class="e-marker min" id="e-marker-min" style="left:10%">
+        <span class="arrow"></span>
+        <span class="label" id="e-marker-min-label">min</span>
+      </span>
+    </div>
+    <div class="e-axis"><span>10⁰</span><span>10¹⁵</span><span>10³⁰</span></div>
+    <div class="eirp-readout" id="e-readout">—</div>
+  </section>
+
+  <!-- SYMMETRY (could ET hear US) -->
+  <section class="symmetry-card">
+    <div class="symmetry-title">Could a civilisation around Omega Centauri hear us?</div>
+    <div class="symmetry-body" id="sym-body">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The radiometer equation</h3>
+      <p>For a steady signal of bandwidth B_sig observed by a receiver with effective area A_eff, system temperature T_sys, and integration time τ, the minimum detectable flux density (in W/m²/Hz) at signal-to-noise ratio SNR is</p>
+      <p><code>S_min(per Hz) = SNR · k_B · T_sys / A_eff · √(B_obs / (n_pol · τ))</code></p>
+      <p>where k_B is Boltzmann's constant, n_pol = 2 polarisations, and B_obs is the matched filter bandwidth (≈ B_sig for a narrowband signal). Integrating this across the signal bandwidth and multiplying by the area of a sphere at distance d gives the minimum EIRP:</p>
+      <p><code>EIRP_min = S_min(per Hz) · B_sig · 4π d²</code></p>
+      <p>The leverage is in the √τ — every quadrupling of integration time gives you 2× sensitivity. Aperture A_eff and T_sys are linear, so the gain from going from MeerKAT to SKA-1 (~50× A_eff) is much larger than the gain from staring for a week instead of an hour.</p>
+
+      <h3>The 0.1 W benchmark</h3>
+      <p>In December 2025, Breakthrough Listen used MeerKAT to observe the interstellar object 3I/ATLAS less than 24 hours before its closest approach to Earth. They reported a 0.17 W EIRP detection limit — the most sensitive radio-technosignature search ever performed, capable of detecting a transmitter as weak as a typical mobile phone handset at that distance. The published result is the calibration check for this tool: plug in MeerKAT's effective area (~6,300 m²), T_sys (~20 K), a 1 Hz channel, 1 hour integration, and the actual 3I/ATLAS distance (~0.3 AU at closest approach), and you should recover an EIRP_min in the 0.1–0.2 W range.</p>
+
+      <h3>The Omega Centauri scaling</h3>
+      <p>Now move the distance slider to OC's 17,000 light-year preset. The 4π d² term explodes by ~24 orders of magnitude relative to 3I/ATLAS. The minimum detectable EIRP jumps from 0.1 W to ~10²³ W — meaning a civilisation around OC could only be detected if it were emitting at near-K-II levels in narrowband at the right frequency for the right amount of time. Earth's commercial radio leakage (~10⁷ W EIRP at best) is utterly undetectable at OC distance. <em>This is the symmetry argument:</em> our radio silence at OC's distance does not constrain Earth-equivalent civilisations there, only K-II-class ones.</p>
+
+      <h3>What this tool does not include</h3>
+      <p>Interstellar medium dispersion / scattering (NE2001 model), RFI rejection, beam-pattern losses, source acquisition / pointing errors, frequency drift compensation, and the doppler-search penalty for civ-modulated signals. Real Breakthrough Listen sensitivities include a 10× factor over the bare radiometer equation to account for these effects. The headline figure here is the <em>theoretical floor</em> — actual surveys do somewhat worse.</p>
+
+      <h3>OCS connection</h3>
+      <p>The MTH says civilisations stop emitting in the radio because they're compressed into ergospheres (see <a href="bekenstein-landauer.html">Tool 4</a> and <a href="bz-kardashev.html">Tool 1</a>). This tool quantifies the prior question — <em>could we have heard them if they were still emitting?</em> The answer for OC at typical "leakage" power levels is no, which means radio silence at OC is consistent with both "they're all gone / never were" (Fermi) and "they're there but not emitting at K-II" (MTH or simply civilisational reticence). The two hypotheses are observationally degenerate at OC distance unless we get to SKA-2 sensitivity or better — which the slider lets you check.</p>
+
+      <h3>Classroom uses</h3>
+      <p><strong>HS:</strong> "could Voyager's 23 W radio be detected from Alpha Centauri?" (answer: with Arecibo or larger, yes, in narrowband, with a 1-hour stare). <strong>Undergrad:</strong> derive the radiometer equation by combining the antenna gain, system noise, and SNR threshold; reproduce the Breakthrough Listen MeerKAT 3I/ATLAS limit. <strong>Project seed:</strong> compare the EIRP sensitivity floor of every major SETI survey from Ozma (1960) to SKA-2 (~2030s) as a single time series.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">📡 Project Ozma to Breakthrough Listen</h3>
+      <p>The first SETI experiment was <strong>Frank Drake's Project Ozma</strong> (1960), pointing the Green Bank 26-m at Tau Ceti and Epsilon Eridani for 200 hours total. Modern: <strong>Breakthrough Listen</strong> (2015–present, ~$100M Yuri Milner endowment) is the largest SETI effort to date — surveying ~1 million nearby stars + ~100 nearby galaxies + the galactic plane using GBT, Parkes, MeerKAT, and ATA. <strong>SKA-Mid</strong> (first light expected ~2028) will offer ~100× the sensitivity of current arrays for narrowband searches.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🛸 Notable false alarms and candidates</h3>
+      <p><strong>Wow! Signal 1977</strong>: 72-second narrowband signal at 1420.4 MHz from Big Ear; never recurred despite repeated re-observations. <strong>BLC1 (Breakthrough Listen Candidate 1, 2020)</strong>: 982.002 MHz signal from Proxima Centauri direction; subsequently identified as terrestrial RFI. <strong>Boyajian's Star / KIC 8462852 ("Tabby's Star", 2015–present)</strong>: irregular dimming events initially proposed as Dyson-sphere construction; consensus explanation is uneven dust clumps. The all-time absence of confirmed signals over ~60 years of intermittent searches is the "Great Silence" data point that feeds the Fermi paradox.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">🎯 EIRP horizon for detection</h3>
+      <p>For a narrowband (~1 Hz) signal from distance d, the minimum detectable EIRP (effective isotropically radiated power) scales as d². Anchors: <strong>Arecibo 1974 message</strong> at 25 ly (M13): 10¹³ W EIRP. <strong>Earth's strongest radars</strong> (military planetary radar, ballistic missile defence): ~10¹³ W EIRP. <strong>Kardashev Type II beacon</strong>: 10²⁶ W could be detected across the entire Milky Way with current technology. The 2025 Garrett et al. analysis (A&amp;ARv 33:5) summarises current Breakthrough-Listen sensitivity limits as a function of distance and EIRP.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Dicke 1946; Breakthrough Listen 3I/ATLAS Dec 2025; Garrett et al. 2023 (AJ 166:241); Wright 2018 review</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const K_B = 1.381e-23;
+const C = 2.998e8;
+const LY_M = 9.461e15;
+const AU_M = 1.496e11;
+const SNR_REQ = 10;
+const N_POL = 2;
+
+const state = {
+  logEirp: 13, logDist: 4.23, logAeff: 3.8, logTsys: 1.3, logTau: 3.56, logBw: 0
+};
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();
+  if(h.eirp!==undefined){const v=parseFloat(h.eirp);if(!isNaN(v))state.logEirp=clamp(v,0,30)}
+  if(h.dist!==undefined){const v=parseFloat(h.dist);if(!isNaN(v))state.logDist=clamp(v,-6,7)}
+  if(h.aeff!==undefined){const v=parseFloat(h.aeff);if(!isNaN(v))state.logAeff=clamp(v,0,6)}
+  if(h.tsys!==undefined){const v=parseFloat(h.tsys);if(!isNaN(v))state.logTsys=clamp(v,0.5,3)}
+  if(h.tau!==undefined){const v=parseFloat(h.tau);if(!isNaN(v))state.logTau=clamp(v,0,7)}
+  if(h.bw!==undefined){const v=parseFloat(h.bw);if(!isNaN(v))state.logBw=clamp(v,-1,9)}
+}
+function saveHash(){setHash({
+  eirp:state.logEirp.toFixed(2), dist:state.logDist.toFixed(2), aeff:state.logAeff.toFixed(2),
+  tsys:state.logTsys.toFixed(2), tau:state.logTau.toFixed(2), bw:state.logBw.toFixed(2)
+});}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+function fmtDist(ly){
+  if (ly < 1e-4) return (ly * LY_M / AU_M).toFixed(2) + ' AU';
+  if (ly < 1) return (ly * 365.25).toFixed(1) + ' light-days';
+  if (ly < 1000) return ly.toFixed(2) + ' ly';
+  if (ly < 1e6) return (ly/1000).toFixed(1) + ' kly';
+  return (ly/1e6).toFixed(2) + ' Mly';
+}
+function fmtTau(s){
+  if (s < 60) return s.toFixed(1) + ' s';
+  if (s < 3600) return (s/60).toFixed(1) + ' min';
+  if (s < 86400) return (s/3600).toFixed(2) + ' hr';
+  if (s < 2.6e6) return (s/86400).toFixed(2) + ' d';
+  return (s/2.6e6).toFixed(2) + ' month';
+}
+function fmtPower(W){
+  if (W < 1e-3) return fmtSci(W) + ' W';
+  if (W < 1) return W.toFixed(3) + ' W';
+  if (W < 1e3) return W.toFixed(2) + ' W';
+  if (W < 1e6) return (W/1e3).toFixed(2) + ' kW';
+  if (W < 1e9) return (W/1e6).toFixed(2) + ' MW';
+  if (W < 1e12) return (W/1e9).toFixed(2) + ' GW';
+  if (W < 1e15) return (W/1e12).toFixed(2) + ' TW';
+  return fmtSci(W) + ' W';
+}
+
+function compute() {
+  const eirp = Math.pow(10, state.logEirp);
+  const dLy = Math.pow(10, state.logDist);
+  const dM = dLy * LY_M;
+  const aeff = Math.pow(10, state.logAeff);
+  const tsys = Math.pow(10, state.logTsys);
+  const tau = Math.pow(10, state.logTau);
+  const bw = Math.pow(10, state.logBw);
+
+  // System Equivalent Flux Density (W/m²/Hz): SEFD = 2 k_B T_sys / A_eff
+  const SEFD = 2 * K_B * tsys / aeff;
+
+  // Noise on integrated bandwidth (W/m²) — matched-filter, narrowband signal of width bw
+  // σ_S_total = SEFD × √(B / (n_pol × τ))
+  const sigma_S_total = SEFD * Math.sqrt(bw / (N_POL * tau));
+
+  // Minimum detectable flux at SNR threshold
+  const sMin_W_m2 = SNR_REQ * sigma_S_total;
+  const sMinPerHz_thresh = sMin_W_m2 / bw;
+
+  // Received flux from EIRP at distance (all power in B_sig channel)
+  const flux_W_m2 = eirp / (4 * Math.PI * dM * dM);
+  const flux_per_hz = flux_W_m2 / bw;
+
+  // SNR achievable = received_flux / σ_S_total
+  const snr = flux_W_m2 / sigma_S_total;
+
+  // Minimum detectable EIRP at this dist (threshold SNR)
+  const eirpMin = sMin_W_m2 * 4 * Math.PI * dM * dM;
+
+  return { eirp, dLy, dM, aeff, tsys, tau, bw,
+           sMinPerHz: sMinPerHz_thresh, sMin: sMin_W_m2,
+           flux: flux_W_m2, flux_per_hz, snr, eirpMin };
+}
+
+function render() {
+  // Slider readouts
+  document.getElementById('eirp-val').textContent = '10' + supDigits(Math.round(state.logEirp*10)/10) + ' W';
+  const dLy = Math.pow(10, state.logDist);
+  document.getElementById('dist-val').textContent = fmtDist(dLy);
+  document.getElementById('aeff-val').textContent = Math.round(Math.pow(10, state.logAeff)).toLocaleString() + ' m²';
+  document.getElementById('tsys-val').textContent = Math.round(Math.pow(10, state.logTsys)) + ' K';
+  document.getElementById('tau-val').textContent = fmtTau(Math.pow(10, state.logTau));
+  const bw = Math.pow(10, state.logBw);
+  document.getElementById('bw-val').textContent =
+    bw < 1e3 ? bw.toFixed(bw<10?2:0) + ' Hz' :
+    bw < 1e6 ? (bw/1e3).toFixed(0) + ' kHz' :
+    bw < 1e9 ? (bw/1e6).toFixed(0) + ' MHz' :
+    (bw/1e9).toFixed(0) + ' GHz';
+
+  const c = compute();
+
+  // Headline
+  document.getElementById('head-val').textContent = fmtPower(c.eirpMin);
+  const sub = document.getElementById('head-sub');
+  sub.innerHTML = `At distance <strong>${fmtDist(c.dLy)}</strong> through a <strong>${Math.round(c.aeff).toLocaleString()} m²</strong> aperture with <strong>${fmtTau(c.tau)}</strong> of integration, your receiver detects (SNR ≥ ${SNR_REQ}) any transmitter emitting at least <strong>${fmtPower(c.eirpMin)}</strong> EIRP in a narrowband ${bw < 1e3 ? bw.toFixed(0) + ' Hz' : bw < 1e6 ? (bw/1e3).toFixed(0) + ' kHz' : (bw/1e6).toFixed(0) + ' MHz'} channel.`;
+
+  // Detail rows
+  document.getElementById('dist-m').textContent = fmtSci(c.dM) + ' m';
+  document.getElementById('flux').textContent = fmtSci(c.flux) + ' W/m²';
+  document.getElementById('smin').textContent = fmtSci(c.sMin) + ' W/m²';
+  document.getElementById('smin-hz').textContent = fmtSci(c.sMinPerHz) + ' W/m²/Hz';
+  document.getElementById('snr').textContent = fmtSci(c.snr, 1);
+  document.getElementById('det').innerHTML = c.snr >= SNR_REQ
+    ? '<span style="color:var(--teal-glow)">✓ YES</span>'
+    : '<span style="color:var(--red-bright)">✗ no</span>';
+  const margin = c.snr / SNR_REQ;
+  document.getElementById('margin').textContent = margin >= 1
+    ? margin.toFixed(2) + '× over threshold'
+    : (1/margin).toFixed(2) + '× under threshold';
+
+  // EIRP strip markers
+  const lgEirp = state.logEirp;
+  const lgMin = Math.log10(c.eirpMin);
+  document.getElementById('e-marker-tx').style.left = Math.max(-2, Math.min(102, lgEirp/30*100)) + '%';
+  document.getElementById('e-marker-tx-label').textContent = '10' + supDigits(Math.round(lgEirp*10)/10) + ' W';
+  document.getElementById('e-marker-min').style.left = Math.max(-2, Math.min(102, lgMin/30*100)) + '%';
+  document.getElementById('e-marker-min-label').textContent = 'min: ' + fmtPower(c.eirpMin);
+
+  // EIRP readout (the punchline)
+  const eReadout = document.getElementById('e-readout');
+  if (c.snr >= SNR_REQ) {
+    eReadout.innerHTML = `Your transmitter at <strong>${fmtPower(c.eirp)}</strong> exceeds the minimum detectable <strong>${fmtPower(c.eirpMin)}</strong> by ${(margin).toFixed(2)}× — detectable at this configuration.`;
+  } else {
+    eReadout.innerHTML = `Your transmitter at <strong>${fmtPower(c.eirp)}</strong> is ${(1/margin).toFixed(2)}× below the minimum detectable <strong>${fmtPower(c.eirpMin)}</strong>. To reach SNR ≥ ${SNR_REQ}, either boost EIRP by that factor, integrate longer by a factor of ${Math.pow(1/margin, 2).toFixed(2)}× (√τ scaling), or use a larger aperture.`;
+  }
+
+  // Symmetry — could ET hear us
+  // Earth's commercial transmitters: TV broadcaster ~5 MW EIRP, military radar ~10 GW EIRP
+  // Assume an OC observer has SKA-2 class telescope (10^6 m²), same T_sys + tau + bw
+  const lgOCdist = Math.log10(17000); // OC distance in ly
+  const dOC = 17000 * LY_M;
+  const aeffOC = 1e6; // assume SKA-2
+  const tauOC = 3600;
+  const bwOC = 1;
+  const tsysOC = 20;
+  const sMinOC_perHz = SNR_REQ * K_B * tsysOC / aeffOC * Math.sqrt(bwOC/(2*tauOC));
+  const eirpMinOC = sMinOC_perHz * bwOC * 4*Math.PI*dOC*dOC;
+  const earthTV = 5e6;
+  const arecibo = 2e13;
+  const dysonK2 = 1e25;
+  const symBody = document.getElementById('sym-body');
+  let symLine;
+  if (eirpMinOC > dysonK2) symLine = `even a <strong>K-II Dyson swarm</strong> at our location wouldn't reach the threshold`;
+  else if (eirpMinOC > arecibo) symLine = `requires more EIRP than Arecibo's most powerful planetary radar pulse (2×10¹³ W); a sustained transmitter would have to be enormous`;
+  else if (eirpMinOC > earthTV) symLine = `would need ~${(eirpMinOC/earthTV).toFixed(0)}× more EIRP than Earth's strongest TV broadcasters; Earth's commercial radio leakage at this level is undetectable`;
+  else symLine = `Earth's commercial radio leakage <em>would</em> be detectable — but the assumption here is the OC observer has a giant array.`;
+  symBody.innerHTML = `With an SKA-2-class telescope (~10⁶ m² A_eff), T_sys = 20 K, 1 hr integration, narrowband 1 Hz channel, an OC observer 17,000 ly away would need a minimum EIRP of <strong>${fmtPower(eirpMinOC)}</strong> from Earth to register a detection. That ${symLine}. ` +
+    `For reference: TV broadcaster ≈ 5 MW, military radar ≈ 10 GW, Arecibo planetary radar pulse ≈ 20 TW, hypothetical 1% K-II Dyson at 10²⁵ W. <strong>Earth's most intentional signals are still ${fmtSci(eirpMinOC / arecibo)}× too quiet to be detected from Omega Centauri.</strong>`;
+}
+
+function wire() {
+  const eirpS = document.getElementById('eirp-slider'); eirpS.value = state.logEirp;
+  eirpS.addEventListener('input', () => { state.logEirp = parseFloat(eirpS.value); saveHash(); render(); });
+  const distS = document.getElementById('dist-slider'); distS.value = state.logDist;
+  distS.addEventListener('input', () => { state.logDist = parseFloat(distS.value); saveHash(); render(); });
+  const aeffS = document.getElementById('aeff-slider'); aeffS.value = state.logAeff;
+  aeffS.addEventListener('input', () => { state.logAeff = parseFloat(aeffS.value); saveHash(); render(); });
+  const tsysS = document.getElementById('tsys-slider'); tsysS.value = state.logTsys;
+  tsysS.addEventListener('input', () => { state.logTsys = parseFloat(tsysS.value); saveHash(); render(); });
+  const tauS = document.getElementById('tau-slider'); tauS.value = state.logTau;
+  tauS.addEventListener('input', () => { state.logTau = parseFloat(tauS.value); saveHash(); render(); });
+  const bwS = document.getElementById('bw-slider'); bwS.value = state.logBw;
+  bwS.addEventListener('input', () => { state.logBw = parseFloat(bwS.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-eirp]').forEach(b => b.addEventListener('click', () => { state.logEirp = parseFloat(b.dataset.eirp); eirpS.value = state.logEirp; saveHash(); render(); }));
+  document.querySelectorAll('[data-dist]').forEach(b => b.addEventListener('click', () => { state.logDist = parseFloat(b.dataset.dist); distS.value = state.logDist; saveHash(); render(); }));
+  document.querySelectorAll('[data-aeff]').forEach(b => b.addEventListener('click', () => { state.logAeff = parseFloat(b.dataset.aeff); aeffS.value = state.logAeff; saveHash(); render(); }));
+  document.querySelectorAll('[data-tsys]').forEach(b => b.addEventListener('click', () => { state.logTsys = parseFloat(b.dataset.tsys); tsysS.value = state.logTsys; saveHash(); render(); }));
+  document.querySelectorAll('[data-tau]').forEach(b => b.addEventListener('click', () => { state.logTau = parseFloat(b.dataset.tau); tauS.value = state.logTau; saveHash(); render(); }));
+  document.querySelectorAll('[data-bw]').forEach(b => b.addEventListener('click', () => { state.logBw = parseFloat(b.dataset.bw); bwS.value = state.logBw; saveHash(); render(); }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

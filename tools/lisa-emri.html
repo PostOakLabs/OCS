@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<!--
+  LISA EMRI/IMRI Detectability Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #science and #roadmap  ·  Epistemic tier(s): 🔬 GR inspiral (PN); LISA noise curve · ⚠ IMBH existence
+  Data sources:
+    - Detection of Intermediate-Mass Ratio Inspirals in Globular Clusters (arXiv:2501.13466, Jan 2025)
+    - Robson, Cornish & Liu (2019) "The construction and use of LISA sensitivity curves" CQG 36:105011
+    - Babak et al. (2017) "Science with the space-based gravitational-wave observatory LISA"
+    - Maggiore (2008) "Gravitational Waves" textbook — inspiral waveform
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LISA EMRI/IMRI Detectability — Omega Centauri Society</title>
+<meta name="description" content="Will LISA catch a stellar-mass black hole spiralling into the Omega Centauri IMBH? Pick a primary mass, a companion, a distance, and see the characteristic-strain trajectory overlaid on LISA's noise curve.">
+<link rel="canonical" href="https://omegacentauri.me/tools/lisa-emri.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(196,120,0,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+
+.preset-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;padding:14px 18px;background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;align-items:center}
+.preset-bar-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-right:8px}
+.preset-pill{font-family:'Space Mono',monospace;font-size:11px;padding:6px 12px;border-radius:14px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.preset-pill:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.preset-pill.active{color:var(--void);background:var(--amber-glow);border-color:var(--amber-glow)}
+
+.layout{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:24px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:14px}
+.slider-block:last-of-type{margin-bottom:6px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:4px;text-transform:uppercase}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:3px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 8px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);min-width:80px;text-align:right;white-space:nowrap}
+.companion-toggle{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.companion-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;letter-spacing:.04em}
+.companion-btn.active{color:var(--void);background:var(--amber-glow);border-color:var(--amber-glow)}
+.companion-btn:hover:not(.active){color:var(--amber-glow);border-color:var(--amber-mid)}
+
+.curve-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;position:relative}
+canvas{display:block;width:100%;height:auto;border-radius:6px;background:#020108}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;letter-spacing:.04em}
+.legend-row span{display:inline-flex;align-items:center;gap:5px}
+.legend-row i{display:inline-block;width:11px;height:3px;border-radius:1px}
+
+.outputs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media (max-width:760px){.outputs{grid-template-columns:repeat(2,1fr)}}
+.stat{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.stat.det{border-color:var(--teal-bright);background:rgba(13,110,88,.18)}
+.stat.det .stat-val{color:var(--teal-glow)}
+.stat.warn{border-color:var(--red-bright);background:rgba(138,32,32,.18)}
+.stat.warn .stat-val{color:var(--red-bright)}
+.stat.marginal{border-color:var(--amber-bright);background:rgba(196,120,0,.18)}
+.stat.marginal .stat-val{color:var(--amber-glow)}
+.stat-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--amber-glow);line-height:1.1;letter-spacing:.02em}
+.stat-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:5px}
+
+.detail-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.detail-cols{grid-template-columns:1fr}}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-of-type{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+
+.verdict-card{background:linear-gradient(135deg,rgba(160,128,240,.08),rgba(13,10,36,.6));border:1px solid var(--purple-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.verdict-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.verdict-title::before{content:'⌥'}
+.verdict-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.verdict-body strong{color:var(--purple-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">LISA EMRI/IMRI Detectability</span>
+    <a class="nav-link" href="https://omegacentauri.me/#roadmap">← #roadmap</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>LISA EMRI/IMRI Detectability Calculator</h1>
+      <p class="tool-subtitle">Current IMBH constraints (Tools 2, 9, 13) are all <em>static</em> — they say nothing dynamic is happening now. LISA (launch ~2035) would catch a stellar-mass compact object spiralling into the IMBH and produce a clean dynamical signature. This tool computes the characteristic-strain trajectory and SNR for that scenario.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 GR inspiral + LISA noise</span>
+      <span class="tier-badge tier-theory">⚠ IMBH existence</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Simplified physics.</strong> Circular inspiral, Newtonian energy balance with leading-order PN radiation reaction (Peters formula), no spin, no eccentricity beyond a single user parameter that perturbs the effective inspiral time. Real EMRI waveforms (Maggiore vol 2, Babak et al. 2017) involve self-force, resonances, and 10⁵+ cycles requiring sophisticated kludge or self-force waveform models. The SNR estimate here is good to a factor of ~3 — enough for "is this in the band?" pedagogy, not enough for waveform parameter estimation.
+  </div>
+
+  <div class="preset-bar">
+    <span class="preset-bar-label">Scenario preset:</span>
+    <button class="preset-pill active" data-preset="oc-stellar">OC IMBH (8,200 M☉) + stellar BH</button>
+    <button class="preset-pill" data-preset="oc-ns">OC IMBH + NS</button>
+    <button class="preset-pill" data-preset="banares">Bañares limit (6,000 M☉) + stellar BH</button>
+    <button class="preset-pill" data-preset="noyola">Noyola detection (4×10⁴ M☉) + stellar BH</button>
+    <button class="preset-pill" data-preset="smbh-emri">Sgr A* SMBH EMRI</button>
+    <button class="preset-pill" data-preset="custom">Custom</button>
+  </div>
+
+  <div class="layout">
+    <!-- LEFT — controls -->
+    <section class="card">
+      <div class="card-title">Source parameters</div>
+      <div class="slider-block">
+        <label>Primary mass M_BH (log M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="mbh-slider" min="2" max="9" step="0.05" value="3.91">
+          <span class="slider-value" id="mbh-val">8,200 M☉</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Companion type</label>
+        <div class="companion-toggle">
+          <button class="companion-btn" data-comp="0.55">WD (0.55 M☉)</button>
+          <button class="companion-btn" data-comp="1.4">NS (1.4 M☉)</button>
+          <button class="companion-btn active" data-comp="10">stellar BH (10 M☉)</button>
+          <button class="companion-btn" data-comp="30">stellar BH (30 M☉)</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Companion mass m (M☉, custom)</label>
+        <div class="slider-row">
+          <input type="range" id="m2-slider" min="0.3" max="50" step="0.1" value="10">
+          <span class="slider-value" id="m2-val">10.0 M☉</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Distance d (kpc, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="d-slider" min="0" max="5" step="0.05" value="0.72">
+          <span class="slider-value" id="d-val">5.2 kpc (OC)</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Observation time T_obs (years)</label>
+        <div class="slider-row">
+          <input type="range" id="tobs-slider" min="0.5" max="10" step="0.1" value="4">
+          <span class="slider-value" id="tobs-val">4 yr</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Initial orbital eccentricity e (perturbation)</label>
+        <div class="slider-row">
+          <input type="range" id="e-slider" min="0" max="0.9" step="0.01" value="0.1">
+          <span class="slider-value" id="e-val">0.10</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT — strain canvas -->
+    <section class="curve-card">
+      <div class="card-title">Characteristic strain h_c(f) vs. LISA sensitivity curve</div>
+      <canvas id="strain" width="900" height="540"></canvas>
+      <div class="legend-row">
+        <span><i style="background:var(--amber-glow)"></i>signal h_c(f) (sweeping toward ISCO)</span>
+        <span><i style="background:var(--purple-glow)"></i>LISA strain sensitivity √(f·S_n)</span>
+        <span><i style="background:rgba(29,186,144,.4)"></i>detectable band (h_c &gt; h_n)</span>
+        <span><i style="background:var(--red-bright)"></i>ISCO frequency</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- HEADLINE STATS -->
+  <div class="outputs">
+    <div class="stat" id="snr-box">
+      <div class="stat-label">Integrated SNR</div>
+      <div class="stat-val" id="snr-val">—</div>
+      <div class="stat-sub" id="snr-sub">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Chirp mass M_chirp</div>
+      <div class="stat-val" id="mchirp-val">—</div>
+      <div class="stat-sub">M☉</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">f_ISCO (Schwarzschild)</div>
+      <div class="stat-val" id="fisco-val">—</div>
+      <div class="stat-sub">Hz</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Inspiral cycles in band</div>
+      <div class="stat-val" id="ncyc-val">—</div>
+      <div class="stat-sub">in LISA window</div>
+    </div>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="detail-cols">
+    <section class="card">
+      <div class="card-title">Frequency window</div>
+      <div class="row"><span class="row-label">LISA low edge</span><span class="row-value">10⁻⁴ <span class="unit">Hz</span></span></div>
+      <div class="row"><span class="row-label">Signal entry frequency f_start</span><span class="row-value" id="fstart-val">—</span></div>
+      <div class="row"><span class="row-label">Signal exit / merger f_ISCO</span><span class="row-value" id="fend-val">—</span></div>
+      <div class="row"><span class="row-label">Time to merger from f_start</span><span class="row-value" id="tmerge-val">—</span></div>
+    </section>
+    <section class="card">
+      <div class="card-title">Strain &amp; rate</div>
+      <div class="row"><span class="row-label">Peak strain (at f_ISCO)</span><span class="row-value" id="hpeak-val">—</span></div>
+      <div class="row"><span class="row-label">Strain at LISA bucket (f = 0.01 Hz)</span><span class="row-value" id="hbucket-val">—</span></div>
+      <div class="row"><span class="row-label">LISA noise at bucket</span><span class="row-value" id="nbucket-val">—</span></div>
+      <div class="row"><span class="row-label">Expected event rate per Hubble time (per cluster, rough)</span><span class="row-value" id="rate-val">—</span></div>
+    </section>
+  </div>
+
+  <!-- VERDICT -->
+  <section class="verdict-card">
+    <div class="verdict-title">LISA verdict for Omega Centauri</div>
+    <div class="verdict-body" id="verdict-body">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What an IMRI signal looks like</h3>
+      <p>For two masses M (primary BH) and m (compact companion) on a circular orbit at orbital frequency f_orb, the dominant gravitational-wave frequency is f_GW = 2 f_orb. Energy is radiated according to the Peters (1964) formula, and the orbit shrinks. The characteristic strain — the strain amplitude integrated over the number of cycles spent near each frequency — is</p>
+      <p><code>h_c(f) = √(2/3) · π⁻²/³ · (G M_chirp / c³)⁵/⁶ · f⁻¹/⁶ · c / d_L</code></p>
+      <p>where M_chirp = (M·m)³/⁵/(M+m)¹/⁵ is the chirp mass and d_L is the luminosity distance. This is the slow-rising line on the strain plot. The signal stops at f_ISCO ≈ c³/(6√6·π·G·M_BH) = 4.4 kHz × (M☉/M_BH) — the innermost stable circular orbit, beyond which the inspiral plunges into the horizon and the perturbative waveform breaks down. For an 8,200 M☉ IMBH, f_ISCO ≈ 0.54 Hz, well inside LISA's sensitive band.</p>
+
+      <h3>LISA's noise curve</h3>
+      <p>The purple curve uses the Robson, Cornish &amp; Liu (2019) sky-averaged analytical LISA strain sensitivity, the standard parameterisation for back-of-envelope SNR estimates. The bucket bottoms out around f ≈ 5 mHz with strain sensitivity h_n ≈ 4×10⁻²¹ in a one-year integration. Outside the bucket — below ~10⁻⁴ Hz acceleration noise dominates; above ~0.1 Hz optical metrology noise dominates — sensitivity falls steeply.</p>
+
+      <h3>Integrated SNR</h3>
+      <p>The matched-filter SNR over the chirp from f_start to f_ISCO is</p>
+      <p><code>SNR² = ∫ (h_c(f)/h_n(f))² · (df/f)</code></p>
+      <p>Numerically integrated by the tool. Conventional "detection threshold" for LISA is SNR ≥ 10. Above that, the signal is detectable; above ~20 the source parameters (mass, spin, location, distance) can be estimated to scientific precision. For the OC + stellar-BH default, SNR is typically in the few-dozen to few-hundred range depending on inclination and chirp mass, well above threshold.</p>
+
+      <h3>Rates: how often does this happen?</h3>
+      <p>The harder question is the event rate. arXiv:2501.13466 (Jan 2025) ran 100 MOCCA simulations of IMRI formation in globular clusters and found that of the IMRIs that form, less than 10% have SNR above the LISA threshold — but a population of ~10⁴ globular clusters in the universe could produce a few-per-decade rate of detectable events. For Omega Centauri specifically, the rate is dominated by the dynamical interaction cross-section in the dense core and is highly uncertain (a single dynamical event in the past 13 Gyr is plausible). The "rate per Hubble time per cluster" row gives the order-of-magnitude expectation; multiply by the number of clusters and the mission lifetime to get an expected detection count.</p>
+
+      <h3>What this tool changes about the OCS narrative</h3>
+      <p>The current IMBH constraints are all upper bounds (Bañares, JWST, TRAPUM) plus one disputed lower bound (Häberle). Even if all parties agree that "a 6,000–10,000 M☉ IMBH is allowed in OC," the question of whether it actually exists is observationally answerable only by either (a) a future tighter kinematic measurement, (b) a future tighter pulsar timing measurement (SKA), or (c) a gravitational-wave detection. LISA gives the cleanest "yes/no" because it sees the dynamical signature of a compact orbit, not the time-averaged enclosed mass profile. This tool lets the visitor see exactly what region of (M_BH, m_companion, distance) LISA can cover.</p>
+
+      <h3>Classroom uses</h3>
+      <p><strong>Advanced undergrad:</strong> derive the characteristic strain formula from the quadrupole radiation formula; reproduce the f⁻¹/⁶ slope. <strong>Graduate:</strong> integrate SNR over the chirp; explain why the bucket frequency dominates the SNR budget; compute the parameter-estimation precision from Fisher matrix arguments. <strong>Project seed:</strong> compute the expected number of OC-like IMRIs in a 4-year LISA mission using the MOCCA-style rate and compare to the IMBH constraints from constraint-stacker.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🛰 LISA mission status</h3>
+      <p>The <strong>Laser Interferometer Space Antenna (LISA)</strong> was adopted by ESA in January 2024 as an L-class mission with NASA partnership, targeting launch in <strong>2035</strong> (full operations from ~2037). Three spacecraft in heliocentric orbit form a 2.5-million-km triangular interferometer, sensitive to gravitational waves in the 10⁻⁴ to 10⁻¹ Hz band — exactly the regime where extreme- and intermediate-mass-ratio inspirals (EMRIs / IMRIs) emit. The LISA Pathfinder demonstration mission (2015–2017) successfully validated the technology.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">⚛ EMRI/IMRI event rates</h3>
+      <p>An EMRI is a stellar-mass compact object (typically a stellar BH, 10–60 M☉) inspiralling into a supermassive BH (10⁵–10⁷ M☉). Predicted detection rates: <strong>~10–100 EMRIs/year</strong> at LISA design sensitivity (Babak et al. 2017 PRD 95:103012), with significant uncertainty from the M_BH mass function and capture-rate physics. An IMRI involves an IMBH (10²–10⁵ M☉) as either the central or inspiralling object. IMRI rates are much more uncertain — anywhere from ~0.1 to ~10 per year depending on whether IMBHs are common in GCs.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">🎯 If OC has an IMBH at the Häberle mass</h3>
+      <p>A Häberle-mass (~8200 M☉) IMBH at OC's distance (5.4 kpc) would produce IMRI signals from any stellar-mass compact object that gets captured into a tight orbit. LISA's strain sensitivity at 10⁻³ Hz is ~10⁻²⁰ Hz^(−1/2); a 10 M☉ BH inspiralling into the OC IMBH would produce a coherent signal detectable for 1–10 years before merger. Even one detection from OC would settle the IMBH question definitively, with mass and spin measurements at 1% precision. The challenge is rate — capture timescales for the few stellar BHs expected in OC are uncertain.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · arXiv:2501.13466 (Jan 2025); Robson, Cornish &amp; Liu 2019 (CQG 36:105011); Babak et al. 2017; Peters 1964; Maggiore "Gravitational Waves" vol 1 §4</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const G = 6.674e-11, C = 2.998e8, MSUN = 1.989e30, KPC_M = 3.086e19;
+const YR_S = 3.156e7;
+const PI = Math.PI;
+
+const PRESETS = {
+  "oc-stellar":{ logM: 3.914, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"OC IMBH (8200 M☉) + stellar BH" },
+  "oc-ns":     { logM: 3.914, m2:1.4, logD: 0.72, tobs:4, e:0.1, label:"OC IMBH + NS" },
+  "banares":   { logM: 3.778, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"Bañares limit (6000 M☉) + stellar BH" },
+  "noyola":    { logM: 4.602, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"Noyola detection (4×10⁴) + stellar BH" },
+  "smbh-emri": { logM: 6.60,  m2:10,  logD: 0.94, tobs:4, e:0.1, label:"Sgr A* (4×10⁶ M☉) at GC" }
+};
+
+const state = {
+  preset:"oc-stellar",
+  logM:3.914, m2:10, logD:0.72, tobs:4, e:0.1
+};
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();
+  if(h.preset && (PRESETS[h.preset] || h.preset==='custom')) state.preset = h.preset;
+  if (state.preset !== "custom" && PRESETS[state.preset]) Object.assign(state, PRESETS[state.preset]);
+  if(h.M!==undefined){const v=parseFloat(h.M);if(!isNaN(v))state.logM=clamp(v,2,9)}
+  if(h.m2!==undefined){const v=parseFloat(h.m2);if(!isNaN(v)&&v>0)state.m2=clamp(v,0.3,50)}
+  if(h.d!==undefined){const v=parseFloat(h.d);if(!isNaN(v))state.logD=clamp(v,0,5)}
+  if(h.T!==undefined){const v=parseFloat(h.T);if(!isNaN(v)&&v>0)state.tobs=clamp(v,0.5,10)}
+  if(h.e!==undefined){const v=parseFloat(h.e);if(!isNaN(v))state.e=clamp(v,0,0.9)}
+}
+function saveHash(){setHash({
+  preset:state.preset, M:state.logM.toFixed(3), m2:state.m2.toFixed(2),
+  d:state.logD.toFixed(2), T:state.tobs.toFixed(1), e:state.e.toFixed(2)
+});}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+function fmtTime(s){
+  if (s < 60) return s.toFixed(1) + ' s';
+  if (s < 3600) return (s/60).toFixed(1) + ' min';
+  if (s < 86400) return (s/3600).toFixed(1) + ' hr';
+  if (s < YR_S) return (s/86400).toFixed(1) + ' d';
+  if (s < 1e3*YR_S) return (s/YR_S).toFixed(1) + ' yr';
+  return fmtSci(s/YR_S) + ' yr';
+}
+
+function chirpMass(m1, m2) {
+  return Math.pow(m1*m2, 3/5) / Math.pow(m1+m2, 1/5);
+}
+
+function fISCO(M_kg) {
+  return Math.pow(C,3) / (6 * Math.sqrt(6) * PI * G * M_kg);
+}
+
+// Characteristic strain h_c(f) for inspiral (Maggiore eq 4.166 form)
+function hc(f, Mchirp_kg, d_m) {
+  const Gx = G * Mchirp_kg / Math.pow(C,3); // seconds
+  const term = Math.sqrt(2/3) / Math.pow(PI, 2/3) * Math.pow(Gx, 5/6) * Math.pow(f, -1/6) * C / d_m;
+  return term;
+}
+
+// Time from frequency f to merger (Peters)
+function timeToMerger(f, Mchirp_kg) {
+  const tau = G * Mchirp_kg / Math.pow(C,3);  // seconds
+  return (5/256) * Math.pow(PI*f*tau, -8/3) * tau;
+}
+
+// LISA sensitivity Robson, Cornish & Liu 2019 (sky-averaged)
+function lisaSn(f) {
+  const L = 2.5e9;
+  const fstar = C/(2*PI*L);
+  // OMS noise
+  const Poms = Math.pow(1.5e-11, 2) * (1 + Math.pow(2e-3/f, 4));
+  // Acceleration noise (translated to displacement at low f)
+  const Pacc = Math.pow(3e-15, 2) * (1 + Math.pow(0.4e-3/f, 2)) * (1 + Math.pow(f/8e-3, 4));
+  const S = (10/(3*L*L)) * (Poms + 2*(1 + Math.cos(f/fstar)**2) * Pacc / Math.pow(2*PI*f, 4)) * (1 + 0.6 * Math.pow(f/fstar, 2));
+  // Add WD confusion noise approximate (Robson+ eq 14)
+  const Sc = 9e-45 * Math.pow(f, -7/3) * Math.exp(-Math.pow(f, 0.138) - 221 * f * Math.sin(521 * f));
+  return S + Math.max(0, Sc);
+}
+
+// Characteristic noise strain h_n(f) = sqrt(f * Sn(f))
+function hn(f) { return Math.sqrt(f * lisaSn(f)); }
+
+function compute() {
+  const M_kg = Math.pow(10, state.logM) * MSUN;
+  const m_kg = state.m2 * MSUN;
+  const d_m = Math.pow(10, state.logD) * KPC_M;
+
+  const Mc_kg = chirpMass(M_kg, m_kg);
+  const Mc_sun = Mc_kg / MSUN;
+
+  const f_isco = fISCO(M_kg);
+  // Approximate frequency at which signal entered LISA band at start of obs
+  // If signal is already past LISA low edge (1e-4 Hz), start there; otherwise it enters later.
+  // Use simple approach: f_start = f at time T_obs before merger, but capped at LISA low
+  const T_obs_s = state.tobs * YR_S;
+  // Invert Peters: t(f) = (5/256) * (πfτ)^(-8/3) * τ
+  // f(t) = (5/(256 * τ * t))^(3/8) / πτ ... let me just compute numerically
+  const tau = G * Mc_kg / Math.pow(C,3);
+  // f at time T_obs before merger
+  let f_TobsBack = Math.pow(5 / (256 * T_obs_s / tau), 3/8) / (PI * tau);
+  if (!isFinite(f_TobsBack) || f_TobsBack > f_isco) f_TobsBack = f_isco;
+  const fLow = Math.max(1e-5, f_TobsBack);  // hard low edge
+
+  // Eccentricity perturbation: increases effective signal power but also makes spectrum bumpy.
+  // Use simple amplitude boost factor (1 + 1.5 e²) for h_c at low f (Peters 1964 eccentric enhancement).
+  const eFactor = 1 + 1.5 * state.e * state.e;
+
+  // SNR integral: SNR² = ∫ (h_c/h_n)² d ln f
+  let snr2 = 0;
+  const fHi = f_isco;
+  const nSteps = 400;
+  const lnLow = Math.log(fLow), lnHi = Math.log(fHi);
+  const dlnf = (lnHi - lnLow) / nSteps;
+  for (let i = 0; i < nSteps; i++) {
+    const f = Math.exp(lnLow + (i+0.5) * dlnf);
+    const hcF = hc(f, Mc_kg, d_m) * eFactor;
+    const hnF = hn(f);
+    if (hnF > 0) {
+      snr2 += Math.pow(hcF / hnF, 2) * dlnf;
+    }
+  }
+  const snr = Math.sqrt(Math.max(0, snr2));
+
+  // Cycles in band (rough): N_cyc(f) = f * t(f to merger)
+  const fBucket = 0.005; // LISA bucket
+  const t_atFlow = timeToMerger(fLow, Mc_kg);
+  const t_atFhi = timeToMerger(fHi, Mc_kg);
+  const N_cyc = (t_atFlow - t_atFhi) * Math.sqrt(fLow * fHi); // rough geometric mean
+
+  // Strains at key freqs
+  const h_at_bucket = hc(fBucket, Mc_kg, d_m) * eFactor;
+  const h_at_isco = hc(fHi, Mc_kg, d_m) * eFactor;
+  const n_at_bucket = hn(fBucket);
+
+  // Event rate per Hubble time per cluster (very rough; based on MOCCA-class estimates)
+  // ~1 detectable IMRI per 10^5 yr per cluster for OC-class central density
+  // For Hubble = 1.4e10 yr → ~1.4e5 events per Hubble time per cluster (formed), of which <10% detectable
+  // OC may produce 1-10 over its lifetime
+  const ratePerHubblePerCluster = 5; // single-order placeholder; depends on cluster density profile
+
+  return { M_kg, m_kg, Mc_kg, Mc_sun, d_m, f_isco, fLow, fHi, snr, N_cyc, h_at_bucket, h_at_isco, n_at_bucket, ratePerHubblePerCluster, T_obs_s, t_atFlow, t_atFhi };
+}
+
+function drawCurve(c) {
+  const cv = document.getElementById('strain');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = 540;
+  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const padL = 70, padR = 24, padT = 20, padB = 50;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+  const xMin = -5, xMax = 1;       // log10 f Hz
+  const yMin = -22, yMax = -15;    // log10 strain
+
+  // axes
+  ctx.strokeStyle = 'rgba(112,85,212,.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT+plotH); ctx.lineTo(padL+plotW, padT+plotH);
+  ctx.stroke();
+
+  ctx.font = "10px 'Space Mono', monospace";
+  ctx.fillStyle = '#9890c0';
+  ctx.textAlign = 'center';
+  for (let lg = xMin; lg <= xMax; lg++) {
+    const x = padL + (lg - xMin)/(xMax - xMin) * plotW;
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT+plotH); ctx.stroke();
+    ctx.fillText('10' + supDigits(lg), x, padT+plotH+14);
+  }
+  ctx.fillText('frequency f (Hz)', padL+plotW/2, h-10);
+
+  ctx.textAlign = 'right';
+  for (let lg = yMin; lg <= yMax; lg++) {
+    const y = padT + plotH - (lg - yMin)/(yMax - yMin) * plotH;
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+plotW, y); ctx.stroke();
+    ctx.fillText('10' + supDigits(lg), padL-6, y+3);
+  }
+  ctx.save();
+  ctx.translate(18, padT+plotH/2);
+  ctx.rotate(-PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('characteristic strain h_c, h_n', 0, 0);
+  ctx.restore();
+
+  // LISA sensitivity curve
+  ctx.strokeStyle = '#a080f0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i <= 200; i++) {
+    const lgf = xMin + i/200 * (xMax - xMin);
+    const f = Math.pow(10, lgf);
+    const h_n = hn(f);
+    const lgh = Math.log10(Math.max(h_n, 1e-30));
+    const x = padL + (lgf - xMin)/(xMax - xMin) * plotW;
+    const y = padT + plotH - (Math.max(yMin, Math.min(yMax, lgh)) - yMin)/(yMax - yMin) * plotH;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Signal h_c
+  const M_kg = c.M_kg, Mc_kg = c.Mc_kg, d_m = c.d_m;
+  const eFactor = 1 + 1.5 * state.e * state.e;
+  ctx.strokeStyle = '#ffc840';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  let firstPoint = true;
+  const sigPts = [];
+  for (let i = 0; i <= 200; i++) {
+    const lgf = xMin + i/200 * (xMax - xMin);
+    const f = Math.pow(10, lgf);
+    if (f < c.fLow || f > c.fHi) continue;
+    const h = hc(f, Mc_kg, d_m) * eFactor;
+    const lgh = Math.log10(Math.max(h, 1e-30));
+    const x = padL + (lgf - xMin)/(xMax - xMin) * plotW;
+    const y = padT + plotH - (Math.max(yMin, Math.min(yMax, lgh)) - yMin)/(yMax - yMin) * plotH;
+    sigPts.push({x, y, h, hn: hn(f)});
+    if (firstPoint) { ctx.moveTo(x, y); firstPoint = false; }
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Fill detectable area
+  ctx.fillStyle = 'rgba(29,186,144,.20)';
+  ctx.beginPath();
+  let starting = true;
+  for (const p of sigPts) {
+    if (p.h > p.hn) {
+      if (starting) { ctx.moveTo(p.x, p.y); starting = false; }
+      else ctx.lineTo(p.x, p.y);
+    }
+  }
+  // close to noise curve along the same frequency range
+  for (let i = sigPts.length - 1; i >= 0; i--) {
+    const p = sigPts[i];
+    if (p.h > p.hn) {
+      const lgh = Math.log10(p.hn);
+      const y = padT + plotH - (Math.max(yMin, Math.min(yMax, lgh)) - yMin)/(yMax - yMin) * plotH;
+      ctx.lineTo(p.x, y);
+    }
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  // ISCO marker
+  const xIsco = padL + (Math.log10(c.f_isco) - xMin)/(xMax - xMin) * plotW;
+  ctx.strokeStyle = '#d04040';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(xIsco, padT); ctx.lineTo(xIsco, padT+plotH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#d04040';
+  ctx.textAlign = 'left';
+  ctx.fillText('f_ISCO = ' + fmtSci(c.f_isco, 2) + ' Hz', xIsco + 4, padT + 12);
+
+  // f_start marker
+  const xStart = padL + (Math.log10(c.fLow) - xMin)/(xMax - xMin) * plotW;
+  ctx.strokeStyle = 'rgba(255,200,64,.4)';
+  ctx.setLineDash([2, 2]);
+  ctx.beginPath(); ctx.moveTo(xStart, padT); ctx.lineTo(xStart, padT+plotH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ffc840';
+  ctx.textAlign = 'left';
+  ctx.fillText('f_start', xStart + 4, padT + plotH - 6);
+}
+
+function render() {
+  // Slider readouts
+  document.getElementById('mbh-val').textContent = state.logM >= 3 ? fmtSci(Math.pow(10, state.logM), 2) + ' M☉' : Math.round(Math.pow(10, state.logM)) + ' M☉';
+  document.getElementById('m2-slider').value = state.m2;
+  document.getElementById('m2-val').textContent = state.m2.toFixed(1) + ' M☉';
+  document.getElementById('d-slider').value = state.logD;
+  document.getElementById('d-val').textContent = Math.pow(10, state.logD).toFixed(2) + ' kpc';
+  document.getElementById('tobs-slider').value = state.tobs;
+  document.getElementById('tobs-val').textContent = state.tobs.toFixed(1) + ' yr';
+  document.getElementById('e-slider').value = state.e;
+  document.getElementById('e-val').textContent = state.e.toFixed(2);
+
+  // Companion buttons
+  document.querySelectorAll('[data-comp]').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.comp) === state.m2));
+  document.querySelectorAll('.preset-pill').forEach(p => p.classList.toggle('active', p.dataset.preset === state.preset));
+
+  const c = compute();
+
+  // SNR box state
+  const snrBox = document.getElementById('snr-box');
+  snrBox.className = 'stat ' + (c.snr >= 20 ? 'det' : c.snr >= 10 ? 'marginal' : 'warn');
+  document.getElementById('snr-val').textContent = c.snr >= 100 ? fmtSci(c.snr, 1) : c.snr.toFixed(1);
+  document.getElementById('snr-sub').textContent = c.snr >= 20 ? 'parameter-estimable' :
+                                                    c.snr >= 10 ? 'marginal detection' :
+                                                    'below LISA threshold';
+
+  document.getElementById('mchirp-val').textContent = c.Mc_sun >= 10 ? c.Mc_sun.toFixed(1) : c.Mc_sun.toFixed(2);
+  document.getElementById('fisco-val').textContent = fmtSci(c.f_isco, 2);
+  document.getElementById('ncyc-val').textContent = fmtSci(c.N_cyc, 2);
+
+  // Frequency window
+  document.getElementById('fstart-val').innerHTML = fmtSci(c.fLow, 2) + ' <span class="unit">Hz</span>';
+  document.getElementById('fend-val').innerHTML = fmtSci(c.fHi, 2) + ' <span class="unit">Hz</span>';
+  document.getElementById('tmerge-val').textContent = fmtTime(c.t_atFlow);
+
+  // Strain
+  document.getElementById('hpeak-val').textContent = fmtSci(c.h_at_isco);
+  document.getElementById('hbucket-val').textContent = fmtSci(c.h_at_bucket);
+  document.getElementById('nbucket-val').textContent = fmtSci(c.n_at_bucket);
+  document.getElementById('rate-val').textContent = '~' + c.ratePerHubblePerCluster + ' / cluster / Hubble time';
+
+  // Verdict
+  const vb = document.getElementById('verdict-body');
+  let vText;
+  if (c.snr >= 50) vText = `<strong>Strong detection.</strong> Integrated SNR ≈ ${c.snr.toFixed(0)} — LISA would not just see this event, it would measure the IMBH mass and the companion mass to a few percent and locate the source to within a few square degrees on the sky. The IMBH question would be settled.`;
+  else if (c.snr >= 20) vText = `<strong>Detection with parameter estimation.</strong> SNR ≈ ${c.snr.toFixed(1)} is enough for confident detection and for fitting a waveform. The IMBH mass would be recovered to ~10% precision.`;
+  else if (c.snr >= 10) vText = `<strong>Marginal detection.</strong> SNR ≈ ${c.snr.toFixed(1)} clears the LISA threshold but parameter estimation would be loose. A confirmation from a second source or a multi-mission combination would help.`;
+  else vText = `<strong>Below LISA detection threshold.</strong> SNR ≈ ${c.snr.toFixed(2)}; this configuration is not detectable as a single source. Either the system is too distant, the companion too low-mass for an IMRI signature, or the chirp is outside LISA's sensitive band.`;
+  vb.innerHTML = vText + ` Companion sweeps through f_start = ${fmtSci(c.fLow, 2)} Hz to f_ISCO = ${fmtSci(c.f_isco, 2)} Hz over ${fmtTime(c.t_atFlow)} (slightly more than the observation window because the integration is cut at T_obs from merger).`;
+
+  drawCurve(c);
+}
+
+function wire() {
+  document.getElementById('mbh-slider').addEventListener('input', e => {
+    state.logM = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('m2-slider').addEventListener('input', e => {
+    state.m2 = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('d-slider').addEventListener('input', e => {
+    state.logD = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('tobs-slider').addEventListener('input', e => {
+    state.tobs = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+  document.getElementById('e-slider').addEventListener('input', e => {
+    state.e = parseFloat(e.target.value); state.preset = "custom"; saveHash(); render();
+  });
+
+  document.querySelectorAll('[data-comp]').forEach(b => b.addEventListener('click', () => {
+    state.m2 = parseFloat(b.dataset.comp); state.preset = "custom"; saveHash(); render();
+  }));
+  document.querySelectorAll('.preset-pill').forEach(p => p.addEventListener('click', () => {
+    const k = p.dataset.preset;
+    if (k === "custom") state.preset = "custom";
+    else if (PRESETS[k]) {
+      state.preset = k;
+      Object.assign(state, PRESETS[k]);
+    }
+    document.getElementById('mbh-slider').value = state.logM;
+    saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => drawCurve(compute()), 100);
+  });
+}
+
+function init() {
+  loadHash();
+  document.getElementById('mbh-slider').value = state.logM;
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

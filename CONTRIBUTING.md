@@ -1,0 +1,145 @@
+# Contributing to the Omega Centauri Society tools
+
+Thanks for considering a contribution. The OCS catalogue is a solo-maintained
+science portal at omegacentauri.me, and most updates take one of a few well-defined
+shapes. This guide walks each one.
+
+Triple-licensing reminder before you start: **code is MIT, prose is CC BY 4.0,
+curated data tables are CC0 1.0.** See the three `LICENSE-*.md` files in the
+repository root. Submitting a contribution means you're releasing it under
+whichever of those licenses fits the kind of change you're making.
+
+---
+
+## Adding a new IMBH mass measurement
+
+When a new paper publishes an IMBH mass estimate or limit for Omega Centauri (or
+any cluster represented in the comparator), the canonical place to add it is
+`tools/data/measurements.js`. *Do not* hardcode the value into any individual
+tool — they all read from this shared sibling file.
+
+1. Open `tools/data/measurements.js`.
+2. Find the `imbh:` array (for IMBH measurements) or `clusters:` /
+   `pulsars:` for the others.
+3. Append a new object following the existing schema. For IMBH measurements
+   the schema is (see §8 Tool 3 of `ocs-tools-spec-v1.1.md`):
+
+```javascript
+{
+  id: "lastname2026",          // short stable identifier
+  year: 2026,
+  authors: "Lastname et al.",
+  value: 12000,                 // central value or limit, M_sun. null for
+                                // no-evidence or parameter-dependent
+  uncertaintyLo: 2000,          // for symmetric error bars (lower extent), M_sun
+  uncertaintyHi: 3000,          // upper extent, M_sun
+  limitType: "detection",       // "detection" | "upper" | "lower" |
+                                // "noEvidence" | "parameterDependent"
+  sigma: null,                  // confidence in sigma if applicable
+  confidenceLevel: null,        // optional, fractional (e.g. 0.90 for 90% CL)
+  method: "kinematics",         // "kinematics" | "propermotion" | "timing" |
+                                // "nbody" | "accretion"
+  methodLabel: "Stellar kinematics (instrument)",  // human-readable
+  journal: "Nature 642:123",
+  doi: "10.1038/s41586-026-...",   // DOI string, no leading URL
+  url: null,                    // optional fallback URL
+  notes: "One- or two-sentence summary; appears in tool detail cards."
+}
+```
+
+4. Update `meta.lastUpdated` to today's ISO date (`YYYY-MM-DD`).
+5. Bump the `Version:` line in the file header of any tool whose displayed
+   data has changed (typically constraint-stacker, imbh-timeline, and
+   cluster-comparator).
+6. Open a PR. Include the DOI in the description.
+
+By contributing the row, you agree to release it under CC0 (the original
+paper's authors retain their own copyright; the citation stays in the row).
+
+## Correcting a hardcoded physical value
+
+If you find a numerical constant in a tool file that needs correction (e.g., a
+better measurement of a cluster's half-light radius, an updated coefficient on
+the M-σ relation):
+
+1. Edit the value in the relevant tool file.
+2. Add a comment immediately above noting the source: `// from <citation>, year`.
+3. Update the file's `Last updated:` line in its header comment block.
+4. If the constant is shared across multiple tools (e.g., the ergosphere
+   ops/sec calculation duplicated in Tools 4 and 6 per spec §11), update **all**
+   consumer tools in the same PR. Spec §11 requires character-identical copies.
+5. Open the PR with a one-line explanation and the source citation.
+
+## Adding a new language
+
+Tools launch in English only. The path to add a second language is intentionally
+made cheap:
+
+1. Find the `const STRINGS = { ... }` object near the top of each tool file
+   (mandated by spec §5.5 — "all user-facing string literals stored in a single
+   JS object").
+2. Add a new key for the language code (e.g., `STRINGS.zh = { ... }` for
+   Chinese) with translated values matching the existing English keys.
+3. Wire a language toggle (see how the main `index.html` handles the `lang-zh`
+   body class for the existing English/Chinese site toggle — copy that pattern).
+4. Test in Chrome and Firefox; verify text fits in the slider labels and badge
+   pills.
+5. Submit one PR per language, even if the translations were generated together —
+   makes review tractable.
+
+## Code style
+
+- **Vanilla JavaScript only.** No npm, no build step, no transpilation, no
+  TypeScript, no React. The whole site is statically served.
+- **Inline everything.** Each tool is a single self-contained HTML file. The
+  one exception is `tools/data/measurements.js` (see spec §6.7).
+- **No network calls at runtime.** No `fetch`, no XHR, no dynamic import over
+  the network. Google Fonts is the only exception (already used by the rest of
+  the site). Tools must work when opened directly from disk on `file://`.
+- **No PII.** Forms that submit data, identity localStorage, cookies, and
+  analytics are not allowed. Non-identity localStorage (e.g., "About panel
+  collapsed/expanded") is permitted.
+- **CSS palette and typography:** copy the variable block from spec §5.2
+  verbatim into every tool. Do not invent new color values.
+- **URL hash state:** every interactive tool must serialize its current state
+  to the URL hash on every interaction and restore from the hash on page load.
+  Use the helper functions in spec §11.
+
+## Pull-request checklist
+
+Before opening a PR, confirm:
+
+- [ ] Any physics is verified against a cited primary source.
+- [ ] Epistemic tier badge(s) are present and correct per spec §6.1.
+- [ ] URL hash state is implemented (read on load, write on every interaction).
+- [ ] File-header comment block at the top of the file is current per spec §6.4
+      (version bumped, "Last updated" matches the commit date, license trio
+      declared, data sources listed).
+- [ ] Tested in Chrome and Firefox at desktop width and at 720 px.
+- [ ] If a shared utility function (spec §11) was modified, all consumer tools
+      updated in the same PR.
+- [ ] If a hardcoded measurement was modified, the change has been migrated to
+      `tools/data/measurements.js` instead, and consumer tools updated to read
+      from there.
+
+## What goes in `tools/data/measurements.js`
+
+That file is the single source of truth for **curated reference tables only** —
+IMBH measurements, cluster properties, OC pulsar inventory. It is loaded via a
+single `<script src>` tag from tools that need it. Adding new schema sections
+(e.g., a "compute substrate calibration" table) requires updating the spec
+first (`ocs-tools-spec-v1.1.md` §6.7) — open an issue rather than a direct PR.
+
+## Reporting an error
+
+Bug reports, factual corrections, and "this slider does the wrong thing" issues
+are all welcome. Open an issue or email the OCS maintainer (contact details on
+the main site). Include the URL with hash state (the tools serialise state into
+the hash on every interaction precisely so a bug report can be reproduced).
+
+## Style of correspondence
+
+Brief, technical, falsifiable. The site's whole stance is epistemic honesty
+about what is established physics vs. what is speculative engineering — please
+keep correspondence in that voice. Tier-correct disagreement is welcome; ad
+hominem and pseudo-scientific tone-policing are not.

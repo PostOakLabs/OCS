@@ -1,0 +1,594 @@
+<!--
+  Cosmological Natural Selection Simulator
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-05-24
+
+  Inspired by: Clément Vidal's work on Cosmological Natural/Artificial Selection
+
+  Data sources:
+    - Smolin, L. (1992). "Did the universe evolve?" Classical and Quantum
+      Gravity 9:173–191. DOI: 10.1088/0264-9381/9/1/016
+    - Smolin, L. (1997). The Life of the Cosmos. Oxford University Press.
+    - Vidal, C. (2014). The Beginning and the End: The Meaning of Life in a
+      Cosmological Perspective. Springer. ISBN 978-3-319-05061-4.
+    - Vidal, C. & Delahaye, J.-P. (2019). "Universal Measures of Complexity."
+      Lecture Notes in Morphogenesis. Springer.
+    - Vidal, C. (2016). "Stellivore extraterrestrials? Binary stars as living
+      systems." Acta Astronautica 128:251–256.
+      DOI: 10.1016/j.actaastro.2016.06.038
+    - Barrow, J. D. & Tipler, F. J. (1986). The Anthropic Cosmological
+      Principle. Oxford University Press.
+    - Tegmark, M. et al. (2006). "Dimensionless constants, cosmology and
+      other dark matters." Phys. Rev. D 73:023505.
+      DOI: 10.1103/PhysRevD.73.023505
+
+  Site section: #compute
+  Epistemic tier(s): ✦ Speculative cosmological framework (CNS/CAS)
+                     ⚠ Theoretical physics (fine-tuning landscape)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmological Natural Selection — Omega Centauri Society</title>
+<meta name="description" content="Lee Smolin and Clément Vidal's Cosmological Natural Selection: tune the physical constants of your universe and watch how black hole production — and universe reproduction — changes.">
+<link rel="canonical" href="https://omegacentauri.me/tools/cosmological-natural-selection.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 10% 20%,rgba(29,186,144,.07),transparent 55%),radial-gradient(ellipse at 90% 60%,rgba(112,85,212,.07),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-spec{border:1px solid var(--amber-mid);background:rgba(196,120,0,.06);color:var(--amber-mid)}
+.badge-theory{border:1px solid var(--purple-bright);background:rgba(112,85,212,.06);color:var(--purple-glow)}
+.warning{background:rgba(196,120,0,.06);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning strong{color:var(--amber-glow)}
+
+/* Layout */
+.main-grid{display:grid;grid-template-columns:340px 1fr;gap:24px;margin-bottom:28px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:4px}
+.panel-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:20px;letter-spacing:.03em;line-height:1.5}
+
+/* Constant sliders */
+.const-row{margin-bottom:22px}
+.const-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.const-symbol{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--teal-glow)}
+.const-ratio{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-primary)}
+.const-name{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--text-secondary);margin-bottom:6px}
+input[type=range].const-track{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow));outline:none;cursor:pointer}
+input[type=range].const-track::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-bright);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.4)}
+input[type=range].const-track::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-bright);cursor:pointer;border:none}
+.const-ticks{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px}
+.const-effect{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;display:inline-block;margin-top:5px}
+.effect-ok{background:rgba(29,186,144,.1);color:var(--teal-bright);border:1px solid var(--teal-dark)}
+.effect-warn{background:rgba(196,120,0,.1);color:var(--amber-bright);border:1px solid var(--amber-mid)}
+.effect-bad{background:rgba(138,32,32,.12);color:var(--red-bright);border:1px solid var(--red-mid)}
+
+/* Reset button */
+.reset-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:8px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;width:100%;margin-top:4px}
+.reset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+
+/* Right panel outputs */
+.fitness-section{margin-bottom:24px}
+.fitness-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:10px}
+.fitness-bar-wrap{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.fitness-track{flex:1;height:22px;background:rgba(255,255,255,.04);border-radius:11px;border:1px solid var(--border-subtle);overflow:hidden;position:relative}
+.fitness-fill{height:100%;border-radius:11px;transition:width .4s ease;position:relative}
+.fitness-our{position:absolute;right:0;top:0;width:2px;height:100%;background:var(--amber-glow)}
+.fitness-score-num{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:600;color:var(--teal-glow);width:64px;text-align:right;flex-shrink:0}
+.fitness-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)}
+
+.viability-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:600px){.viability-grid{grid-template-columns:1fr 1fr}}
+.viability-box{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;text-align:center;transition:border-color .3s,background .3s}
+.viability-box.ok{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
+.viability-box.warn{border-color:var(--amber-mid);background:rgba(196,120,0,.06)}
+.viability-box.fail{border-color:var(--red-mid);background:rgba(138,32,32,.08)}
+.vb-icon{font-size:22px;margin-bottom:4px}
+.vb-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:4px}
+.vb-status{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.04em}
+.status-ok{color:var(--teal-bright)}
+.status-warn{color:var(--amber-glow)}
+.status-fail{color:var(--red-bright)}
+
+/* BH production */
+.bh-section{margin-bottom:24px}
+.bh-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.bh-box{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 18px}
+.bh-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.bh-val{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:600;line-height:1.1;color:var(--purple-glow)}
+.bh-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-top:6px}
+
+/* OCS IMBH node box */
+.node-box{background:rgba(112,85,212,.06);border:1px solid var(--purple-mid);border-radius:12px;padding:18px 22px;margin-bottom:24px}
+.node-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:12px}
+.node-text{font-size:15px;color:var(--text-secondary);line-height:1.7}
+.node-highlight{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:12px}
+
+/* Narrative output */
+.narrative-box{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:18px 22px;font-size:15px;color:var(--text-secondary);line-height:1.75;margin-bottom:24px;font-style:italic}
+
+/* About panel */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0}
+.about-toggle:hover{color:var(--purple-glow)}
+.about-toggle .arrow{transition:transform .25s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:18px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.about-panel a{color:var(--teal-glow)}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Cosmological Natural Selection</span>
+    <a href="https://omegacentauri.me/#compute" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Cosmological Natural Selection Simulator</h1>
+  <p class="subtitle">Lee Smolin & Clément Vidal — tune your universe's physical constants and watch how black hole production, and universe reproduction, changes</p>
+
+  <div class="badges">
+    <span class="badge badge-spec">✦ Speculative cosmological framework</span>
+    <span class="badge badge-theory">⚠ Theoretical physics (fine-tuning)</span>
+  </div>
+
+  <div class="warning">
+    <strong>Epistemic note.</strong> Cosmological Natural Selection (Smolin 1992) and Cosmological Artificial Selection (Vidal 2014) are speculative frameworks — creative and published, but not accepted consensus. The fitness landscape below uses a <strong>toy model</strong> that captures qualitative behaviour only. Physical constant values and their effects on BH production involve significant uncertainties not captured by a simplified calculation. Do not treat the numerical outputs as predictions.
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: constant sliders -->
+    <div class="panel">
+      <div class="panel-title">Physical Constants</div>
+      <div class="panel-sub">Adjust each constant as a ratio relative to our universe (1.0 = our value). The model estimates how black hole production and life viability change.</div>
+
+      <!-- G -->
+      <div class="const-row">
+        <div class="const-header">
+          <span class="const-symbol">G</span>
+          <span class="const-ratio" id="g-ratio">×1.00</span>
+        </div>
+        <div class="const-name">Gravitational constant</div>
+        <input type="range" id="g-slider" class="const-track" min="-2" max="2" step="0.02" value="0" oninput="update()">
+        <div class="const-ticks"><span>÷100</span><span>÷10</span><span>Our G</span><span>×10</span><span>×100</span></div>
+        <div id="g-effect" class="const-effect effect-ok">Nominal star formation</div>
+      </div>
+
+      <!-- α -->
+      <div class="const-row">
+        <div class="const-header">
+          <span class="const-symbol">α</span>
+          <span class="const-ratio" id="alpha-ratio">×1.00</span>
+        </div>
+        <div class="const-name">Fine structure constant (~1/137)</div>
+        <input type="range" id="alpha-slider" class="const-track" min="-2" max="2" step="0.02" value="0" oninput="update()">
+        <div class="const-ticks"><span>÷100</span><span>÷10</span><span>Our α</span><span>×10</span><span>×100</span></div>
+        <div id="alpha-effect" class="const-effect effect-ok">Stable atoms, stellar fusion</div>
+      </div>
+
+      <!-- Λ -->
+      <div class="const-row">
+        <div class="const-header">
+          <span class="const-symbol">Λ</span>
+          <span class="const-ratio" id="lambda-ratio">×1.00</span>
+        </div>
+        <div class="const-name">Cosmological constant (dark energy)</div>
+        <input type="range" id="lambda-slider" class="const-track" min="-2" max="2" step="0.02" value="0" oninput="update()">
+        <div class="const-ticks"><span>÷100</span><span>÷10</span><span>Our Λ</span><span>×10</span><span>×100</span></div>
+        <div id="lambda-effect" class="const-effect effect-ok">Galaxy formation proceeds</div>
+      </div>
+
+      <!-- mp/me -->
+      <div class="const-row">
+        <div class="const-header">
+          <span class="const-symbol">m<sub>p</sub>/m<sub>e</sub></span>
+          <span class="const-ratio" id="mpmE-ratio">×1.00</span>
+        </div>
+        <div class="const-name">Proton-to-electron mass ratio (~1836)</div>
+        <input type="range" id="mpme-slider" class="const-track" min="-2" max="2" step="0.02" value="0" oninput="update()">
+        <div class="const-ticks"><span>÷100</span><span>÷10</span><span>Our ratio</span><span>×10</span><span>×100</span></div>
+        <div id="mpme-effect" class="const-effect effect-ok">Chemistry is possible</div>
+      </div>
+
+      <button class="reset-btn" onclick="resetAll()">↺ Reset to our universe</button>
+    </div>
+
+    <!-- Right: outputs -->
+    <div>
+
+      <!-- Fitness bar -->
+      <div class="panel fitness-section" style="margin-bottom:24px">
+        <div class="fitness-title">CNS Fitness — Black Hole Production (relative to our universe)</div>
+        <div class="fitness-bar-wrap">
+          <div style="flex:1">
+            <div class="fitness-track">
+              <div class="fitness-fill" id="fitness-fill" style="width:50%;background:linear-gradient(90deg,var(--purple-mid),var(--teal-bright))">
+                <div class="fitness-our" title="Our universe"></div>
+              </div>
+            </div>
+            <div class="fitness-labels"><span>Sterile (no BHs)</span><span>Our universe</span><span>Hyper-fecund (toy model)</span></div>
+          </div>
+          <div class="fitness-score-num" id="fitness-num">1.0×</div>
+        </div>
+        <div id="fitness-narrative" class="narrative-box" style="margin-bottom:0;margin-top:14px">
+          This universe matches our own physical constants. According to Smolin's CNS framework, our universe's constants sit near a local optimum for black hole production — neither too strongly gravitating nor too weakly bound to form massive stars.
+        </div>
+      </div>
+
+      <!-- Viability checks -->
+      <div class="panel" style="margin-bottom:24px">
+        <div class="panel-title">Life &amp; Structure Viability</div>
+        <div class="panel-sub">Whether key physical processes are possible at these constant values. <em>Toy model — qualitative only.</em></div>
+        <div class="viability-grid">
+          <div class="viability-box ok" id="vb-atoms">
+            <div class="vb-icon">⚛</div>
+            <div class="vb-label">Stable atoms</div>
+            <div class="vb-status status-ok" id="vb-atoms-status">Yes</div>
+          </div>
+          <div class="viability-box ok" id="vb-stars">
+            <div class="vb-icon">☀</div>
+            <div class="vb-label">Stars form</div>
+            <div class="vb-status status-ok" id="vb-stars-status">Yes</div>
+          </div>
+          <div class="viability-box ok" id="vb-bh">
+            <div class="vb-icon">◉</div>
+            <div class="vb-label">BHs produced</div>
+            <div class="vb-status status-ok" id="vb-bh-status">Yes</div>
+          </div>
+          <div class="viability-box ok" id="vb-galaxy">
+            <div class="vb-icon">🌌</div>
+            <div class="vb-label">Galaxies form</div>
+            <div class="vb-status status-ok" id="vb-galaxy-status">Yes</div>
+          </div>
+          <div class="viability-box ok" id="vb-life">
+            <div class="vb-icon">🧬</div>
+            <div class="vb-label">Life viable</div>
+            <div class="vb-status status-ok" id="vb-life-status">Possible</div>
+          </div>
+          <div class="viability-box ok" id="vb-intel">
+            <div class="vb-icon">🧠</div>
+            <div class="vb-label">CAS possible</div>
+            <div class="vb-status status-ok" id="vb-intel-status">Possible</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BH production numbers -->
+      <div class="panel bh-section">
+        <div class="panel-title">BH Production Estimates</div>
+        <div class="panel-sub">Relative to our universe — toy model, qualitative only</div>
+        <div class="bh-grid">
+          <div class="bh-box">
+            <div class="bh-eyebrow">Stellar BH rate</div>
+            <div class="bh-val" id="bh-stellar">1.0×</div>
+            <div class="bh-sub">Collapse of massive stars (≥25 M☉)</div>
+          </div>
+          <div class="bh-box">
+            <div class="bh-eyebrow">Galaxy formation</div>
+            <div class="bh-val" id="bh-galaxy">1.0×</div>
+            <div class="bh-sub">Gravitational collapse to supermassive BHs</div>
+          </div>
+          <div class="bh-box">
+            <div class="bh-eyebrow">Universe progeny</div>
+            <div class="bh-val" id="bh-progeny">~1.0×</div>
+            <div class="bh-sub">Smolin: offspring universes per cosmic cycle</div>
+          </div>
+          <div class="bh-box">
+            <div class="bh-eyebrow">CAS leverage</div>
+            <div class="bh-val" id="bh-cas">Standard</div>
+            <div class="bh-sub">Vidal: intelligence-guided selection pressure</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OCS IMBH as CNS node -->
+  <div class="node-box">
+    <div class="node-title">Omega Centauri's IMBH as a CNS Node</div>
+    <div class="node-text">
+      In Smolin's framework, every black hole seeds a new universe. Omega Centauri's candidate IMBH — with mass currently constrained between
+      <span class="node-highlight">≥8,200 M☉ (Häberle 2024)</span> and <span class="node-highlight">≤6,000 M☉ (Bañares 2025)</span> —
+      represents a single node in this cosmic reproduction chain. In Vidal's extension, Cosmological Artificial Selection (CAS), an
+      intelligence sufficiently advanced to influence the parameters of a collapsing black hole could bias which universes get produced —
+      selecting for universes conducive to further intelligence and further BH production. Under this framework, the Fermi Paradox finds
+      a different kind of resolution: advanced civilisations are not silent because they have died or transcended, but because their most
+      significant work happens at the interior of a black hole — outside causal contact with our universe.
+      <br><br>
+      This is the complementary narrative to the Transcension Hypothesis: transcension and CAS both predict that the most powerful civilisational
+      acts occur at or inside a black hole event horizon. See also: <a href="stem-compression.html">STEM Compression Explorer</a>.
+    </div>
+  </div>
+
+  <!-- About panel -->
+  <div style="margin-top:32px">
+    <button class="about-toggle" id="about-btn" onclick="toggleAbout()">
+      <span class="arrow">▶</span> About this tool &amp; data sources
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>
+        This tool operationalises Lee Smolin's Cosmological Natural Selection (CNS) hypothesis through a toy fitness model. You tune the four physical constants most critical for star and black hole formation — the gravitational constant G, the fine structure constant α, the cosmological constant Λ, and the proton-to-electron mass ratio — and observe how the estimated black hole production rate changes relative to our universe.
+      </p>
+      <p>
+        The fitness function is a simplified product of Gaussian-like factors, each capturing the qualitative effect of each constant on BH production. It is explicitly a toy model; real fine-tuning calculations require full stellar evolution models, nuclear physics codes, and many more parameters.
+      </p>
+      <p>
+        Vidal's extension — Cosmological Artificial Selection — posits that intelligence could in principle influence which universes get "selected" by guiding the parameters of collapsing black holes. The "CAS leverage" indicator reflects whether this universe has conditions that would allow complex life to reach that level of technological sophistication.
+      </p>
+      <h3>Epistemic status</h3>
+      <p>
+        Cosmological Natural Selection (Smolin 1992, 1997) is a falsifiable scientific hypothesis — Smolin identifies predictions it makes about stellar mass limits that are consistent with observation. However, it is not widely accepted as the correct explanation for the universe's apparent fine-tuning, and it competes with other frameworks (anthropic reasoning, string landscape, etc.). Vidal's CAS is a philosophical/speculative extension.
+      </p>
+      <h3>Physical reasoning behind each constant</h3>
+      <p>
+        <strong>G (gravitational constant):</strong> Too weak → gas clouds don't collapse → no stars, no BHs. Too strong → the universe collapses on short timescales before stars can form or explode.<br>
+        <strong>α (fine structure constant):</strong> Controls electromagnetic force. Too low → electrons not bound to nuclei → no atoms or chemistry. Too high → nuclear repulsion prevents fusion in stars → no stellar evolution, few massive stars, few BHs.<br>
+        <strong>Λ (cosmological constant):</strong> Controls expansion rate. Too large → universe expands too rapidly for matter to clump into galaxies and stars. Too negative → universe recollapses before structure forms.<br>
+        <strong>m<sub>p</sub>/m<sub>e</sub> (mass ratio):</strong> Affects nuclear and atomic physics. Our value ~1836 enables the chemistry of life and the nuclear physics of stellar nucleosynthesis.
+      </p>
+      <h3>Data sources &amp; citations</h3>
+      <span class="cite">Smolin, L. (1992). "Did the universe evolve?" <em>Classical and Quantum Gravity</em> 9:173–191. <a href="https://doi.org/10.1088/0264-9381/9/1/016" target="_blank">DOI: 10.1088/0264-9381/9/1/016</a></span>
+      <span class="cite">Smolin, L. (1997). <em>The Life of the Cosmos.</em> Oxford University Press. ISBN 978-0-19-512664-5.</span>
+      <span class="cite">Vidal, C. (2014). <em>The Beginning and the End: The Meaning of Life in a Cosmological Perspective.</em> Springer. <a href="https://doi.org/10.1007/978-3-319-05062-1" target="_blank">ISBN 978-3-319-05061-4</a></span>
+      <span class="cite">Vidal, C. (2016). "Stellivore extraterrestrials? Binary stars as living systems." <em>Acta Astronautica</em> 128:251–256. <a href="https://doi.org/10.1016/j.actaastro.2016.06.038" target="_blank">DOI: 10.1016/j.actaastro.2016.06.038</a></span>
+      <span class="cite">Tegmark, M. et al. (2006). "Dimensionless constants, cosmology and other dark matters." <em>Phys. Rev. D</em> 73:023505. <a href="https://doi.org/10.1103/PhysRevD.73.023505" target="_blank">DOI: 10.1103/PhysRevD.73.023505</a></span>
+      <span class="cite">Häberle et al. (2024). <em>Nature</em> 631:285. <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank">DOI: 10.1038/s41586-024-07511-z</a> — OC IMBH lower bound ≥8,200 M☉</span>
+      <span class="cite">Bañares-Hernández et al. (2025). <em>A&A</em> 693:A104. <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank">DOI: 10.1051/0004-6361/202451763</a> — OC IMBH upper bound ≤6,000 M☉</span>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">Tool content may be revised as scientific knowledge evolves. v1.0 — 2026-05-24.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── URL hash state (spec §6.3) ───────────────────────────────────────────
+function getHashParams(){
+  return Object.fromEntries(
+    window.location.hash.replace('#','').split('&')
+      .filter(Boolean).map(p=>p.split('=').map(decodeURIComponent))
+  );
+}
+function setHashParams(params){
+  window.location.hash=Object.entries(params)
+    .map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+}
+
+// ─── Toy fitness model ────────────────────────────────────────────────────
+// Each constant enters as a log₁₀ ratio from -2 to +2.
+// Fitness contribution is a Gaussian centred on 0 (our universe) with
+// different widths reflecting how sensitive BH production is to each parameter.
+
+function gaussian(x, sigma){ return Math.exp(-x*x/(2*sigma*sigma)); }
+
+function computeFitness(gL, alphaL, lambdaL, mpmeL){
+  // G: BH production peaks at our value; falls on both sides
+  //    Wide sigma on low G (small G = few stars but long-lived), narrow on high G
+  const fG = gL <= 0
+    ? gaussian(gL, 0.9)   // too weak G: stars don't form
+    : gaussian(gL, 0.6);  // too strong G: collapse too fast
+
+  // α: Nuclear fusion is delicate; window ~0.5 log-decades either side
+  const fAlpha = gaussian(alphaL, 0.5);
+
+  // Λ: Very sensitive. Even ×10 Λ prevents galaxy formation.
+  const fLambda = lambdaL >= 0
+    ? gaussian(lambdaL, 0.4)   // larger Λ: expansion wins
+    : gaussian(lambdaL, 1.0);  // smaller Λ: fine (Λ < 0 → crunch, bad)
+
+  // mp/me: Less critical for BH production directly, but affects stellar physics
+  const fMpme = gaussian(mpmeL, 1.2);
+
+  return fG * fAlpha * fLambda * fMpme;
+}
+
+function viabilityChecks(gL, alphaL, lambdaL, mpmeL){
+  const ratio = x => Math.pow(10, x);
+  const checks = {};
+
+  // Atoms: α must not be too large (electrostatic >> nuclear)
+  checks.atoms = alphaL < 1.2 && mpmeL > -1.5 && mpmeL < 1.5;
+
+  // Stars form: G must be large enough, Λ not too huge, α compatible with fusion
+  checks.stars = gL > -1.5 && lambdaL < 1.5 && alphaL < 0.8;
+
+  // BHs produced: need massive stars → G and α both in range
+  checks.bh = checks.stars && alphaL < 0.6 && gL > -1.0;
+
+  // Galaxies: Λ critical
+  checks.galaxy = lambdaL < 1.0 && gL > -1.8 && lambdaL > -1.5;
+
+  // Life viable: all four in moderate range
+  checks.life = checks.atoms && checks.stars && Math.abs(alphaL) < 0.8 && Math.abs(mpmeL) < 0.8 && Math.abs(gL) < 1.5 && lambdaL < 0.8;
+
+  // CAS: life viable + BHs + galaxies
+  checks.intel = checks.life && checks.bh && checks.galaxy;
+
+  return checks;
+}
+
+// ─── Effect labels ────────────────────────────────────────────────────────
+function gEffect(gL){
+  if(gL < -1.5) return ['Bad — gas clouds never collapse into stars', 'bad'];
+  if(gL < -0.5) return ['Warn — star formation suppressed', 'warn'];
+  if(gL > 1.2)  return ['Bad — universe collapses before BHs form', 'bad'];
+  if(gL > 0.5)  return ['Warn — very short stellar lifetimes', 'warn'];
+  return ['Nominal star formation', 'ok'];
+}
+function alphaEffect(aL){
+  if(aL < -1.5) return ['Bad — electrons not bound; no atoms', 'bad'];
+  if(aL < -0.5) return ['Warn — weak electromagnetism; exotic chemistry', 'warn'];
+  if(aL > 0.8)  return ['Bad — nuclear fusion stops in stars', 'bad'];
+  if(aL > 0.4)  return ['Warn — stellar evolution altered; fewer massive stars', 'warn'];
+  return ['Stable atoms, stellar fusion', 'ok'];
+}
+function lambdaEffect(lL){
+  if(lL > 1.2)  return ['Bad — expansion wins; no galaxy formation', 'bad'];
+  if(lL > 0.5)  return ['Warn — large-scale structure suppressed', 'warn'];
+  if(lL < -1.2) return ['Bad — universe recollapses rapidly', 'bad'];
+  if(lL < -0.5) return ['Warn — late-time collapse threatens structure', 'warn'];
+  return ['Galaxy formation proceeds', 'ok'];
+}
+function mpmeEffect(mL){
+  if(Math.abs(mL) > 1.5) return ['Bad — nuclear/atomic physics disrupted', 'bad'];
+  if(Math.abs(mL) > 0.8) return ['Warn — chemistry severely altered', 'warn'];
+  return ['Chemistry is possible', 'ok'];
+}
+
+function setEffect(id, label, tier){
+  const el = document.getElementById(id);
+  el.textContent = label;
+  el.className = 'const-effect effect-'+tier;
+}
+function setViability(id, statusId, ok, warnCond, statusOk, statusWarn, statusFail){
+  const box = document.getElementById(id);
+  const st  = document.getElementById(statusId);
+  if(ok){
+    box.className='viability-box ok';
+    st.className='vb-status status-ok';
+    st.textContent=statusOk||'Yes';
+  } else if(warnCond){
+    box.className='viability-box warn';
+    st.className='vb-status status-warn';
+    st.textContent=statusWarn||'Marginal';
+  } else {
+    box.className='viability-box fail';
+    st.className='vb-status status-fail';
+    st.textContent=statusFail||'No';
+  }
+}
+
+function fmtMult(x){
+  if(x<0.001) return '<0.001×';
+  if(x>9999)  return '>9999×';
+  if(x>=100)  return x.toFixed(0)+'×';
+  if(x>=10)   return x.toFixed(1)+'×';
+  return x.toFixed(2)+'×';
+}
+
+// ─── Main update ─────────────────────────────────────────────────────────
+function update(){
+  const gL      = parseFloat(document.getElementById('g-slider').value);
+  const alphaL  = parseFloat(document.getElementById('alpha-slider').value);
+  const lambdaL = parseFloat(document.getElementById('lambda-slider').value);
+  const mpmeL   = parseFloat(document.getElementById('mpme-slider').value);
+
+  function fmtRatio(v){
+    if(v===0) return '×1.00';
+    const mag = Math.pow(10,Math.abs(v));
+    return v>0 ? '×'+mag.toFixed(2) : '÷'+mag.toFixed(2);
+  }
+  document.getElementById('g-ratio').textContent      = fmtRatio(gL);
+  document.getElementById('alpha-ratio').textContent   = fmtRatio(alphaL);
+  document.getElementById('lambda-ratio').textContent  = fmtRatio(lambdaL);
+  document.getElementById('mpmE-ratio').textContent    = fmtRatio(mpmeL);
+
+  // Effect labels
+  const [gLbl,gTier]=[...gEffect(gL)]; setEffect('g-effect',gLbl,gTier);
+  const [aLbl,aTier]=[...alphaEffect(alphaL)]; setEffect('alpha-effect',aLbl,aTier);
+  const [lLbl,lTier]=[...lambdaEffect(lambdaL)]; setEffect('lambda-effect',lLbl,lTier);
+  const [mLbl,mTier]=[...mpmeEffect(mpmeL)]; setEffect('mpme-effect',mLbl,mTier);
+
+  // Fitness
+  const fitness = computeFitness(gL, alphaL, lambdaL, mpmeL);
+  const fitPct  = Math.min(Math.max(fitness * 50, 1), 99); // normalised to 50% at our universe
+  document.getElementById('fitness-fill').style.width = fitPct+'%';
+  document.getElementById('fitness-num').textContent = fmtMult(fitness);
+
+  // Fitness narrative
+  let narr;
+  if(fitness > 2) narr = 'This universe is more fecund than our own — its constants drive higher black hole production, meaning more offspring universes per generation. In Smolin\'s framework, such universes are selected for. Vidal notes that intelligence arising in such a universe would have even more CNS leverage via Cosmological Artificial Selection.';
+  else if(fitness > 0.5) narr = 'This universe produces black holes at a rate similar to or moderately higher than our own. It sits within the CNS fitness neighbourhood of our universe — potentially reachable by the small mutations Smolin proposes occur at each black hole\'s birth.';
+  else if(fitness > 0.05) narr = 'This universe is less fecund than ours. Black hole production is suppressed. In Smolin\'s framework, such universes are selected against — they produce fewer offspring and their constants are unlikely to propagate.';
+  else narr = 'This universe produces very few or no black holes. Stars may not form, fusion may be impossible, or expansion may shred structure before collapse. This region of constant-space is strongly selected against by CNS. The universe is effectively sterile.';
+  document.getElementById('fitness-narrative').textContent = narr;
+
+  // Viability
+  const v = viabilityChecks(gL, alphaL, lambdaL, mpmeL);
+  setViability('vb-atoms','vb-atoms-status', v.atoms, false,'Stable','Marginal','Unstable');
+  setViability('vb-stars','vb-stars-status', v.stars, false,'Yes','Suppressed','No');
+  setViability('vb-bh','vb-bh-status', v.bh, !v.bh && v.stars,'Yes','Few','No');
+  setViability('vb-galaxy','vb-galaxy-status', v.galaxy, !v.galaxy && lambdaL<1.5,'Yes','Suppressed','No');
+  setViability('vb-life','vb-life-status', v.life, !v.life && v.atoms,'Possible','Marginal','Unlikely');
+  setViability('vb-intel','vb-intel-status', v.intel, !v.intel && v.life,'Possible','Unlikely','No');
+
+  // BH production numbers
+  const bhStellar  = fitness * gaussian(alphaL, 0.5) * Math.max(0, 1-Math.abs(gL)*0.3);
+  const bhGalaxy   = fitness * gaussian(lambdaL, 0.6) * Math.max(0, 1-Math.abs(gL)*0.2);
+  const bhProgeny  = fitness;
+  document.getElementById('bh-stellar').textContent  = fmtMult(bhStellar);
+  document.getElementById('bh-galaxy').textContent   = fmtMult(bhGalaxy);
+  document.getElementById('bh-progeny').textContent  = '~'+fmtMult(bhProgeny);
+  document.getElementById('bh-cas').textContent      = v.intel ? 'Possible' : v.life ? 'Unlikely' : 'N/A';
+
+  // Hash state
+  setHashParams({g:gL.toFixed(2),a:alphaL.toFixed(2),l:lambdaL.toFixed(2),mp:mpmeL.toFixed(2)});
+}
+
+function resetAll(){
+  ['g-slider','alpha-slider','lambda-slider','mpme-slider'].forEach(id=>{
+    document.getElementById(id).value=0;
+  });
+  update();
+}
+
+function toggleAbout(){
+  const panel=document.getElementById('about-panel');
+  const btn=document.getElementById('about-btn');
+  const isOpen=panel.classList.toggle('visible');
+  btn.classList.toggle('open',isOpen);
+}
+
+// ─── Init from hash ───────────────────────────────────────────────────────
+(function init(){
+  const p=getHashParams();
+  if(p.g)  document.getElementById('g-slider').value=p.g;
+  if(p.a)  document.getElementById('alpha-slider').value=p.a;
+  if(p.l)  document.getElementById('lambda-slider').value=p.l;
+  if(p.mp) document.getElementById('mpme-slider').value=p.mp;
+  update();
+})();
+</script>
+</body>
+</html>

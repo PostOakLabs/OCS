@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--
+  Velocity Dispersion / M-σ Estimator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #science  ·  Epistemic tier(s): 🔬 (virial) / ⚠ (M-σ extrapolation)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velocity Dispersion / M-σ Estimator — Omega Centauri Society</title>
+<meta name="description" content="What IMBH mass does the M-σ scaling relation predict for Omega Centauri? And how does that prediction compare to actual published estimates?">
+<link rel="canonical" href="https://omegacentauri.me/tools/velocity-dispersion.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-label .tier{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:6px;letter-spacing:.06em}
+.row-label .tier.e{background:rgba(29,186,144,.12);color:var(--teal-bright)}
+.row-label .tier.d{background:rgba(240,160,32,.12);color:var(--amber-bright)}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.compare-card{background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.compare-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.compare-grid{grid-template-columns:1fr}}
+.compare-cell{padding:14px 16px;background:rgba(7,5,21,.4);border-radius:8px;border-left:3px solid var(--purple-bright)}
+.compare-cell.tension{border-left-color:var(--amber-bright)}
+.compare-cell.ok{border-left-color:var(--teal-bright)}
+.cc-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:6px}
+.cc-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:6px}
+.cc-note{font-size:13px;color:var(--text-secondary);font-style:italic;line-height:1.55}
+.observed-list{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:760px){.observed-list{grid-template-columns:1fr}}
+.obs-item{padding:8px 12px;background:rgba(7,5,21,.3);border-radius:6px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);display:flex;justify-content:space-between;gap:8px}
+.obs-item .obs-author{color:var(--text-primary)}
+.obs-item .obs-value{color:var(--teal-glow)}
+.cross-link{display:inline-block;margin-top:14px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(112,85,212,.15);border:1px solid var(--purple-bright);color:var(--purple-glow);border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.cross-link:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Velocity Dispersion / M-σ Estimator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Velocity Dispersion / M-σ Estimator</h1>
+      <p class="tool-subtitle">From a cluster's total mass and half-light radius, the virial theorem gives a velocity dispersion. The M-σ scaling relation then predicts an IMBH mass. The interesting result is the gap between that prediction and what's actually been measured.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Virial theorem</span>
+      <span class="tier-badge debated">⚠ M-σ extrapolation</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>The M-σ relation is calibrated for galactic nuclei, not globular clusters.</strong>
+    Applying it to GCs is an open research question, not an established result. The values this tool produces should be read as "what the scaling relation would predict if it held" — not as predictions of OC's actual IMBH mass.
+  </div>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Cluster inputs</div>
+
+      <div class="slider-block">
+        <label>Total cluster mass M_cluster  (M<sub>☉</sub>)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="4" max="8" step="0.01" value="6.602">
+          <span class="slider-value" id="m-val">4×10⁶ M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-m="4e6">OC (4×10⁶)</button>
+          <button class="preset-btn" data-preset-m="6e5">M15</button>
+          <button class="preset-btn" data-preset-m="1.5e6">NGC 6388</button>
+          <button class="preset-btn" data-preset-m="7e5">47 Tuc</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Half-light radius r_h  (pc)</label>
+        <div class="slider-row">
+          <input type="range" id="rh-slider" min="0.3" max="20" step="0.05" value="4.8">
+          <span class="slider-value" id="rh-val">4.8 pc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-rh="4.8">OC (4.8 pc)</button>
+          <button class="preset-btn" data-preset-rh="3.0">M15 (compact)</button>
+          <button class="preset-btn" data-preset-rh="6.5">47 Tuc</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Override σ (optional, km/s) — overrides virial estimate</label>
+        <div class="slider-row">
+          <input type="range" id="sig-slider" min="0" max="100" step="0.5" value="0">
+          <span class="slider-value" id="sig-val">— (use virial)</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-sig="0">Use virial</button>
+          <button class="preset-btn" data-preset-sig="20">OC observed (20)</button>
+          <button class="preset-btn" data-preset-sig="14">M15 observed</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Derived quantities</div>
+
+      <div class="row">
+        <div class="row-label">σ from virial theorem <span class="tier e">🔬</span></div>
+        <div class="row-value" id="sig-virial-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">σ in use (driving M-σ)</div>
+        <div class="row-value" id="sig-used-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">M-σ predicted IMBH mass <span class="tier d">⚠</span></div>
+        <div class="row-value amber" id="msigma-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">vs. Häberle 2024 lower bound (8,200 M☉)</div>
+        <div class="row-value" id="ratio-haberle">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">vs. Noyola 2008 detection (4×10⁴ M☉)</div>
+        <div class="row-value" id="ratio-noyola">—</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- COMPARISON -->
+  <section class="compare-card">
+    <div class="compare-title">M-σ prediction vs. observed estimates</div>
+    <div class="compare-grid">
+      <div class="compare-cell" id="verdict-cell">
+        <div class="cc-label">Verdict</div>
+        <div class="cc-value" id="verdict-headline">computing…</div>
+        <div class="cc-note" id="verdict-note">—</div>
+      </div>
+      <div class="compare-cell">
+        <div class="cc-label">Observed OC IMBH estimates</div>
+        <div class="observed-list" id="observed-list"></div>
+      </div>
+    </div>
+    <a class="cross-link" href="constraint-stacker.html">→ See this prediction overlaid on every constraint</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool does</h3>
+      <p>Two stages. First, the virial theorem gives a rough velocity dispersion: <code>σ² ≈ G M_cluster / r_h</code>. Second, the Gültekin et al. (2009) M-σ relation predicts a central black hole mass: <code>M_BH ≈ 8.5×10⁶ M☉ · (σ / 200 km/s)^4.38</code>. These are independent published results; this tool just composes them and compares the result to actual OC IMBH measurements.</p>
+
+      <h3>Why σ matters more than you'd think</h3>
+      <p>The M-σ exponent is 4.38 — a factor-of-3 change in σ becomes a factor of 3^4.38 ≈ 130 in predicted mass. So the gap between OC's observed central σ (≈ 20 km/s) and the naive virial estimate (~60 km/s for OC) translates to a ~10⁴ difference in predicted M_BH. This is why we expose σ as an override slider: small input differences blow up massively in the output.</p>
+
+      <h3>Why the prediction probably doesn't apply</h3>
+      <p>The M-σ relation was calibrated against galactic nuclei (10⁶ to 10⁹ M☉ supermassive holes) — a regime several orders of magnitude above OC's candidate IMBH. Whether a single power law extends down to globular cluster scales is empirically open. The Gültekin paper itself doesn't claim it does. Treat the predicted M_BH as a "what would a naive scaling-relation extrapolation say?" — useful for context, not as a measurement.</p>
+
+      <h3>The OC σ controversy</h3>
+      <p>OC's central velocity dispersion has been re-measured many times. Modern estimates from oMEGACat (Sommer et al. 2025, ApJ) cluster around 20 km/s but vary with the radial range chosen and whether rotation is included. The "virial estimate" computed here (~60 km/s for the OC default inputs) is much higher than observed because <code>σ² ≈ GM/r_h</code> ignores structural factors — real cluster density profiles have form-factor corrections of order ~0.1 to 0.2.</p>
+
+      <h3>Cross-references</h3>
+      <p>The M-σ prediction line in the <a href="constraint-stacker.html">IMBH Constraint Stacker</a> uses the same calculation with σ = 20 km/s hardcoded. This tool exposes the inputs.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">📊 The M-σ relation, calibrated</h3>
+      <p>The black hole mass / velocity dispersion relation was discovered independently in <strong>Ferrarese &amp; Merritt 2000</strong> (ApJL 539:L9) and <strong>Gebhardt et al. 2000</strong> (ApJL 539:L13), then refined by Gültekin et al. 2009 (ApJ 698:198) using ~50 well-measured galactic BHs spanning 10⁶ to 10¹⁰ M☉. The exponent ≈ 4.38 is steep but the intrinsic scatter is real: ~0.3 dex in M_BH at fixed σ. <strong>McConnell &amp; Ma 2013</strong> (ApJ 764:184) and later updates push to a sample of ~100 BHs with slightly different normalisation but similar slope. Crucially, all calibrations were done on <em>galactic-nucleus</em> BHs — not GC IMBHs.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">🌟 OC central velocity dispersion — observed</h3>
+      <p>OC's central line-of-sight velocity dispersion has been re-measured many times. <strong>oMEGACat VI (Sommer et al. 2025)</strong> reports the central σ_los ≈ 19–21 km/s from 1.4 million HST proper motions out to the half-light radius, with anisotropy parameter β consistent with isotropy in the inner core. Earlier studies (Pancino 2007, Sollima 2009) found similar values from line-of-sight RVs alone. The "virial estimate" σ ≈ √(GM/r_h) ≈ 60 km/s for OC defaults is three times the measured value because the simple formula ignores the cluster's structural form factor (~0.1–0.2 for King profiles), the projection from 3D to LOS, and the radial profile of σ(r) itself.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🎯 Why the M-σ exponent matters so much</h3>
+      <p>With exponent 4.38, a factor of 3 in σ becomes a factor of 3⁴·³⁸ ≈ 130 in M_BH. The gap between the virial σ ≈ 60 km/s (giving M_BH ≈ 4×10⁴ M☉, right at the Noyola detection) and the observed σ ≈ 20 km/s (giving M_BH ≈ 350 M☉, well below Häberle's lower bound) is a 100× difference in predicted IMBH mass. This is not a tool bug — it's the actual reason the M-σ extrapolation to GCs is contested. The relation is steep enough that small uncertainties in σ blow up massively in predicted M_BH.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0 · Sources: Gültekin et al. 2009 (ApJ 698:198); cluster property values from Baumgardt &amp; Hilker 2018 and oMEGACat VI (Sommer et al. 2025)</p>
+    </div>
+  </section>
+</div>
+
+<script src="data/measurements.js"></script>
+<script>
+"use strict";
+const G_SI = 6.674e-11;
+const MSUN_KG = 1.989e30;
+const PC_M = 3.086e16;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M===null||!isFinite(M)||M<=0)return'—';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=100)return Math.round(M).toLocaleString()+' M☉';return M.toFixed(1)+' M☉'}
+function fmtMassShort(M){if(!isFinite(M)||M<=0)return'—';if(M>=1e6)return(M/1e6).toFixed(1)+'M';if(M>=1e3)return(M/1e3).toFixed(1)+'k';return Math.round(M).toString()}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+// State
+const state = { mass: 4e6, rh: 4.8, sigOverride: 0 };
+function loadHash(){
+  const p = getHash();
+  if (p.mass) { const v = parseFloat(p.mass); if (!isNaN(v) && v > 0) state.mass = v; }
+  if (p.rh) { const v = parseFloat(p.rh); if (!isNaN(v) && v > 0) state.rh = v; }
+  if (p.sig) { const v = parseFloat(p.sig); if (!isNaN(v) && v >= 0) state.sigOverride = v; }
+}
+function saveHash(){ setHash({mass: state.mass.toExponential(3), rh: state.rh.toFixed(2), sig: state.sigOverride.toFixed(1)}); }
+
+// Physics
+function virialSigmaKms(M_solar, rh_pc) {
+  const M_kg = M_solar * MSUN_KG;
+  const rh_m = rh_pc * PC_M;
+  const sig2 = G_SI * M_kg / rh_m; // m^2/s^2
+  return Math.sqrt(sig2) / 1000;   // km/s
+}
+function mSigmaPrediction(sigma_kms) {
+  return 8.5e6 * Math.pow(sigma_kms / 200, 4.38);
+}
+
+function render() {
+  // Readouts
+  document.getElementById('m-val').textContent = fmtMass(state.mass);
+  document.getElementById('rh-val').textContent = state.rh.toFixed(2) + ' pc';
+  document.getElementById('sig-val').textContent = state.sigOverride > 0 ? state.sigOverride.toFixed(1) + ' km/s' : '— (use virial)';
+
+  const sigVirial = virialSigmaKms(state.mass, state.rh);
+  const sigUsed = state.sigOverride > 0 ? state.sigOverride : sigVirial;
+  const m_msigma = mSigmaPrediction(sigUsed);
+
+  document.getElementById('sig-virial-val').innerHTML = sigVirial.toFixed(1) + ' <span class="unit">km/s</span>';
+  document.getElementById('sig-used-val').innerHTML = sigUsed.toFixed(1) + ' <span class="unit">km/s ' + (state.sigOverride > 0 ? '(override)' : '(virial)') + '</span>';
+  document.getElementById('msigma-val').textContent = fmtMass(m_msigma);
+
+  // Ratios
+  const HABERLE = 8200, NOYOLA = 4e4;
+  const rH = m_msigma / HABERLE;
+  const rN = m_msigma / NOYOLA;
+  const fmtRatio = (r) => isFinite(r) ? (r >= 1 ? r.toFixed(2)+'×' : '1/'+(1/r).toFixed(1)) : '—';
+  document.getElementById('ratio-haberle').textContent = fmtRatio(rH);
+  document.getElementById('ratio-noyola').textContent = fmtRatio(rN);
+
+  // Verdict
+  const cell = document.getElementById('verdict-cell');
+  const head = document.getElementById('verdict-headline');
+  const note = document.getElementById('verdict-note');
+  cell.classList.remove('tension', 'ok');
+  if (m_msigma < HABERLE * 0.5) {
+    cell.classList.add('tension');
+    head.textContent = 'M-σ predicts well below Häberle';
+    note.textContent = `Predicted ${fmtMass(m_msigma)}, but Häberle's lower bound is 8,200 M☉. Either the M-σ extrapolation breaks down for GCs (likely), or Häberle's measurement is incorrect, or some combination.`;
+  } else if (m_msigma > NOYOLA * 5) {
+    cell.classList.add('tension');
+    head.textContent = 'M-σ predicts well above all measurements';
+    note.textContent = `Predicted ${fmtMass(m_msigma)}, but the highest detection (Noyola 2008) is only 4×10⁴ M☉. The cluster would have to be hiding a much more massive black hole than any observation has found.`;
+  } else if (m_msigma > HABERLE && m_msigma < NOYOLA * 2) {
+    cell.classList.add('ok');
+    head.textContent = 'M-σ in the observed range';
+    note.textContent = `Predicted ${fmtMass(m_msigma)} sits between the Häberle lower bound and the Noyola detection. Plausible but not a confirmation — M-σ on GCs is still extrapolation territory.`;
+  } else {
+    head.textContent = 'M-σ near the lower bound';
+    note.textContent = `Predicted ${fmtMass(m_msigma)} is in the same ballpark as the Häberle lower bound of 8,200 M☉.`;
+  }
+
+  // Observed list — pull from measurements.js
+  const list = document.getElementById('observed-list');
+  list.innerHTML = '';
+  if (window.OCS_MEASUREMENTS) {
+    for (const m of window.OCS_MEASUREMENTS.imbh) {
+      if (m.value === null) continue;
+      const item = document.createElement('div');
+      item.className = 'obs-item';
+      let label = '';
+      if (m.limitType === 'detection') label = '≈ ';
+      else if (m.limitType === 'upper') label = '< ';
+      else if (m.limitType === 'lower') label = '> ';
+      item.innerHTML = `<span class="obs-author">${escapeHtml(m.authors.split(' ')[0])} ${m.year}</span><span class="obs-value">${label}${fmtMassShort(m.value)} M☉</span>`;
+      list.appendChild(item);
+    }
+  }
+}
+
+function wire() {
+  const ms = document.getElementById('m-slider');
+  const rs = document.getElementById('rh-slider');
+  const ss = document.getElementById('sig-slider');
+  ms.value = Math.log10(state.mass).toFixed(2);
+  rs.value = state.rh.toFixed(2);
+  ss.value = state.sigOverride.toFixed(1);
+
+  ms.addEventListener('input', () => { state.mass = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); });
+  rs.addEventListener('input', () => { state.rh = parseFloat(rs.value); saveHash(); render(); });
+  ss.addEventListener('input', () => { state.sigOverride = parseFloat(ss.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-preset-m]').forEach(b => b.addEventListener('click', () => {
+    state.mass = parseFloat(b.dataset.presetM); ms.value = Math.log10(state.mass).toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-rh]').forEach(b => b.addEventListener('click', () => {
+    state.rh = parseFloat(b.dataset.presetRh); rs.value = state.rh.toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-sig]').forEach(b => b.addEventListener('click', () => {
+    state.sigOverride = parseFloat(b.dataset.presetSig); ss.value = state.sigOverride.toFixed(1); saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() {
+  if (!window.OCS_MEASUREMENTS) {
+    document.body.innerHTML = '<p style="padding:40px;color:#d04040;font-family:monospace">Failed to load measurements.js — observed-values panel cannot render.</p>';
+    return;
+  }
+  loadHash();
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

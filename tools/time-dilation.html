@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<!--
+  Gravitational Time Dilation Comparator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #compute  ·  Epistemic tier(s): 🔬 (Schwarzschild dilation) / ✦ (civilisational compute implication)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravitational Time Dilation — Omega Centauri Society</title>
+<meta name="description" content="How much slower does a clock tick near a black hole? Side-by-side comparison at two radii, with the Lloyd-bound compute implication.">
+<link rel="canonical" href="https://omegacentauri.me/tools/time-dilation.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.fiction{color:var(--purple-glow);background:rgba(160,128,240,.07)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--red-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--red-bright)}
+.input-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.input-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block:last-child{margin-bottom:0}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none}
+.slider-row.r1 input[type=range]{background:linear-gradient(90deg,var(--purple-dark),var(--teal-bright))}
+.slider-row.r2 input[type=range]{background:linear-gradient(90deg,var(--purple-dark),var(--amber-bright))}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;cursor:pointer}
+.slider-row.r1 input[type=range]::-webkit-slider-thumb{background:var(--teal-glow);box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row.r2 input[type=range]::-webkit-slider-thumb{background:var(--amber-glow);box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row.r1 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row.r2 input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]:not([class])::-webkit-slider-thumb,.slider-row > input[type=range]:not([id^="r"]):not([id^="r2"])::-webkit-slider-thumb{background:var(--purple-glow);box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row > input[type=range]#m-slider{background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid))}
+.slider-row > input[type=range]#m-slider::-webkit-slider-thumb{background:var(--purple-glow);box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row > input[type=range]#m-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:140px;text-align:right;white-space:nowrap}
+.slider-value.r1{color:var(--teal-glow)}
+.slider-value.r2{color:var(--amber-glow)}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:760px){.compare-grid{grid-template-columns:1fr}}
+.loc-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;position:relative}
+.loc-card.r1{border-color:var(--teal-mid)}
+.loc-card.r2{border-color:var(--amber-mid)}
+.loc-tag{position:absolute;top:-10px;left:18px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:10px;background:var(--void)}
+.loc-tag.r1{color:var(--teal-glow);border:1px solid var(--teal-mid)}
+.loc-tag.r2{color:var(--amber-glow);border:1px solid var(--amber-mid)}
+.loc-position{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.loc-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.loc-row:last-child{border-bottom:none}
+.loc-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.loc-value{font-family:'Orbitron',sans-serif;font-size:17px;text-align:right;white-space:nowrap}
+.loc-card.r1 .loc-value{color:var(--teal-glow)}
+.loc-card.r2 .loc-value{color:var(--amber-glow)}
+.loc-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+
+.headline{background:linear-gradient(135deg,rgba(26,16,64,.5),rgba(13,10,36,.4));border:1px solid var(--purple-bright);border-radius:12px;padding:22px 28px;margin-bottom:24px;text-align:center}
+.headline-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.headline-text{font-family:'Orbitron',sans-serif;font-size:20px;color:var(--text-primary);line-height:1.45}
+.headline-text .v{color:var(--purple-glow);font-weight:600;font-size:22px}
+.headline-sub{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);margin-top:8px;font-style:italic}
+
+.compute-card{background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.compute-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.compute-chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:center;margin-bottom:14px}
+@media (max-width:760px){.compute-chain{grid-template-columns:1fr;text-align:center}.chain-arrow{transform:rotate(90deg);margin:0 auto}}
+.chain-step{padding:14px;background:rgba(7,5,21,.4);border-radius:8px;text-align:center}
+.chain-step .label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-dim);margin-bottom:6px}
+.chain-step .value{font-family:'Orbitron',sans-serif;font-size:15px;color:var(--teal-glow)}
+.chain-step .sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:4px}
+.chain-arrow{color:var(--text-dim);font-size:18px}
+.compute-note{font-size:14px;color:var(--text-secondary);line-height:1.7;padding:12px 16px;background:rgba(7,5,21,.3);border-radius:6px;border-left:2px solid var(--purple-bright)}
+.compute-note strong{color:var(--purple-glow)}
+
+.tidal-warn{background:rgba(208,64,64,.08);border:1px solid var(--red-bright);border-radius:8px;padding:14px 18px;margin-top:14px;font-size:14px;color:var(--text-primary)}
+.tidal-warn strong{color:var(--red-bright)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Gravitational Time Dilation Comparator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#compute">← #compute</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Gravitational Time Dilation Comparator</h1>
+      <p class="tool-subtitle">A clock near a black hole ticks slower than one far away. This tool lets you place two clocks at two radii and see the difference, then chains the result through Lloyd's compute limit to show what the dilation means for a hypothetical near-horizon civilisation.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Schwarzschild GR</span>
+      <span class="tier-badge fiction">✦ Compute implication</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Schwarzschild metric (non-spinning hole).</strong>
+    Real IMBHs are Kerr — dilation near the prograde ISCO is somewhat stronger than the Schwarzschild numbers shown here. For a → 1, the ISCO sits at r_g (not 6 r_g), and the redshift factor at ISCO depends on the spin parameter rather than just r/r_s. The Schwarzschild result here is correct as a baseline; for the Kerr correction at extreme spin, use the <a href="kerr-geometry.html">Kerr Geometry tool</a>.
+  </div>
+
+  <section class="input-card">
+    <div class="card-title">Inputs</div>
+    <div class="slider-block">
+      <label>Black hole mass M  (M<sub>☉</sub>)</label>
+      <div class="slider-row">
+        <input type="range" id="m-slider" min="2" max="10" step="0.01" value="3.91">
+        <span class="slider-value" id="m-val">8,200 M☉</span>
+      </div>
+      <div class="preset-row">
+        <button class="preset-btn" data-m="8200">8,200 (Häberle)</button>
+        <button class="preset-btn" data-m="20000">20,000 (JWST)</button>
+        <button class="preset-btn" data-m="4e6">Sgr A*</button>
+        <button class="preset-btn" data-m="1e9">Quasar (10⁹)</button>
+      </div>
+    </div>
+    <div class="slider-block">
+      <label style="color:var(--teal-glow)">Clock A position  (r / r_s)</label>
+      <div class="slider-row r1">
+        <input type="range" id="r1-slider" min="0.005" max="3" step="0.005" value="0.176">
+        <span class="slider-value r1" id="r1-val">1.5 r_s</span>
+      </div>
+      <div class="preset-row">
+        <button class="preset-btn" data-r1="1.01">Just outside horizon (1.01)</button>
+        <button class="preset-btn" data-r1="1.5">1.5 r_s</button>
+        <button class="preset-btn" data-r1="3">ISCO (3 r_s = 6 r_g)</button>
+      </div>
+    </div>
+    <div class="slider-block">
+      <label style="color:var(--amber-glow)">Clock B position  (r / r_s)</label>
+      <div class="slider-row r2">
+        <input type="range" id="r2-slider" min="0.005" max="3" step="0.005" value="1">
+        <span class="slider-value r2" id="r2-val">10 r_s</span>
+      </div>
+      <div class="preset-row">
+        <button class="preset-btn" data-r2="3">ISCO (3 r_s)</button>
+        <button class="preset-btn" data-r2="10">10 r_s</button>
+        <button class="preset-btn" data-r2="100">100 r_s</button>
+        <button class="preset-btn" data-r2="1000">Distant (1000)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE COMPARISON -->
+  <section class="headline">
+    <div class="headline-label">Headline result</div>
+    <div class="headline-text" id="headline-text">computing…</div>
+    <div class="headline-sub" id="headline-sub">—</div>
+  </section>
+
+  <!-- SIDE BY SIDE -->
+  <section class="compare-grid">
+    <div class="loc-card r1">
+      <div class="loc-tag r1">Clock A</div>
+      <div class="loc-position" id="r1-position">—</div>
+      <div class="loc-row">
+        <div class="loc-label">Redshift factor √(1 − r_s/r)</div>
+        <div class="loc-value" id="r1-zfactor">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">1 year of proper time =</div>
+        <div class="loc-value" id="r1-yr-ext">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">1 year of external time =</div>
+        <div class="loc-value" id="r1-yr-pro">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">Circular orbital period (coord)</div>
+        <div class="loc-value" id="r1-period">—</div>
+      </div>
+    </div>
+
+    <div class="loc-card r2">
+      <div class="loc-tag r2">Clock B</div>
+      <div class="loc-position" id="r2-position">—</div>
+      <div class="loc-row">
+        <div class="loc-label">Redshift factor √(1 − r_s/r)</div>
+        <div class="loc-value" id="r2-zfactor">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">1 year of proper time =</div>
+        <div class="loc-value" id="r2-yr-ext">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">1 year of external time =</div>
+        <div class="loc-value" id="r2-yr-pro">—</div>
+      </div>
+      <div class="loc-row">
+        <div class="loc-label">Circular orbital period (coord)</div>
+        <div class="loc-value" id="r2-period">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPUTE PANEL -->
+  <section class="compute-card">
+    <div class="compute-title">Compute implication (engineering fiction)</div>
+    <div class="compute-chain">
+      <div class="chain-step">
+        <div class="label">Clock A vs Clock B</div>
+        <div class="value" id="cc-ratio">—</div>
+        <div class="sub">subjective time multiplier</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">
+        <div class="label">Lloyd ops/sec at this M</div>
+        <div class="value" id="cc-lloyd">—</div>
+        <div class="sub">from 2 M c² / (πℏ)</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">
+        <div class="label">Subjective ops per <em>external</em> sec</div>
+        <div class="value" id="cc-effective">—</div>
+        <div class="sub">if Clock A is the observer</div>
+      </div>
+    </div>
+    <div class="compute-note" id="cc-note">computing…</div>
+    <div class="tidal-warn" id="tidal-warn" style="display:none">
+      <strong>Tidal forces, Hawking flux, and accretion environment make sustained proximity to r_s untenable in practice.</strong>
+      The dilation factor at r → r_s is finite, but the tidal acceleration scales as M / r³ — for a stellar-mass hole, an observer would be spaghettified well outside the horizon; for an IMBH at 10⁴ M☉, tidal forces near r = 1.5 r_s would still tear apart any object larger than a few cm. Hawking radiation flux is negligible for IMBH masses (T_H ~ 10⁻⁷ K for 8,200 M☉), but an accreting hole emits intense X-ray and UV radiation that would sterilise nearby matter. None of these are reflected in the dilation calculation above.
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The formula</h3>
+      <p>For a static observer at radius r outside a non-rotating black hole of Schwarzschild radius r_s = 2GM/c², the proper time τ relates to the coordinate time t (the time measured by an observer at infinity) as:</p>
+      <p style="text-align:center"><code>dτ / dt = √(1 − r_s/r)</code></p>
+      <p>A clock at r ticks slower than a clock at infinity by this factor. As r → r_s, the factor → 0 — the clock appears (from outside) to freeze. As r → ∞, the factor → 1.</p>
+
+      <h3>How to read Clock A and Clock B</h3>
+      <p>Both clocks are static observers at fixed radii. "1 year of proper time = X years of external" means: while the clock at this radius ticks off one year of its own experience, an external observer's clock has ticked off X years. For Clock A near the horizon, X is large (years near horizon ≈ many years outside). For Clock B far from the horizon, X ≈ 1.</p>
+
+      <h3>The compute chain — what is and isn't free</h3>
+      <p>Lloyd's bound on operations per second is <code>f_max = 2 E / (πℏ)</code> using the system's total rest energy E. Crucially, this formula is observer-invariant when energy and time are measured consistently. A near-horizon computer with local rest energy E performs Lloyd-bounded ops at rate f_max per <em>local</em> second. An external observer sees those ops happen at rate f_max × √(1−r_s/r) per <em>external</em> second — slower, not faster, because the local clock is dilated.</p>
+      <p>The "subjective ops per external sec" number in the chain above shows what the near-horizon civilisation can compute, in terms of local subjective time, during the time an external second elapses. It's larger than the external-frame rate by exactly 1/√(1−r_s/r). This is a subjective gain in experience per external time, not a thermodynamic free lunch — the same compute capacity gets repackaged in more local seconds rather than more raw ops.</p>
+
+      <h3>What it doesn't model</h3>
+      <p>This is the Schwarzschild (non-rotating) metric. Real IMBHs spin, and Kerr dilation near the prograde ISCO is somewhat stronger; the ISCO itself moves inward from 6 r_g to r_g as a → 1. The orbital period shown is the Keplerian coordinate period, which differs from a relativistic circular-orbit period by a few percent at large r and more at small r. Tidal forces, accretion-disk radiation, and the practical impossibility of "hovering" at fixed r without enormous propulsion are not addressed — see the red warning under the compute chain when Clock A approaches r_s.</p>
+
+      <h3>The pop-culture reference: Miller's Planet</h3>
+      <p>In Christopher Nolan's <em>Interstellar</em> (2014), Miller's Planet orbits the supermassive black hole Gargantua with the famous ratio of <strong>1 hour on the planet = 7 years on Earth</strong>. That's a dilation factor of ~61,000 — so the redshift factor √(1−r_s/r) would have to be about 1.6×10⁻⁵. In Schwarzschild geometry, achieving this ratio requires r ≈ 1.000000000³ r_s — essentially grazing the horizon, well inside the photon sphere (1.5 r_s) and far inside any stable circular orbit (3 r_s for Schwarzschild). It's not physically allowable in a non-spinning hole.</p>
+      <p>The film made it work by giving Gargantua a near-maximal spin (a/M ≈ 1 − 10⁻¹⁴), at which point the prograde Kerr ISCO migrates inward to r_g rather than 6 r_g, and stable circular orbits become available at radii where the redshift factor is small enough for the 1:61,000 ratio. Kip Thorne (the film's science consultant and a relativist who literally wrote <em>Gravitation</em>) describes the calculation in his companion book <em>The Science of Interstellar</em>; the requirement that Gargantua be near-extremal Kerr is exactly what makes Miller's Planet a stable place rather than a sub-second plunge through the horizon.</p>
+      <p>This tool uses Schwarzschild geometry, so the Miller's-Planet ratio is unreachable here at any stable r. The <a href="kerr-geometry.html">Kerr Geometry tool</a> lets you reproduce the Interstellar configuration explicitly with the spin parameter as an input.</p>
+
+      <h3>Cross-references</h3>
+      <p>The Lloyd ops/sec number used here is the same calculation as in the <a href="bekenstein-landauer.html">Bekenstein–Landauer–Lloyd Explorer</a>'s Panel 2. The <a href="kerr-geometry.html">Kerr Geometry tool</a> provides the canonical picture of how horizon and ISCO move with spin.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🕒 GR time dilation — measured</h3>
+      <p>General-relativistic time dilation has been verified to extraordinary precision. <strong>Hafele &amp; Keating 1971</strong> flew caesium clocks around the world on commercial jets; the eastward-flying clock lost 59 ns and the westward-flying clock gained 273 ns relative to USNO, matching GR + special-relativity predictions to within ~10%. <strong>GPS satellites</strong> require continuous relativistic correction: their clocks tick ~38 μs/day faster than ground clocks (45 μs faster from weaker gravity, 7 μs slower from orbital velocity). <strong>NIST optical-lattice clocks</strong> (2010 onward) resolve gravitational redshift across 33 cm of vertical height, corresponding to a relative frequency shift of 4×10⁻¹⁷. The Schwarzschild formula this tool uses has never failed an experimental test.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">⭐ S2 orbits Sgr A* — a real "Interstellar"-adjacent observation</h3>
+      <p>The star <strong>S2</strong> orbits Sgr A* (4.3×10⁶ M☉) at perihelion 17 light-hours, with a 16.05-year period. <strong>Gravity Collaboration 2020</strong> (A&amp;A 636:L5) measured S2's gravitational redshift at perihelion (perinigricon?): observed ~200 km/s wavelength shift relative to special-relativity-only prediction, confirming GR to within 20%. The Schwarzschild radius at Sgr A* is ~12 million km; S2 perihelion is ~120 r_s, so the dilation factor at perihelion is √(1−1/120) ≈ 0.996 — slow time only by 0.4%, but enough for clean detection with modern infrared spectroscopy.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">🎬 Miller's Planet, calibrated</h3>
+      <p><em>Interstellar</em>'s 1 hr = 7 yr time dilation requires a redshift factor of ~1.6×10⁻⁵, which Schwarzschild geometry can't reach at any stable orbit (the photon sphere sits at 1.5 r_s; the prograde ISCO is at 3 r_s = 6 r_g). Kip Thorne's companion book solves this by making Gargantua spin at a/M ≈ 1 − 10⁻¹⁴ — the spin pulls the prograde ISCO inward to r_g, where the redshift factor can reach the required value at a stable orbit. The <a href="kerr-geometry.html">Kerr Geometry tool</a> lets you tune spin and see the ISCO migrate; this tool intentionally uses Schwarzschild as a baseline.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G_SI = 6.674e-11, C_SI = 2.998e8, HBAR = 1.055e-34, MSUN = 1.989e30, YR_S = 3.156e7;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=1000)return Math.round(M).toLocaleString()+' M☉';return Math.round(M)+' M☉'}
+function fmtLength(m){if(m>=1.496e11)return(m/1.496e11).toFixed(2)+' AU';if(m>=1e9)return(m/1e9).toFixed(2)+'×10⁹ m';if(m>=1000)return(m/1000).toFixed(2)+' km';return Math.round(m)+' m'}
+function fmtDuration(s){if(s<1e-3)return fmtSci(s*1e6,2)+' μs';if(s<1)return fmtSci(s*1e3,2)+' ms';if(s<60)return s.toFixed(2)+' s';if(s<3600)return(s/60).toFixed(2)+' min';if(s<86400)return(s/3600).toFixed(2)+' h';if(s<YR_S)return(s/86400).toFixed(2)+' days';if(s<1e6*YR_S)return(s/YR_S).toFixed(2)+' yr';if(s<1e9*YR_S)return(s/(1e6*YR_S)).toFixed(2)+' Myr';return fmtSci(s/YR_S,2)+' yr'}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+// State: r values are stored as r/r_s ratios
+const state = { M: 8200, r1: 1.5, r2: 10 };
+function loadHash(){const p=getHash(); if(p.mass){const v=parseFloat(p.mass);if(!isNaN(v)&&v>0)state.M=v;} if(p.r){const v=parseFloat(p.r);if(!isNaN(v)&&v>1)state.r1=v;} if(p.r2){const v=parseFloat(p.r2);if(!isNaN(v)&&v>1)state.r2=v;}}
+function saveHash(){setHash({mass:state.M.toExponential(3), r:state.r1.toFixed(3), r2:state.r2.toFixed(3)})}
+
+// Slider mapping: r/r_s = 1 + 10^(value) so value=-3 → r=1.001, value=3 → r=1001
+function rFromSlider(v){return 1 + Math.pow(10, v)}
+function sliderFromR(r){return Math.log10(Math.max(r-1, 1e-4))}
+
+// Physics
+function rsM(M_solar){return 2*G_SI*M_solar*MSUN/(C_SI*C_SI)}
+function zFactor(rOverRs){return Math.sqrt(Math.max(1 - 1/rOverRs, 0))}
+function orbitalPeriodCoord(M_solar, rOverRs) {
+  // Keplerian: T = 2π √(r³/GM)
+  const r_m = rOverRs * rsM(M_solar);
+  return 2 * Math.PI * Math.sqrt(Math.pow(r_m, 3) / (G_SI * M_solar * MSUN));
+}
+function lloydOpsPerSec(M_solar) {
+  return 2 * M_solar * MSUN * C_SI * C_SI / (Math.PI * HBAR);
+}
+
+function render() {
+  document.getElementById('m-val').textContent = fmtMass(state.M);
+  document.getElementById('r1-val').textContent = state.r1.toFixed(3) + ' r_s';
+  document.getElementById('r2-val').textContent = state.r2.toFixed(3) + ' r_s';
+
+  const rs = rsM(state.M);
+  const r1_m = state.r1 * rs;
+  const r2_m = state.r2 * rs;
+  const z1 = zFactor(state.r1);
+  const z2 = zFactor(state.r2);
+  const T1 = orbitalPeriodCoord(state.M, state.r1);
+  const T2 = orbitalPeriodCoord(state.M, state.r2);
+  const lloyd = lloydOpsPerSec(state.M);
+
+  // Per-clock cards
+  document.getElementById('r1-position').textContent = `r = ${state.r1.toFixed(3)} r_s = ${fmtLength(r1_m)}`;
+  document.getElementById('r2-position').textContent = `r = ${state.r2.toFixed(3)} r_s = ${fmtLength(r2_m)}`;
+  document.getElementById('r1-zfactor').textContent = z1.toExponential(4);
+  document.getElementById('r2-zfactor').textContent = z2.toExponential(4);
+  document.getElementById('r1-yr-ext').innerHTML = (z1>0?(1/z1).toFixed(4):'∞') + ' <span class="unit">yr external</span>';
+  document.getElementById('r2-yr-ext').innerHTML = (z2>0?(1/z2).toFixed(4):'∞') + ' <span class="unit">yr external</span>';
+  document.getElementById('r1-yr-pro').innerHTML = z1.toFixed(4) + ' <span class="unit">yr proper</span>';
+  document.getElementById('r2-yr-pro').innerHTML = z2.toFixed(4) + ' <span class="unit">yr proper</span>';
+  document.getElementById('r1-period').textContent = fmtDuration(T1);
+  document.getElementById('r2-period').textContent = fmtDuration(T2);
+
+  // Headline: ratio of subjective times between Clock A and Clock B
+  // If A is closer to horizon (z1 < z2), then per external second, A experiences less time.
+  // Subjective ratio: 1 year of A's time = (z2/z1) years of B's time (B's clock has ticked more).
+  // Or equivalently: while A experiences 1 year, B experiences z2/z1 years.
+  const headline = document.getElementById('headline-text');
+  const sub = document.getElementById('headline-sub');
+  if (z1 > 0 && z2 > 0) {
+    const ratio = z2 / z1;
+    if (ratio > 1) {
+      headline.innerHTML = `While <span style="color:var(--teal-glow)">Clock A</span> ages 1 year, <span style="color:var(--amber-glow)">Clock B</span> ages <span class="v">${ratio < 1e4 ? ratio.toFixed(2) : fmtSci(ratio,2)} years</span>.`;
+      sub.textContent = `Clock A is deeper in the gravity well — it runs slower.`;
+    } else if (ratio < 1) {
+      headline.innerHTML = `While <span style="color:var(--amber-glow)">Clock B</span> ages 1 year, <span style="color:var(--teal-glow)">Clock A</span> ages <span class="v">${(1/ratio) < 1e4 ? (1/ratio).toFixed(2) : fmtSci(1/ratio,2)} years</span>.`;
+      sub.textContent = `Clock B is deeper in the gravity well — it runs slower.`;
+    } else {
+      headline.innerHTML = `Clocks A and B are at the same depth in the gravity well.`;
+      sub.textContent = `Set them to different radii to see the dilation.`;
+    }
+  } else {
+    headline.innerHTML = `Clock A is at the horizon — its time effectively halts as seen from outside.`;
+    sub.textContent = 'Move it outside r_s to recover a finite ratio.';
+  }
+
+  // Compute chain
+  // Treat Clock A as the local observer
+  const ccRatio = (z1 > 0) ? (1/z1) : Infinity;  // external sec per local sec
+  document.getElementById('cc-ratio').textContent = (isFinite(ccRatio) && ccRatio < 1e6) ? ccRatio.toFixed(2)+'×' : (isFinite(ccRatio) ? fmtSci(ccRatio,2)+'×' : '∞');
+  document.getElementById('cc-lloyd').textContent = fmtSci(lloyd, 2) + ' ops/s';
+  // Subjective ops per external second = lloyd * ccRatio (per external second, ccRatio local seconds elapse,
+  // each containing lloyd ops at local rate)
+  const cc_eff = lloyd * ccRatio;
+  document.getElementById('cc-effective').textContent = (isFinite(cc_eff)) ? fmtSci(cc_eff,2) + ' ops/s' : '∞';
+
+  const cn = document.getElementById('cc-note');
+  if (state.r1 > 1.0 && z1 > 0) {
+    cn.innerHTML = `From an external observer's viewpoint, a Clock-A civilisation completes <strong>${fmtSci(lloyd * z1, 2)} ops</strong> per external second — slower than its local Lloyd rate of ${fmtSci(lloyd,2)} ops/s, because A's clock is dilated. From Clock A's own perspective, however, ${ccRatio < 1e6 ? ccRatio.toFixed(2) : fmtSci(ccRatio,2)} external seconds pass during each of its local seconds — so per external second, A subjectively experiences ${fmtSci(cc_eff,2)} ops worth of work. This is a subjective gain in experienced time, not a thermodynamic free lunch.`;
+  } else {
+    cn.innerHTML = `Clock A is at or inside the horizon. The numerical compute chain is degenerate here — outside an observer sees A's processes freeze entirely. The "infinite subjective time per external second" doesn't represent a physical computation rate.`;
+  }
+
+  // Tidal-warn visibility
+  document.getElementById('tidal-warn').style.display = (state.r1 < 5) ? 'block' : 'none';
+}
+
+function wire() {
+  const ms = document.getElementById('m-slider');
+  const r1s = document.getElementById('r1-slider');
+  const r2s = document.getElementById('r2-slider');
+  ms.value = Math.log10(state.M).toFixed(2);
+  r1s.value = sliderFromR(state.r1).toFixed(3);
+  r2s.value = sliderFromR(state.r2).toFixed(3);
+
+  ms.addEventListener('input', () => { state.M = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); });
+  r1s.addEventListener('input', () => { state.r1 = rFromSlider(parseFloat(r1s.value)); saveHash(); render(); });
+  r2s.addEventListener('input', () => { state.r2 = rFromSlider(parseFloat(r2s.value)); saveHash(); render(); });
+
+  document.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => {
+    state.M = parseFloat(b.dataset.m); ms.value = Math.log10(state.M).toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-r1]').forEach(b => b.addEventListener('click', () => {
+    state.r1 = parseFloat(b.dataset.r1); r1s.value = sliderFromR(state.r1).toFixed(3); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-r2]').forEach(b => b.addEventListener('click', () => {
+    state.r2 = parseFloat(b.dataset.r2); r2s.value = sliderFromR(state.r2).toFixed(3); saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() { loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

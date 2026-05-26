@@ -1,0 +1,609 @@
+<!--
+  Cosmic Centre Illusion Explorer
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-05-24
+
+  Inspired by: Yvonne K. Tang (SXS / black-holes.org),
+  "The Disputed Center of the Universe"
+  https://www.black-holes.org/the-science/relativity/center-of-the-universe
+
+  Data sources:
+    - Hubble, E. (1929). "A relation between distance and radial velocity
+      among extra-galactic nebulae." PNAS 15(3):168–173.
+      DOI: 10.1073/pnas.15.3.168
+    - Planck Collaboration (2020). "Planck 2018 results VI." A&A 641:A6.
+      DOI: 10.1051/0004-6361/201833910 — H₀ = 67.4 ± 0.5 km/s/Mpc
+    - Riess et al. (2022). "A comprehensive measurement of the local value
+      of the Hubble constant." ApJ Lett. 934:L7.
+      DOI: 10.3847/2041-8213/ac5c5b — H₀ = 73.0 ± 1.0 km/s/Mpc
+    - Peebles, P. J. E. (1993). Principles of Physical Cosmology.
+      Princeton University Press.
+    - Harris, W. E. (1996, 2010 revision). "A catalog of parameters for
+      globular clusters in the Milky Way." AJ 112:1487. — OC distance 5.4 kpc
+
+  Site section: #science
+  Epistemic tier(s): 🔬 Established cosmology (Copernican Principle, Hubble law)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic Centre Illusion — Omega Centauri Society</title>
+<meta name="description" content="Place an observer anywhere in an expanding universe and discover that every point looks like the centre of the Hubble flow. Inspired by Yvonne K. Tang's 'Disputed Center of the Universe' essay at SXS/black-holes.org.">
+<link rel="canonical" href="https://omegacentauri.me/tools/cosmic-center.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 50% 50%,rgba(112,85,212,.06),transparent 60%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.06);color:var(--teal-bright)}
+
+/* Main layout */
+.main-grid{display:grid;grid-template-columns:1fr 280px;gap:24px;margin-bottom:28px;align-items:start}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:4px}
+.panel-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:14px;letter-spacing:.03em;line-height:1.5}
+
+/* Canvas wrapper */
+.canvas-wrap{position:relative;background:rgba(3,2,10,.8);border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;cursor:crosshair;user-select:none}
+#universe-canvas{display:block;width:100%;height:auto}
+.canvas-instruction{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:11px;color:rgba(160,128,240,.6);text-align:center;pointer-events:none;white-space:nowrap}
+
+/* Controls */
+.controls{margin-top:18px}
+.ctrl-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.ctrl-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;min-width:80px}
+input[type=range].ctrl-slider{flex:1;min-width:100px;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--amber-mid),var(--amber-glow));outline:none;cursor:pointer}
+input[type=range].ctrl-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,200,64,.5)}
+input[type=range].ctrl-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none}
+.ctrl-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--amber-glow);min-width:80px;text-align:right}
+.snap-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;border-radius:8px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.snap-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.snap-btn.oc{border-color:var(--amber-mid);color:var(--amber-bright)}
+.snap-btn.earth{border-color:var(--teal-mid);color:var(--teal-bright)}
+
+/* Readout panel */
+.readout-item{margin-bottom:18px}
+.readout-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.readout-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;line-height:1.1;letter-spacing:.02em}
+.readout-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-top:4px;line-height:1.4}
+.readout-divider{border:none;border-top:1px solid var(--border-subtle);margin:16px 0}
+
+/* Insight box */
+.insight-box{background:rgba(112,85,212,.06);border:1px dashed var(--border-subtle);border-radius:8px;padding:14px 16px;margin-top:18px;font-size:14px;color:var(--text-secondary);line-height:1.65}
+.insight-box strong{color:var(--purple-glow);font-style:normal}
+
+/* Key insight banner */
+.key-insight{background:rgba(29,186,144,.06);border:1px solid var(--teal-mid);border-radius:10px;padding:16px 22px;margin-bottom:24px;font-size:15px;color:var(--text-primary);line-height:1.7}
+.key-insight .big{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-bright);display:block;margin-bottom:8px}
+
+/* About panel */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0}
+.about-toggle:hover{color:var(--purple-glow)}
+.about-toggle .arrow{transition:transform .25s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:18px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.about-panel a{color:var(--teal-glow)}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Cosmic Centre Illusion</span>
+    <a href="https://omegacentauri.me/#science" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Cosmic Centre Illusion</h1>
+  <p class="subtitle">Place any observer in an expanding universe — they all see themselves at the centre. There is no privileged position. Inspired by Yvonne K. Tang's essay at SXS / <a href="https://www.black-holes.org/the-science/relativity/center-of-the-universe" target="_blank">black-holes.org</a>.</p>
+
+  <div class="badges">
+    <span class="badge badge-sci">🔬 Established cosmology — Copernican Principle &amp; Hubble law</span>
+  </div>
+
+  <div class="key-insight">
+    <span class="big">The Copernican Principle</span>
+    In an expanding universe governed by Hubble's Law (v = H₀ × d), every observer sees all other galaxies receding away from them — with speed proportional to distance. This is true regardless of where the observer sits. There is no centre. Click anywhere in the universe below to move the observer and see this for yourself.
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Canvas -->
+    <div>
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="universe-canvas" width="700" height="700"></canvas>
+        <div class="canvas-instruction">Click or drag to move the observer (★)</div>
+      </div>
+
+      <div class="controls">
+        <div class="ctrl-row">
+          <span class="ctrl-label">H₀</span>
+          <input type="range" id="h0-slider" class="ctrl-slider" min="60" max="80" step="0.5" value="67.4" oninput="onH0Change()">
+          <span class="ctrl-val" id="h0-val">67.4 km/s/Mpc</span>
+        </div>
+        <div class="ctrl-row">
+          <span class="ctrl-label">Arrow scale</span>
+          <input type="range" id="scale-slider" class="ctrl-slider" min="0.2" max="2.0" step="0.05" value="1.0" oninput="drawUniverse()">
+          <span class="ctrl-val" id="scale-val">1.0×</span>
+        </div>
+        <div class="ctrl-row" style="gap:10px">
+          <button class="snap-btn earth" onclick="snapTo('earth')">📍 Our Galaxy</button>
+          <button class="snap-btn oc" onclick="snapTo('oc')">⊙ Omega Centauri</button>
+          <button class="snap-btn" onclick="snapTo('edge')">Edge galaxy</button>
+          <button class="snap-btn" onclick="snapTo('random')">Random</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Readout panel -->
+    <div class="panel">
+      <div class="panel-title">Observer Readouts</div>
+      <div class="panel-sub">Values from the current observer's reference frame</div>
+
+      <div class="readout-item">
+        <div class="readout-label">Observer position</div>
+        <div class="readout-val" id="obs-pos" style="font-size:15px;color:var(--purple-glow)">Centre</div>
+        <div class="readout-sub" id="obs-pos-sub">Grid units from universe centre</div>
+      </div>
+
+      <hr class="readout-divider">
+
+      <div class="readout-item">
+        <div class="readout-label">Nearest galaxy</div>
+        <div class="readout-val" id="near-dist" style="color:var(--teal-glow)">—</div>
+        <div class="readout-sub" id="near-vel">Recession velocity: —</div>
+      </div>
+
+      <div class="readout-item">
+        <div class="readout-label">Furthest galaxy</div>
+        <div class="readout-val" id="far-dist" style="color:var(--amber-glow)">—</div>
+        <div class="readout-sub" id="far-vel">Recession velocity: —</div>
+      </div>
+
+      <hr class="readout-divider">
+
+      <div class="readout-item">
+        <div class="readout-label">Omega Centauri</div>
+        <div class="readout-val" id="oc-dist" style="color:var(--amber-bright);font-size:16px">5.4 kpc</div>
+        <div class="readout-sub" id="oc-note">Within the Milky Way — too close for Hubble recession</div>
+      </div>
+
+      <div class="insight-box" id="insight-text">
+        <strong>Copernican symmetry:</strong> Every observer sees the same Hubble pattern — recession in all directions, faster with distance. No point is the origin of the expansion. Move the observer to see the pattern persist unchanged.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OC context box -->
+  <div class="panel" style="margin-bottom:28px">
+    <div class="panel-title">What this means for Omega Centauri</div>
+    <p style="color:var(--text-secondary);font-size:15px;line-height:1.75;margin-top:10px">
+      Omega Centauri (NGC 5139) is <strong style="color:var(--text-primary)">5.4 kpc</strong> from the Sun — deep within our own galaxy's halo. At this scale, Hubble expansion is negligible; gravitational binding within the Milky Way dominates. OC is not receding from us; it is in orbit.
+    </p>
+    <p style="color:var(--text-secondary);font-size:15px;line-height:1.75;margin-top:10px">
+      The Copernican Principle cuts deeper for OC, however: Tang's essay (following Copernicus → Einstein) establishes that there is no privileged vantage point. From the Andromeda galaxy, Omega Centauri is a small cluster in the outskirts of a neighbouring galaxy — not at any special location. From a galaxy 100 Mpc away, neither the Milky Way nor OC appears at a cosmic centre; they are simply two of billions of gravitationally bound systems embedded in the Hubble flow.
+    </p>
+    <p style="color:var(--text-secondary);font-size:15px;line-height:1.75;margin-top:10px">
+      This matters for the <a href="https://omegacentauri.me/">Omega Centauri Society's</a> research programme: if OC's candidate IMBH hosts a transcended civilisation, that civilisation does not occupy a privileged cosmic position. It inhabits a cluster in a spiral galaxy's halo, 26,000 light-years from the galactic centre — as unremarkable a location as Smolin's, Darwin's or Copernicus's own: important to those within it, not privileged by the universe.
+    </p>
+  </div>
+
+  <!-- About panel -->
+  <div>
+    <button class="about-toggle" id="about-btn" onclick="toggleAbout()">
+      <span class="arrow">▶</span> About this tool &amp; data sources
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>
+        This tool demonstrates the Copernican Principle through an interactive simulation of Hubble expansion. A 2D grid of galaxies is laid out with uniform spacing. The observer (★) can be placed at any point by clicking or dragging. From that point, Hubble-flow recession velocity arrows are drawn to every other galaxy — with length proportional to distance, following v = H₀ × d.
+      </p>
+      <p>
+        The key observation: regardless of where the observer sits, the pattern of arrows looks identical — everything receding outward. There is no unique centre. This is exactly what an observer in our own universe sees in the real Hubble flow.
+      </p>
+      <p>
+        The Hubble constant H₀ can be adjusted between the CMB-inferred value (Planck 2020: 67.4 km/s/Mpc) and the local distance-ladder value (Riess 2022: 73.0 km/s/Mpc). The gap between these two measurements — the Hubble Tension — is an active area of research.
+      </p>
+      <h3>Inspiration</h3>
+      <p>
+        Yvonne K. Tang's essay "The Disputed Center of the Universe" at the SXS Project (<a href="https://www.black-holes.org/the-science/relativity/center-of-the-universe" target="_blank">black-holes.org</a>) traces the intellectual history from Ptolemy's geocentric epicycles through Copernicus's heliocentric revolution to Einstein's insight that all physical laws must be independent of the observer's perspective. This tool builds an interactive demonstration of that final step: not just that Earth is not the centre of the Solar System, but that no point in the universe is the centre of the Hubble expansion.
+      </p>
+      <h3>Physics</h3>
+      <p>
+        Hubble's Law: v = H₀ × d, where H₀ is the Hubble constant (km/s/Mpc) and d is the proper distance in megaparsecs. This applies to the large-scale expansion of space; gravitationally bound systems (clusters, galaxies, the Local Group) are not carried apart by the expansion. Omega Centauri at 5.4 kpc is far below the scale at which Hubble expansion matters (~Mpc).
+      </p>
+      <p>
+        The grid spacing in this tool is set to 50 Mpc. The Hubble flow is computed and displayed in the co-moving frame of the chosen observer — a coordinate transformation, not a physical motion.
+      </p>
+      <h3>The Hubble Tension</h3>
+      <p>
+        Two independent methods give different H₀ values: CMB-based measurements (Planck 2020) give ~67.4 km/s/Mpc; local distance-ladder methods (Cepheids + Type Ia SNe; Riess 2022) give ~73.0 km/s/Mpc. The ~5σ discrepancy is unresolved as of 2026 and may signal new physics. Both values are available in the H₀ slider.
+      </p>
+      <h3>Data sources &amp; citations</h3>
+      <span class="cite">Tang, Y. K. "The Disputed Center of the Universe." SXS Project. <a href="https://www.black-holes.org/the-science/relativity/center-of-the-universe" target="_blank">black-holes.org</a></span>
+      <span class="cite">Hubble, E. (1929). "A relation between distance and radial velocity among extra-galactic nebulae." <em>PNAS</em> 15(3):168–173. <a href="https://doi.org/10.1073/pnas.15.3.168" target="_blank">DOI: 10.1073/pnas.15.3.168</a></span>
+      <span class="cite">Planck Collaboration (2020). "Planck 2018 results VI." <em>A&A</em> 641:A6. <a href="https://doi.org/10.1051/0004-6361/201833910" target="_blank">DOI: 10.1051/0004-6361/201833910</a> — H₀ = 67.4 km/s/Mpc</span>
+      <span class="cite">Riess et al. (2022). "A comprehensive measurement of the local value of the Hubble constant." <em>ApJ Lett.</em> 934:L7. <a href="https://doi.org/10.3847/2041-8213/ac5c5b" target="_blank">DOI: 10.3847/2041-8213/ac5c5b</a> — H₀ = 73.0 km/s/Mpc</span>
+      <span class="cite">Harris, W. E. (1996, 2010 revision). "A catalog of parameters for globular clusters in the Milky Way." <em>AJ</em> 112:1487. — OC distance 5.4 kpc</span>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">Tool content may be revised as scientific knowledge evolves. v1.0 — 2026-05-24.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── URL hash state (spec §6.3) ───────────────────────────────────────────
+function getHashParams(){
+  return Object.fromEntries(
+    window.location.hash.replace('#','').split('&')
+      .filter(Boolean).map(p=>p.split('=').map(decodeURIComponent))
+  );
+}
+function setHashParams(params){
+  window.location.hash=Object.entries(params)
+    .map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+}
+
+// ─── Constants & setup ────────────────────────────────────────────────────
+const CANVAS_SIZE   = 700;
+const GRID_N        = 13;        // N×N galaxy grid (odd so true centre exists)
+const GRID_SPACING  = 50;        // Mpc between galaxies
+const MPC_TO_PX     = (CANVAS_SIZE - 80) / ((GRID_N - 1) * GRID_SPACING);
+
+// OC is within the Milky Way — not on the cosmological grid
+// We record its Galactic position for the readout only
+const OC_DIST_KPC = 5.4;
+
+let H0      = 67.4;   // km/s/Mpc
+let obsGridX = (GRID_N - 1) / 2;  // observer grid position (float, 0-indexed)
+let obsGridY = (GRID_N - 1) / 2;
+
+// ─── Galaxy grid ─────────────────────────────────────────────────────────
+// Create galaxies at integer grid positions; add small random offsets for realism
+const rng = (function(){let s=42;return function(){s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/4294967296};})();
+const galaxies = [];
+for(let i=0;i<GRID_N;i++){
+  for(let j=0;j<GRID_N;j++){
+    galaxies.push({
+      gi:i, gj:j,
+      ox:(rng()-0.5)*0.3,  // offset in grid units
+      oy:(rng()-0.5)*0.3,
+      r: 1.5+rng()*2.0,    // visual radius px
+      bright: 0.5+rng()*0.5
+    });
+  }
+}
+// The "Milky Way" galaxy is at grid centre
+const MW_IDX = ((GRID_N-1)/2)*GRID_N + (GRID_N-1)/2;
+
+function gridToCanvas(gi, gj){
+  const margin = 40;
+  const step   = (CANVAS_SIZE - 2*margin) / (GRID_N - 1);
+  return {
+    x: margin + gj * step,
+    y: margin + gi * step
+  };
+}
+function canvasToGrid(cx, cy){
+  const margin = 40;
+  const step   = (CANVAS_SIZE - 2*margin) / (GRID_N - 1);
+  return {
+    gi: (cy - margin) / step,
+    gj: (cx - margin) / step
+  };
+}
+function distMpc(g1i, g1j, g2i, g2j){
+  return Math.sqrt((g1i-g2i)**2 + (g1j-g2j)**2) * GRID_SPACING;
+}
+
+// ─── Drawing ──────────────────────────────────────────────────────────────
+function drawUniverse(){
+  const canvas = document.getElementById('universe-canvas');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const scaleSlider = parseFloat(document.getElementById('scale-slider').value);
+  document.getElementById('scale-val').textContent = scaleSlider.toFixed(2)+'×';
+
+  // Background
+  ctx.fillStyle='#03020a';
+  ctx.fillRect(0,0,W,H);
+
+  // Faint grid lines
+  ctx.strokeStyle='rgba(112,85,212,0.07)';
+  ctx.lineWidth=0.5;
+  const margin=40;
+  const step=(W-2*margin)/(GRID_N-1);
+  for(let i=0;i<GRID_N;i++){
+    ctx.beginPath(); ctx.moveTo(margin+i*step,margin); ctx.lineTo(margin+i*step,H-margin); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(margin,margin+i*step); ctx.lineTo(W-margin,margin+i*step); ctx.stroke();
+  }
+
+  // Observer position in canvas coords
+  const obsCvs = gridToCanvas(obsGridY, obsGridX);
+
+  // Draw Hubble arrows
+  const maxDist = Math.sqrt(2) * (GRID_N-1) * GRID_SPACING;
+  const maxArrowLen = 28 * scaleSlider;
+
+  for(const g of galaxies){
+    const di = g.gi + g.oy - obsGridY;
+    const dj = g.gj + g.ox - obsGridX;
+    const distGrid = Math.sqrt(di*di + dj*dj);
+    if(distGrid < 0.3) continue;  // skip observer galaxy itself
+    const distMpc_ = distGrid * GRID_SPACING;
+    const vel      = H0 * distMpc_ / 1e3;  // × 10³ km/s, displayed as fraction
+    const arrowLen = (distGrid / (GRID_N-1)) * maxArrowLen;
+
+    const cv = gridToCanvas(g.gi + g.oy, g.gj + g.ox);
+    // Arrow direction: away from observer
+    const nx = dj / distGrid;
+    const ny = di / distGrid;
+
+    // Arrow colour: teal (close) → amber → red (far)
+    const t = Math.min(distGrid / (GRID_N - 1), 1);
+    const r = Math.round(29 + t * (240-29));
+    const gr= Math.round(186 + t*(80-186));
+    const b = Math.round(144 + t*(0-144));
+    const alpha = 0.5 + 0.3 * t;
+    ctx.strokeStyle = `rgba(${r},${gr},${b},${alpha})`;
+    ctx.lineWidth   = 1 + t;
+
+    const ex = cv.x + nx * arrowLen;
+    const ey = cv.y + ny * arrowLen;
+    // Arrow shaft
+    ctx.beginPath(); ctx.moveTo(cv.x, cv.y); ctx.lineTo(ex, ey); ctx.stroke();
+    // Arrowhead
+    const headLen = 5 + t*2;
+    const angle   = Math.atan2(ny, nx);
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - headLen*Math.cos(angle-0.4), ey - headLen*Math.sin(angle-0.4));
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - headLen*Math.cos(angle+0.4), ey - headLen*Math.sin(angle+0.4));
+    ctx.stroke();
+  }
+
+  // Draw galaxies
+  for(let idx=0; idx<galaxies.length; idx++){
+    const g   = galaxies[idx];
+    const cv  = gridToCanvas(g.gi + g.oy, g.gj + g.ox);
+    const isMW = idx === MW_IDX;
+
+    const di = (g.gi + g.oy) - obsGridY;
+    const dj = (g.gj + g.ox) - obsGridX;
+    const distGrid = Math.sqrt(di*di+dj*dj);
+    const isObs = distGrid < 0.3;
+
+    if(isObs) continue; // drawn later
+
+    if(isMW){
+      // Milky Way spiral hint
+      ctx.save();
+      ctx.translate(cv.x, cv.y);
+      ctx.beginPath();
+      for(let a=0;a<Math.PI*4;a+=0.1){
+        const sr = a*1.5;
+        const sx = sr*Math.cos(a+0.5);
+        const sy = sr*Math.sin(a+0.5)*0.5;
+        a===0 ? ctx.moveTo(sx,sy) : ctx.lineTo(sx,sy);
+      }
+      ctx.strokeStyle='rgba(255,200,64,0.35)';
+      ctx.lineWidth=1;
+      ctx.stroke();
+      // OC marker
+      ctx.fillStyle='rgba(255,200,64,0.8)';
+      ctx.beginPath(); ctx.arc(7, -3, 2.5, 0, Math.PI*2); ctx.fill();
+      ctx.font='bold 9px "Space Mono", monospace';
+      ctx.fillStyle='rgba(255,200,64,0.7)';
+      ctx.fillText('OC', 10, -1);
+      ctx.restore();
+    } else {
+      // Generic galaxy: small ellipse
+      const t = Math.min(distGrid/(GRID_N-1),1);
+      ctx.save();
+      ctx.translate(cv.x, cv.y);
+      ctx.rotate(Math.atan2(di,dj)+Math.PI/4);
+      ctx.scale(1,0.5);
+      ctx.beginPath();
+      ctx.arc(0,0, g.r * (0.8+g.bright*0.4), 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${Math.round(200*g.bright)},${Math.round(180*g.bright)},${Math.round(240*g.bright)},${0.5*g.bright})`;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Observer star
+  const obs = obsCvs;
+  ctx.save();
+  ctx.translate(obs.x, obs.y);
+  // Glow
+  const grd = ctx.createRadialGradient(0,0,2,0,0,18);
+  grd.addColorStop(0,'rgba(160,128,240,0.5)');
+  grd.addColorStop(1,'rgba(160,128,240,0)');
+  ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(0,0,18,0,Math.PI*2); ctx.fill();
+  // Star shape
+  ctx.fillStyle='#a080f0';
+  for(let p=0;p<5;p++){
+    const a0=p*Math.PI*2/5 - Math.PI/2;
+    const a1=(p+0.5)*Math.PI*2/5 - Math.PI/2;
+    p===0 ? ctx.beginPath() : null;
+    ctx.lineTo(Math.cos(a0)*9, Math.sin(a0)*9);
+    ctx.lineTo(Math.cos(a1)*4, Math.sin(a1)*4);
+  }
+  ctx.closePath(); ctx.fill();
+  ctx.font='bold 10px "Space Mono", monospace';
+  ctx.fillStyle='rgba(160,128,240,0.9)';
+  ctx.fillText('★ YOU', 12, -8);
+  ctx.restore();
+
+  // Update readouts
+  updateReadouts();
+}
+
+// ─── Readouts ─────────────────────────────────────────────────────────────
+function updateReadouts(){
+  // Observer position from universe centre
+  const ci=(GRID_N-1)/2, cj=(GRID_N-1)/2;
+  const offI = (obsGridY - ci) * GRID_SPACING;
+  const offJ = (obsGridX - cj) * GRID_SPACING;
+  const offDist = Math.sqrt(offI*offI+offJ*offJ);
+  document.getElementById('obs-pos').textContent = offDist < 5
+    ? 'Near centre ('+offDist.toFixed(0)+' Mpc off)'
+    : offDist.toFixed(0)+' Mpc from centre';
+  document.getElementById('obs-pos-sub').textContent = offJ>=0 ? '→'+offJ.toFixed(0)+' Mpc east, ↓'+offI.toFixed(0)+' Mpc south' : '←'+(-offJ).toFixed(0)+' Mpc west, ↑'+(-offI).toFixed(0)+' Mpc north';
+
+  // Distances to all galaxies from observer
+  let minD=Infinity, maxD=0, nearG=null, farG=null;
+  for(const g of galaxies){
+    const di=(g.gi+g.oy)-obsGridY;
+    const dj=(g.gj+g.ox)-obsGridX;
+    const dist=Math.sqrt(di*di+dj*dj);
+    if(dist<0.3) continue;
+    if(dist<minD){minD=dist;nearG=g;}
+    if(dist>maxD){maxD=dist;farG=g;}
+  }
+  if(nearG){
+    const d=minD*GRID_SPACING;
+    const v=H0*d;
+    document.getElementById('near-dist').textContent = d.toFixed(0)+' Mpc';
+    document.getElementById('near-vel').textContent  = 'Recession velocity: '+v.toFixed(0)+' km/s';
+  }
+  if(farG){
+    const d=maxD*GRID_SPACING;
+    const v=H0*d;
+    document.getElementById('far-dist').textContent = d.toFixed(0)+' Mpc';
+    document.getElementById('far-vel').textContent  = 'Recession velocity: '+v.toFixed(0)+' km/s';
+  }
+
+  // OC note
+  const mwDi=(((GRID_N-1)/2)+0)-obsGridY;
+  const mwDj=(((GRID_N-1)/2)+0)-obsGridX;
+  const mwDistGrid=Math.sqrt(mwDi*mwDi+mwDj*mwDj);
+  const mwMpc=mwDistGrid*GRID_SPACING;
+  if(mwDistGrid < 0.3){
+    document.getElementById('oc-note').textContent = 'You are in the Milky Way. OC orbits 5.4 kpc away — part of our galaxy, far below Hubble scale.';
+  } else {
+    document.getElementById('oc-note').textContent = 'The Milky Way (with OC in its halo) is '+mwMpc.toFixed(0)+' Mpc away. OC itself is 5.4 kpc from Earth — a Galactic distance, not a Hubble one.';
+  }
+
+  // Insight text
+  const pos = offDist/((GRID_N-1)*GRID_SPACING/2);
+  let ins;
+  if(pos < 0.1){
+    ins='You are near the geometric centre of this grid — yet every galaxy recedes from you. Move the observer: the pattern will look the same from anywhere.';
+  } else if(pos < 0.5){
+    ins='Notice that even here, off-centre, all arrows point away from you. The Hubble flow has no origin — it looks the same from every vantage point.';
+  } else {
+    ins='From the edge, the pattern is still symmetric outward expansion. Galaxies "behind" you recede just as fast as galaxies "ahead". There is no preferred direction, no cosmic address.';
+  }
+  document.getElementById('insight-text').innerHTML = '<strong>Observation:</strong> '+ins;
+
+  // Hash
+  setHashParams({x:obsGridX.toFixed(2),y:obsGridY.toFixed(2),h0:H0.toFixed(1)});
+}
+
+// ─── Interaction ──────────────────────────────────────────────────────────
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+
+function onCanvasClick(e){
+  const canvas=document.getElementById('universe-canvas');
+  const rect=canvas.getBoundingClientRect();
+  const scaleX=canvas.width/rect.width;
+  const scaleY=canvas.height/rect.height;
+  const cx=(e.clientX-rect.left)*scaleX;
+  const cy=(e.clientY-rect.top)*scaleY;
+  const g=canvasToGrid(cx,cy);
+  const margin=40;
+  const step=(700-2*margin)/(GRID_N-1);
+  const minG=margin/step, maxG=(700-margin)/step - (margin/step);
+  obsGridX=clamp(g.gj, 0, GRID_N-1);
+  obsGridY=clamp(g.gi, 0, GRID_N-1);
+  drawUniverse();
+}
+
+let dragging=false;
+document.getElementById('universe-canvas').addEventListener('mousedown', e=>{dragging=true; onCanvasClick(e);});
+document.getElementById('universe-canvas').addEventListener('mousemove', e=>{if(dragging) onCanvasClick(e);});
+document.addEventListener('mouseup', ()=>dragging=false);
+document.getElementById('universe-canvas').addEventListener('touchstart', e=>{e.preventDefault(); dragging=true; const t=e.touches[0]; onCanvasClick({clientX:t.clientX,clientY:t.clientY});},{passive:false});
+document.getElementById('universe-canvas').addEventListener('touchmove',  e=>{e.preventDefault(); if(dragging){const t=e.touches[0]; onCanvasClick({clientX:t.clientX,clientY:t.clientY});}},{passive:false});
+document.addEventListener('touchend',  ()=>dragging=false);
+
+function onH0Change(){
+  H0=parseFloat(document.getElementById('h0-slider').value);
+  document.getElementById('h0-val').textContent=H0.toFixed(1)+' km/s/Mpc';
+  drawUniverse();
+}
+
+function snapTo(loc){
+  switch(loc){
+    case 'earth': obsGridX=(GRID_N-1)/2; obsGridY=(GRID_N-1)/2; break;
+    case 'oc':    obsGridX=(GRID_N-1)/2+0.1; obsGridY=(GRID_N-1)/2-0.1; break; // slightly offset
+    case 'edge':  obsGridX=1; obsGridY=1; break;
+    case 'random':
+      obsGridX=1+rng()*(GRID_N-2);
+      obsGridY=1+rng()*(GRID_N-2);
+      break;
+  }
+  drawUniverse();
+}
+
+function toggleAbout(){
+  const panel=document.getElementById('about-panel');
+  const btn=document.getElementById('about-btn');
+  const isOpen=panel.classList.toggle('visible');
+  btn.classList.toggle('open',isOpen);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+(function init(){
+  const p=getHashParams();
+  if(p.x) obsGridX=parseFloat(p.x);
+  if(p.y) obsGridY=parseFloat(p.y);
+  if(p.h0){H0=parseFloat(p.h0); document.getElementById('h0-slider').value=H0; document.getElementById('h0-val').textContent=H0.toFixed(1)+' km/s/Mpc';}
+  drawUniverse();
+  // Redraw on resize
+  window.addEventListener('resize',()=>drawUniverse());
+})();
+</script>
+</body>
+</html>

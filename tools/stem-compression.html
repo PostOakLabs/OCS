@@ -1,0 +1,625 @@
+<!--
+  STEM Compression Explorer
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-05-24
+
+  Inspired by: John Smart's Transcension Hypothesis (2011)
+
+  Data sources:
+    - Smart, J. M. (2012). "The transcension hypothesis: Sufficiently advanced
+      civilizations invariably leave our universe, and implications for METI
+      and SETI." Acta Astronautica 78:55–68.
+      DOI: 10.1016/j.actaastro.2011.11.006
+    - Bekenstein, J. D. (1973). "Black holes and entropy." Phys. Rev. D 7:2333.
+      DOI: 10.1103/PhysRevD.7.2333
+    - Lloyd, S. (2000). "Ultimate physical limits to computation." Nature 406:1047.
+      DOI: 10.1038/35023282
+    - Landauer, R. (1961). "Irreversibility and heat generation in the
+      computing process." IBM J. Res. Dev. 5:183.
+      DOI: 10.1147/rd.53.0183
+    - Häberle et al. (2024). Nature 631:285. DOI: 10.1038/s41586-024-07511-z
+    - Bañares-Hernández et al. (2025). A&A 693:A104.
+      DOI: 10.1051/0004-6361/202451763
+
+  Site section: #compute
+  Epistemic tier(s): ✦ Speculative framework (Transcension Hypothesis)
+                     🔬 Established physics (STEM endpoint quantities)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEM Compression Explorer — Omega Centauri Society</title>
+<meta name="description" content="Trace John Smart's STEM compression trajectory: how advanced civilisations collapse inward — toward smaller space, faster time, denser energy, richer matter — converging on a black-hole-like computational endpoint.">
+<link rel="canonical" href="https://omegacentauri.me/tools/stem-compression.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(112,85,212,.08),transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-spec{border:1px solid var(--amber-mid);background:rgba(196,120,0,.06);color:var(--amber-mid)}
+.badge-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.06);color:var(--teal-bright)}
+.warning{background:rgba(196,120,0,.06);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning strong{color:var(--amber-glow)}
+
+/* Layout */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px}
+@media(max-width:760px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:4px}
+.panel-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:20px;letter-spacing:.03em}
+
+/* STEM sliders */
+.stem-row{margin-bottom:20px}
+.stem-label-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px}
+.stem-letter{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600}
+.stem-s{color:var(--purple-glow)}
+.stem-t{color:var(--teal-glow)}
+.stem-e{color:var(--amber-glow)}
+.stem-m{color:var(--red-bright)}
+.stem-name{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase}
+.stem-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-primary);text-align:right}
+.stem-desc{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-bottom:8px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer}
+input[type=range].s-track{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range].t-track{background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range].e-track{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-glow))}
+input[type=range].m-track{background:linear-gradient(90deg,var(--red-mid),var(--red-bright))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 8px rgba(160,128,240,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+
+/* Score bar */
+.score-section{margin-top:8px}
+.score-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.score-track{position:relative;height:18px;background:rgba(255,255,255,.05);border-radius:9px;border:1px solid var(--border-subtle);overflow:hidden}
+.score-fill{height:100%;border-radius:9px;transition:width .3s ease;background:linear-gradient(90deg,var(--purple-mid),var(--purple-bright),var(--teal-bright))}
+.score-text{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-family:'Space Mono',monospace;font-size:11px;color:var(--text-primary);font-weight:700}
+
+/* Output grid */
+.output-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:600px){.output-grid{grid-template-columns:1fr}}
+.output-box{background:linear-gradient(135deg,rgba(13,10,36,.6),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:10px;padding:16px 18px;transition:border-color .3s}
+.output-box.active-s{border-color:var(--purple-bright)}
+.output-box.active-t{border-color:var(--teal-bright)}
+.output-box.active-e{border-color:var(--amber-bright)}
+.output-box.active-m{border-color:var(--red-bright)}
+.out-eye{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;line-height:1.1;letter-spacing:.02em}
+.out-unit{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-top:4px}
+.out-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-top:6px;line-height:1.4}
+
+/* Endpoint comparison */
+.endpoint-section{margin-bottom:28px}
+.endpoint-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border-subtle)}
+.ep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.ep-grid{grid-template-columns:repeat(2,1fr)}}
+.ep-box{background:rgba(112,85,212,.06);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px;text-align:center}
+.ep-letter{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;margin-bottom:4px}
+.ep-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.ep-quantity{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);margin-bottom:4px}
+.ep-note{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--text-dim)}
+
+/* Mass preset bar */
+.preset-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;padding:12px 16px;background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:8px;align-items:center}
+.preset-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-right:4px}
+.preset-pill{font-family:'Space Mono',monospace;font-size:11px;padding:5px 11px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.preset-pill:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+.preset-pill.active{color:var(--void);background:var(--purple-glow);border-color:var(--purple-glow)}
+
+/* SETI visibility */
+.seti-section{background:rgba(138,32,32,.07);border:1px solid var(--red-mid);border-radius:10px;padding:18px 20px;margin-bottom:28px}
+.seti-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--red-bright);margin-bottom:10px}
+.seti-bar-wrap{display:flex;align-items:center;gap:14px}
+.seti-bar-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px}
+.seti-track{flex:1;height:14px;background:rgba(255,255,255,.05);border-radius:7px;border:1px solid var(--border-subtle);overflow:hidden;position:relative}
+.seti-fill{height:100%;border-radius:7px;transition:width .3s ease;background:linear-gradient(90deg,var(--teal-bright),var(--amber-bright),var(--red-bright))}
+.seti-score{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:600;color:var(--red-bright);width:56px;text-align:right;flex-shrink:0}
+.seti-note{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--text-secondary);margin-top:10px}
+
+/* About panel */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-bottom:0}
+.about-toggle:hover{color:var(--purple-glow)}
+.about-toggle .arrow{transition:transform .25s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:18px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.about-panel a{color:var(--teal-glow)}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">STEM Compression Explorer</span>
+    <a href="https://omegacentauri.me/#compute" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>STEM Compression Explorer</h1>
+  <p class="subtitle">John Smart's Transcension Hypothesis — tracing the inward trajectory of advanced civilisation toward a black-hole-like computational endpoint</p>
+
+  <div class="badges">
+    <span class="badge badge-spec">✦ Speculative framework</span>
+    <span class="badge badge-sci">🔬 Established physics (endpoint quantities)</span>
+  </div>
+
+  <div class="warning">
+    <strong>Epistemic note.</strong> The Transcension Hypothesis is a speculative theoretical framework
+    (Smart 2012), not a peer-reviewed empirical claim. The four STEM dimensions are a conceptual
+    scaffold; the endpoint quantities shown (Schwarzschild radius, ISCO frequency, Hawking temperature,
+    Bekenstein entropy) are established physics applied to a speculative civilisational trajectory.
+    This tool is labelled <strong>✦ Speculative framework</strong> throughout.
+  </div>
+
+  <!-- Mass preset + slider -->
+  <div class="panel" style="margin-bottom:24px">
+    <div class="panel-title">Black Hole Mass — OC IMBH Endpoint</div>
+    <div class="panel-sub">Sets the physical parameters of the candidate transcension endpoint in Omega Centauri</div>
+    <div class="preset-bar">
+      <span class="preset-label">Presets:</span>
+      <button class="preset-pill active" data-mass="8200" onclick="setMass(8200,this)">Häberle 2024 (≥8,200 M☉)</button>
+      <button class="preset-pill" data-mass="6000" onclick="setMass(6000,this)">Bañares 2025 (≤6,000 M☉)</button>
+      <button class="preset-pill" data-mass="20000" onclick="setMass(20000,this)">Chen 2025 (~20,000 M☉)</button>
+      <button class="preset-pill" data-mass="40000" onclick="setMass(40000,this)">Noyola 2008 (~40,000 M☉)</button>
+    </div>
+    <div class="stem-label-row">
+      <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary)">M<sub>BH</sub> (M☉)</span>
+      <span id="mass-display" style="font-family:'Orbitron',sans-serif;font-size:18px;color:var(--purple-glow)">8,200</span>
+    </div>
+    <input type="range" id="mass-slider" class="s-track" min="2" max="6" step="0.01" value="3.914"
+      oninput="onMassSlide(this.value)" style="margin-top:10px">
+    <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px">
+      <span>100 M☉</span><span>1,000</span><span>10,000</span><span>100,000</span><span>1,000,000</span>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: STEM sliders (civ profile) -->
+    <div class="panel">
+      <div class="panel-title">Civilisation STEM Profile</div>
+      <div class="panel-sub">Set the compression level the civilisation has achieved on each dimension (0 = present-day Earth, 1 = theoretical maximum)</div>
+
+      <!-- S -->
+      <div class="stem-row">
+        <div class="stem-label-row">
+          <span><span class="stem-letter stem-s">S</span><span class="stem-name"> — Space (miniaturisation)</span></span>
+          <span id="s-pct" class="stem-val">0%</span>
+        </div>
+        <div class="stem-desc">How far toward atomic/quantum-scale physical structures? 0 = city-scale datacentres; 1 = near-Planck substrate.</div>
+        <input type="range" id="s-slider" class="s-track" min="0" max="1" step="0.01" value="0" oninput="update()">
+      </div>
+
+      <!-- T -->
+      <div class="stem-row">
+        <div class="stem-label-row">
+          <span><span class="stem-letter stem-t">T</span><span class="stem-name"> — Time (clock speed)</span></span>
+          <span id="t-pct" class="stem-val">0%</span>
+        </div>
+        <div class="stem-desc">How far toward maximum computation rate? 0 = GHz silicon; 1 = near-ISCO orbital clock.</div>
+        <input type="range" id="t-slider" class="t-track" min="0" max="1" step="0.01" value="0" oninput="update()">
+      </div>
+
+      <!-- E -->
+      <div class="stem-row">
+        <div class="stem-label-row">
+          <span><span class="stem-letter stem-e">E</span><span class="stem-name"> — Energy (efficiency)</span></span>
+          <span id="e-pct" class="stem-val">0%</span>
+        </div>
+        <div class="stem-desc">How close to Landauer-limit energy per bit operation? 0 = ~10⁻¹² J/op; 1 = Landauer minimum at T_H.</div>
+        <input type="range" id="e-slider" class="e-track" min="0" max="1" step="0.01" value="0" oninput="update()">
+      </div>
+
+      <!-- M -->
+      <div class="stem-row">
+        <div class="stem-label-row">
+          <span><span class="stem-letter stem-m">M</span><span class="stem-name"> — Matter (info density)</span></span>
+          <span id="m-pct" class="stem-val">0%</span>
+        </div>
+        <div class="stem-desc">How close to Bekenstein-bound information density? 0 = ~10¹² bits/g (today's SSD); 1 = black hole entropy per unit mass.</div>
+        <input type="range" id="m-slider" class="m-track" min="0" max="1" step="0.01" value="0" oninput="update()">
+      </div>
+
+      <div class="score-section">
+        <div class="score-label">Overall Transcension Score</div>
+        <div class="score-track">
+          <div class="score-fill" id="score-fill" style="width:0%"></div>
+          <span class="score-text" id="score-text">0%</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px">
+          <span>Present-day Earth</span><span>Transcended</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Current position readouts -->
+    <div class="panel">
+      <div class="panel-title">Current STEM Coordinates</div>
+      <div class="panel-sub">Physical quantities corresponding to the civilisation's current compression level</div>
+      <div class="output-grid">
+        <div class="output-box active-s" id="box-s">
+          <div class="out-eye"><span class="stem-s">S</span> Physical Footprint</div>
+          <div class="out-val stem-s" id="val-s">—</div>
+          <div class="out-unit" id="unit-s">m³ per node</div>
+          <div class="out-sub" id="sub-s">Volume of a single compute node</div>
+        </div>
+        <div class="output-box active-t" id="box-t">
+          <div class="out-eye"><span class="stem-t">T</span> Clock Rate</div>
+          <div class="out-val stem-t" id="val-t">—</div>
+          <div class="out-unit" id="unit-t">ops / sec</div>
+          <div class="out-sub" id="sub-t">Operations per second per node</div>
+        </div>
+        <div class="output-box active-e" id="box-e">
+          <div class="out-eye"><span class="stem-e">E</span> Energy / Op</div>
+          <div class="out-val stem-e" id="val-e">—</div>
+          <div class="out-unit" id="unit-e">J per operation</div>
+          <div class="out-sub" id="sub-e">Energy cost per bit erasure</div>
+        </div>
+        <div class="output-box active-m" id="box-m">
+          <div class="out-eye"><span class="stem-m">M</span> Info Density</div>
+          <div class="out-val stem-m" id="val-m">—</div>
+          <div class="out-unit" id="unit-m">bits / kg</div>
+          <div class="out-sub" id="sub-m">Information per unit mass</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(112,85,212,.06);border:1px dashed var(--border-subtle);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--text-secondary)">
+        <strong style="color:var(--text-secondary);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase">Smart's Prediction:</strong>
+        <span id="smart-prediction" style="display:block;margin-top:6px;font-style:italic"> Set a compression level above to see the prediction.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Endpoint comparison: OC IMBH -->
+  <div class="endpoint-section panel">
+    <div class="endpoint-title">OC IMBH as Transcension Endpoint — Established Physics</div>
+    <p style="color:var(--text-secondary);font-size:15px;margin-bottom:18px;font-style:italic">
+      The four quantities below are computed directly from general relativity and quantum mechanics for the selected IMBH mass.
+      They represent physical limits of the black hole environment — the endpoint Smart's trajectory converges toward.
+    </p>
+    <div class="ep-grid">
+      <div class="ep-box">
+        <div class="ep-letter stem-s">S</div>
+        <div class="ep-label">Schwarzschild Radius</div>
+        <div class="ep-quantity" id="ep-rs">—</div>
+        <div class="ep-note">Physical footprint of the horizon — the ultimate spatial compression endpoint</div>
+      </div>
+      <div class="ep-box">
+        <div class="ep-letter stem-t">T</div>
+        <div class="ep-label">ISCO Orbital Freq.</div>
+        <div class="ep-quantity" id="ep-fisco">—</div>
+        <div class="ep-note">Natural clock set by geodesic at the innermost stable orbit</div>
+      </div>
+      <div class="ep-box">
+        <div class="ep-letter stem-e">E</div>
+        <div class="ep-label">Hawking Temperature</div>
+        <div class="ep-quantity" id="ep-th">—</div>
+        <div class="ep-note">Minimum waste-heat temperature — vanishingly cold for an IMBH</div>
+      </div>
+      <div class="ep-box">
+        <div class="ep-letter stem-m">M</div>
+        <div class="ep-label">Bekenstein Entropy</div>
+        <div class="ep-quantity" id="ep-sbek">—</div>
+        <div class="ep-note">Information capacity of the horizon — the matter compression ceiling</div>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-size:14px;color:var(--text-dim);font-style:italic">
+      Note: Hawking temperature for an IMBH of this mass is so low it is far below the CMB (2.725 K) — the black hole absorbs rather than emits. The Bekenstein entropy bound gives an upper limit; actual accessible information in an ergosphere computation scenario would be substantially less. Endpoint quantities labelled 🔬 established physics.
+    </p>
+  </div>
+
+  <!-- SETI visibility -->
+  <div class="seti-section">
+    <div class="seti-title">SETI Visibility — Fermi Implication</div>
+    <div class="seti-bar-wrap">
+      <div style="flex:1">
+        <div class="seti-track">
+          <div class="seti-fill" id="seti-fill" style="width:100%"></div>
+        </div>
+        <div class="seti-bar-labels"><span>Invisible (transcended)</span><span>Detectable (expanding)</span></div>
+      </div>
+      <div class="seti-score" id="seti-score">100</div>
+    </div>
+    <div class="seti-note" id="seti-note">
+      A pre-transcension civilisation at Earth-level STEM compression is highly detectable — radio signals, Dyson structures, and technosignatures all scale with outer-space expansion. As STEM compression increases, the civilisation's footprint shrinks and its output becomes indistinguishable from natural sources.
+    </div>
+  </div>
+
+  <!-- About panel -->
+  <div style="margin-top:32px">
+    <button class="about-toggle" id="about-btn" onclick="toggleAbout()">
+      <span class="arrow">▶</span> About this tool &amp; data sources
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>
+        This tool operationalises John Smart's Transcension Hypothesis (2012) by mapping the four STEM dimensions — Space, Time, Energy, Matter compression — to concrete physical quantities drawn from established physics. Each slider represents how far along the compression trajectory a civilisation has progressed on that dimension, from present-day Earth baseline to the theoretical maximum set by fundamental physics.
+      </p>
+      <p>
+        The endpoint quantities (Schwarzschild radius, ISCO orbital frequency, Hawking temperature, Bekenstein entropy) are computed directly from the selected IMBH mass using established general-relativistic and thermodynamic formulae. They represent the physical environment that Smart's trajectory converges toward — a black-hole-like computational substrate.
+      </p>
+      <p>
+        The SETI visibility score reflects the Transcension Hypothesis's primary Fermi Paradox implication: transcended civilisations are not absent — they are simply invisible, having collapsed inward rather than expanding outward.
+      </p>
+      <h3>Epistemic status</h3>
+      <p>
+        The Transcension Hypothesis is a speculative theoretical framework. It has been published in a peer-reviewed journal (Acta Astronautica) but is not accepted consensus. The STEM compression framing is Smart's conceptual scaffold. The IMBH endpoint quantities are well-established physics applied to a speculative context.
+      </p>
+      <p>
+        Note: a previous version of this site (v1.0 spec) included a "STEM Compression Visualiser" that was removed because it compared incommensurable units (parsecs vs. ops/m³) side-by-side. This tool avoids that error by keeping each STEM dimension on its own physical axis.
+      </p>
+      <h3>Physics formulas used</h3>
+      <p>
+        Schwarzschild radius: r<sub>s</sub> = 2GM/c²<br>
+        ISCO orbital frequency (Schwarzschild): f<sub>ISCO</sub> = c³/(6√6 · 2π · GM)<br>
+        Hawking temperature: T<sub>H</sub> = ℏc³/(8πGMk<sub>B</sub>)<br>
+        Bekenstein entropy: S<sub>BH</sub> = k<sub>B</sub> · A/(4l<sub>P</sub>²) = 4πGM²k<sub>B</sub>/(ℏc)
+      </p>
+      <h3>Data sources &amp; citations</h3>
+      <span class="cite">Smart, J. M. (2012). "The transcension hypothesis." <em>Acta Astronautica</em> 78:55–68. <a href="https://doi.org/10.1016/j.actaastro.2011.11.006" target="_blank">DOI: 10.1016/j.actaastro.2011.11.006</a></span>
+      <span class="cite">Bekenstein, J. D. (1973). "Black holes and entropy." <em>Phys. Rev. D</em> 7:2333. <a href="https://doi.org/10.1103/PhysRevD.7.2333" target="_blank">DOI: 10.1103/PhysRevD.7.2333</a></span>
+      <span class="cite">Lloyd, S. (2000). "Ultimate physical limits to computation." <em>Nature</em> 406:1047. <a href="https://doi.org/10.1038/35023282" target="_blank">DOI: 10.1038/35023282</a></span>
+      <span class="cite">Landauer, R. (1961). "Irreversibility and heat generation in the computing process." <em>IBM J. Res. Dev.</em> 5:183. <a href="https://doi.org/10.1147/rd.53.0183" target="_blank">DOI: 10.1147/rd.53.0183</a></span>
+      <span class="cite">Häberle et al. (2024). <em>Nature</em> 631:285. <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank">DOI: 10.1038/s41586-024-07511-z</a> — lower bound ≥8,200 M☉ (stellar kinematics)</span>
+      <span class="cite">Bañares-Hernández et al. (2025). <em>A&A</em> 693:A104. <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank">DOI: 10.1051/0004-6361/202451763</a> — upper limit ≤6,000 M☉ (kinematics + pulsar timing)</span>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">
+        Tool content may be revised as scientific knowledge evolves. v1.0 — 2026-05-24.
+      </p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── URL hash state (spec §6.3) ───────────────────────────────────────────
+function getHashParams(){
+  return Object.fromEntries(
+    window.location.hash.replace('#','').split('&')
+      .filter(Boolean)
+      .map(p=>p.split('=').map(decodeURIComponent))
+  );
+}
+function setHashParams(params){
+  window.location.hash=Object.entries(params)
+    .map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+}
+
+// ─── Physics constants ─────────────────────────────────────────────────────
+const G   = 6.674e-11;   // m³ kg⁻¹ s⁻²
+const c   = 2.998e8;     // m/s
+const hbar= 1.055e-34;   // J·s
+const kB  = 1.381e-23;   // J/K
+const Msun= 1.989e30;    // kg
+const lP  = 1.616e-35;   // Planck length, m
+
+// ─── Baseline values (Earth present-day) ──────────────────────────────────
+// S: volume of a server blade ~0.01 m³
+// T: typical server CPU, ~3×10⁹ ops/sec per core
+// E: ~10⁻¹² J per floating-point op (modern GPU)
+// M: ~10¹² bits per gram (NAND flash SSD)
+const BASE_S = 0.01;         // m³
+const BASE_T = 3e9;          // ops/sec
+const BASE_E = 1e-12;        // J/op
+const BASE_M = 1e15;         // bits/kg (= 10¹² bits/g)
+
+// ─── State ─────────────────────────────────────────────────────────────────
+let bhMass = 8200; // M☉
+
+// ─── Formatting ────────────────────────────────────────────────────────────
+function fmtSI(val, unit){
+  if(val===0) return '0 '+unit;
+  const prefixes=[['',1],['k',1e3],['M',1e6],['G',1e9],['T',1e12],['P',1e15],['E',1e18],['Z',1e21],['Y',1e24]];
+  const neg_prefixes=[['m',1e-3],['μ',1e-6],['n',1e-9],['p',1e-12],['f',1e-15],['a',1e-18]];
+  if(val>=1){
+    for(let i=prefixes.length-1;i>=0;i--){
+      if(val>=prefixes[i][1]){
+        return (val/prefixes[i][1]).toPrecision(3)+' '+prefixes[i][0]+unit;
+      }
+    }
+  } else {
+    for(let i=0;i<neg_prefixes.length;i++){
+      if(val>=neg_prefixes[i][1]){
+        return (val/neg_prefixes[i][1]).toPrecision(3)+' '+neg_prefixes[i][0]+unit;
+      }
+    }
+  }
+  return val.toExponential(2)+' '+unit;
+}
+function fmtE(val){
+  return val.toExponential(2);
+}
+
+// ─── BH endpoint physics ──────────────────────────────────────────────────
+function bhEndpoint(M_solar){
+  const M = M_solar * Msun;
+  const rs  = 2*G*M/(c*c);                         // m
+  const rg  = G*M/(c*c);
+  const rISCO = 6*rg;                               // Schwarzschild ISCO
+  const fISCO = c*c*c / (6*Math.sqrt(6)*2*Math.PI*G*M); // Hz
+  const Th  = hbar*c*c*c / (8*Math.PI*G*M*kB);     // K
+  const A   = 4*Math.PI*rs*rs;                      // horizon area, m²
+  const Sbek= kB * A / (4*lP*lP);                   // J/K (entropy)
+  const bits= Sbek / (kB * Math.LN2);               // bits
+  return {rs, rISCO, fISCO, Th, Sbek, bits, M};
+}
+
+// ─── Interpolation helpers ────────────────────────────────────────────────
+// log-interpolate from base to target over t=[0,1]
+function logInterp(base, target, t){
+  return base * Math.pow(target/base, t);
+}
+
+// ─── Compute endpoint targets from BH physics ─────────────────────────────
+// S target: rs³ (volume ~ radius³) for a stellar-mass fraction of the BH
+// T target: fISCO (natural clock)
+// E target: kB * Th * ln2 (Landauer limit at Hawking temp)
+// M target: bits / M_solar (bits per solar mass equivalent for scale)
+
+function getTargets(){
+  const ep = bhEndpoint(bhMass);
+  const sTarget = ep.rs * ep.rs * ep.rs;        // m³ (horizon volume scale)
+  const tTarget = ep.fISCO;                     // ops/sec (orbital clock)
+  const eTarget = Math.max(kB * ep.Th * Math.LN2, 1e-40); // J/op (Landauer@Th)
+  const mTarget = ep.bits / (bhMass * Msun);    // bits/kg
+  return {sTarget, tTarget, eTarget, mTarget, ep};
+}
+
+// ─── Main update ─────────────────────────────────────────────────────────
+function update(){
+  const sv = parseFloat(document.getElementById('s-slider').value);
+  const tv = parseFloat(document.getElementById('t-slider').value);
+  const ev = parseFloat(document.getElementById('e-slider').value);
+  const mv = parseFloat(document.getElementById('m-slider').value);
+
+  document.getElementById('s-pct').textContent = Math.round(sv*100)+'%';
+  document.getElementById('t-pct').textContent = Math.round(tv*100)+'%';
+  document.getElementById('e-pct').textContent = Math.round(ev*100)+'%';
+  document.getElementById('m-pct').textContent = Math.round(mv*100)+'%';
+
+  const score = (sv+tv+ev+mv)/4;
+  const scorePct = Math.round(score*100);
+  document.getElementById('score-fill').style.width = scorePct+'%';
+  document.getElementById('score-text').textContent = scorePct+'%';
+
+  const {sTarget, tTarget, eTarget, mTarget, ep} = getTargets();
+
+  // Current values via log interpolation
+  const curS = logInterp(BASE_S, sTarget, sv);
+  const curT = logInterp(BASE_T, tTarget, tv);
+  const curE = logInterp(BASE_E, eTarget, ev);
+  const curM = logInterp(BASE_M, mTarget, mv);
+
+  // Display current values
+  document.getElementById('val-s').textContent = fmtE(curS);
+  document.getElementById('unit-s').textContent = 'm³ per node';
+  document.getElementById('sub-s').textContent = curS >= 1e-9
+    ? 'Nanoscale substrate approaching'
+    : curS >= 1
+      ? 'City-scale datacentre era'
+      : 'Miniaturising rapidly';
+
+  document.getElementById('val-t').textContent = fmtE(curT);
+  document.getElementById('unit-t').textContent = 'ops / sec';
+
+  document.getElementById('val-e').textContent = fmtE(curE);
+  document.getElementById('unit-e').textContent = 'J / op';
+
+  document.getElementById('val-m').textContent = fmtE(curM);
+  document.getElementById('unit-m').textContent = 'bits / kg';
+
+  // SETI visibility: inversely correlated with score
+  // At score=0: fully visible; at score=1: invisible
+  const setiVis = Math.round((1 - score) * 100);
+  document.getElementById('seti-fill').style.width = setiVis+'%';
+  document.getElementById('seti-score').textContent = setiVis;
+  const setiNote = setiVis > 80
+    ? 'High SETI visibility. Outer-space infrastructure (radio, Dyson structures, waste heat) is detectable at interstellar distances. This civilisation has not yet transcended.'
+    : setiVis > 50
+    ? 'Moderate SETI visibility. The civilisation is actively compressing. Radio output and large-scale engineering decline as inner-space investment grows.'
+    : setiVis > 20
+    ? 'Low SETI visibility. Most activity is at sub-atomic or ergospheric scale. Technosignatures resemble natural astrophysical sources.'
+    : 'Near-zero SETI visibility. The civilisation has effectively transcended — indistinguishable from the background at any observed wavelength. This is Smart\'s proposed resolution to Fermi\'s silence.';
+  document.getElementById('seti-note').textContent = setiNote;
+
+  // Smart prediction text
+  const pred = score < 0.1
+    ? 'Present-day Earth or equivalent. STEM compression is negligible — the civilisation is in the Kardashev-I expansion phase, broadcasting across radio bands.'
+    : score < 0.3
+    ? 'Early compression phase. The civilisation is beginning to invest in inner-space infrastructure — molecular computing, energy efficiency gains — while still expanding outward.'
+    : score < 0.55
+    ? 'Intermediate phase. STEM compression now dominates over spatial expansion. The civilisation\'s physical footprint is shrinking as computational density climbs.'
+    : score < 0.8
+    ? 'Advanced compression. The civilisation approaches substrate densities that require quantum-gravitational effects. Outer-space signals have ceased entirely.'
+    : 'Near-terminal compression. The civilisation is converging on the IMBH endpoint. All four STEM dimensions approach their physical limits — the transcension horizon.';
+  document.getElementById('smart-prediction').textContent = pred;
+
+  // Update endpoint panel
+  updateEndpoint(ep);
+
+  // Hash state
+  setHashParams({s:sv.toFixed(2),t:tv.toFixed(2),e:ev.toFixed(2),m:mv.toFixed(2),mass:bhMass});
+}
+
+function updateEndpoint(ep){
+  document.getElementById('ep-rs').textContent   = fmtSI(ep.rs,'m') + ' (' + (ep.rs/1.496e11).toExponential(2)+' AU)';
+  document.getElementById('ep-fisco').textContent = ep.fISCO.toExponential(3) + ' Hz';
+  document.getElementById('ep-th').textContent   = ep.Th.toExponential(3) + ' K';
+  // Bekenstein bits — use scientific notation
+  const logBits = Math.log10(ep.bits);
+  document.getElementById('ep-sbek').textContent = '10^' + logBits.toFixed(1) + ' bits';
+}
+
+// ─── Mass controls ────────────────────────────────────────────────────────
+function onMassSlide(logVal){
+  bhMass = Math.pow(10, parseFloat(logVal));
+  document.getElementById('mass-display').textContent = Math.round(bhMass).toLocaleString() + ' M☉';
+  // Clear active presets
+  document.querySelectorAll('.preset-pill').forEach(p=>p.classList.remove('active'));
+  update();
+}
+function setMass(mass, btn){
+  bhMass = mass;
+  document.getElementById('mass-slider').value = Math.log10(mass).toFixed(3);
+  document.getElementById('mass-display').textContent = mass.toLocaleString() + ' M☉';
+  document.querySelectorAll('.preset-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  update();
+}
+
+// ─── About panel toggle ───────────────────────────────────────────────────
+function toggleAbout(){
+  const panel = document.getElementById('about-panel');
+  const btn   = document.getElementById('about-btn');
+  const isOpen= panel.classList.toggle('visible');
+  btn.classList.toggle('open', isOpen);
+}
+
+// ─── Init from hash ───────────────────────────────────────────────────────
+(function init(){
+  const p = getHashParams();
+  if(p.mass){ bhMass = parseFloat(p.mass); document.getElementById('mass-slider').value = Math.log10(bhMass).toFixed(3); document.getElementById('mass-display').textContent = Math.round(bhMass).toLocaleString()+' M☉'; }
+  if(p.s){ document.getElementById('s-slider').value = p.s; }
+  if(p.t){ document.getElementById('t-slider').value = p.t; }
+  if(p.e){ document.getElementById('e-slider').value = p.e; }
+  if(p.m){ document.getElementById('m-slider').value = p.m; }
+  update();
+})();
+</script>
+</body>
+</html>

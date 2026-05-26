@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!--
+  Pulsar Timing IMBH Sensitivity Estimator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #science  ·  Epistemic tier(s): 🔬 (sensitivity formula) / ⚠ (IMBH constraint)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsar Timing IMBH Sensitivity — Omega Centauri Society</title>
+<meta name="description" content="What IMBH mass would a single pulsar at given distance, timing precision, and observation baseline be sensitive to? Hardcoded OC pulsars overlaid.">
+<link rel="canonical" href="https://omegacentauri.me/tools/pulsar-timing.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:14px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:140px;text-align:right;white-space:nowrap}
+.slider-help{font-size:12px;color:var(--text-dim);margin-top:4px;font-style:italic}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.warn{color:var(--amber-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:24px;margin-bottom:24px;overflow:hidden}
+.chart-svg-wrap{overflow-x:auto}
+.chart-svg{display:block;width:100%;height:auto;min-width:720px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;padding:4px 4px 14px;margin-bottom:14px;border-bottom:1px dashed var(--border-subtle);font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.legend-item{display:inline-flex;align-items:center;gap:8px}
+.legend-glyph{width:36px;height:16px;flex-shrink:0}
+.legend-item strong{color:var(--text-primary);font-weight:400;letter-spacing:.05em}
+.axis-line{stroke:var(--text-dim);stroke-width:1}
+.axis-tick{stroke:var(--text-dim);stroke-width:1}
+.axis-grid{stroke:var(--text-dim);stroke-width:.5;stroke-dasharray:1,4;opacity:.4}
+.axis-label{font-family:'Space Mono',monospace;font-size:11px;fill:var(--text-secondary);text-anchor:middle}
+.axis-title{font-family:'Space Mono',monospace;font-size:12px;fill:var(--text-secondary);letter-spacing:.06em;text-anchor:middle}
+.sens-curve{fill:none;stroke:var(--teal-bright);stroke-width:2.5;filter:drop-shadow(0 0 4px rgba(29,186,144,.4))}
+.published-line{stroke:var(--amber-bright);stroke-width:1.5;stroke-dasharray:6,4;opacity:.8}
+.published-label{font-family:'Space Mono',monospace;font-size:10px;fill:var(--amber-bright);letter-spacing:.04em}
+.psr-dot{stroke:var(--purple-glow);stroke-width:1.5;fill:var(--purple-glow);cursor:pointer;transition:filter .15s}
+.psr-dot:hover{filter:brightness(1.4) drop-shadow(0 0 6px var(--purple-glow))}
+.psr-label{font-family:'Space Mono',monospace;font-size:10px;fill:var(--purple-glow);letter-spacing:.02em;pointer-events:none}
+.zone-excl{fill:rgba(208,64,64,.05)}
+.zone-allow{fill:rgba(29,186,144,.04)}
+.psr-list{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:14px;border-top:1px dashed var(--border-subtle)}
+@media (max-width:760px){.psr-list{grid-template-columns:1fr}}
+.psr-item{padding:10px 14px;background:rgba(7,5,21,.4);border-radius:6px;border-left:3px solid var(--purple-bright);font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.psr-name{color:var(--text-primary);font-weight:600;display:block;margin-bottom:4px}
+.psr-meta{color:var(--text-dim);font-size:10px;display:block;margin-top:4px}
+.callout{background:linear-gradient(135deg,rgba(13,10,36,.6),rgba(26,16,64,.4));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 24px;margin-bottom:24px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center}
+.callout-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+.callout-main{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--text-primary)}
+.callout-main .value{color:var(--teal-glow);font-weight:600;font-size:20px}
+.callout-link{font-family:'Space Mono',monospace;font-size:11px;color:var(--purple-glow);text-transform:uppercase;letter-spacing:.05em}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+.mobile-notice{display:none;background:rgba(26,16,64,.5);border:1px solid var(--amber-bright);border-radius:12px;padding:32px 24px;margin-bottom:24px;text-align:center;color:var(--text-primary)}
+body.is-mobile .mobile-notice{display:block}
+body.is-mobile .chart-card,body.is-mobile .cols,body.is-mobile .callout{display:none}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}.callout{grid-template-columns:1fr;gap:10px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Pulsar Timing IMBH Sensitivity</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Pulsar Timing IMBH Sensitivity Estimator</h1>
+      <p class="tool-subtitle">A pulsar near a central black hole feels a line-of-sight acceleration that drifts its arrival times by Δt ≈ ½(a/c)T². Given the pulsar's distance from cluster centre, the timing precision, and the observation baseline, this tool solves for the minimum IMBH mass detectable.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Newtonian sensitivity</span>
+      <span class="tier-badge debated">⚠ IMBH constraint context</span>
+    </div>
+  </header>
+
+  <div class="mobile-notice">
+    <p>This tool is best viewed on a desktop or tablet.</p>
+    <p>The sensitivity chart needs the wider viewport.</p>
+    <a href="#about-this-tool">Read the description instead →</a>
+  </div>
+
+  <div class="callout">
+    <span class="callout-label">Minimum detectable M<sub>BH</sub> at current parameters</span>
+    <span class="callout-main"><span class="value" id="mmin-val">— M☉</span> &nbsp;<span style="color:var(--text-dim);font-family:'Space Mono',monospace;font-size:12px" id="mmin-ctx">computing…</span></span>
+    <a class="callout-link" href="constraint-stacker.html">→ Compare against all constraints</a>
+  </div>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Hypothetical pulsar parameters</div>
+      <div class="slider-block">
+        <label>Distance from cluster centre r  (arcsec)</label>
+        <div class="slider-row">
+          <input type="range" id="r-slider" min="0" max="3" step="0.02" value="1.78">
+          <span class="slider-value" id="r-val">60 arcsec</span>
+        </div>
+        <div class="slider-help">Closer pulsar ⇒ stronger acceleration ⇒ smaller M_BH detectable. OC has known pulsars at ~30–250 arcsec from centre.</div>
+      </div>
+      <div class="slider-block">
+        <label>Timing precision σ_t  (μs RMS)</label>
+        <div class="slider-row">
+          <input type="range" id="sig-slider" min="-1" max="3" step="0.02" value="0.7">
+          <span class="slider-value" id="sig-val">5 μs</span>
+        </div>
+        <div class="slider-help">Post-fit residual. Best OC pulsars achieve ~1–3 μs; cluster-confused or binary systems are worse.</div>
+      </div>
+      <div class="slider-block">
+        <label>Observation baseline T  (years)</label>
+        <div class="slider-row">
+          <input type="range" id="t-slider" min="0.5" max="30" step="0.1" value="5">
+          <span class="slider-value" id="t-val">5.0 yr</span>
+        </div>
+        <div class="slider-help">Longer baseline ⇒ much smaller M_BH detectable (M_min ∝ 1/T²). MeerKAT timing has been running ~4 yr; SKA will extend this.</div>
+      </div>
+    </section>
+
+    <!-- KEY OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Derived quantities</div>
+      <div class="row">
+        <div class="row-label">Distance r in physical units</div>
+        <div class="row-value" id="r-physical">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Required acceleration for detection</div>
+        <div class="row-value" id="a-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Minimum detectable M_BH</div>
+        <div class="row-value" id="mmin-card">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">vs. Bañares 2025 upper limit (6,000 M☉)</div>
+        <div class="row-value" id="vs-banares">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">vs. Häberle 2024 lower bound (8,200 M☉)</div>
+        <div class="row-value" id="vs-haberle">—</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SENSITIVITY CHART -->
+  <section class="chart-card">
+    <div class="legend">
+      <span class="legend-item" style="color:var(--teal-bright)"><svg class="legend-glyph" viewBox="0 0 36 16"><path d="M 4 14 Q 18 14 22 8 Q 28 2 32 2" fill="none" stroke="currentColor" stroke-width="2"/></svg><span><strong>Sensitivity curve</strong> — M_min(r) at current σ_t &amp; T</span></span>
+      <span class="legend-item" style="color:var(--purple-glow)"><svg class="legend-glyph" viewBox="0 0 36 16"><circle cx="18" cy="8" r="4" fill="currentColor"/></svg><span><strong>OC pulsar</strong> — at its own r &amp; σ_t (T = your slider)</span></span>
+      <span class="legend-item" style="color:var(--amber-bright)"><svg class="legend-glyph" viewBox="0 0 36 16"><line x1="4" y1="8" x2="32" y2="8" stroke="currentColor" stroke-width="2" stroke-dasharray="6,4"/></svg><span><strong>Published</strong> upper limits (Bañares 2025, TRAPUM 2026)</span></span>
+    </div>
+    <div class="chart-svg-wrap">
+      <svg class="chart-svg" id="chart" viewBox="0 0 1000 440" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Pulsar timing sensitivity to IMBH mass"></svg>
+    </div>
+    <div class="psr-list" id="psr-list"></div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The physics</h3>
+      <p>A pulsar at projected distance r from a central mass M_BH feels a line-of-sight acceleration of order <code>a = GM_BH / r²</code> (Newtonian; valid because we're orders of magnitude outside the horizon). That acceleration drifts the apparent pulse-arrival times by <code>Δt ≈ ½ (a/c) T²</code> over an observation baseline T. The IMBH is detectable when Δt exceeds the timing precision σ_t. Solving for the smallest detectable M_BH:</p>
+      <p style="text-align:center"><code>M_min = 2 σ_t c r² / (G T²)</code></p>
+      <p>The quadratic in r makes pulsars near the cluster centre disproportionately valuable; the inverse-square in T makes longer baselines the high-leverage investment.</p>
+
+      <h3>Why the chart's pulsars sit so far below the published bounds</h3>
+      <p>The formula above is the formal sensitivity for an idealised, isolated pulsar with the intrinsic spin-down rate <em>independently known</em>. In practice, a constant line-of-sight acceleration produces a constant <code>ΔP/P</code> shift that is mathematically degenerate with intrinsic pulsar spin-down — the standard timing fit absorbs it, leaving the IMBH signature in higher-order terms (jerk, snap) that are much smaller. Real OC pulsar timing also has to contend with: the cluster's mean gravitational potential (which produces an acceleration of order GM_cluster/r_h² independent of any IMBH), binary orbital motion (for the majority of MSPs), interstellar dispersion variations, and confusion from other accelerating masses.</p>
+      <p>The practical consequence is that published combined bounds — Bañares et al. 2025's 6,000 M☉ (3σ) and TRAPUM 2026's 10⁵ M☉ (90% CL) — are <strong>weaker than per-pulsar formal sensitivities by factors of order 100–1000</strong>. The gap on this chart between the purple pulsar dots and the amber published-bound lines IS that systematics penalty. Closing it requires multi-pulsar joint analyses with kinematic priors on the cluster potential, which is what the published papers do.</p>
+
+      <h3>How to read the chart</h3>
+      <p>The teal curve is M_min(r) at your current σ_t and T sliders. The purple dots are real OC pulsars at their <em>own</em> measured σ_t (from the discovery papers) and your T slider value. Where a pulsar's dot lies on the chart is its individual sensitivity; the most sensitive pulsar (lowest-y point) sets the de-facto upper limit at its r. The horizontal amber dashed lines are the published combined upper limits — the tightest ones come from joint analyses that exploit multiple pulsars and cluster-kinematics priors simultaneously.</p>
+
+      <h3>OC distance assumption</h3>
+      <p>Conversion from arcsec to physical distance uses an OC distance of 5.43 kpc (Soltis et al. 2021, ApJ 908:L5). 1 arcsec at this distance ≈ 0.0263 pc ≈ 8.13×10¹⁴ m.</p>
+
+      <h3>Cross-references</h3>
+      <p>The published upper limits also appear in the <a href="constraint-stacker.html">IMBH Constraint Stacker</a> as horizontal-axis markers, where you can see them in the company of kinematic and JWST constraints. The pulsar list itself comes from <code>tools/data/measurements.js</code>; per-pulsar parameters are illustrative pending a published per-pulsar ephemerides catalog.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">📡 Pulsar Timing Array (PTA) precision today</h3>
+      <p>The best millisecond pulsars achieve weekly RMS residuals of <strong>~50–100 ns</strong> (PSR J1909-3744 at Green Bank Telescope is the gold standard at ~60 ns over 15 years). The four major PTAs — NANOGrav (North America), EPTA (Europe), PPTA (Parkes/Australia), and the MeerKAT-based MPTA — together monitor ~70 pulsars and recently reported (June 2023) evidence for a stochastic gravitational-wave background consistent with supermassive black hole binaries. SKA-Mid (first light ~2028) will push best-pulsar precision to <strong>~10 ns</strong> and extend the network to ~200 pulsars.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🌀 OC's pulsar population</h3>
+      <p>Omega Centauri hosts <strong>~25 known pulsars</strong> as of 2026, almost all discovered by MeerKAT TRAPUM (Chen et al. 2023 reported 13 new ones; subsequent surveys have added ~12 more). Most are millisecond pulsars (P ≈ 2–10 ms). Per-pulsar timing precision varies widely: isolated MSPs with low DM achieve 1–5 μs RMS post-fit residuals; binary MSPs and ones in confused regions are 10× worse. The TRAPUM 2026 IMBH constraint (~10⁵ M☉ at 90% CL) combines ~10 of the best-timed pulsars across a 5-year baseline.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">⚙ The spin-down degeneracy explained</h3>
+      <p>A constant line-of-sight acceleration produces a constant ΔP/P shift that is mathematically <strong>indistinguishable</strong> from intrinsic pulsar spin-down. Standard pulsar timing software (TEMPO2, PINT) absorbs this into the fitted P-dot, leaving residual signal in higher-order derivatives (jerk, snap) that are much smaller. This is the central reason per-pulsar formal sensitivity (often quoted as M_BH ≲ few M☉) is ~1000× tighter than the published bounds (~10³–10⁵ M☉). Multi-pulsar joint analyses with kinematic priors can recover some of the loss by fitting cluster-potential-induced accelerations across many sightlines simultaneously.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0 · Pulsar list: Chen et al. 2023 (MNRAS 520:3847), TRAPUM 2026 (arXiv:2603.21845)</p>
+    </div>
+  </section>
+</div>
+
+<script src="data/measurements.js"></script>
+<script>
+"use strict";
+const G_SI = 6.674e-11;
+const C_SI = 2.998e8;
+const MSUN_KG = 1.989e30;
+const PC_M = 3.086e16;
+const OC_DIST_PC = 5430;           // Baumgardt & Vasiliev (2021)
+const M_PER_ARCSEC = OC_DIST_PC / 206265 * PC_M;  // ~8.13e14 m
+const YR_S = 3.156e7;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+// Published combined upper limits
+const PUBLISHED = [
+  { name: 'Bañares 2025 (3σ)', value: 6000, color: 'var(--amber-bright)' },
+  { name: 'TRAPUM 2026 (90% CL)', value: 1e5, color: 'var(--amber-mid)' }
+];
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M===null||!isFinite(M)||M<=0)return'—';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶';if(M>=1e3)return(M/1e3).toFixed(2)+'×10³';if(M>=1)return Math.round(M).toLocaleString();return M.toExponential(1)}
+function fmtLength(m){if(m>=PC_M)return(m/PC_M).toFixed(2)+' pc';if(m>=1.496e11)return(m/1.496e11).toFixed(1)+' AU';return fmtSci(m,2)+' m'}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function isNarrow(){return window.matchMedia('(max-width: 720px)').matches}
+function applyMobile(){document.body.classList.toggle('is-mobile', isNarrow())}
+window.addEventListener('resize', applyMobile);
+
+const state = { r_arcsec: 60, sig_us: 5, T_yr: 5 };
+function loadHash(){const p=getHash(); if(p.r){const v=parseFloat(p.r);if(!isNaN(v)&&v>0)state.r_arcsec=v;} if(p.precision){const v=parseFloat(p.precision);if(!isNaN(v)&&v>0)state.sig_us=v;} if(p.baseline){const v=parseFloat(p.baseline);if(!isNaN(v)&&v>0)state.T_yr=v;}}
+function saveHash(){setHash({r:state.r_arcsec.toFixed(2), precision:state.sig_us.toFixed(2), baseline:state.T_yr.toFixed(2)})}
+
+// Physics: M_min in solar masses
+function mMinSolar(r_arcsec, sig_us, T_yr) {
+  const r_m = r_arcsec * M_PER_ARCSEC;
+  const sig_s = sig_us * 1e-6;
+  const T_s = T_yr * YR_S;
+  return 2 * sig_s * C_SI * r_m * r_m / (G_SI * T_s * T_s) / MSUN_KG;
+}
+// Acceleration (m/s²) needed for detection
+function aRequired(sig_us, T_yr) {
+  const sig_s = sig_us * 1e-6;
+  const T_s = T_yr * YR_S;
+  return 2 * sig_s * C_SI / (T_s * T_s);
+}
+
+// Chart geometry
+const CH = { vbW:1000, vbH:440, padL:80, padR:60, padT:50, padB:80, xMin:0, xMax:3, yMin:-1, yMax:7 };
+// xMin..xMax: log arcsec (1 to 1000); yMin..yMax: log M_sun (10 to 10^7)
+function el(t,a={},p=null){const n=document.createElementNS(SVG_NS,t);for(const[k,v]of Object.entries(a)){if(v!=null)n.setAttribute(k,v)} if(p)p.appendChild(n);return n}
+function xToPx(logR){const w=CH.vbW-CH.padL-CH.padR;return CH.padL+(logR-CH.xMin)/(CH.xMax-CH.xMin)*w}
+function yToPx(logM){const h=CH.vbH-CH.padT-CH.padB;return CH.vbH-CH.padB-(logM-CH.yMin)/(CH.yMax-CH.yMin)*h}
+
+function renderChart() {
+  const svg = document.getElementById('chart');
+  svg.innerHTML = '';
+  const xLeft = xToPx(CH.xMin), xRight = xToPx(CH.xMax);
+  const yTop = CH.padT, yBot = CH.vbH - CH.padB;
+
+  // X gridlines (log arcsec)
+  for (let lg = CH.xMin; lg <= CH.xMax; lg++) {
+    const x = xToPx(lg);
+    el('line', {class:'axis-grid', x1:x, y1:yTop, x2:x, y2:yBot}, svg);
+    el('line', {class:'axis-tick', x1:x, y1:yBot, x2:x, y2:yBot+5}, svg);
+    const t = el('text', {x:x, y:yBot+20, class:'axis-label'}, svg);
+    t.textContent = '10' + supDigits(lg);
+  }
+  // Y gridlines (log M_sun)
+  for (let lg = CH.yMin; lg <= CH.yMax; lg++) {
+    const y = yToPx(lg);
+    el('line', {class:'axis-grid', x1:CH.padL, y1:y, x2:xRight, y2:y}, svg);
+    el('line', {class:'axis-tick', x1:CH.padL-5, y1:y, x2:CH.padL, y2:y}, svg);
+    const t = el('text', {x:CH.padL-10, y:y+4, class:'axis-label', 'text-anchor':'end'}, svg);
+    t.textContent = '10' + supDigits(lg);
+  }
+  el('line', {class:'axis-line', x1:CH.padL, y1:yBot, x2:xRight, y2:yBot}, svg);
+  el('line', {class:'axis-line', x1:CH.padL, y1:yTop, x2:CH.padL, y2:yBot}, svg);
+  // Axis titles
+  const axX = el('text', {x:(CH.padL+xRight)/2, y:yBot+48, class:'axis-title'}, svg);
+  axX.textContent = 'Distance from cluster centre  r  (arcsec, log scale)';
+  const axY = el('text', {class:'axis-title', transform:`translate(20,${(yTop+yBot)/2}) rotate(-90)`}, svg);
+  axY.textContent = 'Minimum detectable M_BH  (M☉, log scale)';
+
+  // Published horizontal lines
+  for (const pub of PUBLISHED) {
+    const ly = yToPx(Math.log10(pub.value));
+    if (ly >= yTop && ly <= yBot) {
+      el('line', {class:'published-line', x1:CH.padL, y1:ly, x2:xRight, y2:ly, stroke: pub.color}, svg);
+      const lab = el('text', {x:xRight-8, y:ly-6, class:'published-label', 'text-anchor':'end', fill:pub.color}, svg);
+      lab.textContent = pub.name + ' ≤ ' + fmtMass(pub.value) + ' M☉';
+    }
+  }
+
+  // Sensitivity curve (at current σ_t and T)
+  const N = 80;
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const logR = CH.xMin + (CH.xMax - CH.xMin) * i/N;
+    const r_a = Math.pow(10, logR);
+    const m = mMinSolar(r_a, state.sig_us, state.T_yr);
+    const logM = Math.log10(m);
+    if (logM >= CH.yMin && logM <= CH.yMax) {
+      pts.push(`${xToPx(logR)},${yToPx(logM)}`);
+    }
+  }
+  if (pts.length) {
+    el('polyline', {class:'sens-curve', points: pts.join(' ')}, svg);
+  }
+
+  // OC pulsars: plot at (own r, M_min using own σ_t and user's T)
+  const pulsars = window.OCS_MEASUREMENTS && window.OCS_MEASUREMENTS.pulsars || [];
+  for (const p of pulsars) {
+    const m = mMinSolar(p.dist_arcsec, p.timing_us, state.T_yr);
+    const logR = Math.log10(p.dist_arcsec);
+    const logM = Math.log10(m);
+    if (logR < CH.xMin || logR > CH.xMax) continue;
+    const cy = (logM > CH.yMax) ? yTop+4 : (logM < CH.yMin ? yBot-4 : yToPx(logM));
+    const cx = xToPx(logR);
+    const dot = el('circle', {class:'psr-dot', cx:cx, cy:cy, r:5}, svg);
+    const title = el('title', {}, dot);
+    title.textContent = `${p.name}\nr = ${p.dist_arcsec}" · σ_t = ${p.timing_us} μs · period ${p.period_ms} ms\nM_min @ T=${state.T_yr.toFixed(1)}yr: ${fmtMass(m)} M☉`;
+    const lab = el('text', {x:cx+8, y:cy+3, class:'psr-label'}, svg);
+    lab.textContent = p.name.replace('PSR J1326-4728', '');
+  }
+
+  // Vertical marker for current r slider
+  const xMark = xToPx(Math.log10(state.r_arcsec));
+  el('line', {x1:xMark, y1:yTop, x2:xMark, y2:yBot, stroke:'var(--teal-glow)', 'stroke-width':1, 'stroke-dasharray':'3,3', opacity:0.4}, svg);
+}
+
+function renderOutputs() {
+  document.getElementById('r-val').textContent = state.r_arcsec.toFixed(1) + ' arcsec';
+  document.getElementById('sig-val').textContent = state.sig_us.toFixed(2) + ' μs';
+  document.getElementById('t-val').textContent = state.T_yr.toFixed(1) + ' yr';
+
+  const r_m = state.r_arcsec * M_PER_ARCSEC;
+  const a_req = aRequired(state.sig_us, state.T_yr);
+  const m_min = mMinSolar(state.r_arcsec, state.sig_us, state.T_yr);
+
+  document.getElementById('r-physical').innerHTML = fmtLength(r_m);
+  document.getElementById('a-val').innerHTML = fmtSci(a_req, 2) + ' <span class="unit">m/s²</span>';
+  document.getElementById('mmin-card').textContent = fmtMass(m_min) + ' M☉';
+
+  const vBan = m_min / 6000;
+  const vHab = m_min / 8200;
+  const fmtRatio = (r) => isFinite(r) ? (r >= 1 ? r.toFixed(2)+'× larger' : (1/r).toFixed(1)+'× tighter') : '—';
+  document.getElementById('vs-banares').textContent = fmtRatio(vBan);
+  document.getElementById('vs-haberle').textContent = fmtRatio(vHab);
+
+  // Callout
+  document.getElementById('mmin-val').textContent = fmtMass(m_min) + ' M☉';
+  let ctx;
+  if (m_min < 1000) ctx = 'extraordinarily tight — would resolve any IMBH if other systematics could be controlled';
+  else if (m_min < 6000) ctx = 'tighter than Bañares 2025 (6,000 M☉) — this pulsar would be load-bearing in a published constraint';
+  else if (m_min < 1e5) ctx = 'between Bañares and TRAPUM bounds — informative but not the tightest';
+  else ctx = 'weaker than current published bounds — wouldn\'t move the needle';
+  document.getElementById('mmin-ctx').textContent = ctx;
+}
+
+function renderPsrList() {
+  const root = document.getElementById('psr-list');
+  root.innerHTML = '';
+  const pulsars = window.OCS_MEASUREMENTS && window.OCS_MEASUREMENTS.pulsars || [];
+  for (const p of pulsars) {
+    const m = mMinSolar(p.dist_arcsec, p.timing_us, state.T_yr);
+    const item = document.createElement('div');
+    item.className = 'psr-item';
+    item.innerHTML = `
+      <span class="psr-name">${escapeHtml(p.name)}</span>
+      r = ${p.dist_arcsec}″ · σ_t = ${p.timing_us} μs · P = ${p.period_ms} ms<br>
+      M_min @ T=${state.T_yr.toFixed(1)} yr: <strong style="color:var(--teal-glow)">${fmtMass(m)} M☉</strong>
+      <span class="psr-meta">${escapeHtml(p.discovery)}</span>
+    `;
+    root.appendChild(item);
+  }
+}
+
+function wire() {
+  const rs = document.getElementById('r-slider');
+  const ss = document.getElementById('sig-slider');
+  const ts = document.getElementById('t-slider');
+  rs.value = Math.log10(state.r_arcsec).toFixed(2);
+  ss.value = Math.log10(state.sig_us).toFixed(2);
+  ts.value = state.T_yr.toFixed(1);
+
+  const update = () => { saveHash(); renderOutputs(); renderChart(); renderPsrList(); };
+  rs.addEventListener('input', () => { state.r_arcsec = Math.pow(10, parseFloat(rs.value)); update(); });
+  ss.addEventListener('input', () => { state.sig_us = Math.pow(10, parseFloat(ss.value)); update(); });
+  ts.addEventListener('input', () => { state.T_yr = parseFloat(ts.value); update(); });
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() {
+  if (!window.OCS_MEASUREMENTS) {
+    document.body.innerHTML = '<p style="padding:40px;color:#d04040;font-family:monospace">Failed to load measurements.js — tool cannot render.</p>';
+    return;
+  }
+  loadHash();
+  applyMobile();
+  wire();
+  renderOutputs();
+  renderChart();
+  renderPsrList();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

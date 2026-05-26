@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<!--
+  Kerr ISCO Geometry Viewer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #compute  ·  Epistemic tier: 🔬 Established physics
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kerr Geometry Viewer — Omega Centauri Society</title>
+<meta name="description" content="Canonical visualisation of a spinning black hole's horizons, ergosphere, and ISCO radii as a function of spin parameter a.">
+<link rel="canonical" href="https://omegacentauri.me/tools/kerr-geometry.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+
+.directions{background:rgba(13,10,36,.4);border:1px solid var(--teal-mid);border-radius:8px;padding:12px 18px;margin-bottom:18px;font-size:14px;color:var(--text-secondary);display:flex;align-items:flex-start;gap:14px;line-height:1.6}
+.directions .icon{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-bright);padding:3px 9px;border:1px solid var(--teal-mid);border-radius:10px;background:rgba(29,186,144,.06);flex-shrink:0;white-space:nowrap}
+.directions strong{color:var(--text-primary);font-weight:400}
+.directions code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:12px;color:var(--teal-glow)}
+
+.viz-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:24px;margin-bottom:24px}
+.view-toggle{display:flex;justify-content:center;margin-bottom:14px}
+.view-buttons{display:inline-flex;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden}
+.view-btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.04em;padding:8px 18px;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.view-btn:hover{color:var(--text-primary)}
+.view-btn.active{background:linear-gradient(135deg,var(--purple-mid),var(--purple-bright));color:var(--text-primary)}
+.viz-svg-wrap{display:flex;justify-content:center;align-items:center}
+.viz-svg{display:block;max-width:600px;width:100%;height:auto;cursor:crosshair}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:18px;padding-top:14px;border-top:1px dashed var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.legend-item{display:inline-flex;align-items:center;gap:6px}
+.legend-swatch{width:14px;height:14px;border-radius:2px;display:inline-block;flex-shrink:0}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:140px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-value.amber{color:var(--amber-glow)}
+
+.testpoint-info{margin-top:14px;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:8px;border-left:3px solid var(--amber-bright);font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);line-height:1.7}
+.testpoint-info strong{color:var(--amber-glow)}
+.testpoint-info .zone-tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-left:6px}
+.zone-tag.outside{background:rgba(29,186,144,.1);color:var(--teal-bright)}
+.zone-tag.ergo{background:rgba(160,128,240,.12);color:var(--purple-glow)}
+.zone-tag.between{background:rgba(240,160,32,.12);color:var(--amber-bright)}
+.zone-tag.inside{background:rgba(208,64,64,.12);color:var(--red-bright)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Kerr ISCO Geometry Viewer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#compute">← #compute</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Kerr ISCO Geometry Viewer</h1>
+      <p class="tool-subtitle">Canonical picture of a spinning black hole's spacetime structure: outer and inner horizons, ergosphere, and the prograde/retrograde ISCO radii — as functions of the spin parameter <em>a</em>. Cross-reference target for the other OCS tools that mention horizon or ISCO.</p>
+    </div>
+    <span class="tier-badge">🔬 Established physics</span>
+  </header>
+
+  <div class="directions">
+    <span class="icon">How to use</span>
+    <div>
+      <strong>Drag the spin slider</strong> below the diagram to watch the horizons, ergosphere, and ISCO radii morph in real time.
+      <strong>Click anywhere on the diagram</strong> to drop a test point — the right-hand info box reports which zone you're in (outside the ISCO, inside the ergosphere, past the event horizon, etc.).
+      <strong>Toggle between views</strong> with the buttons at the top of the visualisation: <code>Equatorial</code> looks down the spin axis (everything appears as circles); <code>Polar</code> looks edge-on and shows the ergosphere's characteristic equatorial bulge.
+    </div>
+  </div>
+
+  <!-- VISUALISATION -->
+  <section class="viz-card">
+    <div class="view-toggle">
+      <div class="view-buttons">
+        <button class="view-btn active" data-view="equatorial">Equatorial slice (face-on)</button>
+        <button class="view-btn" data-view="polar">Polar slice (edge-on)</button>
+      </div>
+    </div>
+    <div class="viz-svg-wrap">
+      <svg class="viz-svg" id="viz" viewBox="-12 -12 24 24" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Kerr black hole geometry">
+      </svg>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch" style="background:#000;border:1px solid var(--text-dim)"></span>r₊ outer horizon</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:transparent;border:1px dashed var(--text-dim)"></span>r₋ inner horizon (Cauchy)</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:rgba(160,128,240,.25);border:1px solid var(--purple-glow)"></span>ergosphere</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:transparent;border:1px solid var(--teal-bright)"></span>prograde ISCO</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:transparent;border:1px solid var(--amber-bright)"></span>retrograde ISCO</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--teal-glow);border-radius:50%"></span>test point (click to move)</span>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Inputs</div>
+      <div class="slider-block">
+        <label>Spin parameter a  (0 = Schwarzschild, 0.998 = Thorne limit)</label>
+        <div class="slider-row">
+          <input type="range" id="a-slider" min="0" max="0.998" step="0.001" value="0.9">
+          <span class="slider-value" id="a-val">0.900</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-a="0">0 (Schwarzschild)</button>
+          <button class="preset-btn" data-a="0.5">0.5</button>
+          <button class="preset-btn" data-a="0.9">0.9</button>
+          <button class="preset-btn" data-a="0.998">0.998 (Thorne)</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Black hole mass M  (M<sub>☉</sub>, optional — converts r_g to km)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="0" max="10" step="0.01" value="3.91">
+          <span class="slider-value" id="m-val">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-m="10">10 M☉ (stellar)</button>
+          <button class="preset-btn" data-m="8200">Häberle IMBH</button>
+          <button class="preset-btn" data-m="4e6">Sgr A*</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Geometry (in r_g = GM/c²)</div>
+      <div class="row">
+        <div class="row-label">Outer horizon r₊</div>
+        <div class="row-value" id="rp-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Inner horizon r₋</div>
+        <div class="row-value" id="rm-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Equatorial ergosphere radius</div>
+        <div class="row-value" id="rerg-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Prograde ISCO</div>
+        <div class="row-value" id="isco-pro-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Retrograde ISCO</div>
+        <div class="row-value" id="isco-retro-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Penrose extractable fraction</div>
+        <div class="row-value amber" id="penrose-val">—</div>
+      </div>
+
+      <div class="testpoint-info" id="tp-info">
+        Click anywhere on the diagram to place a test point.
+      </div>
+    </section>
+  </div>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What you're looking at</h3>
+      <p>The Kerr metric (Roy Kerr 1963) describes the spacetime around any uncharged, rotating black hole. Its key structural surfaces — horizons and ergosphere — and the radii of marginally stable circular orbits depend on a single dimensionless spin parameter <code>a = Jc/(GM²)</code>, ranging from 0 (no spin, Schwarzschild) to 1 (maximally rotating, naked singularity at the limit). Astrophysical black holes are bounded below 1 by Thorne's limit, <code>a ≲ 0.998</code>.</p>
+
+      <h3>The structures</h3>
+      <p><strong>Outer horizon</strong>: <code>r₊ = r_g(1 + √(1−a²))</code>. The event horizon. Nothing inside can causally affect the outside. At a = 0 it sits at 2 r_g (Schwarzschild radius); at a = 1 it shrinks to r_g.</p>
+      <p><strong>Inner horizon (Cauchy horizon)</strong>: <code>r₋ = r_g(1 − √(1−a²))</code>. Inside this surface, the Kerr extension contains closed timelike curves and the singularity becomes timelike. For a < 1 it sits between 0 and r_g; at a = 1 it merges with r₊.</p>
+      <p><strong>Ergosphere</strong>: the region between the outer horizon and the static limit <code>r_erg(θ) = r_g(1 + √(1−a²cos²θ))</code>. The static limit touches the horizon at the poles and bulges out to 2 r_g at the equator, producing the characteristic oblate shape visible in the polar-slice view. Inside the ergosphere, no observer can remain static — frame-dragging forces co-rotation with the hole.</p>
+      <p><strong>Prograde ISCO</strong>: innermost stable circular orbit for matter orbiting in the same sense as the hole's rotation. Sits at 6 r_g for a = 0; shrinks to r_g for a = 1 (Bardeen, Press &amp; Teukolsky 1972). This is the inner edge of any thin accretion disk.</p>
+      <p><strong>Retrograde ISCO</strong>: same for counter-rotating orbits. Moves outward from 6 r_g (Schwarzschild) to 9 r_g (a → 1) — retrograde orbits get less stable as the hole spins faster.</p>
+
+      <h3>The two views</h3>
+      <p><strong>Equatorial slice</strong> looks down the spin axis. All structures appear as circles. This is the natural view for thinking about accretion disks and orbital mechanics.</p>
+      <p><strong>Polar slice</strong> looks edge-on, with the spin axis vertical. The ergosphere reveals its oblate (squashed-sphere) shape — bulging at the equator, flattening at the poles where it touches the horizon. The inner and outer horizons are still circles (axially symmetric), but the ergosphere is not.</p>
+
+      <h3>Penrose extractable fraction</h3>
+      <p>The maximum fraction of a black hole's mass-energy that can be extracted via the Penrose process (test particle in, two particles out, one with negative energy) is <code>η = 1 − √((1 + √(1−a²))/2)</code>. At maximal spin this is ~29% — three orders of magnitude above any chemical or nuclear conversion efficiency. This is the theoretical foundation of the BZ/Penrose Power Calculator.</p>
+
+      <h3>Why this tool exists</h3>
+      <p>Half a dozen OCS tools mention "ISCO", "horizon", or "ergosphere" — sometimes in Kerr, sometimes in Schwarzschild approximation, sometimes inconsistently. This tool provides the single canonical picture they can all reference. Tools 1 (BZ/Kardashev), 4 (Bekenstein–Landauer–Lloyd Panel 2), 6 (Time Dilation), and 11 (Tidal Disruption) all use Kerr ISCO or horizon radii computed identically to the values shown here.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🌀 Measuring black hole spin — three techniques</h3>
+      <p>Three independent methods constrain real BH spin parameters. <strong>Iron Kα reflection spectroscopy</strong> fits the relativistically broadened 6.4 keV line in X-rays from accretion-disk reflection; results: MCG-6-30-15 has a/M &gt; 0.917 (Brenneman &amp; Reynolds 2006), and a sample of ~25 AGN spans a/M = 0.7–0.99 (Reynolds 2021 review). <strong>Continuum-fitting</strong> models the disk thermal blackbody peak; works best for stellar-mass BHs in X-ray binaries (Cyg X-1 at a/M &gt; 0.95). <strong>EHT polarimetry</strong> (Event Horizon Telescope 2021, ApJL 910:L12) constrained M87* spin orientation; spin magnitude not yet definitive but consistent with a/M ≳ 0.5. Most measured BHs cluster at high spin, consistent with prolonged accretion histories.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">💫 LIGO BBH spin distributions</h3>
+      <p>The LIGO/Virgo/KAGRA O4 catalog (closed Jan 2025) contains ~200 binary black hole mergers. The spin distribution of merger remnants peaks near a/M ≈ 0.7 (the natural value from orbital angular momentum at merger). Pre-merger component spins are individually less constrained but show a population mean χ_eff ≈ 0.06 with broad spread — consistent with either isolated binary evolution (small spins) or dynamical assembly in dense clusters (random orientations). The first BBH detection <strong>GW150914</strong> had remnant spin a/M = 0.67 ± 0.05; the most extreme <strong>GW190521</strong> had remnant a/M ≈ 0.7 at ~150 M☉.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">⚖ The Thorne limit, derived</h3>
+      <p>Thorne 1974 (ApJ 191:507) showed that radiation back-reaction on accreting matter caps the spin a real astrophysical BH can reach at <strong>a/M ≈ 0.998</strong>, set by photon capture asymmetry in the accretion process. Above this, accreting matter spins the hole DOWN rather than up because of the increased capture of retrograde photons emitted by the disk. So the slider in this tool maxes at 0.998 not as a numerical limit but as the physically achievable ceiling. The Penrose extractable fraction at the Thorne limit is ~27% — almost the full theoretical maximum (29.3% at a=1). Whether any astrophysical hole has actually reached the Thorne limit is observationally constrained but not definitively resolved.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0 · Refs: Kerr 1963 (PRL 11:237); Bardeen, Press &amp; Teukolsky 1972 (ApJ 178:347); Thorne 1974 (ApJ 191:507)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G_SI = 6.674e-11, C_SI = 2.998e8, MSUN = 1.989e30;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M>=1e6)return fmtSci(M,2)+' M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=1000)return Math.round(M).toLocaleString()+' M☉';return Math.round(M)+' M☉'}
+function fmtLength(m){if(m>=1.496e11)return(m/1.496e11).toFixed(2)+' AU';if(m>=1e9)return fmtSci(m,2)+' m';if(m>=1000)return(m/1000).toFixed(2)+' km';return Math.round(m)+' m'}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { a: 0.9, view: 'equatorial', M: 8200, tp: { x: 5, y: 0 } };
+function loadHash(){
+  const p = getHash();
+  if (p.a) { const v = parseFloat(p.a); if (!isNaN(v) && v >= 0 && v < 1) state.a = v; }
+  if (p.view === 'polar' || p.view === 'equatorial') state.view = p.view;
+  if (p.mass) { const v = parseFloat(p.mass); if (!isNaN(v) && v > 0) state.M = v; }
+  if (p.tx && p.ty) { const x = parseFloat(p.tx), y = parseFloat(p.ty); if (!isNaN(x) && !isNaN(y)) state.tp = { x, y }; }
+}
+function saveHash(){setHash({a: state.a.toFixed(3), view: state.view, mass: state.M.toExponential(3), tx: state.tp.x.toFixed(2), ty: state.tp.y.toFixed(2)})}
+
+// Kerr formulas (in units where r_g = 1)
+function rPlus(a){return 1 + Math.sqrt(1 - a*a)}
+function rMinus(a){return 1 - Math.sqrt(1 - a*a)}
+function rErg(a, theta){return 1 + Math.sqrt(1 - a*a * Math.cos(theta)*Math.cos(theta))}
+function iscoProgradeRg(a){
+  const Z1 = 1 + Math.cbrt(1-a*a)*(Math.cbrt(1+a)+Math.cbrt(1-a));
+  const Z2 = Math.sqrt(3*a*a + Z1*Z1);
+  return 3 + Z2 - Math.sqrt((3-Z1)*(3+Z1+2*Z2));
+}
+function iscoRetrogradeRg(a){
+  const Z1 = 1 + Math.cbrt(1-a*a)*(Math.cbrt(1+a)+Math.cbrt(1-a));
+  const Z2 = Math.sqrt(3*a*a + Z1*Z1);
+  return 3 + Z2 + Math.sqrt((3-Z1)*(3+Z1+2*Z2));
+}
+function penroseEta(a){return 1 - Math.sqrt((1 + Math.sqrt(1-a*a))/2)}
+function rgMeters(M_solar){return G_SI*M_solar*MSUN/(C_SI*C_SI)}
+// Schwarzschild redshift factor — approximation for a=0; for Kerr it's direction-dependent
+function redshiftSchwarzschild(r_in_rg){return r_in_rg > 2 ? Math.sqrt(1 - 2/r_in_rg) : 0}
+
+function el(t, a={}, p=null){const n=document.createElementNS(SVG_NS,t); for(const[k,v]of Object.entries(a)){if(v!=null)n.setAttribute(k,v)} if(p)p.appendChild(n); return n}
+
+function renderViz() {
+  const svg = document.getElementById('viz');
+  svg.innerHTML = '';
+  const a = state.a;
+  const rp = rPlus(a);
+  const rm = rMinus(a);
+  const isco_p = iscoProgradeRg(a);
+  const isco_r = iscoRetrogradeRg(a);
+
+  // Axes: light cross
+  el('line', {x1:-12, y1:0, x2:12, y2:0, stroke:'var(--text-dim)', 'stroke-width':0.03, 'stroke-dasharray':'0.2,0.3', opacity:0.4}, svg);
+  el('line', {x1:0, y1:-12, x2:0, y2:12, stroke:'var(--text-dim)', 'stroke-width':0.03, 'stroke-dasharray':'0.2,0.3', opacity:0.4}, svg);
+
+  // Spin-axis label for polar view
+  if (state.view === 'polar') {
+    const axisLabel = el('text', {x:0, y:-11.3, fill:'var(--text-dim)', 'font-size':0.5, 'font-family':'Space Mono', 'text-anchor':'middle'}, svg);
+    axisLabel.textContent = '↑ spin axis';
+  }
+
+  // Grid: r_g ticks
+  for (let r = 2; r <= 10; r += 2) {
+    el('circle', {cx:0, cy:0, r:r, fill:'none', stroke:'var(--text-dim)', 'stroke-width':0.015, 'stroke-dasharray':'0.1,0.2', opacity:0.5}, svg);
+    const t = el('text', {x:r+0.15, y:-0.15, fill:'var(--text-dim)', 'font-size':0.4, 'font-family':'Space Mono'}, svg);
+    t.textContent = r + ' r_g';
+  }
+
+  // Retrograde ISCO (outer, amber)
+  if (isco_r < 12) {
+    el('circle', {cx:0, cy:0, r:isco_r, fill:'none', stroke:'var(--amber-bright)', 'stroke-width':0.06, 'stroke-dasharray':'0.2,0.15', opacity:0.85}, svg);
+    const t = el('text', {x:isco_r*0.71, y:-isco_r*0.71-0.15, fill:'var(--amber-bright)', 'font-size':0.45, 'font-family':'Space Mono', 'text-anchor':'middle'}, svg);
+    t.textContent = 'retro ISCO ' + isco_r.toFixed(2);
+  }
+
+  // Prograde ISCO (inner-ish, teal)
+  el('circle', {cx:0, cy:0, r:isco_p, fill:'none', stroke:'var(--teal-bright)', 'stroke-width':0.07, opacity:0.9}, svg);
+  const lab2 = el('text', {x:-isco_p*0.71, y:-isco_p*0.71-0.15, fill:'var(--teal-bright)', 'font-size':0.45, 'font-family':'Space Mono', 'text-anchor':'middle'}, svg);
+  lab2.textContent = 'pro ISCO ' + isco_p.toFixed(2);
+
+  // Ergosphere
+  if (state.view === 'equatorial') {
+    // Equatorial ergosphere is a circle at r=2 (since cos(θ_pi/2)=0)
+    el('circle', {cx:0, cy:0, r:2, fill:'rgba(160,128,240,0.18)', stroke:'var(--purple-glow)', 'stroke-width':0.04}, svg);
+  } else {
+    // Polar slice: ergosphere is oblate. Build the boundary as a path through theta in [0, 2π]
+    const N = 80;
+    const pts = [];
+    for (let i = 0; i <= N; i++) {
+      const theta = i / N * 2 * Math.PI;
+      const r = rErg(a, theta);
+      // In polar slice, x = r sin θ, y = r cos θ (z axis vertical)
+      const x = r * Math.sin(theta);
+      const y = -r * Math.cos(theta); // negate for SVG (y-down)
+      pts.push((i === 0 ? 'M ' : 'L ') + x.toFixed(3) + ',' + y.toFixed(3));
+    }
+    el('path', {d: pts.join(' ') + ' Z', fill:'rgba(160,128,240,0.18)', stroke:'var(--purple-glow)', 'stroke-width':0.04}, svg);
+  }
+
+  // Outer horizon (filled black)
+  el('circle', {cx:0, cy:0, r:rp, fill:'#000', stroke:'var(--text-dim)', 'stroke-width':0.04}, svg);
+
+  // Inner horizon (dashed outline, lighter)
+  if (rm > 0 && a > 0) {
+    el('circle', {cx:0, cy:0, r:rm, fill:'none', stroke:'var(--text-secondary)', 'stroke-width':0.03, 'stroke-dasharray':'0.15,0.1', opacity:0.7}, svg);
+  }
+
+  // Singularity at center
+  el('circle', {cx:0, cy:0, r:0.08, fill:'var(--red-bright)'}, svg);
+
+  // Equator line for polar view
+  if (state.view === 'polar') {
+    el('line', {x1:-11, y1:0, x2:11, y2:0, stroke:'var(--text-secondary)', 'stroke-width':0.02, 'stroke-dasharray':'0.3,0.2', opacity:0.5}, svg);
+    const eqLab = el('text', {x:10.8, y:-0.2, fill:'var(--text-secondary)', 'font-size':0.35, 'font-family':'Space Mono', 'text-anchor':'end'}, svg);
+    eqLab.textContent = 'equator';
+  }
+
+  // Test point
+  const tp = state.tp;
+  el('circle', {cx:tp.x, cy:tp.y, r:0.2, fill:'var(--teal-glow)', stroke:'var(--void)', 'stroke-width':0.05}, svg);
+  el('circle', {cx:tp.x, cy:tp.y, r:0.4, fill:'none', stroke:'var(--teal-glow)', 'stroke-width':0.03, opacity:0.5}, svg);
+
+  // Click handler
+  svg.onclick = (e) => {
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    const ctm = svg.getScreenCTM().inverse();
+    const p = pt.matrixTransform(ctm);
+    state.tp = { x: p.x, y: p.y };
+    saveHash();
+    render();
+  };
+}
+
+function renderInfo() {
+  const a = state.a;
+  const rp = rPlus(a);
+  const rm = rMinus(a);
+  const isco_p = iscoProgradeRg(a);
+  const isco_r = iscoRetrogradeRg(a);
+  const eta = penroseEta(a);
+
+  document.getElementById('a-val').textContent = a.toFixed(3);
+  document.getElementById('m-val').textContent = fmtMass(state.M);
+
+  const rg_m = rgMeters(state.M);
+  const km = (r_rg) => fmtLength(r_rg * rg_m);
+
+  document.getElementById('rp-val').innerHTML = rp.toFixed(3) + ' <span class="unit">r_g = ' + km(rp) + '</span>';
+  document.getElementById('rm-val').innerHTML = (a > 0 ? rm.toFixed(3) + ' <span class="unit">r_g = ' + km(rm) + '</span>' : '0 (merged with r₊ at a=0)');
+  document.getElementById('rerg-val').innerHTML = '2.000 <span class="unit">r_g = ' + km(2) + '</span>';
+  document.getElementById('isco-pro-val').innerHTML = isco_p.toFixed(3) + ' <span class="unit">r_g = ' + km(isco_p) + '</span>';
+  document.getElementById('isco-retro-val').innerHTML = isco_r.toFixed(3) + ' <span class="unit">r_g = ' + km(isco_r) + '</span>';
+  document.getElementById('penrose-val').textContent = (eta*100).toFixed(2) + '%';
+
+  // Test-point info
+  const tp = state.tp;
+  const r = Math.sqrt(tp.x*tp.x + tp.y*tp.y);
+  let theta;
+  if (state.view === 'equatorial') {
+    theta = Math.PI / 2; // always equator in this view
+  } else {
+    // y in SVG is positive downward, so the angle from north (spin axis) is:
+    theta = Math.atan2(tp.x, -tp.y); // 0 at +z (north), π/2 at +x (equator), etc.
+  }
+  const r_erg_here = rErg(a, theta);
+  const inErgo = (r < r_erg_here && r > rp);
+  const insideHorizon = (r < rp);
+  const insideInner = (r < rm && rm > 0);
+
+  let zoneTag, zoneText;
+  if (insideInner) { zoneTag = '<span class="zone-tag inside">inside Cauchy horizon</span>'; zoneText = 'Inside the inner horizon — the Kerr extension contains closed timelike curves here. Causality is broken in a serious way.'; }
+  else if (insideHorizon) { zoneTag = '<span class="zone-tag inside">inside event horizon</span>'; zoneText = 'Inside the event horizon. Cannot causally influence the exterior.'; }
+  else if (inErgo) { zoneTag = '<span class="zone-tag ergo">inside ergosphere</span>'; zoneText = 'Frame-dragging forces co-rotation with the hole. Penrose energy extraction is allowed here — a particle splitting into two pieces, with one falling on a negative-energy orbit, lets the other escape with more energy than the original.'; }
+  else if (r < isco_p) { zoneTag = '<span class="zone-tag between">between ergosphere and prograde ISCO</span>'; zoneText = 'Stable circular orbits do not exist this close (prograde). Matter here either plunges in or must use non-circular paths.'; }
+  else { zoneTag = '<span class="zone-tag outside">stable orbit region</span>'; zoneText = 'Stable prograde circular orbits exist at this radius. Thin accretion disks can sit here.'; }
+
+  const z_schw = redshiftSchwarzschild(r);
+  document.getElementById('tp-info').innerHTML = `
+    <strong>Test point at r = ${r.toFixed(3)} r_g</strong>${zoneTag}<br>
+    ${state.view === 'polar' ? `θ from spin axis = ${(theta*180/Math.PI).toFixed(1)}°<br>` : ''}
+    Schwarzschild-approx redshift √(1−2/r) = ${z_schw > 0 ? z_schw.toFixed(4) : 'undefined (inside horizon)'}<br>
+    <em style="color:var(--text-dim)">${zoneText}</em>
+  `;
+}
+
+function render() { renderViz(); renderInfo(); }
+
+function wire() {
+  const as_ = document.getElementById('a-slider');
+  const ms = document.getElementById('m-slider');
+  as_.value = state.a.toFixed(3);
+  ms.value = Math.log10(state.M).toFixed(2);
+
+  as_.addEventListener('input', () => { state.a = parseFloat(as_.value); saveHash(); render(); });
+  ms.addEventListener('input', () => { state.M = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); });
+
+  document.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => {
+    state.a = parseFloat(b.dataset.a); as_.value = state.a.toFixed(3); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => {
+    state.M = parseFloat(b.dataset.m); ms.value = Math.log10(state.M).toFixed(2); saveHash(); render();
+  }));
+
+  document.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () => {
+    state.view = b.dataset.view;
+    document.querySelectorAll('.view-btn').forEach(x => x.classList.toggle('active', x.dataset.view === state.view));
+    saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() {
+  loadHash();
+  document.querySelectorAll('.view-btn').forEach(x => x.classList.toggle('active', x.dataset.view === state.view));
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

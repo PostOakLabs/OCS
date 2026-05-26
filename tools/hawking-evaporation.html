@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!--
+  Hawking Evaporation Timeline
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-14
+  Site section: #science  ·  Epistemic tier: 🔬 Established physics (Hawking radiation theoretically sound, not directly observed)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hawking Evaporation Timeline — Omega Centauri Society</title>
+<meta name="description" content="Hawking temperature, luminosity, and evaporation time for any black hole mass, plotted on a logarithmic timeline against cosmological reference points.">
+<link rel="canonical" href="https://omegacentauri.me/tools/hawking-evaporation.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:160px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+
+.timeline-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:26px 32px;margin-bottom:24px}
+.timeline-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.timeline-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:32px;font-style:italic}
+.timeline-strip{position:relative;height:18px;margin:36px 0 72px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--purple-bright),var(--amber-mid),var(--red-mid));border-radius:9px}
+.tl-tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.2)}
+.tl-tick-label{position:absolute;top:-36px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.tl-tick-label .ref{display:block;color:var(--text-dim);font-size:9px;letter-spacing:.04em;margin-top:2px}
+.tl-marker{position:absolute;top:-14px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.tl-marker .arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:14px solid currentColor;filter:drop-shadow(0 0 6px currentColor)}
+.tl-marker .label{position:absolute;top:-26px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:currentColor;font-weight:600}
+.tl-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px}
+.tl-readout{margin-top:18px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);line-height:1.7;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--amber-bright)}
+.tl-readout .v{color:var(--amber-glow);font-weight:600}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Hawking Evaporation Timeline</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Hawking Evaporation Timeline</h1>
+      <p class="tool-subtitle">Drag the mass slider. Watch the evaporation time race past the age of the universe, past proton decay, past every reference point cosmology can name — and back the other way for primordial black holes that died before the cosmic microwave background formed.</p>
+    </div>
+    <span class="tier-badge">🔬 Established physics</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Hawking radiation has not been directly observed.</strong>
+    The formulas below combine quantum field theory with general relativity and are accepted as theoretically sound, but await experimental confirmation. Analog "Hawking" radiation has been seen in lab systems (sonic black holes in BECs); the astrophysical version remains a prediction.
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Black hole mass</div>
+      <div class="slider-block">
+        <label>Mass M  (kg, log scale across 45 decades)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="-5" max="40" step="0.05" value="34.21">
+          <span class="slider-value" id="m-val">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-m-kg="1.74e11">Primordial (evap today)</button>
+          <button class="preset-btn" data-m-kg="1.989e31">Stellar (10 M☉)</button>
+          <button class="preset-btn" data-m-kg="1.631e34">IMBH (Häberle 8,200)</button>
+          <button class="preset-btn" data-m-kg="7.956e36">Sgr A* (4×10⁶)</button>
+          <button class="preset-btn" data-m-kg="1.989e40">Quasar (10¹⁰ M☉)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Hawking properties at this mass</div>
+      <div class="row">
+        <div class="row-label">Hawking temperature T_H</div>
+        <div class="row-value" id="t-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Hawking luminosity P_H</div>
+        <div class="row-value" id="p-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Evaporation time t_evap</div>
+        <div class="row-value" id="tevap-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Schwarzschild radius r_s</div>
+        <div class="row-value" id="rs-val">—</div>
+      </div>
+      <div class="row-meta" id="thermal-meta">—</div>
+    </section>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="timeline-card">
+    <div class="timeline-title">Evaporation time on a cosmological log axis</div>
+    <div class="timeline-sub">Log scale across 100 decades — from the year humans started writing to ~10⁹⁰ times the current age of the universe.</div>
+
+    <div class="timeline-strip" id="tl-strip">
+      <span class="tl-tick" style="left:0%"><span class="tl-tick-label">10⁰<span class="ref">1 year</span></span></span>
+      <span class="tl-tick" style="left:9.7%"><span class="tl-tick-label">10⁹·⁷<span class="ref">solar future (5 Gyr)</span></span></span>
+      <span class="tl-tick" style="left:10.1%"><span class="tl-tick-label">10¹⁰·¹<span class="ref">age of universe</span></span></span>
+      <span class="tl-tick" style="left:14%"><span class="tl-tick-label">10¹⁴<span class="ref">stellar epoch end</span></span></span>
+      <span class="tl-tick" style="left:20%"><span class="tl-tick-label">10²⁰<span class="ref">degenerate-stars era</span></span></span>
+      <span class="tl-tick" style="left:34%"><span class="tl-tick-label">10³⁴<span class="ref">proton decay (theoretical)</span></span></span>
+      <span class="tl-tick" style="left:67%"><span class="tl-tick-label">10⁶⁷<span class="ref">M☉ Hawking lifetime</span></span></span>
+      <span class="tl-tick" style="left:100%"><span class="tl-tick-label">10¹⁰⁰<span class="ref">supermassive Hawking</span></span></span>
+
+      <span class="tl-marker" id="tl-marker" style="left:50%">
+        <span class="label" id="tl-marker-label">computing…</span>
+        <span class="arrow"></span>
+      </span>
+    </div>
+
+    <div class="tl-axis">
+      <span>10⁰ yr</span><span>10⁵⁰ yr</span><span>10¹⁰⁰ yr</span>
+    </div>
+
+    <div class="tl-readout" id="tl-readout">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The formulas</h3>
+      <p>For a Schwarzschild black hole of mass M, in SI units:</p>
+      <p><code>T_H = ℏc³ / (8π G M k_B)</code><br><code>P_H = ℏc⁶ / (15360π G² M²)</code><br><code>t_evap = 5120π G² M³ / (ℏc⁴)</code></p>
+      <p>The temperature falls as 1/M, the luminosity as 1/M², and the evaporation time grows as M³ — which is why varying mass on the slider produces such dramatic timeline movement. A factor-of-10 increase in mass moves the evaporation time three decades to the right.</p>
+
+      <h3>What the slider tells you</h3>
+      <p>At the low end (~10⁻⁵ kg, micrograms), evaporation is essentially instantaneous — these are hypothetical microscopic black holes from extra-dimension scenarios, not anything astrophysical. At ~10¹¹ kg (~100 million tonnes — small asteroid mass), the evaporation timescale equals the current age of the universe; a primordial black hole of that mass formed in the early universe would be finishing its evaporation right now, producing a final-burst gamma-ray signature that GLAST/Fermi-LAT has searched for and not detected. At stellar masses, the timescale is ~10⁶⁷ years; at supermassive scales, ~10¹⁰⁰ years and beyond. The IMBH preset (8,200 M☉) lands at ~10⁷⁹ years — fifty-five decades past the stellar epoch end, twenty-nine decades past proton decay.</p>
+
+      <h3>Why "not directly observed" matters</h3>
+      <p>Hawking radiation was derived in 1974 by Stephen Hawking by combining quantum field theory in curved spacetime with the thermodynamics of black hole horizons. The derivation is internally consistent and several independent re-derivations (Unruh, Wald, Parikh-Wilczek) all converge on the same result. But for stellar-mass and larger holes, the predicted temperature is far below 1 K — for an 8,200 M☉ IMBH, T_H ≈ 7×10⁻⁹ K, completely buried beneath the 2.7 K cosmic microwave background. Direct detection requires either a tiny BH that's about to evaporate (none discovered) or some way to thermally isolate from the CMB (no proposal works). Laboratory analog systems — sonic horizons in Bose-Einstein condensates (Steinhauer 2016) — have shown the predicted spectrum, but a curved-spacetime measurement remains open.</p>
+
+      <h3>The implication for the MTH timeframe</h3>
+      <p>An IMBH-based civilisation would have a host whose Hawking lifetime exceeds proton decay by ~45 orders of magnitude. The MTH speculative scenario of compressing computation into a black-hole ergosphere therefore has effectively unlimited substrate lifetime relative to any other physical timescale — provided the surrounding universe isn't doing something interesting on cosmological timescales (heat death, vacuum decay, etc).</p>
+
+      <h3>Reference points on the timeline</h3>
+      <p><strong>10⁹·⁷ yr</strong>: remaining solar lifetime before the Sun becomes a red giant.<br>
+      <strong>10¹⁰·¹ yr</strong>: current age of the universe.<br>
+      <strong>10¹⁴ yr</strong>: end of the stellar epoch — no more star formation, gas exhausted (Adams &amp; Laughlin 1997).<br>
+      <strong>10²⁰ yr</strong>: degenerate-stars era — white dwarfs cooling, occasional collisions.<br>
+      <strong>10³⁴ yr</strong>: theoretical lower bound on the proton lifetime (Super-Kamiokande limit).<br>
+      <strong>10⁶⁷ yr</strong>: solar-mass black hole Hawking lifetime.<br>
+      <strong>10¹⁰⁰ yr</strong>: supermassive-BH Hawking lifetime.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🌀 Hawking radiation — theoretical and analog</h3>
+      <p>Hawking's 1974 derivation (Nature 248:30) combined QFT in curved spacetime with thermodynamics. Several independent derivations since (Unruh 1976, Parikh–Wilczek 2000, Hartle–Hawking via Euclidean methods) all converge on the same spectrum. For curved-spacetime detection, the obstacle is temperature scale: a 1 M☉ hole has T_H = 6.2×10⁻⁸ K, ~8 decades below CMB. The first <strong>analog Hawking observation</strong> came from Steinhauer 2016 (Nature Physics 12:959) using a Bose-Einstein condensate sonic horizon — thermal spectrum confirmed, with refinements in 2019 and 2021. Other analog systems (water-wave horizons, optical-fiber analogs) have observed compatible signatures. The astrophysical observation remains open.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🧨 Primordial black holes — searched and constrained</h3>
+      <p>If a primordial BH formed in the early universe at ~1.7×10¹¹ kg, it would be evaporating today and producing a final-burst gamma-ray signature. <strong>Fermi-LAT</strong> (2008+) and ground-based atmospheric Cherenkov telescopes (HESS, MAGIC, VERITAS) have searched for these final-burst events with null results, placing a rate limit of ≲ 0.05 PBH bursts/pc³/yr (Albert et al. 2019). Across the full PBH mass range, dynamical microlensing (OGLE, Subaru HSC), CMB spectral distortions (FIRAS), and gravitational-wave (LIGO) constraints together rule out PBHs as the dominant dark matter component except in narrow mass windows (~10⁻¹⁶ to 10⁻¹⁰ M☉ asteroidal range and a small ~10–100 M☉ window).</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">⏳ Reference cosmological timescales</h3>
+      <p>The timeline strip ticks: <strong>age of universe</strong> 1.38×10¹⁰ yr (Planck 2018); <strong>solar lifetime remaining</strong> ~5×10⁹ yr to red giant onset (Sackmann, Boothroyd &amp; Kraemer 1993); <strong>stellar epoch end</strong> ~10¹⁴ yr (gas exhaustion; Adams &amp; Laughlin 1997); <strong>degenerate-stars era</strong> ~10²⁰ yr (cooling white dwarfs, occasional collisions); <strong>proton decay</strong> ~10³⁴ yr lower bound (Super-Kamiokande); <strong>solar-mass BH Hawking lifetime</strong> ~10⁶⁷ yr; <strong>supermassive Hawking lifetime</strong> ~10¹⁰⁰ yr (this is the famous "Black Hole Era" of cosmological epoch taxonomy). After ~10¹⁰⁰ yr the universe contains only photons and leptons — until the next something.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-14 · Code MIT · Prose CC BY 4.0 · Hawking 1974 (Nature 248:30); Adams &amp; Laughlin 1997 (Rev Mod Phys 69:337)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G_SI = 6.674e-11, C_SI = 2.998e8, HBAR = 1.055e-34, KB = 1.381e-23, MSUN = 1.989e30, YR_S = 3.156e7;
+const PI = Math.PI;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M_kg){
+  const M_sun = M_kg / MSUN;
+  if (M_sun >= 1e6) return fmtSci(M_sun, 2) + ' M☉';
+  if (M_sun >= 100) return Math.round(M_sun).toLocaleString() + ' M☉';
+  if (M_sun >= 0.01) return M_sun.toFixed(2) + ' M☉';
+  if (M_kg >= 1e15) return fmtSci(M_kg, 2) + ' kg';
+  if (M_kg >= 1e9) return fmtSci(M_kg, 2) + ' kg (~mountain)';
+  if (M_kg >= 1) return fmtSci(M_kg, 2) + ' kg';
+  return fmtSci(M_kg, 2) + ' kg';
+}
+function fmtLength(m){if(m>=1.496e11)return(m/1.496e11).toFixed(2)+' AU';if(m>=1e9)return fmtSci(m,2)+' m';if(m>=1000)return(m/1000).toFixed(2)+' km';if(m>=1)return m.toFixed(2)+' m';if(m>=1e-3)return(m*1e3).toFixed(2)+' mm';return fmtSci(m,2)+' m'}
+function fmtTemp(T){if(T>=1e9)return fmtSci(T,2)+' K';if(T>=1)return T.toFixed(T<10?2:0)+' K';if(T>=1e-3)return(T*1e3).toFixed(2)+' mK';return fmtSci(T,2)+' K'}
+function fmtPower(P){if(P>=1e30)return fmtSci(P,2)+' W';if(P>=1)return fmtSci(P,2)+' W';return fmtSci(P,2)+' W'}
+function fmtDuration(s){if(s<1e-9)return fmtSci(s,2)+' s';if(s<1)return fmtSci(s,2)+' s';if(s<YR_S)return fmtSci(s,2)+' s';return fmtSci(s/YR_S,2)+' yr'}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { M_kg: 8200 * MSUN };
+function loadHash(){const p=getHash(); if(p.mass){const v=parseFloat(p.mass);if(!isNaN(v)&&v>0)state.M_kg=v*MSUN;} if(p.masskg){const v=parseFloat(p.masskg);if(!isNaN(v)&&v>0)state.M_kg=v;}}
+function saveHash(){const M_sun=state.M_kg/MSUN; if(M_sun>=1e-3)setHash({mass:M_sun.toExponential(3)}); else setHash({masskg:state.M_kg.toExponential(3)})}
+
+// Physics
+function T_H(M_kg){return HBAR*Math.pow(C_SI,3)/(8*PI*G_SI*M_kg*KB)}
+function P_H(M_kg){return HBAR*Math.pow(C_SI,6)/(15360*PI*G_SI*G_SI*M_kg*M_kg)}
+function t_evap(M_kg){return 5120*PI*G_SI*G_SI*Math.pow(M_kg,3)/(HBAR*Math.pow(C_SI,4))}
+function r_s(M_kg){return 2*G_SI*M_kg/(C_SI*C_SI)}
+
+function render() {
+  // Mass readout
+  document.getElementById('m-val').textContent = fmtMass(state.M_kg);
+
+  // Outputs
+  const T = T_H(state.M_kg);
+  const P = P_H(state.M_kg);
+  const t_s = t_evap(state.M_kg);
+  const t_yr = t_s / YR_S;
+  const rs = r_s(state.M_kg);
+
+  document.getElementById('t-val').innerHTML = fmtTemp(T);
+  document.getElementById('p-val').innerHTML = fmtPower(P);
+  document.getElementById('tevap-val').innerHTML = fmtSci(t_yr, 2) + ' <span class="unit">yr</span>';
+  document.getElementById('rs-val').innerHTML = fmtLength(rs);
+
+  // Thermal context
+  const thermal = document.getElementById('thermal-meta');
+  if (T > 2.7) {
+    thermal.textContent = `T_H > T_CMB — Hawking emission dominates over CMB absorption. Net evaporating.`;
+  } else {
+    thermal.textContent = `T_H < T_CMB (2.7 K) — net absorbs CMB; would grow (slowly) under current cosmology, not evaporate, until CMB cools below T_H.`;
+  }
+
+  // Timeline marker
+  const marker = document.getElementById('tl-marker');
+  const label = document.getElementById('tl-marker-label');
+  const readout = document.getElementById('tl-readout');
+  const lgT = Math.log10(Math.max(t_yr, 1e-30));
+  const pct = Math.max(-2, Math.min(102, (lgT / 100) * 100));
+  marker.style.left = pct + '%';
+  if (lgT < 0) {
+    label.textContent = '← evaporates in ' + fmtDuration(t_s);
+  } else if (lgT > 100) {
+    label.textContent = fmtSci(t_yr, 1) + ' yr →';
+  } else {
+    label.textContent = fmtSci(t_yr, 1) + ' yr';
+  }
+
+  // Readout
+  const universeAge = 1.38e10;
+  const ratio = t_yr / universeAge;
+  let context;
+  if (lgT < -10) context = `Already evaporated by the time you read this — total lifetime ${fmtDuration(t_s)}.`;
+  else if (lgT < 0) context = `Sub-year lifetime — would evaporate in ${fmtDuration(t_s)}. Belongs to the "microscopic black hole" regime; nothing of this mass survives to be observed.`;
+  else if (ratio < 0.5) context = `Evaporation time = ${fmtSci(t_yr,2)} yr — less than the current age of the universe. A primordial BH of this mass would already have finished evaporating.`;
+  else if (ratio < 2) context = `Evaporation time ≈ ${fmtSci(t_yr,2)} yr — comparable to the current age of the universe. A primordial BH of this mass would be in its final-burst phase right now.`;
+  else context = `Evaporation time = ${fmtSci(t_yr,2)} yr — that's <span class="v">${fmtSci(ratio,2)}× the current age of the universe</span>. ${ratio > 1e57 ? 'Past proton decay and into the late-degenerate era.' : ratio > 1e23 ? 'Past proton decay timescale.' : ratio > 1e4 ? 'Long past stellar epoch end.' : ''}`;
+  readout.innerHTML = context;
+}
+
+function wire() {
+  const ms = document.getElementById('m-slider');
+  ms.value = Math.log10(state.M_kg).toFixed(2);
+  ms.addEventListener('input', () => { state.M_kg = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); });
+
+  document.querySelectorAll('[data-m-kg]').forEach(b => b.addEventListener('click', () => {
+    state.M_kg = parseFloat(b.dataset.mKg);
+    ms.value = Math.log10(state.M_kg).toFixed(2);
+    saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() { loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

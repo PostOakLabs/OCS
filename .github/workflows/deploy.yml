@@ -1,0 +1,248 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Deploy – The Omega Centauri Society → DreamHost shared hosting (rsync/SSH)
+#
+# Triggers
+#   • Push to main  → full deploy
+#   • workflow_dispatch → choose dry_run: true for a rehearsal with no live push
+#
+# Required repository secrets (Settings → Secrets → Actions):
+#   DH_SSH_KEY    ed25519 private key (matching the public key in ~/.ssh/authorized_keys
+#                 on DreamHost for the deploy user)
+#   DH_SSH_USER   DreamHost shell username (e.g. ocsdeploy)
+#   DH_SSH_HOST   DreamHost server hostname (e.g. example.dreamhost.com)
+#   DH_WEB_ROOT   Absolute path to web root on DreamHost (e.g. /home/ocsdeploy/omegacentauri.me)
+#   DH_SITE_URL   Canonical site URL for smoke test (e.g. https://omegacentauri.me)
+#
+# PREREQUISITE: The DreamHost user must have "Shell" access, not "SFTP only".
+#   Verify in the DreamHost panel under Manage Users → Edit user → Shell account.
+#   SFTP-only accounts accept SSH handshakes but silently drop commands, which
+#   causes rsync to hang indefinitely.
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Deploy to DreamHost
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run only — rehearse rsync without pushing live"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+# Cancel any in-flight deploy for the same branch so pushes don't pile up.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Job 1 – Validate
+# Lightweight pre-flight: confirm every file the workflow will push exists
+# and is readable, and that no obviously broken includes are present.
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify key HTML files are present
+        run: |
+          REQUIRED=(
+            index.html
+            faq.html
+            membership.html
+            advisors.html
+            proposals.html
+            tools/index.html
+            robots.txt
+            sitemap.xml
+            llms.txt
+          )
+          MISSING=0
+          for f in "${REQUIRED[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "❌ Missing expected file: $f"
+              MISSING=$((MISSING + 1))
+            else
+              echo "✅ $f"
+            fi
+          done
+          if [ "$MISSING" -gt 0 ]; then
+            echo ""
+            echo "Validation failed: $MISSING required file(s) not found."
+            exit 1
+          fi
+
+      - name: Count tool files
+        run: |
+          COUNT=$(find tools -maxdepth 1 -name "*.html" | wc -l)
+          echo "Tool HTML files found: $COUNT"
+          if [ "$COUNT" -lt 20 ]; then
+            echo "❌ Expected at least 20 tool files; found $COUNT. Something may be missing."
+            exit 1
+          fi
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Job 2 – Deploy
+  # Steps (in order):
+  #   1. Checkout
+  #   2. Verify secrets
+  #   3. Install SSH key
+  #   4. Test SSH connectivity
+  #   5. rsync dry run (always — shows what would change)
+  #   6. rsync live deploy (skipped when dry_run == 'true')
+  #   7. Smoke test (skipped when dry_run == 'true')
+  #   8. Deploy summary
+  # ───────────────────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Checkout (shallow)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # ── 1. Verify secrets ──────────────────────────────────────────────────
+      - name: Verify required secrets are present
+        env:
+          DH_SSH_KEY:  ${{ secrets.DH_SSH_KEY }}
+          DH_SSH_USER: ${{ secrets.DH_SSH_USER }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+          DH_WEB_ROOT: ${{ secrets.DH_WEB_ROOT }}
+          DH_SITE_URL: ${{ secrets.DH_SITE_URL }}
+        run: |
+          set -euo pipefail
+          missing=()
+          [ -z "${DH_SSH_KEY:-}"  ] && missing+=(DH_SSH_KEY)
+          [ -z "${DH_SSH_USER:-}" ] && missing+=(DH_SSH_USER)
+          [ -z "${DH_SSH_HOST:-}" ] && missing+=(DH_SSH_HOST)
+          [ -z "${DH_WEB_ROOT:-}" ] && missing+=(DH_WEB_ROOT)
+          [ -z "${DH_SITE_URL:-}" ] && missing+=(DH_SITE_URL)
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repository secrets: ${missing[*]}"
+            echo "::error::Go to Settings → Secrets and variables → Actions and add the missing secrets."
+            exit 1
+          fi
+          echo "All required secrets are present."
+
+      # ── 2. Install SSH key ─────────────────────────────────────────────────
+      - name: Install SSH key
+        env:
+          DH_SSH_KEY:  ${{ secrets.DH_SSH_KEY }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          # tr -d '\r' strips Windows CRLF that corrupts PEM keys pasted from Windows
+          echo "$DH_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DH_SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          # Verify key was written correctly (safe — does not expose key content)
+          echo "Key header : $(head -1 ~/.ssh/deploy_key)"
+          echo "Key footer : $(tail -1 ~/.ssh/deploy_key)"
+          echo "Permissions: $(stat -c %a ~/.ssh/deploy_key)"
+
+      # ── 3. Test SSH connectivity ───────────────────────────────────────────
+      - name: Test SSH connectivity
+        env:
+          DH_SSH_USER: ${{ secrets.DH_SSH_USER }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+        run: |
+          set -euo pipefail
+          echo "Testing SSH connection to ${DH_SSH_HOST}…"
+          ssh -i ~/.ssh/deploy_key \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=no \
+              "${DH_SSH_USER}@${DH_SSH_HOST}" "echo 'SSH OK'"
+
+      # ── 4. rsync dry run (always) ──────────────────────────────────────────
+      - name: rsync dry run
+        env:
+          DH_SSH_USER: ${{ secrets.DH_SSH_USER }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+          DH_WEB_ROOT: ${{ secrets.DH_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          echo "=== DRY RUN — no files will be transferred ==="
+          rsync -avz --omit-dir-times --dry-run \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='CLAUDE.md' \
+            --exclude='.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" \
+            ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
+
+      # ── 5. rsync live deploy (skipped on dry_run) ──────────────────────────
+      - name: rsync live deploy
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          DH_SSH_USER: ${{ secrets.DH_SSH_USER }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+          DH_WEB_ROOT: ${{ secrets.DH_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          echo "=== LIVE DEPLOY ==="
+          rsync -avz --omit-dir-times \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='CLAUDE.md' \
+            --exclude='.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" \
+            ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
+
+      # ── 6. Smoke test (skipped on dry_run) ────────────────────────────────
+      # Accepts 200, 301, or 302 — DreamHost typically issues an HTTP→HTTPS
+      # redirect (301/302) before the final 200, so we do NOT follow redirects.
+      - name: Smoke test (HTTP 200/301/302 check)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          DH_SITE_URL: ${{ secrets.DH_SITE_URL }}
+        run: |
+          set -euo pipefail
+          echo "Checking ${DH_SITE_URL}…"
+          STATUS=$(curl -o /dev/null -s -w "%{http_code}" \
+                   --max-time 15 --retry 3 --retry-delay 5 \
+                   "${DH_SITE_URL}")
+          if [ "$STATUS" -ne 200 ] && [ "$STATUS" -ne 301 ] && [ "$STATUS" -ne 302 ]; then
+            echo "::error::Smoke test failed — ${DH_SITE_URL} returned HTTP ${STATUS}"
+            exit 1
+          fi
+          echo "Smoke test passed (HTTP ${STATUS})."
+
+      # ── 7. Deploy summary (always runs) ───────────────────────────────────
+      - name: Deploy summary
+        if: always()
+        run: |
+          set -euo pipefail
+          DRY="${{ github.event.inputs.dry_run }}"
+          DRY="${DRY:-false}"
+          PAGE_COUNT=$(find . -name "*.html" ! -path './.git/*' ! -path './.github/*' | wc -l)
+          {
+            echo "## Deploy summary"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Pages deployed | $PAGE_COUNT |"
+            echo "| Branch | \`${{ github.ref_name }}\` |"
+            echo "| Commit | \`${{ github.sha }}\` |"
+            echo "| Triggered by | ${{ github.actor }} |"
+            echo "| Dry run | \`$DRY\` |"
+            if [ "$DRY" != "true" ]; then
+              echo "| Site | ${{ secrets.DH_SITE_URL }} |"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

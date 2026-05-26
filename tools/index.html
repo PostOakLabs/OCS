@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<!--
+  OCS Tools — Landing Page
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.2  ·  Last updated: 2026-05-24
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCS Tools — Omega Centauri Society</title>
+<meta name="description" content="Twenty-seven interactive tools for exploring Omega Centauri's candidate intermediate-mass black hole, the physics of compact-object computation, the Macro Transcension Hypothesis, the Fermi Paradox, and civilisational cosmology.">
+<link rel="canonical" href="https://omegacentauri.me/tools/">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.10),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.06),transparent 50%),radial-gradient(ellipse at 50% 90%,rgba(240,160,32,.04),transparent 60%)}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:60px 28px 80px}
+.hero{margin-bottom:50px;text-align:center}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:46px;line-height:1.1;letter-spacing:.02em;margin-bottom:20px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:19px;font-style:italic;max-width:780px;margin:0 auto 20px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+.section-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:24px auto 0;max-width:900px}
+.section-nav a{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:6px 12px;border:1px solid var(--border-subtle);border-radius:14px;color:var(--text-secondary);background:rgba(7,5,21,.4)}
+.section-nav a:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+
+.section{margin-bottom:56px;scroll-margin-top:80px}
+.section-header{margin-bottom:24px;padding-bottom:14px;border-bottom:1px dashed var(--border-subtle)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:18px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-primary);margin-bottom:6px}
+.section-sub{font-family:'Crimson Pro',serif;font-style:italic;color:var(--text-secondary);font-size:15px}
+.section-count{display:inline-block;margin-left:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);text-transform:none;letter-spacing:.04em}
+.section-1 .section-title{color:var(--teal-glow)}
+.section-2 .section-title{color:var(--purple-glow)}
+.section-3 .section-title{color:var(--amber-glow)}
+.section-4 .section-title{color:var(--red-bright)}
+.section-5 .section-title{color:var(--teal-bright)}
+
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:880px){.tools-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.tools-grid{grid-template-columns:1fr}}
+
+.tool-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:all .2s;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple-bright),transparent);opacity:0;transition:opacity .2s}
+.tool-card:hover{border-color:var(--purple-bright);transform:translateY(-2px);box-shadow:0 8px 24px rgba(112,85,212,.15)}
+.tool-card:hover::before{opacity:1}
+.section-1 .tool-card:hover{border-color:var(--teal-bright);box-shadow:0 8px 24px rgba(29,186,144,.15)}
+.section-1 .tool-card:hover::before{background:linear-gradient(90deg,transparent,var(--teal-bright),transparent)}
+.section-2 .tool-card:hover{border-color:var(--purple-glow);box-shadow:0 8px 24px rgba(160,128,240,.15)}
+.section-3 .tool-card:hover{border-color:var(--amber-bright);box-shadow:0 8px 24px rgba(240,160,32,.15)}
+.section-4 .tool-card:hover{border-color:var(--red-bright);box-shadow:0 8px 24px rgba(208,64,64,.15)}
+.section-5 .tool-card:hover{border-color:var(--teal-bright);box-shadow:0 8px 24px rgba(29,186,144,.12)}
+.section-5 .tool-card:hover::before{background:linear-gradient(90deg,transparent,var(--teal-bright),transparent)}
+
+.tool-num{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--text-dim);text-transform:uppercase}
+.tool-name{font-family:'Orbitron',sans-serif;font-size:15px;line-height:1.25;color:var(--text-primary);font-weight:600}
+.tool-card:hover .tool-name{color:var(--text-primary)}
+.tool-desc{font-family:'Crimson Pro',serif;font-size:13px;line-height:1.55;color:var(--text-secondary);flex:1}
+.tool-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-mini.e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-mini.d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-mini.t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-mini.f{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+.tier-mini.s{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+
+.flagship-tag{position:absolute;top:12px;right:12px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:8px;background:linear-gradient(135deg,var(--teal-mid),var(--purple-mid));color:var(--text-primary)}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){.hero h1{font-size:34px}.hero-sub{font-size:16px}.container{padding:40px 18px 60px}.section{margin-bottom:40px}.section-title{font-size:15px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Tools</span>
+    <a class="nav-link" href="https://omegacentauri.me/">← Back to main site</a>
+    <a class="nav-link" href="https://omegacentauri.me/faq.html">FAQ</a>
+    <a class="nav-link" href="https://omegacentauri.me/membership.html">Membership</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <h1>Interactive Tools</h1>
+    <p class="hero-sub">Twenty-seven browser-only tools for exploring Omega Centauri\'s candidate intermediate-mass black hole, the physics of compact-object computation, the Macro Transcension Hypothesis, the wider Fermi Paradox landscape, and civilisational cosmology.</p>
+    <p class="hero-meta">No backend · no tracking · works offline · <strong>v1.2</strong> · 2026-05-24</p>
+    <nav class="section-nav">
+      <a href="#evidence">⚖ IMBH Evidence (9)</a>
+      <a href="#physics">⊙ Physics &amp; Geometry (6)</a>
+      <a href="#compute">✦ Speculative Compute (5)</a>
+      <a href="#fermi">⚙ Fermi &amp; Technosignatures (4)</a>
+      <a href="#perspectives">🌌 Civilisational Cosmology (3)</a>
+    </nav>
+  </header>
+
+  <!-- SECTION 1: IMBH EVIDENCE -->
+  <section class="section section-1" id="evidence">
+    <header class="section-header">
+      <div class="section-title">⚖ What does the evidence say?<span class="section-count">9 tools</span></div>
+      <div class="section-sub">Every published constraint on Omega Centauri\'s IMBH, the techniques behind them, and the upcoming observations that would resolve the tension.</div>
+    </header>
+    <div class="tools-grid">
+
+      <a class="tool-card" href="constraint-stacker.html">
+        <span class="flagship-tag">Headline</span>
+        <span class="tool-num">Tool 2</span>
+        <span class="tool-name">IMBH Constraint Stacker</span>
+        <span class="tool-desc">Every published kinematic, timing, and JWST-accretion constraint on a single log-mass axis. Surfaces the active tension between Häberle 2024 (&gt;8,200 M☉) and Bañares 2025 (&lt;6,000 M☉ at 3σ).</span>
+        <span class="tool-badges"><span class="tier-mini d">⚠ Debated</span></span>
+      </a>
+
+      <a class="tool-card" href="imbh-timeline.html">
+        <span class="tool-num">Tool 3</span>
+        <span class="tool-name">IMBH Measurement Timeline</span>
+        <span class="tool-desc">Chronological scatter of every published IMBH estimate from Noyola 2008 through TRAPUM 2026. Filter by method, click any marker for the citation and detail card.</span>
+        <span class="tool-badges"><span class="tier-mini d">⚠ Debated</span></span>
+      </a>
+
+      <a class="tool-card" href="cluster-comparator.html">
+        <span class="tool-num">Tool 5</span>
+        <span class="tool-name">Globular Cluster Comparator</span>
+        <span class="tool-desc">Sortable table of Milky Way GCs with published IMBH claims — OC, M15, NGC 6388, 47 Tuc, M22, M54. Same pattern across all: every detection has been challenged.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Properties</span> <span class="tier-mini d">⚠ IMBH</span></span>
+      </a>
+
+      <a class="tool-card" href="cmd-explorer.html">
+        <span class="tool-num">Tool 16</span>
+        <span class="tool-name">GC Color-Magnitude Explorer</span>
+        <span class="tool-desc">Interactive CMD viewer for OC and other globular clusters, showing multiple stellar populations, isochrones, and the photometric signatures of accreted dwarf-galaxy nuclei.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Photometry</span></span>
+      </a>
+
+      <a class="tool-card" href="velocity-dispersion.html">
+        <span class="tool-num">Tool 8</span>
+        <span class="tool-name">Velocity Dispersion · M-σ</span>
+        <span class="tool-desc">Virial theorem gives the cluster σ; Gültekin 2009 M-σ extrapolation gives a predicted IMBH mass. The pedagogical payoff is how dramatically the prediction swings with the σ input.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Virial</span> <span class="tier-mini d">⚠ M-σ</span></span>
+      </a>
+
+      <a class="tool-card" href="pulsar-timing.html">
+        <span class="tool-num">Tool 9</span>
+        <span class="tool-name">Pulsar Timing Sensitivity</span>
+        <span class="tool-desc">M_min sensitivity from a single pulsar at given r, σ_t, T baseline. The gap between per-pulsar formal sensitivity and published bounds IS the spin-down degeneracy story.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Newtonian</span> <span class="tier-mini d">⚠ IMBH</span></span>
+      </a>
+
+      <a class="tool-card" href="lisa-emri.html">
+        <span class="tool-num">Tool 17</span>
+        <span class="tool-name">LISA EMRI/IMRI Detectability</span>
+        <span class="tool-desc">Predicted detection rates for extreme/intermediate mass-ratio inspirals against the LISA 2035 sensitivity curve. One OC detection would settle the IMBH question definitively.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 GW</span> <span class="tier-mini d">⚠ Rates</span></span>
+      </a>
+
+      <a class="tool-card" href="jwst-accretion.html">
+        <span class="tool-num">Tool 13</span>
+        <span class="tool-name">JWST Accretion Limit</span>
+        <span class="tool-desc">Chen et al. 2025 + Madhuri et al. 2026: how the JWST non-detection translates to an M_BH upper limit. Three sliders show how the limit swings 1,000× across the plausible parameter space.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Bondi/ADAF</span> <span class="tier-mini d">⚠ Debated</span></span>
+      </a>
+
+      <a class="tool-card" href="synthetic-observation.html">
+        <span class="tool-num">Tool 12</span>
+        <span class="tool-name">Synthetic Observation Simulator</span>
+        <span class="tool-desc">~200 procedural stars with PM vectors from cluster rotation + IMBH Keplerian + dispersion. Watch the central swirl emerge from the noise floor as M_BH increases.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Newtonian</span> <span class="tier-mini d">⚠ Schematic</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION 2: PHYSICS & GEOMETRY -->
+  <section class="section section-2" id="physics">
+    <header class="section-header">
+      <div class="section-title">⊙ Physics &amp; geometry of the central engine<span class="section-count">6 tools</span></div>
+      <div class="section-sub">The textbook GR and orbital mechanics that underpin every other claim on the site — visualised, parameterised, and made tactile.</div>
+    </header>
+    <div class="tools-grid">
+
+      <a class="tool-card" href="kerr-geometry.html">
+        <span class="tool-num">Tool 14</span>
+        <span class="tool-name">Kerr ISCO Geometry Viewer</span>
+        <span class="tool-desc">Canonical visualisation of a spinning hole\'s horizons, ergosphere, and ISCO radii vs. spin a. Drag the slider; click to drop a test point and see which zone it sits in.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Established</span></span>
+      </a>
+
+      <a class="tool-card" href="time-dilation.html">
+        <span class="tool-num">Tool 6</span>
+        <span class="tool-name">Time Dilation Comparator</span>
+        <span class="tool-desc">Two clocks at two radii; live comparison of how much slower each ticks. Includes Miller\'s Planet (Interstellar) walkthrough — why 1hr=7yr requires near-extremal Kerr, not Schwarzschild.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 GR</span> <span class="tier-mini f">✦ Compute</span></span>
+      </a>
+
+      <a class="tool-card" href="orbital-dynamics.html">
+        <span class="tool-num">Tool 10</span>
+        <span class="tool-name">Orbital Dynamics Lab</span>
+        <span class="tool-desc">Newtonian sandbox with Velocity Verlet — 5-50 test particles around an IMBH. Häberle mode loads seven illustrative fast stars with residual arrows that collapse at the best-fit M_BH.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Verlet</span> <span class="tier-mini d">⚠ Häberle data</span></span>
+      </a>
+
+      <a class="tool-card" href="tidal-disruption.html">
+        <span class="tool-num">Tool 11</span>
+        <span class="tool-name">Tidal Disruption Calculator</span>
+        <span class="tool-desc">Shredded outside the ISCO (bright TDE flare) or swallowed whole (no signature)? Six object presets — star, planet, white dwarf, asteroid — and the crossover BH mass for each.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Established</span></span>
+      </a>
+
+      <a class="tool-card" href="hawking-evaporation.html">
+        <span class="tool-num">Tool 7</span>
+        <span class="tool-name">Hawking Evaporation Timeline</span>
+        <span class="tool-desc">Drag a mass slider across 45 decades; watch the M³ scaling sling the evaporation time across a 100-decade cosmological log axis with reference ticks at every major epoch boundary.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Theoretical</span></span>
+      </a>
+
+      <a class="tool-card" href="superradiance.html">
+        <span class="tool-num">Tool 18</span>
+        <span class="tool-name">Superradiance / Black-Hole-Bomb Explorer</span>
+        <span class="tool-desc">Penrose-Teukolsky superradiance, ultralight-boson clouds extracting BH spin, and the resulting exclusion regions in the BH spin/mass plane (Arvanitaki 2015).</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Established</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION 3: SPECULATIVE COMPUTE & ENERGY -->
+  <section class="section section-3" id="compute">
+    <header class="section-header">
+      <div class="section-title">✦ Speculative compute &amp; energy<span class="section-count">5 tools</span></div>
+      <div class="section-sub">Where established physics provides the constraints and engineering fiction asks what a sufficiently advanced civilisation could do with them. The MTH lives here.</div>
+    </header>
+    <div class="tools-grid">
+
+      <a class="tool-card" href="bz-kardashev.html">
+        <span class="tool-num">Tool 1</span>
+        <span class="tool-name">BZ / Kardashev Power Calculator</span>
+        <span class="tool-desc">Blandford-Znajek power extraction from a spinning hole. Inverse mode: set target P, see required B. Forward mode: set B, get P. Live Kardashev-scale strip showing where you land.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 BZ</span> <span class="tier-mini t">⚠ Kardashev</span> <span class="tier-mini f">✦ Engineering</span></span>
+      </a>
+
+      <a class="tool-card" href="bekenstein-landauer.html">
+        <span class="tool-num">Tool 4</span>
+        <span class="tool-name">Bekenstein-Landauer-Lloyd Limits</span>
+        <span class="tool-desc">The three fundamental limits on physical computation. Compute ladder strip places your abstract system AND the ergosphere on the same log axis — the gap is the MTH compute argument in one picture.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Limits</span> <span class="tier-mini f">✦ BH application</span></span>
+      </a>
+
+      <a class="tool-card" href="compute-in-space.html">
+        <span class="tool-num">Tool 15</span>
+        <span class="tool-name">Compute-in-Space Footprint</span>
+        <span class="tool-desc">Take Earth-equivalent compute and scale it up by N. Tool computes required radiator area, solar-panel area, build time, and material mass — showing where you cross asteroid, Moon, Earth-crust thresholds.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Stefan-Boltzmann</span> <span class="tier-mini f">✦ Engineering</span></span>
+      </a>
+
+      <a class="tool-card" href="dyson-swarm.html">
+        <span class="tool-num">Tool 19</span>
+        <span class="tool-name">Dyson Swarm Material Comparator</span>
+        <span class="tool-desc">From the original Dyson 1960 proposal through G-HAT survey constraints. How much material do partial Dyson swarms actually need? Compare against asteroid-belt and inner-system inventories.</span>
+        <span class="tool-badges"><span class="tier-mini t">⚠ Theoretical</span> <span class="tier-mini f">✦ Engineering</span></span>
+      </a>
+
+      <a class="tool-card" href="aestivation.html">
+        <span class="tool-num">Tool 20</span>
+        <span class="tool-name">Aestivation Cost Calculator</span>
+        <span class="tool-desc">Sandberg, Armstrong &amp; Ćirković 2017: would a compute-limited civilisation "sleep" until the CMB cools enough to dramatically lower the Landauer floor? Calculate the speedup factor and the trade-offs.</span>
+        <span class="tool-badges"><span class="tier-mini t">⚠ Hypothesis</span> <span class="tier-mini f">✦ Speculative</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4: FERMI PARADOX & TECHNOSIGNATURES -->
+  <section class="section section-4" id="fermi">
+    <header class="section-header">
+      <div class="section-title">⚙ Fermi Paradox &amp; technosignatures<span class="section-count">4 tools</span></div>
+      <div class="section-sub">The interpretive frameworks for the Great Silence, the empirical SETI program, and the meta-question of which MTH-adjacent claims are even falsifiable.</div>
+    </header>
+    <div class="tools-grid">
+
+      <a class="tool-card" href="drake-monte-carlo.html">
+        <span class="tool-num">Tool 21</span>
+        <span class="tool-name">Drake Equation Monte Carlo</span>
+        <span class="tool-desc">Monte-Carlo over the joint Drake-factor uncertainty distribution (Sandberg, Drexler &amp; Ord 2018). Sample published prior ranges, get the posterior distribution of N — including the probability humanity is alone.</span>
+        <span class="tool-badges"><span class="tier-mini t">⚠ Theoretical</span></span>
+      </a>
+
+      <a class="tool-card" href="great-filter.html">
+        <span class="tool-num">Tool 22</span>
+        <span class="tool-name">Great Filter Localizer</span>
+        <span class="tool-desc">Hanson 1998 framework for the Fermi paradox. Step through candidate filters (abiogenesis, eukaryogenesis, intelligence, alignment, etc.) and assess whether each likely lies behind us or ahead.</span>
+        <span class="tool-badges"><span class="tier-mini t">⚠ Theoretical</span></span>
+      </a>
+
+      <a class="tool-card" href="radio-seti.html">
+        <span class="tool-num">Tool 23</span>
+        <span class="tool-name">Radio SETI Sensitivity Calculator</span>
+        <span class="tool-desc">From Project Ozma 1960 through Breakthrough Listen and the future SKA. EIRP detection horizons by distance, bandwidth, and integration time. Anchor points: BLC1, Tabby\'s Star, Wow! Signal.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Sensitivity</span></span>
+      </a>
+
+      <a class="tool-card" href="falsification-hub.html">
+        <span class="tool-num">Tool 24</span>
+        <span class="tool-name">Falsification &amp; Observational Roadmap</span>
+        <span class="tool-desc">For each MTH-adjacent and IMBH claim on the site: the upcoming observation that would falsify it, the timescale, and the instrument. If the claim has no entry, it isn\'t science yet.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Meta</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- SECTION 5: CIVILISATIONAL COSMOLOGY & PERSPECTIVE -->
+  <section class="section section-5" id="perspectives">
+    <header class="section-header">
+      <div class="section-title">🌌 Civilisational cosmology &amp; perspective<span class="section-count">3 tools</span></div>
+      <div class="section-sub">Where does advanced life fit in a universe governed by black holes, selection pressures, and the Copernican Principle? Three thinker-inspired frameworks — Smart, Vidal &amp; Smolin, Tang — each approaching Omega Centauri from a different philosophical altitude.</div>
+    </header>
+    <div class="tools-grid">
+
+      <a class="tool-card" href="stem-compression.html">
+        <span class="tool-num">Tool 25</span>
+        <span class="tool-name">STEM Compression Explorer</span>
+        <span class="tool-desc">John Smart\'s Transcension Hypothesis: trace the Space-Time-Energy-Matter compression trajectory of an advanced civilisation toward a black-hole-like endpoint. Maps each STEM dimension to a physical IMBH quantity (r<sub>s</sub>, f<sub>ISCO</sub>, T<sub>H</sub>, Bekenstein entropy). Fermi implication: transcended civs are invisible, not absent.</span>
+        <span class="tool-badges"><span class="tier-mini s">✦ Speculative framework</span><span class="tier-mini e">🔬 BH physics</span></span>
+      </a>
+
+      <a class="tool-card" href="cosmological-natural-selection.html">
+        <span class="tool-num">Tool 26</span>
+        <span class="tool-name">Cosmological Natural Selection</span>
+        <span class="tool-desc">Lee Smolin &amp; Clément Vidal: tune G, α, Λ, and the proton/electron mass ratio and watch black hole production — and universe reproduction — change. Toy fitness landscape for the CNS framework, with Vidal\'s Cosmological Artificial Selection extension. OC\'s IMBH as a node in the cosmic reproduction chain.</span>
+        <span class="tool-badges"><span class="tier-mini s">✦ Speculative framework</span><span class="tier-mini t">⚠ Theoretical</span></span>
+      </a>
+
+      <a class="tool-card" href="cosmic-center.html">
+        <span class="tool-num">Tool 27</span>
+        <span class="tool-name">Cosmic Centre Illusion</span>
+        <span class="tool-desc">Inspired by Yvonne K. Tang (SXS / black-holes.org): place any observer in an expanding universe and every point looks like the centre of the Hubble flow. Draggable observer, live recession-velocity arrows, H₀ slider spanning the Hubble Tension (67–73 km/s/Mpc), and OC\'s position in the Milky Way halo.</span>
+        <span class="tool-badges"><span class="tier-mini e">🔬 Established cosmology</span></span>
+      </a>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>All tools work offline · No accounts, no tracking, no cookies · State persists in the URL hash</div>
+    <div class="footer-licenses">
+      <span>Code: <a href="../LICENSE-code.md">MIT</a></span>
+      <span>Prose: <a href="../LICENSE-content.md">CC BY 4.0</a></span>
+      <span>Data tables: <a href="../LICENSE-data.md">CC0 1.0</a></span>
+    </div>
+    <div style="margin-top:8px">
+      <a href="https://omegacentauri.me/">omegacentauri.me</a> ·
+      <a href="https://omegacentauri.me/faq.html">FAQ</a> ·
+      <a href="../CONTRIBUTING.md">Contribute / fork</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

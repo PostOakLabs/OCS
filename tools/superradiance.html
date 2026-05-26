@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<!--
+  Superradiance / Black-Hole-Bomb Explorer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #compute and #science  ·  Epistemic tier(s): 🔬 GR + QFT in curved spacetime · ⚠ Theoretical (ultralight-boson particle physics)
+  Data sources:
+    - Press & Teukolsky (1972) "Floating Orbits, Superradiant Scattering and the Black-hole Bomb" Nature 238:211
+    - Arvanitaki & Dubovsky (2011) "Exploring the String Axiverse with Precision Black Hole Physics" Phys Rev D 83:044026
+    - Brito, Cardoso & Pani (2015) "Superradiance" Lect Notes Phys 906, arXiv:1501.06570
+    - Detweiler (1980) for hydrogenic-approximation growth rate formula
+    - Recent SMBH spin constraints: e.g. Stott & Horowitz 2020 (arXiv:2004.00009)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Superradiance / Black-Hole-Bomb Explorer — Omega Centauri Society</title>
+<meta name="description" content="The other way to extract energy from a spinning black hole — wave-based, not magnetic. Pick a BH mass and spin and a boson mass; the tool plots the unstable mode spectrum, the e-folding growth time, and the energy that ends up in the cloud.">
+<link rel="canonical" href="https://omegacentauri.me/tools/superradiance.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(160,128,240,.08);border-left:3px solid var(--purple-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--purple-glow)}
+
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.inputs-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 28px}
+@media (max-width:880px){.input-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.6)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.6)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--purple-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+
+/* Outputs grid */
+.outputs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media (max-width:880px){.outputs{grid-template-columns:repeat(2,1fr)}}
+.stat{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.stat.bind{border-color:var(--teal-bright);background:rgba(13,110,88,.18)}
+.stat.bind .stat-val{color:var(--teal-glow)}
+.stat.warn{border-color:var(--red-bright);background:rgba(138,32,32,.18)}
+.stat.warn .stat-val{color:var(--red-bright)}
+.stat-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:20px;color:var(--purple-glow);line-height:1.1;letter-spacing:.02em}
+.stat-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:5px}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-of-type{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--purple-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+
+.spectrum-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.spectrum-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.spectrum-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:18px;letter-spacing:.04em}
+canvas{display:block;width:100%;height:auto;border-radius:6px}
+.spectrum-legend{display:flex;gap:24px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;letter-spacing:.04em}
+.spectrum-legend span{display:inline-flex;align-items:center;gap:6px}
+.spectrum-legend i{display:inline-block;width:14px;height:3px;border-radius:1px}
+.spectrum-legend i.dot{width:8px;height:8px;border-radius:50%}
+
+.note-card{background:linear-gradient(135deg,rgba(29,186,144,.08),rgba(13,10,36,.6));border:1px solid var(--teal-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.note-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.note-title::before{content:'◆'}
+.note-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.note-body strong{color:var(--teal-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Superradiance / Black-Hole-Bomb Explorer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#compute">← #compute</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Superradiance / Black-Hole-Bomb Explorer</h1>
+      <p class="tool-subtitle">The Blandford-Znajek mechanism pulls energy out of a Kerr black hole with magnetic flux. Superradiance does the same job with a wave field — and for an ultralight boson, the field self-amplifies into an exponentially growing "cloud" around the hole, in what Press &amp; Teukolsky in 1972 called a black hole bomb. This is one of the leading observational handles on ultralight dark matter.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 GR + QFT in curved spacetime</span>
+      <span class="tier-badge tier-theory">⚠ Ultralight-boson hypothesis</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>The mode spectrum is hydrogenic.</strong> A massive bosonic field around a Kerr BH organises itself into bound states that look mathematically like a hydrogen atom — labelled (n, l, m). When the superradiance condition <code>ω &lt; m·Ω_H</code> is satisfied, the state grows exponentially, draining angular momentum from the BH. The fastest-growing mode is typically (n=2, l=1, m=1). The growth rate Γ ~ α<sup>8</sup> for small α (gravitational fine-structure constant), so the effect is dramatic when α ~ 0.1–0.5 and negligible when α is much smaller or larger.
+  </div>
+
+  <!-- INPUTS -->
+  <section class="inputs-card">
+    <div class="card-title">Inputs</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Black hole mass M (log M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="0" max="10" step="0.05" value="3.91">
+          <span class="slider-value" id="m-val">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-m="1">10 M☉ (stellar)</button>
+          <button class="preset-btn" data-m="3.914">8,200 M☉ (Häberle)</button>
+          <button class="preset-btn" data-m="6.6">4×10⁶ M☉ (Sgr A*)</button>
+          <button class="preset-btn" data-m="9.8">6×10⁹ M☉ (M87*)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>BH spin a (0 to 0.998)</label>
+        <div class="slider-row">
+          <input type="range" id="a-slider" min="0" max="0.998" step="0.001" value="0.9">
+          <span class="slider-value" id="a-val">a = 0.900</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-a="0.5">a = 0.5</button>
+          <button class="preset-btn" data-a="0.9">a = 0.9</button>
+          <button class="preset-btn" data-a="0.998">a = 0.998 (Thorne)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Boson mass μ (log eV)</label>
+        <div class="slider-row">
+          <input type="range" id="mu-slider" min="-22" max="-8" step="0.05" value="-14.2">
+          <span class="slider-value" id="mu-val">10⁻¹⁴·² eV</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-mu="-20.1">10⁻²⁰ (6e9 M☉ peak)</button>
+          <button class="preset-btn" data-mu="-16.9">10⁻¹⁷ (4e6 M☉ peak)</button>
+          <button class="preset-btn" data-mu="-14.2">10⁻¹⁴·² (8200 M☉ peak)</button>
+          <button class="preset-btn" data-mu="-11.3">10⁻¹¹·³ (10 M☉ peak)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE STATS -->
+  <div class="outputs">
+    <div class="stat" id="alpha-box">
+      <div class="stat-label">α (grav. fine-structure)</div>
+      <div class="stat-val" id="alpha-val">—</div>
+      <div class="stat-sub" id="alpha-sub">—</div>
+    </div>
+    <div class="stat" id="cond-box">
+      <div class="stat-label">Superradiance condition</div>
+      <div class="stat-val" id="cond-val">—</div>
+      <div class="stat-sub" id="cond-sub">ω = μc²/ℏ vs. m·Ω_H</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Growth rate Γ (l=m=1)</div>
+      <div class="stat-val" id="gamma-val">—</div>
+      <div class="stat-sub">1/sec</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">e-folding time τ</div>
+      <div class="stat-val" id="tau-val">—</div>
+      <div class="stat-sub" id="tau-sub">—</div>
+    </div>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Black hole properties</div>
+      <div class="row"><span class="row-label">Gravitational radius r_g</span><span class="row-value" id="rg-val">—</span></div>
+      <div class="row"><span class="row-label">Outer horizon r_+</span><span class="row-value" id="rplus-val">—</span></div>
+      <div class="row"><span class="row-label">Horizon angular velocity Ω_H</span><span class="row-value" id="omegaH-val">—</span></div>
+      <div class="row"><span class="row-label">Light-crossing time (r_g/c)</span><span class="row-value" id="tcross-val">—</span></div>
+    </section>
+    <section class="card">
+      <div class="card-title">Boson and extraction</div>
+      <div class="row"><span class="row-label">Boson Compton wavelength λ_C</span><span class="row-value" id="lambdac-val">—</span></div>
+      <div class="row"><span class="row-label">Boson angular frequency ω</span><span class="row-value" id="omega-val">—</span></div>
+      <div class="row"><span class="row-label">Energy extractable to cloud (~few % M c²)</span><span class="row-value" id="ecloud-val">—</span></div>
+      <div class="row"><span class="row-label">Saturation extracted vs. BH lifetime</span><span class="row-value" id="sat-val">—</span></div>
+    </section>
+  </div>
+
+  <!-- GROWTH-RATE SPECTRUM -->
+  <section class="spectrum-card">
+    <div class="spectrum-title">Growth rate vs. boson mass at this BH</div>
+    <div class="spectrum-sub">For each μ, evaluate Γ(α) under the leading-order Detweiler 1980 expression and cap at the superradiance window. The instability "lights up" where α ~ 0.1–0.5 and quenches where the condition ω &lt; mΩ_H fails.</div>
+    <canvas id="spectrum" width="1100" height="280"></canvas>
+    <div class="spectrum-legend">
+      <span><i style="background:var(--purple-glow)"></i>Γ (1/sec)</span>
+      <span><i style="background:var(--teal-glow)"></i>superradiance allowed</span>
+      <span><i style="background:var(--red-bright)"></i>condition fails (ω &gt; mΩ_H)</span>
+      <span><i class="dot" style="background:var(--amber-glow)"></i>your boson mass</span>
+    </div>
+  </section>
+
+  <!-- Observational note -->
+  <section class="note-card">
+    <div class="note-title">Observable consequence — the missing-spin-BH test</div>
+    <div class="note-body" id="obs-body">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The phenomenon</h3>
+      <p>A field mode of frequency ω and azimuthal number m scattering off a Kerr black hole gains amplitude when ω &lt; m·Ω_H, where Ω_H = a·c/(2r_+) is the horizon's angular velocity. This is superradiance — the wave analogue of the Penrose process. For a <em>massive</em> bosonic field, the mass acts as a reflecting wall (the wave can't escape to infinity) and the amplified mode bounces back to be amplified again. The resulting bound-state cloud grows exponentially: a "black hole bomb" in Press &amp; Teukolsky's 1972 phrase.</p>
+
+      <h3>The hydrogenic spectrum</h3>
+      <p>The bound modes are labelled (n, l, m) like a hydrogen atom, with the dimensionless gravitational fine-structure constant <code>α = GM·μ/(ℏc³)</code> in place of the electromagnetic α. The fastest-growing mode is generally (n=2, l=1, m=1). Detweiler's 1980 leading-order expression for the growth rate is:</p>
+      <p><code>Γ ≈ (1/24) · a · α⁸ · (1 + √(1−a²)) · c³/(GM)</code></p>
+      <p>This is accurate for small α. At α ~ 0.4–0.5 the rate peaks; for α &gt; 1 (where the Compton wavelength is smaller than r_g) the formula breaks down and the rate falls off fast. The tool uses a smooth interpolation across this region that captures the qualitative behaviour but should not be trusted to better than ~30% near the peak.</p>
+
+      <h3>What this tool reports</h3>
+      <p>Given M, a and μ: α and the superradiance condition, the growth rate Γ for the dominant mode and the e-folding time τ = 1/Γ. The "energy extractable to the cloud" line is the standard estimate that the instability saturates when the cloud carries ~5–10% of M c² (Arvanitaki-Dubovsky 2011); the BH spin is reduced to the critical value where the superradiance condition just barely fails.</p>
+
+      <h3>Why it's not pure engineering fiction</h3>
+      <p>Ultralight bosons — QCD axions, axion-like particles, fuzzy dark matter, light dark photons — are well-motivated in string theory and modern particle physics. The superradiance "Regge plane" test (Arvanitaki-Dubovsky) asks: if these particles exist in some mass range, then high-spin BHs in the corresponding mass range should be rare, because they'd have spun themselves down via superradiance on timescales much shorter than their ages. Observations of stellar-mass BH spins (LIGO/Virgo) and SMBH spins (X-ray reflection, EHT) currently constrain ultralight boson masses in the windows around 10⁻¹² eV (stellar) and 10⁻¹⁸ eV (SMBH). The IMBH window — μ ~ 10⁻¹⁵ eV, corresponding to a few-thousand-M☉ BH — is where any candidate IMBH like the one in Omega Centauri becomes a probe.</p>
+
+      <h3>OCS connection</h3>
+      <p>This sits alongside <a href="bz-kardashev.html">BZ/Kardashev Tool 1</a> as a second route to extracting rotational energy from a Kerr BH. The two mechanisms exploit the same underlying resource (the ergosphere's frame-dragging) but with different "antennas": BZ uses magnetic flux, superradiance uses a wave field. For engineered extraction, BZ is plausibly tractable (you just need magnetic flux); superradiance requires a coherent boson field of the right mass, which a civilisation can't manufacture but the dark sector might already supply. The energetics are comparable in order of magnitude when both saturate. See <a href="kerr-geometry.html">Tool 14</a> for the geometry both mechanisms operate in.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🌀 The black-hole bomb</h3>
+      <p><strong>Press &amp; Teukolsky 1972</strong> (Nature 238:211) proposed that a spinning Kerr black hole surrounded by a reflecting mirror would amplify superradiant modes exponentially — a "black-hole bomb." The mechanism: bosonic field modes with frequency ω &lt; mΩ_H (where m is the azimuthal quantum number and Ω_H is the horizon angular velocity) extract rotational energy via the Penrose process. Without a mirror, the cosmological version uses gravitationally bound boson clouds as the trapping mechanism — explored systematically by <strong>Detweiler 1980</strong> (PRD 22:2323) and a large literature since.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">⚛ Ultralight bosons constrained by BH spin</h3>
+      <p><strong>Arvanitaki, Baryakhtar &amp; Huang 2015</strong> (PRD 91:084011) showed that ultralight bosons (axions, dark photons) with masses 10⁻²⁰ to 10⁻¹¹ eV would superradiantly extract spin from astrophysical black holes on cosmological timescales, producing "exclusion regions" in the BH mass / spin plane. Observed spin measurements (Cyg X-1 at a&gt;0.95; AGN sample from iron-line fitting at a~0.7–0.99; LIGO remnant spins ~0.7) are largely incompatible with bosons in certain mass ranges. The combined constraints exclude ultralight bosons across roughly 4 orders of magnitude in mass — independent of (and complementary to) direct-detection axion searches.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">💫 Gravitational-wave signatures</h3>
+      <p>A boson cloud around a spinning BH is itself a gravitational-wave source: the cloud emits coherent monochromatic GWs at frequency ω = 2·μ (twice the boson mass / ℏ). For a 10 M☉ BH with cloud-extracting an axion of mass ~10⁻¹² eV, the GW frequency falls in LIGO's sensitivity band; for IMBH-mass holes, the signal moves to LISA frequencies. Searches by LIGO O3 + Virgo (Tsukada et al. 2019, 2021) have set upper limits, with O4 + Advanced Virgo extending coverage. Detection or further exclusion is expected from O5 (2026+) and from LISA after launch.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Press &amp; Teukolsky 1972 (Nature 238:211); Detweiler 1980 (PRD 22:2323); Arvanitaki &amp; Dubovsky 2011 (PRD 83:044026); Brito-Cardoso-Pani 2015 (arXiv:1501.06570)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const G = 6.674e-11, C = 2.998e8, HBAR = 1.055e-34, MSUN = 1.989e30;
+const EV_J = 1.602e-19;  // 1 eV in joules
+const YR_S = 3.156e7;
+const PI = Math.PI;
+
+const state = { logM: 3.914, a: 0.9, logMu: -14.2 };
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();
+  if(h.M!==undefined){const v=parseFloat(h.M);if(!isNaN(v))state.logM=clamp(v,0,10)}
+  if(h.a!==undefined){const v=parseFloat(h.a);if(!isNaN(v))state.a=clamp(v,0,0.998)}
+  if(h.mu!==undefined){const v=parseFloat(h.mu);if(!isNaN(v))state.logMu=clamp(v,-22,-8)}
+}
+function saveHash(){setHash({M:state.logM.toFixed(3), a:state.a.toFixed(3), mu:state.logMu.toFixed(2)});}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+function fmtLength(m){
+  if (m >= 1.496e11) return (m/1.496e11).toFixed(2) + ' AU';
+  if (m >= 1e9) return fmtSci(m,2) + ' m';
+  if (m >= 1000) return (m/1000).toFixed(2) + ' km';
+  if (m >= 1) return m.toFixed(2) + ' m';
+  return fmtSci(m,2) + ' m';
+}
+function fmtTime(s){
+  if (s < 1e-9) return fmtSci(s,2) + ' s';
+  if (s < 1) return fmtSci(s,2) + ' s';
+  if (s < 60) return s.toFixed(2) + ' s';
+  if (s < 3600) return (s/60).toFixed(1) + ' min';
+  if (s < 86400) return (s/3600).toFixed(1) + ' hr';
+  if (s < YR_S) return (s/86400).toFixed(1) + ' d';
+  return fmtSci(s/YR_S,2) + ' yr';
+}
+
+// Physics
+function gravRadius(M_kg) { return G * M_kg / (C*C); }
+function rPlus(M_kg, a) { return gravRadius(M_kg) * (1 + Math.sqrt(1 - a*a)); }
+function omegaH(M_kg, a) {
+  const rp = rPlus(M_kg, a);
+  return a * C / (2 * rp);  // 1/s
+}
+function omegaBoson(mu_eV) {
+  return mu_eV * EV_J / HBAR;  // rad/s
+}
+function alpha(M_kg, mu_eV) {
+  // α = GM μ / (ℏ c³), with μ in joules (rest energy)
+  return G * M_kg * (mu_eV * EV_J) / (HBAR * C*C*C);
+}
+
+// Detweiler-style growth rate for (n=2, l=1, m=1) — leading order, with
+// damping for α > 0.5 to avoid the formula running away.
+function growthRate(M_kg, a, mu_eV) {
+  const al = alpha(M_kg, mu_eV);
+  if (al <= 0) return 0;
+  const om = omegaBoson(mu_eV);
+  const oH = omegaH(M_kg, a);
+  if (om >= oH) return -1e-30;  // not superradiant — return tiny negative
+  // Leading-order rate (Detweiler 1980, m=1)
+  const tg = G * M_kg / Math.pow(C, 3);  // GM/c^3 in seconds
+  // (1/24) a (1+sqrt(1-a^2)) α^8 / (GM/c^3)
+  const lead = (1/24) * a * (1 + Math.sqrt(1 - a*a)) * Math.pow(al, 8) / tg;
+  // Damp for large α — approximate cap. Real formula uses confluent Heun;
+  // for our purposes a Gaussian cutoff at α≈0.42 gives qualitatively right shape.
+  const sigma = 0.18;
+  const peakAl = 0.42;
+  const damp = Math.exp(-Math.pow((al - peakAl) / sigma, 2));
+  // For very small α, lead dominates and damp ≈ tiny; we want lead to win there.
+  // Use: rate = max(lead, lead_peak * damp) when al > peakAl else lead.
+  let rate;
+  if (al < peakAl) {
+    rate = lead;
+  } else {
+    // Reuse lead at peak as scale, damp from peak
+    const tgPeak = tg;
+    const leadPeak = (1/24) * a * (1 + Math.sqrt(1 - a*a)) * Math.pow(peakAl, 8) / tgPeak;
+    rate = leadPeak * damp;
+  }
+  return rate;
+}
+
+function render() {
+  const M_kg = Math.pow(10, state.logM) * MSUN;
+  const mu_eV = Math.pow(10, state.logMu);
+  const a = state.a;
+
+  // Slider readouts
+  document.getElementById('m-val').textContent = state.logM >= 3 ? fmtSci(Math.pow(10, state.logM),2) + ' M☉' : Math.round(Math.pow(10, state.logM)) + ' M☉';
+  document.getElementById('a-val').textContent = 'a = ' + a.toFixed(3);
+  document.getElementById('mu-val').textContent = '10' + supDigits(Math.round(state.logMu*10)/10) + ' eV';
+
+  const al = alpha(M_kg, mu_eV);
+  const om = omegaBoson(mu_eV);
+  const oH = omegaH(M_kg, a);
+  const rg = gravRadius(M_kg);
+  const rp = rPlus(M_kg, a);
+  const lc = HBAR * C / (mu_eV * EV_J);  // Compton wavelength
+  const Gamma = growthRate(M_kg, a, mu_eV);
+  const tau = Gamma > 0 ? 1 / Gamma : Infinity;
+
+  // Headlines
+  document.getElementById('alpha-val').textContent = al < 0.001 ? fmtSci(al,2) : al.toFixed(3);
+  const alphaBox = document.getElementById('alpha-box');
+  alphaBox.className = 'stat' + (al > 0.05 && al < 1 ? ' bind' : '');
+  document.getElementById('alpha-sub').textContent =
+    al < 0.01 ? 'far too small — no instability' :
+    al < 0.05 ? 'tiny — slow growth' :
+    al < 1 ? 'sweet spot' : 'too large — formula breaks down';
+
+  const condBox = document.getElementById('cond-box');
+  const condMet = om < oH;
+  condBox.className = 'stat' + (condMet ? ' bind' : ' warn');
+  document.getElementById('cond-val').textContent = condMet ? 'satisfied' : 'fails';
+  document.getElementById('cond-sub').textContent = `ω = ${fmtSci(om)} rad/s; Ω_H = ${fmtSci(oH)} rad/s`;
+
+  document.getElementById('gamma-val').textContent = Gamma > 0 ? fmtSci(Gamma) : '—';
+  document.getElementById('tau-val').textContent = Gamma > 0 ? fmtTime(tau) : 'never';
+  document.getElementById('tau-sub').textContent =
+    Gamma <= 0 ? 'no instability' :
+    tau < 60 ? 'instantaneous on astrophysical scales' :
+    tau < YR_S ? 'fast' :
+    tau < 1e10*YR_S ? 'finite over BH lifetime' : 'longer than age of universe';
+
+  // BH props
+  document.getElementById('rg-val').innerHTML = fmtLength(rg);
+  document.getElementById('rplus-val').innerHTML = fmtLength(rp) + ' <span class="unit">(' + (rp/rg).toFixed(3) + ' r_g)</span>';
+  document.getElementById('omegaH-val').innerHTML = fmtSci(oH) + ' <span class="unit">rad/s</span>';
+  document.getElementById('tcross-val').innerHTML = fmtTime(rg/C);
+
+  // Boson
+  document.getElementById('lambdac-val').innerHTML = fmtLength(lc);
+  document.getElementById('omega-val').innerHTML = fmtSci(om) + ' <span class="unit">rad/s</span>';
+  // E_cloud ≈ 5% Mc² (typical saturation, Arvanitaki-Dubovsky)
+  const eCloud = 0.05 * M_kg * C*C;
+  document.getElementById('ecloud-val').innerHTML = fmtSci(eCloud) + ' <span class="unit">J</span>';
+  const bhAge = 1e10 * YR_S; // assume Hubble-time age
+  const satFrac = Math.min(1, bhAge / tau);
+  document.getElementById('sat-val').textContent =
+    Gamma <= 0 ? 'n/a' :
+    tau < bhAge ? 'fully saturated' : 'partial — ' + (satFrac*100).toFixed(2) + '% over Hubble time';
+
+  drawSpectrum(M_kg, a, mu_eV);
+  renderObs(M_kg, a, mu_eV, Gamma, tau);
+}
+
+function renderObs(M_kg, a, mu_eV, Gamma, tau) {
+  const body = document.getElementById('obs-body');
+  const M_sun = M_kg / MSUN;
+  if (Gamma <= 0) {
+    body.innerHTML = `At this configuration the superradiance condition fails — the boson is too heavy to be bound and grown by this BH. <strong>No constraint can be placed on this particle mass from this BH.</strong> Try a lighter boson (move μ leftward).`;
+    return;
+  }
+  const bhAge = 1e10 * YR_S;
+  if (tau < 0.001 * bhAge) {
+    body.innerHTML = `With τ ≈ ${fmtTime(tau)} — far shorter than any plausible BH age — <strong>this BH should already have spun itself down</strong> by exciting the boson cloud. Observing a high-spin BH of mass ${fmtSci(M_sun)} M☉ today would rule out an ultralight boson at μ = 10${supDigits(Math.round(state.logMu*10)/10)} eV. LIGO/Virgo high-spin detections (stellar-mass) and X-ray spin estimates (SMBH) currently exclude windows around μ ~ 10⁻¹² eV (stellar) and μ ~ 10⁻¹⁸ eV (SMBH). An IMBH at this mass would test the gap.`;
+  } else if (tau < bhAge) {
+    body.innerHTML = `τ ≈ ${fmtTime(tau)}, comparable to the BH lifetime. The instability is marginal — a partial cloud could form. Spin distributions of BHs in this mass class become statistical evidence rather than a clean exclusion.`;
+  } else {
+    body.innerHTML = `τ ≈ ${fmtTime(tau)} is too long for the instability to matter on astrophysical timescales. This (M, μ) combination is not constrained by spin observations of this BH.`;
+  }
+}
+
+function drawSpectrum(M_kg_curr, a, mu_curr) {
+  const cv = document.getElementById('spectrum');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = 280;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const padL=60, padR=60, padT=18, padB=38;
+  const plotW = w - padL - padR, plotH = h - padT - padB;
+  const xMin = -22, xMax = -8;       // log μ in eV
+  const yMin = -25, yMax = 5;        // log Γ in 1/s
+
+  ctx.strokeStyle = 'rgba(112,85,212,.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, padT + plotH);
+  ctx.lineTo(padL + plotW, padT + plotH);
+  ctx.stroke();
+
+  // X axis
+  ctx.font = "10px 'Space Mono', monospace";
+  ctx.fillStyle = '#9890c0';
+  ctx.textAlign = 'center';
+  for (let lg = xMin; lg <= xMax; lg += 2) {
+    const x = padL + (lg - xMin)/(xMax - xMin) * plotW;
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT+plotH); ctx.stroke();
+    ctx.fillText('10' + supDigits(lg), x, padT + plotH + 14);
+  }
+  ctx.fillText('log₁₀ μ (eV)', padL + plotW/2, h - 8);
+
+  // Y axis
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#a080f0';
+  for (let lg = yMin; lg <= yMax; lg += 5) {
+    const y = padT + plotH - (lg - yMin)/(yMax - yMin) * plotH;
+    ctx.fillText('10' + supDigits(lg), padL - 6, y + 3);
+  }
+  ctx.save();
+  ctx.translate(16, padT + plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('log₁₀ Γ (1/s)', 0, 0);
+  ctx.restore();
+
+  // Reference line: 1/Hubble time
+  const lgHubble = -Math.log10(1e10 * YR_S);
+  const yH = padT + plotH - (lgHubble - yMin)/(yMax - yMin) * plotH;
+  if (yH > padT && yH < padT + plotH) {
+    ctx.strokeStyle = 'rgba(255,200,64,.5)';
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(padL, yH); ctx.lineTo(padL + plotW, yH); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ffc840';
+    ctx.textAlign = 'left';
+    ctx.fillText('Γ = 1/(Hubble time)', padL + 6, yH - 4);
+  }
+
+  // Sweep μ; for each, compute Gamma at this M, a
+  const samples = 280;
+  let pts = [];
+  for (let i = 0; i <= samples; i++) {
+    const lgMu = xMin + i/samples * (xMax - xMin);
+    const mu = Math.pow(10, lgMu);
+    const Gam = growthRate(M_kg_curr, a, mu);
+    const lgG = Gam > 0 ? Math.log10(Gam) : null;
+    pts.push({lgMu, lgG, ok: Gam > 0});
+  }
+  // Draw allowed segments (purple) and disallowed (red ticks at bottom)
+  ctx.strokeStyle = '#a080f0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let drawing = false;
+  for (const p of pts) {
+    const x = padL + (p.lgMu - xMin)/(xMax - xMin) * plotW;
+    if (p.ok && p.lgG !== null) {
+      const yClamp = Math.max(yMin, Math.min(yMax, p.lgG));
+      const y = padT + plotH - (yClamp - yMin)/(yMax - yMin) * plotH;
+      if (!drawing) { ctx.moveTo(x, y); drawing = true; }
+      else ctx.lineTo(x, y);
+    } else {
+      drawing = false;
+    }
+  }
+  ctx.stroke();
+
+  // Red base line where condition fails
+  ctx.fillStyle = 'rgba(208,64,64,.5)';
+  for (const p of pts) {
+    if (!p.ok) {
+      const x = padL + (p.lgMu - xMin)/(xMax - xMin) * plotW;
+      ctx.fillRect(x, padT + plotH - 3, 1, 3);
+    }
+  }
+
+  // Current boson marker
+  const xm = padL + (state.logMu - xMin)/(xMax - xMin) * plotW;
+  const Gnow = growthRate(M_kg_curr, a, Math.pow(10, state.logMu));
+  let ym;
+  if (Gnow > 0) {
+    const lg = Math.log10(Gnow);
+    const lgC = Math.max(yMin, Math.min(yMax, lg));
+    ym = padT + plotH - (lgC - yMin)/(yMax - yMin) * plotH;
+  } else {
+    ym = padT + plotH - 4;
+  }
+  ctx.fillStyle = '#ffc840';
+  ctx.beginPath();
+  ctx.arc(xm, ym, 6, 0, 2*PI);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,200,64,.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xm, padT); ctx.lineTo(xm, padT + plotH); ctx.stroke();
+}
+
+function wire() {
+  const ms = document.getElementById('m-slider'); ms.value = state.logM;
+  ms.addEventListener('input', () => { state.logM = parseFloat(ms.value); saveHash(); render(); });
+  const as = document.getElementById('a-slider'); as.value = state.a;
+  as.addEventListener('input', () => { state.a = parseFloat(as.value); saveHash(); render(); });
+  const us = document.getElementById('mu-slider'); us.value = state.logMu;
+  us.addEventListener('input', () => { state.logMu = parseFloat(us.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => { state.logM = parseFloat(b.dataset.m); ms.value = state.logM; saveHash(); render(); }));
+  document.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => { state.a = parseFloat(b.dataset.a); as.value = state.a; saveHash(); render(); }));
+  document.querySelectorAll('[data-mu]').forEach(b => b.addEventListener('click', () => { state.logMu = parseFloat(b.dataset.mu); us.value = state.logMu; saveHash(); render(); }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(render, 100);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

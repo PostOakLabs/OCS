@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!--
+  Dyson Swarm Material Comparator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #compute and #fermi  ·  Epistemic tier(s): 🔬 Stefan-Boltzmann + solar flux · ✦ Civilisational scaling
+  Data sources:
+    - Dyson (1960) "Search for Artificial Stellar Sources of Infrared Radiation" Science 131:1667
+    - Wright et al. (2014) "G-HAT: Glimpsing Heat from Alien Technologies" project
+    - Stellar/planetary masses: NASA Planetary Fact Sheet
+    - Asteroid belt mass: Krasinsky et al. 2002 (1e21-3e21 kg main-belt total)
+    - Smith (2021) Viability of a Dyson Swarm arXiv:2109.11443
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dyson Swarm Material Comparator — Omega Centauri Society</title>
+<meta name="description" content="Coverage fraction → panel mass → side-by-side with Vesta, Ceres, the Moon, all of Mercury. Plus the G-HAT infrared waste-heat signature, the observational hook that connects Dyson swarms to actual SETI surveys.">
+<link rel="canonical" href="https://omegacentauri.me/tools/dyson-swarm.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(240,160,32,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-fic{color:var(--purple-glow);background:rgba(160,128,240,.06)}
+
+.warning-banner{background:rgba(196,120,0,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.inputs-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+@media (max-width:760px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:140px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+
+/* Outputs */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-of-type{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:17px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+.row-value.alt{color:var(--teal-glow)}
+.row-value.warn{color:var(--red-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:12px;color:var(--text-dim);font-style:italic;margin-top:6px}
+
+/* Mass comparison strip */
+.mass-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 28px;margin-bottom:24px}
+.mass-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.mass-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:36px;letter-spacing:.04em}
+.mass-strip{position:relative;height:18px;margin:36px 0 72px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--purple-bright),var(--amber-mid),var(--red-mid));border-radius:9px}
+.m-tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.2)}
+.m-tick-label{position:absolute;top:-38px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.m-tick-label .ref{display:block;color:var(--text-dim);font-size:9px;letter-spacing:.04em;margin-top:2px}
+.m-marker{position:absolute;top:-14px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.m-marker .arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:14px solid currentColor;filter:drop-shadow(0 0 6px currentColor)}
+.m-marker .label{position:absolute;top:-26px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:currentColor;font-weight:600}
+.m-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px}
+.m-readout{margin-top:18px;font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-secondary);line-height:1.7;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--amber-bright)}
+.m-readout strong{color:var(--amber-glow);font-weight:600}
+
+/* G-HAT callout */
+.ghat-card{background:linear-gradient(135deg,rgba(112,85,212,.08),rgba(13,10,36,.6));border:1px solid var(--purple-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.ghat-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.ghat-title::before{content:'◉'}
+.ghat-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.ghat-body strong{color:var(--purple-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Dyson Swarm Material Comparator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#compute">← #compute</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Dyson Swarm Material Comparator</h1>
+      <p class="tool-subtitle">A Kardashev-II civilisation needs to build something to capture a star's output. This tool computes how much asteroid-belt material that "something" actually requires — and how loud its waste-heat signature would be to a G-HAT-style survey looking for it from light-years away.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Stefan-Boltzmann + flux</span>
+      <span class="tier-badge tier-fic">✦ Civilisational scaling</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>What "swarm coverage fraction" means here.</strong> 1.0 = every photon the star emits hits a collector (a "full" Dyson sphere/swarm). 0.01 = 1% of the star's output is intercepted. The Kardashev-II definition is typically taken as f ≈ 1. Even f = 0.001 corresponds to ~10²⁹ W captured at 1 AU around the Sun — three orders of magnitude beyond civilisation's current power budget. The material requirement is the lever the MTH counter-argument leans on.
+  </div>
+
+  <!-- INPUTS -->
+  <section class="inputs-card">
+    <div class="card-title">Inputs</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Swarm coverage fraction f (log slider, 10⁻⁶ to 1)</label>
+        <div class="slider-row">
+          <input type="range" id="f-slider" min="-6" max="0" step="0.05" value="-2">
+          <span class="slider-value" id="f-val">0.010 (1%)</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-f="-6">10⁻⁶ (faint partial)</button>
+          <button class="preset-btn" data-f="-2">1%</button>
+          <button class="preset-btn" data-f="-1">10%</button>
+          <button class="preset-btn" data-f="0">100% (full K-II)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Orbital distance d (AU, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="d-slider" min="-0.4" max="1.7" step="0.05" value="0">
+          <span class="slider-value" id="d-val">1.00 AU</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-d="-0.4">0.4 AU (Mercury)</button>
+          <button class="preset-btn" data-d="0">1 AU (Earth)</button>
+          <button class="preset-btn" data-d="0.72">5.2 AU (Jupiter)</button>
+          <button class="preset-btn" data-d="1.48">30 AU (Neptune)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Panel efficiency η_pv (0.10 to 0.45)</label>
+        <div class="slider-row">
+          <input type="range" id="eta-slider" min="0.10" max="0.45" step="0.005" value="0.30">
+          <span class="slider-value" id="eta-val">0.30</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-eta="0.20">cheap thin-film</button>
+          <button class="preset-btn" data-eta="0.30">commercial silicon</button>
+          <button class="preset-btn" data-eta="0.45">multi-junction</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Panel areal density ρ (kg/m², log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="rho-slider" min="-1" max="1.4" step="0.05" value="0.7">
+          <span class="slider-value" id="rho-val">5 kg/m²</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-rho="-1">0.1 kg/m² (aerospace thin-film)</button>
+          <button class="preset-btn" data-rho="0.7">5 kg/m² (typical)</button>
+          <button class="preset-btn" data-rho="1.4">25 kg/m² (rigid glass)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Radiator temperature T_rad (K, for IR signature)</label>
+        <div class="slider-row">
+          <input type="range" id="trad-slider" min="50" max="500" step="5" value="300">
+          <span class="slider-value" id="trad-val">300 K</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-trad="100">100 K (deep-space radiator)</button>
+          <button class="preset-btn" data-trad="200">200 K (optimised)</button>
+          <button class="preset-btn" data-trad="300">300 K (room temp)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TWO-COL OUTPUTS -->
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Power, area, mass</div>
+      <div class="row"><span class="row-label">Captured power P</span><span class="row-value" id="p-cap">—</span></div>
+      <div class="row"><span class="row-label">Solar flux at d</span><span class="row-value" id="flux">—</span></div>
+      <div class="row"><span class="row-label">Required panel area</span><span class="row-value" id="area">—</span></div>
+      <div class="row"><span class="row-label">Required panel mass</span><span class="row-value" id="mass">—</span></div>
+      <div class="row-meta" id="mass-context">—</div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Waste-heat &amp; observable signature</div>
+      <div class="row"><span class="row-label">Total waste heat (= captured power)</span><span class="row-value alt" id="heat">—</span></div>
+      <div class="row"><span class="row-label">Radiator area at T_rad</span><span class="row-value alt" id="rad-area">—</span></div>
+      <div class="row"><span class="row-label">IR fraction of host luminosity</span><span class="row-value alt" id="ir-frac">—</span></div>
+      <div class="row"><span class="row-label">Peak emission wavelength (Wien)</span><span class="row-value alt" id="lambda">—</span></div>
+      <div class="row"><span class="row-label">G-HAT detectability</span><span class="row-value warn" id="ghat">—</span></div>
+    </section>
+  </div>
+
+  <!-- MASS COMPARISON STRIP -->
+  <section class="mass-card">
+    <div class="mass-title">Where the panel mass lands on the log-mass axis</div>
+    <div class="mass-sub">Bar runs from 10⁵ kg (ISS scale) to 10²⁵ kg (Earth scale) — 20 decades of mass.</div>
+    <div class="mass-strip" id="mass-strip">
+      <span class="m-tick" style="left:0%"><span class="m-tick-label">10⁵<span class="ref">ISS</span></span></span>
+      <span class="m-tick" style="left:25%"><span class="m-tick-label">10¹⁰<span class="ref">Hoover Dam</span></span></span>
+      <span class="m-tick" style="left:50%"><span class="m-tick-label">10¹⁵<span class="ref">small asteroid</span></span></span>
+      <span class="m-tick" style="left:60%"><span class="m-tick-label">10¹⁷<span class="ref">~10 km moonlet</span></span></span>
+      <span class="m-tick" style="left:75%"><span class="m-tick-label">10²⁰<span class="ref">Vesta</span></span></span>
+      <span class="m-tick" style="left:80%"><span class="m-tick-label">10²¹<span class="ref">asteroid belt</span></span></span>
+      <span class="m-tick" style="left:85%"><span class="m-tick-label">10²²<span class="ref">10× Ceres</span></span></span>
+      <span class="m-tick" style="left:88.5%"><span class="m-tick-label">10²²·⁹<span class="ref">Moon</span></span></span>
+      <span class="m-tick" style="left:92.5%"><span class="m-tick-label">10²³·⁵<span class="ref">Mercury</span></span></span>
+      <span class="m-tick" style="left:97.8%"><span class="m-tick-label">10²⁴·⁸<span class="ref">Earth</span></span></span>
+      <span class="m-marker" id="m-marker" style="left:30%">
+        <span class="label" id="m-marker-label">computing…</span>
+        <span class="arrow"></span>
+      </span>
+    </div>
+    <div class="m-axis"><span>10⁵ kg</span><span>10¹⁵ kg</span><span>10²⁵ kg</span></div>
+    <div class="m-readout" id="m-readout">—</div>
+  </section>
+
+  <!-- G-HAT detail callout -->
+  <section class="ghat-card">
+    <div class="ghat-title">G-HAT (Glimpsing Heat from Alien Technologies) — Wright et al. 2014–</div>
+    <div class="ghat-body" id="ghat-body">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>Dyson's original argument</h3>
+      <p>Dyson's 1960 <em>Science</em> note pointed out that if you wanted to capture significantly more than the ~10⁻¹⁰ fraction of the Sun's output that hits Earth, the only way (at any technology level) was to put a lot of collector area in orbit. Disassembling Jupiter to do this is a thought experiment, not a serious engineering proposal — the point was that the bookkeeping of stellar energy is straightforward, and that a civilisation that wanted star-scale power would <em>visibly</em> alter the host star's IR spectrum. That last clause is the basis of every megastructure search since.</p>
+
+      <h3>What this tool computes</h3>
+      <p>Captured power P = f · L_☉ where L_☉ = 3.83×10²⁶ W. Local solar flux S(d) = 1361/d² W/m² for d in AU. Required panel area A = P/(S(d)·η). Panel mass = A·ρ. Stefan-Boltzmann tells us how much radiator surface you need to dump the captured energy as waste heat at temperature T_rad: A_rad = P/(σ·ε·T_rad⁴) with ε = 0.9 (greybody approximation). Peak emission wavelength from Wien's displacement law: λ_max = 2.898×10⁻³/T_rad metres.</p>
+
+      <h3>Why the mass numbers are uncomfortable</h3>
+      <p>A 100% swarm at 1 AU with typical panels (η=0.30, ρ=5 kg/m²) needs about 9×10²³ m² of collector — roughly 5×10²⁴ kg of panel material. That's ~4× the mass of Mercury, ~15× the mass of all asteroid belt + Moon combined. Even a 1% swarm needs about half a Moon mass. The standard MTH counter-argument is: if your goal is computation rather than energy capture per se, going to an ergosphere where the gravitational field <em>is</em> the substrate bypasses this mass scaling entirely. See <a href="bz-kardashev.html">BZ/Kardashev Tool 1</a>: the same Kardashev-II power output can in principle come from an IMBH ergosphere with zero panel material at all (and an entirely different set of problems).</p>
+
+      <h3>The G-HAT detectability check</h3>
+      <p>If a civilisation intercepts fraction f of the star's output and re-emits it as waste heat at radiator temperature T_rad, the host star's bolometric luminosity is unchanged (energy is conserved), but the spectrum shifts. The IR excess relative to a bare main-sequence spectrum is essentially f — i.e. if f = 0.10, the star has ~10% IR excess in the band where T_rad peaks. G-HAT's WISE-based survey rules out any K-III civilisation in ~10⁵ galaxies (Wright et al. 2014), and surveys for K-II Dyson swarms have placed limits at f ≳ ~0.1 around individual stars. So a 100% K-II Dyson swarm around a sun-like star within ~1 kpc would already have been ruled out. This is one of the strongest empirical Fermi constraints we have.</p>
+
+      <h3>Caveats</h3>
+      <p>The "panel mass" line assumes flat solar collectors. Other architectures (statite light sails, gravitational lenses, mirror swarms feeding central absorbers) shift the bookkeeping; the mass-vs-coverage relation has the same shape but the prefactors change. The waste-heat argument is robust independent of architecture — the only way to avoid the IR signature is to either not actually capture the energy, or to engineer ways to do useful work that leak less waste heat than thermodynamics permits, which is impossible if the work is irreversible (see <a href="aestivation.html">aestivation calculator</a>).</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">🌞 Dyson 1960 and what it actually proposes</h3>
+      <p><strong>Dyson 1960</strong> (Science 131:1667, "Search for Artificial Stellar Sources of Infrared Radiation") proposed not a literal solid shell but a swarm of habitats orbiting the Sun, intercepting most of its 3.83×10²⁶ W output. Dyson noted the construction would require ~10²³ kg of material — comparable to the mass of all planetesimals and inner-system asteroids combined. A "complete" Dyson sphere intercepting 100% of L☉ would have radius ~1 AU and area ~2.83×10²³ m². A 10⁻⁴ fractional swarm (intercepting 0.01% of L☉) would only need to be ~10¹⁹ kg — well within the asteroid-belt budget (~3×10²¹ kg total).</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">🔭 Direct searches for Dyson swarms</h3>
+      <p>Several searches have looked for the infrared excess that a partial Dyson swarm would produce. <strong>G-HAT survey</strong> (Wright et al. 2014 ApJ 792:26; Griffith et al. 2015) examined ~100,000 galaxies in WISE infrared data, finding no candidates with &gt; 85% Type-III re-radiation. <strong>Carrigan 2009</strong> examined IRAS individual-star data with similar null results. <strong>"Project Hephaistos II"</strong> (Suazo et al. 2024, MNRAS 531:695) reported 7 candidate M-dwarfs with anomalous IR excess from Gaia + 2MASS + WISE crossmatching — likely circumstellar dust but not yet conclusively excluded as partial swarms.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">🪨 Material availability</h3>
+      <p>Inner Solar System material budget: asteroid belt ~3×10²¹ kg; Vesta + Ceres alone ~1.2×10²¹ kg; Mercury (whole) 3.3×10²³ kg; Earth (whole) 6×10²⁴ kg; Sun's metal content ~2×10²⁸ kg (most locked in stellar interior). A 10⁻⁴ Dyson swarm at ~10¹⁹ kg is achievable from asteroid disassembly; a 10⁻² swarm (~10²¹ kg) requires Vesta+Ceres-scale mining; a "full" Dyson at ~10²⁴ kg would require disassembling Mercury or a substantial fraction of Earth. The Vera Rubin LSST (first light 2026) will catalog the asteroid belt at ~mag 24, providing the most complete inventory of Solar System material yet.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Dyson 1960 (Science 131:1667); Wright et al. 2014 (G-HAT); Smith 2021 (arXiv:2109.11443)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const L_SUN = 3.828e26;       // W
+const S_AT_1AU = 1361;        // W/m²
+const SIGMA_SB = 5.67e-8;     // W/m²/K⁴
+const EPS_RAD = 0.9;          // greybody emissivity
+const WIEN_B = 2.898e-3;      // m·K
+
+// Reference masses (kg). For the strip we use log10 mass directly.
+// Strip endpoints at log10 = 5 (left) and 25 (right). Width = 20 decades.
+const STRIP_LG_MIN = 5, STRIP_LG_MAX = 25;
+const REFS = [
+  {lg: 5.62,  name:"ISS (4.2e5 kg)"},
+  {lg: 9.82,  name:"Hoover Dam (~6.6e9 kg)"},
+  {lg: 15.83, name:"Eros / small asteroid"},
+  {lg: 18.0,  name:"Mt Everest mass"},
+  {lg: 20.0,  name:"~Vesta scale"},
+  {lg: 21.0,  name:"main-belt total (~10²¹ kg)"},
+  {lg: 22.87, name:"Moon (7.35e22 kg)"},
+  {lg: 23.52, name:"Mercury (3.3e23 kg)"},
+  {lg: 24.78, name:"Earth (6e24 kg)"}
+];
+
+const state = { logF: -2, logD: 0, eta: 0.30, logRho: 0.7, tRad: 300 };
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();
+  if(h.f!==undefined){const v=parseFloat(h.f);if(!isNaN(v))state.logF=clamp(v,-6,0)}
+  if(h.d!==undefined){const v=parseFloat(h.d);if(!isNaN(v))state.logD=clamp(v,-0.4,1.7)}
+  if(h.eta!==undefined){const v=parseFloat(h.eta);if(!isNaN(v))state.eta=clamp(v,0.10,0.45)}
+  if(h.rho!==undefined){const v=parseFloat(h.rho);if(!isNaN(v))state.logRho=clamp(v,-1,1.4)}
+  if(h.trad!==undefined){const v=parseFloat(h.trad);if(!isNaN(v)&&v>0)state.tRad=clamp(v,50,500)}
+}
+function saveHash(){setHash({f:state.logF.toFixed(2), d:state.logD.toFixed(2), eta:state.eta.toFixed(3), rho:state.logRho.toFixed(2), trad:state.tRad.toFixed(0)});}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+function fmtArea(m2){
+  if (m2 >= 1e12) return fmtSci(m2/1e12, 2) + ' Mkm²';
+  if (m2 >= 1e6) return fmtSci(m2/1e6, 2) + ' km²';
+  return fmtSci(m2, 2) + ' m²';
+}
+function fmtMass(kg){
+  if (kg >= 1e22) return fmtSci(kg, 2) + ' kg';
+  if (kg >= 1e9) return fmtSci(kg, 2) + ' kg';
+  if (kg >= 1) return fmtSci(kg, 2) + ' kg';
+  return fmtSci(kg, 2) + ' kg';
+}
+function fmtPower(W){return fmtSci(W, 2) + ' W';}
+
+function compute(){
+  const f = Math.pow(10, state.logF);
+  const d = Math.pow(10, state.logD);
+  const rho = Math.pow(10, state.logRho);
+  const T = state.tRad;
+
+  const P = f * L_SUN;
+  const flux = S_AT_1AU / (d * d);
+  const A = P / (flux * state.eta);
+  const M = A * rho;
+  const A_rad = P / (EPS_RAD * SIGMA_SB * Math.pow(T, 4));
+  const irFrac = f;  // Conservation: captured power = re-emitted as IR
+  const lambdaMax = WIEN_B / T;
+  // G-HAT detectability heuristic: f >= 0.10 is "easily seen" for nearby stars
+  let ghatNote;
+  if (f >= 0.50) ghatNote = "Trivially detectable";
+  else if (f >= 0.10) ghatNote = "Detectable in G-HAT/WISE limits";
+  else if (f >= 0.01) ghatNote = "Marginal — survey-dependent";
+  else if (f >= 0.001) ghatNote = "Below current survey sensitivity";
+  else ghatNote = "Far below detectability";
+
+  return { f, d, rho, T, P, flux, A, M, A_rad, irFrac, lambdaMax, ghatNote };
+}
+
+function nearestRef(lgM){
+  let best = REFS[0], dist = Infinity;
+  REFS.forEach(r => { const dd = Math.abs(r.lg - lgM); if (dd < dist) { dist = dd; best = r; } });
+  return { ref: best, dist };
+}
+
+function render(){
+  // Slider readouts
+  const f = Math.pow(10, state.logF);
+  document.getElementById('f-val').textContent = f >= 0.01 ? (f*100).toFixed(2) + '% (' + fmtSci(f) + ')' : fmtSci(f);
+  const d = Math.pow(10, state.logD);
+  document.getElementById('d-val').textContent = d.toFixed(2) + ' AU';
+  document.getElementById('eta-val').textContent = state.eta.toFixed(3);
+  const rho = Math.pow(10, state.logRho);
+  document.getElementById('rho-val').textContent = rho >= 1 ? rho.toFixed(2) + ' kg/m²' : rho.toFixed(3) + ' kg/m²';
+  document.getElementById('trad-val').textContent = state.tRad.toFixed(0) + ' K';
+
+  const c = compute();
+
+  // Power/area/mass
+  document.getElementById('p-cap').innerHTML = fmtPower(c.P);
+  document.getElementById('flux').innerHTML = c.flux.toFixed(0) + ' <span class="unit">W/m²</span>';
+  document.getElementById('area').innerHTML = fmtArea(c.A);
+  document.getElementById('mass').innerHTML = fmtMass(c.M);
+  const lgM = Math.log10(Math.max(c.M, 1));
+  const near = nearestRef(lgM);
+  const ratio = c.M / Math.pow(10, near.ref.lg);
+  document.getElementById('mass-context').textContent =
+    ratio >= 1
+      ? `${ratio >= 10 ? ratio.toFixed(0) : ratio.toFixed(2)}× the mass of ${near.ref.name.replace(/\s*\(.*\)/,'')}`
+      : `${(1/ratio).toFixed(2)}× less than ${near.ref.name.replace(/\s*\(.*\)/,'')}`;
+
+  // Waste heat side
+  document.getElementById('heat').innerHTML = fmtPower(c.P);
+  document.getElementById('rad-area').innerHTML = fmtArea(c.A_rad);
+  document.getElementById('ir-frac').innerHTML = (c.irFrac * 100).toFixed(c.irFrac < 0.01 ? 4 : 2) + '%';
+  document.getElementById('lambda').innerHTML = (c.lambdaMax * 1e6).toFixed(2) + ' <span class="unit">μm</span>';
+  document.getElementById('ghat').innerHTML = c.ghatNote;
+
+  // Mass strip marker
+  const lgClamped = clamp(lgM, STRIP_LG_MIN, STRIP_LG_MAX);
+  const pct = (lgClamped - STRIP_LG_MIN) / (STRIP_LG_MAX - STRIP_LG_MIN) * 100;
+  const marker = document.getElementById('m-marker');
+  marker.style.left = pct + '%';
+  document.getElementById('m-marker-label').textContent = '10' + supDigits(Math.round(lgM*10)/10) + ' kg';
+
+  // Mass readout (the punchline line)
+  const readout = document.getElementById('m-readout');
+  let line;
+  if (lgM > 24) line = `<strong>${fmtMass(c.M)}</strong> — exceeds every solid body inside Jupiter's orbit combined. Mercury would not be enough; you'd need to disassemble Mars or Earth.`;
+  else if (lgM > 23.5) line = `<strong>${fmtMass(c.M)}</strong> — exceeds the mass of Mercury. The "disassemble Mercury for a Dyson swarm" Stapledon scenario fits here.`;
+  else if (lgM > 22.8) line = `<strong>${fmtMass(c.M)}</strong> — exceeds the mass of the Moon. Stripping the lunar mantle to make panels is the closest available source.`;
+  else if (lgM > 21) line = `<strong>${fmtMass(c.M)}</strong> — exceeds the entire mass of the main asteroid belt. You'd need to either mine planet-class bodies or accept a partial swarm.`;
+  else if (lgM > 20) line = `<strong>${fmtMass(c.M)}</strong> — comparable to dwarf-planet mass (Vesta, Ceres). Engineering feasible for a 1000-year capital programme.`;
+  else if (lgM > 15) line = `<strong>${fmtMass(c.M)}</strong> — fits comfortably within near-Earth and main-belt small bodies. The lightweight end of K-II.`;
+  else line = `<strong>${fmtMass(c.M)}</strong> — modest material footprint. The signature is still detectable if the IR excess is in the right band.`;
+  readout.innerHTML = line + ` Mass-equivalent reference: <em>${near.ref.name}</em>.`;
+
+  // G-HAT body
+  document.getElementById('ghat-body').innerHTML =
+    c.f >= 0.5
+      ? `At f = ${(c.f*100).toFixed(1)}%, the host star would emit nearly all its luminosity as ${c.lambdaMax*1e6 >= 1 ? (c.lambdaMax*1e6).toFixed(1) + ' μm' : (c.lambdaMax*1e9).toFixed(0) + ' nm'} thermal radiation. Any survey looking at this star would see a <strong>dramatically anomalous spectrum</strong> — the kind of result that would consume astrophysics for years. Wright et al.'s G-HAT survey (WISE all-sky data) finds no such examples among ~10⁵ galaxies, ruling out widespread K-III construction in nearby galaxies.`
+      : c.f >= 0.10
+      ? `At f = ${(c.f*100).toFixed(1)}%, ~${(c.f*100).toFixed(0)}% of the host's bolometric output is shifted to ~${(c.lambdaMax*1e6).toFixed(1)} μm. Detectable to G-HAT-class surveys for nearby stars; the absence of confirmed detections places this as an empirical limit on completed K-II within ~1 kpc of the Sun.`
+      : c.f >= 0.01
+      ? `At f = ${(c.f*100).toFixed(2)}%, the IR excess is comparable to natural debris disks. <strong>This is the regime where Dyson signatures and astrophysical false positives become hard to separate.</strong> Survey results here are method-dependent.`
+      : `At f = ${fmtSci(c.f)}, the IR excess is below the threshold where modern surveys can reliably distinguish it from natural variation. This is the comfortable hiding zone for partial swarms — and the regime where "Fermi silence" arguments lose force, since we couldn't detect partial swarms at this fraction even if many existed.`;
+}
+
+function wire(){
+  const fs = document.getElementById('f-slider'); fs.value = state.logF;
+  fs.addEventListener('input', () => { state.logF = parseFloat(fs.value); saveHash(); render(); });
+  const ds = document.getElementById('d-slider'); ds.value = state.logD;
+  ds.addEventListener('input', () => { state.logD = parseFloat(ds.value); saveHash(); render(); });
+  const es = document.getElementById('eta-slider'); es.value = state.eta;
+  es.addEventListener('input', () => { state.eta = parseFloat(es.value); saveHash(); render(); });
+  const rs = document.getElementById('rho-slider'); rs.value = state.logRho;
+  rs.addEventListener('input', () => { state.logRho = parseFloat(rs.value); saveHash(); render(); });
+  const ts = document.getElementById('trad-slider'); ts.value = state.tRad;
+  ts.addEventListener('input', () => { state.tRad = parseFloat(ts.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-f]').forEach(b => b.addEventListener('click', () => { state.logF = parseFloat(b.dataset.f); fs.value = state.logF; saveHash(); render(); }));
+  document.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => { state.logD = parseFloat(b.dataset.d); ds.value = state.logD; saveHash(); render(); }));
+  document.querySelectorAll('[data-eta]').forEach(b => b.addEventListener('click', () => { state.eta = parseFloat(b.dataset.eta); es.value = state.eta; saveHash(); render(); }));
+  document.querySelectorAll('[data-rho]').forEach(b => b.addEventListener('click', () => { state.logRho = parseFloat(b.dataset.rho); rs.value = state.logRho; saveHash(); render(); }));
+  document.querySelectorAll('[data-trad]').forEach(b => b.addEventListener('click', () => { state.tRad = parseFloat(b.dataset.trad); ts.value = state.tRad; saveHash(); render(); }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

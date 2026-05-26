@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<!--
+  Aestivation Cost Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-16
+  Site section: #fermi and #compute  ·  Epistemic tier(s): 🔬 Landauer + cosmology · ⚠ Theoretical (aestivation thesis) · ⚠ Theoretical (Bennett critique)
+  Data sources:
+    - Sandberg, Armstrong & Cirković (2017) "That is not dead which can eternal lie: the aestivation hypothesis for resolving Fermi's paradox" arXiv:1705.03394
+    - Bennett, Hanson & Riedel (2019) Comment, Foundations of Physics 49:820. DOI 10.1007/s10701-019-00289-5
+    - Planck 2018 cosmological parameters (H0, Ω_Λ); CMB temperature 2.725 K
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aestivation Cost Calculator — Omega Centauri Society</title>
+<meta name="description" content="If a civilisation waits for the CMB to cool, can it perform 10³⁰× more irreversible computation? The Sandberg-Armstrong-Cirković hypothesis and the Bennett-Hanson-Riedel critique, side by side, with the Landauer math in the middle.">
+<link rel="canonical" href="https://omegacentauri.me/tools/aestivation.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(13,110,88,.08);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--teal-glow)}
+
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.inputs-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+@media (max-width:760px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:140px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-bright)}
+
+/* Versus panel */
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.versus{grid-template-columns:1fr}}
+.side{border-radius:12px;padding:22px 24px;border:1px solid;display:flex;flex-direction:column}
+.side.sandberg{background:linear-gradient(135deg,rgba(112,85,212,.10),rgba(13,10,36,.6));border-color:var(--purple-bright)}
+.side.bennett{background:linear-gradient(135deg,rgba(29,186,144,.10),rgba(13,10,36,.6));border-color:var(--teal-bright)}
+.side-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.side.sandberg .side-eyebrow{color:var(--purple-glow)}
+.side.bennett .side-eyebrow{color:var(--teal-glow)}
+.side h2{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:6px}
+.side .citation{font-family:'Crimson Pro',serif;font-style:italic;color:var(--text-dim);font-size:13px;margin-bottom:14px}
+.side .big{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:600;line-height:1.05;margin:8px 0}
+.side.sandberg .big{color:var(--purple-glow)}
+.side.bennett .big{color:var(--teal-glow)}
+.side .body{font-family:'Crimson Pro',serif;color:var(--text-secondary);font-size:14px;line-height:1.6}
+.side .body strong{color:var(--text-primary)}
+.side .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dotted var(--border-subtle);font-family:'Space Mono',monospace;font-size:12px}
+.side .row:last-of-type{border-bottom:none}
+.side .row .lbl{color:var(--text-secondary);letter-spacing:.04em}
+.side .row .val{color:var(--text-primary);font-weight:600;white-space:nowrap}
+.side .row .val.accent{color:var(--amber-glow)}
+
+/* Cooling curve */
+.curve-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.curve-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.curve-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:18px;letter-spacing:.04em}
+canvas{display:block;width:100%;height:auto;border-radius:6px}
+.curve-legend{display:flex;gap:24px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;letter-spacing:.04em}
+.curve-legend span{display:inline-flex;align-items:center;gap:6px}
+.curve-legend i{display:inline-block;width:14px;height:3px;border-radius:1px}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Aestivation Cost Calculator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#fermi">← #fermi</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Aestivation Cost Calculator</h1>
+      <p class="tool-subtitle">Sandberg, Armstrong &amp; Cirković (2017) argue that a civilisation can perform vastly more irreversible computation by waiting for the cosmic microwave background to cool. Bennett, Hanson &amp; Riedel (2019) reply that the gain is illusory because cold reservoirs already exist. Both sides, with their math, side by side.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Landauer + cosmology</span>
+      <span class="tier-badge tier-theory">⚠ Aestivation thesis</span>
+      <span class="tier-badge tier-theory">⚠ Bennett critique</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Why both panels exist.</strong> The aestivation result depends on a contested assumption: that civilisations must dump computational entropy <em>only</em> into the cosmic-microwave background, so they're stuck with whatever temperature it has. If the assumption holds, cooling = staggering gain. If the assumption fails (Bennett et al.), the gain mostly evaporates. Slide the parameters; watch how both numbers respond.
+  </div>
+
+  <!-- INPUTS -->
+  <section class="inputs-card">
+    <div class="card-title">Inputs</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Total irreversible bit-operations N (log slider, 10²⁰ to 10⁸⁰)</label>
+        <div class="slider-row">
+          <input type="range" id="n-slider" min="20" max="80" step="0.1" value="50">
+          <span class="slider-value" id="n-val">10⁵⁰ ops</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-n="33">Earth-civ to 2026 (~10³³)</button>
+          <button class="preset-btn" data-n="50">"Cosmic" budget (10⁵⁰)</button>
+          <button class="preset-btn" data-n="68">All Bekenstein bits Sgr A* (~10⁶⁸)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Wait time Δt (log years from now, 0 to 16)</label>
+        <div class="slider-row">
+          <input type="range" id="t-slider" min="0" max="16" step="0.05" value="11">
+          <span class="slider-value" id="t-val">10¹¹ yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-t="0">today</button>
+          <button class="preset-btn" data-t="10">10¹⁰ yr (~age of universe)</button>
+          <button class="preset-btn" data-t="11">10¹¹ yr (Sandberg target)</button>
+          <button class="preset-btn" data-t="14">10¹⁴ yr (stellar epoch end)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Reversible fraction (0 = all irreversible, 1 = pure reversible)</label>
+        <div class="slider-row">
+          <input type="range" id="rev-slider" min="0" max="0.999" step="0.001" value="0">
+          <span class="slider-value" id="rev-val">0.000 (all irreversible)</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-rev="0">all irreversible</button>
+          <button class="preset-btn" data-rev="0.9">90%</button>
+          <button class="preset-btn" data-rev="0.99">99%</button>
+          <button class="preset-btn" data-rev="0.999">99.9%</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Bennett "today's cold reservoir" temperature (K)</label>
+        <div class="slider-row">
+          <input type="range" id="bcold-slider" min="-3" max="2.4" step="0.05" value="0">
+          <span class="slider-value" id="bcold-val">1.0 K</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-bcold="2.725">CMB today</button>
+          <button class="preset-btn" data-bcold="1.0">cooled radiator</button>
+          <button class="preset-btn" data-bcold="0.1">dilution fridge</button>
+          <button class="preset-btn" data-bcold="0.001">future-engineered cold sink</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERSUS -->
+  <div class="versus">
+    <section class="side sandberg">
+      <div class="side-eyebrow">Aestivation (Sandberg-Armstrong-Cirković 2017)</div>
+      <h2>Wait. Compute later. Win 10ⁿ ops.</h2>
+      <p class="citation">arXiv:1705.03394</p>
+      <div class="row"><span class="lbl">T_CMB now</span><span class="val">2.725 K</span></div>
+      <div class="row"><span class="lbl">T_CMB after waiting Δt</span><span class="val" id="tafter-val">—</span></div>
+      <div class="row"><span class="lbl">Energy now (Landauer × N × T_CMB)</span><span class="val" id="enow-val">—</span></div>
+      <div class="row"><span class="lbl">Energy after waiting</span><span class="val" id="ewait-val">—</span></div>
+      <div class="row"><span class="lbl">Gain factor (× more ops for same energy)</span><span class="val accent" id="gain-val">—</span></div>
+      <div class="big" id="sandberg-headline">—</div>
+      <div class="body" id="sandberg-body">computing…</div>
+    </section>
+
+    <section class="side bennett">
+      <div class="side-eyebrow">Critique (Bennett-Hanson-Riedel 2019)</div>
+      <h2>Cold reservoirs exist now. The wait is unnecessary.</h2>
+      <p class="citation">Foundations of Physics 49:820 · DOI 10.1007/s10701-019-00289-5</p>
+      <div class="row"><span class="lbl">Bennett-style cold sink T_cold today</span><span class="val" id="bcold-row">—</span></div>
+      <div class="row"><span class="lbl">Energy at T_cold today (Landauer × N × T_cold)</span><span class="val" id="ebennett-val">—</span></div>
+      <div class="row"><span class="lbl">vs. naive CMB-now cost</span><span class="val" id="bratio-val">—</span></div>
+      <div class="row"><span class="lbl">vs. Sandberg's deep-future cost</span><span class="val accent" id="bsratio-val">—</span></div>
+      <div class="big" id="bennett-headline">—</div>
+      <div class="body" id="bennett-body">computing…</div>
+    </section>
+  </div>
+
+  <!-- COOLING CURVE -->
+  <section class="curve-card">
+    <div class="curve-title">CMB cooling and the Landauer cost</div>
+    <div class="curve-sub">T_CMB(t) under flat ΛCDM with H₀ = 67 km/s/Mpc and Ω_Λ = 0.69. In the late dark-energy era, a(t) ≈ exp(H_Λ t), so T scales as exp(−H_Λ t). Cost per irreversible bit scales linearly with T.</div>
+    <canvas id="cooling-curve" width="1100" height="280"></canvas>
+    <div class="curve-legend">
+      <span><i style="background:var(--purple-glow)"></i>T_CMB (left axis, K)</span>
+      <span><i style="background:var(--amber-glow)"></i>Landauer cost per bit (right axis, J)</span>
+      <span><i style="background:var(--teal-glow);border:1px dashed var(--teal-glow);background:transparent"></i>Bennett T_cold (current option)</span>
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The Landauer foundation (both sides agree)</h3>
+      <p>Erasing one bit at temperature T dissipates at least <code>E_min = k_B · T · ln 2</code> joules. For N irreversible bit-erasures, the total minimum energy cost is <code>E = N · k_B · T_sink · ln 2</code> where T_sink is the temperature of the cold reservoir into which entropy is dumped. Reversible computation has no such bound — you can in principle do unlimited reversible operations for zero energy — but most useful computation produces irreversible steps (memory creation, error correction, decisions). The factor is <em>linear in T_sink</em>, which is the lever both sides argue over.</p>
+
+      <h3>Sandberg's argument (aestivation)</h3>
+      <p>If a civilisation is forced to use the CMB as its cold reservoir (because it has saturated all local entropy sinks and is now dumping entropy into the only available wide-open low-temperature surface), then waiting Δt years cools the CMB by a factor of a(t<sub>0</sub>+Δt)/a(t<sub>0</sub>). In ΛCDM with current parameters, the late-era expansion gives a(t) ≈ exp(H<sub>Λ</sub>(t−t<sub>0</sub>)) with H<sub>Λ</sub> ≈ 1.8×10⁻¹⁸ /s ≈ 5.7×10⁻¹¹ /yr. Waiting 10¹¹ years cools the CMB by exp(5.7) ≈ 300×; waiting 10¹² years cools it by exp(57) ≈ 10²⁵×. The Landauer cost drops in proportion. Sandberg et al. estimate that by waiting until the CMB is cold enough, a civilisation could perform on the order of 10³⁰ times more irreversible operations than if it computed now.</p>
+
+      <h3>Bennett-Hanson-Riedel's critique</h3>
+      <p>The 2019 reply argues the premise fails. Today's universe is not in maximum-entropy equilibrium — there are stars (hot reservoirs at ~6000 K), an interstellar medium, the CMB itself (2.725 K), and engineered cold sinks (dilution fridges at millikelvin, vacuum-pumped traps colder still). A civilisation that wants to do irreversible computation can dump entropy into <em>any</em> reservoir whose temperature is below its compute temperature. The CMB is just one option, and not the coldest one available. Furthermore, the universe contains other low-entropy resources (gravitational potential, baryon-asymmetry, etc.) that today can be used as entropy sinks. <em>"This can be done at any time, and is not improved by waiting for a low cosmic background temperature."</em> The aestivation gain over a current-tech civilisation is therefore not 10³⁰ but more like 10⁰–10³ — significant but not enormous, and entirely contingent on engineering you could equally well do today.</p>
+
+      <h3>How the panels are computed</h3>
+      <p>Sandberg side: <code>E_now = N · k_B · 2.725 · ln 2 · (1 − r)</code>; <code>E_wait = N · k_B · T_CMB(Δt) · ln 2 · (1 − r)</code> where r is the reversible fraction and T_CMB(Δt) uses the ΛCDM expansion above. Bennett side: same Landauer with T_sink set to the user-chosen "cold reservoir today" temperature. The third row of each panel compares the two costs; the headline ratio is the punchline.</p>
+
+      <h3>OCS connection</h3>
+      <p>The Macro Transcension Hypothesis and aestivation are <em>different</em> answers to the Fermi paradox: MTH says civilisations compress into black-hole substrates and stop expanding; aestivation says they're alive but dormant, waiting. Both predict observable silence; both predict no Dyson swarms. The Bennett critique, if correct, removes most of the motivation for aestivation specifically — but doesn't rule it out for civilisations that genuinely want to wait. The aestivation gain at any wait time can be compared to the ergosphere ops/sec from <a href="bekenstein-landauer.html">Bekenstein-Landauer-Lloyd</a> Tool 4, Panel 2: that's the MTH counter-proposal in concrete numbers.</p>
+
+      <h3>Real-world reference numbers (as of May 2026)</h3>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">❄ Why aestivation is a real Fermi-Paradox proposal</h3>
+      <p><strong>Sandberg, Armstrong &amp; Ćirković 2017</strong> (J Brit Interpl Soc 70:406; arXiv:1705.03394) formalised the aestivation hypothesis: any sufficiently advanced civilisation that is compute-limited (rather than energy-limited) has an incentive to "sleep" through the early universe and resume operation only when the cosmic microwave background has cooled enough to dramatically lower the Landauer floor. The CMB is currently 2.725 K; in a flat ΛCDM universe it cools as 1/a, so by t ≈ 10²⁵ yr it reaches ~10⁻¹⁵ K. The compute speedup factor over the same energy budget is roughly (T_now/T_future)^n where n depends on whether the bound is Landauer (n=1) or thermal noise (n=2) — for n=1 and a factor 10¹⁵ in temperature, that's a 10¹⁵× speedup per joule.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">⏳ Cosmological timescales for aestivation</h3>
+      <p>Heat death (matter-dominated era ends): ~10¹⁴ years. Stellar epoch end: 10¹⁴ years (no new star formation). Degenerate-stars era: 10²⁰ years. Proton decay theoretical: 10³⁴ years. CMB temperature at 10¹⁰⁰ years ≈ 10⁻⁹⁰ K. For an aestivating civilisation, the optimal wake-up time is set by the trade-off between (a) cooler universe = cheaper compute and (b) shrinking accessible energy budget as stars die and the universe expands. Sandberg et al. argue the sweet spot is around 10²⁰ to 10²⁵ years from now.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">⚖ The counter-argument</h3>
+      <p><strong>Bennett, Hanson &amp; Riedel 2019</strong> (J Brit Interpl Soc 72:51) argued that mere waiting doesn't solve the Fermi paradox because the dark-energy-dominated late universe expands accessible matter <em>away</em> faster than waiting can recover compute efficiency. Aestivators would lose more in energy budget than they gain in Landauer floor reduction. The debate is alive — a related literature on the Black Hole Era and ultra-late-universe physics continues.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-16 · Code MIT · Prose CC BY 4.0 · Sandberg-Armstrong-Cirković 2017 (arXiv:1705.03394); Bennett-Hanson-Riedel 2019 (DOI 10.1007/s10701-019-00289-5); Planck 2018 cosmological parameters</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const KB = 1.381e-23;
+const LN2 = Math.log(2);
+const T_CMB_NOW = 2.725;             // Kelvin
+const H_LAMBDA_PER_YR = 5.7e-11;     // late-era de Sitter expansion rate, 1/yr
+const YR_S = 3.156e7;
+
+const state = {
+  logN: 50,         // log10 of N irreversible bit-ops
+  logT: 11,         // log10 of wait time in years
+  rev: 0,           // reversible fraction
+  bColdT: 1.0       // Bennett cold reservoir T (K)
+};
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){
+  const h = getHash();
+  if (h.n !== undefined) { const v=parseFloat(h.n); if(!isNaN(v)) state.logN = clamp(v, 20, 80); }
+  if (h.t !== undefined) { const v=parseFloat(h.t); if(!isNaN(v)) state.logT = clamp(v, 0, 16); }
+  if (h.rev !== undefined) { const v=parseFloat(h.rev); if(!isNaN(v)) state.rev = clamp(v, 0, 0.999); }
+  if (h.bcold !== undefined) { const v=parseFloat(h.bcold); if(!isNaN(v)&&v>0) state.bColdT = v; }
+}
+function saveHash(){setHash({n:state.logN.toFixed(2), t:state.logT.toFixed(2), rev:state.rev.toFixed(3), bcold:state.bColdT.toExponential(3)});}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+function fmtE(joules){
+  if (joules === 0) return '0 J';
+  if (!isFinite(joules)) return '∞';
+  return fmtSci(joules) + ' J';
+}
+function fmtRatio(r){
+  if (!isFinite(r) || r === 0) return '—';
+  if (r > 1e3 || r < 1e-3) {
+    const e = Math.round(Math.log10(r));
+    return '×10' + supDigits(e);
+  }
+  if (r >= 1) return r.toFixed(2) + '×';
+  return r.toExponential(2) + '×';
+}
+
+// T_CMB at wait time Δt (years) using late-time exponential expansion
+function TCMB_after(yearsAhead) {
+  return T_CMB_NOW * Math.exp(-H_LAMBDA_PER_YR * yearsAhead);
+}
+
+function compute() {
+  const N = Math.pow(10, state.logN);
+  const tWait = Math.pow(10, state.logT);
+  const irrevFrac = 1 - state.rev;
+  const T_then = TCMB_after(tWait);
+  const eNow = N * KB * T_CMB_NOW * LN2 * irrevFrac;
+  const eWait = N * KB * T_then * LN2 * irrevFrac;
+  const gain = eNow / Math.max(eWait, Number.MIN_VALUE);
+
+  const eBennett = N * KB * state.bColdT * LN2 * irrevFrac;
+  const bRatioVsNow = eBennett / eNow;             // Bennett vs naive-now
+  const bRatioVsWait = eBennett / Math.max(eWait, Number.MIN_VALUE); // Bennett vs Sandberg-wait
+
+  return { N, tWait, T_then, eNow, eWait, gain, eBennett, bRatioVsNow, bRatioVsWait, irrevFrac };
+}
+
+function render() {
+  // Slider readouts
+  document.getElementById('n-val').innerHTML = '10' + supDigits(Math.round(state.logN*10)/10) + ' ops';
+  document.getElementById('t-val').innerHTML = '10' + supDigits(Math.round(state.logT*10)/10) + ' yr';
+  document.getElementById('rev-val').textContent = state.rev === 0
+    ? '0.000 (all irreversible)'
+    : state.rev >= 0.999 ? '0.999 (≈ pure reversible)' : state.rev.toFixed(3);
+  document.getElementById('bcold-val').textContent =
+    state.bColdT >= 1 ? state.bColdT.toFixed(2) + ' K' :
+    state.bColdT >= 1e-3 ? (state.bColdT*1000).toFixed(2) + ' mK' :
+    fmtSci(state.bColdT) + ' K';
+
+  const c = compute();
+
+  // Sandberg panel
+  document.getElementById('tafter-val').textContent = c.T_then > 1e-3 ? c.T_then.toFixed(3) + ' K' : fmtSci(c.T_then) + ' K';
+  document.getElementById('enow-val').textContent = fmtE(c.eNow);
+  document.getElementById('ewait-val').textContent = fmtE(c.eWait);
+  document.getElementById('gain-val').textContent = fmtRatio(c.gain);
+
+  const sandbergHead = document.getElementById('sandberg-headline');
+  const gainLog = Math.log10(c.gain);
+  if (gainLog >= 28) sandbergHead.innerHTML = '≈ 10' + supDigits(Math.round(gainLog)) + '× more ops';
+  else if (gainLog >= 1) sandbergHead.innerHTML = '≈ 10' + supDigits(Math.round(gainLog)) + '× more ops';
+  else sandbergHead.textContent = c.gain.toFixed(2) + '× more ops';
+
+  document.getElementById('sandberg-body').innerHTML = gainLog >= 25
+    ? `By waiting <strong>${fmtSci(c.tWait,1)} yr</strong>, the CMB falls to <strong>${c.T_then > 1e-3 ? c.T_then.toFixed(3) + ' K' : fmtSci(c.T_then) + ' K'}</strong>. The Landauer cost per bit falls in proportion, so the same energy budget buys <strong>${gainLog >= 28 ? '~10³⁰+' : '~10' + supDigits(Math.round(gainLog))}</strong> times more computation. This is the headline aestivation result.`
+    : gainLog >= 1
+    ? `Waiting ${fmtSci(c.tWait,1)} yr cools the CMB to ${c.T_then.toFixed(3)} K. Gain is <strong>${fmtRatio(c.gain)}</strong> — meaningful but not the famous 10³⁰. The headline requires waiting deep into the dark-energy era.`
+    : `At this wait time the CMB has barely cooled. Aestivation gain is negligible at this Δt.`;
+
+  // Bennett panel
+  document.getElementById('bcold-row').textContent = state.bColdT >= 1 ? state.bColdT.toFixed(2) + ' K' : state.bColdT >= 1e-3 ? (state.bColdT*1000).toFixed(2) + ' mK' : fmtSci(state.bColdT) + ' K';
+  document.getElementById('ebennett-val').textContent = fmtE(c.eBennett);
+  document.getElementById('bratio-val').textContent = c.bRatioVsNow < 1 ? fmtRatio(1/c.bRatioVsNow) + ' cheaper' : fmtRatio(c.bRatioVsNow) + ' more';
+  document.getElementById('bsratio-val').textContent = c.bRatioVsWait > 1 ? fmtRatio(c.bRatioVsWait) + ' more expensive than Sandberg' : fmtRatio(1/c.bRatioVsWait) + ' cheaper than Sandberg';
+
+  const bennettHead = document.getElementById('bennett-headline');
+  const ratioVsNowLog = -Math.log10(c.bRatioVsNow);
+  bennettHead.textContent = ratioVsNowLog > 0 ? '~' + Math.pow(10, ratioVsNowLog).toFixed(0) + '× cheaper than CMB-now, available today' : 'No cheaper than CMB-now';
+
+  if (c.bRatioVsWait > 1e10) {
+    document.getElementById('bennett-body').innerHTML = `Bennett's cold reservoir is <strong>${fmtRatio(c.bRatioVsWait)}</strong> more expensive than the deep-future CMB Sandberg targets. So if waiting were truly available, Sandberg wins. But: the wait costs ${fmtSci(c.tWait,1)} years and assumes the universe and your civilisation survive intact. Bennett's option is available <em>now</em>. Both costs are vastly below any biological civilisation's current energy budget — the choice is engineering convenience, not feasibility.`;
+  } else if (c.bRatioVsWait > 1) {
+    document.getElementById('bennett-body').innerHTML = `Bennett's reservoir is ${fmtRatio(c.bRatioVsWait)} more expensive than the deep-future CMB, but available today. Sandberg's gain over Bennett is real but smaller than the famous 10³⁰ figure — and conditional on surviving the wait.`;
+  } else {
+    document.getElementById('bennett-body').innerHTML = `Bennett's cold reservoir is <strong>cheaper</strong> than Sandberg's deep-future CMB by ${fmtRatio(1/c.bRatioVsWait)}. The aestivation gain over current engineering is <em>negative</em>: waiting actively costs you. This is Bennett-Hanson-Riedel's strongest claim.`;
+  }
+
+  drawCurve(c);
+}
+
+// Cooling curve canvas
+function drawCurve(c) {
+  const cv = document.getElementById('cooling-curve');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = 280;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  cv.style.height = h + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const padL = 60, padR = 60, padT = 18, padB = 38;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+
+  // X: log10 yr from 0 (now) to 16
+  const xMin = 0, xMax = 16;
+  // Y left: log10 T_CMB from -30 to 1 (K)
+  const yMin = -30, yMax = 1;
+
+  ctx.strokeStyle = 'rgba(112,85,212,.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, padT + plotH);
+  ctx.lineTo(padL + plotW, padT + plotH);
+  ctx.stroke();
+
+  // Gridlines + axis labels
+  ctx.font = "10px 'Space Mono', monospace";
+  ctx.fillStyle = '#9890c0';
+  ctx.textAlign = 'center';
+  for (let lg = 0; lg <= 16; lg += 2) {
+    const x = padL + (lg - xMin)/(xMax - xMin) * plotW;
+    ctx.strokeStyle = 'rgba(80,72,112,.18)';
+    ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+    ctx.fillText('10' + supDigits(lg), x, padT + plotH + 14);
+  }
+  ctx.fillText('log₁₀ Δt (years from now)', padL + plotW/2, h - 8);
+
+  // Y axis ticks (T_CMB)
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#a080f0';
+  for (let lg = -30; lg <= 1; lg += 5) {
+    const y = padT + plotH - (lg - yMin)/(yMax - yMin) * plotH;
+    ctx.fillText('10' + supDigits(lg), padL - 6, y + 3);
+  }
+  // y axis title
+  ctx.save();
+  ctx.translate(16, padT + plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('T_CMB (K)', 0, 0);
+  ctx.restore();
+
+  // Right axis: Landauer cost per bit at current N
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#ffc840';
+  // cost = k_B * T * ln2 → log10 = log10(T) + log10(k_B ln2) ≈ log10(T) - 22.985
+  const costOff = Math.log10(KB * LN2);
+  for (let lg = -30; lg <= 1; lg += 5) {
+    const y = padT + plotH - (lg - yMin)/(yMax - yMin) * plotH;
+    ctx.fillText('10' + supDigits(lg + Math.round(costOff)), padL + plotW + 6, y + 3);
+  }
+  ctx.save();
+  ctx.translate(w - 14, padT + plotH/2);
+  ctx.rotate(Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('Landauer cost per bit (J)', 0, 0);
+  ctx.restore();
+
+  // CMB cooling curve
+  ctx.strokeStyle = '#a080f0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let px = 0; px <= plotW; px++) {
+    const lg = xMin + px/plotW * (xMax - xMin);
+    const yrs = Math.pow(10, lg);
+    const T = TCMB_after(yrs);
+    const lgT = Math.log10(Math.max(T, 1e-99));
+    const yPx = padT + plotH - (Math.max(yMin, Math.min(yMax, lgT)) - yMin)/(yMax - yMin) * plotH;
+    if (px === 0) ctx.moveTo(padL + px, yPx); else ctx.lineTo(padL + px, yPx);
+  }
+  ctx.stroke();
+
+  // Marker: current wait time
+  const xMark = padL + (state.logT - xMin)/(xMax - xMin) * plotW;
+  const T_then = TCMB_after(Math.pow(10, state.logT));
+  const lgT_then = Math.log10(Math.max(T_then, 1e-99));
+  const yMark = padT + plotH - (Math.max(yMin, Math.min(yMax, lgT_then)) - yMin)/(yMax - yMin) * plotH;
+  ctx.fillStyle = '#ffc840';
+  ctx.beginPath();
+  ctx.arc(xMark, yMark, 5, 0, 2*Math.PI);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,200,64,.5)';
+  ctx.beginPath();
+  ctx.moveTo(xMark, padT); ctx.lineTo(xMark, padT + plotH); ctx.stroke();
+
+  // Bennett line (horizontal)
+  const lgBcold = Math.log10(state.bColdT);
+  if (lgBcold > yMin && lgBcold < yMax) {
+    const yB = padT + plotH - (lgBcold - yMin)/(yMax - yMin) * plotH;
+    ctx.strokeStyle = '#4de8c0';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(padL, yB); ctx.lineTo(padL + plotW, yB); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#4de8c0';
+    ctx.textAlign = 'left';
+    ctx.fillText('Bennett T_cold = ' + fmtSci(state.bColdT) + ' K', padL + 6, yB - 4);
+  }
+}
+
+function wire() {
+  const ns = document.getElementById('n-slider');
+  ns.value = state.logN;
+  ns.addEventListener('input', () => { state.logN = parseFloat(ns.value); saveHash(); render(); });
+
+  const ts = document.getElementById('t-slider');
+  ts.value = state.logT;
+  ts.addEventListener('input', () => { state.logT = parseFloat(ts.value); saveHash(); render(); });
+
+  const rs = document.getElementById('rev-slider');
+  rs.value = state.rev;
+  rs.addEventListener('input', () => { state.rev = parseFloat(rs.value); saveHash(); render(); });
+
+  const bs = document.getElementById('bcold-slider');
+  bs.value = Math.log10(state.bColdT);
+  bs.addEventListener('input', () => { state.bColdT = Math.pow(10, parseFloat(bs.value)); saveHash(); render(); });
+
+  document.querySelectorAll('[data-n]').forEach(b => b.addEventListener('click', () => {
+    state.logN = parseFloat(b.dataset.n); ns.value = state.logN; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => {
+    state.logT = parseFloat(b.dataset.t); ts.value = state.logT; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-rev]').forEach(b => b.addEventListener('click', () => {
+    state.rev = parseFloat(b.dataset.rev); rs.value = state.rev; saveHash(); render();
+  }));
+  document.querySelectorAll('[data-bcold]').forEach(b => b.addEventListener('click', () => {
+    state.bColdT = parseFloat(b.dataset.bcold); bs.value = Math.log10(state.bColdT); saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => drawCurve(compute()), 100);
+  });
+}
+
+function init() { loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
