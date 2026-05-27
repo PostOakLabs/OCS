@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<!--
+  Demo O — Five Ways to Look for ET
+  Omega Centauri Society · omegacentauri.me
+  A 60-second walk through the empirical SETI programme on shared priors.
+  Chains: drake-monte-carlo · great-filter · radio-seti · optical-seti · dyson-swarm · aestivation
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 · 2026-05-27
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — Five Ways to Look for ET · OCS</title>
+<meta name="description" content="A guided walk through the five empirical SETI programmes — Drake-MC, Great Filter, radio SETI, optical/NIR laser SETI, Dyson-swarm waste-heat, and the aestivation hypothesis — all on shared priors you choose.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-fermi-five-ways.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.06),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:780px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.priors{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.priors-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:6px}
+.priors-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.priors-row{display:flex;gap:10px;flex-wrap:wrap}
+.priors-btn{flex:1;min-width:220px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.priors-btn:hover{border-color:var(--purple-bright)}
+.priors-btn.active{border-color:var(--amber-bright);background:rgba(196,120,0,.08);box-shadow:0 0 0 1px var(--amber-bright) inset}
+.priors-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-glow);display:block;margin-bottom:4px}
+.priors-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--amber-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--teal-bright)}
+.step.s4{--accent:var(--teal-glow)}
+.step.s5{--accent:var(--amber-glow)}
+.step.s6{--accent:var(--purple-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:780px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.step-params strong{color:var(--text-secondary);font-weight:400}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:840px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:32px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .priors-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo &middot; Five Ways to Look for ET</span>
+    <a class="nav-link" href="index.html">&larr; All tools</a>
+    <a class="nav-link" href="falsification-hub.html">Falsification hub</a>
+    <a class="nav-link" href="https://omegacentauri.me/faq.html">FAQ</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo O &middot; Fermi pillar &middot; chains six tools</div>
+    <h1>Five Ways to Look for ET in 60 Seconds</h1>
+    <p class="hero-sub">A guided walk through the empirical SETI programme, on priors you choose. Each step deep-links to the relevant tool with the right parameters already loaded &mdash; no fetch, no backend, fully shareable.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-05-27</div>
+  </header>
+
+  <section class="priors" id="priors">
+    <div class="priors-title">&#9881; Pick your priors</div>
+    <p class="priors-help">Choose a starting position. Steps 1&ndash;2 inherit the priors directly; steps 3&ndash;6 stay at sensible default targets so you can compare programmes on equal footing.</p>
+    <div class="priors-row" role="radiogroup">
+      <button class="priors-btn active" data-priors="sandberg2018">
+        <span class="name">Sandberg 2018 (Recommended)</span>
+        <span class="desc">Wide log-uniform priors from <em>Dissolving the Fermi Paradox</em>. Posterior on N has substantial mass at zero &mdash; i.e. "we are alone" is defensible.</span>
+      </button>
+      <button class="priors-btn" data-priors="drake1961">
+        <span class="name">Drake 1961 (Optimistic)</span>
+        <span class="desc">Point-estimate-style narrow ranges from the original Drake meeting. Gives N &asymp; 10&#8308; civilisations and a Great-Filter-behind-us reading.</span>
+      </button>
+      <button class="priors-btn" data-priors="pessimistic">
+        <span class="name">Pessimistic anchor</span>
+        <span class="desc">Wide priors shifted toward small fi, fl, L. The filter most likely lies <em>ahead</em> at industrial-to-stellar.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 21 &middot; Sandberg/Drexler/Ord 2018</div>
+        <div class="step-title">Set the priors &mdash; and get a <em>distribution</em>, not a point estimate</div>
+        <p class="step-prose">The Drake equation almost always appears as a single multiplication. That's wrong by construction: every factor has orders-of-magnitude uncertainty, and propagating the uncertainty changes the answer qualitatively. The Monte Carlo runs 10&#8308; samples over your prior cube and returns the posterior on <em>N</em> &mdash; including <code>P(N &lt; 1)</code>, the probability humanity is alone in the Milky Way.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="drake" href="drake-monte-carlo.html">Open Drake-MC &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-e">Bayesian MC</span>
+          <span class="tier-mini tier-t">Drake formulation</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 22 &middot; Hanson 1998</div>
+        <div class="step-title">Locate the filter &mdash; is the bottleneck behind us or ahead?</div>
+        <p class="step-prose">If N is small, almost all of the survival probability along the path from non-life to galactic civilisation must collapse somewhere. <em>Where</em> matters enormously: a filter behind us (abiogenesis, eukaryogenesis) is reassuring; a filter ahead (industrial collapse, alignment failure) is not. The tool walks the eight Hanson stages and computes the implied joint probability against your N from step 1.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="filter" href="great-filter.html">Open Great Filter &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-t">Theoretical</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 23 &middot; Project Ozma 1960 &rarr; SKA</div>
+        <div class="step-title">Listen at 1.4 GHz &mdash; the historical empirical baseline</div>
+        <p class="step-prose">If they exist, the cheapest way to find them used to be a narrowband carrier in the hydrogen window. Six decades and ~10&#8309; targets later: nothing. The sensitivity calculator turns transmitter EIRP, distance, dish area, system temperature, integration time, and bandwidth into a detection floor. Sliding distance out shows how dramatically the assumed transmitter power matters.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="radio" href="radio-seti.html">Open Radio SETI &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-e">Sensitivity</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 32 &middot; NIROSETI &middot; VERITAS &middot; APF &middot; TMT</div>
+        <div class="step-title">Watch for ns laser pulses &mdash; different photon regime, different window</div>
+        <p class="step-prose">Optical photons carry ~10&#8309;&times; more energy than 1.4 GHz radio, so a single-shot ns laser pulse can outshine the host star photometrically in its instant. The detection physics is sky-background-limited, not receiver-noise-limited &mdash; the sensitivity curve has a different shape than radio. APF Breakthrough Listen, NIROSETI, and the proposed ESO Optical SETI 2040s programme are the empirical anchors.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="optical" href="optical-seti.html">Open Optical SETI &rarr;</a>
+          <span class="step-params" id="p4"></span>
+          <span class="tier-mini tier-e">Photon counting</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 19 &middot; Wright et al. G-HAT</div>
+        <div class="step-title">Look for waste heat &mdash; partial Dyson swarms as IR excess</div>
+        <p class="step-prose">A Kardashev-II civ captures stellar luminosity and re-radiates it at the radiator temperature; the spectral signature shifts from optical to mid-IR. G-HAT surveyed ~10&#8309; galaxies for the integrated stellar-light deficit + IR excess. The tool tells you how much panel mass a given swarm coverage actually needs &mdash; and where you cross the asteroid-belt budget, the Mercury budget, and the "this isn't engineering, it's geophysics" boundary.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="dyson" href="dyson-swarm.html">Open Dyson Swarm &rarr;</a>
+          <span class="step-params" id="p5"></span>
+          <span class="tier-mini tier-t">Theoretical</span>
+          <span class="tier-mini tier-s">Engineering</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s6" id="step6">
+      <div class="step-num">06</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 20 &middot; Sandberg/Armstrong/&Cacute;irkovi&cacute; 2017 (+ Bennett 2019)</div>
+        <div class="step-title">Or &mdash; are they hibernating on purpose?</div>
+        <p class="step-prose">The most uncomfortable answer to the silence: maybe an old enough civ is <em>waiting</em>. The Landauer floor scales with temperature, and the CMB is cooling on cosmological timescales; a sufficiently long nap buys ~10&#179;&#8304; extra irreversible operations per joule. Bennett, Hanson &amp; Riedel (2019) push back: today's universe already has cold reservoirs, so the gain is illusory. Both arguments live in the tool; the user picks who they believe.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="aestivation" href="aestivation.html">Open Aestivation &rarr;</a>
+          <span class="step-params" id="p6"></span>
+          <span class="tier-mini tier-t">Hypothesis</span>
+          <span class="tier-mini tier-s">Speculative</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">The detection rate so far, across all five programmes: zero</div>
+    <div class="synth-prose">
+      <p>That is consistent with at least five different worlds: a Sandberg-style prior where <em>N</em> &lt; 1 is unsurprising; a Great Filter behind us; a Great Filter ahead; a Kardashev-II population that lives in waste-heat regimes we haven't surveyed deeply enough; or a population that has chosen, for thermodynamic reasons, to be silent for now.</p>
+      <p>Each tool above tells you what observation would <em>change</em> its row. For the IMBH-evidence companion to this same question &mdash; what observation would falsify the central Omega Centauri claim &mdash; see the <a href="falsification-hub.html">Falsification &amp; Observational Roadmap</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework with active debate or unconfirmed inputs.
+    <span class="tier-mini tier-s">Speculative</span> = engineering or philosophical extrapolation, clearly labelled.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into six interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo O - Five Ways to Look for ET
+// Priors -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #priors=sandberg2018|drake1961|pessimistic
+// =========================================================================
+
+// Drake-MC priors (log10 lo, hi) per scenario.
+var DRAKE_PRIORS = {
+  sandberg2018: {Rstar:[0,1.5], fp:[-1,0],     ne:[-1,0],     fl:[-3,0],   fi:[-3,0],   fc:[-2,0],     L:[2,9]},
+  drake1961:    {Rstar:[0,0.3], fp:[-0.7,-0.5],ne:[-0.3,-0.1],fl:[-0.1,0], fi:[-0.1,0], fc:[-0.1,0],   L:[4,4.3]},
+  pessimistic:  {Rstar:[0,1.0], fp:[-2,-0.3],  ne:[-2,-0.5],  fl:[-6,-1],  fi:[-5,-1],  fc:[-3,-0.5],  L:[2,5]}
+};
+
+// Great Filter log10 P(survival) per stage.
+var FILTER_PRIORS = {
+  sandberg2018: {preset:'balanced', you:6, H:1e10, abio:-3, prok:-1,   euk:-3, multi:-2,   intel:-2,   tool:-1,   ind:-1, stellar:-2},
+  drake1961:    {preset:'early',    you:6, H:1e10, abio:-1, prok:-0.5, euk:-1, multi:-0.5, intel:-0.5, tool:-0.3, ind:-0.3, stellar:-0.5},
+  pessimistic:  {preset:'late',     you:6, H:1e10, abio:-1, prok:-0.5, euk:-1, multi:-1,   intel:-1,   tool:-1,   ind:-3, stellar:-4}
+};
+
+// Downstream sensitivity tools - same target across scenarios (Kardashev-I @ 1000 ly).
+// NOTE: optical-seti takes LINEAR hash values and log10s them internally;
+// every other tool here takes log10 directly. (See loadHash() in each tool.)
+var SENS_TARGETS = {
+  radio:       {eirp:13, dist:3.0, aeff:3.8, tsys:1.3, tau:3.56, bw:0},
+  optical:     {P:'1.0e+16', d:100, tau:1, lam:1064, D:12, n:3},
+  dyson:       {f:-2, d:0, eta:0.30, rho:0.7, trad:300},
+  aestivation: {n:50, t:11, rev:0, bcold:'1.0e+0'}
+};
+
+function paramSummary(priors) {
+  var dp = DRAKE_PRIORS[priors];
+  var fp = FILTER_PRIORS[priors];
+  return {
+    drake:       'priors=' + labelFor(priors) + ' / L=10^' + dp.L[0] + '-10^' + dp.L[1] + ' yr / samples=10000',
+    filter:      'you=industrial / preset=' + fp.preset + ' / H=1e10 habitable',
+    radio:       'EIRP=10^13 W / 1000 ly / Arecibo-class (10^3.8 m^2) / Tsys=20 K / 1 h',
+    optical:     'EIRP=10^16 W / 100 ly / 1 ns pulse / 1064 nm / D=12 m / 3 photons',
+    dyson:       'f=1% / 1 AU / eta=30% / rho=5 kg/m^2 / T_rad=300 K',
+    aestivation: 'target=10^50 ops / wait=10^11 yr / 0% reversible / Bennett T=1 K'
+  };
+}
+
+function labelFor(p) {
+  return ({sandberg2018:'Sandberg 2018', drake1961:'Drake 1961', pessimistic:'Pessimistic'})[p] || p;
+}
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+// Flatten Drake priors into the schema the tool expects (Rstar_lo, Rstar_hi, ...).
+function drakeHash(priors) {
+  var p = DRAKE_PRIORS[priors];
+  var out = {preset:'custom', n:10000};
+  for (var k in p) {
+    if (!Object.prototype.hasOwnProperty.call(p, k)) continue;
+    out[k + '_lo'] = p[k][0];
+    out[k + '_hi'] = p[k][1];
+  }
+  return out;
+}
+
+function applyPriors(priors) {
+  var sens = SENS_TARGETS;
+  var sum = paramSummary(priors);
+  var links = {
+    drake:       'drake-monte-carlo.html' + buildHash(drakeHash(priors)),
+    filter:      'great-filter.html'      + buildHash(FILTER_PRIORS[priors]),
+    radio:       'radio-seti.html'        + buildHash(sens.radio),
+    optical:     'optical-seti.html'      + buildHash(sens.optical),
+    dyson:       'dyson-swarm.html'       + buildHash(sens.dyson),
+    aestivation: 'aestivation.html'       + buildHash(sens.aestivation)
+  };
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+  document.getElementById('p1').textContent = sum.drake;
+  document.getElementById('p2').textContent = sum.filter;
+  document.getElementById('p3').textContent = sum.radio;
+  document.getElementById('p4').textContent = sum.optical;
+  document.getElementById('p5').textContent = sum.dyson;
+  document.getElementById('p6').textContent = sum.aestivation;
+  var btns = document.querySelectorAll('.priors-btn');
+  for (var j = 0; j < btns.length; j++) {
+    var active = btns[j].getAttribute('data-priors') === priors;
+    btns[j].classList.toggle('active', active);
+  }
+  // Persist choice to URL hash so this page is itself shareable.
+  history.replaceState(null, '', '#priors=' + priors);
+}
+
+function init() {
+  var m = window.location.hash.match(/priors=([a-z0-9]+)/i);
+  var initial = (m && DRAKE_PRIORS[m[1]]) ? m[1] : 'sandberg2018';
+  var btns = document.querySelectorAll('.priors-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyPriors(btn.getAttribute('data-priors')); });
+    })(btns[i]);
+  }
+  applyPriors(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
