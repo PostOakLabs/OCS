@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<!--
+  Optical & NIR Laser SETI Sensitivity Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-26
+  Site section: #fermi  ·  Epistemic tier(s): 🔬 Photon-counting / diffraction optics · ⚠ Theoretical (transmitter framing)
+  Data sources:
+    - Schwartz & Townes (1961) Nature 190:205 — original optical SETI proposal
+    - Townes (1983) PNAS 80:1147 — infrared SETI
+    - Howard et al. (2007) Acta Astronautica — optical SETI overview
+    - Maire et al. (2018) PASP 130 — NIROSETI commissioning
+    - Lipman et al. (2023) arXiv:2301.06971 — APF laser pipeline
+    - Garrett (2025) arXiv:2512.18903 — ESO Optical SETI 2040s proposal
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optical &amp; NIR Laser SETI Sensitivity — Omega Centauri Society</title>
+<meta name="description" content="EIRP detection horizons for nanosecond optical and near-infrared laser pulses across telescope apertures. The empirical complement to radio SETI: narrow beams, ns pulses, sky-background-limited regime.">
+<link rel="canonical" href="https://omegacentauri.me/tools/optical-seti.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(160,128,240,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.warning-banner{background:rgba(160,128,240,.08);border-left:3px solid var(--purple-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--purple-glow)}
+
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.inputs-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}
+@media (max-width:760px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.55)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.55)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--purple-glow);min-width:140px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+
+.instrument-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.instrument-card .card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px;padding-bottom:0;border-bottom:none}
+.instrument-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:14px;letter-spacing:.04em}
+.instrument-row{display:flex;gap:8px;flex-wrap:wrap}
+.inst-btn{font-family:'Space Mono',monospace;font-size:11px;padding:8px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:rgba(7,5,21,.4);color:var(--text-secondary);cursor:pointer;transition:all .15s;text-align:left}
+.inst-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid);background:rgba(29,186,144,.06)}
+.inst-btn .inst-name{display:block;color:var(--text-primary);font-weight:700;margin-bottom:2px}
+.inst-btn .inst-spec{display:block;color:var(--text-dim);font-size:10px}
+.inst-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.10);color:var(--teal-glow)}
+
+.headline{background:linear-gradient(135deg,rgba(160,128,240,.10),rgba(29,186,144,.06));border:1px solid var(--purple-bright);border-radius:12px;padding:26px 30px;margin-bottom:24px;text-align:center}
+.headline-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
+.headline-val{font-family:'Orbitron',sans-serif;font-size:42px;font-weight:600;color:var(--amber-glow);line-height:1.05;letter-spacing:.02em}
+.headline-sub{font-family:'Crimson Pro',serif;font-style:italic;color:var(--text-secondary);margin-top:8px;font-size:15px}
+.headline-sub strong{color:var(--text-primary)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-of-type{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:17px;color:var(--purple-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-bright)}
+.row-value.teal{color:var(--teal-glow)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+
+.dist-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 28px;margin-bottom:24px}
+.dist-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.dist-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:36px;letter-spacing:.04em}
+.dist-strip{position:relative;height:18px;margin:36px 0 88px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--purple-bright),var(--amber-mid),var(--red-mid));border-radius:9px}
+.d-tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.2)}
+.d-tick-label{position:absolute;top:-38px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.d-tick-label .ref{display:block;color:var(--text-dim);font-size:9px;letter-spacing:.04em;margin-top:2px}
+.d-marker{position:absolute;top:-14px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.d-marker .arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:14px solid currentColor;filter:drop-shadow(0 0 6px currentColor)}
+.d-marker .label{position:absolute;top:-26px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:currentColor;font-weight:600}
+.d-marker.horizon{color:var(--teal-glow);top:30px}
+.d-marker.horizon .arrow{border-top:none;border-bottom:14px solid currentColor}
+.d-marker.horizon .label{top:auto;bottom:-26px}
+.d-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px}
+.dist-readout{margin-top:18px;font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-secondary);line-height:1.7;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--purple-bright)}
+.dist-readout strong{color:var(--purple-glow);font-weight:600}
+
+.verdict-card{border-radius:12px;padding:20px 24px;margin-bottom:24px;border:1px solid;transition:all .25s}
+.verdict-card.green{background:linear-gradient(135deg,rgba(29,186,144,.10),rgba(13,10,36,.6));border-color:var(--teal-bright)}
+.verdict-card.amber{background:linear-gradient(135deg,rgba(240,160,32,.10),rgba(13,10,36,.6));border-color:var(--amber-bright)}
+.verdict-card.purple{background:linear-gradient(135deg,rgba(160,128,240,.10),rgba(13,10,36,.6));border-color:var(--purple-bright)}
+.verdict-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.verdict-card.green .verdict-title{color:var(--teal-glow)}
+.verdict-card.amber .verdict-title{color:var(--amber-glow)}
+.verdict-card.purple .verdict-title{color:var(--purple-glow)}
+.verdict-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.verdict-body strong{color:var(--text-primary)}
+
+.compare-card{background:linear-gradient(135deg,rgba(160,128,240,.06),rgba(13,10,36,.5));border:1px solid var(--purple-bright);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.compare-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.compare-title::before{content:'↔'}
+.compare-body{font-family:'Crimson Pro',serif;color:var(--text-primary);font-size:15px;line-height:1.65}
+.compare-body strong{color:var(--purple-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+.cross-link{display:inline-block;margin-right:10px;margin-top:8px;padding:6px 12px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(112,85,212,.15);border:1px solid var(--purple-bright);color:var(--purple-glow);border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.cross-link:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+@media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Optical &amp; NIR Laser SETI Sensitivity</span>
+    <a class="nav-link" href="https://omegacentauri.me/#fermi">← #fermi</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Optical &amp; NIR Laser SETI Sensitivity</h1>
+      <p class="tool-subtitle">Photon-counting detection horizons for nanosecond optical and near-infrared laser pulses, across telescope apertures from LaserSETI's 7 cm wide-field cameras up to the proposed ESO 2040s 39 m dedicated SETI mode. The empirical complement to the radio calculator (<a href="radio-seti.html">Tool 23</a>): same EIRP question, different physical window.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Photon-counting</span>
+      <span class="tier-badge tier-theory">⚠ Transmitter framing</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Optical and NIR laser SETI is the empirical complement to radio SETI (<a href="radio-seti.html">Tool 23</a>).</strong>
+    Different physical window, different sensitivity profile: narrow beams, nanosecond pulses, sky-background-limited rather than receiver-noise-limited. NIROSETI began observing in 2016; Breakthrough Listen added APF spectroscopic laser searches in 2018; ELT and TMT come online late 2020s; ESO has proposed dedicated optical SETI for the 2040s (arXiv:2512.18903). Optical SETI can outperform radio at modest transmitter powers because optical photons carry ~10⁵× more energy than 1.4 GHz radio.
+  </div>
+
+  <!-- INSTRUMENT PRESETS -->
+  <section class="instrument-card">
+    <div class="card-title">Instrument preset</div>
+    <div class="instrument-sub">Click an instrument to load its aperture and a representative detection floor.</div>
+    <div class="instrument-row">
+      <button class="inst-btn" data-inst="niroseti" data-d="1.0">
+        <span class="inst-name">NIROSETI (UCSD/UCB)</span>
+        <span class="inst-spec">D = 1.0 m · dual-band NIR 1064 + 1550 nm · photon-counting</span>
+      </button>
+      <button class="inst-btn" data-inst="laserseti" data-d="0.07">
+        <span class="inst-name">LaserSETI (SETI Institute)</span>
+        <span class="inst-spec">D = 0.07 m · all-sky transient survey · wide-field</span>
+      </button>
+      <button class="inst-btn" data-inst="veritas" data-d="12">
+        <span class="inst-name">VERITAS optical SETI</span>
+        <span class="inst-spec">D = 12 m · Whipple · ns photon-counting array</span>
+      </button>
+      <button class="inst-btn" data-inst="apf" data-d="2.4">
+        <span class="inst-name">APF Breakthrough Listen</span>
+        <span class="inst-spec">D = 2.4 m · spectroscopic CW laser search</span>
+      </button>
+      <button class="inst-btn" data-inst="tmt" data-d="30">
+        <span class="inst-name">TMT optical SETI</span>
+        <span class="inst-spec">D = 30 m · future capability ~2030+</span>
+      </button>
+      <button class="inst-btn" data-inst="elt" data-d="39">
+        <span class="inst-name">ELT optical SETI</span>
+        <span class="inst-spec">D = 39 m · late 2020s first light</span>
+      </button>
+      <button class="inst-btn" data-inst="eso2040" data-d="39">
+        <span class="inst-name">ESO Optical SETI 2040s</span>
+        <span class="inst-spec">D = 39 m · proposed dedicated SETI mode</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- INPUTS -->
+  <section class="inputs-card">
+    <div class="card-title">Inputs</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Transmitter EIRP P (W, log slider, 10⁹ to 10²⁵)</label>
+        <div class="slider-row">
+          <input type="range" id="p-slider" min="9" max="25" step="0.05" value="16">
+          <span class="slider-value" id="p-val">10¹⁶ W</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-p="14.7">Earth IPL laser (5×10¹⁴)</button>
+          <button class="preset-btn" data-p="13.3">Arecibo radar (2×10¹³)</button>
+          <button class="preset-btn" data-p="20">Beamed Type II frac (10²⁰)</button>
+          <button class="preset-btn" data-p="25">Solar L☉ (10²⁶·⁶, off-scale)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Target distance d (light-years, log slider, 1 to 10⁵)</label>
+        <div class="slider-row">
+          <input type="range" id="d-slider" min="0" max="5" step="0.02" value="2">
+          <span class="slider-value" id="d-val">100 ly</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-d="0.633">α Cen (4.3)</button>
+          <button class="preset-btn" data-d="1.079">Tau Ceti (12)</button>
+          <button class="preset-btn" data-d="4.215">ω Cen (16,400)</button>
+          <button class="preset-btn" data-d="4.415">Galactic centre (26,000)</button>
+          <button class="preset-btn" data-d="5">Andromeda (2.5×10⁶, off-scale)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Pulse duration τ (ns, log slider, 0.1 to 1000)</label>
+        <div class="slider-row">
+          <input type="range" id="tau-slider" min="-1" max="3" step="0.02" value="0">
+          <span class="slider-value" id="tau-val">1 ns</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-tau="0">ns regime (1)</button>
+          <button class="preset-btn" data-tau="3">μs regime (1000)</button>
+          <button class="preset-btn" data-tau="3">CW (large τ)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Wavelength λ (nm, 400 to 2500)</label>
+        <div class="slider-row">
+          <input type="range" id="lam-slider" min="400" max="2500" step="1" value="1064">
+          <span class="slider-value" id="lam-val">1064 nm</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-lam="1064">Nd:YAG (1064)</button>
+          <button class="preset-btn" data-lam="514">Visible / Argon (514)</button>
+          <button class="preset-btn" data-lam="1300">NIROSETI band (1300)</button>
+          <button class="preset-btn" data-lam="2200">Long NIR (2200)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Receiver aperture D (m, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="ap-slider" min="-1.3" max="1.7" step="0.02" value="1.08">
+          <span class="slider-value" id="ap-val">12 m</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-ap="-1.155">7 cm (LaserSETI)</button>
+          <button class="preset-btn" data-ap="0">1 m (NIROSETI)</button>
+          <button class="preset-btn" data-ap="0.380">2.4 m (APF)</button>
+          <button class="preset-btn" data-ap="1.079">12 m (VERITAS)</button>
+          <button class="preset-btn" data-ap="1.477">30 m (TMT)</button>
+          <button class="preset-btn" data-ap="1.591">39 m (ELT)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Detection threshold N_thr (photons in gate)</label>
+        <div class="slider-row">
+          <input type="range" id="nthr-slider" min="1" max="20" step="1" value="3">
+          <span class="slider-value" id="nthr-val">3 photons</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-nthr="3">3 (canonical)</button>
+          <button class="preset-btn" data-nthr="5">5 (conservative)</button>
+          <button class="preset-btn" data-nthr="10">10 (RFI-hardened)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADLINE -->
+  <div class="headline">
+    <div class="headline-eyebrow">Headline · Detection horizon d_max at this configuration</div>
+    <div class="headline-val" id="head-val">—</div>
+    <div class="headline-sub" id="head-sub">computing…</div>
+  </div>
+
+  <!-- DETAIL ROWS -->
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Photons at the aperture</div>
+      <div class="row"><span class="row-label">Photon energy E_γ</span><span class="row-value teal" id="egamma">—</span></div>
+      <div class="row"><span class="row-label">Photons emitted per pulse N_emit</span><span class="row-value" id="nemit">—</span></div>
+      <div class="row"><span class="row-label">Photon fluence at d (per m²)</span><span class="row-value" id="fluence">—</span></div>
+      <div class="row"><span class="row-label">Photons collected N_det</span><span class="row-value" id="ndet">—</span></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Detection &amp; verdict</div>
+      <div class="row"><span class="row-label">Detection threshold N_thr</span><span class="row-value" id="thresh">3 photons</span></div>
+      <div class="row"><span class="row-label">SNR ratio N_det / N_thr</span><span class="row-value" id="snr">—</span></div>
+      <div class="row"><span class="row-label">At current target distance</span><span class="row-value" id="det">—</span></div>
+      <div class="row"><span class="row-label">Detection horizon d_max</span><span class="row-value amber" id="dmax">—</span></div>
+      <div class="row"><span class="row-label">ω Cen reach (16,400 ly)?</span><span class="row-value" id="omega-reach">—</span></div>
+    </section>
+  </div>
+
+  <!-- DISTANCE COMPARISON STRIP -->
+  <section class="dist-card">
+    <div class="dist-title">Where the target and detection horizon sit on the distance axis</div>
+    <div class="dist-sub">Log axis spans 1 ly to 10⁶ ly. Amber arrow above = target distance. Teal arrow below = detection horizon d_max at this configuration.</div>
+    <div class="dist-strip" id="dist-strip">
+      <span class="d-tick" style="left:11.6%"><span class="d-tick-label">α Cen<span class="ref">4.3 ly</span></span></span>
+      <span class="d-tick" style="left:21.6%"><span class="d-tick-label">Tau Ceti<span class="ref">12 ly</span></span></span>
+      <span class="d-tick" style="left:46.5%"><span class="d-tick-label">M13<span class="ref">25 kly</span></span></span>
+      <span class="d-tick" style="left:69.9%"><span class="d-tick-label">galactic ⊙<span class="ref">26 kly</span></span></span>
+      <span class="d-tick" style="left:67.2%"><span class="d-tick-label" style="top:-58px">ω Cen<span class="ref">16.4 kly</span></span></span>
+      <span class="d-tick" style="left:100%"><span class="d-tick-label">Andromeda<span class="ref">2.5 Mly</span></span></span>
+      <span class="d-marker" id="d-marker-target" style="left:33%">
+        <span class="label" id="d-marker-target-label">100 ly</span>
+        <span class="arrow"></span>
+      </span>
+      <span class="d-marker horizon" id="d-marker-horizon" style="left:50%">
+        <span class="arrow"></span>
+        <span class="label" id="d-marker-horizon-label">horizon</span>
+      </span>
+    </div>
+    <div class="d-axis"><span>1 ly</span><span>10³ ly</span><span>10⁶ ly</span></div>
+    <div class="dist-readout" id="d-readout">—</div>
+  </section>
+
+  <!-- VERDICT -->
+  <section class="verdict-card purple" id="verdict-card">
+    <div class="verdict-title" id="verdict-title">computing…</div>
+    <div class="verdict-body" id="verdict-body">—</div>
+  </section>
+
+  <!-- COMPARISON TO RADIO -->
+  <section class="compare-card">
+    <div class="compare-title">Compare against radio SETI at the same EIRP and distance</div>
+    <div class="compare-body" id="compare-body">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What optical SETI looks for</h3>
+      <p>Three classes of signal: (1) <strong>nanosecond optical/NIR laser pulses</strong> easily distinguishable from any natural astrophysical source — the original Schwartz &amp; Townes (1961) proposal; (2) <strong>narrowband continuous-wave lasers</strong> visible as anomalously narrow spectral lines in stellar spectra — the APF Breakthrough Listen approach (Lipman et al. 2023); (3) <strong>all-sky transient surveys</strong> catching one-shot pulses with wide-field photon-counters (LaserSETI). All three exploit the same fact: lasers produce photon arrival statistics no natural process can replicate.</p>
+
+      <h3>Why optical can beat radio at modest EIRP</h3>
+      <p>A 1064 nm photon carries <code>E_γ = hc/λ ≈ 1.87×10⁻¹⁹ J</code> — about ~10⁵× more energy than a 1.4 GHz radio photon (~10⁻²⁴ J). For a fixed transmitter EIRP, an optical beam produces ~10⁵× <em>fewer</em> photons per second, but each photon is individually detectable. A 1 ns optical pulse can deliver thousands of photons to a 10 m aperture at 100 ly using an EIRP a million times lower than radio would require for the same SNR — because optical photon counting against zero background beats noise-temperature-limited radio sensitivity by enormous factors.</p>
+
+      <h3>The narrow-beam tradeoff</h3>
+      <p>Diffraction-limited optical beams are very narrow: a 10 m transmitter at 1 μm produces a beam ~10 μas wide, vs. ~arcminute for 1.4 GHz radio from the same aperture. High gain means high EIRP at low transmitter power — but it also means the transmitter must be <em>aimed at us</em>. The strategy that pays off: target as many stars as possible, and assume some fraction of the galactic civilisation set has chosen to aim at our solar system in the optical band.</p>
+
+      <h3>Sky-background-limited regime</h3>
+      <p>For nanosecond gates, even bright sky background (~10 photons/m²/s/Å in the visible) gives <<1 photon per pixel per gate — essentially zero. Detection thresholds can be set as low as ~3 photons (above zero background) rather than the noise-floor / radiometer-equation calculations that govern radio. This tool uses <code>N_thr = 3</code> by default; bumping it to 5 or 10 simulates an RFI-hardened or false-alarm-suppressed detection regime.</p>
+
+      <h3>NIR vs visible vs UV</h3>
+      <p>Near-infrared (1–2.5 μm) penetrates galactic dust much better than visible light, extending useful detection distance across the Galactic plane and into the bulge. Visible (400–700 nm) is the original SETI band and is well-served by APF, VERITAS, and TMT. <strong>UV is effectively blocked</strong> by interstellar absorption beyond a few hundred parsecs — too short for galactic SETI. Most NIROSETI signal-search is in the 1.3–1.8 μm window, chosen specifically because it pierces dust toward the galactic centre and ω Centauri.</p>
+
+      <h3>The ω Cen connection</h3>
+      <p>Tools 23 (radio) and 32 (optical) together establish that, for the EIRP regimes a transcended civilisation might plausibly use, ω Centauri is well within reach of <em>current</em> instruments in at least one window. The non-detection of either radio or optical signals at ω Cen distance therefore puts a real constraint on the population of high-EIRP transmitters there. This tool quantifies the optical half of that constraint: move the EIRP slider until d_max ≈ 16,400 ly and read off the EIRP required for a positive detection at any given aperture.</p>
+
+      <h3>Method &amp; equations</h3>
+      <p>Photon energy: <code>E_γ = hc/λ</code> with <code>h = 6.626×10⁻³⁴ J·s</code>, <code>c = 3×10⁸ m/s</code>. Photons per pulse from a transmitter of EIRP P over duration τ: <code>N_emit = P·τ / E_γ</code>. Photons per m² at distance d: <code>Φ = N_emit / (4π d²)</code>. Photons collected by aperture D: <code>N_det = Φ · π D²/4 = P·τ·D² / (16 E_γ d²)</code>. Inverting for the detection horizon at threshold N_thr: <code>d_max = √(P·τ·D² / (16 E_γ N_thr))</code>. The tool assumes background-limited regime (N_bg ≈ 0 over a ns gate), 100% quantum efficiency, perfect pointing, and ignores atmospheric extinction (~30% loss at zenith in visible, less in NIR). Real surveys typically lose another factor 2–10 to these effects.</p>
+
+      <h3>Sources</h3>
+      <p>Schwartz &amp; Townes 1961 (Nature 190:205, original optical SETI proposal); Townes 1983 (PNAS 80:1147, infrared SETI); Howard et al. 2007 (Acta Astronautica, optical SETI overview); Maire et al. 2018 (PASP 130, NIROSETI commissioning); Lipman et al. 2023 (arXiv:2301.06971, APF laser pipeline); Garrett 2025 (arXiv:2512.18903, ESO Optical SETI 2040s).</p>
+
+      <h3>Related tools</h3>
+      <p>
+        <a class="cross-link" href="radio-seti.html">→ Radio SETI sensitivity (Tool 23)</a>
+        <a class="cross-link" href="falsification-hub.html">→ Falsification hub</a>
+        <a class="cross-link" href="drake-monte-carlo.html">→ Drake Monte Carlo</a>
+        <a class="cross-link" href="bz-kardashev.html">→ BZ / Kardashev</a>
+      </p>
+
+      <p class="meta-line">v1.0 — 2026-05-26 · Code MIT · Prose CC BY 4.0 · Sources as above</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+const H_PLANCK = 6.626e-34;  // J·s
+const C_LIGHT  = 3.0e8;      // m/s
+const LY_M     = 9.461e15;   // m per light-year
+const EV_J     = 1.602e-19;  // J per eV
+const OMEGA_CEN_LY = 16400;
+
+// State: log10 of physical quantities (except lambda, nthr)
+const state = {
+  logP: 16,        // log10 EIRP in W
+  logD: 2,         // log10 distance in ly
+  logTauNs: 0,     // log10 pulse duration in ns
+  lam: 1064,       // wavelength in nm
+  logAp: 1.079,    // log10 aperture in m  (12 m default = VERITAS)
+  nthr: 3          // photon threshold
+};
+
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+function loadHash(){
+  const h = getHash();
+  if (h.P !== undefined) { const v = parseFloat(h.P); if (!isNaN(v) && v > 0) state.logP = clamp(Math.log10(v), 9, 25); }
+  if (h.d !== undefined) { const v = parseFloat(h.d); if (!isNaN(v) && v > 0) state.logD = clamp(Math.log10(v), 0, 5); }
+  if (h.tau !== undefined) { const v = parseFloat(h.tau); if (!isNaN(v) && v > 0) state.logTauNs = clamp(Math.log10(v), -1, 3); }
+  if (h.lam !== undefined) { const v = parseFloat(h.lam); if (!isNaN(v)) state.lam = clamp(v, 400, 2500); }
+  if (h.D !== undefined) { const v = parseFloat(h.D); if (!isNaN(v) && v > 0) state.logAp = clamp(Math.log10(v), -1.3, 1.7); }
+  if (h.n !== undefined) { const v = parseInt(h.n,10); if (!isNaN(v)) state.nthr = clamp(v, 1, 20); }
+}
+function saveHash(){
+  const P = Math.pow(10, state.logP);
+  const d = Math.pow(10, state.logD);
+  const tau = Math.pow(10, state.logTauNs);
+  const D = Math.pow(10, state.logAp);
+  setHash({
+    P: P.toExponential(2),
+    d: d.toFixed(d < 100 ? 2 : 0),
+    tau: tau.toFixed(tau < 10 ? 2 : 0),
+    lam: state.lam.toFixed(0),
+    D: D.toFixed(D < 10 ? 2 : 1),
+    n: state.nthr
+  });
+}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+
+function fmtSci(x, dp=2){
+  if (!isFinite(x)) return '∞';
+  if (x === 0) return '0';
+  const ax = Math.abs(x);
+  if (ax >= 1e4 || ax < 1e-3) {
+    const e = Math.floor(Math.log10(ax));
+    const m = x / Math.pow(10, e);
+    return m.toFixed(dp) + '×10' + supDigits(e);
+  }
+  if (ax >= 100) return x.toFixed(0);
+  if (ax >= 1) return x.toFixed(2);
+  return x.toFixed(dp + 1);
+}
+
+function fmtDist(ly){
+  if (ly < 1) return ly.toFixed(2) + ' ly';
+  if (ly < 1000) return ly.toFixed(1) + ' ly';
+  if (ly < 1e6) return (ly/1000).toFixed(2) + ' kly';
+  return (ly/1e6).toFixed(2) + ' Mly';
+}
+
+function fmtPower(W){
+  if (W < 1e-3) return fmtSci(W) + ' W';
+  if (W < 1) return W.toFixed(3) + ' W';
+  if (W < 1e3) return W.toFixed(2) + ' W';
+  if (W < 1e6) return (W/1e3).toFixed(2) + ' kW';
+  if (W < 1e9) return (W/1e6).toFixed(2) + ' MW';
+  if (W < 1e12) return (W/1e9).toFixed(2) + ' GW';
+  if (W < 1e15) return (W/1e12).toFixed(2) + ' TW';
+  return fmtSci(W) + ' W';
+}
+
+function fmtTau(ns){
+  if (ns < 1) return ns.toFixed(2) + ' ns';
+  if (ns < 1e3) return ns.toFixed(1) + ' ns';
+  if (ns < 1e6) return (ns/1e3).toFixed(1) + ' μs';
+  return (ns/1e6).toFixed(2) + ' ms';
+}
+
+function fmtAp(D){
+  if (D < 1) return (D*100).toFixed(1) + ' cm';
+  return D.toFixed(2) + ' m';
+}
+
+// Pulse photon energy (J) and eV
+function photonEnergy(lam_nm) {
+  const lam_m = lam_nm * 1e-9;
+  return H_PLANCK * C_LIGHT / lam_m; // J
+}
+
+// Map ly distance onto 0..100% across log axis [1 ly, 1e6 ly] (6 decades)
+function pctFromLy(ly) {
+  if (ly <= 0) return 0;
+  return clamp(Math.log10(ly) / 6 * 100, -2, 102);
+}
+
+function compute() {
+  const P    = Math.pow(10, state.logP);          // W
+  const dLy  = Math.pow(10, state.logD);          // ly
+  const dM   = dLy * LY_M;                        // m
+  const tau_ns = Math.pow(10, state.logTauNs);    // ns
+  const tau_s  = tau_ns * 1e-9;                   // s
+  const D    = Math.pow(10, state.logAp);         // m
+  const A    = Math.PI * D * D / 4;               // m² aperture area
+  const Eg   = photonEnergy(state.lam);           // J per photon
+  const Nthr = state.nthr;
+
+  const Nemit  = P * tau_s / Eg;                  // photons emitted
+  const fluence = Nemit / (4 * Math.PI * dM * dM); // photons / m² at distance
+  const Ndet  = fluence * A;                      // photons collected over the gate
+
+  // d_max from N_det = N_thr → d_max² = P·τ·D² / (16 E_γ N_thr)
+  const dMax_m = Math.sqrt(P * tau_s * D * D / (16 * Eg * Nthr));
+  const dMax_ly = dMax_m / LY_M;
+
+  return { P, dLy, dM, tau_s, tau_ns, D, A, Eg, Nemit, fluence, Ndet, Nthr, dMax_ly };
+}
+
+function render() {
+  // Slider readouts
+  document.getElementById('p-val').textContent = '10' + supDigits(Math.round(state.logP*10)/10) + ' W';
+  document.getElementById('d-val').textContent = fmtDist(Math.pow(10, state.logD));
+  document.getElementById('tau-val').textContent = fmtTau(Math.pow(10, state.logTauNs));
+  document.getElementById('lam-val').textContent = state.lam + ' nm';
+  document.getElementById('ap-val').textContent = fmtAp(Math.pow(10, state.logAp));
+  document.getElementById('nthr-val').textContent = state.nthr + ' photon' + (state.nthr === 1 ? '' : 's');
+  document.getElementById('thresh').textContent = state.nthr + ' photons';
+
+  const c = compute();
+
+  // Headline
+  document.getElementById('head-val').textContent = fmtDist(c.dMax_ly);
+  const headSub = document.getElementById('head-sub');
+  headSub.innerHTML = `A <strong>${fmtAp(c.D)}</strong> aperture detects a <strong>${fmtPower(c.P)}</strong> EIRP transmitter emitting a <strong>${fmtTau(c.tau_ns)}</strong> pulse at ${state.lam} nm out to <strong>${fmtDist(c.dMax_ly)}</strong> (N_thr = ${c.Nthr} photons, background-limited).`;
+
+  // Detail rows — photons
+  const eV = c.Eg / EV_J;
+  document.getElementById('egamma').textContent = eV.toFixed(2) + ' eV';
+  document.getElementById('nemit').textContent = fmtSci(c.Nemit, 2);
+  document.getElementById('fluence').textContent = fmtSci(c.fluence, 2) + ' /m²';
+  document.getElementById('ndet').textContent = c.Ndet >= 1 ? fmtSci(c.Ndet, 2) : c.Ndet.toExponential(2);
+
+  // Detection block
+  const ratio = c.Ndet / c.Nthr;
+  document.getElementById('snr').textContent = ratio >= 1 ? ratio.toFixed(2) + '×' : '1/' + (1/ratio).toFixed(2);
+  const det = document.getElementById('det');
+  if (ratio >= 3) det.innerHTML = '<span style="color:var(--teal-glow)">✓ DETECTABLE</span>';
+  else if (ratio >= 1) det.innerHTML = '<span style="color:var(--amber-bright)">~ MARGINAL</span>';
+  else det.innerHTML = '<span style="color:var(--red-bright)">✗ BELOW FLOOR</span>';
+
+  document.getElementById('dmax').textContent = fmtDist(c.dMax_ly);
+
+  // ω Cen reach
+  const omegaRatio = c.dMax_ly / OMEGA_CEN_LY;
+  const omegaCell = document.getElementById('omega-reach');
+  if (omegaRatio >= 3) omegaCell.innerHTML = '<span style="color:var(--teal-glow)">YES · ' + omegaRatio.toFixed(1) + '× over</span>';
+  else if (omegaRatio >= 1) omegaCell.innerHTML = '<span style="color:var(--amber-bright)">MARGINAL · ' + omegaRatio.toFixed(2) + '×</span>';
+  else omegaCell.innerHTML = '<span style="color:var(--red-bright)">NO · 1/' + (1/omegaRatio).toFixed(1) + '× short</span>';
+
+  // Distance strip markers
+  const pctTarget = pctFromLy(c.dLy);
+  const pctHorizon = pctFromLy(c.dMax_ly);
+  const mt = document.getElementById('d-marker-target');
+  const mtl = document.getElementById('d-marker-target-label');
+  mt.style.left = pctTarget + '%';
+  mtl.textContent = fmtDist(c.dLy);
+
+  const mh = document.getElementById('d-marker-horizon');
+  const mhl = document.getElementById('d-marker-horizon-label');
+  mh.style.left = pctHorizon + '%';
+  mhl.textContent = 'horizon: ' + fmtDist(c.dMax_ly);
+
+  // Distance readout
+  const dr = document.getElementById('d-readout');
+  if (ratio >= 3) {
+    dr.innerHTML = `Target at <strong>${fmtDist(c.dLy)}</strong> is well inside the <strong>${fmtDist(c.dMax_ly)}</strong> detection horizon — strong, unambiguous photon-counting detection.`;
+  } else if (ratio >= 1) {
+    dr.innerHTML = `Target at <strong>${fmtDist(c.dLy)}</strong> sits just inside the <strong>${fmtDist(c.dMax_ly)}</strong> horizon. Marginal: a longer integration, larger aperture, or higher-EIRP source would consolidate the detection.`;
+  } else {
+    const needed = c.Ndet > 0 ? Math.pow(c.dLy/c.dMax_ly, 2) : Infinity;
+    dr.innerHTML = `Target at <strong>${fmtDist(c.dLy)}</strong> is beyond the <strong>${fmtDist(c.dMax_ly)}</strong> horizon. Would need ${isFinite(needed)?needed.toFixed(1)+'×':'enormously'} more EIRP·τ·D² to reach this distance with N_thr = ${c.Nthr}.`;
+  }
+
+  // Verdict card — three-state
+  const vCard = document.getElementById('verdict-card');
+  const vTitle = document.getElementById('verdict-title');
+  const vBody = document.getElementById('verdict-body');
+  vCard.classList.remove('green','amber','purple');
+  if (omegaRatio >= 3) {
+    vCard.classList.add('green');
+    vTitle.textContent = 'Configuration easily reaches ω Cen';
+    vBody.innerHTML = `Detection horizon of <strong>${fmtDist(c.dMax_ly)}</strong> covers ω Centauri (16.4 kly) with margin ${omegaRatio.toFixed(1)}×. IMBH-associated technosignatures in ω Cen would be detectable at this EIRP and aperture — a positive non-detection here puts a real upper bound on optical-band transmitters in the cluster.`;
+  } else if (omegaRatio >= 1) {
+    vCard.classList.add('amber');
+    vTitle.textContent = 'Marginal — borderline ω Cen detection';
+    vBody.innerHTML = `Detection horizon of <strong>${fmtDist(c.dMax_ly)}</strong> just covers ω Centauri (16.4 kly). Borderline: a single ns pulse from a peer transmitter would land in the noise of a ~3-photon gate. Longer exposure, a larger aperture, or a marginally higher-EIRP source would lift this firmly above threshold.`;
+  } else {
+    vCard.classList.add('purple');
+    vTitle.textContent = 'Below floor — need next-generation aperture';
+    vBody.innerHTML = `Detection horizon of <strong>${fmtDist(c.dMax_ly)}</strong> falls short of ω Centauri (16.4 kly) by ${(1/omegaRatio).toFixed(1)}×. At this EIRP/τ/λ a peer transmitter in ω Cen is below the photon-counting floor. Reaching ω Cen would require a TMT/ELT-class aperture, the proposed ESO 2040s dedicated SETI mode, a longer pulse, or a substantially higher EIRP.`;
+  }
+
+  // Compare against radio SETI: rough symmetric framing.
+  // Radio narrowband sensitivity at MeerKAT-class for 1 hr, 1 Hz channel, T_sys = 20 K
+  // EIRP_min ≈ SNR·k_B·T_sys/A_eff · √(B/(n_pol·τ)) · B · 4π d²
+  // We compute a quick estimate at the current distance, then compare to current P.
+  const k_B = 1.381e-23;
+  const T_sys = 20, A_eff = 6300, tau_radio = 3600, bw = 1, SNR_R = 10, n_pol = 2;
+  const sMin = SNR_R * k_B * T_sys / A_eff * Math.sqrt(bw / (n_pol * tau_radio)); // W/m²/Hz
+  const eirpMinRadio = sMin * bw * 4 * Math.PI * c.dM * c.dM; // W
+  const cb = document.getElementById('compare-body');
+  const opticalRatio = c.P / eirpMinRadio;
+  if (c.dLy < 0.01) {
+    cb.innerHTML = `At sub-light-year distances, both windows trivially detect any reasonable transmitter — radio (MeerKAT-class, 1 hr, 1 Hz channel) and ns optical photon-counting both win by many orders of magnitude.`;
+  } else if (opticalRatio >= 1 && ratio >= 1) {
+    cb.innerHTML = `<strong>Both windows detect.</strong> Radio (MeerKAT-class, 1 hr, 1 Hz) needs EIRP ≥ <strong>${fmtPower(eirpMinRadio)}</strong> at ${fmtDist(c.dLy)}. Your <strong>${fmtPower(c.P)}</strong> source exceeds that by ${opticalRatio.toFixed(2)}×, and the ns optical channel sees N_det/N_thr = ${ratio.toFixed(2)}×. Symmetric detectability — pick whichever window has cleaner backgrounds.`;
+  } else if (opticalRatio >= 1 && ratio < 1) {
+    cb.innerHTML = `<strong>Radio wins this configuration.</strong> A <strong>${fmtPower(c.P)}</strong> source at ${fmtDist(c.dLy)} exceeds the MeerKAT-class radio EIRP floor (<strong>${fmtPower(eirpMinRadio)}</strong>) by ${opticalRatio.toFixed(2)}×, but the ns optical pulse here delivers only ${c.Ndet.toExponential(2)} photons to the aperture — below threshold. Either lengthen τ (more total photons) or step up to a larger aperture.`;
+  } else if (opticalRatio < 1 && ratio >= 1) {
+    cb.innerHTML = `<strong>Optical wins this configuration.</strong> A <strong>${fmtPower(c.P)}</strong> source at ${fmtDist(c.dLy)} is below the MeerKAT-class radio EIRP floor (<strong>${fmtPower(eirpMinRadio)}</strong>) by 1/${(1/opticalRatio).toFixed(1)}×, yet the ns optical pulse delivers ${fmtSci(c.Ndet,1)} photons — well above the ${c.Nthr}-photon threshold. This is the "optical can beat radio at modest EIRP" regime.`;
+  } else {
+    cb.innerHTML = `<strong>Both windows miss.</strong> Source is <strong>${fmtPower(c.P)}</strong>; radio floor (MeerKAT-class, 1 hr, 1 Hz) at ${fmtDist(c.dLy)} is <strong>${fmtPower(eirpMinRadio)}</strong>; optical pulse delivers only ${c.Ndet.toExponential(2)} photons. Need more EIRP, more τ, or a bigger aperture in either window.`;
+  }
+}
+
+function wire() {
+  const pS = document.getElementById('p-slider'); pS.value = state.logP;
+  pS.addEventListener('input', () => { state.logP = parseFloat(pS.value); saveHash(); render(); });
+  const dS = document.getElementById('d-slider'); dS.value = state.logD;
+  dS.addEventListener('input', () => { state.logD = parseFloat(dS.value); saveHash(); render(); });
+  const tauS = document.getElementById('tau-slider'); tauS.value = state.logTauNs;
+  tauS.addEventListener('input', () => { state.logTauNs = parseFloat(tauS.value); saveHash(); render(); });
+  const lamS = document.getElementById('lam-slider'); lamS.value = state.lam;
+  lamS.addEventListener('input', () => { state.lam = parseFloat(lamS.value); saveHash(); render(); });
+  const apS = document.getElementById('ap-slider'); apS.value = state.logAp;
+  apS.addEventListener('input', () => { state.logAp = parseFloat(apS.value); saveHash(); render(); });
+  const nS = document.getElementById('nthr-slider'); nS.value = state.nthr;
+  nS.addEventListener('input', () => { state.nthr = parseInt(nS.value,10); saveHash(); render(); });
+
+  document.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { state.logP = parseFloat(b.dataset.p); pS.value = state.logP; saveHash(); render(); }));
+  document.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => { state.logD = parseFloat(b.dataset.d); dS.value = state.logD; saveHash(); render(); }));
+  document.querySelectorAll('[data-tau]').forEach(b => b.addEventListener('click', () => { state.logTauNs = parseFloat(b.dataset.tau); tauS.value = state.logTauNs; saveHash(); render(); }));
+  document.querySelectorAll('[data-lam]').forEach(b => b.addEventListener('click', () => { state.lam = parseFloat(b.dataset.lam); lamS.value = state.lam; saveHash(); render(); }));
+  document.querySelectorAll('[data-ap]').forEach(b => b.addEventListener('click', () => { state.logAp = parseFloat(b.dataset.ap); apS.value = state.logAp; saveHash(); render(); }));
+  document.querySelectorAll('[data-nthr]').forEach(b => b.addEventListener('click', () => { state.nthr = parseInt(b.dataset.nthr,10); nS.value = state.nthr; saveHash(); render(); }));
+
+  // Instrument-preset buttons: set aperture (D) only — leave the rest of the config alone
+  document.querySelectorAll('.inst-btn').forEach(b => b.addEventListener('click', () => {
+    const D = parseFloat(b.dataset.d);
+    if (isNaN(D) || D <= 0) return;
+    state.logAp = clamp(Math.log10(D), -1.3, 1.7);
+    apS.value = state.logAp;
+    document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    saveHash();
+    render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

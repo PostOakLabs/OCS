@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<!--
+  ω Dwarf Origin Story — Stripped Nucleus Tracer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-26
+  Site section: #science  ·  Epistemic tier(s): ⚠ (ω Dwarf unification) / 🔬 (tidal disruption physics)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ω Dwarf Origin Story — Stripped Nucleus Tracer — Omega Centauri Society</title>
+<meta name="description" content="Time-scrub across 12 Gyr of cosmic history as the ω Dwarf progenitor is shredded by Milky Way tides — leaving Sequoia, Thamnos and Gaia-Enceladus debris in the halo, and its surviving nucleus as today's ω Centauri.">
+<link rel="canonical" href="https://omegacentauri.me/tools/omega-dwarf-origin.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-label .tier{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:6px;letter-spacing:.06em}
+.row-label .tier.e{background:rgba(29,186,144,.12);color:var(--teal-bright)}
+.row-label .tier.d{background:rgba(240,160,32,.12);color:var(--amber-bright)}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.compare-card{background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.compare-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media (max-width:820px){.compare-grid{grid-template-columns:1fr}}
+.compare-cell{padding:14px 16px;background:rgba(7,5,21,.4);border-radius:8px;border-left:3px solid var(--purple-bright)}
+.compare-cell.cyan{border-left-color:var(--teal-bright)}
+.compare-cell.amber{border-left-color:var(--amber-bright)}
+.cc-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:6px}
+.cc-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:6px}
+.cc-note{font-size:13px;color:var(--text-secondary);font-style:italic;line-height:1.55}
+.cc-list{margin-top:8px;list-style:none;padding:0}
+.cc-list li{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);padding:4px 0;display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--border-subtle)}
+.cc-list li:last-child{border-bottom:none}
+.cc-list li .name{color:var(--text-primary)}
+.cc-list li .val{color:var(--teal-glow)}
+.canvas-card{background:rgba(3,2,10,.6);border:1px solid var(--border-subtle);border-radius:12px;padding:18px 18px 14px;margin-bottom:24px}
+.canvas-card .card-title{margin-bottom:10px}
+.canvas-wrap{position:relative;width:100%;background:radial-gradient(ellipse at center,rgba(7,5,21,.9),var(--void));border-radius:8px;overflow:hidden}
+canvas{display:block;width:100%;height:auto}
+.scrub-row{display:flex;align-items:center;gap:14px;margin-top:12px}
+.play-btn{font-family:'Space Mono',monospace;font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid var(--teal-mid);background:rgba(13,110,88,.15);color:var(--teal-glow);cursor:pointer;transition:all .15s;letter-spacing:.04em;min-width:78px;text-align:center}
+.play-btn:hover{background:rgba(13,110,88,.3);color:var(--text-primary)}
+.scrub-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.05em}
+.scrub-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:5px;border-radius:3px;outline:none}
+.scrub-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 12px rgba(255,200,64,.6)}
+.scrub-row input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 12px rgba(255,200,64,.6)}
+.scrub-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:96px;text-align:right;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+.cross-link{display:inline-block;margin-top:14px;margin-right:8px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(112,85,212,.15);border:1px solid var(--purple-bright);color:var(--purple-glow);border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.cross-link:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.status-bar{margin-top:14px;height:18px;background:rgba(7,5,21,.6);border-radius:9px;overflow:hidden;border:1px solid var(--border-subtle);position:relative}
+.status-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal-mid),var(--amber-mid),var(--red-mid));transition:width .15s ease-out}
+.status-bar-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-primary);letter-spacing:.06em;text-transform:uppercase;text-shadow:0 0 4px rgba(0,0,0,.8)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body ul{margin:8px 0 12px 18px}
+.about-body li{margin-bottom:5px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">ω Dwarf Origin Story — Stripped Nucleus Tracer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>ω Dwarf Origin Story — Stripped Nucleus Tracer</h1>
+      <p class="tool-subtitle">Scrub across 12 Gyr of cosmic history as a dwarf galaxy is shredded by Milky Way tides. Its outer stars become the Sequoia, Thamnos and Gaia-Enceladus halo substructures; its dense nuclear star cluster survives as today's ω Centauri.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge debated">⚠ Observationally debated</span>
+      <span class="tier-badge estab">🔬 Established physics</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>The leading explanation for ω Centauri's anomalies — its mass, multiple populations, inverted metallicity gradient — is that it's the surviving nuclear star cluster of an accreted dwarf galaxy.</strong>
+    The "ω Dwarf" hypothesis (oMEGACat X, Sommer et al. 2026) unifies Sequoia, Thamnos and Gaia-Enceladus as debris from a single progenitor whose nucleus is today's ω Cen. If correct, this provides the strongest prior for expecting a central IMBH.
+  </div>
+
+  <!-- CANVAS NARRATIVE -->
+  <section class="canvas-card">
+    <div class="card-title">Time-scrub — 12 Gyr ago → present</div>
+    <div class="canvas-wrap">
+      <canvas id="scene" width="700" height="360" aria-label="Top-down schematic of the Milky Way with the ω Dwarf progenitor orbit, debris streams, and surviving nucleus."></canvas>
+    </div>
+    <div class="scrub-row">
+      <button class="play-btn" id="play-btn">▶ Play</button>
+      <span class="scrub-label">t (Gyr ago)</span>
+      <input type="range" id="t-slider" min="0" max="12" step="0.05" value="6">
+      <span class="scrub-val" id="t-val">6.00 Gyr ago</span>
+    </div>
+    <div class="legend">
+      <span><i style="background:#4de8c0"></i>Gaia-Enceladus debris</span>
+      <span><i style="background:#f0a020"></i>Sequoia debris</span>
+      <span><i style="background:#a080f0"></i>Thamnos debris</span>
+      <span><i style="background:#ffffff;box-shadow:0 0 8px #fff"></i>Surviving nucleus (ω Cen)</span>
+      <span><i style="background:#ffc840"></i>Sun</span>
+    </div>
+  </section>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Progenitor parameters</div>
+
+      <div class="slider-block">
+        <label>Progenitor dwarf mass M_prog (M<sub>☉</sub>)</label>
+        <div class="slider-row">
+          <input type="range" id="mp-slider" min="8" max="10" step="0.01" value="9">
+          <span class="slider-value" id="mp-val">1.0×10⁹ M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-mp="1e9">Sausage estimate (1×10⁹)</button>
+          <button class="preset-btn" data-preset-mp="5e8">Sgr-like (~5×10⁸)</button>
+          <button class="preset-btn" data-preset-mp="1e10">Large LMC progenitor (1×10¹⁰)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Orbit pericentre r_peri (kpc) — tighter ⇒ faster disruption</label>
+        <div class="slider-row">
+          <input type="range" id="rp-slider" min="5" max="30" step="0.5" value="12">
+          <span class="slider-value" id="rp-val">12.0 kpc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-rp="8">Deep plunge (8 kpc)</button>
+          <button class="preset-btn" data-preset-rp="12">Default (12 kpc)</button>
+          <button class="preset-btn" data-preset-rp="22">Loose (22 kpc)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Nucleus survival fraction f_nuc — share of M_prog that locks into the surviving nucleus</label>
+        <div class="slider-row">
+          <input type="range" id="fn-slider" min="0" max="1" step="0.01" value="0.15">
+          <span class="slider-value" id="fn-val">0.15</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-fn="0.05">Loosely bound (0.05)</button>
+          <button class="preset-btn" data-preset-fn="0.15">Default (0.15)</button>
+          <button class="preset-btn" data-preset-fn="0.30">Dense NSC (0.30)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Progenitor state at t = <span id="t-readout">6.0</span> Gyr ago</div>
+
+      <div class="row">
+        <div class="row-label">Progenitor remaining mass M_prog(t) <span class="tier d">⚠</span></div>
+        <div class="row-value amber" id="mremain-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Mass already shed into debris streams</div>
+        <div class="row-value" id="mshed-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Current galactocentric distance (schematic)</div>
+        <div class="row-value" id="rgc-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Tidal disruption status <span class="tier e">🔬</span></div>
+        <div class="row-value" id="status-val" style="font-size:14px">—</div>
+      </div>
+
+      <div class="status-bar" aria-hidden="true">
+        <div class="status-bar-fill" id="status-fill" style="width:0%"></div>
+        <div class="status-bar-text" id="status-text">—</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- THREE SIDE PANELS -->
+  <section class="compare-card">
+    <div class="compare-title">The ω Dwarf hypothesis — debris, fossil record, IMBH prior</div>
+    <div class="compare-grid">
+
+      <div class="compare-cell cyan">
+        <div class="cc-label">Stream debris budget</div>
+        <div class="cc-value">Three halo substructures</div>
+        <div class="cc-note">oMEGACat X 2026: these are debris from the <em>same</em> progenitor, whose nucleus is today's ω Cen.</div>
+        <ul class="cc-list">
+          <li><span class="name">Gaia-Enceladus</span><span class="val">≈ 6×10⁸ M☉</span></li>
+          <li><span class="name">Sequoia</span><span class="val">≈ 2×10⁷ M☉</span></li>
+          <li><span class="name">Thamnos</span><span class="val">≈ 5×10⁷ M☉</span></li>
+          <li><span class="name">Sum</span><span class="val" id="debris-sum">≈ 6.7×10⁸ M☉</span></li>
+        </ul>
+      </div>
+
+      <div class="compare-cell">
+        <div class="cc-label">Multiple stellar populations as fossil record</div>
+        <div class="cc-value">≥ 3 metallicity groups</div>
+        <div class="cc-note">Inverted metallicity gradient: the inner population is <em>younger</em> and Al-, N-, He-enhanced — the chemical fingerprint of present-day nucleated dwarfs.</div>
+        <ul class="cc-list">
+          <li><span class="name">Hilker et al. 2002</span><span class="val">3+ populations</span></li>
+          <li><span class="name">Sommer et al. 2025</span><span class="val">grad inverted</span></li>
+          <li><span class="name">Inner pop Δ[Fe/H]</span><span class="val">&gt; +0.5 dex</span></li>
+        </ul>
+      </div>
+
+      <div class="compare-cell amber">
+        <div class="cc-label">Why this matters for the IMBH question</div>
+        <div class="cc-value">~70% NSC occupation</div>
+        <div class="cc-note">Neumayer, Seth &amp; Böker 2020: roughly 70% of nuclear star clusters in nearby dwarfs host a confirmed or candidate central massive BH. A stripped-nucleus ω Cen inherits that prior — substantially higher than for an <em>in-situ</em> GC.</div>
+        <ul class="cc-list">
+          <li><span class="name">NSC + central MBH</span><span class="val">≈ 70%</span></li>
+          <li><span class="name">In-situ GC IMBH</span><span class="val">&lt;&lt; 70%</span></li>
+          <li><span class="name">ω Cen prior</span><span class="val">elevated</span></li>
+        </ul>
+      </div>
+
+    </div>
+    <a class="cross-link" href="constraint-stacker.html">→ Stack against every IMBH constraint</a>
+    <a class="cross-link" href="cluster-comparator.html">→ Compare ω Cen to true GCs</a>
+    <a class="cross-link" href="dark-cluster.html">→ Dark-matter cluster scenario</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+
+      <h3 style="color:var(--teal-bright)">What is a stripped nucleus?</h3>
+      <p>When a dwarf galaxy is tidally captured by a larger host like the Milky Way, its loosely-bound outer stars are stripped off first as long tidal streams. The gravitationally-deep <em>nuclear star cluster</em> — the dense central knot of stars at the dwarf's core — survives much longer because its escape velocity is far higher than the tidal field can overcome. The result: the main body of the dwarf dissolves into halo debris over a few orbital periods, while the nucleus persists as a compact bound object indistinguishable, at first glance, from a normal globular cluster.</p>
+
+      <h3 style="color:var(--purple-glow)">Evidence for ω Cen as a stripped nucleus</h3>
+      <ul>
+        <li>Multiple stellar populations (≥ 3 distinct metallicity groups), uncommon in true globular clusters which are usually mono-metallic.</li>
+        <li>A wide metallicity spread of more than 1 dex in [Fe/H] — orders of magnitude beyond typical GC scatter.</li>
+        <li>An <em>inverted</em> radial metallicity gradient: the inner population is younger and chemically enriched (Al-, N-, He-enhanced), exactly as expected for a nucleus that accreted late gas.</li>
+        <li>A retrograde galactic orbit consistent with the Gaia-Enceladus debris frame.</li>
+        <li>A counter-rotating inner core (Pechetti et al. 2024 MNRAS 528:4941) — a signature of late infall onto a pre-existing nucleus.</li>
+      </ul>
+
+      <h3 style="color:var(--amber-bright)">The 2026 ω Dwarf unification</h3>
+      <p>Sommer et al. <strong>oMEGACat X</strong> (March 2026, arXiv 2603.23589) argue from chemical-abundance patterns that the three biggest retrograde halo substructures — <em>Sequoia</em>, <em>Thamnos</em>, and <em>Gaia-Enceladus/Sausage</em> — share a common chemical signature consistent with a single disrupted progenitor. They name this progenitor "ω Dwarf" and estimate a pre-disruption total mass of order <code>1×10⁹ M☉</code>. Its nuclear star cluster survives to today as ω Cen. This is the consolidation step: rather than three independent merger events, a single ~10⁹ M☉ progenitor accounts for all of it, with ω Cen as its smoking-gun core.</p>
+
+      <h3 style="color:var(--teal-bright)">Why this is the dominant prior for an IMBH</h3>
+      <p>Neumayer, Seth &amp; Böker 2020 (A&amp;AR 28:4) compiled occupation fractions across nearby dwarfs and showed that roughly <strong>70% of nuclear star clusters host a central massive black hole</strong> in the 10⁴–10⁶ M☉ range — confirmed or strong candidate. If ω Cen is a stripped nucleus, it inherits that prior directly. By contrast, in-situ globular clusters formed from a single collapsing gas cloud have far lower observed IMBH occupation fractions, with most claimed detections later overturned. This is the empirical reason ω Cen is the <em>number-one</em> Local-Group IMBH candidate, rather than just "the nearest massive GC". The Häberle 2024 lower bound of ~8,200 M☉ sits comfortably inside the NSC-occupation mass range.</p>
+
+      <h3 style="color:var(--amber-bright)">Caveats</h3>
+      <ul>
+        <li>The unified ω Dwarf hypothesis is one interpretation of the substructure chemistry. Alternative scenarios — where Sequoia and Gaia-Enceladus are independent progenitors — remain plausible and are not yet excluded.</li>
+        <li>Pericentre, perigalacticon and disruption-time numbers in this tool are <em>illustrative</em>. Published orbit reconstructions span a factor of ~2 in pericentre, and the disruption timescale depends sensitively on the assumed dark-matter halo of the progenitor.</li>
+        <li>The canvas animation is a stylised schematic, not an N-body simulation. Stream colours are assigned by hypothesis-mapping (Gaia-Enceladus = cyan, Sequoia = orange, Thamnos = purple), not by physics.</li>
+      </ul>
+
+      <h3 style="color:var(--purple-glow)">Sources</h3>
+      <ul>
+        <li><strong>oMEGACat X</strong> — Sommer et al. 2026, arXiv 2603.23589 (the ω Dwarf unification).</li>
+        <li>Hilker, Kayser, Richtler &amp; Willemsen 2002, A&amp;A 391:195 (multiple populations).</li>
+        <li>Pechetti et al. 2024, MNRAS 528:4941 (counter-rotating inner core).</li>
+        <li>Neumayer, Seth &amp; Böker 2020, A&amp;AR 28:4 (NSC + central MBH occupation fractions).</li>
+        <li>Bekki &amp; Freeman 2003, MNRAS 346:L11 (original stripped-nucleus argument for ω Cen).</li>
+        <li>Myeong et al. 2019, MNRAS 488:1235 (Sequoia identification).</li>
+        <li>Helmi et al. 2018, Nature 563:85 (Gaia-Enceladus identification).</li>
+      </ul>
+
+      <h3 style="color:var(--teal-bright)">Cross-links</h3>
+      <p>For the stack of every published IMBH constraint, see the <a href="constraint-stacker.html">IMBH Constraint Stacker</a>. For a side-by-side of ω Cen against actual globular clusters, see the <a href="cluster-comparator.html">Cluster Comparator</a>. For the alternative dark-matter cluster scenario, see <a href="dark-cluster.html">Dark Cluster</a>.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-26 · Code MIT · Prose CC BY 4.0 · Sources as above</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- helpers ---------- */
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=1){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(!isFinite(M)||M<=0)return'—';if(M>=1e9)return(M/1e9).toFixed(2)+'×10⁹ M☉';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e3)return(M/1e3).toFixed(1)+'×10³ M☉';return Math.round(M).toLocaleString()+' M☉'}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+function lerp(a,b,t){return a+(b-a)*t}
+function smoothstep(e0,e1,x){const t=clamp((x-e0)/(e1-e0),0,1);return t*t*(3-2*t)}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+/* ---------- state ---------- */
+const state = { t: 6.0, mp: 1e9, rp: 12.0, fn: 0.15 };
+
+function loadHash(){
+  const p = getHash();
+  if (p.t)     { const v = parseFloat(p.t);     if (!isNaN(v)) state.t  = clamp(v, 0, 12); }
+  if (p.Mprog) { const v = parseFloat(p.Mprog); if (!isNaN(v) && v > 0) state.mp = clamp(v, 1e8, 1e10); }
+  if (p.peri)  { const v = parseFloat(p.peri);  if (!isNaN(v) && v > 0) state.rp = clamp(v, 5, 30); }
+  if (p.fnuc)  { const v = parseFloat(p.fnuc);  if (!isNaN(v)) state.fn = clamp(v, 0, 1); }
+}
+function saveHash(){
+  setHash({
+    t:     state.t.toFixed(2),
+    Mprog: state.mp.toExponential(2),
+    peri:  state.rp.toFixed(1),
+    fnuc:  state.fn.toFixed(2)
+  });
+}
+
+/* ---------- physics-ish model ----------
+   Stylised disruption schedule. We map (t, mp, rp, fn) to a disruption fraction f_dis(t) ∈ [0,1]
+   centred on a midpoint time t_mid that gets earlier for tighter pericentre, and to a remaining mass
+   M(t) = mp * [ fn + (1-fn) * (1 - f_dis(t)) ] — so at full disruption only the nucleus survives.
+   Galactocentric distance r_gc(t) decays from ~40 kpc at t=12 down to ω Cen's current ~6 kpc at t=0,
+   with extra inward kicks near the disruption midpoint.
+---------- */
+function disruptionFrac(t, rp){
+  // t_mid: tighter pericentre ⇒ earlier midpoint (deeper plunge shreds faster)
+  const t_mid = lerp(4.5, 8.5, (rp - 5) / 25);   // rp=5 ⇒ t_mid≈4.5 Gyr ago, rp=30 ⇒ ≈8.5
+  const width = 1.6;                              // disruption window full-width in Gyr
+  // f_dis = 1 at t=0 (fully disrupted), small at large t
+  // smoothstep on (t_mid + width/2) → (t_mid - width/2), running with decreasing t
+  return smoothstep(t_mid + width, t_mid - width, t);
+}
+function remainingMass(t, mp, rp, fn){
+  const f = disruptionFrac(t, rp);
+  return mp * (fn + (1 - fn) * (1 - f));
+}
+function galDistanceKpc(t, rp){
+  // Schematic inspiral: r ≈ 40 kpc at t=12, → ~6 kpc at t=0, sharper drop near disruption midpoint
+  const f = disruptionFrac(t, rp);
+  const r0 = 40, r1 = 5.4;
+  // weight 60% on monotone (12-t)/12 and 40% on disruption progress
+  const w = 0.6 * (1 - t/12) + 0.4 * f;
+  return lerp(r0, r1, clamp(w, 0, 1));
+}
+function statusLabel(f){
+  if (f < 0.10) return { label: 'Pristine',      pct:  5 };
+  if (f < 0.45) return { label: 'Disrupting',    pct: 35 };
+  if (f < 0.90) return { label: 'Stripped',      pct: 75 };
+  return                { label: 'Nucleus-only', pct: 100 };
+}
+
+/* ---------- canvas rendering ---------- */
+const W = 700, H = 360;
+const cx = 350, cy = 180;             // galactic centre (canvas px)
+const KPC_PER_PX = 50 / 320;          // 320 px ≈ 50 kpc field of view (so ~6.4 px / kpc)
+const PX_PER_KPC = 1 / KPC_PER_PX;    // ≈ 6.4
+
+// pre-baked orbit path: an ellipse pinched toward the galactic centre. We sample N points and
+// blend the dwarf along it as a function of t.
+function orbitPoint(s){
+  // s in [0,1], s=0 is the apocentre (t=12), s=1 is final nucleus position (~5.4 kpc, SE of centre)
+  // shape: a spiralling-in arc that loops once.
+  const turns = 1.35;
+  const theta = -Math.PI * 0.2 + turns * Math.PI * 2 * s;   // total winding
+  const r_kpc = lerp(40, 5.4, smoothstep(0, 1, s));         // radius shrinks
+  const x = cx + Math.cos(theta) * r_kpc * PX_PER_KPC;
+  const y = cy + Math.sin(theta) * r_kpc * PX_PER_KPC * 0.72;  // 0.72 squash for top-down disc-look
+  return { x, y, theta, r_kpc };
+}
+
+let ctx = null;
+
+function drawScene(){
+  if (!ctx) return;
+  ctx.clearRect(0, 0, W, H);
+
+  // backdrop stars (deterministic, drawn once at canvas init via offscreen — but we redraw each frame for simplicity)
+  drawStars();
+
+  // Milky Way disc — ~50 kpc across
+  const discR = 25 * PX_PER_KPC;
+  const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, discR);
+  grd.addColorStop(0, 'rgba(120,90,220,0.18)');
+  grd.addColorStop(0.4, 'rgba(80,60,180,0.10)');
+  grd.addColorStop(1, 'rgba(20,15,60,0.00)');
+  ctx.fillStyle = grd;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, discR, discR * 0.72, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // disc outline
+  ctx.strokeStyle = 'rgba(160,128,240,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, discR, discR * 0.72, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  // galactic centre marker
+  ctx.fillStyle = '#ffe080';
+  ctx.beginPath();
+  ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(232,228,255,0.55)';
+  ctx.font = '10px "Space Mono", monospace';
+  ctx.fillText('GC', cx + 6, cy - 4);
+
+  // Sun position — ~8 kpc from GC at angle ~90° (toward bottom)
+  const sunR = 8 * PX_PER_KPC;
+  const sunX = cx, sunY = cy + sunR * 0.72;
+  ctx.fillStyle = '#ffc840';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,200,64,0.4)';
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 6, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,200,64,0.85)';
+  ctx.fillText('☉', sunX - 9, sunY + 4);
+
+  // Time parameter — t=12 ⇒ s=0, t=0 ⇒ s=1
+  const sNow = clamp(1 - state.t / 12, 0, 1);
+  const f_dis = disruptionFrac(state.t, state.rp);
+
+  // Draw debris streams along orbit, with intensity proportional to how much has been shed by 'now'.
+  // Three colour bands traced along three slightly offset arcs of the same orbit.
+  drawStreams(sNow, f_dis);
+
+  // Draw the live dwarf (or just nucleus, if fully disrupted)
+  const p = orbitPoint(sNow);
+  const remainFrac = (1 - f_dis);                  // 1 → pristine, 0 → nucleus-only
+  drawDwarf(p.x, p.y, remainFrac, state.fn);
+
+  // Labels
+  ctx.fillStyle = 'rgba(232,228,255,0.55)';
+  ctx.font = '10px "Space Mono", monospace';
+  ctx.fillText('Milky Way disc (~50 kpc)', cx - discR + 4, cy - discR * 0.72 - 6);
+  // ω Cen tag once we're close to present
+  if (state.t < 1.5) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('ω Cen', p.x + 8, p.y + 4);
+  }
+  // Time label
+  ctx.fillStyle = 'rgba(240,160,32,0.85)';
+  ctx.font = 'bold 12px "Space Mono", monospace';
+  ctx.fillText('t = ' + state.t.toFixed(2) + ' Gyr ago', 14, 22);
+  // Phase label
+  ctx.fillStyle = 'rgba(160,128,240,0.85)';
+  ctx.font = '11px "Space Mono", monospace';
+  const phase = statusLabel(f_dis).label;
+  ctx.fillText('Phase: ' + phase, 14, 40);
+}
+
+// cached starfield (deterministic)
+const _stars = (() => {
+  const out = [];
+  let seed = 12345;
+  function rng(){ seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+  for (let i = 0; i < 110; i++) {
+    out.push({ x: rng() * W, y: rng() * H, b: 0.15 + 0.45 * rng(), r: 0.4 + 0.9 * rng() });
+  }
+  return out;
+})();
+function drawStars(){
+  for (const s of _stars) {
+    ctx.fillStyle = `rgba(232,228,255,${s.b.toFixed(2)})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawStreams(sNow, fDis){
+  // Three streams: cyan (Gaia-Enceladus), orange (Sequoia), purple (Thamnos).
+  // Each stream is an arc segment trailing the dwarf — points from s=0 up to s=sNow,
+  // with opacity scaled by f_dis (more disruption ⇒ more visible debris).
+  const colours = [
+    { rgb: '77,232,192', offset:  0.00, weight: 1.0 },   // Gaia-Enceladus (dominant, ~6e8)
+    { rgb: '240,160,32', offset: -0.04, weight: 0.45 },  // Sequoia
+    { rgb: '160,128,240',offset: +0.04, weight: 0.55 }   // Thamnos
+  ];
+  const NPTS = 80;
+  for (const c of colours) {
+    ctx.lineWidth = 1.5;
+    for (let i = 1; i < NPTS; i++) {
+      const s1 = (i - 1) / NPTS * sNow;
+      const s2 = i / NPTS * sNow;
+      const p1 = orbitPoint(clamp(s1 + c.offset * (1 - s1), 0, 1));
+      const p2 = orbitPoint(clamp(s2 + c.offset * (1 - s2), 0, 1));
+      // alpha: streams are released as f_dis ramps up; later-released points are brighter
+      // i.e. tail bright near current s, fading back to start
+      const tail = Math.pow(i / NPTS, 0.6);
+      const a = clamp(fDis * c.weight * tail * 0.85, 0, 0.9);
+      ctx.strokeStyle = `rgba(${c.rgb},${a.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      // dot every few segments for a "stellar" texture
+      if (i % 4 === 0) {
+        ctx.fillStyle = `rgba(${c.rgb},${(a * 0.8).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(p2.x, p2.y, 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+}
+
+function drawDwarf(x, y, remainFrac, fNuc){
+  // Two layers: a soft glowing envelope (which shrinks with remainFrac), and a bright nucleus
+  // (which is always present once f_dis > 0; sized by fNuc).
+  // Envelope radius: from 26 px (pristine) down to ~3 px (only nucleus)
+  const envR = lerp(3, 26, remainFrac);
+  if (remainFrac > 0.05) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, envR);
+    const aMax = lerp(0.05, 0.55, remainFrac);
+    g.addColorStop(0,   `rgba(255,210,255,${aMax.toFixed(3)})`);
+    g.addColorStop(0.4, `rgba(200,160,240,${(aMax*0.55).toFixed(3)})`);
+    g.addColorStop(1,   'rgba(60,40,140,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, envR, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Nucleus — bright white core, size scales with sqrt(fNuc) so even small fnuc has a visible core
+  const nucR = lerp(1.4, 3.4, Math.sqrt(fNuc));
+  // outer halo
+  const gN = ctx.createRadialGradient(x, y, 0, x, y, nucR * 3.5);
+  gN.addColorStop(0,   'rgba(255,255,255,0.95)');
+  gN.addColorStop(0.3, 'rgba(255,240,200,0.55)');
+  gN.addColorStop(1,   'rgba(255,200,120,0)');
+  ctx.fillStyle = gN;
+  ctx.beginPath();
+  ctx.arc(x, y, nucR * 3.5, 0, Math.PI * 2);
+  ctx.fill();
+  // hard core
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(x, y, nucR, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/* ---------- DOM render ---------- */
+function render(){
+  // slider value displays
+  document.getElementById('t-val').textContent = state.t.toFixed(2) + ' Gyr ago';
+  document.getElementById('t-readout').textContent = state.t.toFixed(2);
+  document.getElementById('mp-val').textContent = fmtSci(state.mp, 1) + ' M☉';
+  document.getElementById('rp-val').textContent = state.rp.toFixed(1) + ' kpc';
+  document.getElementById('fn-val').textContent = state.fn.toFixed(2);
+
+  // computed outputs
+  const f = disruptionFrac(state.t, state.rp);
+  const mNow = remainingMass(state.t, state.mp, state.rp, state.fn);
+  const mShed = state.mp - mNow;
+  const rGC = galDistanceKpc(state.t, state.rp);
+  const st = statusLabel(f);
+
+  document.getElementById('mremain-val').textContent = fmtMass(mNow);
+  document.getElementById('mshed-val').textContent = fmtMass(mShed);
+  document.getElementById('rgc-val').innerHTML = rGC.toFixed(1) + ' <span class="unit">kpc</span>';
+  document.getElementById('status-val').textContent = st.label;
+  document.getElementById('status-fill').style.width = st.pct + '%';
+  document.getElementById('status-text').textContent = st.label + ' — ' + Math.round(f * 100) + '% shed';
+
+  drawScene();
+}
+
+/* ---------- wiring ---------- */
+function wire(){
+  const ts = document.getElementById('t-slider');
+  const mps = document.getElementById('mp-slider');
+  const rps = document.getElementById('rp-slider');
+  const fns = document.getElementById('fn-slider');
+
+  ts.value  = state.t.toFixed(2);
+  mps.value = Math.log10(state.mp).toFixed(2);
+  rps.value = state.rp.toFixed(1);
+  fns.value = state.fn.toFixed(2);
+
+  ts.addEventListener('input',  () => { state.t  = parseFloat(ts.value);  stopPlay(); saveHash(); render(); });
+  mps.addEventListener('input', () => { state.mp = Math.pow(10, parseFloat(mps.value)); saveHash(); render(); });
+  rps.addEventListener('input', () => { state.rp = parseFloat(rps.value); saveHash(); render(); });
+  fns.addEventListener('input', () => { state.fn = parseFloat(fns.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-preset-mp]').forEach(b => b.addEventListener('click', () => {
+    state.mp = parseFloat(b.dataset.presetMp); mps.value = Math.log10(state.mp).toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-rp]').forEach(b => b.addEventListener('click', () => {
+    state.rp = parseFloat(b.dataset.presetRp); rps.value = state.rp.toFixed(1); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-fn]').forEach(b => b.addEventListener('click', () => {
+    state.fn = parseFloat(b.dataset.presetFn); fns.value = state.fn.toFixed(2); saveHash(); render();
+  }));
+
+  // Play button — auto-advance t from 12 → 0 over ~15s
+  const pb = document.getElementById('play-btn');
+  pb.addEventListener('click', () => { isPlaying ? stopPlay() : startPlay(); });
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+/* ---------- play / scrub ---------- */
+let isPlaying = false;
+let playStartMs = 0;
+let playStartT = 12;
+const PLAY_DURATION_MS = 15000;
+
+function startPlay(){
+  isPlaying = true;
+  playStartMs = performance.now();
+  playStartT = 12;
+  state.t = 12;
+  document.getElementById('t-slider').value = '12';
+  document.getElementById('play-btn').textContent = '⏸ Pause';
+  requestAnimationFrame(playStep);
+}
+function stopPlay(){
+  if (!isPlaying) return;
+  isPlaying = false;
+  document.getElementById('play-btn').textContent = '▶ Play';
+}
+function playStep(now){
+  if (!isPlaying) return;
+  const elapsed = now - playStartMs;
+  const frac = clamp(elapsed / PLAY_DURATION_MS, 0, 1);
+  state.t = lerp(playStartT, 0, frac);
+  document.getElementById('t-slider').value = state.t.toFixed(2);
+  saveHash();
+  render();
+  if (frac >= 1) { stopPlay(); return; }
+  requestAnimationFrame(playStep);
+}
+
+/* ---------- init ---------- */
+function init(){
+  const canvas = document.getElementById('scene');
+  // High-DPI sharpening
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.aspectRatio = (W / H).toString();
+  ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  loadHash();
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

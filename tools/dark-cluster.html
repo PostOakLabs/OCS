@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!--
+  Dark Cluster Alternative Explorer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-26
+  Site section: #science  ·  Epistemic tier(s): ⚠ (observationally debated) / ⚠ (theoretical)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Cluster Alternative Explorer — Omega Centauri Society</title>
+<meta name="description" content="Model the leading alternative to a central IMBH in Omega Centauri — a concentrated population of stellar-mass black holes and neutron stars — and compare its kinematic and pulsar-timing signature against the IMBH interpretation.">
+<link rel="canonical" href="https://omegacentauri.me/tools/dark-cluster.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-label .tier{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:6px;letter-spacing:.06em}
+.row-label .tier.e{background:rgba(29,186,144,.12);color:var(--teal-bright)}
+.row-label .tier.d{background:rgba(240,160,32,.12);color:var(--amber-bright)}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-bright)}
+.row-value.red{color:var(--red-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.compare-card{background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.compare-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.compare-grid{grid-template-columns:1fr}}
+.compare-cell{padding:14px 16px;background:rgba(7,5,21,.4);border-radius:8px;border-left:3px solid var(--purple-bright)}
+.compare-cell.tension{border-left-color:var(--amber-bright)}
+.compare-cell.ok{border-left-color:var(--teal-bright)}
+.compare-cell.degen{border-left-color:var(--red-bright)}
+.cc-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:6px}
+.cc-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:6px}
+.cc-note{font-size:13px;color:var(--text-secondary);font-style:italic;line-height:1.55}
+.imbh-select-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.imbh-select-row label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary)}
+.canvas-wrap{margin-top:10px;padding:14px;background:rgba(3,2,10,.55);border:1px solid var(--border-subtle);border-radius:8px}
+.canvas-wrap canvas{display:block;width:100%;height:auto;max-width:100%}
+.canvas-caption{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:8px;text-align:center;letter-spacing:.04em}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-top:8px;justify-content:center}
+.legend .swatch{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px;border-radius:1px}
+.cross-link{display:inline-block;margin-top:14px;margin-right:8px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(112,85,212,.15);border:1px solid var(--purple-bright);color:var(--purple-glow);border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.cross-link:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body ul{margin:6px 0 12px 22px}
+.about-body li{margin-bottom:6px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Dark Cluster Alternative Explorer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">&larr; #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Dark Cluster Alternative Explorer</h1>
+      <p class="tool-subtitle">What if Omega Centauri's central kinematics aren't caused by a single intermediate-mass black hole, but by a concentrated swarm of stellar-mass remnants? This tool models that hypothesis and shows where it is — and isn't — observationally distinguishable from the IMBH interpretation.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge debated">&#9888; Observationally debated</span>
+      <span class="tier-badge debated">&#9888; Theoretical</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>The single most consequential alternative to the IMBH hypothesis.</strong>
+    Ba&ntilde;ares Hern&aacute;ndez et al. 2025 (A&amp;A 693:A104) argue that &omega;&nbsp;Cen's central kinematics + pulsar timing residuals are explained equally well by a concentrated population of stellar-mass black holes (&lesssim;6,000&nbsp;M<sub>&#9737;</sub> in remnants, no single IMBH &gt; 6,000&nbsp;M<sub>&#9737;</sub>). This tool lets you stress-test that hypothesis against the IMBH interpretation.
+  </div>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Dark-remnant population</div>
+
+      <div class="slider-block">
+        <label>Total dark-remnant mass M_dark (M<sub>&#9737;</sub>) &mdash; log slider</label>
+        <div class="slider-row">
+          <input type="range" id="mdark-slider" min="2" max="5" step="0.01" value="3.477">
+          <span class="slider-value" id="mdark-val">3,000 M&#9737;</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-mdark="3000">Ba&ntilde;ares 2025 (~3,000)</button>
+          <button class="preset-btn" data-preset-mdark="8200">H&auml;berle equiv. (8,200)</button>
+          <button class="preset-btn" data-preset-mdark="40000">Noyola equiv. (4&times;10&#8308;)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Mean remnant mass (M<sub>&#9737;</sub>)</label>
+        <div class="slider-row">
+          <input type="range" id="mmean-slider" min="1" max="50" step="0.1" value="10">
+          <span class="slider-value" id="mmean-val">10.0 M&#9737;</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-mmean="1.4">Neutron stars (1.4)</button>
+          <button class="preset-btn" data-preset-mmean="10">Stellar BH mean (10)</button>
+          <button class="preset-btn" data-preset-mmean="30">Heavy BH (30)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Plummer scale radius a (pc)</label>
+        <div class="slider-row">
+          <input type="range" id="aplum-slider" min="0.01" max="1.0" step="0.005" value="0.1">
+          <span class="slider-value" id="aplum-val">0.100 pc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-aplum="0.05">Very concentrated (0.05)</button>
+          <button class="preset-btn" data-preset-aplum="0.1">Ba&ntilde;ares fit (0.1)</button>
+          <button class="preset-btn" data-preset-aplum="0.5">Diffuse (0.5)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Radial anisotropy &beta; (+radial, &minus;tangential)</label>
+        <div class="slider-row">
+          <input type="range" id="beta-slider" min="-0.5" max="0.5" step="0.01" value="0">
+          <span class="slider-value" id="beta-val">0.00 (isotropic)</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-beta="-0.3">Tangential (&minus;0.3)</button>
+          <button class="preset-btn" data-preset-beta="0">Isotropic (0)</button>
+          <button class="preset-btn" data-preset-beta="0.3">Radial (+0.3)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Derived quantities at r = 1&Prime; (0.0263 pc)</div>
+
+      <div class="row">
+        <div class="row-label">M_enc(&lt;1&Prime;) &mdash; dark-cluster <span class="tier d">&#9888;</span></div>
+        <div class="row-value" id="menc-dark-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">M_enc(&lt;1&Prime;) &mdash; IMBH comparator <span class="tier d">&#9888;</span></div>
+        <div class="row-value amber" id="menc-imbh-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Central density (within a)</div>
+        <div class="row-value" id="density-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Number of remnants implied</div>
+        <div class="row-value" id="nremn-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">&sigma;(1&Prime;) dark / &sigma;(1&Prime;) IMBH</div>
+        <div class="row-value" id="sigratio-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Distinguishable by ELT/MICADO (50 &mu;as/yr)?</div>
+        <div class="row-value" id="elt-val">&mdash;</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Distinguishable by pulsar timing alone?</div>
+        <div class="row-value" id="psr-val">&mdash;</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- COMPARISON / VERDICT + CANVAS -->
+  <section class="compare-card">
+    <div class="compare-title">M(&lt;r) profile: dark cluster vs. IMBH comparator</div>
+
+    <div class="imbh-select-row">
+      <label for="mbh-select">IMBH comparator mass:</label>
+      <select id="mbh-select" style="font-family:'Space Mono',monospace;font-size:12px;background:rgba(7,5,21,.6);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:6px;padding:4px 8px;cursor:pointer">
+        <option value="6000">6,000 M&#9737; (Ba&ntilde;ares ceiling)</option>
+        <option value="8200" selected>8,200 M&#9737; (H&auml;berle lower)</option>
+        <option value="20000">20,000 M&#9737;</option>
+        <option value="40000">40,000 M&#9737; (Noyola)</option>
+      </select>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-cell" id="verdict-cell">
+        <div class="cc-label">Distinguishability verdict</div>
+        <div class="cc-value" id="verdict-headline">computing&hellip;</div>
+        <div class="cc-note" id="verdict-note">&mdash;</div>
+      </div>
+      <div class="compare-cell">
+        <div class="cc-label">Why this matters</div>
+        <div class="cc-value" style="font-size:14px;line-height:1.4">The degeneracy is real, but bounded</div>
+        <div class="cc-note">If both scenarios produce the same M_enc(&lt;r) within ~10% across all radii where we have data, then current observations cannot pick one. That's exactly what Ba&ntilde;ares 2025 demonstrates for their best-fit parameters. The IMBH interpretation isn't <em>wrong</em> &mdash; it's just not uniquely required.</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <canvas id="menc-canvas" width="1040" height="420" aria-label="Enclosed mass profile M(<r) on log-log axes, comparing the dark-cluster Plummer model against a single IMBH of selected mass."></canvas>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--purple-glow)"></span>Dark cluster M_enc(&lt;r)</span>
+        <span><span class="swatch" style="background:var(--amber-bright)"></span>IMBH M_enc(&lt;r) = M_BH</span>
+        <span><span class="swatch" style="background:var(--teal-bright)"></span>Cumulative dark crosses M_BH</span>
+      </div>
+      <div class="canvas-caption">r in parsecs (log) &nbsp;&middot;&nbsp; M_enc in M<sub>&#9737;</sub> (log) &nbsp;&middot;&nbsp; vertical guides at 1&Prime; (0.0263&nbsp;pc) and 10&Prime; (0.263&nbsp;pc)</div>
+    </div>
+
+    <a class="cross-link" href="constraint-stacker.html">&rarr; Stack against every constraint</a>
+    <a class="cross-link" href="pulsar-timing.html">&rarr; Pulsar timing tool</a>
+    <a class="cross-link" href="orbital-dynamics.html">&rarr; Orbital dynamics</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">&#9654;</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+
+      <h3>What this tool does</h3>
+      <p>It models the leading non-IMBH explanation for &omega;&nbsp;Cen's central kinematic signature: a centrally-concentrated population of stellar-mass black holes and neutron stars, distributed according to a Plummer profile, rather than a single point-mass IMBH. You set the total remnant mass, the mean remnant mass, the Plummer scale radius, and the velocity anisotropy. The tool computes the enclosed-mass profile M(&lt;r), plots it against an IMBH of comparable enclosed mass, and tells you whether current and near-future observations can actually tell the two apart.</p>
+      <p>The headline result, repeated for every parameter combination: at radii smaller than the Plummer scale (~0.1&nbsp;pc), the two enclosed-mass profiles can be indistinguishable. That is the degeneracy that Ba&ntilde;ares Hern&aacute;ndez et al. 2025 made quantitative, and it's the reason the IMBH detection in &omega;&nbsp;Cen remains contested.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">&#9881; The mass-segregation engine behind it</h3>
+      <p>This isn't an ad-hoc model &mdash; it's what stellar dynamics predicts a cluster like &omega;&nbsp;Cen <em>ought</em> to contain. Over a few relaxation timescales (Spitzer 1987's <em>Dynamical Evolution of Globular Clusters</em>), heavier stellar remnants sink to the core via equipartition. The neutron stars and stellar-mass black holes produced over &omega;&nbsp;Cen's 12&nbsp;Gyr history segregate into a tightly bound central sub-cluster. Direct <em>N</em>-body simulations (Breen &amp; Heggie 2013, MNRAS 432:2779) predict that a cluster of &omega;&nbsp;Cen's mass and age should host on the order of 10&sup3;&ndash;10&#8308; stellar-mass black holes in its core, with a total mass in the few-thousand-M<sub>&#9737;</sub> range. The Ba&ntilde;ares model isn't reaching for an exotic alternative &mdash; it's pointing at what dynamical theory says should already be there.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">&#128280; Why pulsar timing can't distinguish them</h3>
+      <p>&omega;&nbsp;Cen hosts a handful of known millisecond pulsars at projected radii of roughly 5&Prime;&ndash;20&Prime; from the photometric centre (~0.13&ndash;0.53&nbsp;pc). Pulsar timing residuals measure the gravitational pull of all mass interior to the pulsar's projected position. But at those radii, both scenarios &mdash; a single IMBH of mass M_BH, and a Plummer dark cluster with M_total &asymp; M_BH and scale radius a &lesssim; 0.2&nbsp;pc &mdash; produce <em>nearly identical</em> M_enc(&lt;r). The two profiles only diverge appreciably for r &lt; a, which is well inside the innermost pulsar. Pulsar timing alone therefore constrains the <em>total</em> central mass to good precision, but cannot tell you whether that mass is a point or a swarm. This is exactly the degeneracy the tool's right-hand readout makes explicit.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--teal-bright)">&#128301; What WILL distinguish them</h3>
+      <p>Three independent observations, in roughly the order they will arrive:</p>
+      <ul>
+        <li><strong>ELT/MICADO astrometry (first light end-2028)</strong> &mdash; 50&nbsp;&mu;as/yr proper-motion precision for individual stars within 1&Prime; of the centre. A point-mass IMBH produces a sharp r^&minus;&frac12; rise in &sigma;(r); a Plummer dark cluster produces a smoother profile. With ~5 years of baseline this is the cleanest discriminator.</li>
+        <li><strong>LISA EMRI detection (mission 2035)</strong> &mdash; a single extreme mass-ratio inspiral signal from &omega;&nbsp;Cen would constitute a direct detection of an IMBH. Non-detection over ~4 years of operation tightens the upper bound on any single point mass.</li>
+        <li><strong>NewAthena deep central X-ray imaging</strong> &mdash; Bondi-Hoyle accretion onto a 10&#8308;&nbsp;M<sub>&#9737;</sub> IMBH should produce a faint but distinct central X-ray point source; a swarm of quiescent stellar-mass remnants would not.</li>
+      </ul>
+      <p>None of these were available when the Noyola 2008 and H&auml;berle 2024 papers were written. The next decade settles it.</p>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--purple-glow)">&#128214; Sources</h3>
+      <ul>
+        <li><strong>Ba&ntilde;ares Hern&aacute;ndez et al. 2025</strong>, A&amp;A 693:A104 &mdash; the headline paper showing that a Plummer dark cluster fits &omega;&nbsp;Cen's central kinematics and pulsar timing residuals equally well as an IMBH. <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank" rel="noopener">DOI 10.1051/0004-6361/202451763</a>.</li>
+        <li><strong>Zocchi, Gieles &amp; H&eacute;nault-Brunet 2019</strong>, MNRAS 482:4713 &mdash; earlier multi-mass dynamical models making the same degeneracy argument.</li>
+        <li><strong>Breen &amp; Heggie 2013</strong>, MNRAS 432:2779 &mdash; <em>N</em>-body predictions for the stellar-BH population a massive globular cluster should retain.</li>
+        <li><strong>H&auml;berle et al. 2024</strong>, Nature 631:285 &mdash; the fast-moving-stars analysis that established the IMBH lower bound of 8,200&nbsp;M<sub>&#9737;</sub>. <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank" rel="noopener">DOI 10.1038/s41586-024-07511-z</a>.</li>
+      </ul>
+
+      <h3 style="margin-top:14px;font-size:11px;color:var(--amber-bright)">&#128279; Related tools</h3>
+      <p>This tool sits in a small constellation. The <a href="constraint-stacker.html">IMBH Constraint Stacker</a> overlays every published constraint on a single axis &mdash; the Ba&ntilde;ares ceiling appears there as the upper edge of the dark-cluster-allowed region. The <a href="pulsar-timing.html">Pulsar Timing tool</a> computes residuals for &omega;&nbsp;Cen's known MSPs and is where the "pulsar timing can't distinguish" claim becomes quantitative. The <a href="orbital-dynamics.html">Orbital Dynamics tool</a> handles the fast-moving stars side of the same argument.</p>
+
+      <p class="meta-line">v1.0 &mdash; 2026-05-26 &middot; Code MIT &middot; Prose CC BY 4.0 &middot; Sources as above</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G_SI = 6.674e-11;
+const MSUN_KG = 1.989e30;
+const PC_M = 3.086e16;
+const PC_PER_ARCSEC_OC = 0.0263; // 1" at d = 5.43 kpc
+const R_1ARCSEC_PC = PC_PER_ARCSEC_OC;
+const R_10ARCSEC_PC = 10 * PC_PER_ARCSEC_OC;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M===null||!isFinite(M)||M<=0)return'—';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=100)return Math.round(M).toLocaleString()+' M☉';return M.toFixed(1)+' M☉'}
+function fmtInt(n){if(!isFinite(n)||n<=0)return'—';if(n>=1e4)return fmtSci(n,1);return Math.round(n).toLocaleString()}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+// State
+const state = { Mdark: 3000, Mmean: 10, aPlum: 0.1, beta: 0, MBH: 8200 };
+
+function loadHash(){
+  const p = getHash();
+  if (p.Mdark) { const v = parseFloat(p.Mdark); if (!isNaN(v) && v > 0) state.Mdark = v; }
+  if (p.Mmean) { const v = parseFloat(p.Mmean); if (!isNaN(v) && v > 0) state.Mmean = v; }
+  if (p.aPlum) { const v = parseFloat(p.aPlum); if (!isNaN(v) && v > 0) state.aPlum = v; }
+  if (p.beta)  { const v = parseFloat(p.beta);  if (!isNaN(v)) state.beta = v; }
+  if (p.MBH)   { const v = parseFloat(p.MBH);   if (!isNaN(v) && v > 0) state.MBH = v; }
+}
+function saveHash(){
+  setHash({
+    Mdark: state.Mdark.toFixed(0),
+    Mmean: state.Mmean.toFixed(2),
+    aPlum: state.aPlum.toFixed(3),
+    beta:  state.beta.toFixed(2),
+    MBH:   state.MBH.toFixed(0)
+  });
+}
+
+// Physics
+// Plummer enclosed mass profile (analytic): M(<r) = M_total * r^3 / (r^2 + a^2)^(3/2)
+function plummerMenc(Mtot, a_pc, r_pc) {
+  const x2 = r_pc * r_pc;
+  const a2 = a_pc * a_pc;
+  return Mtot * Math.pow(x2, 1.5) / Math.pow(x2 + a2, 1.5);
+}
+// IMBH enclosed mass: point mass for all r > 0
+function imbhMenc(MBH, r_pc) { return r_pc > 0 ? MBH : 0; }
+// Heuristic 1D velocity dispersion squared (km^2/s^2) from G*M(<r)/r
+function sigmaSqHeuristic_kms2(M_solar, r_pc) {
+  if (r_pc <= 0 || M_solar <= 0) return 0;
+  const M_kg = M_solar * MSUN_KG;
+  const r_m  = r_pc * PC_M;
+  const v2_m2s2 = G_SI * M_kg / r_m;
+  return v2_m2s2 / 1e6; // (km/s)^2
+}
+// Plummer central density inside scale radius a: rho_c = 3 M / (4 pi a^3)
+function plummerCentralDensity(Mtot, a_pc) {
+  return 3 * Mtot / (4 * Math.PI * Math.pow(a_pc, 3));
+}
+
+// Canvas plot of M(<r) on log-log axes
+function drawCanvas() {
+  const cv = document.getElementById('menc-canvas');
+  const ctx = cv.getContext('2d');
+  // Respect device pixel ratio for crisp lines
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = cv.clientWidth || 1040;
+  const cssH = 420;
+  if (cv.width !== Math.round(cssW * dpr) || cv.height !== Math.round(cssH * dpr)) {
+    cv.width  = Math.round(cssW * dpr);
+    cv.height = Math.round(cssH * dpr);
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  // Axis ranges
+  const rMin = 1e-3, rMax = 1.0; // pc
+  const logRmin = Math.log10(rMin), logRmax = Math.log10(rMax);
+  const mMin = 1, mMax = Math.max(state.MBH, state.Mdark) * 3;
+  const logMmin = Math.log10(mMin), logMmax = Math.log10(mMax);
+
+  const pad = { l: 60, r: 20, t: 16, b: 40 };
+  const W = cssW - pad.l - pad.r;
+  const H = cssH - pad.t - pad.b;
+  const x = (r) => pad.l + ((Math.log10(r) - logRmin) / (logRmax - logRmin)) * W;
+  const y = (m) => pad.t + (1 - (Math.log10(Math.max(m, mMin)) - logMmin) / (logMmax - logMmin)) * H;
+
+  // Grid + axis labels
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)';
+  ctx.lineWidth = 1;
+  ctx.font = '11px "Space Mono", monospace';
+  ctx.fillStyle = '#504870';
+
+  // x decade gridlines
+  for (let p = Math.ceil(logRmin); p <= Math.floor(logRmax); p++) {
+    const xp = x(Math.pow(10, p));
+    ctx.beginPath(); ctx.moveTo(xp, pad.t); ctx.lineTo(xp, pad.t + H); ctx.stroke();
+    const lbl = (p >= 0) ? Math.pow(10, p).toString() : '10' + supDigits(p);
+    ctx.textAlign = 'center';
+    ctx.fillText(lbl + ' pc', xp, pad.t + H + 16);
+  }
+  // y decade gridlines
+  for (let p = Math.ceil(logMmin); p <= Math.floor(logMmax); p++) {
+    const yp = y(Math.pow(10, p));
+    ctx.beginPath(); ctx.moveTo(pad.l, yp); ctx.lineTo(pad.l + W, yp); ctx.stroke();
+    const lbl = '10' + supDigits(p);
+    ctx.textAlign = 'right';
+    ctx.fillText(lbl, pad.l - 6, yp + 4);
+  }
+  // axes
+  ctx.strokeStyle = 'rgba(152,144,192,0.4)';
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + H); ctx.lineTo(pad.l + W, pad.t + H);
+  ctx.stroke();
+
+  // axis titles
+  ctx.fillStyle = '#9890c0';
+  ctx.textAlign = 'center';
+  ctx.fillText('radius r  (pc, log)', pad.l + W / 2, cssH - 6);
+  ctx.save();
+  ctx.translate(14, pad.t + H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('M_enc (<r)   M☉  (log)', 0, 0);
+  ctx.restore();
+
+  // Vertical guides at 1" and 10"
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(77,232,192,0.35)';
+  ctx.beginPath(); ctx.moveTo(x(R_1ARCSEC_PC), pad.t); ctx.lineTo(x(R_1ARCSEC_PC), pad.t + H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x(R_10ARCSEC_PC), pad.t); ctx.lineTo(x(R_10ARCSEC_PC), pad.t + H); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#4de8c0';
+  ctx.textAlign = 'left';
+  ctx.fillText('1″', x(R_1ARCSEC_PC) + 4, pad.t + 12);
+  ctx.fillText('10″', x(R_10ARCSEC_PC) + 4, pad.t + 12);
+
+  // IMBH curve (step: 0 for r→0 then M_BH plateau). We draw it as a horizontal plateau
+  // at M_BH from rMin to rMax, since M(<r)=M_BH for all r>0.
+  ctx.strokeStyle = '#f0a020';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x(rMin), y(state.MBH));
+  ctx.lineTo(x(rMax), y(state.MBH));
+  ctx.stroke();
+
+  // Dark-cluster Plummer M_enc(r) curve — smooth
+  ctx.strokeStyle = '#a080f0';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  const N = 240;
+  for (let i = 0; i <= N; i++) {
+    const lr = logRmin + (logRmax - logRmin) * i / N;
+    const r = Math.pow(10, lr);
+    const m = plummerMenc(state.Mdark, state.aPlum, r);
+    if (i === 0) ctx.moveTo(x(r), y(Math.max(m, mMin)));
+    else ctx.lineTo(x(r), y(Math.max(m, mMin)));
+  }
+  ctx.stroke();
+
+  // Mark crossing point (where dark M_enc == M_BH), if it exists in range
+  let crossR = null;
+  // bisection
+  let lo = rMin, hi = rMax;
+  const fLo = plummerMenc(state.Mdark, state.aPlum, lo) - state.MBH;
+  const fHi = plummerMenc(state.Mdark, state.aPlum, hi) - state.MBH;
+  if (fLo * fHi < 0) {
+    for (let i = 0; i < 60; i++) {
+      const mid = Math.sqrt(lo * hi);
+      const fM = plummerMenc(state.Mdark, state.aPlum, mid) - state.MBH;
+      if (fM * fLo < 0) hi = mid; else lo = mid;
+    }
+    crossR = Math.sqrt(lo * hi);
+  }
+  if (crossR !== null) {
+    ctx.fillStyle = '#1dba90';
+    ctx.beginPath();
+    ctx.arc(x(crossR), y(state.MBH), 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#4de8c0';
+    ctx.textAlign = 'left';
+    ctx.font = '10px "Space Mono", monospace';
+    ctx.fillText('cross @ ' + crossR.toFixed(3) + ' pc', x(crossR) + 8, y(state.MBH) - 6);
+  }
+}
+
+function render() {
+  // Slider readouts
+  document.getElementById('mdark-val').textContent = state.Mdark >= 1e4
+    ? fmtSci(state.Mdark, 1) + ' M☉'
+    : Math.round(state.Mdark).toLocaleString() + ' M☉';
+  document.getElementById('mmean-val').textContent = state.Mmean.toFixed(2) + ' M☉';
+  document.getElementById('aplum-val').textContent = state.aPlum.toFixed(3) + ' pc';
+  const betaLabel = state.beta === 0
+    ? '0.00 (isotropic)'
+    : (state.beta > 0 ? state.beta.toFixed(2) + ' (radial)' : state.beta.toFixed(2) + ' (tangential)');
+  document.getElementById('beta-val').textContent = betaLabel;
+
+  // Physics at r = 1"
+  const r1 = R_1ARCSEC_PC;
+  const r10 = R_10ARCSEC_PC;
+  const Menc_dark_1 = plummerMenc(state.Mdark, state.aPlum, r1);
+  const Menc_imbh_1 = imbhMenc(state.MBH, r1);
+  const Menc_dark_10 = plummerMenc(state.Mdark, state.aPlum, r10);
+  const Menc_imbh_10 = imbhMenc(state.MBH, r10);
+  const rhoCentral = plummerCentralDensity(state.Mdark, state.aPlum);
+  const nRemn = state.Mdark / state.Mmean;
+
+  // Heuristic anisotropy factor on observed sigma_LOS:
+  // sigma_LOS^2 ~ (1 - beta) * sigma_r^2 for radial projection in the central region.
+  // Use ratio of sqrt(M_enc/r) with anisotropy weighting as a rough indicator.
+  const sig2_dark = sigmaSqHeuristic_kms2(Menc_dark_1, r1) * Math.max(0.2, 1 - state.beta);
+  const sig2_imbh = sigmaSqHeuristic_kms2(Menc_imbh_1, r1);
+  const sig_dark = Math.sqrt(Math.max(sig2_dark, 0));
+  const sig_imbh = Math.sqrt(Math.max(sig2_imbh, 0));
+  const sigRatio = sig_imbh > 0 ? sig_dark / sig_imbh : Infinity;
+
+  // Distinguishability heuristics
+  const dSigPct = sig_imbh > 0 ? Math.abs(sig_dark - sig_imbh) / sig_imbh * 100 : 999;
+  const dMencPctPsr = Menc_imbh_10 > 0 ? Math.abs(Menc_dark_10 - Menc_imbh_10) / Menc_imbh_10 * 100 : 999;
+  const eltDistinguishable = dSigPct > 5;
+  const psrDistinguishable = dMencPctPsr > 20;
+
+  // Output rows
+  document.getElementById('menc-dark-val').innerHTML = fmtMass(Menc_dark_1);
+  document.getElementById('menc-imbh-val').innerHTML = fmtMass(Menc_imbh_1);
+  document.getElementById('density-val').innerHTML = fmtSci(rhoCentral, 2) + ' <span class="unit">M☉/pc³</span>';
+  document.getElementById('nremn-val').textContent = fmtInt(nRemn);
+  document.getElementById('sigratio-val').innerHTML = isFinite(sigRatio)
+    ? sigRatio.toFixed(2) + '× <span class="unit">(' + (dSigPct >= 0 ? dSigPct.toFixed(1) : '—') + '% diff)</span>'
+    : '—';
+
+  const eltEl = document.getElementById('elt-val');
+  eltEl.textContent = eltDistinguishable ? 'Yes (Δσ ' + dSigPct.toFixed(1) + '%)' : 'No (Δσ ' + dSigPct.toFixed(1) + '%)';
+  eltEl.classList.toggle('amber', !eltDistinguishable);
+
+  const psrEl = document.getElementById('psr-val');
+  psrEl.textContent = psrDistinguishable
+    ? 'Yes (ΔM ' + dMencPctPsr.toFixed(0) + '% at 10″)'
+    : 'No (ΔM ' + dMencPctPsr.toFixed(0) + '% at 10″)';
+  psrEl.classList.toggle('red', !psrDistinguishable);
+
+  // Verdict
+  const cell = document.getElementById('verdict-cell');
+  const head = document.getElementById('verdict-headline');
+  const note = document.getElementById('verdict-note');
+  cell.classList.remove('tension', 'ok', 'degen');
+  if (!eltDistinguishable && !psrDistinguishable) {
+    cell.classList.add('degen');
+    head.textContent = 'Observationally indistinguishable';
+    note.textContent = 'At r = 1″ the dark cluster reproduces the IMBH velocity-dispersion signature to within ' + dSigPct.toFixed(1) + '%, and at r = 10″ the enclosed-mass profiles match within ' + dMencPctPsr.toFixed(0) + '%. Current ground-based kinematics and pulsar timing alone cannot distinguish these scenarios.';
+  } else if (eltDistinguishable && dSigPct < 15) {
+    cell.classList.add('tension');
+    head.textContent = 'Borderline — needs ELT/MICADO';
+    note.textContent = 'The kinematic difference at 1″ (' + dSigPct.toFixed(1) + '%) is above the MICADO threshold of ~5%, but a dedicated multi-year campaign would be required to make the call. NewAthena central X-ray and a LISA EMRI search would help.';
+  } else {
+    cell.classList.add('ok');
+    head.textContent = 'Cleanly distinguishable';
+    note.textContent = 'These parameters predict a kinematic signature (' + dSigPct.toFixed(0) + '% Δσ at 1″) and/or pulsar-timing residual (' + dMencPctPsr.toFixed(0) + '% ΔM at 10″) far enough apart that existing observations already favour one scenario over the other. Check the Constraint Stacker to see which.';
+  }
+
+  // Redraw canvas
+  drawCanvas();
+}
+
+function wire() {
+  const md = document.getElementById('mdark-slider');
+  const mm = document.getElementById('mmean-slider');
+  const ap = document.getElementById('aplum-slider');
+  const bs = document.getElementById('beta-slider');
+  const mb = document.getElementById('mbh-select');
+
+  md.value = Math.log10(state.Mdark).toFixed(2);
+  mm.value = state.Mmean.toFixed(2);
+  ap.value = state.aPlum.toFixed(3);
+  bs.value = state.beta.toFixed(2);
+  mb.value = String(Math.round(state.MBH));
+
+  md.addEventListener('input', () => { state.Mdark = Math.pow(10, parseFloat(md.value)); saveHash(); render(); });
+  mm.addEventListener('input', () => { state.Mmean = parseFloat(mm.value); saveHash(); render(); });
+  ap.addEventListener('input', () => { state.aPlum = parseFloat(ap.value); saveHash(); render(); });
+  bs.addEventListener('input', () => { state.beta  = parseFloat(bs.value); saveHash(); render(); });
+  mb.addEventListener('change', () => { state.MBH = parseFloat(mb.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-preset-mdark]').forEach(b => b.addEventListener('click', () => {
+    state.Mdark = parseFloat(b.dataset.presetMdark); md.value = Math.log10(state.Mdark).toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-mmean]').forEach(b => b.addEventListener('click', () => {
+    state.Mmean = parseFloat(b.dataset.presetMmean); mm.value = state.Mmean.toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-aplum]').forEach(b => b.addEventListener('click', () => {
+    state.aPlum = parseFloat(b.dataset.presetAplum); ap.value = state.aPlum.toFixed(3); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-beta]').forEach(b => b.addEventListener('click', () => {
+    state.beta = parseFloat(b.dataset.presetBeta); bs.value = state.beta.toFixed(2); saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  // Redraw canvas on resize so it stays crisp
+  let rAF = null;
+  window.addEventListener('resize', () => {
+    if (rAF) cancelAnimationFrame(rAF);
+    rAF = requestAnimationFrame(drawCanvas);
+  });
+}
+
+function init() {
+  loadHash();
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

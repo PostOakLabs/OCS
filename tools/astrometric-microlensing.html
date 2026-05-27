@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<!--
+  Astrometric Microlensing Predictor — Gaia DR4 + Roman
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-26
+  Site section: #science  ·  Epistemic tier(s): 🔬 (gravity-only lensing) / ⚠ (event-rate estimate)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrometric Microlensing Predictor — Omega Centauri Society</title>
+<meta name="description" content="What astrometric microlensing signature would a central IMBH in Omega Centauri produce against bulge stars — and would Gaia DR4 (≈ Dec 2026) or Roman see it?">
+<link rel="canonical" href="https://omegacentauri.me/tools/astrometric-microlensing.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.debated{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-label .tier{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:6px;letter-spacing:.06em}
+.row-label .tier.e{background:rgba(29,186,144,.12);color:var(--teal-bright)}
+.row-label .tier.d{background:rgba(240,160,32,.12);color:var(--amber-bright)}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-bright)}
+.row-value.purple{color:var(--purple-glow)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.compare-card{background:rgba(13,10,36,.4);border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.compare-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.compare-grid{grid-template-columns:1fr}}
+.compare-cell{padding:14px 16px;background:rgba(7,5,21,.4);border-radius:8px;border-left:3px solid var(--purple-bright)}
+.compare-cell.tension{border-left-color:var(--amber-bright)}
+.compare-cell.ok{border-left-color:var(--teal-bright)}
+.compare-cell.roman{border-left-color:var(--purple-glow)}
+.cc-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:6px}
+.cc-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-primary);margin-bottom:6px}
+.cc-note{font-size:13px;color:var(--text-secondary);font-style:italic;line-height:1.55}
+.observed-list{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:760px){.observed-list{grid-template-columns:1fr}}
+.obs-item{padding:8px 12px;background:rgba(7,5,21,.3);border-radius:6px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);display:flex;justify-content:space-between;gap:8px}
+.obs-item .obs-author{color:var(--text-primary)}
+.obs-item .obs-value{color:var(--teal-glow)}
+.cross-link{display:inline-block;margin-top:14px;margin-right:8px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(112,85,212,.15);border:1px solid var(--purple-bright);color:var(--purple-glow);border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.cross-link:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Astrometric Microlensing Predictor</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Astrometric Microlensing Predictor — Gaia DR4 + Roman</h1>
+      <p class="tool-subtitle">Gravity-only test for a central IMBH (or compact dark mass) in Omega Centauri. As background stars drift behind the lens, their apparent positions shift. Gaia DR4 (≈ Dec 2026) and Roman (≈ 2028 onward) will either see it or rule it out.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Established physics</span>
+      <span class="tier-badge debated">⚠ Observationally debated</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Astrometric microlensing is one of the cleanest near-term tests of a central IMBH in ω Centauri.</strong>
+    Unlike accretion-based constraints (<a href="jwst-accretion.html">Tool 13</a>), it doesn't depend on ambient gas density or radiative efficiency assumptions — just gravity. Gaia DR4 (~ December 2026) and Roman (launch as early as fall 2026; bulge microlensing survey starting ~ 2028) will deliver verdicts on a known schedule.
+  </div>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Lens &amp; source inputs</div>
+
+      <div class="slider-block">
+        <label>Lens mass M_L  (M<sub>☉</sub>)</label>
+        <div class="slider-row">
+          <input type="range" id="ml-slider" min="2" max="6" step="0.01" value="3.914">
+          <span class="slider-value" id="ml-val">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-ml="6000">Bañares upper (6,000)</button>
+          <button class="preset-btn" data-preset-ml="8200">Häberle lower (8,200)</button>
+          <button class="preset-btn" data-preset-ml="20000">JWST-favoured (20k)</button>
+          <button class="preset-btn" data-preset-ml="40000">Noyola (4×10⁴)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Lens distance D_L  (kpc)</label>
+        <div class="slider-row">
+          <input type="range" id="dl-slider" min="1" max="10" step="0.01" value="5.43">
+          <span class="slider-value" id="dl-val">5.43 kpc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-dl="5.43">OC centre (5.43)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Source distance D_S  (kpc)</label>
+        <div class="slider-row">
+          <input type="range" id="ds-slider" min="5" max="20" step="0.05" value="8">
+          <span class="slider-value" id="ds-val">8.0 kpc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-ds="8">Behind OC (8)</button>
+          <button class="preset-btn" data-preset-ds="8.2">Galactic centre (8.2)</button>
+          <button class="preset-btn" data-preset-ds="10">Bulge far side (10)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Source magnitude  (Gaia G band)</label>
+        <div class="slider-row">
+          <input type="range" id="g-slider" min="12" max="21" step="0.1" value="17">
+          <span class="slider-value" id="g-val">G = 17.0</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-g="15">Bright halo giant (15)</button>
+          <button class="preset-btn" data-preset-g="17">Typical bulge (17)</button>
+          <button class="preset-btn" data-preset-g="20">Faint (20)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Relative proper motion μ_rel  (mas/yr)</label>
+        <div class="slider-row">
+          <input type="range" id="mu-slider" min="0.5" max="50" step="0.1" value="5">
+          <span class="slider-value" id="mu-val">5.0 mas/yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-mu="5">OC-bulge typical (5)</button>
+          <button class="preset-btn" data-preset-mu="1">Slow encounter (1)</button>
+          <button class="preset-btn" data-preset-mu="20">High-velocity (20)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Source surface density Σ_bg  (stars/arcsec²)</label>
+        <div class="slider-row">
+          <input type="range" id="sig-slider" min="0.1" max="10" step="0.05" value="2">
+          <span class="slider-value" id="sig-val">2.0 /arcsec²</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-preset-sig="2">Bulge at OC sightline (~2)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Derived quantities</div>
+
+      <div class="row">
+        <div class="row-label">Reduced distance D_rel <span class="tier e">🔬</span></div>
+        <div class="row-value" id="drel-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Einstein radius θ_E (angular) <span class="tier e">🔬</span></div>
+        <div class="row-value" id="thetaE-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Einstein radius R_E (at lens plane)</div>
+        <div class="row-value" id="rE-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Max centroid shift δθ_max <span class="tier e">🔬</span></div>
+        <div class="row-value" id="dthetaMax-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Einstein crossing time t_E</div>
+        <div class="row-value" id="tE-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Photometric magnification A(u=0.5 / u=1)</div>
+        <div class="row-value" id="ampA-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Event rate Γ (events/yr through cross-section) <span class="tier d">⚠</span></div>
+        <div class="row-value amber" id="rate-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Gaia DR4 detectability (30 μas floor)</div>
+        <div class="row-value" id="gaia-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Roman detectability (10 μas floor)</div>
+        <div class="row-value purple" id="roman-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Expected events in Gaia DR4 (5-yr baseline)</div>
+        <div class="row-value" id="gaiaN-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Expected events in 5-yr Roman BTDS</div>
+        <div class="row-value purple" id="romanN-val">—</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- COMPARISON -->
+  <section class="compare-card">
+    <div class="compare-title">Verdict — will the next telescope generation see this?</div>
+    <div class="compare-grid">
+      <div class="compare-cell" id="verdict-cell">
+        <div class="cc-label">Headline</div>
+        <div class="cc-value" id="verdict-headline">computing…</div>
+        <div class="cc-note" id="verdict-note">—</div>
+      </div>
+      <div class="compare-cell">
+        <div class="cc-label">Telescope sensitivity floors</div>
+        <div class="observed-list">
+          <div class="obs-item"><span class="obs-author">Gaia DR4 (Dec 2026)</span><span class="obs-value">~30 μas</span></div>
+          <div class="obs-item"><span class="obs-author">Roman BTDS (≥ 2028)</span><span class="obs-value">~10 μas</span></div>
+          <div class="obs-item"><span class="obs-author">Gaia mission baseline</span><span class="obs-value">~5 yr</span></div>
+          <div class="obs-item"><span class="obs-author">Roman BTDS baseline</span><span class="obs-value">~5 yr</span></div>
+        </div>
+      </div>
+    </div>
+    <a class="cross-link" href="dark-cluster.html">→ Dark-cluster alternative hypothesis</a>
+    <a class="cross-link" href="constraint-stacker.html">→ Stack against all other constraints</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What astrometric microlensing actually measures</h3>
+      <p>When a compact mass passes near our line-of-sight to a background star, the star's light is gravitationally deflected. The star's <em>apparent position</em> shifts on the sky by a fraction of the Einstein radius — at peak alignment, δθ_max ≈ θ_E / (2√2). This is the <em>astrometric</em> signal. It is distinct from the <em>photometric</em> magnification (the brightness bump that OGLE, MOA, and KMTNet hunt for in bulge surveys). Astrometric shifts persist on time scales of years and survive even for "dark" lenses (isolated stellar-mass black holes, neutron stars, IMBHs) that produce no light themselves.</p>
+
+      <h3>Why Gaia DR4 is the near-term game-changer</h3>
+      <p>Gaia DR4 (≈ December 2026) releases the full astrometric time series for each Gaia source for the first time — not just the 5-parameter fit, but the per-epoch positions. Pipelines like <strong>Wyrzykowski et al. 2025</strong> (A&amp;A) have been waiting for this data specifically to look for transient astrometric microlensing events caused by isolated compact objects. ω Centauri's sightline crosses dense bulge regions, so every IMBH-mass body in OC has a non-negligible lensing cross-section against bulge stars. With a per-source astrometric noise floor of order <code>~30 μas</code> at G ≲ 19, DR4 should detect — or strongly constrain — any IMBH that produces centroid shifts above this floor on year-to-decade timescales.</p>
+
+      <h3>Why Roman is the medium-term game-changer</h3>
+      <p>NASA's Roman Space Telescope (launch as early as fall 2026; nominal May 2027) carries a Galactic Bulge Time Domain Survey designed to find isolated stellar-mass black holes by astrometric microlensing across millions of bulge stars — see <strong>Penny et al. 2019</strong> (ApJS 241:3). ω Cen sits in front of one of Roman's calibration fields. Sensitivity reaches <code>~10 μas</code>, roughly 3× better than Gaia. Roman is therefore the medium-term test: if Gaia DR4 doesn't detect an IMBH signature in OC but the mass is real, Roman should still catch the smaller-shift, fainter-source events that Gaia misses.</p>
+
+      <h3>The IMBH vs. dark-cluster discriminator</h3>
+      <p>A <em>single</em> IMBH produces rare but large-amplitude events: one mass × big θ_E × moderate event rate. A <em>dark cluster</em> of many smaller masses (stellar-mass BHs, neutron stars) produces frequent but smaller-amplitude events: many masses × small θ_E × high event rate. The two scenarios give numerically distinct distributions of (δθ_max, t_E) across detected events — which Gaia DR4 and Roman together will be able to discriminate. <a href="dark-cluster.html">Compare to the alternative-hypothesis tool</a> to see the signature difference.</p>
+
+      <h3>Cross-references</h3>
+      <p>Compare with <a href="dark-cluster.html">Dark Cluster Alternative</a>, <a href="constraint-stacker.html">IMBH Constraint Stacker</a>, <a href="pulsar-timing.html">Pulsar Timing</a>, and <a href="jwst-accretion.html">JWST Accretion</a>. Astrometric microlensing is the only test in this set that depends solely on gravity — no assumptions about gas, radiative efficiency, or pulsar populations enter.</p>
+
+      <h3>Caveats</h3>
+      <p>The event rate estimate <code>Γ ≈ 2 θ_E σ_bg μ_rel</code> is a back-of-envelope cross-section calculation; it assumes a uniform background density and ignores blending, finite-source effects, parallax, and binary-lens complications. The "detectable" verdicts use simple step-function thresholds (30 μas for Gaia, 10 μas for Roman) — real pipelines use full likelihood fits and can squeeze 2–3× more out of marginal events. The Einstein radius formula assumes a point lens; an IMBH is effectively a point at these scales, but a dark cluster is not.</p>
+
+      <h3>Sources</h3>
+      <p><strong>Gaia DR4 release schedule</strong> — ESA/DPAC, planned ≈ December 2026 (cosmos.esa.int/gaia/release). <strong>Roman launch</strong> — NASA, fall 2026 – May 2027 (roman.gsfc.nasa.gov). <strong>Penny et al. 2019</strong> (ApJS 241:3) — Roman microlensing survey simulations. <strong>Wyrzykowski et al. 2025</strong> (A&amp;A) — astrometric-only microlensing pipeline targeting DR4. <strong>Dominik &amp; Sahu 2000</strong> (ApJ 534:213) — astrometric microlensing of dark compact objects, including the δθ(u) = u θ_E / (u² + 2) result used here. <strong>Paczyński 1986</strong> (ApJ 304:1) — original photometric microlensing paper; the A(u) = (u² + 2) / (u √(u² + 4)) magnification formula used in this tool.</p>
+
+      <p class="meta-line">v1.0 — 2026-05-26 · Code MIT · Prose CC BY 4.0 · Sources as above</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+// Physical constants (SI)
+const G_SI = 6.674e-11;
+const C_SI = 2.998e8;
+const MSUN_KG = 1.989e30;
+const KPC_M = 3.086e19;
+const AU_M = 1.496e11;
+const RAD_TO_MAS = 206264.806 * 1000; // mas per radian
+const ARCSEC2_PER_STERAD = (206264.806) * (206264.806); // arcsec² per steradian
+
+// Helpers (match velocity-dispersion.html patterns)
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M){if(M===null||!isFinite(M)||M<=0)return'—';if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶ M☉';if(M>=1e4)return(M/1e3).toFixed(1)+'×10³ M☉';if(M>=100)return Math.round(M).toLocaleString()+' M☉';return M.toFixed(1)+' M☉'}
+function fmtNum(x, dp=2){if(!isFinite(x))return'—';if(Math.abs(x)>=1e4||Math.abs(x)<1e-3&&x!==0)return fmtSci(x,dp);return x.toFixed(dp)}
+
+// State
+const state = { ML: 8200, DL: 5.43, DS: 8, G: 17, mu: 5, Sigma: 2 };
+function loadHash(){
+  const p = getHash();
+  if (p.ML)    { const v = parseFloat(p.ML);    if (!isNaN(v) && v > 0)   state.ML = v; }
+  if (p.DL)    { const v = parseFloat(p.DL);    if (!isNaN(v) && v > 0)   state.DL = v; }
+  if (p.DS)    { const v = parseFloat(p.DS);    if (!isNaN(v) && v > 0)   state.DS = v; }
+  if (p.G)     { const v = parseFloat(p.G);     if (!isNaN(v))            state.G  = v; }
+  if (p.mu)    { const v = parseFloat(p.mu);    if (!isNaN(v) && v > 0)   state.mu = v; }
+  if (p.Sigma) { const v = parseFloat(p.Sigma); if (!isNaN(v) && v >= 0)  state.Sigma = v; }
+}
+function saveHash(){
+  setHash({
+    ML: state.ML.toFixed(0),
+    DL: state.DL.toFixed(2),
+    DS: state.DS.toFixed(2),
+    G:  state.G.toFixed(1),
+    mu: state.mu.toFixed(1),
+    Sigma: state.Sigma.toFixed(2)
+  });
+}
+
+// Physics
+// Einstein radius (angular, radians): θ_E = sqrt( 4 G M (D_S - D_L) / (c² D_L D_S) )
+function einsteinThetaRad(M_solar, DL_kpc, DS_kpc) {
+  if (DS_kpc <= DL_kpc) return 0;
+  const M_kg = M_solar * MSUN_KG;
+  const DL_m = DL_kpc * KPC_M;
+  const DS_m = DS_kpc * KPC_M;
+  const inner = 4 * G_SI * M_kg * (DS_m - DL_m) / (C_SI * C_SI * DL_m * DS_m);
+  return Math.sqrt(Math.max(inner, 0));
+}
+// Astrometric centroid shift at impact parameter u (in units of θ_E):
+//   δθ(u) = u / (u² + 2) · θ_E   (single-image / well-resolved bright-image approximation,
+//   Dominik & Sahu 2000). Maximum at u = √2 → δθ_max = θ_E / (2√2).
+function centroidShift(u, theta_E) {
+  return u / (u*u + 2) * theta_E;
+}
+// Photometric magnification (Paczyński 1986)
+function magnification(u) {
+  if (u <= 0) return Infinity;
+  return (u*u + 2) / (u * Math.sqrt(u*u + 4));
+}
+
+function render() {
+  // Reflect slider readouts
+  document.getElementById('ml-val').textContent = state.ML >= 10000 ? fmtSci(state.ML,2)+' M☉' : Math.round(state.ML).toLocaleString()+' M☉';
+  document.getElementById('dl-val').textContent = state.DL.toFixed(2) + ' kpc';
+  document.getElementById('ds-val').textContent = state.DS.toFixed(2) + ' kpc';
+  document.getElementById('g-val').textContent  = 'G = ' + state.G.toFixed(1);
+  document.getElementById('mu-val').textContent = state.mu.toFixed(1) + ' mas/yr';
+  document.getElementById('sig-val').textContent = state.Sigma.toFixed(2) + ' /arcsec²';
+
+  // Reduced distance (kpc)
+  const D_rel = (state.DS > state.DL) ? (state.DS - state.DL) * state.DL / state.DS : 0;
+
+  // Einstein radius
+  const thetaE_rad = einsteinThetaRad(state.ML, state.DL, state.DS);
+  const thetaE_mas = thetaE_rad * RAD_TO_MAS;
+
+  // Physical R_E at lens plane: R_E = θ_E · D_L  (in metres → AU)
+  const RE_m = thetaE_rad * state.DL * KPC_M;
+  const RE_AU = RE_m / AU_M;
+
+  // Max centroid shift δθ_max = θ_E / (2 sqrt 2)
+  const dthetaMax_mas = thetaE_mas / (2 * Math.SQRT2);
+  const dthetaMax_uas = dthetaMax_mas * 1000;
+
+  // Einstein crossing time (years). μ is in mas/yr; θ_E in mas → t_E = θ_E / μ.
+  const tE_yr = state.mu > 0 ? thetaE_mas / state.mu : 0;
+
+  // Photometric magnifications
+  const A_05 = magnification(0.5);
+  const A_10 = magnification(1.0);
+
+  // Event rate Γ (events/yr) ≈ 2 θ_E μ Σ_bg
+  //   θ_E in arcsec, μ in arcsec/yr (mas → arcsec ÷ 1000), Σ_bg in /arcsec²
+  const thetaE_arcsec = thetaE_mas / 1000;
+  const mu_arcsec_per_yr = state.mu / 1000;
+  const Gamma = 2 * thetaE_arcsec * mu_arcsec_per_yr * state.Sigma;
+
+  // Detection floors
+  const GAIA_FLOOR_UAS = 30;
+  const ROMAN_FLOOR_UAS = 10;
+  const gaiaDetect = (dthetaMax_uas > GAIA_FLOOR_UAS) && (tE_yr > 0.5) && (state.G < 19);
+  const romanDetect = (dthetaMax_uas > ROMAN_FLOOR_UAS) && (tE_yr < 5) && (state.G < 21);
+
+  // Expected event counts over 5 yr
+  const N_GAIA = Gamma * 5;
+  const N_ROMAN = Gamma * 5;
+
+  // Write outputs
+  document.getElementById('drel-val').innerHTML     = D_rel.toFixed(2) + ' <span class="unit">kpc</span>';
+  document.getElementById('thetaE-val').innerHTML   = fmtNum(thetaE_mas, 2) + ' <span class="unit">mas</span>';
+  document.getElementById('rE-val').innerHTML       = fmtNum(RE_AU, 2) + ' <span class="unit">AU</span>';
+  document.getElementById('dthetaMax-val').innerHTML= fmtNum(dthetaMax_uas, 1) + ' <span class="unit">μas</span>';
+  document.getElementById('tE-val').innerHTML       = fmtNum(tE_yr, 2) + ' <span class="unit">yr</span>';
+  document.getElementById('ampA-val').innerHTML     = A_05.toFixed(2) + ' / ' + A_10.toFixed(2) + ' <span class="unit">(u=0.5 / 1)</span>';
+  document.getElementById('rate-val').innerHTML     = fmtNum(Gamma, 4) + ' <span class="unit">/yr</span>';
+  document.getElementById('gaia-val').innerHTML     = gaiaDetect
+      ? '<span style="color:var(--teal-glow)">DETECTABLE</span>'
+      : '<span style="color:var(--text-dim)">below DR4 floor</span>';
+  document.getElementById('roman-val').innerHTML    = romanDetect
+      ? '<span style="color:var(--purple-glow)">DETECTABLE</span>'
+      : '<span style="color:var(--text-dim)">below Roman floor</span>';
+  document.getElementById('gaiaN-val').innerHTML    = fmtNum(N_GAIA, 3) + ' <span class="unit">events</span>';
+  document.getElementById('romanN-val').innerHTML   = fmtNum(N_ROMAN, 3) + ' <span class="unit">events</span>';
+
+  // Verdict
+  const cell = document.getElementById('verdict-cell');
+  const head = document.getElementById('verdict-headline');
+  const note = document.getElementById('verdict-note');
+  cell.classList.remove('tension', 'ok', 'roman');
+  const xGaia = N_GAIA.toFixed(2);
+  const xRoman = N_ROMAN.toFixed(2);
+  if (gaiaDetect) {
+    cell.classList.add('ok');
+    head.textContent = 'Gaia DR4 (≈ Dec 2026) will see this';
+    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas exceeds the ~30 μas DR4 floor. Expected ≈ ${xGaia} events over the 5-year baseline. Roman would later catch ≈ ${xRoman}. Either DR4 detects or this scenario is ruled out.`;
+  } else if (romanDetect) {
+    cell.classList.add('roman');
+    head.textContent = 'Roman will resolve this (Gaia probably won\'t)';
+    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas sits below Gaia's ~30 μas floor but above Roman's ~10 μas. Expected ≈ ${xRoman} events in a 5-year BTDS. Verdict by ≈ 2033.`;
+  } else {
+    cell.classList.add('tension');
+    head.textContent = 'Below both telescopes\' floors at these parameters';
+    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas is below the Roman floor (~10 μas). Either the lens is too low-mass, the geometry is unfavourable, the source is too faint (G = ${state.G.toFixed(1)}), or t_E (${tE_yr.toFixed(2)} yr) is outside the survey-friendly window. Try a heavier lens or a brighter background star.`;
+  }
+}
+
+function wire() {
+  const ml = document.getElementById('ml-slider');
+  const dl = document.getElementById('dl-slider');
+  const ds = document.getElementById('ds-slider');
+  const g  = document.getElementById('g-slider');
+  const mu = document.getElementById('mu-slider');
+  const sg = document.getElementById('sig-slider');
+
+  ml.value = Math.log10(state.ML).toFixed(3);
+  dl.value = state.DL.toFixed(2);
+  ds.value = state.DS.toFixed(2);
+  g.value  = state.G.toFixed(1);
+  mu.value = state.mu.toFixed(1);
+  sg.value = state.Sigma.toFixed(2);
+
+  ml.addEventListener('input', () => { state.ML = Math.pow(10, parseFloat(ml.value)); saveHash(); render(); });
+  dl.addEventListener('input', () => { state.DL = parseFloat(dl.value); saveHash(); render(); });
+  ds.addEventListener('input', () => { state.DS = parseFloat(ds.value); saveHash(); render(); });
+  g.addEventListener('input',  () => { state.G  = parseFloat(g.value);  saveHash(); render(); });
+  mu.addEventListener('input', () => { state.mu = parseFloat(mu.value); saveHash(); render(); });
+  sg.addEventListener('input', () => { state.Sigma = parseFloat(sg.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-preset-ml]').forEach(b => b.addEventListener('click', () => {
+    state.ML = parseFloat(b.dataset.presetMl); ml.value = Math.log10(state.ML).toFixed(3); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-dl]').forEach(b => b.addEventListener('click', () => {
+    state.DL = parseFloat(b.dataset.presetDl); dl.value = state.DL.toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-ds]').forEach(b => b.addEventListener('click', () => {
+    state.DS = parseFloat(b.dataset.presetDs); ds.value = state.DS.toFixed(2); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-g]').forEach(b => b.addEventListener('click', () => {
+    state.G = parseFloat(b.dataset.presetG); g.value = state.G.toFixed(1); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-mu]').forEach(b => b.addEventListener('click', () => {
+    state.mu = parseFloat(b.dataset.presetMu); mu.value = state.mu.toFixed(1); saveHash(); render();
+  }));
+  document.querySelectorAll('[data-preset-sig]').forEach(b => b.addEventListener('click', () => {
+    state.Sigma = parseFloat(b.dataset.presetSig); sg.value = state.Sigma.toFixed(2); saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init() {
+  loadHash();
+  wire();
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
