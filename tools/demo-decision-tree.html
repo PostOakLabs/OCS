@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<!--
+  Demo M - 18-Month Decision Tree
+  Omega Centauri Society . omegacentauri.me
+  Chronological walk through the upcoming observations that decide the Omega Centauri IMBH:
+  Gaia DR4 (Dec 2026) . JWST accretion . MeerKAT/TRAPUM pulsar timing . LISA EMRIs (2035).
+  Chains: falsification-hub . astrometric-microlensing . jwst-accretion . pulsar-timing . lisa-emri
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-27
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo - 18-Month Decision Tree &middot; OCS</title>
+<meta name="description" content="Five chained tools that walk the upcoming observational decision tree for the Omega Centauri IMBH: Gaia DR4 astrometric microlensing, JWST accretion limits, MeerKAT/TRAPUM pulsar timing, and the eventual LISA EMRI signature.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-decision-tree.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.06),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--amber-bright);background:rgba(240,160,32,.07);box-shadow:0 0 0 1px var(--amber-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--amber-glow)}
+.step.s5{--accent:var(--purple-glow)}
+/* Final step — the permanent resolution */
+.step.s5{border-color:var(--purple-mid);box-shadow:0 0 0 1px var(--purple-mid) inset}
+.step.s5 .step-title{color:var(--purple-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-f{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo &middot; 18-Month Decision Tree</span>
+    <a class="nav-link" href="index.html">&larr; All tools</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="falsification-hub.html">Falsification hub</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo M &middot; IMBH decision tree &middot; chains five tools</div>
+    <h1>18-Month Decision Tree</h1>
+    <p class="hero-sub">Gaia&nbsp;DR4 (Dec&nbsp;2026) is the first branch point &mdash; it alone can separate a point mass from a dark cluster. JWST accretion limits and MeerKAT/TRAPUM pulsar timing follow as complementary constraints. LISA closes the loop in&nbsp;2035 with the only direct dynamical proof. Walk each observation in sequence to see exactly what it decides, and what it leaves open.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-05-27</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Pick the world you want to walk through</div>
+    <p class="scenario-help">Each scenario pre-loads all five tools with the parameters predicted by that hypothesis. Walk the chain chronologically to see which experiments branch one way, which converge, and which reach a definitive answer &mdash; and when.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="haberle">
+        <span class="name">H&auml;berle 2024 (Recommended start)</span>
+        <span class="desc">Single point mass, &asymp;&nbsp;8,200&nbsp;M&#8857; IMBH. Gaia&nbsp;DR4 centroid shift far above 30&nbsp;&mu;as threshold. JWST accretion detectable. LISA EMRI high&nbsp;SNR.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="banares">
+        <span class="name">Ba&ntilde;ares 2025 (Dark cluster)</span>
+        <span class="desc">Distributed stellar remnants, no point mass. Gaia&nbsp;DR4 centroid shift &asymp;&nbsp;0. JWST luminosity below floor. LISA probes the 6,000&nbsp;M&#8857; upper limit as a worst-case check.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="threshold">
+        <span class="name">Threshold (4,000&nbsp;M&#8857;)</span>
+        <span class="desc">An IMBH just below the Ba&ntilde;ares upper limit, testing Gaia DR4&rsquo;s lower sensitivity boundary. Which experiments still detect it &mdash; and which go silent?</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Hub &middot; all IMBH / MTH / Fermi falsification experiments &middot; reference page</div>
+        <div class="step-title">The full observational roadmap at a glance</div>
+        <p class="step-prose">Before following any branch, orient yourself. The Falsification &amp; Observational Roadmap tabulates every active observation that can confirm or rule out the IMBH, MTH, and Fermi claims made by this site. The IMBH section lists each experiment, its predicted outcome under each hypothesis, and its current observational status. <em>The four tools that follow correspond to four rows in that table.</em> Astrometric microlensing (step&nbsp;2) and LISA (step&nbsp;5) are the only ones flagged as sensitive to the <em>compactness</em> of the central mass &mdash; not merely its enclosed value. That distinction is what makes lensing the primary branch point.</p>
+        <div class="step-meta">
+          <a class="step-cta" href="falsification-hub.html#imbh">Open Falsification Hub &rarr;</a>
+          <span class="step-params">All IMBH falsification rows &mdash; Gaia&nbsp;DR4 / JWST / MeerKAT / Roman / LISA</span>
+          <span class="tier-mini tier-e">Reference</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Each subsequent step maps to one row in the roadmap. The hub is the place to return when a result arrives: mark it confirmed, constrained, or falsified.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 29 &middot; astrometric microlensing &middot; Gaia DR4 (Dec 2026) &middot; Roman (2027)</div>
+        <div class="step-title">The primary branch point: centroid shift or null?</div>
+        <p class="step-prose">A point-mass lens of mass M produces a centroid shift &Theta;_c &asymp;&nbsp;&radic;M that peaks at the Einstein radius. For an 8,200&nbsp;M&#8857; point lens at 5.43&nbsp;kpc, &Theta;_c reaches hundreds of &mu;as &mdash; <em>well above</em> Gaia&nbsp;DR4&rsquo;s &asymp;&nbsp;30&nbsp;&mu;as precision floor for bright bulge sources. For a 10&nbsp;M&#8857; stellar remnant in a Ba&ntilde;ares dark cluster, &Theta;_c &asymp;&nbsp;0.4&nbsp;&mu;as &mdash; <em>far below any threshold this decade</em>. This is the decisive difference between a point mass and a distributed cluster: gravitational lensing is sensitive to <em>compactness</em>, not just enclosed mass. Gaia&nbsp;DR4 (scheduled late 2026) and the Roman Space Telescope (2027, &asymp;&nbsp;10&nbsp;&mu;as) both probe this signal.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="lens" href="astrometric-microlensing.html">Open Astrometric Microlensing &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-d">Pre-DR4</span>
+          <span class="tier-mini tier-t">Gravitational lensing</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &mdash; primary branch point</div>
+        <div class="payoff-body">Gaia&nbsp;DR4 is a near-binary decision. Detection above 30&nbsp;&mu;as implies a compact mass above &asymp;&nbsp;3,000&nbsp;M&#8857;. A clean null closes the IMBH question for this decade under the Ba&ntilde;ares interpretation, and the chain leads directly to the LISA step to ask whether any sub-6,000&nbsp;M&#8857; IMBH still lurks.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">JWST accretion &middot; Bondi-Hoyle &middot; JWST cycle 3 (2026&ndash;2027)</div>
+        <div class="step-title">Does the core glow? The NIR accretion test</div>
+        <p class="step-prose">Bondi-Hoyle accretion onto an 8,200&nbsp;M&#8857; IMBH in &omega;&nbsp;Cen&rsquo;s low-density core gives a bolometric luminosity L&nbsp;=&nbsp;&epsilon;&nbsp;&times;&nbsp;&dot;m&nbsp;&times;&nbsp;c&#178; that depends on the local gas density and the radiative efficiency. For ADAF-mode accretion (&epsilon;&nbsp;=&nbsp;10&#8315;&#179;) and ambient density &rho;&nbsp;&asymp;&nbsp;10&#8315;&#178;&#185;&nbsp;kg&nbsp;m&#8315;&#179;, the predicted near-infrared flux at 5.43&nbsp;kpc falls inside JWST NIRCam&rsquo;s detection envelope. <strong>A null result does not rule out an IMBH</strong> &mdash; it only constrains the product &epsilon;&nbsp;&times;&nbsp;&rho; to below the Bondi floor, consistent with a quiescent IMBH in a gas-poor environment. A positive detection would be the first independent, non-kinematic signature of the IMBH.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="accretion" href="jwst-accretion.html">Open JWST Accretion &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-t">Bondi-Hoyle</span>
+          <span class="tier-mini tier-d">Pre-JWST result</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">JWST probes <em>accretion</em>, not compactness. It is complementary to lensing: if both Gaia&nbsp;DR4 and JWST cycle&nbsp;3 return positive results, the case for the IMBH goes from kinematic to multi-messenger.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 9 &middot; Newtonian acceleration &middot; MeerKAT / TRAPUM (ongoing &rarr; 2028+)</div>
+        <div class="step-title">Cumulative timing: each new pulsar tightens the bound</div>
+        <p class="step-prose">Every pulsar timed in &omega;&nbsp;Cen provides a line-of-sight gravitational acceleration a_z from its spin-down rate. The enclosed-mass sensitivity is <strong>M_min&nbsp;&asymp;&nbsp;r&#178;&nbsp;&times;&nbsp;a_z&nbsp;/&nbsp;G</strong>: a pulsar at smaller projected separation r gives a tighter bound. At 10&Prime; offset with 1&nbsp;&mu;s timing precision on a 10-year baseline, MeerKAT reaches &asymp;&nbsp;10&#179;&nbsp;M&#8857; sensitivity &mdash; probing the full range of IMBH candidates. A fourth pulsar detected inside 5&Prime; by TRAPUM would immediately halve the projected separation and double the constraint. <em>Each new TRAPUM pulsar is a decision-relevant observation in its own right.</em> Timing is not binary, but it is cumulative: the bound sharpens as &radic;t.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="pulsar" href="pulsar-timing.html">Open Pulsar Timing &rarr;</a>
+          <span class="step-params" id="p4"></span>
+          <span class="tier-mini tier-e">Newtonian</span>
+          <span class="tier-mini tier-d">Active TRAPUM campaign</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Unlike lensing, timing is a gradual sharpening, not a single branch point. By 2028, the TRAPUM bound may approach the 4,000&ndash;6,000&nbsp;M&#8857; window where the H&auml;berle and Ba&ntilde;ares results currently diverge.</div></div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 21 &middot; EMRI / IMRI gravitational-wave strain &middot; LISA launch &asymp;&nbsp;2035</div>
+        <div class="step-title">The 2035 clincher: hearing the inspiral directly</div>
+        <p class="step-prose">If an IMBH exists and a stellar-mass compact object is spiralling inward, LISA will detect the characteristic-strain chirp as the orbital frequency sweeps through LISA&rsquo;s mHz band over a 4-year observation. For M_BH&nbsp;=&nbsp;8,200&nbsp;M&#8857; at 5.43&nbsp;kpc, the integrated SNR exceeds&nbsp;50; the IMBH mass and companion mass are recovered to a few percent. <em>No other planned experiment can measure the IMBH mass directly and dynamically &mdash; LISA turns a &ldquo;likely IMBH&rdquo; into a measured, characterised IMBH.</em> For the Ba&ntilde;ares scenario, this step probes the 6,000&nbsp;M&#8857; upper-limit case: if any point mass at the Bañares boundary persists, LISA reaches it. For the threshold scenario, M_BH&nbsp;=&nbsp;4,000&nbsp;M&#8857; yields SNR &asymp;&nbsp;0.70&nbsp;&times;&nbsp;the H&auml;berle value &mdash; a comfortable detection. Only a fully null Gaia&nbsp;DR4 + null LISA result would jointly close the IMBH window to below &asymp;&nbsp;100&nbsp;M&#8857;.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="lisa" href="lisa-emri.html">Open LISA EMRI &rarr;</a>
+          <span class="step-params" id="p5"></span>
+          <span class="tier-mini tier-t">GR inspiral (PN)</span>
+          <span class="tier-mini tier-f">LISA &asymp; 2035</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &mdash; the permanent resolution</div>
+        <div class="payoff-body">LISA provides the only answer that cannot be mimicked by a systematic in the kinematic data. A confirmed EMRI detection ends the degeneracy permanently. A clean non-detection after 4 years of LISA operations, combined with a Gaia&nbsp;DR4 null, sets the most stringent joint upper limit on the central-mass compactness ever placed on &omega;&nbsp;Cen &mdash; and the dark-cluster interpretation becomes the consensus.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9878; Why these five experiments compose a complete decision tree</div>
+    <div class="synth-prose">
+      <p>Each tool in this chain tests a physically independent property of the central mass. Astrometric microlensing tests <em>compactness</em>; JWST tests the <em>gas accretion rate</em>; pulsar timing tests the <em>enclosed gravitational acceleration</em>; LISA tests the <em>inspiral dynamics directly</em>. No single systematic error could simultaneously mimic positive signals across all four channels. A concordant detection &mdash; Gaia centroid, JWST NIR excess, TRAPUM acceleration, LISA EMRI &mdash; would be the most secure identification of a sub-10,000&nbsp;M&#8857; intermediate-mass black hole ever made.</p>
+      <p>The decision tree has two definitive branch points. The <strong>first is Gaia&nbsp;DR4 (late 2026)</strong>: a centroid shift above 30&nbsp;&mu;as confirms a compact mass and places all subsequent experiments in a confirmation chain. A null result strongly favours the dark-cluster interpretation and makes LISA the only remaining test of whether even a sub-6,000&nbsp;M&#8857; point mass survives. The <strong>second is LISA (c.&nbsp;2039, after 4&nbsp;years of operations)</strong>: its verdict is irreversible &mdash; either an EMRI is measured with full parameter estimation, or we set a gravitational-wave upper limit tighter than any kinematic bound by orders of magnitude.</p>
+      <p>Between the two branch points, JWST accretion and MeerKAT/TRAPUM timing are complementary, incremental constraints that converge on the same answer through independent physics. Neither is individually decisive; together they narrow the prior and cross-check the lensing result month by month.</p>
+      <p>For the kinematic-degeneracy companion to this demo &mdash; why six earlier experiments could not decide between an IMBH and a dark cluster &mdash; see <a href="demo-breaking-degeneracy.html">Demo K &mdash; Breaking the Degeneracy</a>. For the Fermi-Paradox thread and five independent searches for extraterrestrial intelligence, see <a href="demo-fermi-five-ways.html">Demo O &mdash; Five Ways to Look for ET</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-f">Future</span> = approved mission, not yet launched or operational.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into five interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo M - 18-Month Decision Tree
+// Scenario -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=haberle|banares|threshold
+//
+// CRITICAL hash-unit notes (verified 2026-05-27):
+//   astrometric-microlensing : ALL params LINEAR
+//     ML (M_sun), DL (kpc), DS (kpc), G (Gaia mag), mu (mas/yr), Sigma (M_sun/pc^2)
+//   jwst-accretion            : ALL params LINEAR in scientific-notation strings
+//     eps (dimensionless efficiency), rho (kg/m^3), cs (m/s)
+//   pulsar-timing             : ALL params LINEAR
+//     r (arcsec), precision (us), baseline (yr)
+//   lisa-emri                 : MIXED — M and d are LOG10; m2, T, e are LINEAR
+//     M = log10(M_BH / M_sun)   e.g. 3.914 -> 8,200 M_sun
+//     d = log10(D_L / kpc)      e.g. 0.72  -> 5.25 kpc  (OC distance preset)
+//     m2 (M_sun), T (yr), e (eccentricity) all LINEAR
+//   falsification-hub         : static anchor page, no hash params;
+//                               link hardcoded to #imbh for all scenarios
+// =========================================================================
+
+var SCENARIOS = {
+  haberle: {
+    label: 'Haberle 2024 — 8,200 M_sun IMBH',
+    // astrometric-microlensing: ML=8200 M_sun point lens
+    lens:     {ML:'8200',   DL:'5.43', DS:'8.00', G:'17.0', mu:'5.0', Sigma:'2.00'},
+    // jwst-accretion: ADAF efficiency, moderate OC core gas density
+    accretion:{eps:'1.00e-3', rho:'1.00e-21', cs:'1.00e3'},
+    // pulsar-timing: current TRAPUM configuration
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
+    // lisa-emri: M=log10(8200)=3.914, d=log10(5.25)=0.72, oc-stellar preset
+    lisa:     {M:'3.914', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'oc-stellar'},
+    summary: {
+      lens:     'M_L=8,200 M☉ (point mass) \xb7 centroid shift ≫ 30 µas floor',
+      accretion:'ε=1×10⁻³ (ADAF) \xb7 ρ=10⁻²¹ kg/m³ \xb7 c_s=10³ m/s',
+      pulsar:   'r=10 arcsec \xb7 1 µs precision \xb7 10 yr baseline (current TRAPUM)',
+      lisa:     'log₁₀(M)=3.914 → 8,200 M☉ \xb7 m₂=10 M☉ \xb7 D=5.25 kpc \xb7 T=4 yr'
+    }
+  },
+  banares: {
+    label: 'Banares 2025 — dark cluster, no point mass',
+    // astrometric-microlensing: ML=10 M_sun (individual stellar remnant) -> null result
+    lens:     {ML:'10',   DL:'5.43', DS:'8.00', G:'17.0', mu:'5.0', Sigma:'2.00'},
+    // jwst-accretion: sparse gas environment (no accretion signal expected)
+    accretion:{eps:'1.00e-3', rho:'1.00e-23', cs:'1.00e3'},
+    // pulsar-timing: same MeerKAT configuration
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
+    // lisa-emri: Banares upper-limit 6,000 M_sun — probes worst-case residual IMBH
+    // M=log10(6000)=3.778, using built-in banares preset
+    lisa:     {M:'3.778', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'banares'},
+    summary: {
+      lens:     'M_L=10 M☉ (single remnant) \xb7 centroid shift ≪ 30 µas → Gaia DR4 null',
+      accretion:'ε=1×10⁻³ \xb7 ρ=10⁻²³ kg/m³ (sparse gas) \xb7 below JWST floor',
+      pulsar:   'r=10 arcsec \xb7 1 µs \xb7 10 yr (same MeerKAT config)',
+      lisa:     'log₁₀(M)=3.778 → 6,000 M☉ (Bañares upper limit) \xb7 borderline SNR'
+    }
+  },
+  threshold: {
+    label: 'Threshold — 4,000 M_sun IMBH',
+    // astrometric-microlensing: ML=4000 — centroid shift ~sqrt(4000/8200) * Haberle
+    lens:     {ML:'4000',  DL:'5.43', DS:'8.00', G:'17.0', mu:'5.0', Sigma:'2.00'},
+    // jwst-accretion: reduced gas density (marginal accretion luminosity)
+    accretion:{eps:'1.00e-3', rho:'1.00e-22', cs:'1.00e3'},
+    // pulsar-timing: extended baseline as needed to approach 4,000 M_sun sensitivity
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'15.0'},
+    // lisa-emri: M=log10(4000)=3.602; no matching preset, custom
+    lisa:     {M:'3.602', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'custom'},
+    summary: {
+      lens:     'M_L=4,000 M☉ \xb7 centroid shift ≈ √(4000/8200) × Häberle signal',
+      accretion:'ε=1×10⁻³ \xb7 ρ=10⁻²² kg/m³ (marginal) \xb7 near JWST threshold',
+      pulsar:   'r=10 arcsec \xb7 1 µs \xb7 15 yr baseline (extended TRAPUM)',
+      lisa:     'log₁₀(M)=3.602 → 4,000 M☉ \xb7 SNR ≈ 0.70 × Häberle — still detected'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+
+  // Build scenario-specific deeplinks for steps 2-5
+  // Step 1 (falsification-hub) is a static anchor page — link unchanged
+  var links = {
+    lens:     'astrometric-microlensing.html' + buildHash(s.lens),
+    accretion:'jwst-accretion.html'           + buildHash(s.accretion),
+    pulsar:   'pulsar-timing.html'            + buildHash(s.pulsar),
+    lisa:     'lisa-emri.html'               + buildHash(s.lisa)
+  };
+
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+
+  // Update params display (steps 2-5; step 1 is static text)
+  document.getElementById('p2').textContent = s.summary.lens;
+  document.getElementById('p3').textContent = s.summary.accretion;
+  document.getElementById('p4').textContent = s.summary.pulsar;
+  document.getElementById('p5').textContent = s.summary.lisa;
+
+  // Update active button
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'haberle';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
