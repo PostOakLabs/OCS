@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<!--
+  Demo V — Every Way It Eats
+  Omega Centauri Society . omegacentauri.me
+  All four accretion channels for ω Cen's IMBH: natural loss-cone tidal captures,
+  full tidal disruption events, the current JWST non-detection upper limit, and the
+  long-term growth history that shaped the IMBH we see today.
+  Chains: tidal-capture → tidal-disruption → jwst-accretion → imbh-growth-history
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo V — Every Way It Eats . OCS</title>
+<meta name="description" content="Four accretion channels of ω Cen's IMBH: tidal capture rates, tidal disruption events, JWST accretion limit, and the IMBH's long-term growth history.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-every-way-it-eats.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 10% 5%,rgba(29,186,144,.10),transparent 50%),
+    radial-gradient(ellipse at 90% 35%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(208,64,64,.06),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--teal-glow),var(--purple-glow),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--teal-bright)}
+.scenario-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.06);box-shadow:0 0 0 1px var(--teal-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--red-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--purple-bright)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.channel-table{margin-top:14px;border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden}
+.ch-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid var(--border-subtle);padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.03em}
+.ch-row:last-child{border-bottom:none}
+.ch-row.header{background:rgba(7,5,21,.5);color:var(--text-dim);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.ch-row .hi{color:var(--teal-glow)}
+.ch-row .med{color:var(--amber-bright)}
+.ch-row .lo{color:var(--text-dim)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+
+.tension-banner{margin-top:20px;padding:12px 16px;background:rgba(196,120,0,.08);border:1px solid var(--amber-mid);border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);line-height:1.6}
+
+footer{border-top:1px solid var(--border-subtle);margin-top:60px;padding:22px 28px;text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)}
+footer a{color:var(--text-secondary)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo V &nbsp;·&nbsp; Every Way It Eats</span>
+    <a class="nav-link" href="index.html">All Tools</a>
+    <a class="nav-link" href="demo-imbh-evidence.html">Demo A &middot; IMBH Evidence</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-star-falls-in.html">Demo C &middot; Star Falls In</a>
+    <a class="nav-link" href="demo-kardashev-two.html">Demo D &middot; Kardashev II</a>
+    <a class="nav-link" href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a>
+    <a class="nav-link" href="demo-wait-compute.html">Demo G &middot; Wait, Compute, Win?</a>
+    <a class="nav-link" href="demo-bh-tap.html">Demo H &middot; Five Ways to Tap</a>
+    <a class="nav-link" href="demo-fermi-mth-crossover.html">Demo J &middot; Fermi/MTH</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+    <a class="nav-link" href="demo-imbh-origin.html">Demo Q &middot; IMBH Origin</a>
+    <a class="nav-link" href="demo-matrioshka-option.html">Demo R &middot; Matrioshka</a>
+    <a class="nav-link" href="demo-send-a-message.html">Demo S &middot; Send a Message</a>
+    <a class="nav-link" href="demo-dark-side.html">Demo T &middot; Dark Side</a>
+    <a class="nav-link" href="demo-spin-up-tap.html">Demo U &middot; Spin Up and Tap</a>
+    <a class="nav-link" href="demo-every-way-it-eats.html">Demo V &middot; Every Way It Eats</a>
+    <a class="nav-link" href="demo-dark-cluster-alt.html">Demo W &middot; Dark Cluster</a>
+    <a class="nav-link" href="demo-lisas-shot.html">Demo X &middot; LISA's Shot</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-tag">Demo V &nbsp;·&nbsp; Accretion Chain</p>
+    <h1>Every Way It Eats</h1>
+    <p class="hero-sub">Four distinct channels feed ω Cen's IMBH — from individual tidal captures through full disruptions to the accumulated growth history spanning billions of years. The current JWST silence constrains them all.</p>
+    <p class="hero-meta">Tools: <strong>Tidal Capture Rate</strong> → <strong>Tidal Disruption</strong> → <strong>JWST Accretion Limit</strong> → <strong>IMBH Growth History</strong> &nbsp;·&nbsp; 4 steps</p>
+  </div>
+
+  <!-- Scenario selector -->
+  <div class="scenario">
+    <p class="scenario-title">Choose an accretion regime</p>
+    <p class="scenario-help">Each scenario emphasises a different feeding channel dominant at different epochs in OC's history.</p>
+    <div class="scenario-row">
+      <button class="scenario-btn active" id="sc-natural" onclick="setScenario('natural')">
+        <span class="name">Natural Loss-Cone Today (Recommended)</span>
+        <span class="desc">The quiescent present: stochastic stellar captures set the baseline rate. Consistent with JWST non-detection (Eddington fraction ≪ 1%). Informs what any managed feeding would have to exceed.</span>
+      </button>
+      <button class="scenario-btn" id="sc-tde" onclick="setScenario('tde')">
+        <span class="name">TDE-Dominated Growth Phase</span>
+        <span class="desc">Peak accretion epoch, ~6–8 Gyr ago. Tidal disruption of main-sequence stars drives mass growth. BH is bright — a quasar-level flare every ~10³–10⁵ years. This is when the IMBH grew fastest.</span>
+      </button>
+      <button class="scenario-btn" id="sc-managed" onclick="setScenario('managed')">
+        <span class="name">Managed Feeding (OCS Hypothesis)</span>
+        <span class="desc">Speculative Phase 3+: precision-engineered prograde captures of brown dwarfs at sub-Eddington rate. Maximises spin-up while staying electromagnetically dark — consistent with current JWST silence.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+
+    <!-- Step 1: Tidal Capture -->
+    <div class="step s1">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-kicker">Continuous background channel</span>
+        <div class="step-title">Tidal Capture — Stars Skimming Into the Loss Cone</div>
+        <p class="step-prose">
+          The <em>loss cone</em> is the region of orbital phase space where a star's angular momentum is low enough that it will pass within the tidal radius of the IMBH. Two-body relaxation within the cluster continuously scatters stars into this cone. The resulting capture rate — <code>dN/dt</code> per stellar type — depends on the IMBH mass, stellar density ρ(r), velocity dispersion σ, and the tidal radius <code>r_T = R★ (M_BH/M★)^(1/3)</code>.
+        </p>
+        <p class="step-prose">
+          For ω Cen's IMBH, the natural capture rate spans a wide range across stellar populations. <strong>Main-sequence captures</strong> dominate by number but release relatively little energy. <strong>Neutron star EMRIs</strong> are rare but release the most energy per event and produce detectable gravitational wave chirps. <strong>White dwarf tidal captures</strong> sit between. This tool spans the full Häberle–Bañares-Hernández tension band so you can compare rates at both constraint extremes.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-tc" href="tidal-capture.html#m=3.914&r=5.50&s=22&a=12" target="_blank">Open Tidal Capture Rate →</a>
+          <span class="step-params" id="params-tc">M = 8,200 M☉ · ρ = 10⁵·⁵ M☉/pc³ · σ = 22 km/s</span>
+          <span class="tier-mini tier-e">🔬 Established physics</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Compare the rate at the Häberle lower bound (8,200 M☉) vs the Bañares-Hernández upper bound (6,000 M☉) using the preset buttons. The rate difference between these two tension endpoints is already ~40% — within observation uncertainty but meaningful for growth calculations. Note that neutron star EMRIs, despite being the rarest capture type, carry the clearest gravitational-wave fingerprint and are LISA's best discriminator.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Tidal Disruption -->
+    <div class="step s2">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-kicker">The dramatic channel</span>
+        <div class="step-title">Tidal Disruption Events — When Capture Becomes Catastrophe</div>
+        <p class="step-prose">
+          A star that enters the loss cone on a near-radial orbit reaches the <em>tidal disruption radius</em> — where the BH's tidal force overwhelms stellar self-gravity — before it can be captured intact. The star is shredded. Roughly half the debris escapes; the other half circularises into an accretion disk that feeds the IMBH over months to years, producing a luminous flare. For ω Cen's IMBH, TDEs are the dominant mass-growth channel for main-sequence stars.
+        </p>
+        <p class="step-prose">
+          The distinction between full TDE and tidal capture (step 1) depends on the star's penetration parameter β = r_T / r_pericenter. At β &lt; 1 the star survives as an EMRI; at β &gt; 1 it is disrupted. The borderline — <em>partial TDEs</em> — strips the envelope and leaves a compact remnant on an eccentric orbit, potentially a recurrent source. The tool covers all three outcomes for MS, WD, and NS star types.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-td" href="tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.000" target="_blank">Open Tidal Disruption →</a>
+          <span class="step-params" id="params-td">Object: MS star · M_BH = 8,200 M☉ · a★ = 0</span>
+          <span class="tier-mini tier-e">🔬 Established physics</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Switch between MS, WD, and NS objects. Notice that for an IMBH in the OCS mass range, the white dwarf tidal disruption radius is <em>smaller</em> than the Schwarzschild radius for low-mass BHs — meaning WDs are swallowed whole unless the BH is large enough. The tool marks this Hills mass boundary. For the managed feeding scenario, compare the accretion rate if brown dwarfs (low mass, compact) are preferentially delivered prograde — they cross the tidal radius inside the ISCO and feed efficiently with minimal flare.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: JWST -->
+    <div class="step s3">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-kicker">The observational constraint</span>
+        <div class="step-title">JWST Non-Detection — An Electromagnetically Dark IMBH</div>
+        <p class="step-prose">
+          Chen et al. (2025) pointed JWST NIRCam at ω Cen's core and found <em>nothing</em>. No near-infrared excess from an accretion disk, no hot dust emission, no central point source above the stellar background. This null result sets an upper limit on the current Eddington fraction: <strong>ṁ/ṁ_Edd ≪ 1</strong>. For a ~10,000 M☉ IMBH, even a faint Seyfert-level accretion rate would be detectable — the IMBH is either completely starved of gas, or its emission is absorbed and re-emitted at wavelengths JWST did not observe.
+        </p>
+        <p class="step-prose">
+          This tool lets you set the accretion efficiency η, ambient gas density, and sound speed to find the maximum allowed Bondi-Hoyle accretion rate consistent with the JWST non-detection. The constraint is tight: the environment within ~0.01 pc of the IMBH must be essentially evacuated. <strong>This silence is the primary observational tension</strong> with the IMBH hypothesis under standard accretion models — and the starting point for both the gas-starvation null hypothesis and the OCS managed-feeding speculation.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-jwst" href="jwst-accretion.html#eps=1.000e-01&rho=1.000e-04&cs=10.000" target="_blank">Open JWST Accretion Limit →</a>
+          <span class="step-params" id="params-jwst">η = 0.1 · ρ_∞ = 10⁻⁴ M☉/pc³ · cs = 10 km/s</span>
+          <span class="tier-mini tier-e">🔬 JWST observation 2025</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Try increasing ambient density ρ to typical globular cluster core values (~10² M☉/pc³). The implied accretion luminosity immediately exceeds the JWST detection limit by orders of magnitude — contradicting the non-detection. The only way to reconcile this is either that the inner core has been evacuated of gas (natural quiescence) or that accretion is so tightly controlled that no thermal emission escapes (OCS managed-feeding scenario). Both explanations predict the same observational silence.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: IMBH Growth History -->
+    <div class="step s4">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-kicker">The long view</span>
+        <div class="step-title">IMBH Growth History — 12 Billion Years of Feeding</div>
+        <p class="step-prose">
+          The IMBH did not arrive at its current mass in a single event. The growth history reconstructs how the black hole accumulated mass over the cluster's ~12 Gyr lifetime, combining a seed mass from runaway stellar collisions or direct collapse, episodic TDE-driven growth during the cluster's dense early phase, merger contributions from globular cluster in-fall, and the long quiescent period we observe today.
+        </p>
+        <p class="step-prose">
+          The tool produces a growth curve showing mass vs. time under adjustable channel weights. The current JWST non-detection (step 3) constrains the <em>late-time</em> accretion rate to essentially zero, while the Häberle lower bound constrains the <em>integrated</em> mass. Together these bracket the allowed growth history: almost all growth must have happened in the first ~4–6 Gyr, with the hole effectively idle since ~z ~ 1.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-gh" href="imbh-growth-history.html#s=2.70&t=-1.00&m=1.00&q=0.20" target="_blank">Open IMBH Growth History →</a>
+          <span class="step-params" id="params-gh">Seed: 10²·⁷ M☉ · TDE: 10⁻¹ M☉/yr · Merger: 1.0×</span>
+          <span class="tier-mini tier-d">⚠ Model-dependent</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Try starting with a heavy seed (10³–10⁴ M☉ from a direct-collapse event) vs a light seed from runaway stellar collisions (~500 M☉). The TDE rate needed to reach ≥8,200 M☉ by z = 0 differs by an order of magnitude — constraining the early cluster density. Compare the TDE-dominated and merger-dominated scenarios: mergers produce fast, stochastic mass jumps; TDEs produce smooth growth. LISA will eventually discriminate between these histories by detecting the EMRI inspiral signal described in step 1.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Channel comparison table -->
+  <div style="margin-top:32px;">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Accretion channel comparison (8,200 M☉ IMBH)</div>
+    <div class="channel-table">
+      <div class="ch-row header"><span>Channel</span><span>Rate (today)</span><span>Mass per event</span><span>Observable signature</span></div>
+      <div class="ch-row"><span class="hi">Loss-cone captures (MS)</span><span class="hi">~10⁻⁷ yr⁻¹</span><span>~0.5 M☉</span><span>faint X-ray, EMRI GW</span></div>
+      <div class="ch-row"><span class="med">Tidal disruptions (MS)</span><span class="med">~10⁻⁵ yr⁻¹</span><span>~0.25 M☉</span><span>bright optical/UV flare</span></div>
+      <div class="ch-row"><span>WD TDE</span><span>~10⁻⁸ yr⁻¹</span><span>~0.3 M☉</span><span>soft X-ray, GW chirp</span></div>
+      <div class="ch-row"><span>NS EMRI</span><span class="lo">~10⁻⁹ yr⁻¹</span><span class="lo">~1.4 M☉</span><span class="lo">LISA mHz band, years-long</span></div>
+      <div class="ch-row"><span class="lo">Bondi-Hoyle (ISM)</span><span class="lo">&lt; JWST limit</span><span class="lo">continuous</span><span class="lo">NIR — not detected (2025)</span></div>
+    </div>
+  </div>
+
+  <div class="tension-banner">
+    ⚠ IMBH mass tension: Häberle et al. (2024) lower bound ≥ 8,200 M☉ vs Bañares-Hernández et al. (2025) upper bound &lt; 6,000 M☉. Steps 1 and 4 show both limits. A 6,000 M☉ BH has a ~15% lower tidal disruption rate and requires either a lighter seed or a higher early TDE rate to reach present mass — the tension is internally consistent but model-dependent.
+  </div>
+
+  <!-- Synthesis -->
+  <div class="synthesis">
+    <div class="synth-title">// Synthesis — The Feeding History and the Silence</div>
+    <div class="synth-prose">
+      <p>Four tools, one story: the IMBH ate voraciously during its first few billion years — mostly through tidal disruptions and stellar captures as the primordial dense nucleus relaxed — then went quiet. The JWST non-detection constrains the present Eddington fraction to well below 10⁻⁵, consistent with a gas-starved environment that has had its inner reservoir swept clean over Gyr timescales.</p>
+      <p>From an OCS perspective, this silence is either the natural end-state of cluster dynamics (the mainstream interpretation) or the signature of a Phase 3+ civilisation that has already managed its feeding environment: prograde brown-dwarf captures, sub-Eddington accretion, all energy routed inward through the ISCO with zero radiative waste. Both scenarios predict the same JWST null result. The growth history chain is the tool that distinguishes them in principle: a managed feeding history will show a <em>resumption</em> of mass growth in the last ~1–2 Gyr as the feeding program begins, while natural quiescence shows a monotonically declining rate since z ~ 2. This distinction requires mass measurements better than ~100 M☉ precision — achievable, in principle, with next-generation astrometry or LISA chirp timing.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <a href="https://omegacentauri.me/">omegacentauri.me</a> &nbsp;·&nbsp;
+  Demo V &nbsp;·&nbsp; Every Way It Eats &nbsp;·&nbsp;
+  Tools: <a href="tidal-capture.html">Tidal Capture</a> · <a href="tidal-disruption.html">Tidal Disruption</a> · <a href="jwst-accretion.html">JWST Accretion</a> · <a href="imbh-growth-history.html">Growth History</a> &nbsp;·&nbsp;
+  Code: MIT · Prose: CC BY 4.0
+</footer>
+
+<script>
+const SCENARIOS = {
+  natural: {
+    tc:   'tidal-capture.html#m=3.914&r=5.50&s=22&a=12',
+    td:   'tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.000',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-04&cs=10.000',
+    gh:   'imbh-growth-history.html#s=2.70&t=-1.00&m=1.00&q=0.20',
+    tcP:  'M = 8,200 M☉ · ρ = 10⁵·⁵ M☉/pc³ · σ = 22 km/s',
+    tdP:  'Object: MS star · M_BH = 8,200 M☉ · a★ = 0',
+    jwP:  'η = 0.1 · ρ_∞ = 10⁻⁴ M☉/pc³ · cs = 10 km/s',
+    ghP:  'Seed: 10²·⁷ M☉ · TDE rate: 10⁻¹ M☉/yr',
+  },
+  tde: {
+    tc:   'tidal-capture.html#m=3.914&r=6.50&s=30&a=6',
+    td:   'tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.300',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-01&cs=15.000',
+    gh:   'imbh-growth-history.html#s=2.70&t=0.30&m=1.00&q=0.30',
+    tcP:  'M = 8,200 M☉ · ρ = 10⁶·⁵ (early dense core) · σ = 30 km/s',
+    tdP:  'Object: MS star · M_BH = 8,200 M☉ · a★ = 0.3',
+    jwP:  'η = 0.1 · ρ_∞ = 0.1 M☉/pc³ · cs = 15 km/s (early)',
+    ghP:  'Seed: 10²·⁷ M☉ · TDE rate: 10⁰·³ M☉/yr (peak)',
+  },
+  managed: {
+    tc:   'tidal-capture.html#m=3.914&r=5.50&s=22&a=12',
+    td:   'tidal-disruption.html#object=custom&mass=8.200e%2B3&spin=0.998&cm=8.000e-02&cr=9.000e-02',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-06&cs=5.000',
+    gh:   'imbh-growth-history.html#s=2.70&t=-2.00&m=0.50&q=0.50',
+    tcP:  'M = 8,200 M☉ · ρ = 10⁵·⁵ M☉/pc³ · σ = 22 km/s',
+    tdP:  'Custom: BD (0.08 M☉, 0.09 R☉) · a★ = 0.998 · managed prograde',
+    jwP:  'η = 0.1 · ρ_∞ = 10⁻⁶ M☉/pc³ (evacuated) · cs = 5 km/s',
+    ghP:  'Seed: 10²·⁷ M☉ · late-phase controlled growth',
+  }
+};
+
+function setScenario(sc) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + sc).classList.add('active');
+  const s = SCENARIOS[sc];
+  document.getElementById('cta-tc').href   = s.tc;
+  document.getElementById('cta-td').href   = s.td;
+  document.getElementById('cta-jwst').href = s.jwst;
+  document.getElementById('cta-gh').href   = s.gh;
+  document.getElementById('params-tc').textContent   = s.tcP;
+  document.getElementById('params-td').textContent   = s.tdP;
+  document.getElementById('params-jwst').textContent = s.jwP;
+  document.getElementById('params-gh').textContent   = s.ghP;
+}
+</script>
+</body>
+</html>

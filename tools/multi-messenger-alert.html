@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<!--
+  Multi-Messenger Alert Simulator — Tool 42
+  Omega Centauri Society . omegacentauri.me
+  Combines LISA gravitational-wave strain, Fermi-LAT / CTA gamma-ray sensitivity,
+  and KM3NeT neutrino detection thresholds into a single coincidence detectability
+  dashboard for ω Cen's IMBH and any associated transient signal.
+  State: { logM, m2, logP, dt, channels }
+  Site section: #science and #fermi
+  Epistemic tier: 🔬 Instrument sensitivity (established) · ⚠ Source model (speculative for ETI signal)
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Messenger Alert Simulator — OCS Tools</title>
+<meta name="description" content="Combined LISA gravitational-wave, Fermi-LAT/CTA gamma-ray, and KM3NeT neutrino detectability dashboard for Omega Centauri's IMBH and associated transient signals.">
+<link rel="canonical" href="https://omegacentauri.me/tools/multi-messenger-alert.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.12),transparent 50%),radial-gradient(ellipse at 85% 50%,rgba(29,186,144,.08),transparent 50%),radial-gradient(ellipse at 50% 90%,rgba(208,64,64,.05),transparent 60%);}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-back{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-secondary)}
+.nav-back:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:44px 28px 80px}
+
+.tool-header{margin-bottom:32px}
+.tool-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:10px}
+.tool-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:10px}
+.tool-sub{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px;line-height:1.6}
+
+.layout{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
+@media(max-width:820px){.layout{grid-template-columns:1fr}}
+
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.6),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:14px;padding:22px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:16px}
+
+.ctrl{margin-bottom:16px}
+.ctrl-label{display:flex;justify-content:space-between;align-items:baseline;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--text-secondary);margin-bottom:5px}
+.ctrl-val{color:var(--teal-glow);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--purple-bright);cursor:pointer}
+.btn-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 10px;border:1px solid var(--border-subtle);border-radius:6px;background:rgba(7,5,21,.5);color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.preset-btn:hover,.preset-btn.active{border-color:var(--purple-bright);color:var(--purple-glow)}
+
+.ch-toggle{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.ch-item{display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em}
+.ch-item input[type=checkbox]{accent-color:var(--purple-bright);width:14px;height:14px;cursor:pointer}
+.ch-label{color:var(--text-secondary)}
+.ch-label.active{color:var(--text-primary)}
+
+/* Detection cards */
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:600px){.det-grid{grid-template-columns:1fr}}
+
+.det-card{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:12px;padding:16px;position:relative}
+.det-card.detected{border-color:var(--teal-bright);background:rgba(13,42,36,.4)}
+.det-card.marginal{border-color:var(--amber-bright);background:rgba(42,30,0,.3)}
+.det-card.undetected{border-color:var(--red-mid)}
+.det-card.disabled{opacity:.4}
+
+.det-instrument{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.det-metric{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;line-height:1;margin-bottom:4px}
+.det-metric.go{color:var(--teal-glow)}
+.det-metric.warn{color:var(--amber-glow)}
+.det-metric.no{color:var(--red-bright)}
+.det-metric.off{color:var(--text-dim)}
+.det-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.04em}
+.det-status{position:absolute;top:12px;right:12px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:8px}
+.det-status.detected{background:rgba(29,186,144,.15);color:var(--teal-glow);border:1px solid var(--teal-mid)}
+.det-status.marginal{background:rgba(196,120,0,.15);color:var(--amber-glow);border:1px solid var(--amber-mid)}
+.det-status.undetected{background:rgba(138,32,32,.15);color:var(--red-bright);border:1px solid var(--red-mid)}
+.det-status.disabled{background:transparent;color:var(--text-dim);border:1px solid var(--text-dim)}
+
+/* Coincidence panel */
+.coinc-panel{background:linear-gradient(180deg,rgba(26,16,64,.5),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:20px;margin-bottom:20px}
+.coinc-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:10px}
+.coinc-score{font-family:'Orbitron',sans-serif;font-size:42px;font-weight:900;margin-bottom:4px}
+.coinc-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em}
+.coinc-bar-wrap{margin:12px 0 6px;height:12px;background:rgba(7,5,21,.7);border-radius:6px;overflow:hidden;border:1px solid var(--border-subtle)}
+.coinc-bar{height:100%;border-radius:6px;transition:width .4s ease}
+
+/* Canvas */
+canvas{width:100%;display:block;border-radius:10px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle)}
+
+.notes{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.65;margin-top:16px}
+.notes strong{color:var(--text-secondary)}
+
+.context-banner{margin-top:20px;padding:11px 15px;background:rgba(112,85,212,.06);border:1px solid var(--border-subtle);border-left:2px solid var(--purple-glow);border-radius:0 8px 8px 0;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);line-height:1.65}
+.context-banner strong{color:var(--purple-glow)}
+
+.speculative-banner{margin-top:12px;padding:11px 15px;background:rgba(240,160,32,.05);border:1px solid var(--amber-mid);border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);line-height:1.65}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <a class="nav-back" href="index.html">← All Tools</a>
+    <a class="nav-back" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-back" href="https://omegacentauri.me/#fermi">← #fermi</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="tool-header">
+    <p class="tool-tag">Tool 42 &nbsp;·&nbsp; Multi-messenger detectability</p>
+    <h1 class="tool-title">Multi-Messenger Alert Simulator</h1>
+    <p class="tool-sub">Combine LISA gravitational-wave strain, Fermi-LAT / CTA gamma-ray sensitivity, and KM3NeT neutrino detection thresholds into a single coincidence detectability picture for ω Cen's IMBH and any associated transient source.</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- Controls -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">// Black Hole Parameters</div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>IMBH mass</span><span class="ctrl-val" id="m-val">8,200 M☉</span></div>
+          <input type="range" id="m-sl" min="3.7" max="4.7" step="0.01" value="3.914">
+          <div class="btn-row">
+            <button class="preset-btn" data-m="3.778">6,000 M☉</button>
+            <button class="preset-btn active" data-m="3.914">8,200 M☉</button>
+            <button class="preset-btn" data-m="4.176">15,000 M☉</button>
+            <button class="preset-btn" data-m="4.602">40,000 M☉</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>EMRI companion mass</span><span class="ctrl-val" id="m2-val">1.4 M☉</span></div>
+          <input type="range" id="m2-sl" min="0.3" max="30" step="0.1" value="1.4">
+          <div class="btn-row">
+            <button class="preset-btn" data-m2="0.6">WD (0.6)</button>
+            <button class="preset-btn active" data-m2="1.4">NS (1.4)</button>
+            <button class="preset-btn" data-m2="10">BH (10)</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>Time to merger T<sub>obs</sub></span><span class="ctrl-val" id="tobs-val">5.0 yr</span></div>
+          <input type="range" id="tobs-sl" min="0.5" max="10" step="0.1" value="5.0">
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>EMRI eccentricity</span><span class="ctrl-val" id="e-val">0.30</span></div>
+          <input type="range" id="e-sl" min="0.00" max="0.90" step="0.01" value="0.30">
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <div class="panel-title">// Transient Source (Optional)</div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>Source power (isotropic)</span><span class="ctrl-val" id="p-val">10<sup>38</sup> W</span></div>
+          <input type="range" id="p-sl" min="32" max="48" step="0.5" value="38">
+          <div class="btn-row">
+            <button class="preset-btn" data-p="36">10³⁶ W</button>
+            <button class="preset-btn active" data-p="38">10³⁸ W</button>
+            <button class="preset-btn" data-p="40">10⁴⁰ W</button>
+            <button class="preset-btn" data-p="44">10⁴⁴ W (GRB)</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>Burst duration</span><span class="ctrl-val" id="dt-val">100 s</span></div>
+          <input type="range" id="dt-sl" min="0" max="6" step="0.5" value="2">
+          <div class="btn-row">
+            <button class="preset-btn" data-dt="0">1 s</button>
+            <button class="preset-btn active" data-dt="2">100 s</button>
+            <button class="preset-btn" data-dt="4">3 hr</button>
+            <button class="preset-btn" data-dt="6">12 days</button>
+          </div>
+        </div>
+
+        <div class="ctrl">
+          <div class="ctrl-label"><span>Active channels</span></div>
+          <div class="ch-toggle">
+            <label class="ch-item"><input type="checkbox" id="ch-lisa" checked> <span class="ch-label active" id="cl-lisa">LISA gravitational wave</span></label>
+            <label class="ch-item"><input type="checkbox" id="ch-fermi" checked> <span class="ch-label active" id="cl-fermi">Fermi-LAT γ-ray (≥100 MeV)</span></label>
+            <label class="ch-item"><input type="checkbox" id="ch-cta" checked> <span class="ch-label active" id="cl-cta">CTA γ-ray (≥30 GeV)</span></label>
+            <label class="ch-item"><input type="checkbox" id="ch-km3" checked> <span class="ch-label active" id="cl-km3">KM3NeT neutrino (≥10 TeV)</span></label>
+            <label class="ch-item"><input type="checkbox" id="ch-hess"> <span class="ch-label" id="cl-hess">H.E.S.S. γ-ray (≥1 TeV)</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div>
+      <!-- Coincidence score -->
+      <div class="coinc-panel">
+        <div class="coinc-title">// Coincidence Detection Score</div>
+        <div style="display:flex;align-items:baseline;gap:12px">
+          <div class="coinc-score" id="coinc-score" style="color:var(--teal-glow)">—</div>
+          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary)">/ 5 channels</div>
+        </div>
+        <div class="coinc-sub" id="coinc-label">Awaiting calculation…</div>
+        <div class="coinc-bar-wrap"><div class="coinc-bar" id="coinc-bar" style="width:0%"></div></div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:4px" id="coinc-far">False-alarm rate: —</div>
+      </div>
+
+      <!-- 4 detection cards -->
+      <div class="det-grid">
+        <div class="det-card" id="card-lisa">
+          <span class="det-status" id="stat-lisa">—</span>
+          <div class="det-instrument">LISA · mHz GW</div>
+          <div class="det-metric" id="snr-lisa">—</div>
+          <div class="det-label">SNR (4-yr mission)</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px" id="detail-lisa">—</div>
+        </div>
+        <div class="det-card" id="card-fermi">
+          <span class="det-status" id="stat-fermi">—</span>
+          <div class="det-instrument">Fermi-LAT · ≥100 MeV</div>
+          <div class="det-metric" id="flux-fermi">—</div>
+          <div class="det-label">Flux ratio (signal/threshold)</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px" id="detail-fermi">—</div>
+        </div>
+        <div class="det-card" id="card-cta">
+          <span class="det-status" id="stat-cta">—</span>
+          <div class="det-instrument">CTA · ≥30 GeV</div>
+          <div class="det-metric" id="flux-cta">—</div>
+          <div class="det-label">Flux ratio (signal/threshold)</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px" id="detail-cta">—</div>
+        </div>
+        <div class="det-card" id="card-km3">
+          <span class="det-status" id="stat-km3">—</span>
+          <div class="det-instrument">KM3NeT ARCA · ν ≥ 10 TeV</div>
+          <div class="det-metric" id="rate-km3">—</div>
+          <div class="det-label">Expected events in burst window</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px" id="detail-km3">—</div>
+        </div>
+      </div>
+
+      <!-- Canvas: SNR/flux vs mass -->
+      <canvas id="canvas" height="240"></canvas>
+
+      <div class="notes" style="margin-top:12px">
+        <strong>LISA SNR</strong> uses the Maggiore (2007) chirp strain formula h ~ (5/96)^(1/2) · π^(-2/3) · (G M_chirp)^(5/6) / (c^(3/2) D) · f^(-7/6) evaluated at peak frequency, integrated against the LISA sensitivity curve approximation S_n(f) ~ 1.44×10⁻⁴⁷ (0.001/f)⁴ + 1.36×10⁻⁵⁵ + 1.80×10⁻⁵² f² Hz⁻¹ (Amaro-Seoane et al. 2017 approximation).
+        <strong>Fermi-LAT threshold</strong>: point-source sensitivity ~8×10⁻¹² erg/cm²/s (E≥100 MeV, 10-yr survey, high latitude).
+        <strong>CTA threshold</strong>: ~5×10⁻¹³ erg/cm²/s (E≥30 GeV, 50-hr pointing).
+        <strong>KM3NeT threshold</strong>: effective area A_eff ~2×10⁴ m² at 10 TeV for OC declination (−47°); background rate ~0.01 events/100s in 5° cone above 10 TeV (upgoing).
+        Distance to OC: 5.49 kpc = 1.694×10²³ cm. All sensitivities are order-of-magnitude estimates for scoping purposes.
+      </div>
+
+      <div class="context-banner">
+        <strong>Note on OC's declination (−47°):</strong> IceCube (South Pole) has degraded sensitivity for OC as a downgoing source. KM3NeT (Mediterranean, 36°N) views OC as an upgoing source with ~3–5× better point-source sensitivity at TeV energies. H.E.S.S. (Namibia) can point at OC directly but has a ~10× higher energy threshold. The coincidence score weights KM3NeT as the primary neutrino instrument for this target.
+      </div>
+
+      <div class="speculative-banner">
+        ⚠ The transient source model applies to <em>hypothetical</em> astrophysical transients (TDE flares, magnetar bursts) or — speculatively — the Dvali-Osmanov kugelblitz neutrino burst. No such burst has been detected from OC. The LISA EMRI calculation reflects established GR predictions for an EMRI in OC's mass range; EMRI detection is a realistic near-future science case, not speculation.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ---- Constants ----
+const G   = 6.674e-11;   // m³ kg⁻¹ s⁻²
+const C   = 3e8;          // m/s
+const MSUN = 1.989e30;    // kg
+const D_OC = 1.694e23;    // cm  (5.49 kpc)
+const D_OC_m = 1.694e23 * 0.01; // metres
+const KPC_M = 3.086e19;   // m per kpc
+
+// ---- State ----
+const state = {
+  logM: 3.914,   // log10 IMBH mass / M☉
+  m2:   1.4,     // companion mass / M☉
+  tobs: 5.0,     // years to merger used for obs window
+  e:    0.30,    // eccentricity
+  logP: 38,      // log10 source power / W
+  logDt: 2,      // log10 burst duration / s
+  channels: { lisa: true, fermi: true, cta: true, km3: true, hess: false }
+};
+
+// ---- Hash ----
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){
+  const h = getHash();
+  if(h.M){const v=parseFloat(h.M);if(!isNaN(v))state.logM=Math.min(4.7,Math.max(3.7,v));}
+  if(h.m2){const v=parseFloat(h.m2);if(!isNaN(v)&&v>0)state.m2=Math.min(30,Math.max(0.3,v));}
+  if(h.T){const v=parseFloat(h.T);if(!isNaN(v)&&v>0)state.tobs=Math.min(10,Math.max(0.5,v));}
+  if(h.e){const v=parseFloat(h.e);if(!isNaN(v))state.e=Math.min(0.9,Math.max(0,v));}
+  if(h.P){const v=parseFloat(h.P);if(!isNaN(v))state.logP=Math.min(48,Math.max(32,v));}
+  if(h.dt){const v=parseFloat(h.dt);if(!isNaN(v))state.logDt=Math.min(6,Math.max(0,v));}
+}
+function saveHash(){setHash({M:state.logM.toFixed(3),m2:state.m2.toFixed(2),T:state.tobs.toFixed(1),e:state.e.toFixed(2),P:state.logP.toFixed(1),dt:state.logDt.toFixed(1)})}
+
+// ---- Physics ----
+function chirpMass(M1, M2){ return Math.pow(M1*M2,3/5)/Math.pow(M1+M2,1/5); }
+
+function lisaSNR(logM, m2, tobs, e){
+  const M1 = Math.pow(10, logM);      // M☉
+  const Mc = chirpMass(M1, m2);       // M☉
+  const Mc_kg = Mc * MSUN;
+  const D_m  = D_OC_m;
+  // Peak GW frequency at ISCO (Schwarzschild)
+  const rg = G * M1 * MSUN / (C*C);
+  const r_isco = 6 * rg;
+  const f_isco = Math.sqrt(G * M1 * MSUN / r_isco) / (2*Math.PI*r_isco); // Hz
+  const f_peak = 2 * f_isco;  // quadrupole
+  // Strain amplitude (sky-averaged, circular)
+  const h0 = (4*Math.sqrt(2/5)) * Math.pow(G*Mc_kg/(C*C), 5/3) * Math.pow(Math.PI*f_peak, 2/3) / (C * D_m);
+  // LISA noise PSD approximation (Amaro-Seoane 2017 analytic)
+  const f = Math.max(f_peak, 1e-5);
+  const Sn = 1.44e-47 * Math.pow(0.001/f,4) + 1.36e-55 + 1.80e-52 * f*f; // Hz⁻¹
+  // Eccentricity enhancement (Peters formula)
+  const eFactor = Math.pow(1 + 0.27*e*e + 2.4*e*e*e + 1.6*e*e*e*e, 1.2);
+  const h_eff = h0 * Math.sqrt(tobs * 3.156e7) * eFactor;  // strain * sqrt(T)
+  const snr = h_eff / Math.sqrt(Sn);
+  return { snr, f_peak, h0, Mc };
+}
+
+function transientFluxCGS(logP_W, logDt_s, fraction_gamma){
+  // erg/s/cm²  at D_OC
+  const P_W = Math.pow(10, logP_W);
+  const P_erg = P_W * 1e7;
+  const dt = Math.pow(10, logDt_s);
+  // Fluence = P * dt, flux = P / (4π D²)
+  const flux_total = P_erg / (4 * Math.PI * D_OC * D_OC); // erg/s/cm²
+  return flux_total * fraction_gamma;
+}
+
+function km3NetEvents(logP_W, logDt_s){
+  // Estimate neutrino event count in KM3NeT ARCA burst window
+  // A_eff ~ 2e4 m² at 10 TeV for upgoing source at dec -47°
+  const Aeff = 2e4;   // m²
+  const Aeff_cm2 = Aeff * 1e4;
+  const P_W = Math.pow(10, logP_W);
+  const P_erg = P_W * 1e7;
+  const dt = Math.pow(10, logDt_s);
+  const E_nu_erg = 1e4 * 1.602e-9;  // 10 TeV in erg
+  // Neutrino fraction of total power (democratic Hawking: ~1/6 per flavour × 3 = 0.4 total; use 0.15 for realistic)
+  const nu_frac = 0.15;
+  const nu_flux = P_erg * nu_frac / (4 * Math.PI * D_OC * D_OC * E_nu_erg); // nu/cm²/s
+  const events = nu_flux * Aeff_cm2 * dt;
+  return events;
+}
+
+// ---- Thresholds ----
+const FERMI_THRESH  = 8e-12;  // erg/cm²/s  (100 MeV, 10-yr, point source)
+const CTA_THRESH    = 5e-13;  // erg/cm²/s  (30 GeV, 50-hr pointing)
+const HESS_THRESH   = 1e-12;  // erg/cm²/s  (1 TeV, 50-hr)
+const KM3_THRESH    = 3;       // events in burst window (≥3 for trigger)
+const LISA_SNR_THRESH = 8;     // SNR threshold for confident detection
+
+// ---- Classify ----
+function classify(val, thresh, isEvents){
+  if(isEvents){
+    if(val >= thresh*2)  return 'detected';
+    if(val >= thresh)    return 'marginal';
+    return 'undetected';
+  } else {
+    if(val >= thresh*3)  return 'detected';
+    if(val >= thresh)    return 'marginal';
+    return 'undetected';
+  }
+}
+
+// ---- Format ----
+function fmtSci(v, dp=2){
+  if(v===0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  const m = v/Math.pow(10,e);
+  return m.toFixed(dp)+'×10'+sup(e);
+}
+function sup(n){const d='⁰¹²³⁴⁵⁶⁷⁸⁹';const m='⁻';if(n<0)return m+[...(''+(-n))].map(c=>d[c]).join('');return [...(''+n)].map(c=>d[c]).join('');}
+function fmtSnr(snr){return snr>=1000?'>1000':snr>=10?Math.round(snr).toString():snr.toFixed(1);}
+
+// ---- Render ----
+function render(){
+  const M = Math.pow(10, state.logM);
+  const { snr, f_peak, h0, Mc } = lisaSNR(state.logM, state.m2, state.tobs, state.e);
+  const gammaFluxFermi  = transientFluxCGS(state.logP, state.logDt, 0.20);
+  const gammaFluxCTA    = transientFluxCGS(state.logP, state.logDt, 0.10);
+  const gammaFluxHESS   = transientFluxCGS(state.logP, state.logDt, 0.08);
+  const km3Ev           = km3NetEvents(state.logP, state.logDt);
+
+  const fermiRatio = gammaFluxFermi / FERMI_THRESH;
+  const ctaRatio   = gammaFluxCTA   / CTA_THRESH;
+  const hessRatio  = gammaFluxHESS  / HESS_THRESH;
+
+  // Channel enables
+  const lisaOn  = state.channels.lisa;
+  const fermiOn = state.channels.fermi;
+  const ctaOn   = state.channels.cta;
+  const km3On   = state.channels.km3;
+  const hessOn  = state.channels.hess;
+
+  // Classify
+  const lisaSt  = lisaOn  ? (snr >= LISA_SNR_THRESH*2 ? 'detected' : snr >= LISA_SNR_THRESH ? 'marginal' : 'undetected') : 'disabled';
+  const fermiSt = fermiOn ? classify(fermiRatio, 1, false) : 'disabled';
+  const ctaSt   = ctaOn   ? classify(ctaRatio,   1, false) : 'disabled';
+  const km3St   = km3On   ? classify(km3Ev, KM3_THRESH, true) : 'disabled';
+
+  function updateCard(id, status, metric, label, detail){
+    const card = document.getElementById('card-'+id);
+    card.className = 'det-card ' + status;
+    const metricEl = document.getElementById(id === 'lisa' ? 'snr-lisa' : id === 'km3' ? 'rate-km3' : 'flux-'+id);
+    metricEl.className = 'det-metric ' + (status==='detected'?'go':status==='marginal'?'warn':status==='undetected'?'no':'off');
+    metricEl.textContent = status === 'disabled' ? '—' : metric;
+    document.getElementById('stat-'+id).textContent = status.toUpperCase();
+    document.getElementById('stat-'+id).className = 'det-status ' + status;
+    document.getElementById('detail-'+id).textContent = detail;
+  }
+
+  updateCard('lisa',  lisaSt,  'SNR ' + fmtSnr(snr),
+    `f_GW = ${(f_peak*1000).toFixed(2)} mHz · M_c = ${Math.round(Mc)} M☉`,
+    lisaOn ? `h₀ = ${fmtSci(h0,1)} · Threshold SNR: ${LISA_SNR_THRESH}` : 'Channel disabled');
+
+  updateCard('fermi', fermiSt, fermiOn ? fmtSci(fermiRatio, 1)+'×' : '—',
+    fermiOn ? 'Flux / Fermi-LAT threshold' : '—',
+    fermiOn ? `F = ${fmtSci(gammaFluxFermi,1)} erg/cm²/s · limit ${fmtSci(FERMI_THRESH,0)}` : 'Channel disabled');
+
+  updateCard('cta', ctaSt, ctaOn ? fmtSci(ctaRatio,1)+'×' : '—',
+    ctaOn ? 'Flux / CTA threshold' : '—',
+    ctaOn ? `F = ${fmtSci(gammaFluxCTA,1)} erg/cm²/s · limit ${fmtSci(CTA_THRESH,0)}` : 'Channel disabled');
+
+  updateCard('km3', km3St, km3On ? km3Ev.toFixed(km3Ev<10?2:1)+' ev' : '—',
+    km3On ? `Expected events in burst window` : '—',
+    km3On ? `Background ~0.01 ev/100s · Threshold: ${KM3_THRESH} events` : 'Channel disabled');
+
+  // Coincidence score
+  const scores = [
+    lisaOn && lisaSt !== 'undetected' ? (lisaSt === 'detected' ? 1 : 0.5) : 0,
+    fermiOn && fermiSt !== 'undetected' ? (fermiSt === 'detected' ? 1 : 0.5) : 0,
+    ctaOn && ctaSt !== 'undetected' ? (ctaSt === 'detected' ? 1 : 0.5) : 0,
+    km3On && km3St !== 'undetected' ? (km3St === 'detected' ? 1 : 0.5) : 0,
+    hessOn ? 0 : 0  // H.E.S.S. not fully modelled
+  ];
+  const totalScore = scores.reduce((a,b)=>a+b,0);
+  const maxScore = [lisaOn,fermiOn,ctaOn,km3On,hessOn].filter(Boolean).length;
+  const pct = maxScore > 0 ? (totalScore/maxScore)*100 : 0;
+
+  document.getElementById('coinc-score').textContent = totalScore.toFixed(1) + ' / ' + maxScore;
+  const barEl = document.getElementById('coinc-bar');
+  barEl.style.width = pct.toFixed(0) + '%';
+  barEl.style.background = pct >= 80 ? 'var(--teal-glow)' : pct >= 40 ? 'var(--amber-glow)' : 'var(--red-bright)';
+
+  const label = pct >= 80 ? 'Strong multi-messenger coincidence — publish-worthy candidate' :
+                pct >= 60 ? 'Moderate coincidence — follow-up warranted' :
+                pct >= 40 ? 'Weak signal — consistent with noise; needs more data' :
+                pct >= 20 ? 'Marginal — single-channel candidate only' :
+                            'Non-detection across active channels';
+  document.getElementById('coinc-label').textContent = label;
+
+  // FAR estimate (very approximate)
+  const far = pct >= 80 ? '< 1 per 10⁶ yr' : pct >= 60 ? '~1 per 10⁴ yr' : pct >= 40 ? '~1 per 10³ yr' : '> 1 per yr (consistent with background)';
+  document.getElementById('coinc-far').textContent = 'Estimated false-alarm rate: ' + far;
+
+  renderChart(snr, fermiRatio, ctaRatio, km3Ev);
+}
+
+function renderChart(snrCurr, frCurr, fctaCurr, km3Curr){
+  const canvas = document.getElementById('canvas');
+  const W = canvas.offsetWidth || 700;
+  const H = 240;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const padL=52, padR=20, padT=20, padB=40;
+  const pw = W-padL-padR, ph = H-padT-padB;
+
+  // Draw across mass range 10^3.7 to 10^4.7
+  const N = 120;
+  const logMs = Array.from({length:N},(_,i)=>3.7+i*1.0/(N-1));
+
+  const snrArr  = logMs.map(lm=>{ const {snr}=lisaSNR(lm,state.m2,state.tobs,state.e); return snr;});
+  const fermiArr= logMs.map(()=>fermiRatio2(state.logP));
+  const km3Arr  = logMs.map(()=>km3Ratio(state.logP, state.logDt));
+
+  function fermiRatio2(logP){ return transientFluxCGS(logP,state.logDt,0.20)/FERMI_THRESH; }
+  function km3Ratio(logP,logDt){ return km3NetEvents(logP,logDt)/KM3_THRESH; }
+
+  // Log scale y: 0.1 to 10^4
+  function yCoord(v){ const lv=Math.log10(Math.max(v,0.05)); const norm=(lv-(-1.3))/(4-(-1.3)); return padT+ph*(1-Math.min(1,Math.max(0,norm))); }
+  function xCoord(lm){ return padL+((lm-3.7)/1.0)*pw; }
+
+  // Grid lines
+  ctx.strokeStyle='rgba(80,72,112,0.3)'; ctx.lineWidth=0.5;
+  [0.1,1,10,100,1000,10000].forEach(v=>{
+    const y=yCoord(v); ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+pw,y); ctx.stroke();
+    ctx.fillStyle='#504870'; ctx.font="9px 'Space Mono',monospace"; ctx.textAlign='right';
+    ctx.fillText(v>=1?Math.round(v).toString():'0.1',padL-4,y+3);
+  });
+  [3.7,3.8,3.9,4.0,4.1,4.2,4.3,4.4,4.5,4.6,4.7].forEach(lm=>{
+    const x=xCoord(lm); ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+ph); ctx.stroke();
+    const mval = Math.round(Math.pow(10,lm));
+    ctx.fillStyle='#504870'; ctx.font="9px 'Space Mono',monospace"; ctx.textAlign='center';
+    if([3.7,3.9,4.1,4.3,4.5,4.7].includes(lm)) ctx.fillText(mval>=10000?'40k':mval>=1000?(mval/1000).toFixed(1)+'k':mval,x,padT+ph+14);
+  });
+
+  // Threshold lines
+  const yLisa = yCoord(LISA_SNR_THRESH);
+  ctx.setLineDash([4,3]); ctx.strokeStyle='rgba(160,128,240,0.5)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,yLisa); ctx.lineTo(padL+pw,yLisa); ctx.stroke();
+  ctx.fillStyle='rgba(160,128,240,0.7)'; ctx.font="9px 'Space Mono'"; ctx.textAlign='left';
+  ctx.fillText('LISA threshold SNR='+LISA_SNR_THRESH,padL+4,yLisa-3);
+
+  const yUnity = yCoord(1);
+  ctx.strokeStyle='rgba(240,160,32,0.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,yUnity); ctx.lineTo(padL+pw,yUnity); ctx.stroke();
+  ctx.fillStyle='rgba(240,160,32,0.6)'; ctx.fillText('Detection threshold (×1)',padL+4,yUnity-3);
+  ctx.setLineDash([]);
+
+  // LISA SNR curve
+  if(state.channels.lisa){
+    ctx.strokeStyle='#a080f0'; ctx.lineWidth=2.2; ctx.beginPath();
+    logMs.forEach((lm,i)=>{ const y=yCoord(snrArr[i]); i===0?ctx.moveTo(xCoord(lm),y):ctx.lineTo(xCoord(lm),y);});
+    ctx.stroke();
+  }
+  // Fermi ratio (flat across mass — depends on power, not mass)
+  if(state.channels.fermi){
+    const yF = yCoord(fermiArr[0]);
+    ctx.strokeStyle='#ffc840'; ctx.lineWidth=1.5; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(xCoord(3.7),yF); ctx.lineTo(xCoord(4.7),yF); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // KM3 ratio (flat)
+  if(state.channels.km3){
+    const yK = yCoord(km3Ratio(state.logP,state.logDt));
+    ctx.strokeStyle='#4de8c0'; ctx.lineWidth=1.5; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(xCoord(3.7),yK); ctx.lineTo(xCoord(4.7),yK); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Current mass marker
+  const xCurr = xCoord(state.logM);
+  ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(xCurr,padT); ctx.lineTo(xCurr,padT+ph); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle='#9890c0'; ctx.font="10px 'Space Mono'"; ctx.textAlign='center';
+  ctx.fillText('IMBH mass (M☉)', padL+pw/2, H-4);
+  ctx.save(); ctx.translate(12, padT+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Ratio to threshold / SNR', 0, 0); ctx.restore();
+
+  // Legend
+  const leg=[
+    state.channels.lisa  ? {c:'#a080f0',l:'LISA SNR',dash:[]} : null,
+    state.channels.fermi ? {c:'#ffc840',l:'Fermi-LAT (flux/thresh)',dash:[5,3]} : null,
+    state.channels.km3   ? {c:'#4de8c0',l:'KM3NeT (ev/thresh)',dash:[3,3]} : null,
+  ].filter(Boolean);
+  let lx=padL+6;
+  leg.forEach(item=>{
+    ctx.setLineDash(item.dash); ctx.strokeStyle=item.c; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(lx,padT+9); ctx.lineTo(lx+22,padT+9); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle=item.c; ctx.font="9px 'Space Mono'"; ctx.textAlign='left';
+    ctx.fillText(item.l, lx+26, padT+12); lx += ctx.measureText(item.l).width + 52;
+  });
+}
+
+// ---- Wire ----
+function wire(){
+  const msl  = document.getElementById('m-sl');
+  const m2sl = document.getElementById('m2-sl');
+  const tosl = document.getElementById('tobs-sl');
+  const esl  = document.getElementById('e-sl');
+  const psl  = document.getElementById('p-sl');
+  const dtsl = document.getElementById('dt-sl');
+
+  function update(){
+    state.logM  = parseFloat(msl.value);
+    state.m2    = parseFloat(m2sl.value);
+    state.tobs  = parseFloat(tosl.value);
+    state.e     = parseFloat(esl.value);
+    state.logP  = parseFloat(psl.value);
+    state.logDt = parseFloat(dtsl.value);
+
+    const mVal = Math.pow(10,state.logM);
+    document.getElementById('m-val').textContent = mVal >= 10000 ? (mVal/1000).toFixed(0)+'k M☉' : Math.round(mVal).toLocaleString()+' M☉';
+    document.getElementById('m2-val').textContent = state.m2.toFixed(1)+' M☉';
+    document.getElementById('tobs-val').textContent = state.tobs.toFixed(1)+' yr';
+    document.getElementById('e-val').textContent = state.e.toFixed(2);
+    const pExp = Math.round(state.logP);
+    document.getElementById('p-val').innerHTML = '10<sup>'+pExp+'</sup> W';
+    const dtVal = Math.pow(10,state.logDt);
+    document.getElementById('dt-val').textContent = dtVal<60?dtVal.toFixed(0)+' s':dtVal<3600?(dtVal/60).toFixed(0)+' min':dtVal<86400?(dtVal/3600).toFixed(1)+' hr':(dtVal/86400).toFixed(1)+' days';
+
+    saveHash(); render();
+  }
+
+  [msl,m2sl,tosl,esl,psl,dtsl].forEach(s=>s.addEventListener('input',update));
+
+  document.querySelectorAll('[data-m]').forEach(b=>b.addEventListener('click',()=>{state.logM=parseFloat(b.dataset.m);msl.value=state.logM;update();}));
+  document.querySelectorAll('[data-m2]').forEach(b=>b.addEventListener('click',()=>{state.m2=parseFloat(b.dataset.m2);m2sl.value=state.m2;update();}));
+  document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{state.logP=parseFloat(b.dataset.p);psl.value=state.logP;update();}));
+  document.querySelectorAll('[data-dt]').forEach(b=>b.addEventListener('click',()=>{state.logDt=parseFloat(b.dataset.dt);dtsl.value=state.logDt;update();}));
+
+  ['lisa','fermi','cta','km3','hess'].forEach(ch=>{
+    const cb = document.getElementById('ch-'+ch);
+    cb.checked = state.channels[ch];
+    cb.addEventListener('change',()=>{
+      state.channels[ch]=cb.checked;
+      document.getElementById('cl-'+ch).className='ch-label'+(cb.checked?' active':'');
+      saveHash(); render();
+    });
+  });
+
+  update();
+}
+
+window.addEventListener('load',()=>{ loadHash(); wire(); });
+window.addEventListener('resize',()=>render());
+</script>
+</body>
+</html>

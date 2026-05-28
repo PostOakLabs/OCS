@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!--
+  Demo X — LISA's Shot
+  Omega Centauri Society . omegacentauri.me
+  The gravitational-wave and multi-messenger detection roadmap for ω Cen's IMBH:
+  LISA EMRI detectability, astrometric microlensing sensitivity, synthetic
+  observation of stellar kinematics, and the combined multi-messenger alert picture
+  that would make OC's central mass undeniable.
+  Chains: lisa-emri → astrometric-microlensing → synthetic-observation → multi-messenger-alert
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo X — LISA's Shot . OCS</title>
+<meta name="description" content="The gravitational-wave and multi-messenger detection roadmap for ω Cen's IMBH: LISA EMRI detectability, astrometric microlensing, synthetic stellar kinematics, and multi-messenger coincidence.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-lisas-shot.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 5%,rgba(112,85,212,.14),transparent 50%),
+    radial-gradient(ellipse at 85% 40%,rgba(29,186,144,.08),transparent 50%),
+    radial-gradient(ellipse at 50% 92%,rgba(240,160,32,.05),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--purple-glow),var(--teal-glow),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--purple-bright);background:rgba(112,85,212,.07);box-shadow:0 0 0 1px var(--purple-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--purple-bright)}
+.step.s2{--accent:var(--teal-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--purple-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.timeline-table{margin-top:14px;border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden}
+.tt-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid var(--border-subtle);padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.03em}
+.tt-row:last-child{border-bottom:none}
+.tt-row.header{background:rgba(7,5,21,.5);color:var(--text-dim);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.tt-row .hi{color:var(--teal-glow)}
+.tt-row .med{color:var(--amber-bright)}
+.tt-row .lo{color:var(--text-dim)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+
+.tension-banner{margin-top:20px;padding:12px 16px;background:rgba(196,120,0,.08);border:1px solid var(--amber-mid);border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);line-height:1.6}
+
+footer{border-top:1px solid var(--border-subtle);margin-top:60px;padding:22px 28px;text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)}
+footer a{color:var(--text-secondary)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo X &nbsp;·&nbsp; LISA's Shot</span>
+    <a class="nav-link" href="index.html">All Tools</a>
+    <a class="nav-link" href="demo-imbh-evidence.html">Demo A &middot; IMBH Evidence</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-star-falls-in.html">Demo C &middot; Star Falls In</a>
+    <a class="nav-link" href="demo-kardashev-two.html">Demo D &middot; Kardashev II</a>
+    <a class="nav-link" href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a>
+    <a class="nav-link" href="demo-wait-compute.html">Demo G &middot; Wait, Compute, Win?</a>
+    <a class="nav-link" href="demo-bh-tap.html">Demo H &middot; Five Ways to Tap</a>
+    <a class="nav-link" href="demo-fermi-mth-crossover.html">Demo J &middot; Fermi/MTH</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+    <a class="nav-link" href="demo-imbh-origin.html">Demo Q &middot; IMBH Origin</a>
+    <a class="nav-link" href="demo-matrioshka-option.html">Demo R &middot; Matrioshka</a>
+    <a class="nav-link" href="demo-send-a-message.html">Demo S &middot; Send a Message</a>
+    <a class="nav-link" href="demo-dark-side.html">Demo T &middot; Dark Side</a>
+    <a class="nav-link" href="demo-spin-up-tap.html">Demo U &middot; Spin Up and Tap</a>
+    <a class="nav-link" href="demo-every-way-it-eats.html">Demo V &middot; Every Way It Eats</a>
+    <a class="nav-link" href="demo-dark-cluster-alt.html">Demo W &middot; Dark Cluster</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-tag">Demo X &nbsp;·&nbsp; Detection Roadmap</p>
+    <h1>LISA's Shot</h1>
+    <p class="hero-sub">LISA launches in the 2030s and immediately looks at ω Cen. Will it detect an EMRI inspiral? What will Gaia's astrometric microlensing add? What does the synthetic stellar kinematics field look like? And if something unusual happens — what channels alert simultaneously?</p>
+    <p class="hero-meta">Tools: <strong>LISA EMRI</strong> → <strong>Astrometric Microlensing</strong> → <strong>Synthetic Observation</strong> → <strong>Multi-Messenger Alert</strong> &nbsp;·&nbsp; 4 steps</p>
+  </div>
+
+  <!-- Scenario selector -->
+  <div class="scenario">
+    <p class="scenario-title">Choose a detection scenario</p>
+    <p class="scenario-help">Each scenario sets a mass and companion type — tracing a different detection pathway from LISA inspiral to multi-messenger coincidence.</p>
+    <div class="scenario-row">
+      <button class="scenario-btn active" id="sc-ns" onclick="setScenario('ns')">
+        <span class="name">NS EMRI — Best LISA Case (Recommended)</span>
+        <span class="desc">A neutron star inspiralling into an 8,200 M☉ IMBH. Peak GW frequency at ~6 mHz — squarely in LISA's sweet spot. Clean chirp; multi-year inspiral. The detection LISA was designed for.</span>
+      </button>
+      <button class="scenario-btn" id="sc-wd" onclick="setScenario('wd')">
+        <span class="name">WD EMRI — Complementary Channel</span>
+        <span class="desc">A white dwarf spiralling in to an 8,200 M☉ IMBH. Lower GW frequency, longer duration. The Hills mass for WD disruption is right at the tension window — whether the WD survives to inspiral or is disrupted depends on which mass bound is correct.</span>
+      </button>
+      <button class="scenario-btn" id="sc-heavy" onclick="setScenario('heavy')">
+        <span class="name">Heavy IMBH — Upper Mass Range</span>
+        <span class="desc">40,000 M☉ IMBH with NS companion. Lower GW frequency (~1 mHz); still in LISA band. Astrometric microlensing Einstein radius scales as √M — much larger and more easily detected by Gaia/Roman.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+
+    <!-- Step 1: LISA EMRI -->
+    <div class="step s1">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-kicker">Gravitational wave channel</span>
+        <div class="step-title">LISA EMRI — The Inspiral Signal</div>
+        <p class="step-prose">
+          An <em>Extreme Mass Ratio Inspiral (EMRI)</em> occurs when a compact object (neutron star, white dwarf, or stellar-mass black hole) spirals into a much more massive black hole, radiating gravitational waves with a frequency set by the orbital period. For ω Cen's IMBH in the 8,200–40,000 M☉ range, the EMRI frequency sits squarely in the <strong>mHz band</strong> — precisely where LISA (the Laser Interferometer Space Antenna, ESA, ~2035) is most sensitive.
+        </p>
+        <p class="step-prose">
+          The EMRI signal is extraordinarily information-rich: over months to years, the orbit maps the Kerr metric in detail, measuring IMBH mass and spin to better than 1% and testing whether the central object is truly a Kerr black hole or something else. A confirmed EMRI in ω Cen would simultaneously prove the IMBH's existence, measure its mass precisely within the tension window, and discriminate against the dark cluster alternative (which predicts a stochastic multi-body background rather than a clean inspiral).
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-lisa" href="lisa-emri.html#preset=custom&M=3.914&m2=1.40&d=0.74&T=4.0&e=0.30" target="_blank">Open LISA EMRI →</a>
+          <span class="step-params" id="params-lisa">M = 8,200 M☉ · m₂ = 1.4 M☉ (NS) · D = 5.49 kpc · T = 4 yr</span>
+          <span class="tier-mini tier-e">🔬 Established GR</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Check the SNR panel — at OC's distance (5.49 kpc, log D ≈ 0.74), is the SNR above the detection threshold for a 4-year LISA mission? For the recommended NS-EMRI scenario with a low-eccentricity orbit, SNR should reach ~10–30, firmly detectable. Increase eccentricity: eccentric EMRIs radiate more power (through higher harmonics) and are harder to template but carry more information. Toggle to WD companion: lower mass means lower chirp mass and lower strain — detection becomes marginal for low IMBH masses.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Astrometric Microlensing -->
+    <div class="step s2">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-kicker">Astrometric channel</span>
+        <div class="step-title">Astrometric Microlensing — The IMBH's Gravitational Shadow</div>
+        <p class="step-prose">
+          When a massive object passes in front of a background star, it creates two images whose centroid shifts relative to the unlensed position — <em>astrometric microlensing</em>. The Einstein radius <code>θ_E = √(4GM D_LS / c² D_L D_S)</code> sets the angular scale: for ω Cen's IMBH at 5.49 kpc lensing background Milky Way bulge stars, θ_E ~ <strong>0.3–3 milliarcseconds</strong> depending on mass. This is well within Gaia's and the Roman Space Telescope's astrometric precision.
+        </p>
+        <p class="step-prose">
+          Unlike photometric microlensing (which is brief and requires the lens to cross a line of sight), astrometric microlensing produces a <em>persistent centroid shift</em> detectable over years as the lens moves through the cluster. For the IMBH at the cluster center — essentially stationary in cluster coordinates but moving relative to background stars at ~1–5 mas/yr (due to OC's proper motion) — astrometric monitoring with Gaia, the Nancy Roman Space Telescope, or a dedicated JWST campaign could detect this signature over a ~5–10 year baseline.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-ml" href="astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.50&G=20.5&mu=5.2&Sigma=2.50" target="_blank">Open Astrometric Microlensing →</a>
+          <span class="step-params" id="params-ml">M_L = 8,200 M☉ · D_L = 5.49 kpc · D_S = 8.5 kpc · μ = 5.2 mas/yr</span>
+          <span class="tier-mini tier-e">🔬 Established astrometry</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Compare the Einstein radius and peak centroid shift for the 8,200 M☉ vs 40,000 M☉ scenarios — the shift scales as √M, so the heavier IMBH has ~2.2× larger astrometric signature. The event rate (number of background stars lensed to detectable level per year) scales with both mass and source star surface density. For OC's declination (−47°), Roman Space Telescope has better coverage than Gaia for long-duration astrometric campaigns.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Synthetic Observation -->
+    <div class="step s3">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-kicker">Stellar kinematics channel</span>
+        <div class="step-title">Synthetic Observation — What the Telescope Would See</div>
+        <p class="step-prose">
+          The synthetic observation simulator generates a mock field of stars around the IMBH — positions drawn from a King model density profile with a central velocity dispersion enhancement from the IMBH — and computes the line-of-sight velocity distribution for each simulated star. This is what a next-generation spectrograph would measure: a kinematic map that rises toward the Keplerian <code>v ∝ r⁻¹/²</code> signature within the sphere of influence <code>r_infl = GM_BH / σ²</code>.
+        </p>
+        <p class="step-prose">
+          For ω Cen's IMBH, the sphere of influence at 8,200 M☉ and σ = 22 km/s is <code>r_infl ≈ 0.06–0.1 pc</code> — about 0.4–0.7 arcsec at 5.49 kpc. This is <em>just within reach</em> of HST/JWST resolution, and well within the resolving power of the next-generation 30-m class telescopes (ELT, TMT). The seven fast-moving stars detected by Häberle et al. (2024) are precisely the stars within this region — the synthetic simulator shows how many more such stars we should expect, and how clearly the kinematic signature of an IMBH vs a dark cluster would differ in a larger catalog.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-syn" href="synthetic-observation.html#mass=8.200e%2B3&dx=0.00&dy=0.00&view=sim&n=200" target="_blank">Open Synthetic Observation →</a>
+          <span class="step-params" id="params-syn">M = 8,200 M☉ · IMBH centred · 200 stars · simulation view</span>
+          <span class="tier-mini tier-d">⚠ Simulated data</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Set M = 0 and compare the velocity distribution to M = 8,200 M☉. The kinematic signature of the IMBH appears as a cluster of high-velocity stars concentrated within ~0.1 arcsec of the center — rare but unmistakable. Try moving the IMBH off-center (dx/dy sliders): the centroid of the kinematic enhancement shifts, an effect visible in the proper motion catalog at high precision. For the heavy IMBH (40,000 M☉) scenario, the sphere of influence is larger and the fast-star population extends to ~1 arcsec — significantly easier to detect.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Multi-Messenger Alert -->
+    <div class="step s4">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-kicker">Coincidence synthesis</span>
+        <div class="step-title">Multi-Messenger Alert — When Everything Fires at Once</div>
+        <p class="step-prose">
+          A gravitational-wave chirp from LISA, an astrometric microlensing event from Roman, and a stellar kinematic spike from ELT occurring simultaneously with a neutrino burst from KM3NeT and a gamma-ray flare from Fermi-LAT — that is the complete multi-messenger picture. Each channel alone is compelling; all firing in the same time window, pointed at the same sky position, would constitute overwhelming evidence for a dynamic event at ω Cen's core.
+        </p>
+        <p class="step-prose">
+          The multi-messenger alert simulator calculates the coincidence detection score — how many channels would register above threshold — for a given IMBH mass, EMRI parameters, and hypothetical transient power. For the EMRI alone (no transient), LISA is the primary channel. For an accompanying tidal disruption flare or hypothetical OCS-related transient, Fermi-LAT and KM3NeT enter the picture. The false-alarm rate for a chance coincidence across three or more independent channels at this sky position is well below 1 per 10⁶ years.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-mm" href="multi-messenger-alert.html#M=3.914&m2=1.40&T=4.0&e=0.30&P=38.0&dt=2.0" target="_blank">Open Multi-Messenger Alert →</a>
+          <span class="step-params" id="params-mm">M = 8,200 M☉ · NS EMRI · T = 4 yr · P = 10³⁸ W transient</span>
+          <span class="tier-mini tier-e">🔬 Instrument sensitivities established</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Start with only the LISA channel enabled: the coincidence score reflects GW detection alone. Now enable Fermi-LAT and KM3NeT. Increase the transient power slider to 10⁴⁰ W (a TDE-scale flare): the gamma-ray and neutrino channels light up simultaneously with the GW signal. Notice the false-alarm rate dropping precipitously as more channels fire — multi-messenger astronomy is fundamentally about false-alarm suppression. The ~5σ threshold for a single-channel detection corresponds to a false-alarm rate of ~1 per ~3 million years; three coincident channels easily pass 6–8σ effective significance.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Detection roadmap table -->
+  <div style="margin-top:32px;">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">ω Cen detection roadmap — instrument timeline</div>
+    <div class="timeline-table">
+      <div class="tt-row header"><span>Instrument</span><span>Expected online</span><span>OC capability</span><span>Key measurement</span></div>
+      <div class="tt-row"><span class="hi">LISA (ESA)</span><span class="hi">~2035</span><span class="hi">EMRI inspiral at mHz</span><span class="hi">Mass + spin to &lt;1%</span></div>
+      <div class="tt-row"><span class="med">Nancy Roman ST</span><span class="med">~2027</span><span class="med">Astrometric microlensing</span><span class="med">Einstein radius + mass</span></div>
+      <div class="tt-row"><span class="med">ELT / TMT</span><span class="med">~2028–2030</span><span class="med">Sub-arcsec kinematics</span><span class="med">Velocity field in r_infl</span></div>
+      <div class="tt-row"><span>KM3NeT ARCA</span><span>~2027 (full)</span><span>Upgoing ν at dec −47°</span><span>Burst neutrino detection</span></div>
+      <div class="tt-row"><span>CTA</span><span>~2027</span><span>γ-ray, ≥30 GeV</span><span>TDE / flare signatures</span></div>
+      <div class="tt-row"><span class="lo">MeerKAT / SKA</span><span class="lo">now / ~2030</span><span class="lo">Pulsar timing</span><span class="lo">Upper limit / detection</span></div>
+    </div>
+  </div>
+
+  <div class="tension-banner">
+    ⚠ IMBH mass tension: Häberle et al. (2024) lower bound ≥ 8,200 M☉ vs Bañares-Hernández et al. (2025) upper bound &lt; 6,000 M☉. The NS-EMRI scenario uses the Häberle lower bound as the baseline. LISA's mass measurement would resolve this tension definitively — a detection above the Bañares-Hernández upper bound would falsify the pulsar-timing constraint under standard assumptions, or reveal a systematic in one of the measurements.
+  </div>
+
+  <!-- Synthesis -->
+  <div class="synthesis">
+    <div class="synth-title">// Synthesis — Why Multi-Messenger Matters</div>
+    <div class="synth-prose">
+      <p>Each detection channel in this chain answers a different question. LISA measures the mass and spin precisely, and the EMRI chirp is the definitive test against the dark cluster alternative: a distributed mass cannot produce a coherent inspiral signal. Astrometric microlensing measures the total lensing mass independently, cross-checking the LISA result without assuming Kerr geometry. Synthetic stellar kinematics is what a 30-m telescope would see in the field — the kinematic sphere of influence that Häberle et al. (2024) have already partially resolved.</p>
+      <p>The multi-messenger alert simulator adds the transient dimension. During an EMRI, the inspiralling compact object perturbs the accretion environment — potentially triggering a transient accretion flare detectable in gamma-rays, or (in the speculative OCS framework) coinciding with an engineered feeding event that produces a detectable signal across multiple channels. The coincidence requirement is the hardest scientific test imaginable: a false alarm at &lt;10⁻⁶/yr probability requires genuine physical association.</p>
+      <p>The OCS case rests ultimately on what LISA finds. If LISA detects a clean Kerr EMRI from ω Cen in the early 2040s, the IMBH hypothesis is confirmed, the dark cluster is falsified, and the OCS speculative framework — for the first time — rests on a confirmed observational foundation. If LISA finds nothing where the models predict a signal, the null hypothesis wins, and the speculative framework must be revised. Either outcome advances the science. This is falsifiability at work.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <a href="https://omegacentauri.me/">omegacentauri.me</a> &nbsp;·&nbsp;
+  Demo X &nbsp;·&nbsp; LISA's Shot &nbsp;·&nbsp;
+  Tools: <a href="lisa-emri.html">LISA EMRI</a> · <a href="astrometric-microlensing.html">Microlensing</a> · <a href="synthetic-observation.html">Synthetic Obs</a> · <a href="multi-messenger-alert.html">Multi-Messenger</a> &nbsp;·&nbsp;
+  Code: MIT · Prose: CC BY 4.0
+</footer>
+
+<script>
+const SCENARIOS = {
+  ns: {
+    lisa: 'lisa-emri.html#preset=custom&M=3.914&m2=1.40&d=0.74&T=4.0&e=0.30',
+    ml:   'astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.50&G=20.5&mu=5.2&Sigma=2.50',
+    syn:  'synthetic-observation.html#mass=8.200e%2B3&dx=0.00&dy=0.00&view=sim&n=200',
+    mm:   'multi-messenger-alert.html#M=3.914&m2=1.40&T=4.0&e=0.30&P=38.0&dt=2.0',
+    lP:   'M = 8,200 M☉ · m₂ = 1.4 M☉ (NS) · D = 5.49 kpc · T = 4 yr',
+    mlP:  'M_L = 8,200 M☉ · D_L = 5.49 kpc · D_S = 8.5 kpc · μ = 5.2 mas/yr',
+    sP:   'M = 8,200 M☉ · centred · 200 stars',
+    mmP:  'M = 8,200 M☉ · NS EMRI · T = 4 yr · P = 10³⁸ W transient',
+  },
+  wd: {
+    lisa: 'lisa-emri.html#preset=custom&M=3.914&m2=0.60&d=0.74&T=4.0&e=0.20',
+    ml:   'astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.50&G=20.5&mu=5.2&Sigma=2.50',
+    syn:  'synthetic-observation.html#mass=8.200e%2B3&dx=0.05&dy=0.02&view=sim&n=200',
+    mm:   'multi-messenger-alert.html#M=3.914&m2=0.60&T=4.0&e=0.20&P=38.0&dt=2.0',
+    lP:   'M = 8,200 M☉ · m₂ = 0.6 M☉ (WD) · D = 5.49 kpc · T = 4 yr',
+    mlP:  'M_L = 8,200 M☉ · D_L = 5.49 kpc · WD Hills mass check',
+    sP:   'M = 8,200 M☉ · slightly off-centre · 200 stars',
+    mmP:  'M = 8,200 M☉ · WD EMRI · T = 4 yr · P = 10³⁸ W transient',
+  },
+  heavy: {
+    lisa: 'lisa-emri.html#preset=custom&M=4.602&m2=1.40&d=0.74&T=4.0&e=0.30',
+    ml:   'astrometric-microlensing.html#ML=40000&DL=5.49&DS=8.50&G=20.5&mu=5.2&Sigma=2.50',
+    syn:  'synthetic-observation.html#mass=4.000e%2B4&dx=0.00&dy=0.00&view=sim&n=200',
+    mm:   'multi-messenger-alert.html#M=4.602&m2=1.40&T=4.0&e=0.30&P=40.0&dt=2.0',
+    lP:   'M = 40,000 M☉ · m₂ = 1.4 M☉ (NS) · D = 5.49 kpc · T = 4 yr',
+    mlP:  'M_L = 40,000 M☉ · D_L = 5.49 kpc · θ_E ~2× larger',
+    sP:   'M = 40,000 M☉ · wide kinematic sphere of influence',
+    mmP:  'M = 40,000 M☉ · NS EMRI · T = 4 yr · P = 10⁴⁰ W transient',
+  }
+};
+
+function setScenario(sc) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + sc).classList.add('active');
+  const s = SCENARIOS[sc];
+  document.getElementById('cta-lisa').href = s.lisa;
+  document.getElementById('cta-ml').href   = s.ml;
+  document.getElementById('cta-syn').href  = s.syn;
+  document.getElementById('cta-mm').href   = s.mm;
+  document.getElementById('params-lisa').textContent = s.lP;
+  document.getElementById('params-ml').textContent   = s.mlP;
+  document.getElementById('params-syn').textContent  = s.sP;
+  document.getElementById('params-mm').textContent   = s.mmP;
+}
+</script>
+</body>
+</html>

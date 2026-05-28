@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--
+  Demo W — The Dark Cluster Alternative
+  Omega Centauri Society . omegacentauri.me
+  The null hypothesis for ω Cen's central mass: not a single IMBH but a compact
+  cluster of stellar remnants — black holes, neutron stars, white dwarfs — whose
+  combined gravity mimics an IMBH in current observations. Walk the challenge from
+  constraint stacking through dark cluster modelling to what oMEGACat stellar
+  populations and mass segregation signatures would look like under each hypothesis.
+  Chains: constraint-stacker → dark-cluster → omegacat-populations → mass-segregation
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo W — The Dark Cluster Alternative . OCS</title>
+<meta name="description" content="The null hypothesis: a dark cluster of stellar remnants instead of an IMBH. Walk the constraint evidence, dark cluster model, oMEGACat stellar populations, and mass segregation signatures.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-dark-cluster-alt.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 8%,rgba(112,85,212,.12),transparent 50%),
+    radial-gradient(ellipse at 80% 60%,rgba(208,64,64,.07),transparent 50%),
+    radial-gradient(ellipse at 50% 95%,rgba(29,186,144,.05),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--purple-glow),var(--red-bright),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.honest-box{margin-bottom:32px;padding:14px 18px;background:rgba(112,85,212,.06);border:1px solid var(--border-subtle);border-left:3px solid var(--purple-glow);border-radius:0 10px 10px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);line-height:1.7}
+.honest-box strong{color:var(--purple-glow)}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--red-bright);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--red-bright)}
+.scenario-btn.active{border-color:var(--red-bright);background:rgba(208,64,64,.06);box-shadow:0 0 0 1px var(--red-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--red-bright);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--purple-bright)}
+.step.s2{--accent:var(--red-bright)}
+.step.s3{--accent:var(--teal-bright)}
+.step.s4{--accent:var(--amber-bright)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.discriminator-table{margin-top:14px;border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden}
+.dt-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border-subtle);padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.03em}
+.dt-row:last-child{border-bottom:none}
+.dt-row.header{background:rgba(7,5,21,.5);color:var(--text-dim);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.dt-row .imbh{color:var(--teal-glow)}
+.dt-row .dark{color:var(--red-bright)}
+.dt-row .both{color:var(--amber-bright)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--red-bright);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+
+footer{border-top:1px solid var(--border-subtle);margin-top:60px;padding:22px 28px;text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)}
+footer a{color:var(--text-secondary)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo W &nbsp;·&nbsp; The Dark Cluster Alternative</span>
+    <a class="nav-link" href="index.html">All Tools</a>
+    <a class="nav-link" href="demo-imbh-evidence.html">Demo A &middot; IMBH Evidence</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-star-falls-in.html">Demo C &middot; Star Falls In</a>
+    <a class="nav-link" href="demo-kardashev-two.html">Demo D &middot; Kardashev II</a>
+    <a class="nav-link" href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a>
+    <a class="nav-link" href="demo-wait-compute.html">Demo G &middot; Wait, Compute, Win?</a>
+    <a class="nav-link" href="demo-bh-tap.html">Demo H &middot; Five Ways to Tap</a>
+    <a class="nav-link" href="demo-fermi-mth-crossover.html">Demo J &middot; Fermi/MTH</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+    <a class="nav-link" href="demo-imbh-origin.html">Demo Q &middot; IMBH Origin</a>
+    <a class="nav-link" href="demo-matrioshka-option.html">Demo R &middot; Matrioshka</a>
+    <a class="nav-link" href="demo-send-a-message.html">Demo S &middot; Send a Message</a>
+    <a class="nav-link" href="demo-dark-side.html">Demo T &middot; Dark Side</a>
+    <a class="nav-link" href="demo-spin-up-tap.html">Demo U &middot; Spin Up and Tap</a>
+    <a class="nav-link" href="demo-every-way-it-eats.html">Demo V &middot; Every Way It Eats</a>
+    <a class="nav-link" href="demo-dark-cluster-alt.html">Demo W &middot; Dark Cluster</a>
+    <a class="nav-link" href="demo-lisas-shot.html">Demo X &middot; LISA's Shot</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-tag">Demo W &nbsp;·&nbsp; Null Hypothesis Chain</p>
+    <h1>The Dark Cluster Alternative</h1>
+    <p class="hero-sub">The OCS hypothesis requires an IMBH. But the data do not yet rule out a competing explanation: a dense cluster of stellar remnants whose combined gravity mimics a single black hole. This is that hypothesis's strongest form — and its testable signatures.</p>
+    <p class="hero-meta">Tools: <strong>Constraint Stacker</strong> → <strong>Dark Cluster Explorer</strong> → <strong>oMEGACat Populations</strong> → <strong>Mass Segregation Lab</strong> &nbsp;·&nbsp; 4 steps</p>
+  </div>
+
+  <div class="honest-box">
+    <strong>Epistemic note:</strong> This demo presents the dark cluster alternative as the mainstream null hypothesis, not a fringe position. Bañares-Hernández et al. (2025) explicitly favour a dark cluster of ~2–3 × 10⁵ M☉ over a single IMBH based on pulsar timing and stellar kinematics. The IMBH interpretation is strongly supported but not yet confirmed. The OCS speculative framework requires an IMBH; this demo stress-tests that requirement.
+  </div>
+
+  <!-- Scenario selector -->
+  <div class="scenario">
+    <p class="scenario-title">Choose a dark cluster model</p>
+    <p class="scenario-help">Each scenario represents a different mass composition for the hypothetical dark remnant cluster at ω Cen's core.</p>
+    <div class="scenario-row">
+      <button class="scenario-btn active" id="sc-bh" onclick="setScenario('bh')">
+        <span class="name">BH-Dominated Cluster (Recommended)</span>
+        <span class="desc">~2×10⁵ M☉ in stellar-mass BHs (10–30 M☉ each), concentrated within ~0.1 pc. Favoured by Bañares-Hernández et al. (2025). High mean mass per remnant; strong mass segregation signature expected.</span>
+      </button>
+      <button class="scenario-btn" id="sc-mix" onclick="setScenario('mix')">
+        <span class="name">Mixed Remnant Cluster</span>
+        <span class="desc">BHs + neutron stars + white dwarfs in a thermally relaxed mix. Lower mean object mass; requires higher total number (~10⁴ objects). Less mass segregation signature; harder to rule out.</span>
+      </button>
+      <button class="scenario-btn" id="sc-minimal" onclick="setScenario('minimal')">
+        <span class="name">Minimal: Small IMBH + Cluster</span>
+        <span class="desc">A modest IMBH of ~2,000–3,000 M☉ plus a dark cluster of ~1×10⁵ M☉. Formally consistent with both Häberle lower bound and Bañares-Hernández upper bound if the IMBH is at the lower end.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+
+    <!-- Step 1: Constraint Stacker -->
+    <div class="step s1">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-kicker">The observational case</span>
+        <div class="step-title">Constraint Stacker — Where the Evidence Actually Points</div>
+        <p class="step-prose">
+          Before evaluating the dark cluster alternative, see what the data require of <em>any</em> central mass model. The constraint stacker layers five independent measurement techniques: HST stellar proper motions (Häberle et al. 2024), pulsar timing (Bañares-Hernández et al. 2025), M-σ relation, JWST non-detection, and LISA EMRI projections. Each constrains the allowed mass window differently.
+        </p>
+        <p class="step-prose">
+          The critical observation: <strong>the Häberle lower bound (≥8,200 M☉) and the Bañares-Hernández upper bound (&lt;6,000 M☉) are formally inconsistent under standard modelling assumptions</strong> if both are interpreted as constraining a <em>point mass</em>. This tension is precisely what motivates the dark cluster alternative — a spatially extended mass distribution can simultaneously satisfy a kinematic lower bound (from fast stars near the center) and a timing upper bound (from pulsars sampling a larger volume) without contradiction.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-cs" href="constraint-stacker.html#epsilon=1.00e-01&rho=1.00e%2B04&show=kinematic%2Cpulsar%2Cmsigma%2Cjwst&sel=" target="_blank">Open Constraint Stacker →</a>
+          <span class="step-params" id="params-cs">Show: kinematic, pulsar, M-σ, JWST constraints</span>
+          <span class="tier-mini tier-e">🔬 Observational data</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Toggle each constraint on and off. With only the Häberle kinematic constraint visible, the data permit a wide mass range above 8,200 M☉ — consistent with a large dark cluster. Add the Bañares-Hernández pulsar timing bound: the window appears to close for a <em>point mass</em> but remains open for an extended distribution. The JWST non-detection constrains the gas environment but not the mass itself. Note that no single constraint forces a point-mass IMBH — that inference requires the joint weight of all constraints together.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Dark Cluster -->
+    <div class="step s2">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-kicker">The alternative model</span>
+        <div class="step-title">Dark Cluster Explorer — Building the Remnant Ball</div>
+        <p class="step-prose">
+          The dark cluster model replaces the IMBH with a <em>Plummer-sphere distribution</em> of stellar remnants: black holes, neutron stars, and white dwarfs accumulated through mass segregation over the cluster's 12 Gyr lifetime. The key parameters are the total dark mass, the mean remnant mass, the Plummer radius (how concentrated the cluster is), and the velocity anisotropy. The model must reproduce the same central velocity dispersion and surface brightness as the IMBH model.
+        </p>
+        <p class="step-prose">
+          The dark cluster has a critical weakness: it must be <em>dynamically stable</em>. A compact cluster of ~10⁴ stellar-mass BHs in a volume of ~0.01 pc³ undergoes rapid two-body relaxation and dynamical friction, causing the inner core to collapse or eject members on timescales of ~10⁷–10⁸ yr. To survive 12 Gyr, either the remnant population must be less compact than observations require, or some energy injection mechanism prevents core collapse. This instability argument is currently the strongest theoretical case for an IMBH over a dark cluster.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-dc" href="dark-cluster.html#Mdark=200000&Mmean=15.00&aPlum=0.050&beta=0.00&MBH=0" target="_blank">Open Dark Cluster Explorer →</a>
+          <span class="step-params" id="params-dc">M_dark = 2×10⁵ M☉ · m̄ = 15 M☉ · a_Plum = 0.05 pc</span>
+          <span class="tier-mini tier-d">⚠ Active debate</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Vary the Plummer radius from 0.01 pc to 0.5 pc. At small radii the velocity dispersion profile can fit the fast stars observed by Häberle et al., but the dynamical instability timescale becomes shorter than the cluster age — the dark cluster evaporates itself. At larger radii, the dynamical stability improves but the model no longer concentrates enough mass to produce the observed fast-star velocities. The sweet spot is a narrow range around ~0.03–0.08 pc — genuinely viable but observationally distinguishable from an IMBH with ~10 μas astrometric precision.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: oMEGACat Populations -->
+    <div class="step s3">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-kicker">The stellar census</span>
+        <div class="step-title">oMEGACat Populations — What the Stars Know About the Core</div>
+        <p class="step-prose">
+          The oMEGACat survey (Häberle et al. 2025; clontz et al. 2024; and five companion papers) provides the most complete stellar catalog of ω Cen ever compiled: 1.4 million proper motions, 300,000 radial velocities, photometric classifications across the full Hertzsprung-Russell diagram. The stellar populations carry two kinds of signal about the central mass.
+        </p>
+        <p class="step-prose">
+          First, the <em>radial kinematics</em>: populations at different evolutionary stages (MS stars, sub-giants, red giants) have different mass-to-light ratios and orbital anisotropies. If the central mass is extended (dark cluster) rather than a point, the velocity dispersion profile will show a characteristic <em>flattening at small radii</em> rather than the Keplerian rise expected for an IMBH. Second, the <em>population gradients</em>: a dark cluster of massive BHs would gravitationally scatter old metal-poor stars out of the core, subtly altering the ratio of stellar sub-populations at r &lt; 0.3 pc — a signal potentially accessible in oMEGACat's deepest photometric bands.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-pop" href="omegacat-populations.html#pop=metal_poor_ms" target="_blank">Open oMEGACat Populations →</a>
+          <span class="step-params" id="params-pop">Population: metal-poor main sequence</span>
+          <span class="tier-mini tier-e">🔬 oMEGACat data 2024–2025</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Browse the multiple stellar populations in ω Cen — from the dominant old metal-poor main sequence through younger sub-populations to the red giant branch. Notice the age spread (~10–12 Gyr) and the multiple main-sequence ridgelines that reveal OC's dwarf-galaxy heritage. For the dark cluster question: a BH cluster of 10⁴ objects at 0.05 pc would scatter the lowest-mass MS stars preferentially via dynamical heating, producing a detectable deficit of M-dwarf stars within the inner ~0.1 pc. This signal has not yet been measured at sufficient precision — it is a candidate discriminator for future JWST photometric programs.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Mass Segregation -->
+    <div class="step s4">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-kicker">The dynamical smoking gun</span>
+        <div class="step-title">Mass Segregation Lab — How Dark Remnants Sink to the Center</div>
+        <p class="step-prose">
+          Mass segregation is the process by which two-body relaxation causes massive objects to sink toward the cluster center while low-mass stars are ejected outward. The timescale is the <em>relaxation time</em> T_relax ∝ M_cl / (m_★ log Λ), and for ω Cen with its ~12 Gyr age and half-mass relaxation time of ~10⁹–10¹⁰ yr, <em>partial but not complete</em> mass segregation is expected.
+        </p>
+        <p class="step-prose">
+          For the dark cluster model, mass segregation is the <em>formation mechanism</em>: stellar BHs born throughout the cluster sink inward over Gyr timescales, accumulating a dense remnant subsystem at the core. The mass segregation lab lets you set cluster mass, half-mass radius, stellar mass spectrum, and retention fraction of stellar remnants to predict the current central dark mass — and check whether it is consistent with what the dark cluster model in step 2 requires.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-ms" href="mass-segregation.html#Mcl=4.000e%2B6&rh=5.00&mstar=0.60&mBH=15.0&t=12.0&fret=0.20" target="_blank">Open Mass Segregation Lab →</a>
+          <span class="step-params" id="params-ms">M_cl = 4×10⁶ M☉ · r_h = 5 pc · m_BH = 15 M☉ · t = 12 Gyr</span>
+          <span class="tier-mini tier-e">🔬 Established stellar dynamics</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Set the BH retention fraction (fraction of natal BHs that remain bound after supernova kicks). At f_ret = 0.05 (typical natal kick estimate) the accumulated central dark mass after 12 Gyr falls well short of the 2×10⁵ M☉ required by the dark cluster model — the cluster simply has not retained enough remnants. Raising f_ret to 0.3–0.5 (low natal kicks, possible for very massive BHs formed by direct collapse) brings the predicted dark mass into range. This is precisely the observational debate: natal kick distributions for massive BHs remain poorly constrained, making the dark cluster formation channel plausible but not demonstrated.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Discriminator table -->
+  <div style="margin-top:32px;">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">IMBH vs dark cluster — discriminating observations</div>
+    <div class="discriminator-table">
+      <div class="dt-row header"><span>Observable</span><span>IMBH prediction</span><span>Dark cluster prediction</span></div>
+      <div class="dt-row"><span>Central velocity dispersion profile</span><span class="imbh">Keplerian rise: σ ∝ r⁻¹/²</span><span class="dark">Flat core: σ plateaus at r &lt; a_Plum</span></div>
+      <div class="dt-row"><span>LISA EMRI signal</span><span class="imbh">Single chirping inspiral, ~10³–10⁶ Hz mHz</span><span class="dark">Absent or confused multibody noise</span></div>
+      <div class="dt-row"><span>GW continuous-wave background</span><span class="imbh">Single EMRI + possibly BZ-driven signal</span><span class="dark">Stochastic cluster background at mHz</span></div>
+      <div class="dt-row"><span>Astrometric microlensing</span><span class="imbh">Single long-timescale event (&gt;1 yr)</span><span class="dark">Many short events from individual BHs</span></div>
+      <div class="dt-row"><span>M-dwarf deficit in inner 0.1 pc</span><span class="both">Small (BH scattering limited)</span><span class="dark">Large (10⁴-object dynamical heating)</span></div>
+      <div class="dt-row"><span>JWST accretion emission</span><span class="both">Both predict: nil (JWST 2025 confirmed)</span><span class="both">Both predict: nil</span></div>
+    </div>
+  </div>
+
+  <!-- Synthesis -->
+  <div class="synthesis">
+    <div class="synth-title">// Synthesis — Why This Matters for the OCS Hypothesis</div>
+    <div class="synth-prose">
+      <p>The OCS speculative framework is built on a single IMBH of ≥8,200 M☉ as the gravitational engine. A dark cluster of 10⁴ stellar-mass BHs distributed over 0.05 pc cannot serve the same purpose: there is no ergosphere, no Blandford-Znajek process, no coherent spin angular momentum to extract via Penrose scattering. If the central mass is a dark cluster, the OCS Phase 3–5 architecture does not apply in its current form.</p>
+      <p>This is why the OCS explicitly supports the LISA EMRI mission and the astrometric microlensing programs (see <a href="lisa-emri.html" target="_blank">LISA EMRI tool</a> and <a href="astrometric-microlensing.html" target="_blank">Microlensing Predictor</a>). These are the decisive discriminators. A single long-duration EMRI chirp at mHz frequencies would falsify the dark cluster model unambiguously. Conversely, a confused stochastic background without a clean inspiral signal would seriously challenge the IMBH interpretation. LISA, expected to launch in the 2030s, is the arbiter.</p>
+      <p>Until then, the OCS acknowledges the dark cluster alternative as a live scientific hypothesis and presents its speculative framework as contingent on the IMBH being confirmed. The chain you have just traced — constraint evidence, dark cluster stability limits, stellar population signatures, and mass segregation formation pathways — is the full case for and against. The evidence favours an IMBH; it does not yet prove one.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <a href="https://omegacentauri.me/">omegacentauri.me</a> &nbsp;·&nbsp;
+  Demo W &nbsp;·&nbsp; The Dark Cluster Alternative &nbsp;·&nbsp;
+  Tools: <a href="constraint-stacker.html">Constraints</a> · <a href="dark-cluster.html">Dark Cluster</a> · <a href="omegacat-populations.html">oMEGACat</a> · <a href="mass-segregation.html">Mass Segregation</a> &nbsp;·&nbsp;
+  Code: MIT · Prose: CC BY 4.0
+</footer>
+
+<script>
+const SCENARIOS = {
+  bh: {
+    cs:  'constraint-stacker.html#epsilon=1.00e-01&rho=1.00e%2B04&show=kinematic%2Cpulsar%2Cmsigma%2Cjwst&sel=',
+    dc:  'dark-cluster.html#Mdark=200000&Mmean=15.00&aPlum=0.050&beta=0.00&MBH=0',
+    pop: 'omegacat-populations.html#pop=metal_poor_ms',
+    ms:  'mass-segregation.html#Mcl=4.000e%2B6&rh=5.00&mstar=0.60&mBH=15.0&t=12.0&fret=0.20',
+    csP: 'Show: kinematic, pulsar, M-σ, JWST constraints',
+    dcP: 'M_dark = 2×10⁵ M☉ · m̄ = 15 M☉ · a_Plum = 0.05 pc · no IMBH',
+    popP:'Population: metal-poor main sequence',
+    msP: 'M_cl = 4×10⁶ M☉ · r_h = 5 pc · m_BH = 15 M☉ · t = 12 Gyr',
+  },
+  mix: {
+    cs:  'constraint-stacker.html#epsilon=1.00e-01&rho=1.00e%2B04&show=kinematic%2Cpulsar%2Cmsigma%2Cjwst&sel=',
+    dc:  'dark-cluster.html#Mdark=300000&Mmean=4.00&aPlum=0.080&beta=0.00&MBH=0',
+    pop: 'omegacat-populations.html#pop=agb',
+    ms:  'mass-segregation.html#Mcl=4.000e%2B6&rh=5.00&mstar=0.60&mBH=4.0&t=12.0&fret=0.40',
+    csP: 'Show: kinematic, pulsar, M-σ, JWST constraints',
+    dcP: 'M_dark = 3×10⁵ M☉ · m̄ = 4 M☉ (mixed) · a_Plum = 0.08 pc',
+    popP:'Population: AGB stars (age tracer)',
+    msP: 'M_cl = 4×10⁶ M☉ · r_h = 5 pc · m̄ = 4 M☉ (mixed NS+WD+BH)',
+  },
+  minimal: {
+    cs:  'constraint-stacker.html#epsilon=1.00e-01&rho=1.00e%2B04&show=kinematic%2Cpulsar%2Cmsigma%2Cjwst&sel=',
+    dc:  'dark-cluster.html#Mdark=100000&Mmean=10.00&aPlum=0.060&beta=0.00&MBH=3000',
+    pop: 'omegacat-populations.html#pop=red_giant',
+    ms:  'mass-segregation.html#Mcl=4.000e%2B6&rh=5.00&mstar=0.60&mBH=10.0&t=12.0&fret=0.15',
+    csP: 'Show: kinematic, pulsar, M-σ, JWST constraints',
+    dcP: 'M_dark = 10⁵ M☉ cluster + 3,000 M☉ IMBH · a_Plum = 0.06 pc',
+    popP:'Population: red giant branch',
+    msP: 'M_cl = 4×10⁶ M☉ · r_h = 5 pc · m_BH = 10 M☉ · f_ret = 0.15',
+  }
+};
+
+function setScenario(sc) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + sc).classList.add('active');
+  const s = SCENARIOS[sc];
+  document.getElementById('cta-cs').href  = s.cs;
+  document.getElementById('cta-dc').href  = s.dc;
+  document.getElementById('cta-pop').href = s.pop;
+  document.getElementById('cta-ms').href  = s.ms;
+  document.getElementById('params-cs').textContent  = s.csP;
+  document.getElementById('params-dc').textContent  = s.dcP;
+  document.getElementById('params-pop').textContent = s.popP;
+  document.getElementById('params-ms').textContent  = s.msP;
+}
+</script>
+</body>
+</html>

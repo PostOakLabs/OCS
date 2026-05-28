@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!--
+  Demo U — Spin Up and Tap
+  Omega Centauri Society . omegacentauri.me
+  The complete energy-extraction chain: Penrose scattering seeds angular momentum
+  extraction; superradiance shows the ultralight-boson instability that drains spin
+  independently; BZ electromagnetic extraction is the operational power plant;
+  Kerr geometry visualises the ergosphere that makes all three possible.
+  Chains: penrose-process → superradiance → bz-kardashev → kerr-geometry
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo U — Spin Up and Tap . OCS</title>
+<meta name="description" content="The complete energy-extraction chain from a Kerr black hole: Penrose process efficiency, superradiance instability, Blandford-Znajek power output, and Kerr ergosphere geometry.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-spin-up-tap.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 5%,rgba(240,160,32,.12),transparent 50%),
+    radial-gradient(ellipse at 80% 40%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(29,186,144,.06),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--amber-glow),var(--amber-bright),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--amber-bright)}
+.scenario-btn.active{border-color:var(--amber-bright);background:rgba(196,120,0,.08);box-shadow:0 0 0 1px var(--amber-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--amber-bright)}
+.step.s2{--accent:var(--red-bright)}
+.step.s3{--accent:var(--purple-bright)}
+.step.s4{--accent:var(--teal-bright)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.eff-table{margin-top:14px;border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden}
+.et-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1px solid var(--border-subtle);padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.03em}
+.et-row:last-child{border-bottom:none}
+.et-row.header{background:rgba(7,5,21,.5);color:var(--text-dim);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.et-row .hi{color:var(--teal-glow)}
+.et-row .med{color:var(--amber-bright)}
+.et-row .lo{color:var(--text-dim)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+
+.tension-banner{margin-top:20px;padding:12px 16px;background:rgba(196,120,0,.08);border:1px solid var(--amber-mid);border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);line-height:1.6}
+
+footer{border-top:1px solid var(--border-subtle);margin-top:60px;padding:22px 28px;text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)}
+footer a{color:var(--text-secondary)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo U &nbsp;·&nbsp; Spin Up and Tap</span>
+    <a class="nav-link" href="index.html">All Tools</a>
+    <a class="nav-link" href="demo-imbh-evidence.html">Demo A &middot; IMBH Evidence</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-star-falls-in.html">Demo C &middot; Star Falls In</a>
+    <a class="nav-link" href="demo-kardashev-two.html">Demo D &middot; Kardashev II</a>
+    <a class="nav-link" href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a>
+    <a class="nav-link" href="demo-wait-compute.html">Demo G &middot; Wait, Compute, Win?</a>
+    <a class="nav-link" href="demo-bh-tap.html">Demo H &middot; Five Ways to Tap</a>
+    <a class="nav-link" href="demo-fermi-mth-crossover.html">Demo J &middot; Fermi/MTH</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+    <a class="nav-link" href="demo-imbh-origin.html">Demo Q &middot; IMBH Origin</a>
+    <a class="nav-link" href="demo-matrioshka-option.html">Demo R &middot; Matrioshka</a>
+    <a class="nav-link" href="demo-send-a-message.html">Demo S &middot; Send a Message</a>
+    <a class="nav-link" href="demo-dark-side.html">Demo T &middot; Dark Side</a>
+    <a class="nav-link" href="demo-spin-up-tap.html">Demo U &middot; Spin Up and Tap</a>
+    <a class="nav-link" href="demo-every-way-it-eats.html">Demo V &middot; Every Way It Eats</a>
+    <a class="nav-link" href="demo-dark-cluster-alt.html">Demo W &middot; Dark Cluster</a>
+    <a class="nav-link" href="demo-lisas-shot.html">Demo X &middot; LISA's Shot</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-tag">Demo U &nbsp;·&nbsp; Energy Extraction Chain</p>
+    <h1>Spin Up and Tap</h1>
+    <p class="hero-sub">A Kerr black hole is more than a drain — it's a battery. Walk the four-step chain from Penrose scattering through superradiance instability to Blandford-Znajek jet power, and see the ergosphere that makes it all possible.</p>
+    <p class="hero-meta">Tools: <strong>Penrose Process</strong> → <strong>Superradiance</strong> → <strong>BZ / Kardashev</strong> → <strong>Kerr Geometry</strong> &nbsp;·&nbsp; 4 steps</p>
+  </div>
+
+  <!-- Scenario selector -->
+  <div class="scenario">
+    <p class="scenario-title">Choose a spin scenario</p>
+    <p class="scenario-help">Each scenario sets a consistent spin parameter across all four tools — trace how extraction efficiency collapses as the hole winds down.</p>
+    <div class="scenario-row">
+      <button class="scenario-btn active" id="sc-max" onclick="setScenario('max')">
+        <span class="name">Maximally Spun &nbsp;a★ → 1 (Recommended)</span>
+        <span class="desc">a★ = 0.998. Ergosphere maximally inflated. Penrose yields 20.7% efficiency; BZ power ~10³⁷ W; superradiance instability in the resonant window. The civilisation's target operating state after a feeding campaign.</span>
+      </button>
+      <button class="scenario-btn" id="sc-mod" onclick="setScenario('mod')">
+        <span class="name">Operational Baseline &nbsp;a★ = 0.9</span>
+        <span class="desc">a★ = 0.9. Achievable via standard prograde accretion. Penrose ~13%; BZ still ~10³⁵ W. More realistic for early Phase 3 operations before deliberate spin-up.</span>
+      </button>
+      <button class="scenario-btn" id="sc-down" onclick="setScenario('down')">
+        <span class="name">Spin-Down After 10 Gyr</span>
+        <span class="desc">a★ = 0.3. What happens if extraction outpaces accretion replenishment. Penrose drops to ~2%; BZ power collapses ~3 orders of magnitude. Shows why the feeding program matters.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps">
+
+    <!-- Step 1: Penrose -->
+    <div class="step s1">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <span class="step-kicker">Foundation physics</span>
+        <div class="step-title">Penrose Process — Borrowing Energy from the Ergosphere</div>
+        <p class="step-prose">
+          Inside the <em>ergosphere</em> — the oblate region outside the event horizon where spacetime itself is dragged faster than light — a particle can acquire <em>negative energy</em> relative to a distant observer. Split a particle there: one fragment falls in with negative energy, the other escapes with more total energy than the original. The black hole pays with spin. This is the Penrose process, and it is the conceptual root of every energy-extraction mechanism that follows.
+        </p>
+        <p class="step-prose">
+          For ω Cen's IMBH at ≥8,200 M☉, the maximum Penrose efficiency is <strong>η = 1 − 1/√2 ≈ 20.7%</strong> at a★ → 1 (extremal), falling to ~13% at a★ = 0.9 and ~2% at a★ = 0.3. Each extraction event reduces spin slightly. Crucially, this sets the <em>theoretical ceiling</em> for all ergosphere-based extraction — the BZ process and superradiance both operate within this bound.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-penrose" href="penrose-process.html#M=3.914&a=0.998&R=1.00" target="_blank">Open Penrose Process →</a>
+          <span class="step-params" id="params-penrose">a★ = 0.998 · M = 8,200 M☉ · η<sub>max</sub> ≈ 20.7%</span>
+          <span class="tier-mini tier-e">🔬 Established GR</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Drag the spin slider from 0.3 → 0.998. Watch efficiency climb non-linearly. Below a★ ≈ 0.1 the ergosphere nearly vanishes and Penrose efficiency drops below 0.5% — extraction becomes negligible. The tool also shows the ISCO radius shrinking as spin increases: at a★ = 0.998 the prograde ISCO is just ~1.24 r<sub>g</sub>, concentrating computational nodes far closer to the singularity.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Superradiance -->
+    <div class="step s2">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <span class="step-kicker">Natural spin drain</span>
+        <div class="step-title">Superradiance — The Boson Cloud That Drains a Spinning Black Hole</div>
+        <p class="step-prose">
+          Quantum fields with mass in the right range undergo <em>superradiant instability</em> around a Kerr BH: a bosonic wave satisfying the resonance condition <code>ω &lt; m Ω<sub>H</sub></code> is amplified rather than absorbed, growing exponentially while draining the hole's spin. The instability peaks when the boson Compton wavelength matches the gravitational radius — requiring a boson mass of roughly <strong>m<sub>b</sub> ≈ 10⁻¹⁹ eV for an ~8,200 M☉ IMBH</strong>.
+        </p>
+        <p class="step-prose">
+          For a civilisation relying on BZ power, this is a <em>threat and an opportunity</em>. If ultralight bosons (axions, dark photons) exist in this mass range, the BH self-depletes in astrophysically short timescales — potentially ~10⁴–10⁷ yr depending on boson mass — unless the feeding program replenishes spin faster than superradiance drains it. Conversely, the gravitational-wave emission from the rotating boson cloud is a detectable technosignature: a nearly monochromatic continuous-wave signal at twice the boson frequency.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-sr" href="superradiance.html#M=3.914&a=0.998&mu=-19" target="_blank">Open Superradiance →</a>
+          <span class="step-params" id="params-sr">a★ = 0.998 · M = 8,200 M☉ · μ = 10⁻¹⁹ eV</span>
+          <span class="tier-mini tier-d">⚠ Theoretical</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Sweep the boson mass slider. The instability timescale τ<sub>SR</sub> has a sharp minimum at the resonant mass — orders of magnitude shorter than BH age. At a★ = 0.3 (spin-down scenario) the instability rate drops dramatically: a slowly spinning BH is much less susceptible, and the boson cloud cannot grow. This explains why maintaining high spin is essential to the OCS threat calculus around hypothetical ultralight dark matter.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: BZ / Kardashev -->
+    <div class="step s3">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <span class="step-kicker">The power plant</span>
+        <div class="step-title">Blandford-Znajek — Turning Ergosphere Rotation into a Jet</div>
+        <p class="step-prose">
+          The Blandford-Znajek (BZ) process is the electromagnetic version of Penrose extraction, and it scales to civilisational power levels. An ordered magnetic field threading the BH ergosphere, maintained by accreting plasma, extracts rotational energy as a Poynting-flux jet. The power scales as <code>P<sub>BZ</sub> ∝ B² M² a²</code> — quadratically in both mass and spin, linearly in field strength squared.
+        </p>
+        <p class="step-prose">
+          At a★ = 0.998 with a field of ~10⁴ Gauss (consistent with an Eddington-limited accretion disk), an 8,200 M☉ IMBH delivers <strong>~10³⁶–10³⁷ W</strong> — comparable to the total luminosity of a galaxy. At a★ = 0.3 the same BH delivers ~10³³ W: still Kardashev II territory, but ~10⁴× less capable. The jet is the power supply for the entire computronium swarm.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-bz" href="bz-kardashev.html#mode=forward&mass=8.200e%2B3&spin=0.998&power=1.000e%2B37&B=1.000e%2B04" target="_blank">Open BZ / Kardashev →</a>
+          <span class="step-params" id="params-bz">a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ G · P<sub>BZ</sub> ~10³⁷ W</span>
+          <span class="tier-mini tier-e">🔬 Confirmed in AGN jets</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Use the inverse mode: enter a target power (e.g. 10³⁷ W) and let the tool solve for the required spin and field combination. Notice how small changes in spin near a★ = 1 yield enormous changes in power — the jet output is highly sensitive to the last few percent of extremality. The Kardashev scale panel shows that even the spin-down scenario (a★ = 0.3) exceeds Kardashev Type II by ~3 orders of magnitude in raw available power.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Kerr geometry -->
+    <div class="step s4">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <span class="step-kicker">The geometry behind it all</span>
+        <div class="step-title">Kerr Geometry — Visualising the Ergosphere</div>
+        <p class="step-prose">
+          The ergosphere is not a surface of the black hole — it is a region of spacetime. Inside it, all observers are dragged prograde around the BH regardless of their initial velocity, but they can still escape. The ergosphere's boundary (<em>static limit</em>) touches the outer event horizon at the poles and bulges out to <code>r = 2GM/c²</code> at the equator when a★ → 1. Every energy-extraction mechanism in steps 1–3 operates within or near this region.
+        </p>
+        <p class="step-prose">
+          For a computronium swarm, the Kerr geometry also defines the <em>prograde ISCO radius</em> — the innermost stable orbit where nodes can survive indefinitely. At a★ = 0.998 this collapses to ~1.24 r<sub>g</sub>, parking computronium nodes in the heart of maximum time-dilation territory (<strong>dτ/dt ≈ 0.16</strong> — subjective time runs ~6× faster than for distant observers). At a★ = 0.3 the ISCO sits at ~4.6 r<sub>g</sub> and dilation is only ~1.2×.
+        </p>
+        <div class="step-meta">
+          <a class="step-cta" id="cta-kerr" href="kerr-geometry.html#a=0.998&view=equatorial&mass=8.200e%2B3" target="_blank">Open Kerr Geometry →</a>
+          <span class="step-params" id="params-kerr">a★ = 0.998 · equatorial view · M = 8,200 M☉</span>
+          <span class="tier-mini tier-e">🔬 Established GR</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">What to notice</div>
+          <div class="payoff-body">Switch between the equatorial and meridional cross-section views. In the equatorial plane, the ergosphere (shown between the static limit and the event horizon) is the annular zone where Penrose scattering and BZ extraction operate. Note that the ergoregion is largest precisely where you want ISCO nodes to orbit. Use the mass slider to confirm that the geometry is scale-invariant in r/r<sub>g</sub> units — the dimensionless structure is the same for a stellar BH or an IMBH.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- Efficiency comparison table -->
+  <div style="margin-top:32px;">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Extraction efficiency vs spin</div>
+    <div class="eff-table">
+      <div class="et-row header"><span>Spin a★</span><span>Penrose η_max</span><span>BZ power (relative)</span><span>ISCO / r_g (prograde)</span></div>
+      <div class="et-row"><span class="hi">0.998</span><span class="hi">20.7 %</span><span class="hi">~10³⁷ W baseline</span><span class="hi">1.24</span></div>
+      <div class="et-row"><span class="med">0.900</span><span class="med">13.4 %</span><span class="med">~4 × 10³⁵ W</span><span class="med">2.32</span></div>
+      <div class="et-row"><span>0.600</span><span>5.1 %</span><span>~3 × 10³⁴ W</span><span>3.83</span></div>
+      <div class="et-row"><span class="lo">0.300</span><span class="lo">1.9 %</span><span class="lo">~4 × 10³³ W</span><span class="lo">4.98</span></div>
+      <div class="et-row"><span class="lo">0.000</span><span class="lo">0 %</span><span class="lo">0 W (no ergosphere)</span><span class="lo">6.00</span></div>
+    </div>
+  </div>
+
+  <div class="tension-banner">
+    ⚠ IMBH mass tension applies throughout: Häberle et al. (2024) set a lower bound ≥ 8,200 M☉ from stellar kinematics; Bañares-Hernández et al. (2025) set an upper bound &lt; 6,000 M☉ from pulsar timing. All deeplinks use the Häberle lower bound as baseline. BZ power scales as M², so the true value spans roughly one order of magnitude across the tension window.
+  </div>
+
+  <!-- Synthesis -->
+  <div class="synthesis">
+    <div class="synth-title">// Synthesis — The Spin Budget</div>
+    <div class="synth-prose">
+      <p>Every energy extraction mechanism explored in this chain depends on the same resource: <em>angular momentum stored in the Kerr metric</em>. The Penrose process converts ergosphere geometry into particle energy. Superradiance converts it into a boson cloud and gravitational waves. The BZ process converts it into an electromagnetic jet. The Kerr geometry shows you the physical space in which all three compete.</p>
+      <p>The strategic implication is a <em>spin budget</em>. The OCS civilisation must run the feeding program — prograde accretion of tidally stripped stellar material — at a rate that replenishes spin faster than BZ extraction (and any superradiance) drains it. This is achievable: for an 8,200 M☉ IMBH at a★ = 0.998, the spin-down timescale under BZ extraction alone is ~10¹⁰–10¹² yr at 10⁴ G field strength, comfortably longer than the cluster's stellar fuel supply. The real risk is runaway superradiance from an ultralight boson in the resonant mass window — which is why the dark matter mass constraint in <a href="dark-matter-flux.html" target="_blank">Tool 35</a> matters to this engineering chain.</p>
+      <p>The Kerr geometry also sets the ISCO architecture. Maximising spin is not merely about power — it is about packing computational nodes as close as possible to the singularity to maximise gravitational time dilation, pushing the subjective compute rate ~6× above the rate experienced by a distant observer. Spin is both the engine and the clock.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <a href="https://omegacentauri.me/">omegacentauri.me</a> &nbsp;·&nbsp;
+  Demo U &nbsp;·&nbsp; Spin Up and Tap &nbsp;·&nbsp;
+  Tools: <a href="penrose-process.html">Penrose</a> · <a href="superradiance.html">Superradiance</a> · <a href="bz-kardashev.html">BZ/Kardashev</a> · <a href="kerr-geometry.html">Kerr Geometry</a> &nbsp;·&nbsp;
+  Code: MIT · Prose: CC BY 4.0
+</footer>
+
+<script>
+const SCENARIOS = {
+  max: {
+    penrose: 'penrose-process.html#M=3.914&a=0.998&R=1.00',
+    sr:      'superradiance.html#M=3.914&a=0.998&mu=-19',
+    bz:      'bz-kardashev.html#mode=forward&mass=8.200e%2B3&spin=0.998&power=1.000e%2B37&B=1.000e%2B04',
+    kerr:    'kerr-geometry.html#a=0.998&view=equatorial&mass=8.200e%2B3',
+    pParams: 'a★ = 0.998 · M = 8,200 M☉ · ηₘₐχ ≈ 20.7%',
+    sParams: 'a★ = 0.998 · M = 8,200 M☉ · μ = 10⁻¹⁹ eV',
+    bParams: 'a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ G · P₂ᴢ ~10³⁷ W',
+    kParams: 'a★ = 0.998 · equatorial view · M = 8,200 M☉',
+  },
+  mod: {
+    penrose: 'penrose-process.html#M=3.914&a=0.900&R=1.00',
+    sr:      'superradiance.html#M=3.914&a=0.900&mu=-19',
+    bz:      'bz-kardashev.html#mode=forward&mass=8.200e%2B3&spin=0.900&power=4.000e%2B35&B=1.000e%2B04',
+    kerr:    'kerr-geometry.html#a=0.900&view=equatorial&mass=8.200e%2B3',
+    pParams: 'a★ = 0.9 · M = 8,200 M☉ · ηₘₐχ ≈ 13%',
+    sParams: 'a★ = 0.9 · M = 8,200 M☉ · μ = 10⁻¹⁹ eV',
+    bParams: 'a★ = 0.9 · M = 8,200 M☉ · B = 10⁴ G · P₂ᴢ ~4×10³⁵ W',
+    kParams: 'a★ = 0.9 · equatorial view · M = 8,200 M☉',
+  },
+  down: {
+    penrose: 'penrose-process.html#M=3.914&a=0.300&R=1.00',
+    sr:      'superradiance.html#M=3.914&a=0.300&mu=-19',
+    bz:      'bz-kardashev.html#mode=forward&mass=8.200e%2B3&spin=0.300&power=4.000e%2B33&B=1.000e%2B04',
+    kerr:    'kerr-geometry.html#a=0.300&view=equatorial&mass=8.200e%2B3',
+    pParams: 'a★ = 0.3 · M = 8,200 M☉ · ηₘₐχ ≈ 2%',
+    sParams: 'a★ = 0.3 · M = 8,200 M☉ · μ = 10⁻¹⁹ eV',
+    bParams: 'a★ = 0.3 · M = 8,200 M☉ · B = 10⁴ G · P₂ᴢ ~4×10³³ W',
+    kParams: 'a★ = 0.3 · equatorial view · M = 8,200 M☉',
+  }
+};
+
+function setScenario(sc) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sc-' + sc).classList.add('active');
+  const s = SCENARIOS[sc];
+  document.getElementById('cta-penrose').href = s.penrose;
+  document.getElementById('cta-sr').href      = s.sr;
+  document.getElementById('cta-bz').href      = s.bz;
+  document.getElementById('cta-kerr').href    = s.kerr;
+  document.getElementById('params-penrose').textContent = s.pParams;
+  document.getElementById('params-sr').textContent      = s.sParams;
+  document.getElementById('params-bz').textContent      = s.bParams;
+  document.getElementById('params-kerr').textContent    = s.kParams;
+}
+</script>
+</body>
+</html>
