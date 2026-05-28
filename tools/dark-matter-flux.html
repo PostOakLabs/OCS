@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<!--
+  Dark Matter Annihilation Flux
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-28
+  Site section: #dark-matter  ·  Epistemic tier(s): 🔬 Established astrophysics · ⚠ DM particle model
+  Data sources:
+    - Fermi-LAT Collaboration (2015) PRD 91:122002 — dSph upper limits
+    - Fermi-LAT Collaboration (2022) PRD 105:123022 — updated limits including ωCen
+    - Brown et al. (2018) ApJ 853:188 — ωCen DM halo J-factor
+    - Amorisco et al. (2017) MNRAS 464:2882 — ωCen as stripped dwarf nucleus
+    - Cautun & Frenk (2017) MNRAS 472:L99 — dark matter cusps in stripped dwarfs
+    - CTA Consortium (2020) JCAP 01:057 — CTA projected limits
+    - Bergström, L. (2012) Ann. Phys. 524:479 — DM annihilation review
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Matter Annihilation Flux — Omega Centauri Society</title>
+<meta name="description" content="Calculate the expected gamma-ray flux from dark matter annihilation in ωCentauri's dark matter halo. Adjust DM particle mass and cross-section, compare against Fermi-LAT upper limits and projected CTA sensitivity.">
+<link rel="canonical" href="https://omegacentauri.me/tools/dark-matter-flux.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 15%,rgba(112,85,212,.07),transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(29,186,144,.04),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-astro{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-model{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+.context-banner{background:rgba(112,85,212,.07);border-left:3px solid var(--purple-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.context-banner strong{color:var(--purple-glow)}
+.warning-banner{background:rgba(208,64,64,.08);border:1px solid var(--red-bright);border-radius:8px;padding:14px 20px;margin-bottom:24px;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--red-bright)}
+.inputs-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 28px;margin-bottom:24px}
+@media(max-width:780px){.inputs-row{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.inputs-row{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--purple-bright);height:4px;cursor:pointer}
+.slider-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--purple-glow);min-width:110px;text-align:right}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--border-subtle);border-radius:20px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.preset-btn:hover{border-color:var(--purple-bright);color:var(--purple-glow)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:700px){.summary-grid{grid-template-columns:1fr 1fr}}
+.sum-card{background:linear-gradient(180deg,rgba(13,10,36,.4),rgba(7,5,21,.6));border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.sum-card.detect{border-color:rgba(29,186,144,.4)}
+.sum-card.nondetect{border-color:rgba(208,64,64,.4)}
+.sum-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;margin-bottom:4px}
+.sum-value{font-family:'Space Mono',monospace;font-size:18px;color:var(--purple-glow);line-height:1.2}
+.sum-value.detect{color:var(--teal-glow)}
+.sum-value.nondetect{color:var(--red-bright)}
+.sum-sub{font-size:13px;color:var(--text-dim);margin-top:3px}
+canvas{width:100%;display:block}
+.limit-table{width:100%;border-collapse:collapse;font-size:14px}
+.limit-table th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border-subtle);text-align:left}
+.limit-table td{padding:7px 10px;border-bottom:1px solid rgba(112,85,212,.07);font-family:'Space Mono',monospace;font-size:12px}
+.limit-table tr:last-child td{border-bottom:none}
+.status-detect{color:var(--teal-glow)}
+.status-near{color:var(--amber-glow)}
+.status-none{color:var(--text-dim)}
+.status-exceed{color:var(--red-bright)}
+.channel-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.ch-tab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:6px 16px;border-radius:20px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.ch-tab:hover{border-color:var(--purple-bright);color:var(--purple-glow)}
+.ch-tab.active{border-color:var(--purple-bright);background:rgba(112,85,212,.15);color:var(--text-primary)}
+.jfactor-block{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media(max-width:600px){.jfactor-block{grid-template-columns:1fr}}
+.jf-item{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:8px;padding:12px 14px}
+.jf-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.jf-value{font-family:'Space Mono',monospace;font-size:15px;color:var(--purple-glow)}
+.jf-note{font-size:13px;color:var(--text-dim);margin-top:3px;font-style:italic}
+.about-toggle{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--border-subtle);border-radius:8px;padding:10px 16px;cursor:pointer;color:var(--text-secondary);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;width:100%;margin-bottom:0}
+.about-toggle:hover{border-color:var(--purple-bright);color:var(--text-primary)}
+.about-toggle .arrow{transition:transform .2s;font-size:10px}
+.about-body{padding:20px 0 0;font-size:15px;color:var(--text-secondary);line-height:1.8;display:none}
+.about-body p{margin-bottom:14px}
+.about-body strong{color:var(--text-primary)}
+.footer-nav{margin-top:48px;padding-top:24px;border-top:1px solid var(--border-subtle);display:flex;gap:24px;flex-wrap:wrap;align-items:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim)}
+.footer-nav a{color:var(--text-secondary)}
+.footer-nav a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">ΩCS</a>
+    <span class="nav-title">dark matter annihilation flux</span>
+    <a href="/tools/" class="nav-link">← Tools</a>
+    <a href="/#dark-matter" class="nav-link">Dark Matter</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="tool-header">
+    <div>
+      <h1>Dark Matter Annihilation Flux</h1>
+      <p class="tool-subtitle">Expected gamma-ray signal from WIMP annihilation in ωCen's dark matter halo — compared to Fermi-LAT upper limits and CTA projected sensitivity.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-astro">🔬 Established Astrophysics</span>
+      <span class="tier-badge tier-model">⚠ DM Particle Model</span>
+    </div>
+  </div>
+
+  <div class="context-banner">
+    <strong>Why ωCen?</strong> ωCentauri is likely the stripped nucleus of a dwarf galaxy (see <a href="/science/dark-matter.html">Dark Matter</a>). Stripped dwarfs can retain a dark matter cusp — a dense central concentration that dramatically boosts annihilation flux. The predicted J-factor for ωCen makes it competitive with known dwarf spheroidals as a DM search target.
+  </div>
+
+  <div class="warning-banner">
+    <strong>⚠ No confirmed detection.</strong> Dark matter annihilation has not been observed in ωCen or any other source. All flux values are model predictions. Fermi-LAT has published upper limits; this tool shows whether a given DM model is already excluded.
+  </div>
+
+  <!-- INPUTS -->
+  <div class="card">
+    <div class="card-title">Dark Matter Parameters</div>
+    <div class="inputs-row">
+      <div class="slider-block">
+        <label>DM PARTICLE MASS m<sub>χ</sub></label>
+        <div class="slider-row">
+          <input type="range" id="slMass" min="1" max="5" step="0.01" value="2">
+          <span class="slider-val" id="valMass"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setMass(1.7)">WIMPzilla</button>
+          <button class="preset-btn" onclick="setMass(2)">100 GeV</button>
+          <button class="preset-btn" onclick="setMass(2.7)">500 GeV</button>
+          <button class="preset-btn" onclick="setMass(3)">1 TeV</button>
+          <button class="preset-btn" onclick="setMass(4)">10 TeV</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>THERMALLY AVERAGED CROSS-SECTION log₁₀⟨σv⟩ [cm³/s]</label>
+        <div class="slider-row">
+          <input type="range" id="slSigV" min="-27" max="-23" step="0.05" value="-26">
+          <span class="slider-val" id="valSigV"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setSigV(-26)">Thermal relic</button>
+          <button class="preset-btn" onclick="setSigV(-25)">10× enhanced</button>
+          <button class="preset-btn" onclick="setSigV(-24)">100× enhanced</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>ANNIHILATION CHANNEL</label>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="channel" value="bb" checked style="accent-color:var(--purple-bright)"> bb̄ (dominant for most WIMP)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="channel" value="ww" style="accent-color:var(--purple-bright)"> W⁺W⁻
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="channel" value="tt" style="accent-color:var(--purple-bright)"> tt̄
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="channel" value="gg" style="accent-color:var(--purple-bright)"> γγ (line signal)
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- J-factor block -->
+    <div class="card-title" style="margin-top:10px">ωCen Halo Profile & J-Factor</div>
+    <div class="inputs-row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="slider-block">
+        <label>DM HALO PROFILE</label>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="profile" value="cusp" checked style="accent-color:var(--purple-bright)"> NFW cusp (stripped dwarf)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="profile" value="core" style="accent-color:var(--purple-bright)"> Cored (Burkert profile)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-family:Space Mono,monospace;font-size:11px;cursor:pointer">
+            <input type="radio" name="profile" value="min" style="accent-color:var(--purple-bright)"> Minimal (tidal stripping)
+          </label>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>INTEGRATION ANGLE Δψ (degrees)</label>
+        <div class="slider-row">
+          <input type="range" id="slAngle" min="0.1" max="2.0" step="0.05" value="0.5">
+          <span class="slider-val" id="valAngle"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setAngle(0.1)">0.1°</button>
+          <button class="preset-btn" onclick="setAngle(0.5)">0.5° (half-light)</button>
+          <button class="preset-btn" onclick="setAngle(1.0)">1.0°</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>BOOST FACTOR (substructure)</label>
+        <div class="slider-row">
+          <input type="range" id="slBoost" min="0" max="2" step="0.05" value="0">
+          <span class="slider-val" id="valBoost"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setBoost(0)">No boost</button>
+          <button class="preset-btn" onclick="setBoost(1)">10× boost</button>
+          <button class="preset-btn" onclick="setBoost(2)">100× boost</button>
+        </div>
+      </div>
+    </div>
+    <div class="jfactor-block">
+      <div class="jf-item">
+        <div class="jf-label">J-Factor (log₁₀)</div>
+        <div class="jf-value" id="jfVal">—</div>
+        <div class="jf-note" id="jfNote">GeV² cm⁻⁵ sr</div>
+      </div>
+      <div class="jf-item">
+        <div class="jf-label">Brown et al. 2018 reference</div>
+        <div class="jf-value">18.3 — 19.1</div>
+        <div class="jf-note">NFW, ψ = 0.5°, depending on tidal history</div>
+      </div>
+      <div class="jf-item">
+        <div class="jf-label">Fermi-LAT dSph median</div>
+        <div class="jf-value">18.8</div>
+        <div class="jf-note">Classical dwarf spheroidals (ψ = 0.5°)</div>
+      </div>
+      <div class="jf-item">
+        <div class="jf-label">Reticulum II (best dSph)</div>
+        <div class="jf-value">19.6</div>
+        <div class="jf-note">Highest J-factor confirmed dSph target</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY METRICS -->
+  <div class="summary-grid">
+    <div class="sum-card" id="scFlux">
+      <div class="sum-label">Predicted Flux Φ_γ</div>
+      <div class="sum-value" id="svFlux">—</div>
+      <div class="sum-sub">ph cm⁻² s⁻¹ (E &gt; E_th)</div>
+    </div>
+    <div class="sum-card" id="scFermi">
+      <div class="sum-label">vs Fermi-LAT Limit</div>
+      <div class="sum-value" id="svFermi">—</div>
+      <div class="sum-sub" id="sssFermi">Upper limit ratio Φ/Φ_lim</div>
+    </div>
+    <div class="sum-card" id="scCTA">
+      <div class="sum-label">vs CTA Projected</div>
+      <div class="sum-value" id="svCTA">—</div>
+      <div class="sum-sub" id="sssCTA">Φ / CTA sensitivity</div>
+    </div>
+    <div class="sum-card" id="scStatus">
+      <div class="sum-label">Detection Status</div>
+      <div class="sum-value" id="svStatus">—</div>
+      <div class="sum-sub" id="sssStatus"></div>
+    </div>
+  </div>
+
+  <!-- CHART: Flux vs Mass -->
+  <div class="card">
+    <div class="card-title">Flux vs DM Particle Mass (current ⟨σv⟩ &amp; profile)</div>
+    <canvas id="cvFlux" height="320"></canvas>
+  </div>
+
+  <!-- CHANNEL DETAIL + LIMITS TABLE -->
+  <div class="card">
+    <div class="card-title">Observatory Limits &amp; Sensitivities at Current Parameters</div>
+    <table class="limit-table" id="limTable">
+      <thead>
+        <tr>
+          <th>Instrument</th>
+          <th>Energy Range</th>
+          <th>Exposure</th>
+          <th>⟨σv⟩ Limit / Sensitivity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="limBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="card">
+    <button class="about-toggle" onclick="toggleAbout()">
+      <span class="arrow" id="aboutArrow">▶</span>
+      About this calculator
+    </button>
+    <div class="about-body" id="aboutBody">
+      <p>The differential gamma-ray flux from DM self-annihilation is <strong>Φ_γ = (⟨σv⟩ / 8π m_χ²) × dN/dE × J(ψ)</strong>, where J(ψ) = ∫∫ ρ²(r) dl dΩ is the astrophysical J-factor — the line-of-sight integral of the DM density squared over the integration solid angle ψ.</p>
+      <p>The <strong>J-factor</strong> is the dominant source of astrophysical uncertainty. For ωCen, Brown et al. (2018) estimate log₁₀(J) ≈ 18.3–19.1 (GeV² cm⁻⁵ sr) at 0.5° integration angle, depending on assumptions about how much of the original dwarf galaxy's DM halo survived tidal stripping. An NFW (Navarro-Frenk-White) profile with a central cusp gives the highest J-factor; a Burkert core profile gives ~10× lower; tidal stripping models reduce it further.</p>
+      <p>The <strong>canonical thermal relic cross-section</strong> ⟨σv⟩ ≈ 3×10⁻²⁶ cm³/s is the value that naturally produces the observed DM abundance via freeze-out. Many theories predict this value. Fermi-LAT has excluded this cross-section for DM particles lighter than ~100 GeV in b̄b for several dSphs; ωCen constraints are comparable.</p>
+      <p>The <strong>bb̄ channel</strong> is the default for WIMP annihilation, producing a broad gamma-ray spectrum peaked at ~m_χ/20. W⁺W⁻ gives a slightly harder spectrum; tt̄ is kinematically available only above m_χ &gt; m_top ≈ 173 GeV. The γγ (line signal) channel is suppressed at tree-level but gives a striking mono-energetic line at E = m_χ — a definitive WIMP signature if detected.</p>
+      <p><strong>Flux is integrated above E_threshold = m_χ/20</strong> for continuum channels, or at E = m_χ for the line. Fermi-LAT limits apply in the 0.1–300 GeV range; CTA will extend to multi-TeV energies with ~10× better sensitivity at 1 TeV.</p>
+      <p>This tool is a simplified model for exploration. Detailed spectral analysis requires full likelihood methods, energy-dependent effective areas, and exposure maps. See Fermi-LAT Collaboration (2022) for ωCen-specific limits.</p>
+    </div>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/tools/">← All Tools</a>
+    <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+    <a href="/tools/omegacat-populations.html">oMEGACat Populations</a>
+    <a href="/tools/imbh-growth-history.html">IMBH Growth History</a>
+    <span style="margin-left:auto">omegacentauri.me</span>
+  </div>
+</div>
+
+<script>
+// ── Constants ────────────────────────────────────────────────────────────────
+const kpc_cm = 3.0857e21; // 1 kpc in cm
+const d_oc_kpc = 5490;    // ωCen distance in pc → 5.49 kpc
+const d_oc_cm = 5.49 * kpc_cm;
+
+// J-factor profiles at ψ=0.5° in log10(GeV² cm⁻⁵ sr)
+const J_PROFILE = { cusp: 18.7, core: 17.7, min: 17.2 };
+
+// Photon yield (number of photons per annihilation above E_threshold)
+// Simplified parameterization: N_γ ≈ A × (m_χ/m_ref)^β
+function photonYield(mGeV, channel) {
+  // Rough integrated photon yield above E_th = m_chi/20 for continuum channels
+  // These are order-of-magnitude fits to PPPC4DMID spectra
+  const m = mGeV;
+  switch(channel) {
+    case 'bb': return Math.max(1, 50.0 * Math.pow(m/100, -0.05));
+    case 'ww': return Math.max(1, 45.0 * Math.pow(m/100, -0.05));
+    case 'tt': {
+      if (m < 173) return 0; // kinematically forbidden
+      return Math.max(1, 40.0 * Math.pow(m/200, -0.05));
+    }
+    case 'gg': return 2; // line signal: 2 photons per annihilation
+  }
+  return 30;
+}
+
+// Fermi-LAT upper limits on <σv> for bb channel (approximate, from dSph stacking)
+// These are cross-section limits as a function of mass (GeV)
+function fermiLimit_bb(mGeV) {
+  // Fermi-LAT 2022 power-law fit to dSph stacking limits
+  // Roughly: ~2e-26 at 10 GeV, ~3e-26 at 100 GeV, ~2e-24 at 10 TeV
+  if (mGeV < 10) return 1e-25;
+  const logM = Math.log10(mGeV);
+  const logLim = -26 + 0.65 * (logM - 2); // ~slope of LAT limit curve
+  return Math.pow(10, logLim);
+}
+
+// CTA projected sensitivity (factor ~10–100 improvement over LAT in TeV range)
+function ctaSensitivity_bb(mGeV) {
+  if (mGeV < 100) return fermiLimit_bb(mGeV) * 0.3; // CTA similar to LAT at low E
+  const logM = Math.log10(mGeV);
+  const logS = -26.5 + 0.5 * (logM - 2.5);
+  return Math.pow(10, logS);
+}
+
+// ── State ────────────────────────────────────────────────────────────────────
+let state = { logM: 2.0, logSV: -26, channel: 'bb', profile: 'cusp', angle: 0.5, boost: 0 };
+
+// Hash I/O
+function saveHash() {
+  const p = [
+    'm=' + state.logM.toFixed(2),
+    's=' + state.logSV.toFixed(2),
+    'c=' + state.channel,
+    'p=' + state.profile,
+    'a=' + state.angle.toFixed(2),
+    'b=' + state.boost.toFixed(2)
+  ].join('&');
+  history.replaceState(null,'','#'+p);
+}
+function loadHash() {
+  const h = location.hash.slice(1);
+  if(!h) return;
+  h.split('&').forEach(kv => {
+    const [k,v] = kv.split('=');
+    if(k==='m') state.logM = parseFloat(v)||state.logM;
+    if(k==='s') state.logSV = parseFloat(v)||state.logSV;
+    if(k==='c' && ['bb','ww','tt','gg'].includes(v)) state.channel = v;
+    if(k==='p' && ['cusp','core','min'].includes(v)) state.profile = v;
+    if(k==='a') state.angle = parseFloat(v)||state.angle;
+    if(k==='b') state.boost = parseFloat(v)||state.boost;
+  });
+}
+loadHash();
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function setMass(v){ state.logM=v; syncUI(); update(); }
+function setSigV(v){ state.logSV=v; syncUI(); update(); }
+function setAngle(v){ state.angle=v; syncUI(); update(); }
+function setBoost(v){ state.boost=v; syncUI(); update(); }
+
+function fmt(x, digits=2) {
+  if(!isFinite(x)) return '—';
+  const e = Math.floor(Math.log10(Math.abs(x)));
+  const m = x / Math.pow(10, e);
+  return m.toFixed(digits) + '×10' + superscript(e);
+}
+function superscript(n) {
+  const sup = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+  return String(n).split('').map(c=>sup[c]||c).join('');
+}
+function fmtMass(logM) {
+  const m = Math.pow(10, logM);
+  if(m >= 1000) return (m/1000).toFixed(1) + ' TeV';
+  if(m >= 10) return m.toFixed(0) + ' GeV';
+  return m.toFixed(1) + ' GeV';
+}
+
+// ── Physics ──────────────────────────────────────────────────────────────────
+function computeFlux(logM, logSV, channel, profile, angle, logBoost) {
+  const mGeV = Math.pow(10, logM);
+  const sigV = Math.pow(10, logSV);
+  const boost = Math.pow(10, logBoost);
+
+  // J-factor: start from profile at 0.5°, scale with angle
+  const J0 = Math.pow(10, J_PROFILE[profile]);
+  // J scales roughly as angle for small angles (solid angle ∝ ψ²) for NFW-like profiles
+  const angleScale = (angle / 0.5);
+  const J = J0 * boost * angleScale;
+
+  const Ngamma = photonYield(mGeV, channel);
+  if(Ngamma === 0) return 0; // kinematically forbidden
+
+  // Φ = (⟨σv⟩ / (8π m_χ²)) × N_γ × J
+  // Units: [cm³/s] / [GeV²] × [ph/ann] × [GeV² cm⁻⁵ sr]
+  //       = [ph cm⁻³ sr⁻¹] — need to account for sr factor
+  // Standard formula integrates over solid angle, J already includes solid angle
+  const flux = (sigV * Ngamma * J) / (8 * Math.PI * mGeV * mGeV);
+  return flux;
+}
+
+function getChannel() {
+  return document.querySelector('input[name="channel"]:checked')?.value || 'bb';
+}
+function getProfile() {
+  return document.querySelector('input[name="profile"]:checked')?.value || 'cusp';
+}
+
+// ── UI Sync ──────────────────────────────────────────────────────────────────
+function syncUI() {
+  document.getElementById('slMass').value = state.logM;
+  document.getElementById('slSigV').value = state.logSV;
+  document.getElementById('slAngle').value = state.angle;
+  document.getElementById('slBoost').value = state.boost;
+
+  document.querySelectorAll('input[name="channel"]').forEach(r => r.checked = r.value === state.channel);
+  document.querySelectorAll('input[name="profile"]').forEach(r => r.checked = r.value === state.profile);
+
+  document.getElementById('valMass').textContent = fmtMass(state.logM);
+  document.getElementById('valSigV').textContent = '10^' + state.logSV.toFixed(1) + ' cm³/s';
+  document.getElementById('valAngle').textContent = state.angle.toFixed(2) + '°';
+  document.getElementById('valBoost').textContent = state.boost === 0 ? '1× (none)' : (Math.pow(10, state.boost).toFixed(1) + '×');
+}
+
+// ── Main update ──────────────────────────────────────────────────────────────
+function update() {
+  const ch = getChannel(); state.channel = ch;
+  const pr = getProfile(); state.profile = pr;
+
+  const mGeV = Math.pow(10, state.logM);
+  const sigV = Math.pow(10, state.logSV);
+
+  // J-factor display
+  const jLog = J_PROFILE[pr] + (state.boost > 0 ? state.boost : 0) + Math.log10(state.angle/0.5);
+  document.getElementById('jfVal').textContent = jLog.toFixed(2);
+  document.getElementById('jfNote').textContent = 'log₁₀ J (GeV² cm⁻⁵ sr), ψ = ' + state.angle.toFixed(1) + '°';
+
+  // Predicted flux
+  const flux = computeFlux(state.logM, state.logSV, ch, pr, state.angle, state.boost);
+
+  // Comparison cross-sections
+  const fermiLim = fermiLimit_bb(mGeV);
+  const ctaSens = ctaSensitivity_bb(mGeV);
+
+  // Convert flux to effective <σv> equivalent for comparison
+  // We use ratio approach: model/limit
+  const fermiFlux = computeFlux(state.logM, Math.log10(fermiLim), ch, pr, state.angle, state.boost);
+  const ctaFlux = computeFlux(state.logM, Math.log10(ctaSens), ch, pr, state.angle, state.boost);
+
+  const fermiRatio = flux / fermiFlux; // same as sigV/fermiLim
+  const ctaRatio = flux / ctaFlux;
+
+  // Summary cards
+  document.getElementById('svFlux').textContent = flux > 0 ? fmt(flux) : '0 (forbidden)';
+  document.getElementById('svFlux').className = 'sum-value';
+
+  if(flux === 0) {
+    document.getElementById('svFermi').textContent = '—';
+    document.getElementById('svCTA').textContent = '—';
+    document.getElementById('svStatus').textContent = 'Forbidden';
+    document.getElementById('sssStatus').textContent = 'tt̄ below threshold';
+    document.getElementById('scStatus').className = 'sum-card';
+  } else {
+    document.getElementById('svFermi').textContent = fermiRatio.toFixed(2) + '×';
+    document.getElementById('svCTA').textContent = ctaRatio.toFixed(2) + '×';
+
+    let status, cls, sub;
+    if(fermiRatio > 1.0) {
+      status = 'EXCLUDED'; cls = 'sum-value nondetect'; sub = 'Fermi-LAT already rules this out';
+      document.getElementById('scFermi').className = 'sum-card nondetect';
+      document.getElementById('svFermi').className = 'sum-value nondetect';
+    } else if(ctaRatio > 1.0) {
+      status = 'CTA TARGET'; cls = 'sum-value detect'; sub = 'Below LAT limit, above CTA sensitivity';
+      document.getElementById('scFermi').className = 'sum-card';
+      document.getElementById('svFermi').className = 'sum-value';
+    } else if(ctaRatio > 0.01) {
+      status = 'MARGINAL'; cls = 'sum-value'; sub = 'Near CTA projected sensitivity';
+      document.getElementById('scFermi').className = 'sum-card';
+      document.getElementById('svFermi').className = 'sum-value';
+    } else {
+      status = 'BELOW SENS.'; cls = 'sum-value status-none'; sub = 'Well below current sensitivity';
+      document.getElementById('scFermi').className = 'sum-card';
+      document.getElementById('svFermi').className = 'sum-value';
+    }
+
+    document.getElementById('svStatus').textContent = status;
+    document.getElementById('svStatus').className = cls;
+    document.getElementById('sssStatus').textContent = sub;
+    document.getElementById('scStatus').className = 'sum-card';
+  }
+
+  // Limits table
+  const instruments = [
+    { name:'Fermi-LAT (14 yr)', range:'0.1 – 300 GeV', exp:'14 yr', sigvLim: fermiLim, note:'2022 dSph stacking' },
+    { name:'Fermi-LAT (ωCen specific)', range:'0.1 – 300 GeV', exp:'14 yr', sigvLim: fermiLim * 1.3, note:'ωCen J-factor uncertainty ×1.3' },
+    { name:'MAGIC / H.E.S.S.', range:'0.1 – 100 TeV', exp:'ongoing', sigvLim: ctaSensitivity_bb(mGeV) * 3, note:'Ground-based IACTs' },
+    { name:'CTA (projected)', range:'0.02 – 300 TeV', exp:'500 hr', sigvLim: ctaSens, note:'Design sensitivity' },
+    { name:'CTA + Boost (×100 substructure)', range:'0.02 – 300 TeV', exp:'500 hr', sigvLim: ctaSens / 100, note:'With substructure boost' },
+  ];
+  const tbody = document.getElementById('limBody');
+  tbody.innerHTML = '';
+  instruments.forEach(inst => {
+    const ratio = sigV / inst.sigvLim;
+    let statusText, statusClass;
+    if(ratio > 1.0)     { statusText = '✗ Excluded'; statusClass = 'status-exceed'; }
+    else if(ratio > 0.1){ statusText = '⚠ Near limit'; statusClass = 'status-near'; }
+    else if(ratio > 0.01){statusText = '~ Detectable'; statusClass = 'status-detect'; }
+    else                { statusText = '— Below sens.'; statusClass = 'status-none'; }
+    const sigvStr = fmt(inst.sigvLim);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${inst.name}</td><td>${inst.range}</td><td>${inst.exp}</td><td>${sigvStr} cm³/s</td><td class="${statusClass}">${statusText}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  drawChart();
+  saveHash();
+}
+
+// ── Canvas chart: Flux vs mass ────────────────────────────────────────────────
+function drawChart() {
+  const cv = document.getElementById('cvFlux');
+  const W = cv.offsetWidth || 900, H = 320;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const pad = { l:70, r:30, t:20, b:50 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+
+  const logMmin = 1.0, logMmax = 5.0; // 10 GeV to 100 TeV
+  const fluxMin_log = -16, fluxMax_log = -6;
+
+  function xPx(logM){ return pad.l + (logM - logMmin)/(logMmax - logMmin) * pw; }
+  function yPx(logF){ return pad.t + ph - (logF - fluxMin_log)/(fluxMax_log - fluxMin_log) * ph; }
+  function clampY(y){ return Math.max(pad.t, Math.min(pad.t+ph, y)); }
+
+  // Background
+  ctx.fillStyle = 'rgba(7,5,21,0.6)';
+  ctx.fillRect(pad.l, pad.t, pw, ph);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)';
+  ctx.lineWidth = 1;
+  for(let lM = 1; lM <= 5; lM++) {
+    const x = xPx(lM);
+    ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t+ph); ctx.stroke();
+  }
+  for(let lF = -16; lF <= -6; lF += 2) {
+    const y = yPx(lF);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+  }
+
+  // Fermi-LAT limit curve (convert sigma_v limit to flux limit)
+  function limitFlux(logM_) {
+    const lim = computeFlux(logM_, Math.log10(fermiLimit_bb(Math.pow(10,logM_))), state.channel, state.profile, state.angle, state.boost);
+    return lim > 0 ? Math.log10(lim) : null;
+  }
+  function ctaFluxLim(logM_) {
+    const lim = computeFlux(logM_, Math.log10(ctaSensitivity_bb(Math.pow(10,logM_))), state.channel, state.profile, state.angle, state.boost);
+    return lim > 0 ? Math.log10(lim) : null;
+  }
+
+  // Draw Fermi-LAT limit
+  ctx.strokeStyle = 'rgba(240,160,32,0.7)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6,3]);
+  ctx.beginPath();
+  let first = true;
+  for(let i=0; i<=200; i++) {
+    const logM_ = logMmin + i/200*(logMmax-logMmin);
+    const lf = limitFlux(logM_);
+    if(lf === null) { first = true; continue; }
+    const x = xPx(logM_), y = clampY(yPx(lf));
+    if(first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // CTA projected
+  ctx.strokeStyle = 'rgba(29,186,144,0.7)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  first = true;
+  for(let i=0; i<=200; i++) {
+    const logM_ = logMmin + i/200*(logMmax-logMmin);
+    const cf = ctaFluxLim(logM_);
+    if(cf === null) { first = true; continue; }
+    const x = xPx(logM_), y = clampY(yPx(cf));
+    if(first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Model prediction curve (vary mass, keep sigma_v and profile fixed)
+  ctx.strokeStyle = 'rgba(160,128,240,0.9)';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  first = true;
+  for(let i=0; i<=200; i++) {
+    const logM_ = logMmin + i/200*(logMmax-logMmin);
+    const flux_ = computeFlux(logM_, state.logSV, state.channel, state.profile, state.angle, state.boost);
+    if(flux_ <= 0) { first = true; continue; }
+    const lf = Math.log10(flux_);
+    if(lf < fluxMin_log || lf > fluxMax_log) { if(lf > fluxMax_log) { first=true; continue; } }
+    const x = xPx(logM_), y = clampY(yPx(lf));
+    if(first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // Current mass marker
+  const curX = xPx(state.logM);
+  const curFlux = computeFlux(state.logM, state.logSV, state.channel, state.profile, state.angle, state.boost);
+  if(curFlux > 0) {
+    const curY = clampY(yPx(Math.log10(curFlux)));
+    ctx.fillStyle = 'rgba(160,128,240,1)';
+    ctx.beginPath(); ctx.arc(curX, curY, 5, 0, 2*Math.PI); ctx.fill();
+  }
+
+  // Axes
+  ctx.strokeStyle = 'rgba(184,176,224,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t+ph); ctx.lineTo(pad.l+pw, pad.t+ph); ctx.stroke();
+
+  // X axis labels
+  ctx.fillStyle = '#9890c0';
+  ctx.font = '11px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  const xLabels = [[1,'10 GeV'],[2,'100 GeV'],[3,'1 TeV'],[4,'10 TeV'],[5,'100 TeV']];
+  xLabels.forEach(([lm, lab]) => {
+    ctx.fillText(lab, xPx(lm), pad.t+ph+16);
+  });
+
+  // Y axis labels
+  ctx.textAlign = 'right';
+  for(let lF = -16; lF <= -6; lF += 2) {
+    const y = yPx(lF);
+    if(y < pad.t || y > pad.t+ph) continue;
+    ctx.fillText('10^' + lF, pad.l-8, y+4);
+  }
+
+  // Legend
+  const lgX = pad.l + pw - 200, lgY = pad.t + 16;
+  ctx.font = '11px Space Mono, monospace';
+  ctx.textAlign = 'left';
+  [[ctx => { ctx.strokeStyle='rgba(160,128,240,0.9)'; ctx.lineWidth=2.5; }, 'Model prediction'],
+   [ctx => { ctx.strokeStyle='rgba(240,160,32,0.7)'; ctx.lineWidth=2; ctx.setLineDash([6,3]); }, 'Fermi-LAT limit'],
+   [ctx => { ctx.strokeStyle='rgba(29,186,144,0.7)'; ctx.lineWidth=2; ctx.setLineDash([4,4]); }, 'CTA sensitivity'],
+  ].forEach(([styleFn, label], i) => {
+    styleFn(ctx);
+    ctx.beginPath();
+    ctx.moveTo(lgX, lgY + i*20);
+    ctx.lineTo(lgX + 28, lgY + i*20);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'none';
+    ctx.fillStyle = '#9890c0';
+    ctx.fillText(label, lgX + 34, lgY + i*20 + 4);
+  });
+
+  // Axis title
+  ctx.save();
+  ctx.translate(14, pad.t + ph/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#9890c0';
+  ctx.font = '11px Space Mono, monospace';
+  ctx.fillText('Φ_γ [ph cm⁻² s⁻¹]', 0, 0);
+  ctx.restore();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#9890c0';
+  ctx.font = '11px Space Mono, monospace';
+  ctx.fillText('DM particle mass m_χ', pad.l + pw/2, H - 6);
+}
+
+// ── Event listeners ──────────────────────────────────────────────────────────
+document.getElementById('slMass').addEventListener('input', e => {
+  state.logM = parseFloat(e.target.value);
+  document.getElementById('valMass').textContent = fmtMass(state.logM);
+  update();
+});
+document.getElementById('slSigV').addEventListener('input', e => {
+  state.logSV = parseFloat(e.target.value);
+  document.getElementById('valSigV').textContent = '10^' + state.logSV.toFixed(1) + ' cm³/s';
+  update();
+});
+document.getElementById('slAngle').addEventListener('input', e => {
+  state.angle = parseFloat(e.target.value);
+  document.getElementById('valAngle').textContent = state.angle.toFixed(2) + '°';
+  update();
+});
+document.getElementById('slBoost').addEventListener('input', e => {
+  state.boost = parseFloat(e.target.value);
+  document.getElementById('valBoost').textContent = e.target.value == 0 ? '1× (none)' : (Math.pow(10,state.boost).toFixed(1) + '×');
+  update();
+});
+document.querySelectorAll('input[name="channel"]').forEach(r => r.addEventListener('change', update));
+document.querySelectorAll('input[name="profile"]').forEach(r => r.addEventListener('change', update));
+
+function toggleAbout() {
+  const body = document.getElementById('aboutBody');
+  const arrow = document.getElementById('aboutArrow');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  arrow.textContent = open ? '▶' : '▼';
+}
+
+window.addEventListener('resize', drawChart);
+syncUI();
+update();
+</script>
+</body>
+</html>

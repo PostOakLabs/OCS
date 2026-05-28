@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--
+  oMEGACat Population Explorer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-28
+  Site section: #science  ·  Epistemic tier(s): 🔬 Peer-reviewed (oMEGACat survey) · ⚠ Population boundaries are approximate
+  Data sources:
+    - Nitschai, M.S. et al. (2023) "oMEGACat: Spectrophotometric Catalog of ωCen with HST" ApJS 268:40
+    - Clontz, C. et al. (2026) "oMEGACat IX: Chemical Tagging with ML-Inferred MUSE Abundances" arXiv:2603.01041
+    - Bellini, A. et al. (2017) "Hubble Space Telescope Proper Motion (HSTPROMO) Catalogs of Galactic Globular Clusters: V. ωCen" ApJ 842:6
+    - Johnson, C.I. & Pilachowski, C.A. (2010) "Chemical Abundances for 855 Giants in the Globular Cluster ωCen" ApJ 722:1373
+    - Bekki, K. & Tsujimoto, T. (2019) "Multiple Stellar Populations in ω Centauri" ApJ 886:L3
+    - Häberle, M. et al. (2024) "Fast-moving stars around an intermediate-mass black hole in ωCen" Nature 631:285
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>oMEGACat Population Explorer — Omega Centauri Society</title>
+<meta name="description" content="ωCen hosts at least five chemically distinct stellar populations — a fossil record of its assembly as a dwarf galaxy nucleus. Explore the metallicity spread, age sequence, and what each population implies about NGC 5139's origin story.">
+<link rel="canonical" href="https://omegacentauri.me/tools/omegacat-populations.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 8%,rgba(29,186,144,.06),transparent 50%),radial-gradient(ellipse at 80% 65%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--teal-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-approx{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+.context-banner{background:rgba(29,186,144,.07);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.context-banner strong{color:var(--teal-glow)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.pop-list{display:flex;flex-direction:column;gap:8px}
+.pop-item{display:flex;align-items:stretch;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border-subtle);cursor:pointer;transition:all .15s}
+.pop-item:hover,.pop-item.active{border-color:var(--selected-color,var(--teal-bright));box-shadow:0 0 0 1px var(--selected-color,var(--teal-bright))}
+.pop-swatch{width:6px;flex-shrink:0;background:var(--selected-color,#888)}
+.pop-body{flex:1;padding:10px 14px}
+.pop-name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.06em;color:var(--text-primary);margin-bottom:2px}
+.pop-stats{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.pop-frac{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:auto;align-self:center;padding-right:10px;flex-shrink:0}
+canvas{width:100%;display:block}
+.detail-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+@media(max-width:660px){.detail-grid{grid-template-columns:1fr 1fr}}
+.detail-item{}
+.detail-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;margin-bottom:4px}
+.detail-value{font-family:'Space Mono',monospace;font-size:16px;color:var(--text-primary)}
+.detail-note{font-size:14px;color:var(--text-secondary);font-style:italic;line-height:1.6}
+.origin-bar{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);width:140px;flex-shrink:0;letter-spacing:.03em}
+.bar-outer{flex:1;height:18px;background:rgba(112,85,212,.1);border-radius:4px;overflow:hidden}
+.bar-inner{height:100%;border-radius:4px;transition:width .4s ease}
+.bar-pct{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);width:42px;text-align:right;flex-shrink:0}
+.about-toggle{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--border-subtle);border-radius:8px;padding:10px 16px;cursor:pointer;color:var(--text-secondary);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;width:100%;margin-bottom:0}
+.about-toggle:hover{border-color:var(--teal-bright);color:var(--text-primary)}
+.about-toggle .arrow{transition:transform .2s;font-size:10px}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-this-tool{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.about-this-tool.open{max-height:700px}
+.about-body{padding:20px 0 4px;font-size:15px;color:var(--text-secondary);line-height:1.75}
+.about-body p{margin-bottom:12px}
+.about-body strong{color:var(--text-primary)}
+.about-body a{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">oMEGACat Population Explorer</span>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/tools/omega-dwarf-origin.html" class="nav-link">Dwarf Origin ↗</a>
+    <a href="/tools/cmd-explorer.html" class="nav-link">CMD Explorer ↗</a>
+    <a href="/tools/cluster-comparator.html" class="nav-link">Cluster Comparator ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="tool-header">
+    <div>
+      <h1>oMEGACat Population Explorer</h1>
+      <p class="tool-subtitle">ωCen's five chemically distinct stellar populations are the fossil record of a consumed dwarf galaxy. Select a population to explore its metallicity, age, abundance ratios, and what it implies about the assembly history of NGC 5139.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Peer-Reviewed Survey</span>
+      <span class="tier-badge tier-approx">⚠ Boundaries Approximate</span>
+    </div>
+  </div>
+
+  <div class="context-banner">
+    <strong>Why does ωCen have multiple stellar populations?</strong> Normal globular clusters show a narrow metallicity spread (~0.1 dex). ωCen spans −2.2 to −0.5 in [Fe/H] — a 1.7 dex range that implies repeated star-formation episodes fuelled by retained supernova ejecta. Only a dwarf galaxy nucleus, deep enough in a potential well to hold its own gas, could do this. The oMEGACat survey (2023–2026) used machine-learning on MUSE IFU spectra to tag ~300,000 stars across five populations.
+  </div>
+
+  <div class="layout">
+    <!-- Population list -->
+    <div class="panel">
+      <div class="card-title">Stellar Populations — click to explore</div>
+      <div class="pop-list" id="pop-list"></div>
+    </div>
+
+    <!-- [Fe/H] distribution chart -->
+    <div class="panel">
+      <div class="card-title">Metallicity Distribution Function</div>
+      <canvas id="mdf-chart" height="260"></canvas>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:8px;font-family:'Space Mono',monospace;">Approximate [Fe/H] distribution per population. Based on Johnson &amp; Pilachowski 2010 + oMEGACat 2026 ML tagging.</p>
+    </div>
+  </div>
+
+  <!-- Detail card -->
+  <div class="detail-card" id="detail-card">
+    <div class="card-title" id="detail-title">Select a population above</div>
+    <div class="detail-grid" id="detail-grid"></div>
+    <p class="detail-note" id="detail-note">Click any population in the list to see its chemical properties and assembly interpretation.</p>
+  </div>
+
+  <!-- Assembly origin bar chart -->
+  <div class="origin-bar">
+    <div class="card-title">Fraction of Total Cluster Mass by Population</div>
+    <div id="bar-rows"></div>
+    <p style="font-size:13px;color:var(--text-dim);margin-top:10px;font-family:'Space Mono',monospace;">Approximate mass fractions from Bellini et al. 2017 proper-motion cleaned samples + oMEGACat photometric membership.</p>
+  </div>
+
+  <!-- About -->
+  <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool &amp; references</button>
+  <div class="about-this-tool" id="about-this-tool">
+    <div class="about-body">
+      <p><strong>oMEGACat</strong> is a multi-epoch HST photometric and MUSE spectroscopic survey of ωCen covering ~300,000 stars. The IX instalment (Clontz et al. 2026) used a random-forest classifier trained on known [Fe/H], [Mg/Fe], and [Ca/Fe] values to assign probabilistic population membership to stars with only photometric data — extending chemical tagging to stars too faint for individual spectroscopy.</p>
+      <p><strong>Population naming</strong> follows the Johnson &amp; Pilachowski (2010) scheme: Metal-Poor (MP), Intermediate-1, Intermediate-2, Metal-Rich (MR), and the anomalous "supermetal-rich" population (RGB-a). Each formed in a distinct star-formation episode, with the later populations enriched by ejecta from earlier ones.</p>
+      <p><strong>The dwarf galaxy connection:</strong> the multi-episode chemical history, the presence of an IMBH, the retrograde orbit in the Galaxy (Dinescu et al. 1999), the flattened morphology, and the stellar population age spread (1–3 Gyr between oldest and youngest populations) all point to ωCen as the stripped nucleus of a dwarf galaxy accreted by the Milky Way.</p>
+      <p><strong>References:</strong> <a href="https://arxiv.org/abs/2603.01041" target="_blank" rel="noopener">Clontz et al. 2026 (arXiv:2603.01041)</a> · <a href="https://doi.org/10.3847/1538-4365/ace5ea" target="_blank" rel="noopener">Nitschai et al. 2023 ApJS 268:40</a> · <a href="https://doi.org/10.1088/0004-637X/722/2/1373" target="_blank" rel="noopener">Johnson &amp; Pilachowski 2010 ApJ 722:1373</a> · Bellini et al. 2017 ApJ 842:6</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Population data — approximate, based on Johnson & Pilachowski 2010, oMEGACat 2026
+const POPULATIONS = [
+  {
+    id:'mp',
+    name:'Metal-Poor (MP)',
+    color:'#4de8c0',
+    frac:0.38,
+    feH:{mean:-1.75, sigma:0.12},
+    mgFe: '+0.35',
+    caFe: '+0.28',
+    age: '12.5 ± 0.5 Gyr',
+    stars: '~115,000',
+    note: 'The dominant and oldest population. Formed in the first major star-formation episode of the proto-dwarf galaxy, before significant Fe enrichment. High [α/Fe] ratios indicate rapid enrichment by Type II supernovae only — no Type Ia contribution yet. These stars define the cluster\'s main sequence and red giant branch at low metallicity.',
+    origin: 'First star-formation burst in proto-dwarf galaxy nucleus, ~12.5 Gyr ago. Chemistry consistent with rapid collapse from metal-poor primordial gas.'
+  },
+  {
+    id:'int1',
+    name:'Intermediate-1 (Int-1)',
+    color:'#a0c8ff',
+    frac:0.27,
+    feH:{mean:-1.40, sigma:0.10},
+    mgFe: '+0.28',
+    caFe: '+0.22',
+    age: '12.0 ± 0.5 Gyr',
+    stars: '~82,000',
+    note: 'Second-generation stars formed from gas enriched by MP supernovae ejecta. Modest iron enrichment and still high [α/Fe], suggesting Type Ia supernovae had not yet contributed significantly. The cluster retained sufficient gas for this episode despite the intense radiation from the first generation.',
+    origin: 'Second star-formation burst, ~0.5 Gyr after MP. The dwarf nucleus was deep enough to retain SN II ejecta and cool it for re-collapse.'
+  },
+  {
+    id:'int2',
+    name:'Intermediate-2 (Int-2)',
+    color:'#c8a0ff',
+    frac:0.19,
+    feH:{mean:-1.10, sigma:0.12},
+    mgFe: '+0.18',
+    caFe: '+0.15',
+    age: '11.5 ± 0.6 Gyr',
+    stars: '~58,000',
+    note: 'Third-generation stars show a declining [α/Fe] signature — the first clear sign of Type Ia supernovae enrichment. The iron abundance has climbed by ~0.65 dex from the MP baseline. The presence of spread in [Ba/Fe] in this population hints at AGB star contributions and a prolonged enrichment history.',
+    origin: 'Third burst, ~1 Gyr after MP. Type Ia SN timescale (~1 Gyr) has now elapsed, contributing iron-peak elements and depressing the [α/Fe] ratio.'
+  },
+  {
+    id:'mr',
+    name:'Metal-Rich (MR)',
+    color:'#f0a020',
+    frac:0.12,
+    feH:{mean:-0.80, sigma:0.14},
+    mgFe: '+0.08',
+    caFe: '+0.10',
+    age: '11.0 ± 0.7 Gyr',
+    stars: '~36,000',
+    note: 'A metal-rich population with solar-like [α/Fe], indicating a prolonged and well-mixed star-formation epoch. High [Ca/Fe] scatter in this population (as seen in oMEGACat ML data) may reflect contributions from multiple AGB and SN Ia channels. These stars sit on a distinct red-giant branch sequence at higher metallicity.',
+    origin: 'Fourth burst. By this point the dwarf was deeply enriched, suggesting a compact potential well — a nucleus, not a diffuse halo — was the formation site.'
+  },
+  {
+    id:'rgba',
+    name:'RGB-a / Supermetal-Rich',
+    color:'#ff7070',
+    frac:0.04,
+    feH:{mean:-0.55, sigma:0.10},
+    mgFe: '+0.05',
+    caFe: '+0.08',
+    age: '10.5 ± 1.0 Gyr',
+    stars: '~12,000',
+    note: 'The anomalous "a" component of the red giant branch, first identified photometrically by Lee et al. (1999). Near-solar metallicity in a cluster at 5.5 kpc. These stars show an anomalously bright, red RGB sequence. Their formation requires extensive self-enrichment — only possible in a massive, gas-retaining structure. Possibly formed during or just after the tidal stripping event itself.',
+    origin: 'Latest burst, possibly triggered by tidal compression during the dwarf galaxy\'s infall into the Milky Way. The stripped nucleus then lost its outer envelope, leaving only the dense central relic we see as ωCen today.'
+  }
+];
+
+let selectedPop = null;
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();if(h.pop){const p=POPULATIONS.find(x=>x.id===h.pop);if(p)selectedPop=p}}
+function saveHash(){if(selectedPop)setHash({pop:selectedPop.id})}
+
+function renderPopList(){
+  const list = document.getElementById('pop-list');
+  list.innerHTML = '';
+  POPULATIONS.forEach(pop=>{
+    const item = document.createElement('div');
+    item.className = 'pop-item' + (selectedPop===pop ? ' active' : '');
+    item.style.setProperty('--selected-color', pop.color);
+    item.innerHTML = `
+      <div class="pop-swatch" style="background:${pop.color}"></div>
+      <div class="pop-body">
+        <div class="pop-name">${pop.name}</div>
+        <div class="pop-stats">[Fe/H] ≈ ${pop.feH.mean.toFixed(2)} · Age ${pop.age} · ${pop.stars} stars</div>
+      </div>
+      <div class="pop-frac">${(pop.frac*100).toFixed(0)}%</div>`;
+    item.addEventListener('click',()=>{selectedPop=pop;saveHash();render()});
+    list.appendChild(item);
+  });
+}
+
+function renderDetail(){
+  const card = document.getElementById('detail-card');
+  const title = document.getElementById('detail-title');
+  const grid = document.getElementById('detail-grid');
+  const note = document.getElementById('detail-note');
+  if(!selectedPop){
+    title.textContent = 'Select a population above';
+    grid.innerHTML = '';
+    note.textContent = 'Click any population in the list to see its chemical properties and assembly interpretation.';
+    return;
+  }
+  const p = selectedPop;
+  title.innerHTML = `<span style="color:${p.color}">${p.name}</span> — Chemical Profile`;
+  grid.innerHTML = `
+    <div class="detail-item"><div class="detail-label">Mean [Fe/H]</div><div class="detail-value" style="color:${p.color}">${p.feH.mean.toFixed(2)} ± ${p.feH.sigma.toFixed(2)}</div></div>
+    <div class="detail-item"><div class="detail-label">[Mg/Fe]</div><div class="detail-value">${p.mgFe}</div></div>
+    <div class="detail-item"><div class="detail-label">[Ca/Fe]</div><div class="detail-value">${p.caFe}</div></div>
+    <div class="detail-item"><div class="detail-label">Estimated Age</div><div class="detail-value">${p.age}</div></div>
+    <div class="detail-item"><div class="detail-label">Stellar Count</div><div class="detail-value">${p.stars}</div></div>
+    <div class="detail-item"><div class="detail-label">Mass Fraction</div><div class="detail-value">${(p.frac*100).toFixed(0)}%</div></div>`;
+  note.innerHTML = `<strong style="color:var(--text-primary)">Chemistry:</strong> ${p.note}<br><br><strong style="color:var(--text-primary)">Assembly interpretation:</strong> ${p.origin}`;
+}
+
+function renderBars(){
+  const container = document.getElementById('bar-rows');
+  container.innerHTML = '';
+  POPULATIONS.forEach(pop=>{
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label">${pop.name.split(' (')[0]}</div>
+      <div class="bar-outer"><div class="bar-inner" style="width:${pop.frac*100}%;background:${pop.color}40;border-right:2px solid ${pop.color}"></div></div>
+      <div class="bar-pct">${(pop.frac*100).toFixed(0)}%</div>`;
+    container.appendChild(row);
+  });
+}
+
+function drawMDF(){
+  const cv = document.getElementById('mdf-chart');
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = 260;
+  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  cv.style.height = h+'px';
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+
+  const padL=44,padR=16,padT=16,padB=36;
+  const pW=w-padL-padR, pH=h-padT-padB;
+  const xMin=-2.3, xMax=-0.3;
+  const nBins=100;
+
+  // Sample Gaussian for each population
+  const bins = new Float64Array(nBins).fill(0);
+  const binContribs = POPULATIONS.map(()=>new Float64Array(nBins).fill(0));
+  const dx=(xMax-xMin)/nBins;
+
+  POPULATIONS.forEach((pop,pi)=>{
+    for(let i=0;i<nBins;i++){
+      const x = xMin + (i+0.5)*dx;
+      const g = pop.frac * Math.exp(-0.5*Math.pow((x-pop.feH.mean)/pop.feH.sigma,2)) / (pop.feH.sigma*Math.sqrt(2*Math.PI));
+      binContribs[pi][i] = g;
+      bins[i] += g;
+    }
+  });
+
+  const maxBin = Math.max(...bins)*1.05;
+  const xOf = x=>(padL+(x-xMin)/(xMax-xMin)*pW);
+  const yOf = v=>(padT+pH-v/maxBin*pH);
+
+  // Grid
+  ctx.strokeStyle='rgba(112,85,212,.15)'; ctx.lineWidth=1;
+  [-2.2,-2.0,-1.8,-1.6,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4].forEach(v=>{
+    const x=xOf(v);
+    ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();
+  });
+  ctx.strokeStyle='rgba(112,85,212,.4)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,padT+pH);ctx.lineTo(padL+pW,padT+pH);ctx.stroke();
+
+  // X axis
+  ctx.font="10px 'Space Mono',monospace"; ctx.fillStyle='#9890c0'; ctx.textAlign='center';
+  [-2.2,-2.0,-1.8,-1.6,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4].forEach(v=>{
+    ctx.fillText(v.toFixed(1),xOf(v),padT+pH+14);
+  });
+  ctx.fillText('[Fe/H]',padL+pW/2,h-6);
+
+  // Draw stacked Gaussians per population
+  POPULATIONS.forEach((pop,pi)=>{
+    const isSelected = selectedPop===pop;
+    ctx.fillStyle = isSelected ? pop.color+'55' : pop.color+'22';
+    ctx.strokeStyle = isSelected ? pop.color : pop.color+'88';
+    ctx.lineWidth = isSelected ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(xOf(xMin),yOf(0));
+    for(let i=0;i<nBins;i++){
+      const x=xMin+(i+0.5)*dx;
+      ctx.lineTo(xOf(x),yOf(binContribs[pi][i]));
+    }
+    ctx.lineTo(xOf(xMax),yOf(0));
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    for(let i=0;i<nBins;i++){
+      const x=xMin+(i+0.5)*dx;
+      i===0?ctx.moveTo(xOf(x),yOf(binContribs[pi][i])):ctx.lineTo(xOf(x),yOf(binContribs[pi][i]));
+    }
+    ctx.stroke();
+    // Peak label
+    const peakI = Array.from(binContribs[pi]).indexOf(Math.max(...binContribs[pi]));
+    const peakY = yOf(binContribs[pi][peakI]);
+    if(peakY > padT+8){
+      ctx.fillStyle=pop.color; ctx.textAlign='center'; ctx.font="9px 'Space Mono',monospace";
+      ctx.fillText(pop.id.toUpperCase(), xOf(xMin+(peakI+0.5)*dx), peakY-4);
+    }
+  });
+
+  // Total envelope
+  ctx.strokeStyle='rgba(232,228,255,.35)'; ctx.lineWidth=1.5; ctx.setLineDash([3,3]);
+  ctx.beginPath();
+  for(let i=0;i<nBins;i++){
+    const x=xMin+(i+0.5)*dx;
+    i===0?ctx.moveTo(xOf(x),yOf(bins[i])):ctx.lineTo(xOf(x),yOf(bins[i]));
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+
+function render(){
+  renderPopList();
+  renderDetail();
+  renderBars();
+  drawMDF();
+}
+
+function wire(){
+  const at=document.getElementById('about-toggle');
+  const ab=document.getElementById('about-this-tool');
+  at.addEventListener('click',()=>{const o=!ab.classList.contains('open');ab.classList.toggle('open',o);at.classList.toggle('open',o)});
+  let rt; window.addEventListener('resize',()=>{if(rt)clearTimeout(rt);rt=setTimeout(drawMDF,80)});
+}
+
+function init(){loadHash();wire();render()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>

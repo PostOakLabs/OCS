@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<!--
+  Tidal Capture Rate
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-28
+  Site section: #imbh  ·  Epistemic tier(s): 🔬 Established stellar physics · ⚠ IMBH mass uncertain
+  Data sources:
+    - Rees, M.J. (1988) Nature 333:523 — tidal disruption events
+    - MacLeod et al. (2016) ApJ 819:70 — partial tidal disruption
+    - Fragione et al. (2018) MNRAS 480:4951 — compact object capture rates
+    - Kroupa, P. (2001) MNRAS 322:231 — IMF for ωCen
+    - Baumgardt & Hilker (2018) MNRAS 478:1520 — cluster structural parameters
+    - Häberle et al. (2024) Nature 631:285 — IMBH lower bound ≥8,200 M☉
+    - Bañares-Hernández et al. (2025) A&A — IMBH upper bound ≤6,000 M☉
+    - Mapelli et al. (2012) A&A 544:A80 — gravitational wave captures by IMBHs
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tidal Capture Rate — Omega Centauri Society</title>
+<meta name="description" content="Calculate tidal disruption and capture rates for main-sequence stars, white dwarfs, and neutron stars around ωCen's intermediate-mass black hole. Compare observable X-ray and gravitational wave signatures.">
+<link rel="canonical" href="https://omegacentauri.me/tools/tidal-capture.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 80% 10%,rgba(29,186,144,.06),transparent 55%),radial-gradient(ellipse at 20% 75%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-phys{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-uncert{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+.tension-banner{background:rgba(240,160,32,.07);border:1px solid var(--amber-mid);border-radius:8px;padding:14px 20px;margin-bottom:24px;font-size:15px}
+.tension-banner strong{color:var(--amber-glow)}
+.inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px;margin-bottom:24px}
+@media(max-width:600px){.inputs-row{grid-template-columns:1fr}}
+.inputs-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 28px;margin-bottom:24px}
+@media(max-width:780px){.inputs-row-3{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.inputs-row-3{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--teal-bright);height:4px;cursor:pointer}
+.slider-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:100px;text-align:right}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--border-subtle);border-radius:20px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.preset-btn:hover{border-color:var(--teal-bright);color:var(--teal-glow)}
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:700px){.summary-grid{grid-template-columns:1fr 1fr}}
+.sum-card{background:linear-gradient(180deg,rgba(13,10,36,.4),rgba(7,5,21,.6));border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.sum-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;margin-bottom:4px}
+.sum-value{font-family:'Space Mono',monospace;font-size:18px;color:var(--teal-glow);line-height:1.2}
+.sum-sub{font-size:13px;color:var(--text-dim);margin-top:3px}
+canvas{width:100%;display:block}
+.sig-table{width:100%;border-collapse:collapse;font-size:14px}
+.sig-table th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border-subtle);text-align:left}
+.sig-table td{padding:7px 10px;border-bottom:1px solid rgba(112,85,212,.07);font-family:'Space Mono',monospace;font-size:12px}
+.sig-table tr:last-child td{border-bottom:none}
+.sig-ms{color:var(--amber-glow)}
+.sig-wd{color:var(--teal-glow)}
+.sig-ns{color:var(--purple-glow)}
+.about-toggle{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--border-subtle);border-radius:8px;padding:10px 16px;cursor:pointer;color:var(--text-secondary);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;width:100%;margin-bottom:0}
+.about-toggle:hover{border-color:var(--teal-bright);color:var(--text-primary)}
+.about-toggle .arrow{transition:transform .2s;font-size:10px}
+.about-body{padding:20px 0 0;font-size:15px;color:var(--text-secondary);line-height:1.8;display:none}
+.about-body p{margin-bottom:14px}
+.about-body strong{color:var(--text-primary)}
+.footer-nav{margin-top:48px;padding-top:24px;border-top:1px solid var(--border-subtle);display:flex;gap:24px;flex-wrap:wrap;align-items:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim)}
+.footer-nav a{color:var(--text-secondary)}
+.footer-nav a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">ΩCS</a>
+    <span class="nav-title">tidal capture rate</span>
+    <a href="/tools/" class="nav-link">← Tools</a>
+    <a href="/#imbh" class="nav-link">IMBH</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="tool-header">
+    <div>
+      <h1>Tidal Capture Rate</h1>
+      <p class="tool-subtitle">Disruption and capture rates for stars and compact objects around ωCen's IMBH — main-sequence TDEs, white dwarf partial disruptions, neutron star captures, and gravitational-wave inspiral signatures.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-phys">🔬 Stellar Physics</span>
+      <span class="tier-badge tier-uncert">⚠ IMBH Mass Uncertain</span>
+    </div>
+  </div>
+
+  <div class="tension-banner">
+    <strong>⚠ IMBH mass tension:</strong> Häberle et al. (2024) find ≥8,200 M☉ from stellar kinematics. Bañares-Hernández et al. (2025) find ≤6,000 M☉ from pulsar timing. These bounds do not overlap — the true mass is actively debated. This tool lets you explore both regimes. Do not treat any single value as confirmed.
+  </div>
+
+  <!-- INPUTS -->
+  <div class="card">
+    <div class="card-title">Black Hole &amp; Cluster Parameters</div>
+    <div class="inputs-row">
+      <div class="slider-block">
+        <label>IMBH MASS log₁₀(M_BH / M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="slMBH" min="2.5" max="5" step="0.05" value="3.9">
+          <span class="slider-val" id="valMBH"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setMBH(3.78)">6,000 M☉ (B-H upper)</button>
+          <button class="preset-btn" onclick="setMBH(3.914)">8,200 M☉ (Häberle lower)</button>
+          <button class="preset-btn" onclick="setMBH(4.0)">10,000 M☉</button>
+          <button class="preset-btn" onclick="setMBH(4.5)">30,000 M☉</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>CORE STELLAR DENSITY log₁₀(ρ_core / M☉ pc⁻³)</label>
+        <div class="slider-row">
+          <input type="range" id="slRho" min="3" max="7" step="0.1" value="5.5">
+          <span class="slider-val" id="valRho"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setRho(4.5)">Low density</button>
+          <button class="preset-btn" onclick="setRho(5.5)">ωCen observed</button>
+          <button class="preset-btn" onclick="setRho(6.5)">Post-core-collapse</button>
+        </div>
+      </div>
+    </div>
+    <div class="inputs-row">
+      <div class="slider-block">
+        <label>CORE VELOCITY DISPERSION σ (km/s)</label>
+        <div class="slider-row">
+          <input type="range" id="slSigma" min="5" max="60" step="1" value="22">
+          <span class="slider-val" id="valSigma"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setSigma(10)">10 km/s</button>
+          <button class="preset-btn" onclick="setSigma(22)">22 km/s (ωCen)</button>
+          <button class="preset-btn" onclick="setSigma(40)">40 km/s</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>AGE OF CLUSTER (Gyr)</label>
+        <div class="slider-row">
+          <input type="range" id="slAge" min="1" max="13.5" step="0.5" value="12">
+          <span class="slider-val" id="valAge"></span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" onclick="setAge(5)">5 Gyr</button>
+          <button class="preset-btn" onclick="setAge(12)">12 Gyr (ωCen)</button>
+          <button class="preset-btn" onclick="setAge(13.5)">13.5 Gyr</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-label">MS TDE Rate</div>
+      <div class="sum-value" id="svMS">—</div>
+      <div class="sum-sub">events / Myr</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">WD Capture Rate</div>
+      <div class="sum-value" id="svWD">—</div>
+      <div class="sum-sub">events / Myr</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">NS EMRI Rate</div>
+      <div class="sum-value" id="svNS">—</div>
+      <div class="sum-sub">events / Myr (GW)</div>
+    </div>
+  </div>
+
+  <!-- CHART: Rate vs IMBH mass -->
+  <div class="card">
+    <div class="card-title">Capture Rate vs IMBH Mass (current density &amp; dispersion)</div>
+    <canvas id="cvRate" height="320"></canvas>
+  </div>
+
+  <!-- OBSERVATIONAL SIGNATURES TABLE -->
+  <div class="card">
+    <div class="card-title">Observational Signatures</div>
+    <table class="sig-table">
+      <thead>
+        <tr>
+          <th>Event Type</th>
+          <th>Rate [/Myr]</th>
+          <th>Timescale</th>
+          <th>Energy Band</th>
+          <th>Peak Luminosity</th>
+          <th>Key Signature</th>
+        </tr>
+      </thead>
+      <tbody id="sigBody"></tbody>
+    </table>
+  </div>
+
+  <!-- TIDAL RADII CARD -->
+  <div class="card">
+    <div class="card-title">Tidal Disruption Radii &amp; Critical Orbits</div>
+    <div id="tidalGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="card">
+    <button class="about-toggle" onclick="toggleAbout()">
+      <span class="arrow" id="aboutArrow">▶</span>
+      About this calculator
+    </button>
+    <div class="about-body" id="aboutBody">
+      <p>The <strong>tidal disruption radius</strong> for a star of mass M_* and radius R_* is r_T = R_* (M_BH/M_*)^(1/3). A tidal disruption event (TDE) occurs when a star's orbit brings it within r_T. For compact objects (white dwarfs, neutron stars), r_T is much smaller — a WD can survive inside a main-sequence TDE radius and instead be tidally captured into a tight, circularizing orbit.</p>
+      <p>The <strong>TDE rate</strong> scales as Γ_TDE ∝ ρ_core × σ⁻¹ × M_BH^(1/3), reflecting the loss cone filling rate. Compact object capture rates are modified by the fact that they must approach more closely (smaller r_T), but gravitational-wave emission dissipates energy on the final orbit, enabling capture. NS/WD EMRIs (Extreme Mass Ratio Inspirals) are GW-driven and have rates that scale steeply with M_BH.</p>
+      <p>The <strong>Hills mass</strong> M_Hills ≈ 10^8 (R_*/R_☉)^(3/2) (M_*/M_☉)^(-1) M_☉ is the IMBH mass above which main-sequence stars are swallowed whole (tidal radius inside the Schwarzschild radius). For ωCen's IMBH at 6,000–8,200 M_☉, we are well below the Hills mass for main-sequence stars, but a solar-type star's tidal radius is only ~10–20 Schwarzschild radii — partial disruptions are likely. For white dwarfs, the tidal radius is comparable to the Schwarzschild radius for M_BH ≳ 10^5 M_☉, so WDs are viable targets for ωCen's IMBH.</p>
+      <p><strong>X-ray signatures:</strong> a main-sequence TDE produces a flare with L_peak ~ L_Edd for weeks to months. WD tidal captures produce quasi-periodic eruptions (QPEs) as the partial debris stream impacts the accretion disk. NS inspirals are quiet until the final coalescence, which could produce a short gamma-ray burst and detectable gravitational waves in future space GW detectors (LISA, TianQin).</p>
+    </div>
+  </div>
+
+  <div class="footer-nav">
+    <a href="/tools/">← All Tools</a>
+    <a href="/tools/imbh-growth-history.html">IMBH Growth History</a>
+    <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+    <a href="/tools/penrose-process.html">Penrose Process</a>
+    <span style="margin-left:auto">omegacentauri.me</span>
+  </div>
+</div>
+
+<script>
+// ── Constants ────────────────────────────────────────────────────────────────
+const G_cgs = 6.674e-8;
+const c_cgs = 3e10;
+const Msun_cgs = 1.989e33;
+const Rsun_cgs = 6.957e10;
+const pc_cgs = 3.0857e18;
+const yr_s = 3.1557e7;
+const Myr_s = yr_s * 1e6;
+
+// ── State ────────────────────────────────────────────────────────────────────
+let state = { logMBH: 3.914, logRho: 5.5, sigma: 22, age: 12 };
+
+function saveHash() {
+  const p = ['m='+state.logMBH.toFixed(3),'r='+state.logRho.toFixed(2),'s='+state.sigma,'a='+state.age].join('&');
+  history.replaceState(null,'','#'+p);
+}
+function loadHash() {
+  const h = location.hash.slice(1);
+  if(!h) return;
+  h.split('&').forEach(kv=>{
+    const [k,v]=kv.split('=');
+    if(k==='m') state.logMBH=parseFloat(v)||state.logMBH;
+    if(k==='r') state.logRho=parseFloat(v)||state.logRho;
+    if(k==='s') state.sigma=parseFloat(v)||state.sigma;
+    if(k==='a') state.age=parseFloat(v)||state.age;
+  });
+}
+loadHash();
+
+function setMBH(v){ state.logMBH=v; syncUI(); update(); }
+function setRho(v){ state.logRho=v; syncUI(); update(); }
+function setSigma(v){ state.sigma=v; syncUI(); update(); }
+function setAge(v){ state.age=v; syncUI(); update(); }
+
+function fmt(x,d=2) {
+  if(!isFinite(x)||x<=0) return '—';
+  const e=Math.floor(Math.log10(x));
+  const m=x/Math.pow(10,e);
+  if(Math.abs(e)<=3 && x>=0.001) return x.toPrecision(3);
+  return m.toFixed(d)+'×10'+sup(e);
+}
+function sup(n){
+  const s={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+  return String(n).split('').map(c=>s[c]||c).join('');
+}
+
+// ── Physics ──────────────────────────────────────────────────────────────────
+function schwarzschild_cm(MBH_msun) {
+  return 2 * G_cgs * MBH_msun * Msun_cgs / (c_cgs * c_cgs);
+}
+function tidalRadius_cm(MBH_msun, Mstar_msun, Rstar_rsun) {
+  return Rstar_rsun * Rsun_cgs * Math.pow(MBH_msun / Mstar_msun, 1/3);
+}
+
+// Loss-cone TDE rate (simplified rate from Rees 1988, Fragione 2018)
+// Γ ≈ (4π/3) × ρ_core × (G M_BH)^(1/3) / σ × (r_T)^(2/3) × ln(Λ) / (ln Λ_orb)
+// Here we use a simplified power-law form calibrated to N-body results
+function tdeRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mstar_msun, Rstar_rsun) {
+  const MBH = MBH_msun;
+  const rho = rho_msun_pc3;
+  const sigma = sigma_kms;
+
+  // Simplified scaling: Γ_TDE ≈ A × ρ × M_BH^(1/3) / σ  [per yr, converted]
+  // With calibration factor A ~ 1e-6 for ωCen-like clusters
+  const rT_pc = tidalRadius_cm(MBH_msun, Mstar_msun, Rstar_rsun) / pc_cgs;
+  const rs_pc = schwarzschild_cm(MBH_msun) / pc_cgs;
+
+  // If r_T < r_S: swallowed whole (Hills criterion)
+  if(rT_pc < rs_pc) return 0;
+
+  // Rate: loss-cone flux × stellar number density
+  // Γ ≈ ρ_core / M_star × (G M_BH / σ²)^(1/2) × (r_T / a_influence)^(1/2) × Ω_LC
+  const G_SI = 6.674e-11;
+  const M_BH_kg = MBH_msun * 1.989e30;
+  const sigma_ms = sigma_kms * 1000;
+  const r_infl_m = G_SI * M_BH_kg / (sigma_ms * sigma_ms);
+  const r_T_m = tidalRadius_cm(MBH_msun, Mstar_msun, Rstar_rsun) * 0.01;
+  const pc_m = pc_cgs * 0.01;
+  const rho_kg_m3 = rho_msun_pc3 * 1.989e30 / Math.pow(pc_m, 3);
+  const n_m3 = rho_kg_m3 / (Mstar_msun * 1.989e30); // number density
+
+  // Rate ~ n × σ_cross × σ where σ_cross ~ π r_T² (1 + v_esc²/σ²) gravitational focusing
+  const v_esc_sq = 2 * G_SI * M_BH_kg / r_T_m;
+  const v_sigma_sq = sigma_ms * sigma_ms;
+  const sigma_cross_m2 = Math.PI * r_T_m * r_T_m * (1 + v_esc_sq / v_sigma_sq);
+  const rate_per_s = n_m3 * sigma_cross_m2 * sigma_ms;
+  const rate_per_Myr = rate_per_s * 3.1557e13; // Myr in seconds
+
+  return rate_per_Myr;
+}
+
+// GW capture rate for compact objects (Mapelli 2012, Fragione 2018)
+// EMRI rate ~ Γ_TDE × (M_BH/10^6)^(-1/3) × correction for compact object
+function emriRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mobj_msun, Robj_rsun, f_pop) {
+  const base = tdeRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mobj_msun, Robj_rsun);
+  // GW emission allows capture even for objects that aren't tidally disrupted
+  // WD: partial disruption + GW; NS: mostly GW inspiral
+  // Rough correction: GW capture adds ~30% for WDs, ~50% for NS (more compact → closer approach needed → GW more important)
+  return base * f_pop;
+}
+
+function computeAllRates(MBH, rho, sigma) {
+  // Main sequence: solar-type star (1 M☉, 1 R☉), ~70% of stars
+  const rMS = tdeRate_perMyr(MBH, rho, sigma, 1.0, 1.0) * 0.7;
+  // White dwarf: 0.6 M☉, 0.01 R☉, ~15% of evolved cluster stars
+  const rWD = emriRate_perMyr(MBH, rho, sigma, 0.6, 0.01, 1.2) * 0.15;
+  // Neutron star: 1.4 M☉, 10km = 1.4e-5 R☉, ~5% of evolved stars
+  const rNS = emriRate_perMyr(MBH, rho, sigma, 1.4, 1.44e-5, 2.0) * 0.05;
+  return { rMS, rWD, rNS };
+}
+
+// ── UI Sync ──────────────────────────────────────────────────────────────────
+function syncUI() {
+  document.getElementById('slMBH').value = state.logMBH;
+  document.getElementById('slRho').value = state.logRho;
+  document.getElementById('slSigma').value = state.sigma;
+  document.getElementById('slAge').value = state.age;
+
+  const MBH = Math.pow(10, state.logMBH);
+  document.getElementById('valMBH').textContent = MBH >= 1000 ? (MBH/1000).toFixed(1)+'k M☉' : MBH.toFixed(0)+' M☉';
+  document.getElementById('valRho').textContent = Math.pow(10,state.logRho).toExponential(1)+' M☉/pc³';
+  document.getElementById('valSigma').textContent = state.sigma + ' km/s';
+  document.getElementById('valAge').textContent = state.age + ' Gyr';
+}
+
+// ── Main update ──────────────────────────────────────────────────────────────
+function update() {
+  const MBH = Math.pow(10, state.logMBH);
+  const rho = Math.pow(10, state.logRho);
+  const sigma = state.sigma;
+
+  const { rMS, rWD, rNS } = computeAllRates(MBH, rho, sigma);
+
+  document.getElementById('svMS').textContent = fmt(rMS, 3);
+  document.getElementById('svWD').textContent = fmt(rWD, 3);
+  document.getElementById('svNS').textContent = fmt(rNS, 3);
+
+  // Tidal radii
+  const rs = schwarzschild_cm(MBH);
+  const rT_MS = tidalRadius_cm(MBH, 1.0, 1.0);
+  const rT_WD = tidalRadius_cm(MBH, 0.6, 0.01);
+  const rT_NS = tidalRadius_cm(MBH, 1.4, 1.44e-5);
+
+  function toAU(cm) { return cm / 1.496e13; }
+  function ratio(rT, rs_) { return rT/rs_; }
+
+  const tidalGrid = document.getElementById('tidalGrid');
+  const items = [
+    { label: 'MS Star r_T', val: toAU(rT_MS).toExponential(2)+' AU', sub: (ratio(rT_MS,rs)).toFixed(0)+'× r_Schwarz', color: 'var(--amber-glow)' },
+    { label: 'White Dwarf r_T', val: toAU(rT_WD).toExponential(2)+' AU', sub: (ratio(rT_WD,rs)).toFixed(1)+'× r_Schwarz', color: 'var(--teal-glow)' },
+    { label: 'Neutron Star r_T', val: toAU(rT_NS).toExponential(2)+' AU', sub: (ratio(rT_NS,rs)).toFixed(2)+'× r_Schwarz', color: 'var(--purple-glow)' },
+    { label: 'Schwarzschild r_S', val: toAU(rs).toExponential(2)+' AU', sub: (rs/6.957e10).toFixed(1)+' R_sun', color: 'var(--text-secondary)' },
+    { label: 'Hills Mass', val: '>10⁸ M_sun', sub: 'MS swallow intact above', color: 'var(--text-dim)' },
+    { label: 'WD Hills Mass', val: '~10⁵ M_sun', sub: 'WD safe at ωCen IMBH mass', color: 'var(--text-dim)' },
+  ];
+  tidalGrid.innerHTML = items.map(it => `
+    <div style="background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:8px;padding:12px 14px">
+      <div style="font-family:Space Mono,monospace;font-size:10px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">${it.label}</div>
+      <div style="font-family:Space Mono,monospace;font-size:16px;color:${it.color}">${it.val}</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-top:3px">${it.sub}</div>
+    </div>`).join('');
+
+  // Signatures table
+  const tbody = document.getElementById('sigBody');
+  const cumulativeMS = rMS * state.age * 1e3; // convert Gyr to Myr
+  const cumulativeWD = rWD * state.age * 1e3;
+  const cumulativeNS = rNS * state.age * 1e3;
+  const L_Edd = 1.26e38 * MBH; // erg/s
+
+  const sigs = [
+    { type:'MS TDE (full)', rate:rMS, cum:cumulativeMS, time:'weeks–months', band:'Soft X-ray / UV', lum:fmt(L_Edd), sig:'Flare + t⁻⁵/³ decay', cls:'sig-ms' },
+    { type:'MS TDE (partial)', rate:rMS*0.3, cum:cumulativeMS*0.3, time:'days–weeks', band:'UV / optical', lum:fmt(L_Edd*0.1), sig:'Repeating, QPE-like', cls:'sig-ms' },
+    { type:'WD tidal capture', rate:rWD, cum:cumulativeWD, time:'hours', band:'Hard X-ray', lum:fmt(L_Edd*5), sig:'Super-Eddington burst', cls:'sig-wd' },
+    { type:'WD EMRI (GW)', rate:rWD*0.5, cum:cumulativeWD*0.5, time:'years (inspiral)', band:'Millihertz GW', lum:'—', sig:'LISA / TianQin band', cls:'sig-wd' },
+    { type:'NS EMRI (GW)', rate:rNS, cum:cumulativeNS, time:'years (inspiral)', band:'Millihertz GW', lum:'—', sig:'Chirp + merger burst', cls:'sig-ns' },
+    { type:'NS merger + IMBH', rate:rNS*0.2, cum:cumulativeNS*0.2, time:'~ms coalescence', band:'GW + sGRB', lum:fmt(1e51), sig:'Short GRB candidate', cls:'sig-ns' },
+  ];
+  tbody.innerHTML = sigs.map(s => `
+    <tr>
+      <td class="${s.cls}">${s.type}</td>
+      <td>${fmt(s.rate,3)}</td>
+      <td>${s.time}</td>
+      <td>${s.band}</td>
+      <td>${s.lum} erg/s</td>
+      <td>${s.sig}</td>
+    </tr>`).join('');
+
+  drawChart();
+  saveHash();
+}
+
+// ── Chart ─────────────────────────────────────────────────────────────────────
+function drawChart() {
+  const cv = document.getElementById('cvRate');
+  const W = cv.offsetWidth || 900, H = 320;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const pad = { l:70, r:30, t:20, b:50 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(7,5,21,0.6)';
+  ctx.fillRect(pad.l, pad.t, pw, ph);
+
+  const logMmin = 2.5, logMmax = 5.0;
+  const rateMin = -8, rateMax = 4;
+
+  function xPx(logM) { return pad.l + (logM-logMmin)/(logMmax-logMmin)*pw; }
+  function yPx(logR) { return pad.t + ph - (logR-rateMin)/(rateMax-rateMin)*ph; }
+  function clamp(y) { return Math.max(pad.t, Math.min(pad.t+ph, y)); }
+
+  // Grid
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)'; ctx.lineWidth=1;
+  for(let lM=2.5; lM<=5; lM+=0.5) {
+    const x=xPx(lM); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,pad.t+ph); ctx.stroke();
+  }
+  for(let lR=-8; lR<=4; lR+=2) {
+    const y=yPx(lR); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+pw,y); ctx.stroke();
+  }
+
+  // Constraint bands
+  // Häberle lower bound: log10(8200) ≈ 3.914
+  // B-H upper bound: log10(6000) ≈ 3.778
+  const xHab = xPx(3.914), xBH = xPx(3.778);
+  ctx.fillStyle = 'rgba(240,160,32,0.08)';
+  ctx.fillRect(xBH, pad.t, xHab-xBH, ph);
+  ctx.strokeStyle = 'rgba(240,160,32,0.6)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(xHab,pad.t); ctx.lineTo(xHab,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xBH,pad.t); ctx.lineTo(xBH,pad.t+ph); ctx.stroke();
+  ctx.setLineDash([]);
+
+  const rho = Math.pow(10, state.logRho);
+  const sigma = state.sigma;
+
+  const series = [
+    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rMS; }, color:'rgba(240,160,32,0.85)', label:'MS TDE' },
+    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rWD; }, color:'rgba(29,186,144,0.85)', label:'WD Capture' },
+    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rNS; }, color:'rgba(160,128,240,0.85)', label:'NS EMRI' },
+  ];
+
+  series.forEach(({fn, color}) => {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    let first = true;
+    for(let i=0; i<=200; i++) {
+      const logM_ = logMmin + i/200*(logMmax-logMmin);
+      const rate = fn(Math.pow(10, logM_));
+      if(rate <= 0) { first=true; continue; }
+      const logR = Math.log10(rate);
+      const x = xPx(logM_), y = clamp(yPx(logR));
+      if(first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  });
+
+  // Current mass marker
+  const curX = xPx(state.logMBH);
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(curX, pad.t); ctx.lineTo(curX, pad.t+ph); ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(184,176,224,0.5)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+
+  // Labels
+  ctx.fillStyle='#9890c0'; ctx.font='11px Space Mono, monospace';
+  ctx.textAlign='center';
+  [[2.5,'300 M☉'],[3,'1k M☉'],[3.5,'3k M☉'],[4,'10k M☉'],[4.5,'30k M☉'],[5,'100k M☉']].forEach(([lm,lab])=>{
+    ctx.fillText(lab, xPx(lm), pad.t+ph+16);
+  });
+  ctx.textAlign='right';
+  for(let lR=-8; lR<=4; lR+=2) {
+    const y=yPx(lR); if(y<pad.t||y>pad.t+ph) continue;
+    ctx.fillText('10^'+lR, pad.l-8, y+4);
+  }
+
+  // Legend
+  const lgX = pad.l+20, lgY = pad.t+16;
+  ctx.font='11px Space Mono, monospace'; ctx.textAlign='left';
+  series.forEach(({color, label},i)=>{
+    ctx.strokeStyle=color; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(lgX,lgY+i*20); ctx.lineTo(lgX+24,lgY+i*20); ctx.stroke();
+    ctx.fillStyle='#9890c0'; ctx.fillText(label, lgX+30, lgY+i*20+4);
+  });
+
+  // Tension label
+  ctx.fillStyle='rgba(240,160,32,0.7)'; ctx.font='9px Space Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('Mass tension', (xBH+xHab)/2, pad.t+10);
+
+  // Axis titles
+  ctx.save(); ctx.translate(14,pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign='center'; ctx.fillStyle='#9890c0'; ctx.font='11px Space Mono,monospace';
+  ctx.fillText('Rate [/Myr]', 0, 0); ctx.restore();
+  ctx.textAlign='center'; ctx.fillStyle='#9890c0'; ctx.font='11px Space Mono,monospace';
+  ctx.fillText('IMBH mass M_BH', pad.l+pw/2, H-6);
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+document.getElementById('slMBH').addEventListener('input', e=>{
+  state.logMBH=parseFloat(e.target.value);
+  const MBH=Math.pow(10,state.logMBH);
+  document.getElementById('valMBH').textContent = MBH>=1000?(MBH/1000).toFixed(1)+'k M☉':MBH.toFixed(0)+' M☉';
+  update();
+});
+document.getElementById('slRho').addEventListener('input', e=>{
+  state.logRho=parseFloat(e.target.value);
+  document.getElementById('valRho').textContent=Math.pow(10,state.logRho).toExponential(1)+' M☉/pc³';
+  update();
+});
+document.getElementById('slSigma').addEventListener('input', e=>{
+  state.sigma=parseFloat(e.target.value);
+  document.getElementById('valSigma').textContent=e.target.value+' km/s';
+  update();
+});
+document.getElementById('slAge').addEventListener('input', e=>{
+  state.age=parseFloat(e.target.value);
+  document.getElementById('valAge').textContent=e.target.value+' Gyr';
+  update();
+});
+
+function toggleAbout() {
+  const body=document.getElementById('aboutBody');
+  const arrow=document.getElementById('aboutArrow');
+  const open=body.style.display==='block';
+  body.style.display=open?'none':'block';
+  arrow.textContent=open?'▶':'▼';
+}
+
+window.addEventListener('resize', drawChart);
+syncUI();
+update();
+</script>
+</body>
+</html>

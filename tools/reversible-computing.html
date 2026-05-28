@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--
+  Reversible Computing Advantage Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-05-28
+  Site section: #compute  ·  Epistemic tier(s): 🔬 Established thermodynamics (Landauer) · ⚠ Engineering projections speculative
+  Data sources:
+    - Landauer, R. (1961) "Irreversibility and heat generation in the computing process" IBM J. Res. Dev. 5:183
+    - Bennett, C.H. (1973) "Logical reversibility of computation" IBM J. Res. Dev. 17:525
+    - Lloyd, S. (2000) "Ultimate physical limits to computation" Nature 406:1047
+    - Frank, M.P. (2018) "Reversibility for Efficient Computing" PhD thesis, MIT (foundational engineering discussion)
+    - Markov, I.L. (2014) "Limits on Fundamental Limits to Computation" Nature 512:147
+    - Sandberg, A. (1999) "The Physics of Information Processing Superobjects" J. Evolution Technology 5:1
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reversible Computing Advantage — Omega Centauri Society</title>
+<meta name="description" content="Landauer's principle sets the minimum energy cost of irreversible bit erasure. Reversible computation sidesteps this limit — at the cost of circuit complexity and latency. Calculate the thermal gain at different operating temperatures and the crossover point where reversibility becomes worth its overhead.">
+<link rel="canonical" href="https://omegacentauri.me/tools/reversible-computing.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 25% 10%,rgba(29,186,144,.06),transparent 50%),radial-gradient(ellipse at 75% 65%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--teal-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-eng{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+.context-banner{background:rgba(29,186,144,.07);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.context-banner strong{color:var(--teal-glow)}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 28px}
+@media(max-width:880px){.input-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--teal-bright);height:4px;cursor:pointer}
+.slider-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:100px;text-align:right}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--border-subtle);border-radius:20px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.preset-btn:hover{border-color:var(--teal-bright);color:var(--teal-glow)}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:700px){.results-grid{grid-template-columns:1fr 1fr}}
+.result-card{background:linear-gradient(180deg,rgba(13,10,36,.4),rgba(7,5,21,.6));border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.result-card.hi{border-color:rgba(77,232,192,.3)}
+.result-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;margin-bottom:4px}
+.result-value{font-family:'Space Mono',monospace;font-size:18px;color:var(--teal-glow);line-height:1.2}
+.result-sub{font-size:13px;color:var(--text-dim);margin-top:3px}
+canvas{width:100%;display:block}
+.regime-table{width:100%;border-collapse:collapse;font-size:14px}
+.regime-table th{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-secondary);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border-subtle);text-align:left}
+.regime-table td{padding:7px 10px;border-bottom:1px solid rgba(112,85,212,.07);color:var(--text-primary)}
+.regime-table tr:last-child td{border-bottom:none}
+.regime-table .val{font-family:'Space Mono',monospace;font-size:13px}
+.about-toggle{display:flex;align-items:center;gap:10px;background:none;border:1px solid var(--border-subtle);border-radius:8px;padding:10px 16px;cursor:pointer;color:var(--text-secondary);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;width:100%;margin-bottom:0}
+.about-toggle:hover{border-color:var(--teal-bright);color:var(--text-primary)}
+.about-toggle .arrow{transition:transform .2s;font-size:10px}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-this-tool{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.about-this-tool.open{max-height:700px}
+.about-body{padding:20px 0 4px;font-size:15px;color:var(--text-secondary);line-height:1.75}
+.about-body p{margin-bottom:12px}
+.about-body strong{color:var(--text-primary)}
+.about-body a{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Reversible Computing Advantage</span>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/tools/bekenstein-landauer.html" class="nav-link">B-L-Lloyd Limits ↗</a>
+    <a href="/tools/matrioshka-brain.html" class="nav-link">Matrioshka Brain ↗</a>
+    <a href="/tools/aestivation.html" class="nav-link">Aestivation ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="tool-header">
+    <div>
+      <h1>Reversible Computing Advantage</h1>
+      <p class="tool-subtitle">Every irreversible bit erasure costs at least k_B T ln 2 joules of heat. Reversible computation avoids this — but at the cost of circuit overhead. Calculate the energy gain, the crossover point, and why temperature is the key dial for long-lived civilisations.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Landauer / Bennett</span>
+      <span class="tier-badge tier-eng">⚠ Engineering Projection</span>
+    </div>
+  </div>
+
+  <div class="context-banner">
+    <strong>The core tradeoff:</strong> Irreversible logic (AND, OR, NAND) erases bits and must dissipate heat. At room temperature (300 K), the Landauer minimum is ~3×10⁻²¹ J/bit — tiny today but civilisation-scale significant at 10³⁰ ops/s. Reversible logic (Toffoli, Fredkin gates) erases no bits but requires ancilla storage and deeper circuits. The advantage is purely thermal: lower temperature = lower Landauer floor = more ops per joule — until cooling costs exceed computation gains.
+  </div>
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">Parameters</div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>OPERATING TEMPERATURE (log K)</label>
+        <div class="slider-row">
+          <input type="range" id="t-slider" min="-1" max="4" step="0.02">
+          <span class="slider-val" id="t-val">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-t="-0.43">CMB floor (3 K)</button>
+          <button class="preset-btn" data-t="1.0">Cryo (10 K)</button>
+          <button class="preset-btn" data-t="2.0">Room (100 K)</button>
+          <button class="preset-btn" data-t="2.48">Room (300 K)</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>COMPUTE WORKLOAD (log ops/s)</label>
+        <div class="slider-row">
+          <input type="range" id="ops-slider" min="10" max="40" step="0.5">
+          <span class="slider-val" id="ops-val">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-ops="15">Human brain (~10¹⁵)</button>
+          <button class="preset-btn" data-ops="21">Earth datacenters</button>
+          <button class="preset-btn" data-ops="30">K-II civilisation</button>
+          <button class="preset-btn" data-ops="36">BZ-powered IMBH</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>REVERSIBLE FRACTION (0 – 1)</label>
+        <div class="slider-row">
+          <input type="range" id="rev-slider" min="0" max="1" step="0.01">
+          <span class="slider-val" id="rev-val">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-rev="0">None (classical)</button>
+          <button class="preset-btn" data-rev="0.5">Half reversible</button>
+          <button class="preset-btn" data-rev="0.9">Mostly reversible</button>
+          <button class="preset-btn" data-rev="0.999">Near-ideal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card">
+    <div class="card-title">Thermal Analysis</div>
+    <div class="results-grid">
+      <div class="result-card hi">
+        <div class="result-label">Landauer Min. per Bit</div>
+        <div class="result-value" id="landauer-bit">—</div>
+        <div class="result-sub">k_B T ln 2 at current temp</div>
+      </div>
+      <div class="result-card hi">
+        <div class="result-label">Heat Dissipation (irreversible)</div>
+        <div class="result-value" id="heat-irr">—</div>
+        <div class="result-sub">ops × Landauer limit × (1 − f_rev)</div>
+      </div>
+      <div class="result-card hi">
+        <div class="result-label">Heat Dissipation (with rev. fraction)</div>
+        <div class="result-value" id="heat-rev">—</div>
+        <div class="result-sub" id="heat-rev-sub">—</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">Heat Reduction Factor</div>
+        <div class="result-value" id="reduction">—</div>
+        <div class="result-sub">ratio of irreversible to reversible heat load</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">Max Ops/J (at this temp)</div>
+        <div class="result-value" id="max-ops-j">—</div>
+        <div class="result-sub">Landauer theoretical ceiling</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">Cooling Cost Crossover</div>
+        <div class="result-value" id="crossover">—</div>
+        <div class="result-sub" id="crossover-sub">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart: Landauer energy cost vs temperature -->
+  <div class="card">
+    <div class="card-title">Landauer Energy per Bit — vs Temperature</div>
+    <canvas id="landauer-chart" height="260"></canvas>
+    <p style="font-size:13px;color:var(--text-dim);margin-top:10px;font-family:'Space Mono',monospace;">Minimum energy per irreversible bit erasure = k_B T ln 2. Vertical line = current temperature. Benchmarks shown for reference: modern CMOS operates ~1,000× above Landauer floor; cryo superconducting logic reaches ~10×.</p>
+  </div>
+
+  <!-- Reference regimes -->
+  <div class="card">
+    <div class="card-title">Reference Operating Regimes</div>
+    <table class="regime-table">
+      <thead>
+        <tr><th>Regime</th><th>Temp</th><th>Landauer/bit</th><th>Ops/J (ceiling)</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CMB floor</td><td class="val">2.7 K</td><td class="val" id="reg-cmb-e">—</td><td class="val" id="reg-cmb-j">—</td><td style="color:var(--amber-glow)">Active cooling required</td></tr>
+        <tr><td>Cryo (liquid He)</td><td class="val">4 K</td><td class="val" id="reg-he-e">—</td><td class="val" id="reg-he-j">—</td><td style="color:var(--teal-glow)">Superconducting logic today</td></tr>
+        <tr><td>Liquid N₂</td><td class="val">77 K</td><td class="val" id="reg-ln-e">—</td><td class="val" id="reg-ln-j">—</td><td style="color:var(--teal-glow)">Near-term engineering</td></tr>
+        <tr><td>Room temperature</td><td class="val">300 K</td><td class="val" id="reg-rt-e">—</td><td class="val" id="reg-rt-j">—</td><td>Current silicon baseline</td></tr>
+        <tr><td>Solar surface</td><td class="val">5,778 K</td><td class="val" id="reg-ss-e">—</td><td class="val" id="reg-ss-j">—</td><td style="color:var(--red-bright)">High heat, low efficiency</td></tr>
+        <tr><td style="color:var(--teal-glow)" id="reg-cur-label">Current (—)</td><td class="val" id="reg-cur-t">—</td><td class="val" id="reg-cur-e">—</td><td class="val" id="reg-cur-j">—</td><td style="color:var(--teal-glow)">◀ Selected</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- About -->
+  <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool &amp; references</button>
+  <div class="about-this-tool" id="about-this-tool">
+    <div class="about-body">
+      <p><strong>Landauer's principle</strong> (1961): erasing one bit of information in a system at temperature T must dissipate at least E_L = k_B T ln 2 of heat into the environment. This is a fundamental thermodynamic limit, not an engineering limitation. It has been verified experimentally (Bérut et al. 2012, Nature 483:187).</p>
+      <p><strong>Bennett's reversible computing</strong> (1973): any classical computation can be made thermodynamically reversible if it is implemented with reversible logic gates (Toffoli, Fredkin) that preserve all input information and never erase bits. Reversible computation approaches zero heat dissipation per logical operation in the limit — but requires ancilla (scratch-space) bits and time-reversed "uncomputation" steps, increasing circuit depth and memory requirements.</p>
+      <p><strong>The tradeoff:</strong> the overhead factor for a practical reversible circuit relative to a classical one is roughly proportional to the algorithm's circuit depth. For a workload with overhead factor f, the energy cost is E_rev ≈ f × E_classical + cooling_cost. For very long-lived civilisations operating near the CMB floor, even a 10× overhead is worth it if the Landauer savings are >10× — which happens below ~30 K for a civilisation using 300K-era hardware as a baseline.</p>
+      <p><strong>MTH context:</strong> the Macro Transcension Hypothesis (Smart 2012) posits that sufficiently advanced civilisations migrate to the smallest, densest, coldest computational environments to maximise reversible computation. A black hole ergosphere provides extreme density; post-computation radiation can maintain near-CMB operating temperatures at outer shells.</p>
+      <p><strong>References:</strong> Landauer 1961 IBM J. Res. Dev. 5:183 · Bennett 1973 IBM J. Res. Dev. 17:525 · <a href="https://doi.org/10.1038/406047a0" target="_blank" rel="noopener">Lloyd 2000 Nature 406:1047</a> · <a href="https://doi.org/10.1038/nature10872" target="_blank" rel="noopener">Bérut et al. 2012 Nature 483:187 (experimental verification)</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const KB  = 1.381e-23;
+const LN2 = Math.LN2;
+
+const state = { logT:1.0, logOps:30, rev:0.9 };
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+function loadHash(){const h=getHash();
+  if(h.T!==undefined){const v=parseFloat(h.T);if(!isNaN(v))state.logT=clamp(v,-1,4)}
+  if(h.O!==undefined){const v=parseFloat(h.O);if(!isNaN(v))state.logOps=clamp(v,10,40)}
+  if(h.R!==undefined){const v=parseFloat(h.R);if(!isNaN(v))state.rev=clamp(v,0,1)}
+}
+function saveHash(){setHash({T:state.logT.toFixed(2),O:state.logOps.toFixed(1),R:state.rev.toFixed(3)})}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·','+':''};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){
+  if(!isFinite(x)||x<=0)return '≈ 0';
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  if(e>=-2&&e<=4)return x.toPrecision(dp+1);
+  const m=(x/Math.pow(10,e)).toFixed(dp);
+  return m+'×10'+supDigits(e);
+}
+function landauerPerBit(T){ return KB*T*LN2 }
+function maxOpsPerJoule(T){ return 1/(KB*T*LN2) }
+function fmtTemp(T){
+  if(T<10)return T.toFixed(2)+' K';
+  if(T<1000)return T.toFixed(1)+' K';
+  return (T/1000).toFixed(1)+' kK';
+}
+
+function fillRegRow(suffix, T){
+  const e=landauerPerBit(T), j=maxOpsPerJoule(T);
+  const te=document.getElementById('reg-'+suffix+'-e');
+  const tj=document.getElementById('reg-'+suffix+'-j');
+  if(te)te.textContent=fmtSci(e,2)+' J';
+  if(tj)tj.textContent=fmtSci(j,2)+' op/J';
+}
+
+function render(){
+  const T    = Math.pow(10, state.logT);
+  const ops  = Math.pow(10, state.logOps);
+  const rev  = state.rev;
+
+  // Labels
+  document.getElementById('t-val').textContent   = fmtTemp(T);
+  document.getElementById('ops-val').textContent = fmtSci(ops,1)+' op/s';
+  document.getElementById('rev-val').textContent = (rev*100).toFixed(1)+'% reversible';
+
+  const E_L       = landauerPerBit(T);
+  const heatIrr   = ops * E_L;              // if all irreversible
+  const heatMixed = ops * E_L * (1-rev);    // with reversible fraction
+  const reduction = rev < 1 ? heatIrr / heatMixed : Infinity;
+  const maxOpsJ   = maxOpsPerJoule(T);
+
+  // Crossover: cooling 1 joule of thermal energy to T from 300K costs (300/T - 1) joules (Carnot)
+  // Worth cooling if Landauer savings > cooling cost
+  // Break-even T: E_L(T) × saving_factor = cooling_cost(T)
+  // This is complex; we just show current verdict
+  const T_ref = 300;
+  const coolingCostFactor = T<T_ref ? (T_ref/T - 1) : 0; // Carnot cooling cost ratio
+  const savingsVsCooling  = T<T_ref ? (E_L(T_ref)/E_L) / (1+coolingCostFactor) : 1;
+
+  document.getElementById('landauer-bit').textContent = fmtSci(E_L,2)+' J';
+  document.getElementById('heat-irr').textContent     = fmtSci(heatIrr,2)+' W';
+  document.getElementById('heat-rev').textContent     = rev>=0.9999?'≈ 0 W':fmtSci(heatMixed,2)+' W';
+  document.getElementById('heat-rev-sub').textContent = fmtSci(1-rev,1)+'× Landauer × ops (erasures only)';
+  document.getElementById('reduction').textContent    = rev>=0.9999?'∞':fmtSci(reduction,2)+'×';
+  document.getElementById('max-ops-j').textContent    = fmtSci(maxOpsJ,2)+' op/J';
+
+  const coEl = document.getElementById('crossover');
+  const coSub = document.getElementById('crossover-sub');
+  if(T<=2.725){ coEl.textContent='CMB floor'; coEl.style.color='var(--amber-glow)'; coSub.textContent='Cannot cool below 2.73 K without energy cost exceeding gain'; }
+  else if(savingsVsCooling>1){ coEl.textContent='✓ Worth cooling'; coEl.style.color='var(--teal-glow)'; coSub.textContent='Net computational gain vs Carnot cooling cost'; }
+  else { coEl.textContent='✗ Not worth cooling'; coEl.style.color='var(--red-bright)'; coSub.textContent='Cooling cost exceeds Landauer savings'; }
+
+  // Reference table
+  fillRegRow('cmb', 2.725);
+  fillRegRow('he', 4);
+  fillRegRow('ln', 77);
+  fillRegRow('rt', 300);
+  fillRegRow('ss', 5778);
+  document.getElementById('reg-cur-label').textContent = 'Current ('+fmtTemp(T)+')';
+  document.getElementById('reg-cur-t').textContent     = fmtTemp(T);
+  fillRegRow('cur', T);
+
+  drawChart(T);
+}
+
+// Helper for inline call
+function E_L(T){ return KB*T*LN2 }
+
+function drawChart(currentT){
+  const cv = document.getElementById('landauer-chart');
+  const dpr = window.devicePixelRatio||1;
+  const w=cv.clientWidth, h=260;
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+  cv.style.height=h+'px';
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr); ctx.clearRect(0,0,w,h);
+
+  const padL=60,padR=24,padT=20,padB=38;
+  const pW=w-padL-padR, pH=h-padT-padB;
+  const logTmin=-1, logTmax=4;
+  // log E range: E = kB * T * ln2 → log E = log(kB*ln2) + logT
+  const logKBln2 = Math.log10(KB*LN2);
+  const logEmin = logKBln2+logTmin, logEmax = logKBln2+logTmax;
+
+  const xOf=t=>padL+(Math.log10(t)-logTmin)/(logTmax-logTmin)*pW;
+  const yOf=e=>padT+pH-(Math.log10(e)-logEmin)/(logEmax-logEmin)*pH;
+
+  // Grid
+  ctx.strokeStyle='rgba(112,85,212,.15)'; ctx.lineWidth=1;
+  for(let l=logTmin;l<=logTmax;l++){
+    const x=padL+(l-logTmin)/(logTmax-logTmin)*pW;
+    ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,padT+pH);ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(112,85,212,.4)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,padT+pH);ctx.lineTo(padL+pW,padT+pH);ctx.stroke();
+
+  ctx.font="10px 'Space Mono',monospace"; ctx.fillStyle='#9890c0'; ctx.textAlign='center';
+  [[0.1,'0.1'],[1,'1'],[10,'10'],[100,'100'],[1000,'1k'],[10000,'10k']].forEach(([t,l])=>{
+    if(Math.log10(t)>=logTmin&&Math.log10(t)<=logTmax) ctx.fillText(l+' K',xOf(t),padT+pH+14);
+  });
+  ctx.fillText('Temperature →', padL+pW/2, h-4);
+  ctx.save(); ctx.translate(12,padT+pH/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign='center'; ctx.fillStyle='#9890c0'; ctx.fillText('E_Landauer (J/bit)',0,0); ctx.restore();
+
+  // Landauer line
+  ctx.strokeStyle='var(--teal-bright)'; ctx.lineWidth=2.2;
+  ctx.beginPath();
+  const T0=Math.pow(10,logTmin), T1=Math.pow(10,logTmax);
+  ctx.moveTo(xOf(T0),yOf(E_L(T0)));
+  ctx.lineTo(xOf(T1),yOf(E_L(T1)));
+  ctx.stroke();
+
+  // Benchmark points
+  const benchmarks=[
+    {T:2.725, label:'CMB', color:'#4de8c0'},
+    {T:4,    label:'He',   color:'#a0c8ff'},
+    {T:77,   label:'N₂',   color:'#a080f0'},
+    {T:300,  label:'Room', color:'#f0a020'},
+    {T:5778, label:'☉',    color:'#ff7070'},
+  ];
+  benchmarks.forEach(b=>{
+    const x=xOf(b.T), y=yOf(E_L(b.T));
+    ctx.fillStyle=b.color;
+    ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);ctx.fill();
+    ctx.font="10px 'Space Mono',monospace"; ctx.textAlign='center'; ctx.fillStyle=b.color;
+    ctx.fillText(b.label, x, y-8);
+  });
+
+  // Current T marker
+  const xCur=xOf(currentT), yCur=yOf(E_L(currentT));
+  ctx.fillStyle='#ffc840';
+  ctx.beginPath();ctx.arc(xCur,yCur,7,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='rgba(255,200,64,.35)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(xCur,padT);ctx.lineTo(xCur,padT+pH);ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function wire(){
+  const ts=document.getElementById('t-slider'); ts.value=state.logT;
+  ts.addEventListener('input',()=>{state.logT=parseFloat(ts.value);saveHash();render()});
+  const os=document.getElementById('ops-slider'); os.value=state.logOps;
+  os.addEventListener('input',()=>{state.logOps=parseFloat(os.value);saveHash();render()});
+  const rs=document.getElementById('rev-slider'); rs.value=state.rev;
+  rs.addEventListener('input',()=>{state.rev=parseFloat(rs.value);saveHash();render()});
+
+  document.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>{state.logT=parseFloat(b.dataset.t);ts.value=state.logT;saveHash();render()}));
+  document.querySelectorAll('[data-ops]').forEach(b=>b.addEventListener('click',()=>{state.logOps=parseFloat(b.dataset.ops);os.value=state.logOps;saveHash();render()}));
+  document.querySelectorAll('[data-rev]').forEach(b=>b.addEventListener('click',()=>{state.rev=parseFloat(b.dataset.rev);rs.value=state.rev;saveHash();render()}));
+
+  const at=document.getElementById('about-toggle');
+  const ab=document.getElementById('about-this-tool');
+  at.addEventListener('click',()=>{const o=!ab.classList.contains('open');ab.classList.toggle('open',o);at.classList.toggle('open',o)});
+  let rt; window.addEventListener('resize',()=>{if(rt)clearTimeout(rt);rt=setTimeout(render,80)});
+}
+
+function init(){loadHash();wire();render()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>
