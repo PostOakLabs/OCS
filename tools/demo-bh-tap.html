@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!--
+  Demo H — Five Ways to Tap a Black Hole
+  Omega Centauri Society . omegacentauri.me
+  Comparative engineering of five energy-extraction mechanisms from a Kerr BH.
+  BZ/Kardashev sets the electromagnetic extraction baseline; Superradiance shows
+  the ultralight-boson instability alternative; Hawking gives the thermal floor
+  and lifetime; Bekenstein-Landauer-Lloyd maps the power to an ops budget;
+  Time Dilation shows the relativistic speedup near the horizon.
+  Chains: bz-kardashev → superradiance → hawking-evaporation → bekenstein-landauer → time-dilation
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo H — Five Ways to Tap a Black Hole . OCS</title>
+<meta name="description" content="Comparative engineering of energy-extraction routes from a Kerr black hole: Blandford-Znajek electromagnetic extraction, superradiance, Hawking emission, Bekenstein-Landauer-Lloyd ops budget, and gravitational time-dilation speedup.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-bh-tap.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 8%,rgba(112,85,212,.14),transparent 50%),
+    radial-gradient(ellipse at 85% 50%,rgba(29,186,144,.08),transparent 50%),
+    radial-gradient(ellipse at 50% 92%,rgba(208,64,64,.05),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--red-bright),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--amber-bright);background:rgba(196,120,0,.08);box-shadow:0 0 0 1px var(--amber-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--red-bright)}
+.step.s2{--accent:var(--amber-bright)}
+.step.s3{--accent:var(--purple-bright)}
+.step.s4{--accent:var(--teal-bright)}
+.step.s5{--accent:var(--teal-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.comparison-table{margin-top:14px;border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden}
+.ct-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border-subtle);padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.03em}
+.ct-row:last-child{border-bottom:none}
+.ct-row.header{background:rgba(7,5,21,.5);color:var(--text-dim);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.ct-row .hi{color:var(--teal-glow)}
+.ct-row .med{color:var(--amber-bright)}
+.ct-row .lo{color:var(--text-secondary)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+  .ct-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo H &middot; Five Ways to Tap a Black Hole</span>
+    <a class="nav-link" href="index.html">&larr; All tools</a>
+    <a class="nav-link" href="demo-imbh-evidence.html">Demo A &middot; IMBH Evidence</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-star-falls-in.html">Demo C &middot; Star Falls In</a>
+    <a class="nav-link" href="demo-kardashev-two.html">Demo D &middot; Kardashev II</a>
+    <a class="nav-link" href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a>
+    <a class="nav-link" href="demo-wait-compute.html">Demo G &middot; Wait, Compute, Win?</a>
+    <a class="nav-link" href="demo-fermi-mth-crossover.html">Demo J &middot; Fermi/MTH</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo H &middot; Black hole engineering &middot; chains five tools</div>
+    <h1>Five Ways to Tap a Black Hole</h1>
+    <p class="hero-sub">A rotating black hole stores angular momentum in its ergosphere &mdash; a region outside the event horizon where frame-dragging is so extreme that nothing can remain stationary. Five physically distinct extraction routes exist: the Penrose process (classical particle splitting), Blandford-Znajek (electromagnetic), superradiance (wave/boson amplification), Hawking radiation (quantum thermal), and ergospheric time dilation (relativistic subjective speedup). This demo chains the tools that quantify each.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-05-28</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Choose the black hole</div>
+    <p class="scenario-help">Three canonical mass scales across the Kerr black hole zoo. The &omega;&nbsp;Cen IMBH is the OCS target; the stellar case shows where compact objects today sit; Sgr&nbsp;A* shows the SMBH scaling. All use spin a = 0.9 (high but physically motivated for accreting black holes). The five extraction mechanisms scale differently with mass &mdash; which dominates depends on what you&rsquo;re trying to do.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="imbh">
+        <span class="name">OC IMBH — 8,200 M&#9651; (Recommended)</span>
+        <span class="desc">The &omega;&nbsp;Cen candidate IMBH. BZ power ~10<sup>36</sup> W at B&nbsp;=&nbsp;10<sup>4</sup>&nbsp;T; superradiance window for ultralight bosons (~10<sup>&minus;18</sup>&nbsp;eV); Hawking lifetime ~10<sup>84</sup>&nbsp;yr; Lloyd/Lloyd ops budget ~10<sup>60</sup>&nbsp;ops/s. The OCS&rsquo;s primary MTH target.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="stellar">
+        <span class="name">Stellar BH — 10 M&#9651;</span>
+        <span class="desc">A typical stellar-mass black hole in a binary. Lower mass means faster Hawking cooling (still 10<sup>74</sup>&nbsp;yr), smaller ergosphere, shorter superradiance timescales for heavier bosons. The extrapolation target for LIGO/Virgo BH population.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="sgra">
+        <span class="name">Sgr A* — 4&times;10<sup>6</sup> M&#9651;</span>
+        <span class="desc">The Milky Way SMBH. BZ power at B&nbsp;=&nbsp;10<sup>3</sup>&nbsp;T reaches ~10<sup>42</sup>&nbsp;W; Hawking lifetime ~10<sup>95</sup>&nbsp;yr; Lloyd limit ~10<sup>66</sup>&nbsp;ops/s. The upper-end Kardashev-III reference.</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Comparison summary table -->
+  <div class="comparison-table">
+    <div class="ct-row header"><span>Mechanism</span><span>Principle</span><span>Practical constraint</span></div>
+    <div class="ct-row"><span class="hi">1. Penrose process</span><span>Particle enters ergosphere, splits; fragment with negative energy falls in, other escapes with surplus</span><span>Requires hypersonic infalling particles; max efficiency ~21% (Kerr, a→1)</span></div>
+    <div class="ct-row"><span class="hi">2. Blandford-Znajek</span><span>Magnetised plasma anchors field lines to ergosphere; BZ torque drives Poynting flux jet</span><span>Requires sustained accretion disc; power ∝ B² r₊⁴ Ω_H²</span></div>
+    <div class="ct-row"><span class="med">3. Superradiance</span><span>Bosonic wave extracts angular momentum via ergoregion; black hole bomb if reflected</span><span>Boson Compton wavelength must match gravitational radius (α ≈ 0.1–0.4)</span></div>
+    <div class="ct-row"><span class="lo">4. Hawking radiation</span><span>Virtual pair production at horizon; negative-energy partner falls in, real photon escapes</span><span>Power ∝ M⁻²; negligible for astrophysical BHs — dominant only for sub-gram primordials</span></div>
+    <div class="ct-row"><span class="hi">5. Time dilation</span><span>Ergospheric observer experiences subjective time faster than external coordinate time</span><span>Not energy extraction per se — relativistic speedup for ergosphere-based computation</span></div>
+  </div>
+
+  <section class="steps" id="steps" style="margin-top:32px">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 1 &middot; BZ/Kardashev power extractor &middot; Mechanism 2 — Blandford–Znajek</div>
+        <div class="step-title">Electromagnetic extraction: the Blandford–Znajek mechanism</div>
+        <p class="step-prose">The Penrose process is the parent mechanism: a particle enters the ergosphere, splits so that one fragment has negative energy in the coordinate frame, falls into the black hole reducing its total energy, while the other fragment escapes carrying away more than the infalling energy. The <em>Blandford-Znajek (BZ) mechanism</em> is the electromagnetic implementation: magnetised plasma from an accretion disc anchors large-scale magnetic field lines to the ergosphere. The BZ torque drives a Poynting flux jet, extracting rotational energy at a rate <em>P</em><sub>BZ</sub>&nbsp;&propto;&nbsp;<em>B</em><sup>2</sup>&thinsp;<em>r</em><sub>+</sub><sup>4</sup>&thinsp;&Omega;<sub>H</sub><sup>2</sup>/<em>c</em>. Meringolo et al. (2025, arXiv:2507.08942) confirmed BZ power scaling via ab initio GRPIC simulations. <strong>This is the mechanism the MTH relies on for civilisational power extraction.</strong> The Kardashev scale is read directly from the BZ output power: 10<sup>26</sup>&nbsp;W is K-II; 10<sup>36</sup>&nbsp;W at 8,200&nbsp;M<sub>&#9651;</sub>, <em>a</em>&nbsp;=&nbsp;0.9, <em>B</em>&nbsp;=&nbsp;10<sup>4</sup>&nbsp;T exceeds K-III. Set the mode to <code>forward</code> to compute power from field; set to <code>inverse</code> to ask what magnetic field is required for a target power.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="bz" href="bz-kardashev.html">Open BZ / Kardashev &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-e">Established (BZ 1977 / Meringolo 2025)</span>
+          <span class="tier-mini tier-s">Speculative (civilisational application)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">OC IMBH (8,200 M☉, a=0.9, B=10⁴ T): P_BZ ≈ 10³⁶ W — exceeds all solar luminosity of a large galaxy and is the highest sustained power output achievable by any known astrophysical mechanism. Stellar BH (10 M☉): P_BZ ≈ 10²⁸ W — comfortably Kardashev-II. Sgr A* (4×10⁶ M☉): P_BZ ≈ 10⁴² W — the Kardashev-III ceiling. Power scales as M² at fixed (a, B), so going from stellar to IMBH is an 8-order-of-magnitude jump in power.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 19 &middot; Superradiance explorer &middot; Mechanism 3 — superradiance</div>
+        <div class="step-title">Superradiance: wave amplification and the black-hole bomb</div>
+        <p class="step-prose">When a bosonic field (photons, gravitons, or hypothetical ultralight particles) scatters off a Kerr black hole, waves with frequency below the superradiant threshold &omega;&nbsp;&lt;&nbsp;<em>m</em>&thinsp;&Omega;<sub>H</sub> are <em>amplified</em> at the expense of the black hole&rsquo;s angular momentum (Press &amp; Teukolsky 1972). For a massive boson, the Compton wavelength &lambda;&nbsp;&sim;&nbsp;GM/c<sup>2</sup> creates a gravitational atom: bound boson levels analogous to hydrogen, with exponentially growing occupation numbers. This is the <em>black-hole bomb</em> &mdash; unstable, runaway superradiance that saturates when backreaction kills the spin. The resonance condition (gravitational fine structure constant &alpha;&nbsp;&sim;&nbsp;0.1&ndash;0.4) translates to specific boson masses for each BH mass. <strong>For the OC IMBH, the resonant ultralight boson mass is ~10<sup>&minus;18</sup>&ndash;10<sup>&minus;20</sup>&nbsp;eV</strong> &mdash; within the range of ultralight dark matter (fuzzy dark matter) candidates. The superradiance explorer shows which (l,&thinsp;m) modes are unstable, the e-folding time of the instability, and the saturation energy. This is also a live observational programme: absent superradiance signatures constrain the ultralight boson mass for SMBHs across the universe (arXiv:2411.14528, 2503.15543).</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="sr" href="superradiance.html">Open Superradiance Explorer &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-e">Established (GR + QFT in curved spacetime)</span>
+          <span class="tier-mini tier-t">Theoretical (ultralight boson mass)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">OC IMBH (8,200 M☉, a=0.9, μ≈10⁻¹⁸ eV): the dominant (l=m=1) superradiance mode has an e-folding time of order hours to weeks — a runaway instability that would extract ~10% of the black hole mass-energy. Stellar BH (10 M☉): resonant boson ~10⁻¹² eV (axion range), instability timescale months to years. Superradiance is not a controlled engineering route in the same way BZ is — it is spontaneous and saturating — but it is the mechanism by which ultralight bosons would observationally imprint on spinning black holes.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 7 &middot; Hawking evaporation &middot; Mechanism 4 — Hawking radiation</div>
+        <div class="step-title">Hawking radiation: the thermal floor</div>
+        <p class="step-prose">Hawking (1974) showed that quantum field theory in curved spacetime implies a black hole radiates as a blackbody at temperature <em>T</em><sub>H</sub>&nbsp;=&nbsp;&hbar;<em>c</em><sup>3</sup>/(8&pi;&thinsp;G&thinsp;M&thinsp;<em>k</em><sub>B</sub>). The power scales as <em>P</em>&nbsp;&propto;&nbsp;<em>M</em><sup>&minus;2</sup>, so Hawking radiation is only relevant for <em>small</em> black holes: a gram-mass micro-BH evaporates in nanoseconds and releases a &gamma;-ray burst; a stellar-mass BH evaporates in ~10<sup>74</sup>&nbsp;yr; the OC IMBH in ~10<sup>84</sup>&nbsp;yr. <strong>For the MTH, Hawking radiation is not a power source &mdash; it is a lifetime bound.</strong> The civilisation using BZ extraction needs the black hole to persist for the duration of its intended operation. At 8,200&nbsp;M<sub>&#9651;</sub>, the Hawking temperature is ~10<sup>&minus;18</sup>&nbsp;K &mdash; far below the current CMB &mdash; so the black hole is currently net-absorbing. It will begin to evaporate only after the CMB has cooled below 10<sup>&minus;18</sup>&nbsp;K, which takes ~10<sup>30</sup>&nbsp;yr. The MTH computation window is essentially unlimited on any civilisational timescale.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="hawking" href="hawking-evaporation.html">Open Hawking Evaporation &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-e">Established (Hawking 1974)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">OC IMBH (8,200 M☉): T_H ≈ 10⁻¹⁸ K, evaporation ~10⁸⁴ yr, current Hawking power ≈ 10⁻⁴⁰ W — completely negligible. Stellar BH (10 M☉): T_H ≈ 10⁻⁸ K, lifetime ~10⁷⁴ yr. Sgr A* (4×10⁶ M☉): T_H ≈ 10⁻²² K, lifetime ~10⁹⁵ yr. The pattern: heavier is longer-lived, colder, lower Hawking power. BZ wins by orders of magnitude as an extraction route for any astrophysically relevant mass.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 4 &middot; Bekenstein–Landauer–Lloyd limits</div>
+        <div class="step-title">What does the BZ power buy in computation?</div>
+        <p class="step-prose">Extracting power from a black hole is only useful if you can do something with it. The Bekenstein-Landauer-Lloyd tool translates power into operations per second via three fundamental limits. The <em>Landauer limit</em> (<em>k</em><sub>B</sub>&thinsp;T&thinsp;ln&thinsp;2 per irreversible bit) gives the ops/s per watt at a given temperature. The <em>Lloyd limit</em> (2<em>E</em>/&pi;&hbar;) gives the maximum operations achievable by a physical system of energy <em>E</em>, independent of temperature. For the MTH scenario, the BZ power is the steady input (<em>P</em>&nbsp;&asymp;&nbsp;10<sup>36</sup>&nbsp;W) and the environment temperature is the current CMB (2.73&nbsp;K) or, after aestivation, &lt;&nbsp;10<sup>&minus;9</sup>&nbsp;K. <strong>At BZ power and today&rsquo;s CMB, the Landauer ops/s alone exceeds 10<sup>68</sup>&nbsp;operations per second</strong> &mdash; roughly 10<sup>30</sup> times the estimated total operations ever performed by all computers in human history, per second, in steady state. The Bekenstein bound sets the maximum information stored in the ergosphere volume.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="bl" href="bekenstein-landauer.html">Open Bekenstein-Landauer-Lloyd &rarr;</a>
+          <span class="step-params" id="p4"></span>
+          <span class="tier-mini tier-e">Established (Bekenstein 1981 / Landauer 1961 / Lloyd 2000)</span>
+          <span class="tier-mini tier-s">Speculative (civilisational scale)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">OC IMBH (P_BZ ≈ 10³⁶ W, T=2.73 K): Landauer ops/s ≈ 10⁶⁸. Lloyd limit at M_BH×c² ≈ 10⁵¹ J gives ≈ 10⁹⁸ ops/s — the physical ceiling. Stellar BH (P_BZ ≈ 10²⁸ W): Landauer ≈ 10⁶⁰ ops/s. Sgr A* (P_BZ ≈ 10⁴² W): Landauer ≈ 10⁷⁴ ops/s. The jump from stellar to IMBH is 10⁸ in power and 10⁸ in ops/s. The MTH argues this gap is why a technological civilisation has a strong incentive to locate and develop an IMBH rather than build a Dyson sphere.</div></div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 6 &middot; Gravitational time dilation &middot; Mechanism 5 — ergospheric speedup</div>
+        <div class="step-title">Time dilation: the fifth extraction — subjective speedup</div>
+        <p class="step-prose">The final extraction route is not energy in the thermodynamic sense but <em>time</em>. Close to the Schwarzschild radius, gravitational time dilation slows coordinate time relative to proper time for a distant observer &mdash; or equivalently, an observer near the horizon experiences subjective time faster than one far away, if you think of the metric from the infalling frame. For a computation running near the horizon, a 1-second subjective operation corresponds to many external seconds: the time-dilation factor approaches infinity as the radial coordinate approaches <em>r</em><sub>s</sub>. <strong>This is the MTH&rsquo;s asymmetric advantage over any stellar-based civilisation</strong>: not just more power, but faster subjective time per unit external epoch. The time-dilation tool takes a mass and two radial positions (<em>r</em>/<em>r</em><sub>s</sub> ratios) and returns the ratio of proper times, orbital periods, and the Lloyd ops/s for comparison. At <em>r</em>&nbsp;=&nbsp;1.001&thinsp;<em>r</em><sub>s</sub> (just outside the Schwarzschild radius of an 8,200&nbsp;M<sub>&#9651;</sub> BH), the time dilation factor is ~30&times;. Deep inside the ergosphere of a Kerr BH the effective dilation is larger and depends on the spin parameter.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="td" href="time-dilation.html">Open Time Dilation &rarr;</a>
+          <span class="step-params" id="p5"></span>
+          <span class="tier-mini tier-e">Established (GR Schwarzschild metric)</span>
+          <span class="tier-mini tier-s">Speculative (civilisational application)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">At r = 1.5 r_s (stable orbit inside the photon sphere): time dilation factor ≈ 1.73× (coordinate time per unit proper time). At r = 1.1 r_s: factor ≈ 3.16×. At r = 1.001 r_s: factor ≈ 31.6×. For all three mass scenarios, the geometry is the same — time dilation depends only on r/r_s, not on M itself. The civilisational payoff: 30× subjective speedup means a civilisation operating near the horizon experiences 30 years of subjective time per external year, compounding over cosmological time into an almost arbitrary separation between internal experience and external observation.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9656; Which mechanism dominates &mdash; and when?</div>
+    <div class="synth-prose">
+      <p>The five mechanisms operate at vastly different scales and are suited to different civilisational strategies. The Penrose process (not quantified by a standalone OCS tool, but visible as the efficiency ceiling in the BZ output) gives a maximum efficiency of ~21% for extracting ergospheric energy via particle splitting. The BZ mechanism is the practical engineering route to sustained power: it can operate continuously as long as an accretion disc feeds the magnetic field, and at IMBH masses it exceeds the total luminosity of the Milky Way. Superradiance is not controllable in the same sense &mdash; it is a spontaneous runaway instability that drains spin into bosonic cloud energy and then gravitational waves; it is more relevant as an observational constraint on ultralight dark matter than as a civilisational engineering target. Hawking radiation is effectively zero for any astrophysical black hole and is meaningful only as a lifetime floor and as the theoretical bridge between quantum mechanics and gravity.</p>
+      <p>The fifth mechanism &mdash; time dilation &mdash; is qualitatively different from the others. It is not extracting energy; it is experiencing more subjective time per external epoch. For a civilisation that has converged on an ergospheric existence, the payoff is not just power but <em>temporal depth</em>: the ability to run subjective civilisational history at a rate disconnected from the expansion of the universe. This is the core of the Macro Transcension Hypothesis and why it predicts silence rather than Dyson sphere infrared excess: a civilisation that has found this path has no reason to expand outward. See <a href="demo-kardashev-three.html">Demo&nbsp;B</a> for the full Kardashev-III build-up, and <a href="demo-fermi-mth-crossover.html">Demo&nbsp;J</a> for the six-tool chain linking Fermi priors to this endpoint.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-s">Speculative</span> = physically motivated extrapolation, not yet observationally constrained.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into five interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo H — Five Ways to Tap a Black Hole
+// Scenario → per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=imbh|stellar|sgra
+//
+// Hash params verified 2026-05-28 by reading each tool's loadHash() block:
+//   bz-kardashev:        mode STRING (forward|inverse); mass FLOAT LINEAR M☉ .toExponential(3);
+//                        spin FLOAT 0-0.999 .toFixed(3); power FLOAT W .toExponential(3);
+//                        B FLOAT Tesla .toExponential(3)
+//   superradiance:       M FLOAT LOG10(M☉) range 0-10 .toFixed(3);
+//                        a FLOAT spin 0-0.998 .toFixed(3);
+//                        mu FLOAT LOG10(eV) range -22 to -8 .toFixed(2)
+//   hawking-evaporation: mass FLOAT LINEAR M☉ .toExponential(3)
+//   bekenstein-landauer: T P R E M a B — all LINEAR .toExponential(3)
+//   time-dilation:       mass FLOAT LINEAR M☉ .toExponential(3);
+//                        r FLOAT r/r_s ratio > 1 .toFixed(3);
+//                        r2 FLOAT r/r_s ratio > 1 .toFixed(3)
+// =========================================================================
+
+var SCENARIOS = {
+  imbh: {
+    label: 'OC IMBH — 8,200 M☉, a = 0.9',
+    bz:      {mode:'forward', mass:'8.200e+3', spin:'0.900', B:'1.000e+4'},
+    sr:      {M:'3.914', a:'0.900', mu:'-18.00'},
+    hawking: {mass:'8.200e+3'},
+    bl:      {T:'2.730e+0', P:'1.000e+36', R:'2.400e+7', E:'1.467e+51', M:'8.200e+3', a:'9.000e-1', B:'1.000e+4'},
+    td:      {mass:'8.200e+3', r:'1.500', r2:'10.000'},
+    summary: {
+      bz:      'mode=forward / mass=8,200 M☉ / spin=0.9 / B=10⁴ T → P_BZ ≈ 10³⁶ W',
+      sr:      'M=log₁₀(8,200)=3.914 / a=0.9 / μ=10⁻¹⁸ eV resonance',
+      hawking: 'mass=8,200 M☉ → T_H ≈ 10⁻¹⁸ K / lifetime ≈ 10⁸⁴ yr',
+      bl:      'T=2.73 K / P=10³⁶ W (BZ) / M=8,200 M☉ / a=0.9',
+      td:      'mass=8,200 M☉ / r₁=1.5 r_s (ISCO proxy) / r₂=10 r_s'
+    }
+  },
+  stellar: {
+    label: 'Stellar BH — 10 M☉, a = 0.9',
+    bz:      {mode:'forward', mass:'1.000e+1', spin:'0.900', B:'1.000e+8'},
+    sr:      {M:'1.000', a:'0.900', mu:'-12.00'},
+    hawking: {mass:'1.000e+1'},
+    bl:      {T:'2.730e+0', P:'1.000e+28', R:'3.000e+4', E:'1.789e+48', M:'1.000e+1', a:'9.000e-1', B:'1.000e+8'},
+    td:      {mass:'1.000e+1', r:'1.500', r2:'10.000'},
+    summary: {
+      bz:      'mode=forward / mass=10 M☉ / spin=0.9 / B=10⁸ T → P_BZ ≈ 10²⁸ W',
+      sr:      'M=log₁₀(10)=1.0 / a=0.9 / μ=10⁻¹² eV (axion range)',
+      hawking: 'mass=10 M☉ → T_H ≈ 10⁻⁸ K / lifetime ≈ 10⁷⁴ yr',
+      bl:      'T=2.73 K / P=10²⁸ W / M=10 M☉ / a=0.9',
+      td:      'mass=10 M☉ / r₁=1.5 r_s / r₂=10 r_s — same geometry, scaled'
+    }
+  },
+  sgra: {
+    label: 'Sgr A* — 4×10⁶ M☉, a = 0.9',
+    bz:      {mode:'forward', mass:'4.000e+6', spin:'0.900', B:'1.000e+3'},
+    sr:      {M:'6.602', a:'0.900', mu:'-22.00'},
+    hawking: {mass:'4.000e+6'},
+    bl:      {T:'2.730e+0', P:'1.000e+42', R:'1.200e+10', E:'7.163e+56', M:'4.000e+6', a:'9.000e-1', B:'1.000e+3'},
+    td:      {mass:'4.000e+6', r:'1.500', r2:'10.000'},
+    summary: {
+      bz:      'mode=forward / mass=4×10⁶ M☉ / spin=0.9 / B=10³ T → P_BZ ≈ 10⁴² W',
+      sr:      'M=log₁₀(4e6)=6.602 / a=0.9 / μ=10⁻²² eV (lightest viable boson)',
+      hawking: 'mass=4×10⁶ M☉ → T_H ≈ 10⁻²² K / lifetime ≈ 10⁹⁵ yr',
+      bl:      'T=2.73 K / P=10⁴² W (BZ) / M=4×10⁶ M☉ / a=0.9',
+      td:      'mass=4×10⁶ M☉ / same r/r_s ratios — Sgr A* ergosphere is AU-scale'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+  var links = {
+    bz:      'bz-kardashev.html'         + buildHash(s.bz),
+    sr:      'superradiance.html'         + buildHash(s.sr),
+    hawking: 'hawking-evaporation.html'   + buildHash(s.hawking),
+    bl:      'bekenstein-landauer.html'   + buildHash(s.bl),
+    td:      'time-dilation.html'         + buildHash(s.td)
+  };
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+  document.getElementById('p1').textContent = s.summary.bz;
+  document.getElementById('p2').textContent = s.summary.sr;
+  document.getElementById('p3').textContent = s.summary.hawking;
+  document.getElementById('p4').textContent = s.summary.bl;
+  document.getElementById('p5').textContent = s.summary.td;
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9_]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'imbh';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
