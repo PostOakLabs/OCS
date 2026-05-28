@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!--
+  Demo P - Black Hole Physics, End to End
+  Omega Centauri Society . omegacentauri.me
+  Five connected tools trace a black hole from Kerr spacetime geometry through
+  gravitational time dilation, Hawking evaporation, Bekenstein-Landauer information
+  limits, and ergospheric compute power.
+  Chains: kerr-geometry . time-dilation . hawking-evaporation . bekenstein-landauer . compute-in-space
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo - Black Hole Physics, End to End . OCS</title>
+<meta name="description" content="Five chained tools trace a single black hole from Kerr spacetime geometry through gravitational time dilation, Hawking evaporation, Bekenstein-Landauer-Lloyd information limits, and ergospheric compute power. Three mass scales: stellar, IMBH, SMBH.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-bh-physics.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 10%,rgba(112,85,212,.12),transparent 50%),
+    radial-gradient(ellipse at 80% 50%,rgba(160,128,240,.06),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(61,45,138,.08),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--purple-glow);background:rgba(112,85,212,.08);box-shadow:0 0 0 1px var(--purple-glow) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--red-bright)}
+.step.s2{--accent:var(--amber-bright)}
+.step.s3{--accent:var(--teal-bright)}
+.step.s4{--accent:var(--purple-bright)}
+.step.s5{--accent:var(--purple-glow);border-color:rgba(160,128,240,.4);box-shadow:0 0 30px rgba(160,128,240,.08)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.07)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo &middot; Black Hole Physics, End to End</span>
+    <a class="nav-link" href="index.html">&larr; All tools</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Inheritance</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo P &middot; Black hole physics &middot; chains five tools</div>
+    <h1>Black Hole Physics,<br>End to End</h1>
+    <p class="hero-sub">Five fundamental results chain a single black hole from the geometry of curved spacetime through gravitational time dilation, Hawking radiation, information-storage limits, and finally the ergospheric power that would make a black hole the engine of a civilisation.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-05-28</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Pick a black hole</div>
+    <p class="scenario-help">The same five physical laws operate at every mass scale &mdash; but the numbers differ by many orders of magnitude. Choose a black hole to load all five tools with self-consistent parameters.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="stellar">
+        <span class="name">Stellar-mass &mdash; 30 M&#8857;</span>
+        <span class="desc">A typical compact-binary remnant or gravitational-wave source. Hot Hawking radiation (by BH standards), moderate ergosphere, well-studied mass regime.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="oc_imbh">
+        <span class="name">OC IMBH &mdash; 8,200 M&#8857; (H&auml;berle 2024)</span>
+        <span class="desc">The intermediate-mass black hole candidate at the centre of &omega;&nbsp;Cen. Colder radiation, larger ergosphere, and a Schwarzschild radius measured in tens of thousands of kilometres.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="sgra">
+        <span class="name">Sgr A* &mdash; 4 &times; 10&#8310; M&#8857;</span>
+        <span class="desc">The Milky Way&rsquo;s central supermassive black hole. Near-maximally spinning, extreme spacetime distortion, and a Hawking temperature in the femto-Kelvin regime.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 20 &middot; Kerr metric, Boyer-Lindquist coordinates</div>
+        <div class="step-title">Geometry first &mdash; the shape of the trap</div>
+        <p class="step-prose">The Kerr metric is the exact solution of Einstein&rsquo;s field equations for a spinning, uncharged black hole. It defines two critical surfaces: the <em>event horizon</em> (the point of no return for matter and light) and the <em>ergosphere</em> (the stationary-limit surface, where spacetime itself is dragged faster than light). The equatorial slice shows the photon sphere, the innermost stable circular orbit (ISCO), and how the ergosphere swells with increasing spin. <strong>Spin is not optional for real astrophysical black holes</strong> &mdash; accretion torques them up to <code>a &asymp; 0.9&ndash;0.998</code>. The ergosphere boundary is the lever arm for everything that follows in steps 4 and 5.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="kerr" href="kerr-geometry.html">Open Kerr Geometry &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-e">Established</span>
+          <span class="tier-mini tier-e">GR exact solution</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The ergosphere boundary is the lever arm for Penrose-process and Blandford-Znajek energy extraction &mdash; which we reach in step&nbsp;5. Everything downstream depends on how far the ergosphere extends relative to the Schwarzschild radius.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 22 &middot; Schwarzschild &amp; Kerr gravitational redshift</div>
+        <div class="step-title">Time slows near the horizon</div>
+        <p class="step-prose">Gravitational time dilation is not a metaphor &mdash; it is a precisely measured, GPS-corrected, daily-engineering reality. The closer an observer sits to the event horizon, the slower their clock ticks relative to a distant observer. At <code>r&thinsp;=&thinsp;1.5&thinsp;r_s</code> (the photon sphere) a clock runs at roughly 58% of distant-observer rate. At <code>r = r_s</code> itself, coordinate time freezes entirely. <em>For the OC IMBH and Sgr&nbsp;A*, the Schwarzschild radius is measured in AU</em> &mdash; the scale of stellar separations inside the cluster. Set the two comparison radii to bracket the ISCO and the photon sphere.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="timedil" href="time-dilation.html">Open Time Dilation &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-e">Established</span>
+          <span class="tier-mini tier-e">GR, GPS-confirmed</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Time dilation near the horizon has direct consequences for orbital dynamics inside &omega;&nbsp;Cen&rsquo;s core &mdash; and for how long a civilisation anchored near an IMBH could sustain computation while the rest of the universe ages around it.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 23 &middot; Hawking 1974, Page 1976</div>
+        <div class="step-title">Even black holes die &mdash; slowly</div>
+        <p class="step-prose">Quantum field theory in curved spacetime predicts that black holes radiate thermally at a temperature <code>T_H = &#295;c&#179;&thinsp;/&thinsp;(8&#960;GMk_B)</code> &mdash; with smaller black holes running hotter. A 30&thinsp;M&#8857; stellar-mass black hole has <code>T_H&thinsp;&asymp;&thinsp;2&thinsp;nK</code>, utterly dwarfed by the CMB. The OC IMBH candidate radiates at <code>T_H&thinsp;&asymp;&thinsp;7&thinsp;pK</code>. Sgr&nbsp;A* at <code>&asymp;&thinsp;15&thinsp;fK</code>. <em>None will evaporate on any astrophysically relevant timescale.</em> But the chain from geometry to quantum vacuum is the cornerstone of any unified theory of gravity, and the Page curve tells us how the information ultimately escapes.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="hawking" href="hawking-evaporation.html">Open Hawking Evaporation &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-d">Debated</span>
+          <span class="tier-mini tier-t">Quantum gravity</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Hawking radiation establishes that a black hole has a temperature &mdash; which means it has an entropy. That entropy is the starting point for step&nbsp;4&rsquo;s information-storage calculation and Bekenstein&rsquo;s area law.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 25 &middot; Bekenstein 1972, Landauer 1961, Lloyd 2000</div>
+        <div class="step-title">The black hole as a maximum-entropy object</div>
+        <p class="step-prose">A black hole maximises entropy per unit volume &mdash; it is the most information-dense object the laws of physics permit. The <strong>Bekenstein bound</strong> sets the maximum bits storable in a sphere of radius&nbsp;<code>R</code> with energy&nbsp;<code>E</code>: <code>S&thinsp;&le;&thinsp;2&#960;RE&thinsp;/&thinsp;(&#295;c&thinsp;ln&thinsp;2)</code>. The <strong>Landauer principle</strong> sets the minimum energy cost to erase one bit: <code>k_B T ln 2</code>. And the <strong>Lloyd bound</strong> caps operations per second at <code>2E&thinsp;/&thinsp;(&#960;&#295;)</code>. Set <code>R</code> to the Schwarzschild radius and <code>E</code> to the rest-mass energy to see the absolute theoretical limits for your chosen black hole mass and spin.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="beken" href="bekenstein-landauer.html">Open Bekenstein-Landauer &rarr;</a>
+          <span class="step-params" id="p4"></span>
+          <span class="tier-mini tier-e">Established</span>
+          <span class="tier-mini tier-t">Engineering fiction</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The BH entropy is proportional to horizon area, not volume &mdash; a hint that the information content of three-dimensional spacetime is encoded on a two-dimensional surface. This holographic principle is among the deepest unresolved problems in physics, and it sits exactly at the intersection of GR and quantum mechanics.</div></div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 26 &middot; Blandford-Znajek process, Macro Transcension Hypothesis</div>
+        <div class="step-title">Harness the ergosphere &mdash; civilisational compute</div>
+        <p class="step-prose">The Blandford-Znajek (BZ) mechanism threads a large-scale magnetic field through the ergosphere of a spinning black hole, extracting rotational energy electromagnetically. It is the leading model for relativistic jets from quasars and AGN &mdash; an established process, observed in action across the universe. Taken to its civilisational extreme &mdash; the <em>Macro Transcension Hypothesis</em> &mdash; an advanced civilisation anchors its computational infrastructure around an IMBH or SMBH and runs BZ-powered computation indefinitely. Set the BZ mass to match your chosen black hole and select the &ldquo;BZ ergosphere&rdquo; power source to see the ops-per-second and total compute budget that the physics permits.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="compute" href="compute-in-space.html">Open Compute in Space &rarr;</a>
+          <span class="step-params" id="p5"></span>
+          <span class="tier-mini tier-e">BZ: Established</span>
+          <span class="tier-mini tier-s">MTH: Speculative</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">If a post-biological civilisation optimises for computation over expansion, a black hole at the centre of a dense star cluster is the ideal site. The same object that draws our observational attention as an IMBH candidate may be drawing <em>other</em> attention for a very different reason.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9656; The arc of black hole physics</div>
+    <div class="synth-prose">
+      <p>Einstein&rsquo;s field equations, quantised fields on curved backgrounds, thermodynamics, information theory, and speculative engineering are usually taught as disconnected subjects. They are not. A single spinning black hole &mdash; at any mass &mdash; is where all five converge.</p>
+      <p>The IMBH candidate at &omega;&nbsp;Cen sits at a particularly interesting intersection: it is massive enough that Hawking evaporation is irrelevant on any practical timescale, yet compact enough that its ergosphere spans measurable fractions of an AU. That makes it not only a test of general relativity and stellar dynamics, but a potential computational resource on the scale the MTH requires. The same observations that constrain its mass &mdash; see <a href="demo-decision-tree.html">Demo&nbsp;M</a> for the 18-month observational roadmap &mdash; would also constrain its spin and hence its Penrose-process efficiency.</p>
+      <p>The chain is: <em>geometry shapes the trap; time dilation shapes the neighbourhood; Hawking radiation connects geometry to thermodynamics; Bekenstein-Landauer connects thermodynamics to information; and BZ connects information capacity to power.</em> None of these links is broken at any mass scale &mdash; only the magnitudes change by factors of ten to the power of a hundred.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation. &nbsp;
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature. &nbsp;
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation. &nbsp;
+    <span class="tier-mini tier-s">Speculative</span> = extrapolation beyond current observational reach.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into five interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo P - Black Hole Physics, End to End
+// Scenario -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=stellar|oc_imbh|sgra
+//
+// Hash param verification (2026-05-28, by reading each tool's loadHash() block):
+//   kerr-geometry:       a LINEAR 0-1, view='equatorial'|'polar', mass LINEAR M☉,
+//                        tx/ty LINEAR camera coords
+//   time-dilation:       mass LINEAR M☉, r LINEAR r/r_s, r2 LINEAR r/r_s
+//   hawking-evaporation: mass LINEAR M☉  (stored as .toExponential(3))
+//   bekenstein-landauer: T,P,R,E,M,a,B all LINEAR stored as .toExponential(3);
+//                        loadHash iterates state keys, parseFloat, v>0 guard
+//   compute-in-space:    N,jpop,duty,Trad,Tcmp,etaC,d,etaV,fpd,bzM,launch,mthM
+//                        all LINEAR; rev='0'|'1' (bool); pwr='solar'|'fusion'|'bz'
+//
+// bekenstein R/E are set to Schwarzschild radius (m) and rest-mass energy (J)
+// for each scenario to give the BH-as-object Bekenstein bound directly.
+// =========================================================================
+
+var SCENARIOS = {
+  stellar: {
+    label: 'Stellar-mass — 30 M☉',
+    kerr:    {a:'0.900', view:'equatorial', mass:'3.000e+1', tx:'5.00', ty:'0.00'},
+    timedil: {mass:'3.000e+1', r:'2.500', r2:'6.000'},
+    hawking: {mass:'3.000e+1'},
+    beken:   {T:'2.700e+0', P:'1.000e+9', R:'8.860e+4', E:'5.370e+48', M:'3.000e+1', a:'9.000e-1', B:'1.000e+12'},
+    compute: {N:'1.000e+6', jpop:'1.000e-12', duty:'1.000', rev:'0', Trad:'300.0', Tcmp:'200.0', etaC:'0.100', pwr:'bz', bzM:'3.000e+1', mthM:'3.000e+1', launch:'1.000e+7'},
+    summary: {
+      kerr:    'a=0.9 spin, M=30 M☉, equatorial slice',
+      timedil: 'M=30 M☉ — r_s≈89 km; compare 2.5 r_s vs 6 r_s (ISCO)',
+      hawking: 'M=30 M☉ — T_H≈2 nK, t_evap≫age of universe',
+      beken:   'R=r_s≈89 km, E=Mc²≈5.4×10⁴⁸ J, a=0.9, M=30 M☉',
+      compute: 'BZ power source, M_BZ=30 M☉, 10⁶ compute nodes'
+    }
+  },
+  oc_imbh: {
+    label: 'OC IMBH — 8,200 M☉ (Häberle 2024)',
+    kerr:    {a:'0.700', view:'equatorial', mass:'8.200e+3', tx:'5.00', ty:'0.00'},
+    timedil: {mass:'8.200e+3', r:'2.500', r2:'6.000'},
+    hawking: {mass:'8.200e+3'},
+    beken:   {T:'2.700e+0', P:'1.000e+9', R:'2.420e+7', E:'1.470e+51', M:'8.200e+3', a:'7.000e-1', B:'1.000e+12'},
+    compute: {N:'1.000e+6', jpop:'1.000e-12', duty:'1.000', rev:'0', Trad:'2.7', Tcmp:'4.000', etaC:'0.100', pwr:'bz', bzM:'8.200e+3', mthM:'8.200e+3', launch:'1.000e+7'},
+    summary: {
+      kerr:    'a=0.7 spin, M=8,200 M☉, ergosphere extends well beyond photon sphere',
+      timedil: 'M=8,200 M☉ — r_s≈24,200 km (≈0.08 AU)',
+      hawking: 'M=8,200 M☉ — T_H≈7 pK, effectively immortal',
+      beken:   'R=r_s≈24,200 km, E=Mc²≈1.5×10⁵¹ J, a=0.7, M=8,200 M☉',
+      compute: 'BZ power source, M_BZ=8,200 M☉, OC IMBH ergosphere as engine'
+    }
+  },
+  sgra: {
+    label: 'Sgr A* — 4 × 10⁶ M☉',
+    kerr:    {a:'0.990', view:'equatorial', mass:'4.000e+6', tx:'5.00', ty:'0.00'},
+    timedil: {mass:'4.000e+6', r:'2.500', r2:'6.000'},
+    hawking: {mass:'4.000e+6'},
+    beken:   {T:'2.700e+0', P:'1.000e+9', R:'1.180e+10', E:'7.160e+53', M:'4.000e+6', a:'9.900e-1', B:'1.000e+12'},
+    compute: {N:'1.000e+6', jpop:'1.000e-12', duty:'1.000', rev:'0', Trad:'2.7', Tcmp:'4.000', etaC:'0.100', pwr:'bz', bzM:'4.000e+6', mthM:'4.000e+6', launch:'1.000e+7'},
+    summary: {
+      kerr:    'a=0.99 (near-maximal), M=4×10⁶ M☉, massive ergosphere',
+      timedil: 'M=4×10⁶ M☉ — r_s≈12 billion km (≈39 AU)',
+      hawking: 'M=4×10⁶ M☉ — T_H≈15 fK, never evaporates',
+      beken:   'R=r_s≈12 Gkm, E=Mc²≈7.2×10⁵³ J, a=0.99, M=4×10⁶ M☉',
+      compute: 'BZ power source, M_BZ=4×10⁶ M☉, near-maximal spin extraction'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+  var links = {
+    kerr:    'kerr-geometry.html'       + buildHash(s.kerr),
+    timedil: 'time-dilation.html'       + buildHash(s.timedil),
+    hawking: 'hawking-evaporation.html' + buildHash(s.hawking),
+    beken:   'bekenstein-landauer.html' + buildHash(s.beken),
+    compute: 'compute-in-space.html'    + buildHash(s.compute)
+  };
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+  document.getElementById('p1').textContent = s.summary.kerr;
+  document.getElementById('p2').textContent = s.summary.timedil;
+  document.getElementById('p3').textContent = s.summary.hawking;
+  document.getElementById('p4').textContent = s.summary.beken;
+  document.getElementById('p5').textContent = s.summary.compute;
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9_]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'stellar';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
