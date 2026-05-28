@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<!--
+  Demo A — Is There an IMBH? Guided Evidence Tour
+  Omega Centauri Society . omegacentauri.me
+  Six chained tools walk through every published detection method for the
+  putative intermediate-mass black hole in ω Cen (NGC 5139).
+  Chains: constraint-stacker → imbh-timeline → velocity-dispersion →
+          orbital-dynamics → pulsar-timing → jwst-accretion
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-05-28
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo A — Is There an IMBH? . OCS</title>
+<meta name="description" content="A guided tour of every published detection method for the intermediate-mass black hole in ω Cen. Six chained interactive tools spanning kinematics, proper motions, timing, and accretion physics.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-imbh-evidence.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 10%,rgba(240,160,32,.10),transparent 50%),
+    radial-gradient(ellipse at 80% 55%,rgba(29,186,144,.07),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(112,85,212,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--amber-bright);background:rgba(196,120,0,.08);box-shadow:0 0 0 1px var(--amber-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--amber-bright)}
+.step.s3{--accent:var(--purple-bright)}
+.step.s4{--accent:var(--red-bright)}
+.step.s5{--accent:var(--teal-mid);border-color:rgba(13,110,88,.35)}
+.step.s6{--accent:var(--purple-glow);border-color:rgba(160,128,240,.3);box-shadow:0 0 24px rgba(160,128,240,.06) inset}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Demo A &middot; Is There an IMBH?</span>
+    <a class="nav-link" href="index.html">&larr; All tools</a>
+    <a class="nav-link" href="demo-kardashev-three.html">Demo B &middot; Kardashev III</a>
+    <a class="nav-link" href="demo-fermi-five-ways.html">Demo O &middot; Five Ways</a>
+    <a class="nav-link" href="demo-breaking-degeneracy.html">Demo K &middot; Degeneracy</a>
+    <a class="nav-link" href="demo-dwarf-inheritance.html">Demo L &middot; Dwarf</a>
+    <a class="nav-link" href="demo-decision-tree.html">Demo M &middot; Decision Tree</a>
+    <a class="nav-link" href="demo-cosmology-browser.html">Demo N &middot; Cosmology</a>
+    <a class="nav-link" href="demo-bh-physics.html">Demo P &middot; BH Physics</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo A &middot; IMBH evidence tour &middot; chains six tools</div>
+    <h1>Is There an IMBH?</h1>
+    <p class="hero-sub">A guided tour of every published detection method for the intermediate-mass black hole in &omega;&nbsp;Cen. Six tools. Three independent lines of evidence, two future null tests, and one unresolved tension between H&auml;berle&nbsp;2024 and Ba&ntilde;ares&nbsp;2025.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-05-28</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Choose your prior</div>
+    <p class="scenario-help">The three scenarios reflect the two published claims and the unresolved tension between them. Each pre-loads all six tools with internally consistent parameters so you can follow the evidence chain from start to finish.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="haberle">
+        <span class="name">H&auml;berle et al. 2024 (Recommended)</span>
+        <span class="desc">IMBH lower&nbsp;limit &ge;&nbsp;8,200&nbsp;M&#8857; from Gaia&nbsp;DR3&nbsp;+&nbsp;HST proper motions. Seven high-velocity stars with no non-IMBH explanation found.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="banares">
+        <span class="name">Ba&ntilde;ares-Hern&aacute;ndez et al. 2025</span>
+        <span class="desc">Upper limit &le;&nbsp;6,000&nbsp;M&#8857; from Gaia&nbsp;DR3 Jeans modelling. Argues the high-velocity stars can be explained by cluster dynamics without an IMBH.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="tension">
+        <span class="name">The Unresolved Tension</span>
+        <span class="desc">Show all constraints simultaneously. The two results cannot both be correct &mdash; the allowed windows do not overlap. Something in the measurement chain differs.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 2 &middot; all published constraint families</div>
+        <div class="step-title">The constraint window: where does the mass sit?</div>
+        <p class="step-prose">Start with the full picture. Every published kinematic, proper-motion, timing, accretion, N-body, and M&ndash;&sigma; measurement is overlaid in a single mass&ndash;constraint plot. <em>The H&auml;berle lower limit at &ge;&nbsp;8,200&nbsp;M&#8857; and the Ba&ntilde;ares upper limit at &le;&nbsp;6,000&nbsp;M&#8857; do not overlap</em> &mdash; meaning at least one result contains a systematic error not yet identified. Toggle individual method families on and off to see which constraints are independent of one another and which share the same underlying data.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="stacker" href="constraint-stacker.html">Open Constraint Stacker &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-d">Debated</span>
+          <span class="tier-mini tier-e">Kinematics</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The H&auml;berle/Ba&ntilde;ares tension is not a minor discrepancy &mdash; the allowed mass windows are completely non-overlapping. This is the sharpest observational conflict in globular cluster science right now.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 34 &middot; two decades of measurement history</div>
+        <div class="step-title">The evidence has been accumulating since 2003</div>
+        <p class="step-prose">The IMBH debate in &omega;&nbsp;Cen is not new. van&nbsp;der&nbsp;Marel&nbsp;&amp;&nbsp;Anderson&nbsp;(2010), Noyola&nbsp;et&nbsp;al.&nbsp;(2010), and Jalali&nbsp;et&nbsp;al.&nbsp;(2012) all placed upper or lower limits before proper-motion astrometry could resolve individual stellar velocities near the core. <em>Each generation of instruments tightened the constraint without resolving the question.</em> The timeline tool lets you step through the full measurement history and see how the allowed mass window has evolved. Filter by method type or by result direction (lower limit vs. upper limit) to see which lines of evidence are internally consistent.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="timeline" href="imbh-timeline.html">Open IMBH Timeline &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-d">Debated</span>
+          <span class="tier-mini tier-e">20-yr baseline</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">No single result has been decisive. Each instrument upgrade improves precision but the systematic floor has not been reached. Gaia DR4 (2026) is the next step-change in astrometric quality.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 17 &middot; Jeans equation / Plummer&ndash;IMBH model</div>
+        <div class="step-title">The velocity dispersion profile: the oldest IMBH signature</div>
+        <p class="step-prose">An IMBH creates a gravitational &ldquo;cusp&rdquo; in the line-of-sight velocity dispersion profile &sigma;(r): stars inside the sphere of influence orbit faster, producing a measurable upturn at small radii. For an 8,200&nbsp;M&#8857; IMBH at &omega;&nbsp;Cen's distance, the sphere of influence radius is <em>r<sub>i</sub>&nbsp;&asymp;&nbsp;GM&#x2093;/&sigma;<sub>&infin;</sub>&sup2;&nbsp;&asymp;&nbsp;0.02&nbsp;pc &asymp; 0.05&Prime;</em> &mdash; barely at the resolution limit of the best HST data until 2023. <strong>This is the exact reason the debate has lasted 20 years:</strong> the signal is real but sub-resolution for all pre-Gaia instruments. Adjust the IMBH mass to see how the inner cusp strengthens and watch the sphere of influence move relative to typical measurement bins.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="veldisp" href="velocity-dispersion.html">Open Velocity Dispersion &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-e">Stellar dynamics</span>
+          <span class="tier-mini tier-d">Sub-resolution</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The sphere of influence at 8,200&nbsp;M&#8857; is 0.05&Prime; &mdash; just at the Gaia DR3 proper-motion limit. Gaia DR4's longer baseline will push the individual-star signal deeper into the cusp where the IMBH signature dominates.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 7 &middot; H&auml;berle&nbsp;2024 mode &mdash; individual stellar orbits</div>
+        <div class="step-title">Seven stars that should not be moving that fast</div>
+        <p class="step-prose">H&auml;berle et al.&nbsp;(2024) identified seven stars in &omega;&nbsp;Cen's core with 3D velocity components exceeding the local escape velocity for any reasonable IMBH-free model. In <em>H&auml;berle mode</em>, the orbital-dynamics tool simulates stellar orbits near the IMBH and shows the escape-velocity threshold as a function of distance. Drag the IMBH mass slider: the seven high-velocity stars fall onto plausible bound orbits only when M&#x2093;&nbsp;&ge;&nbsp;8,200&nbsp;M&#8857;. Ba&ntilde;ares&nbsp;(2025) argues the velocity measurements contain systematics from source confusion in the crowded core &mdash; the tool lets you test this by adjusting the position offset to simulate a centroiding error.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="orbital" href="orbital-dynamics.html">Open Orbital Dynamics &rarr;</a>
+          <span class="step-params" id="p4"></span>
+          <span class="tier-mini tier-d">Debated</span>
+          <span class="tier-mini tier-e">Proper motions</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The H&auml;berle result is falsifiable: if the seven high-velocity stars are source-confusion artefacts, they should disappear or weaken in Gaia DR4's 2.5&times; longer astrometric baseline. If they survive, the lower limit holds.</div></div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 12 &middot; pulsar timing model &mdash; future null test</div>
+        <div class="step-title">Millisecond pulsars as gravitational accelerometers</div>
+        <p class="step-prose">Millisecond pulsars within the sphere of influence of an IMBH experience measurable gravitational acceleration, appearing as a time derivative of their pulse period <em>P&#775;</em>. &omega;&nbsp;Cen hosts at least five known MSPs; an 8,200&nbsp;M&#8857; IMBH at the cluster centre would produce <em>|P&#775;/P|&nbsp;&asymp;&nbsp;10&sup2;&middot;yr&sup2; s&sup2;</em> for pulsars within 0.1&nbsp;pc &mdash; larger than intrinsic spin-down by an order of magnitude. <strong>This is a clean null test:</strong> if the IMBH exists at the claimed mass, the acceleration signal is predicted with no free parameters. Current MeerKAT timing baselines are insufficient to separate it from noise; SKA-Mid (2028+) baselines will be decisive.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="pulsar" href="pulsar-timing.html">Open Pulsar Timing &rarr;</a>
+          <span class="step-params" id="p5"></span>
+          <span class="tier-mini tier-t">Theoretical</span>
+          <span class="tier-mini tier-e">Known MSPs</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Pulsar timing is instrument-limited, not physics-limited. The predicted signal at 8,200&nbsp;M&#8857; is above the thermal noise floor &mdash; SKA-Mid's 2028 data will reach the required sensitivity without any new discoveries.</div></div>
+      </div>
+    </article>
+
+    <article class="step s6" id="step6">
+      <div class="step-num">06</div>
+      <div class="step-body">
+        <div class="step-kicker">Tool 29 &middot; Bondi&ndash;Hoyle accretion / ADAF model &mdash; JWST forecast</div>
+        <div class="step-title">JWST accretion limits: the quietest black hole in the Galaxy?</div>
+        <p class="step-prose">Even a quiescent IMBH accretes from stellar winds in the cluster core. For an 8,200&nbsp;M&#8857; BH in an ambient density &rho;&nbsp;&asymp;&nbsp;10&sup2;&sup1;&nbsp;g&nbsp;cm&sup3;, Bondi&ndash;Hoyle accretion gives a luminosity <em>L&nbsp;&asymp;&nbsp;10&sup6;&nbsp;L<sub>Edd</sub></em> &mdash; far sub-Eddington but potentially detectable in the near-IR. <strong>Upper limits from existing Spitzer and Chandra non-detections already constrain &epsilon;&nbsp;&lt;&nbsp;10&sup3;</strong>, consistent with an ADAF-mode radiatively inefficient flow &mdash; the same regime as Sgr&nbsp;A* at low accretion rate. Adjust the efficiency and ambient density to see which parameter space JWST Cycle&nbsp;4 deep imaging will probe.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="accretion" href="jwst-accretion.html">Open JWST Accretion &rarr;</a>
+          <span class="step-params" id="p6"></span>
+          <span class="tier-mini tier-s">Speculative</span>
+          <span class="tier-mini tier-t">JWST Cycle&nbsp;4</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The non-detection is itself a constraint: &epsilon;&nbsp;&lt;&nbsp;10&sup3; rules out thin-disk accretion and confines the flow to ADAF/LHAF mode. If the IMBH exists at 8,200&nbsp;M&#8857;, JWST will either detect the ADAF nucleus or push &epsilon; below physically motivated floors.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9656; The state of the question</div>
+    <div class="synth-prose">
+      <p>The IMBH question in &omega;&nbsp;Cen is the sharpest observational tension in globular cluster science. H&auml;berle et al.&nbsp;(2024) report a <em>lower</em> limit of &ge;&nbsp;8,200&nbsp;M&#8857; from seven high-velocity stars that cannot be bound in any IMBH-free model. Ba&ntilde;ares-Hern&aacute;ndez et al.&nbsp;(2025) report an <em>upper</em> limit of &le;&nbsp;6,000&nbsp;M&#8857; from Jeans modelling of the same Gaia&nbsp;DR3 proper-motion catalogue. These results are mutually exclusive: there is no overlap in the allowed mass windows.</p>
+      <p>The most likely resolution is a systematic difference in how the two teams handle source confusion and completeness in the inner arcminute. H&auml;berle's seven stars require individual radial-velocity confirmation; Ba&ntilde;ares's Jeans analysis depends on the faint-end completeness function near the crowded core. <strong>Both problems are addressable with Gaia DR4</strong> (targeted for 2026), which has a &asymp;&nbsp;2.5&times; longer astrometric baseline than DR3 and will either confirm or retract the high-velocity detections at 3&sigma;.</p>
+      <p>Meanwhile, the pulsar timing and accretion channels provide independent null tests that do not rely on proper-motion astrometry at all. The roadmap for breaking the degeneracy is spelled out in <a href="demo-breaking-degeneracy.html">Demo&nbsp;K &mdash; Breaking Degeneracy</a>. The formation-channel argument for why &omega;&nbsp;Cen specifically is the most likely IMBH host remains valid regardless of which dynamical measurement prevails &mdash; see <a href="demo-dwarf-inheritance.html">Demo&nbsp;L &mdash; The Dwarf-Galaxy Inheritance</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-s">Speculative</span> = physically motivated extrapolation, not yet observationally constrained.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into six interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo A — Is There an IMBH? Guided Evidence Tour
+// Scenario → per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=haberle|banares|tension
+//
+// Hash params verified 2026-05-27/28 by reading each tool's loadHash() block:
+//   constraint-stacker : epsilon/rho LINEAR .toExponential(2); show STRING; sel STRING
+//   imbh-timeline      : filter STRING; sel STRING (no numeric params)
+//   velocity-dispersion: mass LINEAR .toExponential(3); rh .toFixed(2); sig .toFixed(1)
+//   orbital-dynamics   : mode STRING; mass LINEAR .toExponential(3); dx/dy .toFixed(3)
+//   pulsar-timing      : r/precision/baseline LINEAR (verified prior session)
+//   jwst-accretion     : eps/rho/cs LINEAR (verified prior session)
+// =========================================================================
+
+var STACKER_SHOW = 'kinematics,propermotion,timing,accretion,nbody,msigma';
+
+var SCENARIOS = {
+  haberle: {
+    label: 'Häberle et al. 2024',
+    stacker:  {epsilon:'1.00e-3', rho:'1.00e-21', show:STACKER_SHOW, sel:'haberle2024'},
+    timeline: {filter:'all', sel:'haberle2024'},
+    veldisp:  {mass:'4.000e+6', rh:'4.80', sig:'0.0'},
+    orbital:  {mode:'haberle', mass:'8.200e+3', dx:'0.000', dy:'0.000'},
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
+    accretion:{eps:'1.00e-3', rho:'1.00e-21', cs:'1.00e3'},
+    summary: {
+      stacker:  'show all methods / highlight Häberle 2024 lower-limit marker',
+      timeline: 'filter=all / highlight Häberle 2024 entry',
+      veldisp:  'M_cluster=4e6 M☉ / r_h=4.80 pc / σ_obs=0.0',
+      orbital:  'mode=haberle / M_IMBH=8,200 M☉ / centred on IMBH',
+      pulsar:   'r=10 pc / precision=1.0 μs / baseline=10 yr',
+      accretion:'ε=1e-3 / ρ=1e-21 g cm⁻³ / c_s=1000 m s⁻¹'
+    }
+  },
+  banares: {
+    label: 'Bañares-Hernández et al. 2025',
+    stacker:  {epsilon:'1.00e-3', rho:'1.00e-21', show:STACKER_SHOW, sel:'banares2025'},
+    timeline: {filter:'all', sel:'banares2025'},
+    veldisp:  {mass:'4.000e+6', rh:'4.80', sig:'0.0'},
+    orbital:  {mode:'haberle', mass:'6.000e+3', dx:'0.000', dy:'0.000'},
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
+    accretion:{eps:'1.00e-3', rho:'1.00e-22', cs:'1.00e3'},
+    summary: {
+      stacker:  'show all methods / highlight Bañares 2025 upper-limit marker',
+      timeline: 'filter=all / highlight Bañares 2025 entry',
+      veldisp:  'M_cluster=4e6 M☉ / r_h=4.80 pc / σ_obs=0.0',
+      orbital:  'mode=haberle / M_IMBH=6,000 M☉ (upper-limit case)',
+      pulsar:   'r=10 pc / precision=1.0 μs / baseline=10 yr',
+      accretion:'ε=1e-3 / ρ=1e-22 g cm⁻³ (lower density — upper-limit case)'
+    }
+  },
+  tension: {
+    label: 'The unresolved tension',
+    stacker:  {epsilon:'1.00e-3', rho:'1.00e-21', show:STACKER_SHOW},
+    timeline: {filter:'all'},
+    veldisp:  {mass:'4.000e+6', rh:'4.80', sig:'0.0'},
+    orbital:  {mode:'haberle', mass:'8.200e+3', dx:'0.000', dy:'0.000'},
+    pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
+    accretion:{eps:'1.00e-3', rho:'1.00e-21', cs:'1.00e3'},
+    summary: {
+      stacker:  'show all methods / no highlighted marker (full conflict visible)',
+      timeline: 'filter=all / no highlighted entry (full measurement history)',
+      veldisp:  'M_cluster=4e6 M☉ / r_h=4.80 pc / σ_obs=0.0',
+      orbital:  'mode=haberle / M_IMBH=8,200 M☉ (Häberle baseline shown)',
+      pulsar:   'r=10 pc / precision=1.0 μs / baseline=10 yr',
+      accretion:'ε=1e-3 / ρ=1e-21 g cm⁻³ / neutral assumptions'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+  var links = {
+    stacker:  'constraint-stacker.html'  + buildHash(s.stacker),
+    timeline: 'imbh-timeline.html'       + buildHash(s.timeline),
+    veldisp:  'velocity-dispersion.html' + buildHash(s.veldisp),
+    orbital:  'orbital-dynamics.html'    + buildHash(s.orbital),
+    pulsar:   'pulsar-timing.html'       + buildHash(s.pulsar),
+    accretion:'jwst-accretion.html'      + buildHash(s.accretion)
+  };
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+  document.getElementById('p1').textContent = s.summary.stacker;
+  document.getElementById('p2').textContent = s.summary.timeline;
+  document.getElementById('p3').textContent = s.summary.veldisp;
+  document.getElementById('p4').textContent = s.summary.orbital;
+  document.getElementById('p5').textContent = s.summary.pulsar;
+  document.getElementById('p6').textContent = s.summary.accretion;
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'haberle';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
