@@ -165,10 +165,29 @@ jobs:
         run: |
           set -euo pipefail
           echo "Testing SSH connection to ${DH_SSH_HOST}…"
-          ssh -i ~/.ssh/deploy_key \
-              -o IdentitiesOnly=yes \
-              -o StrictHostKeyChecking=no \
-              "${DH_SSH_USER}@${DH_SSH_HOST}" "echo 'SSH OK'"
+          for attempt in 1 2 3; do
+            echo "Attempt ${attempt}/3…"
+            if ssh -i ~/.ssh/deploy_key \
+                   -o IdentitiesOnly=yes \
+                   -o StrictHostKeyChecking=no \
+                   -o ConnectTimeout=30 \
+                   -o ServerAliveInterval=30 \
+                   -o ServerAliveCountMax=3 \
+                   "${DH_SSH_USER}@${DH_SSH_HOST}" "echo 'SSH OK'"; then
+              echo "SSH connection successful."
+              break
+            fi
+            if [ "${attempt}" -lt 3 ]; then
+              echo "Connection failed, retrying in 15s…"
+              sleep 15
+            else
+              echo "::error::SSH connection to ${DH_SSH_HOST}:22 timed out after 3 attempts."
+              echo "::error::Check that (1) DH_SSH_HOST is the DreamHost server hostname (not your domain),"
+              echo "::error::(2) the user has Shell access (not SFTP-only) in the DreamHost panel,"
+              echo "::error::(3) DH_SSH_KEY matches the public key in ~/.ssh/authorized_keys on the server."
+              exit 1
+            fi
+          done
 
       # ── 4. rsync dry run (always) ──────────────────────────────────────────
       - name: rsync dry run
@@ -184,7 +203,7 @@ jobs:
             --exclude='.github/' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
-            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
             ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
 
       # ── 5. rsync live deploy (skipped on dry_run) ──────────────────────────
@@ -202,7 +221,7 @@ jobs:
             --exclude='.github/' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
-            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no" \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
             ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
 
       # ── 6. Smoke test (skipped on dry_run) ────────────────────────────────
