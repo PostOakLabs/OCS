@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!--
+  Passive SETI Detection Probability
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #fermi  ·  Epistemic tier(s): 🔬 Established (Bayesian geometry) · ⚠ Theoretical (Drake formulation, signal duration priors)
+  Data sources:
+    - Civiletti (2025) "Quantifying the Fermi paradox via passive SETI: a general framework" arXiv:2505.00062, Open J. Astrophysics
+    - COSMIC/VLA survey: Sheikh et al. (2025) AJ, arXiv:2501.17997 — 950,000 objects, 10¹¹–10¹⁶ W EIRP limits
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passive SETI Detection Probability — Omega Centauri Society</title>
+<meta name="description" content="How many communicating civilisations does the great silence rule out? Civiletti 2025 geometrical framework: P(≥1 detection) as a function of N civilisations and signal duration δ — the principled way to read a null SETI result.">
+<link rel="canonical" href="https://omegacentauri.me/tools/passive-seti.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 75% 15%,rgba(112,85,212,.09),transparent 50%),radial-gradient(ellipse at 25% 75%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:720px}
+.tier-stack{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-theory{color:var(--amber-mid);background:rgba(196,120,0,.06)}
+
+.card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:20px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.preset-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+.preset-btn.active{color:var(--purple-glow);border-color:var(--purple-bright);background:rgba(112,85,212,.07)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px 28px}
+@media(max-width:800px){.input-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:5px}
+.slider-block .hint{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--text-dim);margin-top:3px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 8px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none}
+.slider-value{font-family:'Space Mono',monospace;font-size:12px;color:var(--purple-glow);min-width:120px;text-align:right;white-space:nowrap}
+
+/* Result panels */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+@media(max-width:680px){.results-grid{grid-template-columns:1fr}}
+.big-result{border-radius:12px;padding:22px 24px;background:linear-gradient(135deg,rgba(112,85,212,.1),rgba(13,10,36,.7));border:1px solid var(--purple-bright)}
+.big-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:8px}
+.big-num{font-family:'Orbitron',sans-serif;font-size:52px;font-weight:900;line-height:1;color:var(--purple-glow)}
+.big-sub{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);margin-top:8px;line-height:1.55}
+.thresholds-card{border-radius:12px;padding:20px 22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle)}
+.thresh-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+.thresh-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px dotted var(--border-subtle);font-family:'Space Mono',monospace;font-size:12px}
+.thresh-row:last-child{border-bottom:none}
+.thresh-conf{color:var(--text-secondary)}
+.thresh-n{color:var(--purple-glow);text-align:right;white-space:nowrap}
+.thresh-row.achieved .thresh-conf{color:var(--teal-glow)}
+.thresh-row.achieved .thresh-n{color:var(--teal-glow)}
+.thresh-row.achieved::after{content:' ✓';color:var(--teal-glow)}
+
+/* P vs N chart */
+.chart-card{border-radius:12px;padding:22px 24px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);margin-bottom:20px}
+.chart-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:4px}
+.chart-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:16px;letter-spacing:.04em}
+canvas{display:block;width:100%;border-radius:6px}
+.chart-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:10px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.04em}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.chart-legend i{display:inline-block;width:16px;height:3px;border-radius:1px}
+
+/* VLA context panel */
+.context-panel{border-radius:12px;padding:18px 22px;background:rgba(13,10,36,.4);border:1px solid var(--border-teal,rgba(29,186,144,.25));margin-bottom:20px;font-size:15px}
+.context-panel .ctx-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.context-panel p{color:var(--text-secondary);line-height:1.6}
+.context-panel strong{color:var(--text-primary)}
+
+/* Cross-links */
+.crosslinks{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.xlink{font-family:'Space Mono',monospace;font-size:11px;padding:7px 14px;border-radius:20px;border:1px solid var(--border-subtle);color:var(--text-secondary);display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.xlink:hover{border-color:var(--purple-bright);color:var(--purple-glow)}
+
+/* About */
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arr{transition:transform .2s}
+.about-toggle.open .arr{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 7px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px;line-height:1.65}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body a{color:var(--teal-glow)}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px;line-height:1.7}
+@media(max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:21px}.container{padding:24px 16px 60px}.big-num{font-size:38px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Passive SETI Detection Probability</span>
+    <a href="/#fermi" class="nav-link">↗ #fermi</a>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/tools/drake-monte-carlo.html" class="nav-link">Drake MC ↗</a>
+    <a href="/tools/radio-seti.html" class="nav-link">Radio SETI ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="tool-header">
+    <div>
+      <h1>Passive SETI Detection Probability</h1>
+      <p class="tool-subtitle">If N civilisations have been broadcasting for δ years, what is the probability that at least one signal crosses Earth? The Civiletti (2025) geometrical framework — the principled way to read a null result.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Established (geometry)</span>
+      <span class="tier-badge tier-theory">⚠ Theoretical (priors)</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="card">
+    <div class="card-title">Parameters</div>
+    <div class="preset-row">
+      <button class="preset-btn active" onclick="applyPreset('sandberg')" id="btn-sandberg">Sandberg 2018 priors</button>
+      <button class="preset-btn" onclick="applyPreset('drake')" id="btn-drake">Drake (1961) point</button>
+      <button class="preset-btn" onclick="applyPreset('optimistic')" id="btn-optimistic">Optimistic</button>
+      <button class="preset-btn" onclick="applyPreset('pessimistic')" id="btn-pessimistic">Pessimistic</button>
+    </div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>N — communicating civilisations</label>
+        <div class="slider-row">
+          <input type="range" id="sl-n" min="0" max="10" step="0.05" value="1">
+          <span class="slider-value" id="lbl-n">10</span>
+        </div>
+        <div class="hint">Number active in the Milky Way today</div>
+      </div>
+      <div class="slider-block">
+        <label>δ — signal duration (years)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-delta" min="0" max="10" step="0.1" value="2">
+          <span class="slider-value" id="lbl-delta">100 yr</span>
+        </div>
+        <div class="hint">How long the civilisation has been broadcasting</div>
+      </div>
+      <div class="slider-block">
+        <label>R — galaxy radius (ly)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-r" min="3.7" max="5" step="0.05" value="4.7">
+          <span class="slider-value" id="lbl-r">50,000 ly</span>
+        </div>
+        <div class="hint">Milky Way disk radius ≈ 50,000 ly</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-grid">
+    <div class="big-result">
+      <div class="big-label">P(≥1 detection)</div>
+      <div class="big-num" id="big-p">—</div>
+      <div class="big-sub" id="big-sub">—</div>
+    </div>
+    <div class="thresholds-card">
+      <div class="thresh-label">N required for detection confidence level (current δ, R)</div>
+      <div class="thresh-row" id="tr-50"><span class="thresh-conf">50% confidence</span><span class="thresh-n" id="tn-50">—</span></div>
+      <div class="thresh-row" id="tr-90"><span class="thresh-conf">90% confidence</span><span class="thresh-n" id="tn-90">—</span></div>
+      <div class="thresh-row" id="tr-99"><span class="thresh-conf">99% confidence</span><span class="thresh-n" id="tn-99">—</span></div>
+      <div class="thresh-row" id="tr-999"><span class="thresh-conf">99.9% confidence</span><span class="thresh-n" id="tn-999">—</span></div>
+    </div>
+  </div>
+
+  <!-- Chart: P vs N for several delta values -->
+  <div class="chart-card">
+    <div class="chart-title">P(≥1 detection) vs. N — four signal durations</div>
+    <div class="chart-sub">Vertical line = your selected N · Horizontal dashed = 50% / 90% / 99% thresholds</div>
+    <canvas id="pn-chart" height="240"></canvas>
+    <div class="chart-legend" id="chart-legend"></div>
+  </div>
+
+  <!-- VLA context -->
+  <div class="context-panel">
+    <div class="ctx-eyebrow">📡 Observational context — COSMIC / VLA survey (Sheikh et al. 2025)</div>
+    <p>The COSMIC system searched <strong>950,000+ objects</strong> during the VLA Sky Survey (covering 75% of sky), placing EIRP upper limits of <strong>10¹¹ – 10¹⁶ W</strong> on narrowband radio transmitters. No technosignatures were confirmed. Under the Civiletti framework, this null result constrains the product N × δ/R: the 950,000-object sample implies that if a transmitter at OC distance (~17,900 ly) were broadcasting with sufficient power, we would have detected it. The absence updates our posterior downward on N×δ but cannot rule out civilisations broadcasting below the sensitivity threshold or in other channels.</p>
+  </div>
+
+  <!-- Cross-links -->
+  <div class="crosslinks">
+    <a class="xlink" href="/tools/drake-monte-carlo.html">↗ Drake Monte Carlo (prior on N)</a>
+    <a class="xlink" href="/tools/radio-seti.html">↗ Radio SETI (power limits)</a>
+    <a class="xlink" href="/tools/great-filter.html">↗ Great Filter Localizer</a>
+    <a class="xlink" href="/tools/constraint-stacker.html">↗ Constraint Stacker (OC window)</a>
+  </div>
+
+  <!-- About -->
+  <div class="about">
+    <button class="about-toggle" onclick="toggleAbout(this)">
+      <span class="arr">▶</span> About this tool
+    </button>
+    <div class="about-body" id="about-body">
+      <h3>The Civiletti 2025 framework</h3>
+      <p>The standard Fermi paradox formulation asks why we see <em>no</em> evidence of extraterrestrial intelligence when our best estimates of N suggest there should be many. But that framing conflates two questions: "does ETI exist?" and "would we detect it if it did?" This tool answers the second question geometrically.</p>
+      <p>Civiletti (2025) constructs a model in which N civilisations in the Milky Way each broadcast an EM signal for duration δ (years), with the signal expanding as a spherical shell at light speed. The probability that at least one such signal intersects Earth's spacetime position is:</p>
+      <p><code>p₁ ≈ 0.6 × δ / R</code> &nbsp; (per civilisation, R = galaxy radius in light-years)</p>
+      <p>For N independent civilisations: <code>P(≥1) = 1 − (1 − p₁)ᴺ</code></p>
+      <p>The factor 0.6 comes from the geometry of a uniform spherical distribution of sources and an Earth-based receiver — roughly 60% of the available "EM shell area" of a galaxy-crossing signal passes through the galactic disc where we reside.</p>
+      <h3>What the tool does not model</h3>
+      <p>This is a geometric null-detection framework. It does not account for: directionality of transmissions (beamed vs. isotropic), frequency selection effects, signal power (sensitivity is handled by Radio SETI ↗), or the anthropic constraint (we are only here because our civilisation arose, which correlates with N > 0). For the prior on N, use the Drake Monte Carlo tool ↗.</p>
+      <h3>Key reference</h3>
+      <p>Civiletti, M. (2025), "Quantifying the Fermi paradox via passive SETI: a general framework," <em>Open Journal of Astrophysics</em>. <a href="https://arxiv.org/abs/2505.00062" target="_blank" rel="noopener">arXiv:2505.00062</a>. Submitted April 2025; revised December 2025.</p>
+      <p>COSMIC survey: Sheikh et al. (2025), <em>AJ</em>. <a href="https://arxiv.org/abs/2501.17997" target="_blank" rel="noopener">arXiv:2501.17997</a>.</p>
+      <div class="meta-line">Tool v1.0 · 2026-06-01 · Code: MIT · Prose: CC BY 4.0 · omegacentauri.me/tools/passive-seti.html</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+const STRINGS = {
+  title: 'Passive SETI Detection Probability',
+  bigSubHigh: 'Detection is virtually certain at this N and δ.',
+  bigSubMid: 'A coin-flip or better — a signal should exist in our past light cone.',
+  bigSubLow: 'Detection is unlikely with current N and δ. Increase either to raise the odds.',
+  bigSubNear0: 'The great silence is unsurprising at this N and δ.',
+};
+
+const PRESETS = {
+  sandberg:   { logN: 1.0,  logD: 2.0  }, // N=10,  δ=100 yr (Sandberg et al. 2018 median-ish)
+  drake:      { logN: 4.3,  logD: 3.0  }, // N=20000, δ=1000 yr (Drake 1961 optimistic)
+  optimistic: { logN: 6.0,  logD: 5.0  }, // N=1e6, δ=100,000 yr
+  pessimistic:{ logN: 0.0,  logD: 1.0  }, // N=1,   δ=10 yr
+};
+
+const CURVE_DELTAS = [10, 1e3, 1e5, 1e7]; // four reference signal durations
+const CURVE_COLORS = ['rgba(160,128,240,0.7)', 'rgba(29,186,144,0.7)', 'rgba(240,160,32,0.7)', 'rgba(208,64,64,0.6)'];
+const CURVE_LABELS = ['δ = 10 yr', 'δ = 1,000 yr', 'δ = 100,000 yr', 'δ = 10 Myr'];
+
+let state = { logN: PRESETS.sandberg.logN, logD: PRESETS.sandberg.logD, logR: Math.log10(50000) };
+
+function pDetect(N, delta, R) {
+  // Civiletti 2025: P(≥1) = 1 - (1 - 0.6 * δ/R)^N
+  const p1 = Math.min(1, 0.6 * delta / R);
+  if (N <= 0) return 0;
+  if (p1 >= 1) return 1;
+  // Use log to avoid underflow for large N
+  // (1-p1)^N = exp(N * log(1-p1))
+  const lnOneMinusP1 = Math.log1p(-p1);
+  return 1 - Math.exp(N * lnOneMinusP1);
+}
+
+function nForConf(conf, delta, R) {
+  // Invert: conf = 1 - (1-p1)^N  →  N = log(1-conf) / log(1-p1)
+  const p1 = Math.min(0.9999, 0.6 * delta / R);
+  if (p1 <= 0) return Infinity;
+  if (p1 >= 1) return 1;
+  return Math.log(1 - conf) / Math.log(1 - p1);
+}
+
+function fmtPct(p) {
+  if (p >= 0.9999) return '> 99.99%';
+  if (p >= 0.001) return (p * 100).toPrecision(3) + '%';
+  if (p >= 1e-6)  return (p * 100).toExponential(2) + '%';
+  return '< 0.0001%';
+}
+function fmtN(n) {
+  if (!isFinite(n)) return '> 10¹⁰ (impractical)';
+  if (n >= 1e9) return '≥ 10⁹';
+  if (n >= 1e6) return (n / 1e6).toPrecision(2) + ' × 10⁶';
+  if (n >= 1e3) return Math.round(n).toLocaleString();
+  if (n < 1)    return '< 1 (any transmitter suffices)';
+  return Math.ceil(n).toLocaleString();
+}
+function fmtDelta(d) {
+  if (d >= 1e9)  return (d / 1e9).toPrecision(2) + ' Gyr';
+  if (d >= 1e6)  return (d / 1e6).toPrecision(2) + ' Myr';
+  if (d >= 1e3)  return (d / 1e3).toPrecision(2) + ' kyr';
+  return Math.round(d).toLocaleString() + ' yr';
+}
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  state.logN = p.logN; state.logD = p.logD;
+  document.getElementById('sl-n').value     = state.logN;
+  document.getElementById('sl-delta').value = state.logD;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + key).classList.add('active');
+  update();
+}
+
+function onSlider() {
+  state.logN = parseFloat(document.getElementById('sl-n').value);
+  state.logD = parseFloat(document.getElementById('sl-delta').value);
+  state.logR = parseFloat(document.getElementById('sl-r').value);
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  update();
+}
+['sl-n','sl-delta','sl-r'].forEach(id => document.getElementById(id).addEventListener('input', onSlider));
+
+function update() {
+  const N = Math.pow(10, state.logN);
+  const D = Math.pow(10, state.logD);
+  const R = Math.pow(10, state.logR);
+
+  // Labels
+  document.getElementById('lbl-n').textContent     = N >= 1e6 ? (N/1e6).toPrecision(2)+' × 10⁶' : N >= 1e3 ? (N/1e3).toPrecision(2)+' × 10³' : Math.round(N).toLocaleString();
+  document.getElementById('lbl-delta').textContent = fmtDelta(D);
+  document.getElementById('lbl-r').textContent     = R >= 1e4 ? (R/1e3).toPrecision(3)+',000 ly' : Math.round(R).toLocaleString()+' ly';
+
+  // Big result
+  const p = pDetect(N, D, R);
+  document.getElementById('big-p').textContent = fmtPct(p);
+  document.getElementById('big-sub').textContent = p > 0.99 ? STRINGS.bigSubHigh : p > 0.40 ? STRINGS.bigSubMid : p > 0.01 ? STRINGS.bigSubLow : STRINGS.bigSubNear0;
+
+  // Thresholds
+  const confs = [0.5, 0.9, 0.99, 0.999];
+  const ids   = ['50','90','99','999'];
+  confs.forEach((c, i) => {
+    const nReq = nForConf(c, D, R);
+    const row  = document.getElementById('tr-' + ids[i]);
+    document.getElementById('tn-' + ids[i]).textContent = fmtN(nReq);
+    row.classList.toggle('achieved', N >= nReq && isFinite(nReq));
+  });
+
+  // Chart
+  drawChart(N, D, R);
+  saveHash();
+}
+
+function drawChart(N_sel, D_sel, R) {
+  const canvas = document.getElementById('pn-chart');
+  const dpr    = window.devicePixelRatio || 1;
+  const W      = canvas.parentElement.clientWidth - 48;
+  const H      = 240;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 16, right: 24, bottom: 40, left: 56 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  const logNMin = 0, logNMax = 9;
+
+  function xPx(logN) { return pad.left + ((logN - logNMin) / (logNMax - logNMin)) * pw; }
+  function yPx(p)    { return pad.top + (1 - p) * ph; }
+
+  // Grid
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)';
+  ctx.lineWidth = 1;
+  for (let lN = logNMin; lN <= logNMax; lN++) {
+    ctx.beginPath(); ctx.moveTo(xPx(lN), pad.top); ctx.lineTo(xPx(lN), pad.top + ph); ctx.stroke();
+  }
+  [0.1, 0.25, 0.5, 0.75, 0.9, 0.99].forEach(p => {
+    ctx.beginPath(); ctx.moveTo(pad.left, yPx(p)); ctx.lineTo(pad.left + pw, yPx(p)); ctx.stroke();
+  });
+
+  // P threshold lines
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(144,136,192,0.3)';
+  [0.5, 0.9, 0.99].forEach(p => {
+    ctx.beginPath(); ctx.moveTo(pad.left, yPx(p)); ctx.lineTo(pad.left + pw, yPx(p)); ctx.stroke();
+    ctx.fillStyle = 'rgba(144,136,192,0.5)';
+    ctx.font = '9px Space Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText((p * 100) + '%', pad.left + pw + 2, yPx(p) + 3);
+  });
+  ctx.setLineDash([]);
+
+  // Curves for 4 delta values
+  CURVE_DELTAS.forEach((d, ci) => {
+    ctx.beginPath();
+    ctx.strokeStyle = CURVE_COLORS[ci];
+    ctx.lineWidth = ci === 1 ? 2.5 : 1.5; // highlight δ=1000 yr
+    for (let i = 0; i <= 200; i++) {
+      const lN = logNMin + (i / 200) * (logNMax - logNMin);
+      const n  = Math.pow(10, lN);
+      const p  = pDetect(n, d, R);
+      const x  = xPx(lN), y = yPx(p);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  });
+
+  // Selected N vertical line
+  const xSel = xPx(Math.log10(Math.max(N_sel, 1)));
+  ctx.strokeStyle = 'rgba(160,128,240,0.6)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(xSel, pad.top); ctx.lineTo(xSel, pad.top + ph); ctx.stroke();
+  ctx.setLineDash([]);
+  // Dot at intersection with selected delta
+  const pSel = pDetect(N_sel, D_sel, R);
+  ctx.fillStyle = 'rgba(160,128,240,1)';
+  ctx.beginPath(); ctx.arc(xSel, yPx(pSel), 5, 0, Math.PI * 2); ctx.fill();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(144,136,192,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(pad.left + pw, pad.top + ph); ctx.stroke();
+
+  // X labels
+  ctx.fillStyle = 'rgba(144,136,192,0.7)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  [0,1,2,3,4,5,6,7,8,9].forEach(lN => {
+    const lbl = lN === 0 ? '1' : '10'+(['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'][lN]);
+    ctx.fillText(lbl, xPx(lN), H - 8);
+  });
+
+  // Y labels
+  ctx.textAlign = 'right';
+  [0, 0.25, 0.5, 0.75, 1.0].forEach(p => {
+    ctx.fillText((p * 100).toFixed(0) + '%', pad.left - 5, yPx(p) + 3);
+  });
+
+  // Axis titles
+  ctx.fillStyle = 'rgba(144,136,192,0.5)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('N (communicating civilisations)', pad.left + pw / 2, H - 0);
+  ctx.save(); ctx.translate(11, pad.top + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('P(≥1 detection)', 0, 0); ctx.restore();
+
+  // Legend
+  const legend = document.getElementById('chart-legend');
+  legend.innerHTML = CURVE_DELTAS.map((d, i) =>
+    `<span><i style="background:${CURVE_COLORS[i]}"></i>${CURVE_LABELS[i]}</span>`
+  ).join('');
+}
+
+// ── Hash state ─────────────────────────────────────────────────────────────
+function getHash() { return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent))); }
+function setHash(p) { const s=Object.entries(p).filter(([,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&'); history.replaceState(null,'','#'+s); }
+function loadHash() {
+  const h = getHash();
+  if (h.n)  { state.logN = parseFloat(h.n);  document.getElementById('sl-n').value = state.logN; }
+  if (h.d)  { state.logD = parseFloat(h.d);  document.getElementById('sl-delta').value = state.logD; }
+  if (h.r)  { state.logR = parseFloat(h.r);  document.getElementById('sl-r').value = state.logR; }
+}
+function saveHash() { setHash({ n: state.logN.toFixed(3), d: state.logD.toFixed(3), r: state.logR.toFixed(3) }); }
+
+function toggleAbout(btn) {
+  btn.classList.toggle('open');
+  document.getElementById('about-body').classList.toggle('open');
+}
+
+loadHash();
+update();
+window.addEventListener('resize', () => update());
+</script>
+</body>
+</html>

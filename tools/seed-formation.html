@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!--
+  IMBH Seed Formation Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #science  ·  Epistemic tier(s): 🔬 Established stellar dynamics · ⚠ Modeled (formation channels, growth calibration)
+  Data sources:
+    - González Prieto, Rodriguez & Cabrera (2025) "Growing the Intermediate-mass Black Hole in Omega Centauri" arXiv:2507.06316, ApJL
+    - Vergara et al. (2025) "Rapid formation of a VMS >50,000 M☉ from runaway collisions" arXiv:2505.07491, A&A
+    - Mapelli et al. (2026) "Seeds to success: Growing heavy black holes in dense star clusters" A&A doi:10.1051/0004-6361/202557230
+    - Binney & Tremaine (2008) Galactic Dynamics §7.5 (relaxation time)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMBH Seed Formation — Omega Centauri Society</title>
+<meta name="description" content="Which formation channel built Omega Centauri's IMBH? Set cluster mass, radius, and metallicity — see whether runaway stellar collisions or repeated black-hole mergers dominate, and track the growth from seed to today's ~50,000 M☉.">
+<link rel="canonical" href="https://omegacentauri.me/tools/seed-formation.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(112,85,212,.09),transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(240,160,32,.04),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--teal-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:720px}
+.tier-stack{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-mod{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+
+/* Controls */
+.card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:20px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.preset-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.preset-btn.active{color:var(--amber-glow);border-color:var(--amber-bright);background:rgba(240,160,32,.07)}
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px 28px}
+@media(max-width:800px){.input-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.input-grid{grid-template-columns:1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:5px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none}
+.slider-value{font-family:'Space Mono',monospace;font-size:12px;color:var(--amber-glow);min-width:110px;text-align:right;white-space:nowrap}
+
+/* Results */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+@media(max-width:680px){.results-grid{grid-template-columns:1fr}}
+.channel-card{border-radius:12px;padding:20px 22px;border:2px solid;display:flex;flex-direction:column;gap:10px;transition:border-color .3s,background .3s}
+.channel-card.runaway{border-color:var(--amber-bright);background:linear-gradient(135deg,rgba(240,160,32,.1),rgba(13,10,36,.6))}
+.channel-card.merger{border-color:var(--purple-bright);background:linear-gradient(135deg,rgba(112,85,212,.1),rgba(13,10,36,.6))}
+.channel-card.mixed{border-color:var(--teal-bright);background:linear-gradient(135deg,rgba(29,186,144,.08),rgba(13,10,36,.6))}
+.channel-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.channel-name{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600;line-height:1.2}
+.channel-card.runaway .channel-name{color:var(--amber-glow)}
+.channel-card.merger .channel-name{color:var(--purple-glow)}
+.channel-card.mixed .channel-name{color:var(--teal-glow)}
+.channel-desc{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.55}
+.channel-metric{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);padding:5px 0;border-top:1px dotted rgba(255,255,255,.07)}
+
+.seed-card{border-radius:12px;padding:20px 22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle)}
+.seed-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.seed-big{font-family:'Orbitron',sans-serif;font-size:36px;font-weight:900;color:var(--amber-glow);line-height:1}
+.seed-range{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-top:6px}
+.seed-rows{margin-top:14px}
+.seed-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted var(--border-subtle);font-family:'Space Mono',monospace;font-size:12px}
+.seed-row:last-child{border-bottom:none}
+.seed-row .lbl{color:var(--text-secondary)}
+.seed-row .val{color:var(--text-primary);white-space:nowrap}
+.seed-row .val.accent{color:var(--amber-glow)}
+
+/* Growth chart */
+.chart-card{border-radius:12px;padding:22px 24px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);margin-bottom:20px}
+.chart-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:4px}
+.chart-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:16px;letter-spacing:.04em}
+canvas{display:block;width:100%;border-radius:6px}
+.chart-oc-note{font-family:'Crimson Pro',serif;font-size:13px;color:var(--text-dim);font-style:italic;margin-top:10px}
+
+/* Cross-links */
+.crosslinks{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.xlink{font-family:'Space Mono',monospace;font-size:11px;padding:7px 14px;border-radius:20px;border:1px solid var(--border-subtle);color:var(--text-secondary);display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.xlink:hover{border-color:var(--amber-bright);color:var(--amber-glow)}
+
+/* About */
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arr{transition:transform .2s}
+.about-toggle.open .arr{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 7px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px;line-height:1.65}
+.about-body a{color:var(--teal-glow)}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px;line-height:1.7}
+@media(max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:21px}.container{padding:24px 16px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">IMBH Seed Formation</span>
+    <a href="/#science" class="nav-link">↗ #science</a>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/tools/imbh-growth-history.html" class="nav-link">Growth History ↗</a>
+    <a href="/tools/constraint-stacker.html" class="nav-link">Constraint Stacker ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="tool-header">
+    <div>
+      <h1>IMBH Seed Formation Calculator</h1>
+      <p class="tool-subtitle">Two competing channels built today's ~50,000 M☉ black hole. Set cluster mass, radius, and metallicity to see which dominated — and trace the growth from seed to present.</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Established dynamics</span>
+      <span class="tier-badge tier-mod">⚠ Modeled growth</span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="card">
+    <div class="card-title">Cluster Parameters</div>
+    <div class="preset-row">
+      <button class="preset-btn active" onclick="applyPreset('oc')" id="btn-oc">ωCen (observed)</button>
+      <button class="preset-btn" onclick="applyPreset('compact')" id="btn-compact">Compact nucleus</button>
+      <button class="preset-btn" onclick="applyPreset('dense')" id="btn-dense">Dense dwarf core</button>
+      <button class="preset-btn" onclick="applyPreset('primordial')" id="btn-primordial">Primordial cluster</button>
+    </div>
+    <div class="input-grid">
+      <div class="slider-block">
+        <label>Cluster mass (M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-mass" min="5" max="7" step="0.05" value="6.602">
+          <span class="slider-value" id="lbl-mass">4 × 10⁶ M☉</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Half-mass radius (pc)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-rh" min="0.3" max="1.3" step="0.02" value="0.845">
+          <span class="slider-value" id="lbl-rh">7.0 pc</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Metallicity (Z / Z☉)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-z" min="-2" max="0.3" step="0.05" value="-0.3">
+          <span class="slider-value" id="lbl-z">0.50 Z☉</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results: channel + seed side-by-side -->
+  <div class="results-grid">
+    <div class="channel-card" id="channel-card">
+      <div class="channel-label">Dominant formation channel</div>
+      <div class="channel-name" id="channel-name">—</div>
+      <div class="channel-desc" id="channel-desc">—</div>
+      <div class="channel-metric" id="channel-metric">—</div>
+    </div>
+    <div class="seed-card">
+      <div class="seed-label">Estimated seed mass</div>
+      <div class="seed-big" id="seed-big">—</div>
+      <div class="seed-range" id="seed-range">—</div>
+      <div class="seed-rows">
+        <div class="seed-row"><span class="lbl">Core collapse time</span><span class="val accent" id="val-tcore">—</span></div>
+        <div class="seed-row"><span class="lbl">Relaxation time</span><span class="val" id="val-trc">—</span></div>
+        <div class="seed-row"><span class="lbl">Core density (est.)</span><span class="val" id="val-rho">—</span></div>
+        <div class="seed-row"><span class="lbl">Projected mass @ 12 Gyr</span><span class="val accent" id="val-final">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Growth chart -->
+  <div class="chart-card">
+    <div class="chart-title">IMBH Growth Trajectory</div>
+    <div class="chart-sub">IMBH mass vs. cluster age — seed formation → present day (12 Gyr)</div>
+    <canvas id="growth-chart" height="220"></canvas>
+    <p class="chart-oc-note" id="chart-note">Calibrated to González Prieto, Rodriguez &amp; Cabrera (2025, arXiv:2507.06316): OC-like Monte Carlo N-body models grow seeds of 500–5,000 M☉ to ~50,000 M☉ over 12 Gyr via loss-cone stellar TDEs and compact-object accretion.</p>
+  </div>
+
+  <!-- Cross-links -->
+  <div class="crosslinks">
+    <a class="xlink" href="/tools/imbh-growth-history.html">↗ Growth History (full accretion model)</a>
+    <a class="xlink" href="/tools/constraint-stacker.html">↗ Constraint Stacker (current mass limits)</a>
+    <a class="xlink" href="/tools/tidal-disruption.html">↗ Tidal Disruption Calculator</a>
+    <a class="xlink" href="/tools/omega-dwarf-origin.html">↗ Dwarf Galaxy Origin</a>
+  </div>
+
+  <!-- About -->
+  <div class="about">
+    <button class="about-toggle" onclick="toggleAbout(this)">
+      <span class="arr">▶</span> About this tool
+    </button>
+    <div class="about-body" id="about-body">
+      <h3>What this tool models</h3>
+      <p>Two channels can seed an IMBH in a dense stellar cluster. <strong>Runaway stellar collisions</strong> require a short core-collapse timescale (≲3 Myr) and low metallicity so that stellar winds do not ablate the colliding stars. Under those conditions a very massive star (VMS) exceeding 10³–10⁴ M☉ forms within ~1 Myr and collapses directly into an IMBH. <strong>Repeated black-hole mergers</strong> are slower but universally available: stellar-mass BHs (50–200 M☉) sink to the core through dynamical friction and merge through gravitational-wave radiation, building mass hierarchically over many Gyr.</p>
+      <p>The growth trajectory uses a power-law model calibrated to the Monte Carlo N-body results of González Prieto et al. (2025), who find that OC-like clusters starting with 500–5,000 M☉ seeds reach ~50,000 M☉ after 12 Gyr primarily through loss-cone stellar tidal disruption events and compact-object accretion.</p>
+      <h3>Physics approximations</h3>
+      <p>The half-mass relaxation time uses the Spitzer (1987) formula: t<sub>rh</sub> ≈ 0.138 N / ln(0.4N) × √(r<sub>h</sub>³/GM<sub>cl</sub>), with mean stellar mass 0.6 M☉. Core collapse is estimated at 1.5% of t<sub>rh</sub> (Portegies Zwart &amp; McMillan 2002). Core density assumes the inner 10% of the half-mass radius contains 25% of the cluster mass. The growth model M(t) is a calibrated power law anchored to the González Prieto et al. Monte Carlo results; it is illustrative, not a substitute for full N-body integration.</p>
+      <h3>Key references</h3>
+      <p>González Prieto, Rodriguez &amp; Cabrera (2025), <em>ApJL</em>, <a href="https://arxiv.org/abs/2507.06316" target="_blank" rel="noopener">arXiv:2507.06316</a> — Monte Carlo N-body models of OC with loss-cone dynamics; seeds of 500–5,000 M☉ grow to ~50,000 M☉ in 12 Gyr.</p>
+      <p>Vergara et al. (2025), <em>A&amp;A</em>, <a href="https://arxiv.org/abs/2505.07491" target="_blank" rel="noopener">arXiv:2505.07491</a> — Direct N-body simulations showing runaway collisions form VMS &gt;50,000 M☉ within 1 Myr in dense, metal-poor clusters.</p>
+      <p>Mapelli et al. (2026), <em>A&amp;A</em>, <a href="https://www.aanda.org/articles/aa/full_html/2026/04/aa57230-25/aa57230-25.html" target="_blank" rel="noopener">doi:10.1051/0004-6361/202557230</a> — Parameter-space study of IMBH formation across young clusters, globular clusters, and nuclear star clusters.</p>
+      <div class="meta-line">Tool v1.0 · 2026-06-01 · Code: MIT · Prose: CC BY 4.0 · omegacentauri.me/tools/seed-formation.html</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+const STRINGS = {
+  title: 'IMBH Seed Formation Calculator',
+  channelRunaway: 'Runaway Stellar Collisions',
+  channelMerger: 'Repeated BH Mergers',
+  channelMixed: 'Mixed (Collisions + Mergers)',
+  descRunaway: 'Low metallicity and rapid core collapse allow massive stars to merge into a very massive star (VMS) within ~1 Myr, collapsing directly into an IMBH seed of hundreds to thousands of solar masses.',
+  descMerger: 'Core-collapse is too slow for VMS formation before massive stars die. Instead, stellar-mass black holes (50–200 M☉) sink to the centre via dynamical friction and build mass through successive mergers over many Gyr.',
+  descMixed: 'Conditions partially favour runaway collisions — a modest VMS may form alongside ongoing BH mergers. Both channels contribute to the seed mass.',
+  metricRunaway: 'Channel criterion: t_core < 3 Myr AND Z < 0.3 Z☉',
+  metricMixed: 'Channel criterion: t_core < 10 Myr OR Z < 0.5 Z☉ (partial)',
+  metricMerger: 'Channel criterion: core collapse too slow for runaway VMS',
+};
+
+const PRESETS = {
+  oc:        { logM: Math.log10(4e6), logRh: Math.log10(7.0),  logZ: Math.log10(0.50) },
+  compact:   { logM: Math.log10(1e7), logRh: Math.log10(1.5),  logZ: Math.log10(0.05) },
+  dense:     { logM: Math.log10(5e6), logRh: Math.log10(3.0),  logZ: Math.log10(0.10) },
+  primordial:{ logM: Math.log10(2e6), logRh: Math.log10(2.0),  logZ: Math.log10(0.01) },
+};
+
+// ── Physics ──────────────────────────────────────────────────────────────────
+const G_pc_Msun = 4.498e-3;  // pc³ M☉⁻¹ Gyr⁻²  (G in convenient cluster units)
+const M_AVG = 0.6;           // mean stellar mass M☉
+
+function calcRelaxationTime(M_cl, r_h) {
+  // Spitzer (1987) §2.4 half-mass relaxation time in Gyr
+  const N = M_cl / M_AVG;
+  const lnLambda = Math.log(0.4 * N);
+  // t_rh = 0.138 * N / lnLambda * sqrt(r_h³ / (G*M_cl))
+  const tDyn = Math.sqrt(Math.pow(r_h, 3) / (G_pc_Msun * M_cl)); // Gyr
+  return 0.138 * N / lnLambda * tDyn;
+}
+
+function calcCoreCollapse(t_rh) {
+  // Core collapse ~1.5% of half-mass relaxation time (Portegies Zwart & McMillan 2002)
+  return 0.015 * t_rh;
+}
+
+function calcCoreDensity(M_cl, r_h) {
+  // Rough: inner 10% of r_h contains 25% of mass → core radius = 0.1*r_h
+  const r_core = 0.10 * r_h;
+  const vol = (4 / 3) * Math.PI * Math.pow(r_core, 3); // pc³
+  return 0.25 * M_cl / vol;                             // M☉/pc³
+}
+
+function determineChannel(t_core, Z) {
+  if (t_core < 0.003 && Z < 0.3) return 'runaway';
+  if (t_core < 0.010 || Z < 0.5) return 'mixed';
+  return 'merger';
+}
+
+function calcSeedMass(channel, M_cl, rho_core, Z) {
+  if (channel === 'runaway') {
+    // Higher seed for lower metallicity and higher density
+    // Anchor: Z=0.05, rho=1e6 → ~5000 M☉; Z=0.3, rho=1e4 → ~500 M☉
+    const zFactor = Math.pow(Math.max(Z, 0.005) / 0.05, -0.5);
+    const rhoFactor = Math.pow(Math.max(rho_core, 1e3) / 1e6, 0.2);
+    return Math.max(500, Math.min(8000, 2500 * zFactor * rhoFactor));
+  } else if (channel === 'mixed') {
+    const zFactor = Math.pow(Math.max(Z, 0.01) / 0.1, -0.3);
+    const rhoFactor = Math.pow(Math.max(rho_core, 1e3) / 1e5, 0.15);
+    return Math.max(200, Math.min(2000, 500 * zFactor * rhoFactor));
+  } else {
+    // Repeated mergers: BH mass ~ 60/(Z+0.1), hierarchical mergers ×2–5
+    const mBH = Math.max(50, Math.min(200, 60 / (Z + 0.08)));
+    return Math.max(100, Math.min(500, mBH * 2.5));
+  }
+}
+
+function calcFinalMass(m_seed, M_cl) {
+  // Calibrated to González Prieto et al. 2025:
+  // OC: m_seed≈1000, M_cl=4e6 → M_final≈50,000
+  // Scaling: M_final = m_seed * k * (M_cl/m_seed)^(1/3)
+  // k calibrated so that m_seed=1000, M_cl=4e6 → M_final=50000
+  // 50000 = 1000 * k * (4000)^(1/3) = 1000 * k * 15.87  →  k ≈ 3.15
+  const k = 3.15;
+  return m_seed * k * Math.pow(M_cl / m_seed, 1 / 3);
+}
+
+function growthAtTime(m_seed, M_final, t_Gyr, t_form_Gyr) {
+  // Power-law growth: M(t) = m_seed + (M_final - m_seed) * ((t - t_form) / (12 - t_form))^0.55
+  if (t_Gyr <= t_form_Gyr) return m_seed;
+  const frac = (t_Gyr - t_form_Gyr) / (12.0 - t_form_Gyr);
+  return m_seed + (M_final - m_seed) * Math.pow(Math.min(frac, 1), 0.55);
+}
+
+// ── Formatting ───────────────────────────────────────────────────────────────
+function fmtMsun(m) {
+  if (m >= 1e6) return (m / 1e6).toPrecision(2) + ' × 10⁶ M☉';
+  if (m >= 1e5) return (m / 1e5).toPrecision(2) + ' × 10⁵ M☉';
+  if (m >= 1e4) return (m / 1e4).toPrecision(2) + ' × 10⁴ M☉';
+  if (m >= 1e3) return (m / 1e3).toPrecision(2) + ' × 10³ M☉';
+  return Math.round(m) + ' M☉';
+}
+function fmtTime(t) {
+  if (t < 0.001) return (t * 1000).toPrecision(2) + ' Myr';
+  if (t < 1)     return (t * 1000).toFixed(0) + ' Myr';
+  return t.toPrecision(3) + ' Gyr';
+}
+function fmtDensity(rho) {
+  if (rho >= 1e7) return '≥ 10⁷ M☉/pc³';
+  if (rho >= 1e6) return (rho / 1e6).toPrecision(2) + ' × 10⁶ M☉/pc³';
+  if (rho >= 1e5) return (rho / 1e5).toPrecision(2) + ' × 10⁵ M☉/pc³';
+  if (rho >= 1e4) return (rho / 1e4).toPrecision(2) + ' × 10⁴ M☉/pc³';
+  return rho.toExponential(1) + ' M☉/pc³';
+}
+function fmtMassLarge(m) {
+  if (m >= 1e5) return (m / 1e5).toPrecision(3) + ' × 10⁵';
+  if (m >= 1e4) return (m / 1e4).toPrecision(3) + ' × 10⁴';
+  return Math.round(m).toLocaleString();
+}
+
+// ── DOM + State ───────────────────────────────────────────────────────────────
+let state = { logM: PRESETS.oc.logM, logRh: PRESETS.oc.logRh, logZ: PRESETS.oc.logZ };
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  state.logM = p.logM; state.logRh = p.logRh; state.logZ = p.logZ;
+  document.getElementById('sl-mass').value = state.logM;
+  document.getElementById('sl-rh').value   = state.logRh;
+  document.getElementById('sl-z').value    = state.logZ;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + key).classList.add('active');
+  update();
+}
+
+function onSlider() {
+  state.logM  = parseFloat(document.getElementById('sl-mass').value);
+  state.logRh = parseFloat(document.getElementById('sl-rh').value);
+  state.logZ  = parseFloat(document.getElementById('sl-z').value);
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  update();
+}
+['sl-mass','sl-rh','sl-z'].forEach(id => document.getElementById(id).addEventListener('input', onSlider));
+
+function update() {
+  const M_cl  = Math.pow(10, state.logM);
+  const r_h   = Math.pow(10, state.logRh);
+  const Z     = Math.pow(10, state.logZ);
+
+  // Labels
+  document.getElementById('lbl-mass').textContent = fmtMsun(M_cl);
+  document.getElementById('lbl-rh').textContent   = r_h.toPrecision(2) + ' pc';
+  document.getElementById('lbl-z').textContent    = Z.toPrecision(2)   + ' Z☉';
+
+  // Physics
+  const t_rh   = calcRelaxationTime(M_cl, r_h);
+  const t_core = calcCoreCollapse(t_rh);
+  const rho    = calcCoreDensity(M_cl, r_h);
+  const ch     = determineChannel(t_core, Z);
+  const m_seed = calcSeedMass(ch, M_cl, rho, Z);
+  const m_fin  = calcFinalMass(m_seed, M_cl);
+  const t_form = ch === 'runaway' ? t_core : Math.min(t_rh * 0.1, 2.0);
+
+  // Channel card
+  const cc = document.getElementById('channel-card');
+  cc.className = 'channel-card ' + ch;
+  document.getElementById('channel-name').textContent = ch === 'runaway' ? STRINGS.channelRunaway : ch === 'merger' ? STRINGS.channelMerger : STRINGS.channelMixed;
+  document.getElementById('channel-desc').textContent = ch === 'runaway' ? STRINGS.descRunaway : ch === 'merger' ? STRINGS.descMerger : STRINGS.descMixed;
+  document.getElementById('channel-metric').textContent = (ch === 'runaway' ? STRINGS.metricRunaway : ch === 'mixer' ? STRINGS.metricMixed : ch === 'mixed' ? STRINGS.metricMixed : STRINGS.metricMerger) + ` · t_core = ${fmtTime(t_core)}`;
+
+  // Seed card
+  document.getElementById('seed-big').textContent = fmtMassLarge(m_seed) + ' M☉';
+  const lo = Math.round(m_seed * 0.6), hi = Math.round(m_seed * 1.6);
+  document.getElementById('seed-range').textContent = `Estimated range: ${lo.toLocaleString()} – ${hi.toLocaleString()} M☉`;
+  document.getElementById('val-tcore').textContent = fmtTime(t_core);
+  document.getElementById('val-trc').textContent   = fmtTime(t_rh);
+  document.getElementById('val-rho').textContent   = fmtDensity(rho);
+  document.getElementById('val-final').textContent = fmtMsun(m_fin) + ' (@ 12 Gyr)';
+
+  // Draw growth chart
+  drawChart(m_seed, m_fin, t_form);
+
+  // Save hash
+  saveHash();
+}
+
+// ── Canvas chart ──────────────────────────────────────────────────────────────
+function drawChart(m_seed, m_final, t_form) {
+  const canvas = document.getElementById('growth-chart');
+  const dpr    = window.devicePixelRatio || 1;
+  const W      = canvas.parentElement.clientWidth - 48;
+  const H      = 220;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 16, right: 24, bottom: 40, left: 72 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+
+  // Build data points (log mass scale)
+  const nPts = 120;
+  const tMax = 12.0;
+  const pts  = [];
+  for (let i = 0; i <= nPts; i++) {
+    const t = (i / nPts) * tMax;
+    const m = growthAtTime(m_seed, m_final, t, t_form);
+    pts.push({ t, m });
+  }
+
+  const logMMin = Math.log10(m_seed * 0.3);
+  const logMMax = Math.log10(m_final * 3.5);
+
+  function xPx(t) { return pad.left + (t / tMax) * pw; }
+  function yPx(m) { const lm = Math.log10(Math.max(m, 1)); return pad.top + ph - ((lm - logMMin) / (logMMax - logMMin)) * ph; }
+
+  // Background
+  ctx.fillStyle = 'rgba(7,5,21,0)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)';
+  ctx.lineWidth = 1;
+  [2, 4, 6, 8, 10, 12].forEach(t => {
+    ctx.beginPath(); ctx.moveTo(xPx(t), pad.top); ctx.lineTo(xPx(t), pad.top + ph); ctx.stroke();
+  });
+  // Horizontal grid (log masses)
+  const logSteps = [];
+  for (let lm = Math.ceil(logMMin); lm <= Math.floor(logMMax); lm++) logSteps.push(lm);
+  logSteps.forEach(lm => {
+    const y = yPx(Math.pow(10, lm));
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + pw, y); ctx.stroke();
+  });
+
+  // OC reference band (40,000 – 60,000 M☉)
+  const yLo = yPx(60000), yHi = yPx(40000);
+  ctx.fillStyle = 'rgba(240,160,32,0.07)';
+  ctx.fillRect(pad.left, yLo, pw, yHi - yLo);
+  ctx.fillStyle = 'rgba(240,160,32,0.5)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('ωCen constraint', pad.left + pw - 4, yLo - 3);
+
+  // Growth curve
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(255,200,64,0.9)';
+  ctx.lineWidth = 2.5;
+  pts.forEach((p, i) => {
+    const x = xPx(p.t), y = yPx(p.m);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Seed dot
+  ctx.fillStyle = 'rgba(77,232,192,1)';
+  ctx.beginPath(); ctx.arc(xPx(t_form), yPx(m_seed), 5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(77,232,192,0.7)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('seed', xPx(t_form) + 7, yPx(m_seed) + 3);
+
+  // Axes
+  ctx.strokeStyle = 'rgba(144,136,192,0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(pad.left + pw, pad.top + ph); ctx.stroke();
+
+  // X labels
+  ctx.fillStyle = 'rgba(144,136,192,0.7)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  [0, 3, 6, 9, 12].forEach(t => { ctx.fillText(t + ' Gyr', xPx(t), H - 8); });
+
+  // Y labels (log M☉)
+  ctx.textAlign = 'right';
+  logSteps.forEach(lm => {
+    const y = yPx(Math.pow(10, lm));
+    const labels = { 2:'10²', 3:'10³', 4:'10⁴', 5:'10⁵', 6:'10⁶' };
+    ctx.fillText(labels[lm] || ('10^'+lm), pad.left - 6, y + 3);
+  });
+
+  // Axis titles
+  ctx.fillStyle = 'rgba(144,136,192,0.5)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Cluster age', pad.left + pw / 2, H - 0);
+  ctx.save(); ctx.translate(12, pad.top + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('IMBH mass (M☉)', 0, 0); ctx.restore();
+}
+
+// ── Hash state ────────────────────────────────────────────────────────────────
+function getHash() {
+  return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p => p.split('=').map(decodeURIComponent)));
+}
+function setHash(p) {
+  const s = Object.entries(p).filter(([,v]) => v !== null && v !== undefined && v !== '').map(([k,v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  history.replaceState(null, '', '#' + s);
+}
+function loadHash() {
+  const h = getHash();
+  if (h.m)  { state.logM  = parseFloat(h.m);  document.getElementById('sl-mass').value = state.logM; }
+  if (h.rh) { state.logRh = parseFloat(h.rh); document.getElementById('sl-rh').value   = state.logRh; }
+  if (h.z)  { state.logZ  = parseFloat(h.z);  document.getElementById('sl-z').value    = state.logZ; }
+}
+function saveHash() {
+  setHash({ m: state.logM.toFixed(3), rh: state.logRh.toFixed(3), z: state.logZ.toFixed(3) });
+}
+
+function toggleAbout(btn) {
+  btn.classList.toggle('open');
+  document.getElementById('about-body').classList.toggle('open');
+}
+
+// Init
+loadHash();
+update();
+window.addEventListener('resize', () => {
+  const M_cl = Math.pow(10, state.logM), r_h = Math.pow(10, state.logRh), Z = Math.pow(10, state.logZ);
+  const m_seed = calcSeedMass(determineChannel(calcCoreCollapse(calcRelaxationTime(M_cl, r_h)), Z), M_cl, calcCoreDensity(M_cl, r_h), Z);
+  const m_fin  = calcFinalMass(m_seed, M_cl);
+  const t_form = determineChannel(calcCoreCollapse(calcRelaxationTime(M_cl, r_h)), Z) === 'runaway' ? calcCoreCollapse(calcRelaxationTime(M_cl, r_h)) : Math.min(calcRelaxationTime(M_cl, r_h) * 0.1, 2.0);
+  drawChart(m_seed, m_fin, t_form);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--
+  Demo — A Visitor from Outside
+  Omega Centauri Society . omegacentauri.me
+  Three confirmed interstellar objects in eight years. Four chained tools
+  read their arrival as data: population rate, SETI null results, and what
+  a wholly natural ISO catalogue implies for the Great Filter.
+  Chain: iso-encounter → radio-seti → optical-seti → great-filter
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-06-01
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo — A Visitor from Outside · OCS</title>
+<meta name="description" content="Three interstellar objects in eight years — 1I/ʻOumuamua, 2I/Borisov, 3I/ATLAS. Four tools read the ISO catalogue as SETI data: population rate, radio null results, optical limits, and the Great Filter interpretation.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-interstellar-messenger.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;background-image:radial-gradient(ellipse at 70% 5%,rgba(29,186,144,.09),transparent 45%),radial-gradient(ellipse at 15% 60%,rgba(112,85,212,.07),transparent 50%),radial-gradient(ellipse at 55% 95%,rgba(208,64,64,.04),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--teal-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+/* ISO arrival strip */
+.arrival-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-subtle);border-radius:10px;overflow:hidden;margin-bottom:36px;border:1px solid var(--border-subtle)}
+.arrival-cell{background:linear-gradient(180deg,rgba(13,10,36,.7),rgba(7,5,21,.9));padding:16px 18px}
+.arr-yr{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--teal-glow);margin-bottom:4px}
+.arr-name{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:3px}
+.arr-type{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-secondary)}
+.arr-note{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:5px;line-height:1.4}
+@media(max-width:600px){.arrival-strip{grid-template-columns:1fr}}
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--red-bright)}
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.payoff{margin-top:14px;background:linear-gradient(180deg,rgba(13,42,36,.4),rgba(7,5,21,.8));border:1px solid var(--teal-mid);border-radius:10px;padding:14px 18px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:5px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:720px){.hero h1{font-size:30px}.hero-sub{font-size:16px}.container{padding:36px 18px 60px}.step{grid-template-columns:1fr;gap:8px;padding:20px}.step-num{font-size:24px}.step-title{font-size:17px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Demo &middot; A Visitor from Outside</span>
+    <a href="/" class="nav-link">&larr; Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">ISO / SETI demo &middot; chains four tools &middot; 3I/ATLAS 2025</div>
+    <h1>A Visitor from Outside</h1>
+    <p class="hero-sub">Three confirmed interstellar objects have crossed the Solar System since 2017. Each one arrived with a question attached: <em>is this natural, or made?</em> Four tools read the ISO catalogue as SETI data &mdash; population flux, null results, and what a wholly natural fleet of visitors implies for the Great Filter.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-06-01</div>
+  </header>
+
+  <!-- Arrival strip -->
+  <div class="arrival-strip">
+    <div class="arrival-cell">
+      <div class="arr-yr">October 2017</div>
+      <div class="arr-name">1I/ʻOumuamua</div>
+      <div class="arr-type">Rocky, cigar/pancake shaped</div>
+      <div class="arr-note">Anomalous non-gravitational acceleration; no outgassing; no radio technosignature detected (Breakthrough Listen)</div>
+    </div>
+    <div class="arrival-cell">
+      <div class="arr-yr">August 2019</div>
+      <div class="arr-name">2I/Borisov</div>
+      <div class="arr-type">Active comet</div>
+      <div class="arr-note">CO-rich; consistent with natural cometary composition; no technosignature detected</div>
+    </div>
+    <div class="arrival-cell">
+      <div class="arr-yr">July 2025</div>
+      <div class="arr-name">3I/ATLAS</div>
+      <div class="arr-type">Active comet</div>
+      <div class="arr-note">GBT, ATA, FAST: no signals detected; most sensitive ISO SETI search to date (EIRP &lt;&nbsp;0.1&nbsp;W, arXiv:2512.18142)</div>
+    </div>
+  </div>
+
+  <section class="steps">
+
+    <article class="step s1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">ISO Encounter Rate tool (new) &middot; population flux</div>
+        <div class="step-title">Three in eight years: what the rate implies</div>
+        <p class="step-prose">Three confirmed detections in ~8 years at a survey efficiency of 10&ndash;50% implies a <strong>true ISO passage rate of roughly 1&ndash;10 per year</strong> within 5&nbsp;AU of the Sun. The pre-LSST detection rate was suppressed by survey incompleteness; Vera Rubin Observatory (LSST) is expected to detect dozens per year when operating at full depth.</p>
+        <p class="step-prose">The ISO Encounter Rate tool lets you set your own detection efficiency and a prior probability that any given ISO is artificial. For a prior of 10&#8315;&#8308; (one-in-ten-thousand chance any ISO is a probe), the expected number of artificial ISOs per century is &asymp;0.001&ndash;0.01 &mdash; solidly consistent with "none detected so far." The Bayesian update from the 3I/ATLAS null result (no transmitter above 0.1&nbsp;W) shifts that prior downward further, but only modestly.</p>
+        <div class="step-meta">
+          <a class="step-cta" href="iso-encounter.html">Open ISO Encounter Rate tool &rarr;</a>
+          <span class="tier-mini tier-e">🔬 Rate estimation</span>
+          <span class="tier-mini tier-t">⚠ Artificial-fraction prior</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">Step payoff</div>
+          <div class="payoff-body">Even an optimistic prior of P(artificial)&nbsp;= 10&#8315;&#178; applied to 1 ISO/year gives an expected 0.01 artificial ISOs per year &mdash; consistent with zero detections in a decade. The null result is not surprising at any remotely realistic prior. What the tool quantifies is <em>how much the null result should update us</em>, given the 3I/ATLAS sensitivity floor.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Radio SETI Sensitivity &middot; 3I/ATLAS campaign</div>
+        <div class="step-title">The most sensitive SETI observation ever made of a passing object</div>
+        <p class="step-prose">3I/ATLAS triggered the most concentrated multi-telescope SETI campaign ever aimed at an interstellar object. The Green Bank Telescope achieved <strong>EIRP sensitivity below 0.1&nbsp;W</strong> at closest approach (December 2025) &mdash; sensitive enough to detect a transmitter weaker than a hand-held radio from the distance of the object. FAST conducted four observation windows from October 2025 to January 2026 (arXiv:2603.19023). No narrowband signals were found in any search.</p>
+        <p class="step-prose">Load the Radio SETI tool and set the distance to 3I/ATLAS at closest approach (&asymp;1.5&nbsp;AU from Earth). The tool shows the EIRP floor achievable with the GBT and FAST at that distance, and how it compares to hypothetical transmitter types &mdash; from a Voyager-scale omnidirectional beacon to a narrowband directed beam.</p>
+        <div class="step-meta">
+          <a class="step-cta" href="radio-seti.html">Open Radio SETI tool &rarr;</a>
+          <span class="tier-mini tier-e">🔬 Observational</span>
+          <span class="tier-mini tier-d">⚠ Narrowband assumption</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">Step payoff</div>
+          <div class="payoff-body">The 3I/ATLAS null result at &lt;0.1&nbsp;W EIRP is the most constraining single-object SETI observation in history. It rules out an actively transmitting probe at any detectable power level. It does not rule out a dormant probe, a passive observer, or a probe transmitting in a direction other than toward Earth &mdash; those require different observational strategies.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Optical SETI Sensitivity &middot; laser and reflectivity constraints</div>
+        <div class="step-title">Can we see it shine? Optical constraints on 3I/ATLAS</div>
+        <p class="step-prose">Radio is not the only channel for an artificial ISO to signal. An engineered object might use laser pulses, anomalous reflectivity, or periodic optical modulation. The Optical SETI tool applies the same sensitivity-curve logic to the optical channel: what pulse energy or continuous-wave power would be detectable at the object's distance with current surveys?</p>
+        <p class="step-prose">3I/ATLAS was bright (&asymp;12th magnitude at closest approach), well within the range of every major optical SETI program. No anomalous pulsations were reported. The optical constraints are therefore complementary to the radio null: together they rule out omnidirectional optical and radio transmitters above energy thresholds set by current survey sensitivities.</p>
+        <div class="step-meta">
+          <a class="step-cta" href="optical-seti.html">Open Optical SETI tool &rarr;</a>
+          <span class="tier-mini tier-e">🔬 Observational</span>
+          <span class="tier-mini tier-d">⚠ Directed beam not ruled out</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">Step payoff</div>
+          <div class="payoff-body">The combination of radio + optical null results covers most plausible communication channels for an intentionally signalling probe. The remaining uncertainty is directional: a beam pointed away from Earth, a laser pulse at a wavelength or time not covered, or a technology entirely outside the radio/optical paradigm.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="step s4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Great Filter Localizer &middot; natural ISOs and the filter</div>
+        <div class="step-title">If they are natural: what that tells us</div>
+        <p class="step-prose">All three ISOs are almost certainly natural objects &mdash; cometary or rocky debris ejected from forming planetary systems in other stars. If the ISO population is entirely natural, and if the universe produces ISOs prolifically but no artificial ones, that is itself evidence about the Great Filter: the filter must be located somewhere on the path between "solar system forms" and "civilisation capable of launching interstellar probes."</p>
+        <p class="step-prose">The Great Filter Localizer makes this quantitative. If we set P(ISO is artificial) to near zero based on three null results, and we note that a galaxy with K-II civilisations would produce a flood of deliberate ISO-probes, then the absence of artificial ISOs in a catalogue of three is weak evidence that K-II civilisations are rare &mdash; consistent with the filter being real and operating before the K-II threshold.</p>
+        <div class="step-meta">
+          <a class="step-cta" href="great-filter.html">Open Great Filter tool &rarr;</a>
+          <span class="tier-mini tier-t">⚠ Theoretical (Hanson 1998)</span>
+        </div>
+        <div class="payoff">
+          <div class="payoff-title">Step payoff</div>
+          <div class="payoff-body">Three ISOs is a tiny sample. With LSST detecting dozens per year, the ISO catalogue will grow rapidly. If none prove artificial over decades of searching, that will be a genuine probabilistic constraint on the density of K-II probes in the galaxy &mdash; and by extension, on where the Great Filter sits. The accumulating null result from ISOs is therefore one of the most concrete SETI observational programmes now underway.</div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">Three visitors, four tools, one question</div>
+    <div class="synth-prose">
+      <p>The ISO programme has transformed SETI from an all-sky search into something with a known address: objects passing through our own Solar System, close enough to observe with every instrument we have. The arrival of 3I/ATLAS in 2025 triggered the most thorough close-proximity SETI campaign in history, and found nothing.</p>
+      <p>The <a href="iso-encounter.html">ISO Encounter Rate</a> tool shows that the null result is entirely expected under any reasonable prior: even an optimistic 1-in-1,000 chance of any ISO being artificial yields an expected few per century, and we have only catalogued three. The <a href="radio-seti.html">Radio SETI</a> and <a href="optical-seti.html">Optical SETI</a> tools show that the sensitivity achieved by GBT and FAST on 3I/ATLAS was formidable but covers only a fraction of conceivable transmitter configurations.</p>
+      <p>The <a href="great-filter.html">Great Filter</a> tool closes the philosophical loop: a universe that produces natural ISOs prolifically but no artificial ones is consistent with a Great Filter operating between planetary-system formation and interstellar civilisation. As LSST expands the ISO catalogue from three to hundreds, the absence of artificial ISOs will become an increasingly strong constraint &mdash; one of the clearest empirical windows we have on Fermi's question.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>Tools used in this demo:</strong> &nbsp;
+    <a href="iso-encounter.html">ISO Encounter Rate</a> &nbsp;&middot;&nbsp;
+    <a href="radio-seti.html">Radio SETI Sensitivity</a> &nbsp;&middot;&nbsp;
+    <a href="optical-seti.html">Optical SETI Sensitivity</a> &nbsp;&middot;&nbsp;
+    <a href="great-filter.html">Great Filter Localizer</a>
+    <br>
+    <strong>Related demos:</strong> &nbsp;
+    <a href="demo-fermi-honest.html">Demo F &middot; Are We Alone?</a> &nbsp;&middot;&nbsp;
+    <a href="demo-null-result-significance.html">Demo &middot; What the Silence Means</a> &nbsp;&middot;&nbsp;
+    <a href="demo-send-a-message.html">Demo S &middot; Could We Send a Message?</a>
+  </div>
+
+  <footer class="footer">
+    The Omega Centauri Society &nbsp;&middot;&nbsp;
+    <a href="/">omegacentauri.me</a> &nbsp;&middot;&nbsp;
+    <a href="/tools/">All tools</a> &nbsp;&middot;&nbsp;
+    <a href="/faq.html">FAQ</a>
+    <br>
+    Code: MIT &nbsp;&middot;&nbsp; Prose: CC BY 4.0 &nbsp;&middot;&nbsp; v1.0 &middot; 2026-06-01
+  </footer>
+
+</div>
+</body>
+</html>
