@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IMBH Evidence Dashboard — Omega Centauri Society</title>
+<link rel="canonical" href="https://omegacentauri.me/tools/imbh-evidence-dashboard.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',serif;min-height:100vh}
+a{color:var(--amber-glow);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(3,2,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.12em;color:var(--purple-glow);text-transform:uppercase}
+.nav-sep{color:var(--text-dim);font-size:18px}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;flex:1}
+.nav-links{display:flex;gap:18px}
+.nav-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em}
+.nav-links a:hover{color:var(--amber-glow);text-decoration:none}
+
+/* HERO */
+.hero{max-width:1200px;margin:0 auto;padding:56px 28px 36px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--red-bright);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--red-bright)}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:32px;background:linear-gradient(135deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px;line-height:1.2}
+.hero p{font-size:18px;color:var(--text-secondary);max-width:680px;line-height:1.6;margin-bottom:18px}
+.hero-note{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.04em}
+
+/* PARAMS PANEL */
+.params-wrap{max-width:1200px;margin:0 auto;padding:0 28px 32px}
+.params-panel{background:linear-gradient(135deg,rgba(29,16,64,.7),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 28px}
+.params-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px}
+.params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:700px){.params-grid{grid-template-columns:1fr}}
+.param-item label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:8px}
+.param-val{font-family:'Space Mono',monospace;font-size:14px;color:var(--amber-glow);margin-bottom:8px}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--purple-mid);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--purple-bright);cursor:pointer;border:2px solid var(--purple-glow)}
+.param-sub{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:4px}
+
+/* CARDS GRID */
+.grid-wrap{max-width:1200px;margin:0 auto;padding:0 28px 48px}
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:880px){.cards-grid{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:linear-gradient(160deg,rgba(13,10,36,.6),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:13px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s}
+.card:hover{border-color:var(--purple-bright)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:10px;border:1px solid}
+.card-tag.kinematics{border-color:rgba(77,232,192,.3);color:var(--teal-glow);background:rgba(29,186,144,.07)}
+.card-tag.jet{border-color:rgba(240,160,32,.3);color:var(--amber-glow);background:rgba(196,120,0,.07)}
+.card-tag.grav{border-color:rgba(112,85,212,.3);color:var(--purple-glow);background:rgba(61,45,138,.1)}
+.card-tag.energy{border-color:rgba(77,232,192,.3);color:var(--teal-glow);background:rgba(29,186,144,.07)}
+.card-tag.gamma{border-color:rgba(240,160,32,.3);color:var(--amber-glow);background:rgba(196,120,0,.07)}
+.card-tag.radio{border-color:rgba(77,232,192,.3);color:var(--teal-glow);background:rgba(29,186,144,.07)}
+.card-tag.orbital{border-color:rgba(112,85,212,.3);color:var(--purple-glow);background:rgba(61,45,138,.1)}
+.card-tag.verdict{border-color:rgba(240,160,32,.5);color:var(--amber-bright);background:rgba(196,120,0,.12)}
+.card-label{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--text-primary)}
+.card-main{display:flex;align-items:baseline;gap:8px}
+.card-number{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.card-unit{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)}
+.card-body{font-size:14px;color:var(--text-secondary);line-height:1.55}
+
+/* STATUS BAR */
+.status-bar{display:flex;align-items:center;gap:10px}
+.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.status-dot.green{background:var(--teal-bright);box-shadow:0 0 6px var(--teal-glow)}
+.status-dot.amber{background:var(--amber-bright);box-shadow:0 0 6px var(--amber-glow)}
+.status-dot.red{background:var(--red-bright);box-shadow:0 0 6px #d0404066}
+.status-text{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em}
+
+/* COMPARISON BAR */
+.cmp-bar-wrap{background:rgba(112,85,212,.12);border-radius:4px;height:6px;position:relative;overflow:hidden}
+.cmp-bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.cmp-bar-fill.good{background:var(--teal-bright)}
+.cmp-bar-fill.warn{background:var(--amber-bright)}
+.cmp-bar-fill.bad{background:var(--red-bright)}
+.cmp-labels{display:flex;justify-content:space-between;margin-top:4px}
+.cmp-labels span{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim)}
+
+/* CARD FOOTER */
+.card-foot{margin-top:auto;padding-top:14px;border-top:1px dotted rgba(112,85,212,.18);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-ref{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);line-height:1.5}
+.card-link{font-family:'Space Mono',monospace;font-size:10px;color:var(--amber-glow);letter-spacing:.06em;white-space:nowrap}
+.card-link:hover{text-decoration:underline}
+
+/* VERDICT CARD special */
+.card.verdict-card{grid-column:1/-1;border-color:rgba(240,160,32,.25)}
+.verdict-score{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0}
+.verdict-pip{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px}
+.verdict-pip.filled{background:var(--teal-bright);color:#000;font-weight:700}
+.verdict-pip.empty{background:rgba(112,85,212,.15);color:var(--text-dim)}
+.verdict-label{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);max-width:1200px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">IMBH Evidence Dashboard</span>
+    <nav class="nav-links">
+      <a href="../index.html">Main site</a>
+      <a href="index.html">All tools</a>
+      <a href="falsification-hub.html">Falsification hub</a>
+    </nav>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Live constraint board</div>
+  <h1>IMBH Evidence Dashboard</h1>
+  <p>Adjust mass, spin, and magnetic field to see how all major observational constraints update simultaneously. Each panel re-derives its key quantity in real time and links to the full tool for deeper exploration.</p>
+  <p class="hero-note">Canonical reference: M = 8,200 M☉ (Häberle 2024), d = 5,494 pc (Häberle 2025), a = 0.9 (assumed)</p>
+</section>
+
+<div class="params-wrap">
+  <div class="params-panel">
+    <div class="params-title">Shared parameters — drag to update all panels</div>
+    <div class="params-grid">
+      <div class="param-item">
+        <label>IMBH Mass</label>
+        <div class="param-val" id="lbl-mass">8,200 M☉</div>
+        <input type="range" id="sl-mass" min="3" max="4.7" step="0.01" value="3.914">
+        <div class="param-sub">log scale · 1,000 – 50,000 M☉</div>
+      </div>
+      <div class="param-item">
+        <label>Spin parameter a</label>
+        <div class="param-val" id="lbl-spin">0.900</div>
+        <input type="range" id="sl-spin" min="0" max="0.998" step="0.001" value="0.9">
+        <div class="param-sub">0 = Schwarzschild · 0.998 = near-extremal</div>
+      </div>
+      <div class="param-item">
+        <label>Magnetic field B</label>
+        <div class="param-val" id="lbl-B">10,000 T</div>
+        <input type="range" id="sl-B" min="1" max="8" step="0.05" value="4">
+        <div class="param-sub">log scale · 10 – 10⁸ T</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-wrap">
+  <div class="cards-grid">
+
+    <!-- 1. Mass Constraint Window -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Mass Constraint Window</span>
+        <span class="card-tag kinematics">Kinematics</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="mass-window-lo">—</span>
+        <span class="card-unit">M☉ lower · <span id="mass-window-hi">—</span> M☉ upper</span>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="mass-dot"></div>
+        <span class="status-text" id="mass-status"></span>
+      </div>
+      <p class="card-body" id="mass-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">Häberle 2024 · Bañares 2025 · González Prieto 2025</span>
+        <a class="card-link" href="constraint-stacker.html">Open constraint stacker →</a>
+      </div>
+    </div>
+
+    <!-- 2. BZ Jet Power -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Blandford-Znajek Power</span>
+        <span class="card-tag jet">Jet / BZ</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="bz-power">—</span>
+        <span class="card-unit" id="bz-unit">W</span>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="bz-dot"></div>
+        <span class="status-text" id="bz-status"></span>
+      </div>
+      <p class="card-body" id="bz-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">Blandford & Znajek 1977 · κ = 0.044</span>
+        <a class="card-link" id="bz-link" href="bz-kardashev.html">Open BZ-Kardashev tool →</a>
+      </div>
+    </div>
+
+    <!-- 3. Radio Jet Detectability -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Radio Jet Flux</span>
+        <span class="card-tag radio">Radio</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="radio-flux">—</span>
+        <span class="card-unit">µJy at 5 GHz</span>
+      </div>
+      <div class="cmp-bar-wrap"><div class="cmp-bar-fill" id="radio-bar"></div></div>
+      <div class="cmp-labels"><span>0 µJy</span><span id="radio-bar-max"></span></div>
+      <div class="status-bar">
+        <div class="status-dot" id="radio-dot"></div>
+        <span class="status-text" id="radio-status"></span>
+      </div>
+      <p class="card-body" id="radio-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">Merloni+2003 fundamental plane · MeerKAT 3 µJy · SKA 0.6 µJy</span>
+        <a class="card-link" id="radio-link" href="jet-radio-detectability.html">Open radio tool →</a>
+      </div>
+    </div>
+
+    <!-- 4. Penrose Energy Reservoir -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Penrose Energy Reservoir</span>
+        <span class="card-tag energy">Spin Energy</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="penrose-E">—</span>
+        <span class="card-unit" id="penrose-unit">J</span>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="penrose-dot"></div>
+        <span class="status-text" id="penrose-status"></span>
+      </div>
+      <p class="card-body" id="penrose-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">Christodoulou 1970 · Penrose 1971</span>
+        <a class="card-link" id="penrose-link" href="penrose-process.html">Open Penrose tool →</a>
+      </div>
+    </div>
+
+    <!-- 5. Gamma-ray Signal -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Gamma-ray BZ Signature</span>
+        <span class="card-tag gamma">Gamma / Fermi</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="gamma-flux">—</span>
+        <span class="card-unit">GeV cm⁻² s⁻¹</span>
+      </div>
+      <div class="cmp-bar-wrap"><div class="cmp-bar-fill" id="gamma-bar"></div></div>
+      <div class="cmp-labels"><span>0</span><span>Fermi-LAT limit</span></div>
+      <div class="status-bar">
+        <div class="status-dot" id="gamma-dot"></div>
+        <span class="status-text" id="gamma-status"></span>
+      </div>
+      <p class="card-body" id="gamma-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">f_leak = 10⁻⁵ · 25 MSPs · 15 yr Fermi obs</span>
+        <a class="card-link" id="gamma-link" href="gamma-ray-msp.html">Open gamma-ray tool →</a>
+      </div>
+    </div>
+
+    <!-- 6. Spin-up Timeline -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Spin-up Timeline</span>
+        <span class="card-tag grav">Accretion</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number" id="spinup-time">—</span>
+        <span class="card-unit" id="spinup-unit">yr</span>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="spinup-dot"></div>
+        <span class="status-text" id="spinup-status"></span>
+      </div>
+      <p class="card-body" id="spinup-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">ṁ = 10⁻³ M☉/yr (tidal capture est.) · OC age ~12 Gyr</span>
+        <a class="card-link" id="spinup-link" href="spin-up-timeline.html">Open spin-up tool →</a>
+      </div>
+    </div>
+
+    <!-- 7. Orbital Context -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-label">Galactic Orbital Context</span>
+        <span class="card-tag orbital">Orbit</span>
+      </div>
+      <div class="card-main">
+        <span class="card-number">6.4</span>
+        <span class="card-unit">kpc · current Galactocentric distance</span>
+      </div>
+      <p class="card-body">OC orbits with period ~370 Myr. Last pericentre at ~1.5 kpc (~0.3 Gyr ago) stripped ~3% of cluster mass per passage. Backward integration to formation suggests M₀ ≈ 5–10× current mass, consistent with a nuclear star cluster origin that could have seeded a central massive black hole.</p>
+      <div class="card-foot">
+        <span class="card-ref">Vasiliev & Baumgardt 2021 Gaia EDR3 · V_c = 220 km/s</span>
+        <a class="card-link" href="oc-orbit-simulator.html">Open orbit simulator →</a>
+      </div>
+    </div>
+
+    <!-- 8. Verdict -->
+    <div class="card verdict-card">
+      <div class="card-head">
+        <span class="card-label">Overall Evidence Assessment</span>
+        <span class="card-tag verdict">Verdict</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+        <div>
+          <div class="verdict-score" id="verdict-pips"></div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px">positive indicators / 6</div>
+        </div>
+        <div>
+          <div class="verdict-label" id="verdict-label">—</div>
+          <div class="status-bar" style="margin-top:6px">
+            <div class="status-dot" id="verdict-dot"></div>
+            <span class="status-text" id="verdict-text"></span>
+          </div>
+        </div>
+      </div>
+      <p class="card-body" id="verdict-body"></p>
+      <div class="card-foot">
+        <span class="card-ref">Aggregates: mass tension · BZ power · radio detectability · gamma detectability · Penrose reservoir · spin-up feasibility</span>
+        <a class="card-link" href="falsification-hub.html">Full falsification framework →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  IMBH Evidence Dashboard · Omega Centauri Society · omegacentauri.me<br>
+  All calculations are estimates based on published best-fit parameters. See linked tools for full parameter sweeps and citations.
+</footer>
+
+<script>
+// ── Physical constants ──────────────────────────────────────────────
+const G       = 6.674e-11;
+const c       = 2.998e8;
+const M_SUN   = 1.989e30;
+const MU0     = 4*Math.PI*1e-7;
+const KAPPA   = 0.044;
+const PC_M    = 3.086e16;      // metres per parsec
+const D_PC    = 5494;          // canonical OC distance (Häberle 2025)
+const OC_AGE  = 12e9;          // OC age in years (approx)
+
+// Canonical published bounds (not slider-controlled)
+const MASS_LO = 8200;          // Häberle 2024 kinematics lower bound
+const MASS_HI = 6000;          // Bañares 2025 3σ upper limit
+
+// ── Core formulae ───────────────────────────────────────────────────
+function rg(M_msun){ return G*M_msun*M_SUN/(c*c); }
+
+function r_plus(M_msun,a){
+  return rg(M_msun)*(1+Math.sqrt(Math.max(0,1-a*a)));
+}
+
+function omega_H(M_msun,a){
+  return a*c/(2*r_plus(M_msun,a));
+}
+
+function P_bz(M_msun,a,B_T){
+  const rp=r_plus(M_msun,a);
+  const oh=omega_H(M_msun,a);
+  return (KAPPA/(4*Math.PI*MU0))*B_T*B_T*Math.pow(rp,4)*oh*oh/c;
+}
+
+// ISCO radius in r_g (Bardeen-Press-Teukolsky)
+function r_isco(a){
+  const a2=a*a;
+  const Z1=1+Math.cbrt(1-a2)*(Math.cbrt(1+a)+Math.cbrt(1-a));
+  const Z2=Math.sqrt(3*a2+Z1*Z1);
+  return 3+Z2-Math.sqrt((3-Z1)*(3+Z1+2*Z2));
+}
+
+// Penrose extractable energy (Christodoulou irreducible mass)
+function E_rot(M_msun,a){
+  const f_irr=Math.sqrt((1+Math.sqrt(Math.max(0,1-a*a)))/2);
+  const E_rest=M_msun*M_SUN*c*c;
+  return E_rest*(1-f_irr);
+}
+function eta_penrose(a){
+  return 1-Math.sqrt((1+Math.sqrt(Math.max(0,1-a*a)))/2);
+}
+
+// Radio fundamental-plane flux (Merloni+2003) in µJy at 5 GHz
+function S_radio_uJy(M_msun,P_W){
+  const L_erg=P_W*1e7;
+  const logS_mJy=0.6*Math.log10(L_erg)+0.78*Math.log10(M_msun)-0.6*Math.log10(D_PC)-11.9;
+  return Math.pow(10,logS_mJy)*1000;
+}
+
+// Gamma-ray BZ signal in GeV/cm²/s
+function F_gamma(P_W,f_leak){
+  const d_cm=D_PC*PC_M*100;
+  const P_erg=P_W*1e7;
+  const F_erg=f_leak*P_erg/(4*Math.PI*d_cm*d_cm);
+  return F_erg/1.602e-3;
+}
+
+// Spin-up time from a=0 to target a, at mdot (M☉/yr), in years
+function t_spinup_yr(M_msun,af,mdot_msun_yr){
+  const ri=r_isco(0);
+  const rf=r_isco(af);
+  const dM_frac=1-Math.sqrt(rf/ri);
+  return (M_msun*dM_frac)/mdot_msun_yr;
+}
+
+// ── Format helpers ───────────────────────────────────────────────────
+function fmtSI(x,digits=3){
+  if(!isFinite(x)||x===0)return'0';
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  if(Math.abs(e)<4&&Math.abs(e)>=-1){
+    return x.toPrecision(digits).replace(/\.?0+$/,'');
+  }
+  const exp=Math.round(e/1)*1;
+  const m=(x/Math.pow(10,exp)).toPrecision(digits).replace(/\.?0+$/,'');
+  return `${m}×10<sup>${exp}</sup>`;
+}
+function fmtComma(n){return Math.round(n).toLocaleString();}
+
+function setHTML(id,v){const el=document.getElementById(id);if(el)el.innerHTML=v;}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v;}
+
+function setDot(id,state){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.className='status-dot '+state;
+}
+
+function setBar(id,pct,cls){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.width=Math.min(100,Math.max(0,pct*100))+'%';
+  el.className='cmp-bar-fill '+cls;
+}
+
+// ── Main update ──────────────────────────────────────────────────────
+function update(){
+  const logM = parseFloat(document.getElementById('sl-mass').value);
+  const a    = parseFloat(document.getElementById('sl-spin').value);
+  const logB = parseFloat(document.getElementById('sl-B').value);
+
+  const M = Math.pow(10,logM);
+  const B = Math.pow(10,logB);
+
+  // Update labels
+  setText('lbl-mass', fmtComma(M)+' M☉');
+  setText('lbl-spin', a.toFixed(3));
+  setText('lbl-B', B>=1e6? (B/1e6).toPrecision(3)+'×10⁶ T' : B>=1e3? fmtComma(B)+' T' : B.toPrecision(3)+' T');
+
+  // ── 1. Mass Constraint Window ────────────────────────────────────
+  const tension = MASS_LO > MASS_HI;
+  setText('mass-window-lo', fmtComma(MASS_LO));
+  setText('mass-window-hi', fmtComma(MASS_HI));
+  if(tension){
+    setDot('mass-dot','red');
+    setText('mass-status','TENSION — lower bound exceeds upper bound');
+    setText('mass-body','The Häberle 2024 kinematic lower bound (8,200 M☉) exceeds the Bañares 2025 3σ point-mass upper limit (6,000 M☉). This tension is the central open question in OC research. The mass slider sets your working assumption for downstream panels.');
+  } else {
+    setDot('mass-dot','green');
+    setText('mass-status','Consistent window');
+    setText('mass-body','Published bounds are mutually consistent.');
+  }
+
+  // ── 2. BZ Power ────────────────────────────────────────────────
+  const Pbz = P_bz(M,a,B);
+  const log_Pbz = Math.log10(Pbz);
+  const KARD_REF=3.86e26; // 1 W = log10 ~ 26.6, Kardashev I ~4×10^26 W
+  const kard = log_Pbz / Math.log10(4e26*1e4); // rough Kardashev scale
+  setHTML('bz-power', fmtSI(Pbz));
+  setText('bz-unit','W');
+  const bz_good = Pbz > 1e30;
+  setDot('bz-dot', Pbz>1e35?'green':Pbz>1e30?'amber':'red');
+  setText('bz-status', Pbz>1e35?'Astrophysically significant power':Pbz>1e30?'Marginal BZ power':'Very low BZ power — check B field');
+  setText('bz-body',`P_BZ = (κ/4πμ₀) B² r₊⁴ Ω_H²/c. At these parameters the jet can sustain ${Pbz>1e35?'energetically significant':'only modest'} power extraction from the ergosphere. Increase B or spin to raise output.`);
+  const bzHash = `#mode=forward&mass=${M.toFixed(0)}&spin=${a.toFixed(3)}&B=${B.toExponential(2)}`;
+  document.getElementById('bz-link').href = 'bz-kardashev.html'+bzHash;
+
+  // ── 3. Radio Jet Flux ──────────────────────────────────────────
+  const S_uJy = S_radio_uJy(M,Pbz);
+  const MEERKAT=3, SKA=0.6;
+  setHTML('radio-flux', fmtSI(S_uJy));
+  const radioMax = Math.max(S_uJy*2, MEERKAT*2, 10);
+  setBar('radio-bar', S_uJy/radioMax, S_uJy>=MEERKAT?'good':S_uJy>=SKA?'warn':'bad');
+  setText('radio-bar-max', radioMax.toFixed(1)+' µJy');
+  setDot('radio-dot', S_uJy>=MEERKAT?'green':S_uJy>=SKA?'amber':'red');
+  setText('radio-status', S_uJy>=MEERKAT?'MeerKAT-detectable now':S_uJy>=SKA?'SKA-detectable (2028+)':'Below current detection limits');
+  setText('radio-body',`Predicted 5 GHz flux from fundamental-plane relation. MeerKAT limit 3 µJy · SKA-Mid limit 0.6 µJy. ${S_uJy>=MEERKAT?'Current sensitivity is sufficient for a detection programme.':S_uJy>=SKA?'Requires SKA-Mid for a firm detection.':'Flux is too low; higher B or spin needed to bring jet into radio band.'}`);
+  const radioHash = `#M=${logM.toFixed(3)}&p=${log_Pbz.toFixed(2)}&e=0.15&v=5`;
+  document.getElementById('radio-link').href = 'jet-radio-detectability.html'+radioHash;
+
+  // ── 4. Penrose Reservoir ───────────────────────────────────────
+  const Er = E_rot(M,a);
+  const eta_p = eta_penrose(a);
+  setHTML('penrose-E', fmtSI(Er));
+  setText('penrose-unit','J');
+  const penrose_frac = eta_p*100;
+  setDot('penrose-dot', eta_p>0.2?'green':eta_p>0.05?'amber':'red');
+  setText('penrose-status', `${penrose_frac.toFixed(1)}% of rest-mass energy extractable`);
+  setText('penrose-body',`Rotational energy stored in the ergosphere (Christodoulou irreducible mass). At a=${a.toFixed(3)}, up to ${penrose_frac.toFixed(1)}% of the BH rest-mass energy is in principle extractable via the Penrose process or BZ mechanism — equivalent to ${fmtSI(Er)} J.`);
+  const penHash = `#M=${logM.toFixed(3)}&a=${a.toFixed(3)}&R=-8`;
+  document.getElementById('penrose-link').href = 'penrose-process.html'+penHash;
+
+  // ── 5. Gamma-ray signal ────────────────────────────────────────
+  const f_leak = 1e-5;
+  const Fg = F_gamma(Pbz, f_leak);
+  const Fermi_limit = 4e-13*Math.sqrt(15/15); // 15yr obs
+  const gamma_ratio = Fg / Fermi_limit;
+  setHTML('gamma-flux', fmtSI(Fg));
+  setBar('gamma-bar', Math.min(gamma_ratio,1), gamma_ratio>=1?'good':gamma_ratio>=0.1?'warn':'bad');
+  setDot('gamma-dot', gamma_ratio>=1?'green':gamma_ratio>=0.1?'amber':'red');
+  setText('gamma-status', gamma_ratio>=1?'Above Fermi-LAT threshold':gamma_ratio>=0.1?'Within an order of magnitude of Fermi-LAT':'Below Fermi-LAT sensitivity');
+  setText('gamma-body',`F_signal = f_leak · P_BZ / 4πd² with f_leak=10⁻⁵. Fermi-LAT 15-yr sensitivity: 4×10⁻¹³ GeV cm⁻²s⁻¹. ${gamma_ratio>=1?'Signal is above the Fermi threshold — the OC core should show a BZ-powered spectral component if the leakage fraction holds.':gamma_ratio>=0.1?'Signal is just below the Fermi threshold; higher BZ power or leakage fraction would bring it into range.':'Signal well below Fermi-LAT; increasing B field or leakage fraction could change this.'}`);
+  const gHash = `#n=25&l=32.5&p=${log_Pbz.toFixed(2)}&f=-5&t=15`;
+  document.getElementById('gamma-link').href = 'gamma-ray-msp.html'+gHash;
+
+  // ── 6. Spin-up Timeline ────────────────────────────────────────
+  const MDOT = 1e-3; // M☉/yr canonical
+  const t_yr = t_spinup_yr(M, a, MDOT);
+  const t_Gyr = t_yr/1e9;
+  const spinup_feasible = t_yr < OC_AGE;
+  setHTML('spinup-time', t_Gyr<0.001? fmtSI(t_yr) : fmtSI(t_Gyr));
+  setText('spinup-unit', t_Gyr<0.001?'yr':'Gyr');
+  setDot('spinup-dot', t_yr<1e9?'green':t_yr<OC_AGE?'amber':'red');
+  setText('spinup-status', t_yr<1e9?'Spin-up fast vs OC age':t_yr<OC_AGE?'Feasible within OC lifetime':'Requires longer than OC age');
+  setText('spinup-body',`Time to spin from a=0 to a=${a.toFixed(3)} via thin-disk accretion at ṁ=10⁻³ M☉/yr. OC age ≈12 Gyr. ${spinup_feasible?`Spin-up is ${(t_yr/OC_AGE*100).toFixed(1)}% of the cluster lifetime — physically achievable through tidal-capture accretion events over OC history.`:'At this spin and mass, even continuous accretion at the assumed rate is insufficient within the cluster lifetime — a higher accretion rate or lower target spin is needed.'}`);
+  const sHash = `#M=${M.toFixed(0)}&a0=0.0&af=${a.toFixed(3)}&mdot=${Math.log10(MDOT).toFixed(1)}&b=6`;
+  document.getElementById('spinup-link').href = 'spin-up-timeline.html'+sHash;
+
+  // ── 8. Verdict ─────────────────────────────────────────────────
+  const indicators = [
+    !tension,               // mass window not in tension (note: currently always false since LO>HI)
+    Pbz > 1e33,            // significant BZ power
+    S_uJy >= SKA,          // radio detectable
+    gamma_ratio >= 0.1,    // gamma near threshold
+    eta_p > 0.1,           // meaningful Penrose reservoir
+    t_yr < OC_AGE          // spin-up feasible
+  ];
+  const score = indicators.filter(Boolean).length;
+
+  const pipsEl = document.getElementById('verdict-pips');
+  pipsEl.innerHTML = indicators.map((v,i)=>`<div class="verdict-pip ${v?'filled':'empty'}">${v?'✓':'·'}</div>`).join('');
+
+  const verdictLabel = score>=5?'Strong':score>=3?'Moderate':score>=1?'Tentative':'Inconclusive';
+  const verdictColor = score>=5?'green':score>=3?'amber':'red';
+  setText('verdict-label', verdictLabel+' evidence');
+  setDot('verdict-dot', verdictColor);
+  setText('verdict-text', `${score} of 6 indicators positive`);
+
+  const verdictBodies = {
+    Strong: 'Multiple independent observational channels converge on a sub-10,000 M☉ mass with significant jet power, radio and gamma detectability, and a physically achievable spin history. The core tension (kinematic lower bound vs. accretion upper limit) remains the key open question.',
+    Moderate: 'Several constraint channels are consistent with an IMBH, but detection thresholds are not yet crossed in the most demanding observables. Raise B or spin to move more indicators into the positive.',
+    Tentative: 'At these parameters, the evidence is marginal. BZ power is low and radio/gamma fluxes are below current sensitivity limits. The mass tension alone is an interesting anomaly but not sufficient.',
+    Inconclusive: 'Current parameters produce no positive observational indicators. Consider higher spin, stronger B field, or a larger mass assumption.'
+  };
+  setText('verdict-body', verdictBodies[verdictLabel]);
+}
+
+// ── Event listeners ──────────────────────────────────────────────────
+['sl-mass','sl-spin','sl-B'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',update);
+});
+
+update();
+</script>
+</body>
+</html>
