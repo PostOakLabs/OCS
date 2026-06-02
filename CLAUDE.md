@@ -43,8 +43,8 @@ When chaining tools via `tools/toolname.html#param=val`:
 - **`radio-seti.html`:** hash params **are** log10 (`logEirp`, `logDist`, etc.)
 - **Rule:** always `Grep` each tool's `loadHash()` block; check `state.X = parseFloat(v)` (linear) vs `state.logX = parseFloat(v)` (log10) before wiring
 
-### Demo page pattern
-`tools/demo-*.html` files chain existing tools as deeplinks (no iframes). Structure: scenario selector → step cards with CTA hash links → synthesis box. Use `demo-breaking-degeneracy.html` as template (6-step); `demo-dwarf-inheritance.html` for 4-step. Demos must not use `measurements.js` unless they actually need cluster data.
+### Scenario page pattern
+`tools/scenario-*.html` files chain existing tools as deeplinks (no iframes). Structure: scenario selector → step cards with CTA hash links → synthesis box. Use `scenario-breaking-degeneracy.html` as template (6-step); `scenario-dwarf-inheritance.html` for 4-step. Scenarios must not use `measurements.js` unless they actually need cluster data.
 
 ---
 
@@ -61,7 +61,7 @@ repo/
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values
     ├── [52 tool *.html files]     ← see categories below
     ├── [7 workflow-*.html files]  ← end-to-end staged narrative calculators
-    └── [30 demo-*.html files]     ← chained-tool narrative demos
+    └── [30 scenario-*.html files]     ← chained-tool narrative demos
 ```
 
 **Tool categories (52 total):**
