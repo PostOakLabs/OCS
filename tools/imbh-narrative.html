@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Is There an IMBH in Omega Centauri? — Omega Centauri Society</title>
+<link rel="canonical" href="https://omegacentauri.me/tools/imbh-narrative.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+  --prose-max:680px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',serif;line-height:1.7}
+a{color:var(--amber-glow);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* PROGRESS BAR */
+#progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--purple-bright),var(--amber-glow));z-index:200;transition:width .1s linear}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(3,2,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.12em;color:var(--purple-glow);text-transform:uppercase}
+.nav-sep{color:var(--text-dim);font-size:18px}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.06em;flex:1}
+.nav-links{display:flex;gap:18px}
+.nav-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.nav-links a:hover{color:var(--amber-glow);text-decoration:none}
+
+/* SECTION SHELL */
+.section{max-width:1200px;margin:0 auto;padding:88px 28px 64px}
+.section-inner{max-width:var(--prose-max)}
+
+/* SECTION META */
+.s-num{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.s-num::before{content:'';display:block;width:24px;height:1px;background:var(--text-dim)}
+.s-tag{display:inline-block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:2px 8px;border-radius:10px;border:1px solid;margin-left:6px}
+.s-tag.red{border-color:rgba(208,64,64,.35);color:var(--red-bright);background:rgba(138,32,32,.1)}
+.s-tag.teal{border-color:rgba(77,232,192,.3);color:var(--teal-glow);background:rgba(29,186,144,.07)}
+.s-tag.amber{border-color:rgba(240,160,32,.3);color:var(--amber-glow);background:rgba(196,120,0,.07)}
+.s-tag.purple{border-color:rgba(112,85,212,.3);color:var(--purple-glow);background:rgba(61,45,138,.1)}
+
+/* HEADINGS */
+.section h2{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.25;margin-bottom:22px;background:linear-gradient(135deg,var(--text-primary) 60%,var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section p{font-size:18px;color:var(--text-secondary);margin-bottom:18px;max-width:var(--prose-max)}
+.section p:last-of-type{margin-bottom:0}
+
+/* PULL QUOTE */
+.pull{border-left:3px solid var(--amber-bright);padding:16px 24px;margin:32px 0;background:rgba(196,120,0,.07);border-radius:0 8px 8px 0;max-width:var(--prose-max)}
+.pull p{font-style:italic;font-size:19px;color:var(--text-primary);margin:0;line-height:1.55}
+.pull cite{display:block;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;font-style:normal}
+
+/* TENSION BOX */
+.tension{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:24px;border:1px solid rgba(208,64,64,.25);border-radius:12px;background:rgba(138,32,32,.06);margin:32px 0;max-width:var(--prose-max)}
+.tension-col{text-align:center}
+.tension-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--text-primary);font-weight:700}
+.tension-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+.tension-src{font-family:'Space Mono',monospace;font-size:9px;color:var(--amber-glow);margin-top:3px}
+.tension-mid{font-family:'Orbitron',sans-serif;font-size:11px;color:var(--red-bright);text-align:center}
+.tension-arrow{font-size:20px;color:var(--red-bright);display:block}
+.tension-word{font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border-subtle);margin:0}
+
+/* IFRAME SECTION */
+.iframe-section{background:rgba(7,5,21,.6);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);padding:40px 28px}
+.iframe-header{max-width:1200px;margin:0 auto 20px}
+.iframe-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+.iframe-title{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--text-secondary)}
+.iframe-wrap{max-width:1200px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid var(--border-subtle);background:var(--deep);position:relative;opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.iframe-wrap.visible{opacity:1;transform:translateY(0)}
+.iframe-wrap iframe{width:100%;display:block;border:none}
+.iframe-placeholder{display:flex;align-items:center;justify-content:center;height:500px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.1em}
+
+/* VERDICT SECTION */
+.verdict-section{max-width:1200px;margin:0 auto;padding:88px 28px 100px}
+.verdict-inner{max-width:var(--prose-max)}
+.verdict-pills{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0}
+.verdict-pill{font-family:'Space Mono',monospace;font-size:10px;padding:6px 14px;border-radius:20px;border:1px solid;letter-spacing:.06em}
+.verdict-pill.open{border-color:rgba(208,64,64,.4);color:var(--red-bright);background:rgba(138,32,32,.08)}
+.verdict-pill.coming{border-color:rgba(240,160,32,.35);color:var(--amber-glow);background:rgba(196,120,0,.07)}
+.verdict-pill.settled{border-color:rgba(29,186,144,.3);color:var(--teal-glow);background:rgba(13,110,88,.08)}
+
+/* CTA BLOCK */
+.cta-block{margin-top:48px;padding:32px;border:1px solid rgba(240,160,32,.25);border-radius:14px;background:linear-gradient(135deg,rgba(29,16,64,.5),rgba(7,5,21,.8))}
+.cta-block h3{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--text-primary);margin-bottom:10px}
+.cta-block p{font-size:16px;color:var(--text-secondary);margin-bottom:20px}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;padding:11px 22px;border-radius:8px;background:linear-gradient(135deg,var(--purple-mid),var(--purple-bright));color:var(--text-primary);border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity .2s}
+.btn-primary:hover{opacity:.85;text-decoration:none}
+.btn-secondary{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;padding:11px 22px;border-radius:8px;background:transparent;color:var(--amber-glow);border:1px solid rgba(240,160,32,.3);text-decoration:none;display:inline-block;transition:border-color .2s}
+.btn-secondary:hover{border-color:var(--amber-glow);text-decoration:none}
+
+/* NAV DOTS */
+.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:90}
+@media(max-width:900px){.nav-dots{display:none}}
+.nav-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--text-dim);background:transparent;cursor:pointer;transition:background .2s,border-color .2s;display:block}
+.nav-dot.active{background:var(--amber-glow);border-color:var(--amber-glow)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border-subtle);padding:32px 28px;text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">Is There an IMBH in Omega Centauri?</span>
+    <nav class="nav-links">
+      <a href="../index.html">Main site</a>
+      <a href="index.html">All tools</a>
+      <a href="imbh-evidence-dashboard.html">Evidence dashboard</a>
+    </nav>
+  </div>
+</nav>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="nav-dots">
+  <a class="nav-dot active" data-section="0" href="#s1" title="The Anomaly"></a>
+  <a class="nav-dot" data-section="1" href="#s2" title="The Kinematic Case"></a>
+  <a class="nav-dot" data-section="2" href="#s3" title="The Energy Channel"></a>
+  <a class="nav-dot" data-section="3" href="#s4" title="Could We See It?"></a>
+  <a class="nav-dot" data-section="4" href="#s5" title="The Verdict"></a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — THE ANOMALY
+══════════════════════════════════════════════════════ -->
+<section class="section" id="s1" data-section="0">
+  <div class="section-inner">
+    <div class="s-num">Section 1 <span class="s-tag red">Open question</span></div>
+    <h2>The Anomaly at the Core</h2>
+    <p>Omega Centauri is the largest globular cluster orbiting the Milky Way — a sphere of roughly ten million stars packed into a region about 150 light-years across, currently 17,900 light-years from Earth. For decades, it was treated as an unusually massive but otherwise ordinary cluster. Then astronomers started measuring what was moving, and how fast.</p>
+    <p>The latest kinematic surveys of the inner parsec disagree about something fundamental. They do not merely give different numbers — they give numbers that are mutually inconsistent. The lower bound on any central dark mass exceeds the upper bound. Something is wrong, or something unusual is there.</p>
+
+    <div class="tension">
+      <div class="tension-col">
+        <div class="tension-val">&gt; 8,200 M☉</div>
+        <div class="tension-lbl">Lower bound</div>
+        <div class="tension-src">Häberle 2024 — stellar kinematics</div>
+      </div>
+      <div class="tension-mid">
+        <span class="tension-arrow">⟷</span>
+        <span class="tension-word">Tension</span>
+      </div>
+      <div class="tension-col">
+        <div class="tension-val">&lt; 6,000 M☉</div>
+        <div class="tension-lbl">Upper bound (3σ)</div>
+        <div class="tension-src">Bañares 2025 — accretion limit</div>
+      </div>
+    </div>
+
+    <p>A lower bound that exceeds an upper bound is not a measurement error in the ordinary sense. It means the two methods are probing different things, or one of the underlying assumptions is wrong. Either the dark mass is not a single point object, or the accretion physics are non-standard, or the kinematics are contaminated by a stellar subpopulation we haven't properly accounted for. None of these resolutions is trivial.</p>
+
+    <div class="pull">
+      <p>"The simplest reading of the data is that a dark mass of order 8,000–10,000 solar masses sits at the centre of Omega Centauri. The simplest reading is not the only reading."</p>
+      <cite>— González Prieto et al. 2025, ApJL 990 L69</cite>
+    </div>
+
+    <p>What follows is an attempt to weigh that evidence directly — using the same physics encoded in the OCS tools, worked through in sequence. By the end you should have a clear sense of what the data says, what it does not say, and what the next few years of observation could resolve.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — KINEMATIC CASE  (iframe: constraint-stacker)
+══════════════════════════════════════════════════════ -->
+<section class="section" id="s2" data-section="1">
+  <div class="section-inner">
+    <div class="s-num">Section 2 <span class="s-tag teal">Kinematics</span></div>
+    <h2>Weighing an Invisible Object</h2>
+    <p>The canonical method for detecting a central massive object you cannot see directly is to measure the velocities of stars near it. If a dark mass is present, stars close to it move faster than those farther away — their orbits reflect the gravitational potential of everything inside their radius.</p>
+    <p>Since 2023, the oMEGACat survey has provided proper motion measurements for over 300,000 stars in Omega Centauri using HST data spanning two decades. The velocity dispersion profile in the inner 0.1 parsec rises steeply — more steeply than any model without a central massive object can reproduce. Häberle et al. (2024) find that models with a point mass of at least 8,200 M☉ are required to fit the observed kinematics. Models without one fail.</p>
+    <p>That lower bound sits in the intermediate-mass black hole range. A stellar remnant cluster of this mass would need to be extraordinarily dense and dynamically implausible given OC's age. The most parsimonious explanation remains a single IMBH — or something that behaves like one on the scales being probed.</p>
+  </div>
+</section>
+
+<div class="iframe-section">
+  <div class="iframe-header">
+    <div class="iframe-eyebrow">Interactive · explore the constraint landscape</div>
+    <div class="iframe-title">IMBH Constraint Stacker — toggle methods and see the joint mass window</div>
+  </div>
+  <div class="iframe-wrap" id="iframe-1">
+    <div class="iframe-placeholder" id="placeholder-1">Loading constraint stacker…</div>
+    <iframe data-src="constraint-stacker.html#show=kinematics,propermotion,accretion,nbody,msigma" height="620" title="IMBH Constraint Stacker" loading="lazy" style="display:none"></iframe>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — ENERGY CHANNEL  (iframe: bz-kardashev)
+══════════════════════════════════════════════════════ -->
+<section class="section" id="s3" data-section="2">
+  <div class="section-inner">
+    <div class="s-num">Section 3 <span class="s-tag amber">Energy extraction</span></div>
+    <h2>The Energy Channel</h2>
+    <p>Accepting the kinematic argument provisionally — suppose there is a black hole of roughly 8,000–10,000 solar masses at the core of Omega Centauri. If it is rotating, it can do work. Not in the thermodynamic sense of burning fuel, but in the geometric sense of the Blandford-Znajek mechanism: a spinning black hole embedded in an ordered magnetic field loses rotational energy to an outgoing Poynting flux, launching a relativistic jet.</p>
+    <p>The extractable power scales as B²M²a² — the square of the field strength, the square of the mass, and the square of the spin. For an IMBH at the Häberle lower bound, a moderate magnetic field of 10⁴ T and spin a = 0.9, the Blandford-Znajek power reaches roughly 10³³ to 10³⁵ watts — competitive with a Kardashev Type I civilisation's total energy budget, and astrophysically significant at the scale of the cluster.</p>
+    <p>This is not a speculative quantity. It is a direct consequence of the measured mass, an assumed spin, and a physically motivated field estimate. The BZ mechanism operates in known AGN; the only question for OC is whether the IMBH is spinning and whether the magnetic field in the inner parsec is structured enough to sustain it.</p>
+
+    <div class="pull">
+      <p>"At a = 0.9, up to 29% of the black hole's rest-mass energy sits in the ergosphere, available in principle to the Blandford-Znajek process. For an 8,200 M☉ object, that is roughly 5 × 10⁴⁷ joules — more than the kinetic energy of an entire supernova remnant."</p>
+      <cite>— OCS BZ-Kardashev tool, canonical parameters</cite>
+    </div>
+  </div>
+</section>
+
+<div class="iframe-section">
+  <div class="iframe-header">
+    <div class="iframe-eyebrow">Interactive · adjust mass, spin, and field</div>
+    <div class="iframe-title">Blandford-Znajek Power Calculator — vary spin and B to see extractable power</div>
+  </div>
+  <div class="iframe-wrap" id="iframe-2">
+    <div class="iframe-placeholder" id="placeholder-2">Loading BZ calculator…</div>
+    <iframe data-src="bz-kardashev.html#mode=forward&mass=8200&spin=0.900&B=1.00e+4" height="680" title="BZ-Kardashev Power Tool" loading="lazy" style="display:none"></iframe>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — DETECTION  (iframe: jet-radio-detectability)
+══════════════════════════════════════════════════════ -->
+<section class="section" id="s4" data-section="3">
+  <div class="section-inner">
+    <div class="s-num">Section 4 <span class="s-tag purple">Detectability</span></div>
+    <h2>Could We See It?</h2>
+    <p>A black hole extracting energy via the BZ mechanism does not do so silently. The Poynting jet couples to the ambient plasma, accelerates particles, and produces synchrotron radiation — light at radio wavelengths. The empirical relationship between a black hole's mass, X-ray luminosity, and radio flux density — the so-called fundamental plane of black hole activity — lets us predict what an IMBH of this mass and BZ power should look like at 5 GHz.</p>
+    <p>At BZ powers of 10³³–10³⁵ W, the fundamental-plane prediction puts the expected radio flux somewhere between 0.1 and 10 microjansky at OC's distance. The MeerKAT radio telescope can reach 3 µJy in a deep pointing. The Square Kilometre Array, coming online through the late 2020s, will push to 0.6 µJy. A firm non-detection by SKA-Mid would constrain the jet power to below 10³³ W — either the spin is low, the field is weak, or the IMBH is not actively accreting.</p>
+    <p>Current radio non-detections are not evidence against the IMBH — they are evidence that the BZ power is below the present detection floor, or that the jet inclination is unfavourable, or that the source is temporarily quiescent. The upcoming SKA deep pointing of OC is one of the most direct near-term tests available.</p>
+  </div>
+</section>
+
+<div class="iframe-section">
+  <div class="iframe-header">
+    <div class="iframe-eyebrow">Interactive · vary BZ power and mass</div>
+    <div class="iframe-title">Jet Radio Detectability — compare predicted flux against MeerKAT and SKA limits</div>
+  </div>
+  <div class="iframe-wrap" id="iframe-3">
+    <div class="iframe-placeholder" id="placeholder-3">Loading radio tool…</div>
+    <iframe data-src="jet-radio-detectability.html#M=3.914&p=33&e=0.15&v=5" height="640" title="Jet Radio Detectability Tool" loading="lazy" style="display:none"></iframe>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 5 — VERDICT + CTA
+══════════════════════════════════════════════════════ -->
+<section class="verdict-section" id="s5" data-section="4">
+  <div class="verdict-inner">
+    <div class="s-num">Section 5 <span class="s-tag teal">Assessment</span></div>
+    <h2>The Honest Verdict</h2>
+    <p>The evidence for an intermediate-mass black hole in Omega Centauri is suggestive but not yet decisive. The kinematic case is the strongest plank: the oMEGACat proper motion data require something dark and massive at the core, and a single IMBH remains the most parsimonious explanation. The accretion upper limit from JWST creates a genuine tension — but tensions in astrophysics are often resolved by more data, not by abandoning the most economical hypothesis.</p>
+    <p>The BZ power calculation shows that if the mass and spin are as inferred, the energy scale is enormous and the jet should eventually be detectable. The radio non-detections to date are consistent with quiescence or low spin — they do not falsify the IMBH. The gamma-ray picture is similar: at moderate BZ power and standard leakage fractions, the signal sits just below Fermi-LAT's long-baseline sensitivity, and will come within reach of CTA-South.</p>
+    <p>What would settle this? Three observational campaigns, each addressing a different piece of the puzzle:</p>
+
+    <div class="verdict-pills">
+      <span class="verdict-pill coming">ELT / MICADO proper motions ~2028</span>
+      <span class="verdict-pill coming">SKA-Mid deep radio pointing ~2029</span>
+      <span class="verdict-pill coming">CTA-South OC survey ~2030</span>
+      <span class="verdict-pill open">Kinematic vs. accretion tension — open</span>
+      <span class="verdict-pill open">Spin measurement — unconstrained</span>
+      <span class="verdict-pill settled">Mass lower bound — kinematically robust</span>
+    </div>
+
+    <p>The next decade will be decisive. ELT's 39-metre aperture will measure proper motions in the inner 0.01 parsec with a precision that resolves individual stellar orbits — the same technique used to confirm Sgr A*. If there is an IMBH, those orbits will show it. If there is not, they will show a dense stellar remnant cluster, which is itself a scientifically important finding.</p>
+    <p>Until then, the honest answer to the question at the top of this page is: <em>probably yes, but the data are not yet clean enough to be certain.</em> The tension between the kinematic lower bound and the accretion upper limit is the live frontier — and it is exactly the kind of tension that drives new observations.</p>
+
+    <div class="cta-block">
+      <h3>Explore the full constraint landscape</h3>
+      <p>The Evidence Dashboard aggregates all major IMBH observational indicators in one place. Adjust mass, spin, and magnetic field with a single set of sliders and watch every panel update simultaneously.</p>
+      <div class="cta-btns">
+        <a class="btn-primary" href="imbh-evidence-dashboard.html">Open Evidence Dashboard →</a>
+        <a class="btn-secondary" href="falsification-hub.html">Falsification roadmap</a>
+        <a class="btn-secondary" href="constraint-stacker.html">Constraint stacker</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Is There an IMBH in Omega Centauri? · Omega Centauri Society · omegacentauri.me<br>
+  Citations: Häberle+2024 · Bañares-Hernández+2025 · González Prieto+2025 · Merloni+2003 · Blandford &amp; Znajek 1977
+</footer>
+
+<script>
+// ── Progress bar ────────────────────────────────────────────────────
+const progressBar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  progressBar.style.width = (pct * 100) + '%';
+}, { passive: true });
+
+// ── Section tracking (nav dots) ─────────────────────────────────────
+const sections = Array.from(document.querySelectorAll('[data-section]'));
+const dots = Array.from(document.querySelectorAll('.nav-dot'));
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = parseInt(entry.target.dataset.section, 10);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+sections.forEach(s => sectionObserver.observe(s));
+
+// ── Lazy iframe loading ─────────────────────────────────────────────
+const iframeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const wrap = entry.target;
+    const iframe = wrap.querySelector('iframe[data-src]');
+    const placeholder = wrap.querySelector('.iframe-placeholder');
+    if (iframe) {
+      iframe.src = iframe.dataset.src;
+      iframe.removeAttribute('data-src');
+      iframe.style.display = 'block';
+      iframe.addEventListener('load', () => {
+        if (placeholder) placeholder.style.display = 'none';
+        wrap.classList.add('visible');
+      });
+    }
+    iframeObserver.unobserve(wrap);
+  });
+}, { rootMargin: '200px 0px' });
+
+document.querySelectorAll('.iframe-wrap').forEach(el => iframeObserver.observe(el));
+
+// ── Fade in iframes already in view on load ─────────────────────────
+window.addEventListener('load', () => {
+  document.querySelectorAll('.iframe-wrap iframe').forEach(iframe => {
+    if (!iframe.dataset.src) {
+      const placeholder = iframe.closest('.iframe-wrap').querySelector('.iframe-placeholder');
+      if (placeholder) placeholder.style.display = 'none';
+      iframe.closest('.iframe-wrap').classList.add('visible');
+    }
+  });
+});
+</script>
+</body>
+</html>
