@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!--
+  Demo - Why ωCen and Not the Galactic Centre?
+  Omega Centauri Society . omegacentauri.me
+  Four tools compare OC's IMBH candidate against the GC's Sgr A* —
+  showing why the ergosphere engineering case favours OC.
+  Chains: cluster-comparator . bz-kardashev . time-dilation . astrometric-microlensing
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-06-01
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why ωCen and Not the Galactic Centre? — OCS</title>
+<meta name="description" content="Four tools compare OC's IMBH candidate against the Galactic Centre's Sgr A* — showing why the ergosphere engineering case favours OC. FAQ E.3.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-oc-vs-gc.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 10%,rgba(29,186,144,.08),transparent 50%),
+    radial-gradient(ellipse at 85% 60%,rgba(160,128,240,.07),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--teal-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--teal-glow),var(--purple-glow),var(--amber-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:280px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.08);box-shadow:0 0 0 1px var(--teal-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--teal-glow)}
+.step.s4{border-color:var(--teal-mid);box-shadow:0 0 0 1px var(--teal-mid) inset}
+.step.s4 .step-title{color:var(--teal-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:6px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:14px 18px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.compare-table{width:100%;border-collapse:collapse;margin:10px 0;font-family:'Space Mono',monospace;font-size:11px}
+.compare-table th{text-align:left;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;font-size:9px;padding:5px 8px;border-bottom:1px solid var(--border-subtle)}
+.compare-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text-secondary)}
+.compare-table td:first-child{color:var(--text-dim);font-size:9px;text-transform:uppercase;letter-spacing:.05em}
+.compare-table td.oc{color:var(--teal-glow)}
+.compare-table td.gc{color:var(--amber-glow)}
+.compare-table tr.winner td{background:rgba(29,186,144,.04)}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.synth-prose strong{color:var(--teal-glow)}
+
+.advantage-list{list-style:none;margin:12px 0;display:flex;flex-direction:column;gap:8px}
+.advantage-list li{display:flex;gap:10px;font-size:15px;line-height:1.6;color:var(--text-secondary)}
+.advantage-list li::before{content:'◉';color:var(--teal-bright);font-size:13px;margin-top:3px;flex-shrink:0}
+.advantage-list li strong{color:var(--text-primary)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Why ωCen and Not the GC?</span>
+    <a href="/tools/" class="nav-link">&larr; All Demos</a>
+    <a href="/#science" class="nav-link">↗ #science</a>
+    <a href="/tools/demo-imbh-formation.html" class="nav-link">IMBH Formation ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo &middot; Context &middot; 4 tools &middot; ~15 min &middot; FAQ E.3</div>
+    <h1>Why ωCen and Not the Galactic Centre?</h1>
+    <p class="hero-sub">Four tools compare OC's IMBH candidate against the Galactic Centre's 4-million-solar-mass Sgr&nbsp;A* — showing why the ergosphere engineering case favours OC despite Sgr&nbsp;A*'s overwhelming mass advantage.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-06-01</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Choose your framing</div>
+    <p class="scenario-help">Each scenario pre-loads all four tools with parameters that emphasise a different dimension of the comparison. Walk the chain to see how the trade-offs shift.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="engineering">
+        <span class="name">Engineering Case (Recommended)</span>
+        <span class="desc">What makes OC's IMBH better for MTH ergosphere exploitation — controllable spin, quiet environment, accessible ISCO, lower tidal disruption rate.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="observation">
+        <span class="name">Observation Case</span>
+        <span class="desc">What makes OC harder to study than the GC — lower mass, larger distance uncertainty, no Event Horizon Telescope coverage, fewer bright stars for astrometry.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 1 &middot; Mass &amp; Environment</div>
+        <div class="step-title">Scale the Two Objects</div>
+        <p class="step-prose" id="p1-prose">OC's IMBH candidate sits at ~8,200 M&#8857; — roughly 500&times; less massive than Sgr&nbsp;A* (4.154 &times; 10&#8310; M&#8857;). Mass alone favours the Galactic Centre for raw energy. But mass is not the whole story.</p>
+        <table class="compare-table" id="p1-table">
+          <thead>
+            <tr><th>Property</th><th class="oc">ωCen IMBH</th><th class="gc">Sgr A*</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Black hole mass</td><td class="oc">~8,200 M&#8857;</td><td class="gc">4.154 × 10⁶ M&#8857;</td></tr>
+            <tr><td>Host cluster mass</td><td class="oc">4 × 10⁶ M&#8857;</td><td class="gc">~1 × 10¹¹ M&#8857; (galactic bulge)</td></tr>
+            <tr><td>Distance</td><td class="oc">5.49 kpc</td><td class="gc">8.178 kpc</td></tr>
+            <tr><td>Central stellar density</td><td class="oc">~10⁵ M&#8857; pc⁻³</td><td class="gc">~10⁶–10⁷ M&#8857; pc⁻³</td></tr>
+            <tr class="winner"><td>Environment</td><td class="oc">Quiet GC, no star formation</td><td class="gc">Active, radiation-rich, chaotic</td></tr>
+          </tbody>
+        </table>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="comparator" id="cta1" href="cluster-comparator.html">Open Cluster Comparator &rarr;</a>
+          <span class="step-params" id="p1-params">OC: 4×10⁶ M&#8857; cluster · IMBH ≥8,200 M&#8857; | GC: Sgr A* 4.154×10⁶ M&#8857;</span>
+          <span class="tier-mini tier-d">Debated</span>
+          <span class="tier-mini tier-e">Measured</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body" id="p1-payoff">Mass favours the GC by 500&times;. But the engineering question is not "which BH has more energy?" — it is "which BH is <em>controllable</em>?" OC's far lower stellar density and inactive environment make it a candidate for <em>precision</em> ergosphere engineering.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 2 &middot; Energy Extraction</div>
+        <div class="step-title">BZ Power: Small but Spinnable</div>
+        <p class="step-prose" id="p2-prose">Engineering Scenario: A near-maximal Kerr IMBH at 8,200 M&#8857; with B = 10&#8310; T delivers ~10&#178;&#178; W of BZ power. Sgr&nbsp;A* at the same spin and B = 10&#8308; T (estimated ambient field) delivers ~10&#178;&#8309; W &mdash; 1,000&times; more. But OC's IMBH can in principle be spun up to a&#9733; &rarr; 1 via controlled accretion, whereas Sgr&nbsp;A*'s spin state is uncertain and its accretion environment is hostile and chaotic. <strong>The engineering advantage is controllability, not raw output.</strong></p>
+        <table class="compare-table" id="p2-table">
+          <thead>
+            <tr><th>Parameter</th><th class="oc">ωCen IMBH (engineering)</th><th class="gc">Sgr A* (reference)</th></tr>
+          </thead>
+          <tbody id="p2-tbody">
+            <tr><td>Mass</td><td class="oc">8,200 M&#8857;</td><td class="gc">4.154 × 10⁶ M&#8857;</td></tr>
+            <tr><td>Assumed spin a★</td><td class="oc">0.95 (near-maximal)</td><td class="gc">~0.5–0.9 (uncertain)</td></tr>
+            <tr><td>Assumed B field</td><td class="oc">10⁶ T (engineered)</td><td class="gc">~10⁴ T (ambient estimate)</td></tr>
+            <tr><td>Estimated P_BZ</td><td class="oc">~10²² W</td><td class="gc">~10²⁵ W</td></tr>
+            <tr class="winner"><td>Controllability</td><td class="oc">High — quiet accretion, stable field</td><td class="gc">Low — turbulent, variable</td></tr>
+          </tbody>
+        </table>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="bz" id="cta2" href="bz-kardashev.html#mass=8200&spin=0.95">Open BZ Calculator (OC preset) &rarr;</a>
+          <span class="step-params" id="p2-params">mass=8200, spin=0.95</span>
+          <span class="tier-mini tier-e">Established GR/MHD</span>
+          <span class="tier-mini tier-s">MTH application</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body" id="p2-payoff">Sgr&nbsp;A* delivers 1,000&times; more BZ power in absolute terms. OC's IMBH delivers a controllable, stable output from a predictable accretion environment. For a civilisation operating on geological timescales, <em>stability matters more than peak output</em>.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 3 &middot; Computational Clock</div>
+        <div class="step-title">ISCO Time Dilation: Why Closeness Matters</div>
+        <p class="step-prose" id="p3-prose">For a civilisation running computronium at the ISCO, gravitational time dilation provides a clock speedup relative to cosmic background. The ISCO radius scales with mass: r_ISCO = 6GM/c² (Schwarzschild, a=0). At near-maximal spin, r_ISCO &rarr; GM/c² (prograde). OC's IMBH has r_ISCO &asymp; 1.8&times;10&#8312; m at a=0.95 — physically tiny. <strong>The key insight: gravitational time dilation at the ISCO is the same for OC's IMBH as for Sgr&nbsp;A* at identical spin. It is a spin-dependent constant, not a mass-dependent one.</strong> The mass difference between OC and the GC is irrelevant for clock rate — it only affects the physical scale of the ergosphere.</p>
+        <table class="compare-table" id="p3-table">
+          <thead>
+            <tr><th>ISCO property</th><th class="oc">ωCen IMBH (a=0.95)</th><th class="gc">Sgr A* (a=0.95)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>r_ISCO (prograde)</td><td class="oc">~1.8 × 10⁸ m</td><td class="gc">~9.1 × 10¹⁰ m</td></tr>
+            <tr><td>r_ISCO / r_g</td><td class="oc">~1.94 (prograde, a=0.95)</td><td class="gc">~1.94 (same)</td></tr>
+            <tr class="winner"><td>Time dilation γ at ISCO</td><td class="oc">~2.6 (identical to GC at same a)</td><td class="gc">~2.6 (same spin)</td></tr>
+            <tr><td>Physical ISCO circumference</td><td class="oc">~1.1 × 10⁹ m</td><td class="gc">~5.7 × 10¹¹ m</td></tr>
+            <tr><td>Tidal disruption rate</td><td class="oc">Lower (lower mass)</td><td class="gc">Higher</td></tr>
+          </tbody>
+        </table>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="timedil" id="cta3" href="time-dilation.html">Open Time Dilation Calculator &rarr;</a>
+          <span class="step-params" id="p3-params">Set spin a=0.95, compare ISCO redshift factor</span>
+          <span class="tier-mini tier-e">Established GR</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &mdash; the key result</div>
+        <div class="payoff-body" id="p3-payoff">The clock-rate advantage of operating at the ISCO is <em>identical</em> for OC's IMBH and for Sgr&nbsp;A* at the same spin. Mass cancels out in the ISCO redshift formula. OC's smaller ergosphere is a disadvantage in <em>scale</em>, not in <em>physics</em>. A civilisation of the right size would prefer the more manageable object.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 4 &middot; Observational Contrast</div>
+        <div class="step-title">The Distance Advantage Reverses for Observation</div>
+        <p class="step-prose" id="p4-prose">OC is 5.49 kpc away vs the GC at 8.178 kpc — OC is <em>closer</em>. For astrometric microlensing, the Einstein radius &theta;_E &prop; &radic;(M/d_L), where d_L is lens distance. OC's lower IMBH mass partially offsets its proximity advantage. <strong>But for VLBI monitoring (Sgr&nbsp;A* has the Event Horizon Telescope), the GC wins entirely.</strong> For technosignature searches — radio beacons, neutrino fluxes — the 5.49/8.178 kpc distance ratio means OC signals arrive 2.2&times; stronger in flux. The final verdict: OC wins for MTH engineering (controllable spin, lower tidal disruption rate, accessible ISCO geometry, quieter environment). The GC wins for current observational access. Both are high-priority targets.</p>
+        <table class="compare-table" id="p4-table">
+          <thead>
+            <tr><th>Observable</th><th class="oc">ωCen IMBH</th><th class="gc">Sgr A*</th></tr>
+          </thead>
+          <tbody id="p4-tbody">
+            <tr><td>Distance</td><td class="oc">5.49 kpc (closer)</td><td class="gc">8.178 kpc</td></tr>
+            <tr><td>Flux ratio advantage</td><td class="oc">2.2× brighter at Earth</td><td class="gc">&mdash;</td></tr>
+            <tr><td>Einstein radius θ_E (IMBH lens)</td><td class="oc">~2.6 mas (at 8,200 M&#8857;)</td><td class="gc">N/A — direct imaging</td></tr>
+            <tr><td>VLBI / EHT access</td><td class="oc">Not yet observed</td><td class="gc">Direct image (2022)</td></tr>
+            <tr class="winner"><td>Engineering environment</td><td class="oc">Quiet, controllable</td><td class="gc">Active galactic nucleus conditions</td></tr>
+          </tbody>
+        </table>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="lens" id="cta4" href="astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.00&G=17.0&mu=5.0&Sigma=2.00">Open Microlensing Calculator &rarr;</a>
+          <span class="step-params" id="p4-params">M_L=8200 M&#8857; · D_L=5.49 kpc · D_S=8.00 kpc</span>
+          <span class="tier-mini tier-e">Gravitational lensing</span>
+          <span class="tier-mini tier-d">Pre-DR4</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &mdash; the synthesis</div>
+        <div class="payoff-body" id="p4-payoff">OC is closer, its IMBH is more massive than any stellar-mass BH, and its environment is the quietest of any massive BH candidate accessible from Earth. For an MTH civilisation, these properties are <em>features</em>, not limitations. For observational astronomers, the lack of EHT coverage is a gap Gaia DR4 (2026) and Roman (2027) will begin to close via astrometric microlensing.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9878; The Engineering Case for ωCen</div>
+    <div class="synth-prose">
+      <p>Both black holes offer ergosphere engineering potential. The Galactic Centre's Sgr&nbsp;A* is 500&times; more massive and 1,000&times; more luminous under equivalent BZ assumptions. But raw power is not the limiting factor for a civilisation operating on Kardashev-II+ scales.</p>
+      <ul class="advantage-list">
+        <li><strong>Lower tidal disruption rate.</strong> OC's IMBH has a lower mass, meaning a smaller tidal disruption radius and a lower rate at which infalling stars would disrupt precision engineering operations. The "fuel consumption" that would eventually consume Phase 2 feeding material is proportionally smaller.</li>
+        <li><strong>Quieter environment.</strong> The globular cluster environment is far quieter than the GC — lower stellar density near the centre, lower ambient radiation field, no active star formation, no molecular gas clouds. Precision engineering at the ISCO requires stability on timescales that the GC's active accretion environment cannot guarantee.</li>
+        <li><strong>Isolated, self-contained system.</strong> OC may be the stripped nucleus of a dwarf galaxy — a naturally isolated, self-contained system that a civilisation could effectively "own" without competition from a busy galactic disk. The globular cluster's old stellar population is past the epoch of stellar explosions, making the environment predictably quiet for billions of years.</li>
+      </ul>
+      <p>The time-dilation calculation (Step 3) shows that mass is irrelevant for the <em>clock-rate</em> advantage of operating at the ISCO: a spin-0.95 IMBH delivers the same gravitational time dilation per orbit as a spin-0.95 SMBH. The physical scale is different — OC's ergosphere fits inside a solar system; Sgr&nbsp;A*'s engulfs a third of the Oort Cloud — but the relativistic physics is identical.</p>
+      <p>For further context on OC's observational roadmap, see the <a href="falsification-hub.html">Falsification &amp; Observational Roadmap</a>. For the IMBH formation and mass constraints, see <a href="demo-breaking-degeneracy.html">Demo K &mdash; Breaking the Degeneracy</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-s">MTH</span> = Macro Transcension Hypothesis application.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into four interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo - Why ωCen and Not the Galactic Centre?
+// Scenario -> per-tool deeplinks and per-step prose/table variants.
+// URL hash: #scenario=engineering|observation
+// No fetch, no PII, no storage.
+// =========================================================================
+
+var SCENARIOS = {
+  engineering: {
+    label: 'Engineering Case',
+    links: {
+      comparator: 'cluster-comparator.html',
+      bz:         'bz-kardashev.html#mass=8200&spin=0.95',
+      timedil:    'time-dilation.html',
+      lens:       'astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.00&G=17.0&mu=5.0&Sigma=2.00'
+    },
+    params: {
+      p1: 'OC: 4×10⁶ M☉ cluster · IMBH ≥8,200 M☉ | GC: Sgr A* 4.154×10⁶ M☉',
+      p2: 'mass=8200, spin=0.95 (near-maximal, engineered)',
+      p3: 'Set spin a=0.95, compare ISCO redshift factor',
+      p4: 'M_L=8200 M☉ · D_L=5.49 kpc · D_S=8.00 kpc'
+    },
+    payoffs: {
+      p1: 'Mass favours the GC by 500×. But the engineering question is not “which BH has more energy?” — it is “which BH is controllable?” OC’s far lower stellar density and inactive environment make it a candidate for precision ergosphere engineering.',
+      p2: 'Sgr A* delivers 1,000× more BZ power in absolute terms. OC’s IMBH delivers a controllable, stable output from a predictable accretion environment. For a civilisation operating on geological timescales, stability matters more than peak output.',
+      p3: 'The clock-rate advantage of operating at the ISCO is identical for OC’s IMBH and for Sgr A* at the same spin. Mass cancels out in the ISCO redshift formula. OC’s smaller ergosphere is a disadvantage in scale, not in physics.',
+      p4: 'OC is closer, its IMBH is more massive than any stellar-mass BH, and its environment is the quietest of any massive BH candidate accessible from Earth. For an MTH civilisation, these properties are features, not limitations.'
+    }
+  },
+  observation: {
+    label: 'Observation Case',
+    links: {
+      comparator: 'cluster-comparator.html',
+      bz:         'bz-kardashev.html#mass=8200&spin=0.5',
+      timedil:    'time-dilation.html',
+      lens:       'astrometric-microlensing.html#ML=8200&DL=5.49&DS=8.00&G=17.0&mu=5.0&Sigma=2.00'
+    },
+    params: {
+      p1: 'OC: distance 5.49 kpc, IMBH mass debated (≥6,000–≥10,000 M☉) | GC: distance 8.178 kpc, mass precisely known',
+      p2: 'mass=8200, spin=0.5 (unknown spin — observation cannot yet constrain it)',
+      p3: 'Set spin a=0.5 (unknown), note dilation uncertainty vs. GC',
+      p4: 'M_L=8200 M☉ · D_L=5.49 kpc · vs. GC direct image (EHT 2022)'
+    },
+    payoffs: {
+      p1: 'Sgr A* is better observed: direct image (EHT 2022), precise parallax (GRAVITY), S-star orbital solutions. OC’s IMBH candidate rests on seven fast central stars and a contested pulsar-timing upper limit — the mass remains uncertain by a factor ~2.',
+      p2: 'OC’s IMBH spin is entirely unconstrained observationally. Sgr A* has spin estimates (likely a≤0.94 from EHT polarimetry). From an observational standpoint, BZ calculations for OC are hypothetical; for the GC they are grounded in real measurements.',
+      p3: 'Without a spin measurement, the ISCO time-dilation advantage cannot be computed for OC’s IMBH. Gaia DR4 astrometric microlensing would measure the mass, not the spin. Spin measurement requires either an IMRI (LISA) or resolved accretion-disc spectroscopy (far future).',
+      p4: 'The observational case clearly favours the GC — Event Horizon Telescope direct imaging, S-star proper motions, and GRAVITY astrometry all combine to give a sub-percent mass measurement and early spin estimates. OC will require a completely different observational programme.'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return parts.length ? '#' + parts.join('&') : '';
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+
+  // Update CTAs
+  var ctaMap = {comparator: 'cta1', bz: 'cta2', timedil: 'cta3', lens: 'cta4'};
+  for (var tool in ctaMap) {
+    var el = document.getElementById(ctaMap[tool]);
+    if (el && s.links[tool]) el.setAttribute('href', s.links[tool]);
+  }
+
+  // Update params
+  var paramMap = {p1: 'p1-params', p2: 'p2-params', p3: 'p3-params', p4: 'p4-params'};
+  for (var p in paramMap) {
+    var pel = document.getElementById(paramMap[p]);
+    if (pel) pel.textContent = s.params[p];
+  }
+
+  // Update payoffs
+  var payoffMap = {p1: 'p1-payoff', p2: 'p2-payoff', p3: 'p3-payoff', p4: 'p4-payoff'};
+  for (var py in payoffMap) {
+    var poel = document.getElementById(payoffMap[py]);
+    if (poel) poel.textContent = s.payoffs[py];
+  }
+
+  // Adjust Step 2 BZ params row label
+  var p2params = document.getElementById('p2-params');
+  if (p2params) p2params.textContent = s.params.p2;
+
+  // Update scenario buttons
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].getAttribute('data-scenario') === name);
+  }
+
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'engineering';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>

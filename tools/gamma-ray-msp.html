@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<!--
+  Gamma-Ray MSP Background Decomposition
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-02
+  Site section: #fermi
+  Epistemic tier: 🔬 Established astrophysics (MSP emission) | ✦ Technosignature speculation
+  References:
+    Fermi-LAT Collaboration (Abdo et al. 2013, ApJS 208:17)
+    Guillemot et al. (2016, A&A 587:A109)
+    Cherenkov Telescope Array Observatory (2019, Science with the CTA)
+    proposal_fermi_cta.html context
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gamma-Ray MSP Background Decomposition — Omega Centauri Society</title>
+<meta name="description" content="Can a steady-state Bekenstein-limited computation signal be separated from OC's millisecond pulsar gamma-ray emission at Fermi-LAT and CTA sensitivity?">
+<link rel="canonical" href="https://omegacentauri.me/tools/gamma-ray-msp.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.spec{color:var(--purple-glow);background:rgba(160,128,240,.06)}
+.warning-banner{background:rgba(13,10,36,.4);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--teal-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:160px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.results-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-value.amber{color:var(--amber-glow)}
+.row-value.purple{color:var(--purple-glow)}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.verdict-row{margin-top:20px;padding:16px 20px;border-radius:8px;border:1px solid var(--border-subtle);text-align:center}
+.verdict-row .verdict-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px}
+.verdict-row .verdict-text{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;letter-spacing:.06em}
+.verdict-row.detectable{background:rgba(29,186,144,.06);border-color:var(--teal-mid)}
+.verdict-row.detectable .verdict-text{color:var(--teal-glow)}
+.verdict-row.marginal{background:rgba(240,160,32,.06);border-color:var(--amber-mid)}
+.verdict-row.marginal .verdict-text{color:var(--amber-glow)}
+.verdict-row.below{background:rgba(138,32,32,.06);border-color:var(--red-mid)}
+.verdict-row.below .verdict-text{color:var(--red-bright)}
+.min-fleek-row{margin-top:12px;padding:12px 16px;background:rgba(13,10,36,.4);border-radius:6px;border-left:2px solid var(--purple-bright);font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);line-height:1.7}
+.min-fleek-row .v{color:var(--purple-glow);font-weight:700}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">◉ OCS</a>
+    <span class="nav-title">Gamma-Ray MSP Decomposition</span>
+    <a class="nav-link" href="/tools/">← All Tools</a>
+    <a class="nav-link" href="https://omegacentauri.me/#fermi">↗ #fermi</a>
+    <a class="nav-link" href="/proposal_fermi_cta.html">Fermi-LAT/CTA proposal ↗</a>
+    <a class="nav-link" href="/tools/neutrino-seti.html">Neutrino SETI ↗</a>
+    <a class="nav-link" href="/tools/bekenstein-landauer.html">B-L-Lloyd Limits ↗</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Gamma-Ray MSP Background Decomposition</h1>
+      <p class="tool-subtitle">Can a steady-state Bekenstein-limited computation signal be separated from OC's millisecond pulsar gamma-ray emission at Fermi-LAT and CTA sensitivity?</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge">🔬 Established astrophysics (MSP emission)</span>
+      <span class="tier-badge spec">✦ Technosignature speculation</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>OC's ~25 known MSPs (TRAPUM will likely find 100+) produce a collective gamma-ray luminosity that is the dominant foreground for any technosignature search.</strong> A Bekenstein-limited computation signal would need to exceed this background — or have a distinguishable spectral shape above ~10 GeV where MSP emission cuts off sharply.
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">MSP Population Parameters</div>
+
+      <div class="slider-block">
+        <label>N_MSP — Number of OC millisecond pulsars</label>
+        <div class="slider-row">
+          <input type="range" id="sl-nmsp" min="10" max="200" step="5" value="25">
+          <span class="slider-value" id="val-nmsp">25 MSPs</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-nmsp="10">10 (conservative)</button>
+          <button class="preset-btn" data-nmsp="25">25 (known)</button>
+          <button class="preset-btn" data-nmsp="100">100 (TRAPUM)</button>
+          <button class="preset-btn" data-nmsp="200">200 (max)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>log₁₀(L_MSP) — Mean MSP gamma-ray luminosity (erg/s)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-lmsp" min="30" max="35" step="0.1" value="32.5">
+          <span class="slider-value" id="val-lmsp">3.2×10³² erg/s</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-lmsp="31.5">Low (10³¹·⁵)</button>
+          <button class="preset-btn" data-lmsp="32.5">Typical (10³²·⁵)</button>
+          <button class="preset-btn" data-lmsp="33.5">Bright (10³³·⁵)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>T_obs — Observation time (years)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-tobs" min="1" max="50" step="1" value="15">
+          <span class="slider-value" id="val-tobs">15 yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-tobs="5">5 yr</button>
+          <button class="preset-btn" data-tobs="15">15 yr (Fermi)</button>
+          <button class="preset-btn" data-tobs="30">30 yr</button>
+          <button class="preset-btn" data-tobs="50">50 yr (CTA life)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Technosignature Signal Parameters</div>
+
+      <div class="slider-block">
+        <label>log₁₀(P_BZ) — BZ jet/computation power (W)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-pbz" min="28" max="40" step="0.1" value="35">
+          <span class="slider-value" id="val-pbz">10³⁵ W</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-pbz="32">10³² W (K~1.6)</button>
+          <button class="preset-btn" data-pbz="35">10³⁵ W (K~2.1)</button>
+          <button class="preset-btn" data-pbz="38">10³⁸ W (near-max)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>log₁₀(f_leak) — Gamma-ray leakage fraction</label>
+        <div class="slider-row">
+          <input type="range" id="sl-fleak" min="-8" max="-2" step="0.1" value="-5">
+          <span class="slider-value" id="val-fleak">1.00×10⁻⁵</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-fleak="-8">10⁻⁸ (trace)</button>
+          <button class="preset-btn" data-fleak="-5">10⁻⁵ (nominal)</button>
+          <button class="preset-btn" data-fleak="-3">10⁻³ (high)</button>
+          <button class="preset-btn" data-fleak="-2">10⁻² (max)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Results -->
+  <section class="results-card">
+    <div class="card-title">Flux &amp; Sensitivity Comparison</div>
+    <div class="cols" style="margin-bottom:0">
+      <div>
+        <div class="row">
+          <div class="row-label">Total MSP flux F_msp</div>
+          <div class="row-value" id="out-fmsp">—<span class="unit">GeV/cm²/s</span></div>
+        </div>
+        <div class="row">
+          <div class="row-label">Fermi-LAT sensitivity (T_obs)</div>
+          <div class="row-value amber" id="out-ferm">—<span class="unit">GeV/cm²/s</span></div>
+        </div>
+        <div class="row">
+          <div class="row-label">CTA-South sensitivity (50h)</div>
+          <div class="row-value amber" id="out-cta">—<span class="unit">GeV/cm²/s</span></div>
+        </div>
+        <div class="row">
+          <div class="row-label">Predicted signal flux F_signal</div>
+          <div class="row-value purple" id="out-fsig">—<span class="unit">GeV/cm²/s</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="row">
+          <div class="row-label">MSP / signal flux ratio</div>
+          <div class="row-value" id="out-ratio">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">SNR_signal (vs Fermi sens.)</div>
+          <div class="row-value" id="out-snrs">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">SNR_separation (|F_sig−F_msp|)</div>
+          <div class="row-value" id="out-snrsep">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Min f_leak for detection</div>
+          <div class="row-value purple" id="out-minfl">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdict-row" id="verdict-row">
+      <div class="verdict-label">Signal status</div>
+      <div class="verdict-text" id="verdict-text">—</div>
+    </div>
+
+    <div class="min-fleek-row" id="min-fleek-note">—</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>MSP gamma-ray background model</h3>
+      <p>Each millisecond pulsar (MSP) in OC emits a characteristic gamma-ray luminosity. The representative model uses spin-down power Ė = 4π²I_NS·Ṗ/P³ with P~3 ms, Ṗ~10⁻²⁰, giving Ė~3.5×10³³ erg/s and a 10% gamma-ray efficiency η_γ~0.1, yielding L_msp~3.5×10³² erg/s per MSP. The total flux at Earth is then F_msp = N_msp × L_msp / (4π × d²) where d = 5.49 kpc.</p>
+      <p>Converting to GeV/cm²/s: <code>F_msp [GeV/cm²/s] = N_msp × L_msp [erg/s] / (4π × d_cm²) × (1 GeV / 1.602×10⁻³ erg)</code></p>
+
+      <h3>Fermi-LAT sensitivity scaling</h3>
+      <p>Fermi-LAT 10-year sensitivity to a point source at 1 GeV is approximately 5×10⁻¹³ GeV cm⁻² s⁻¹. Sensitivity scales as 1/√T_obs, so at 15 years the reference sensitivity is ~4×10⁻¹³ GeV cm⁻² s⁻¹. The tool scales from this reference: <code>F_sens(T) = 4×10⁻¹³ × √(15/T_obs) GeV/cm²/s</code>.</p>
+
+      <h3>CTA-South sensitivity</h3>
+      <p>CTA-South 50h sensitivity for a steady source above 100 GeV is approximately 5×10⁻¹⁴ GeV/cm²/s (Cherenkov Telescope Array Observatory 2019). This is the integrated sensitivity above ~100 GeV where MSP spectral cutoffs (~2–3 GeV) leave the field clear — making CTA particularly powerful for technosignature discrimination.</p>
+
+      <h3>Technosignature signal model</h3>
+      <p>A civilization operating Bekenstein-limited computation via BZ extraction at power P_BZ would emit waste radiation. A fraction f_leak leaks as gamma-rays. The signal flux is: <code>F_signal = f_leak × P_BZ / (4π × d²)</code> converted to GeV/cm²/s. This represents a power-law continuum rather than the exponential MSP cutoff above ~3 GeV, which is the key spectral discriminant.</p>
+
+      <h3>Separability and spectral discrimination</h3>
+      <p>MSP gamma-ray spectra exhibit a characteristic exponential cutoff at ~2–3 GeV. Any BZ-driven emission mechanism would produce a harder spectrum. The SNR_separation metric quantifies whether the flux difference |F_signal − F_msp| exceeds the instrumental sensitivity, independent of the absolute brightness. A signal that sits below MSP emission in total flux but has a different spectral slope above 10 GeV could still be detectable — this is the CTA advantage.</p>
+
+      <h3>The TRAPUM context</h3>
+      <p>The TRAPUM (TRAnsients and PUlsars with MeerKAT) survey is expected to find ~100 MSPs in OC within a few years, compared to ~25 currently known. Each confirmed MSP contributes to the modeled background and sharpens constraints on any residual unresolved emission. A 100-MSP population raises the foreground by ~4× and makes the technosignature detection problem correspondingly harder — unless the signal has a hard spectral component above 10 GeV.</p>
+
+      <p class="meta-line">v1.0 — 2026-06-02 · Code MIT · Prose CC BY 4.0 · Abdo et al. 2013 (ApJS 208:17); Guillemot et al. 2016 (A&amp;A 587:A109); CTA Observatory 2019</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+// Constants
+const G = 6.674e-11, C = 2.998e8, MSUN = 1.989e30, KPC_M = 3.086e19, EV_J = 1.602e-19;
+const OC_DIST = 5.49 * KPC_M;           // m
+const OC_DIST_CM = OC_DIST * 100;       // cm
+const PI = Math.PI;
+// GeV conversion: 1 GeV = 1e9 * 1.602e-19 J = 1.602e-10 J; 1 erg = 1e-7 J → 1 GeV = 1.602e-10 / 1e-7 erg = 1.602e-3 erg
+const GEV_ERG = 1.602e-3;  // 1 GeV in erg
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const mv=x/Math.pow(10,e);return mv.toFixed(dp)+'×10'+supDigits(e)}
+function fmtSciSmall(x){if(!isFinite(x)||x===0)return'0';const e=Math.floor(Math.log10(Math.abs(x)));const mv=x/Math.pow(10,e);return mv.toFixed(2)+'×10'+supDigits(e)}
+
+// Hash helpers
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { n: 25, l: 32.5, p: 35, f: -5, t: 15 };
+
+function loadHash(){
+  const h = getHash();
+  if (h.n && !isNaN(+h.n)) state.n = Math.max(10, Math.min(200, +h.n));
+  if (h.l && !isNaN(+h.l)) state.l = Math.max(30, Math.min(35, +h.l));
+  if (h.p && !isNaN(+h.p)) state.p = Math.max(28, Math.min(40, +h.p));
+  if (h.f && !isNaN(+h.f)) state.f = Math.max(-8, Math.min(-2, +h.f));
+  if (h.t && !isNaN(+h.t)) state.t = Math.max(1, Math.min(50, +h.t));
+}
+function saveHash(){ setHash({n:state.n, l:state.l.toFixed(1), p:state.p.toFixed(1), f:state.f.toFixed(1), t:state.t}); }
+
+function compute(){
+  const N = state.n;
+  const L_msp_erg = Math.pow(10, state.l);          // erg/s per MSP
+  const P_BZ_W = Math.pow(10, state.p);              // W
+  const f_leak = Math.pow(10, state.f);
+  const T_obs = state.t;                             // years
+
+  // MSP total flux: [erg/cm²/s] → [GeV/cm²/s]
+  const F_msp_erg = N * L_msp_erg / (4 * PI * OC_DIST_CM * OC_DIST_CM);
+  const F_msp_GeV = F_msp_erg / GEV_ERG;
+
+  // Fermi-LAT sensitivity: reference 4e-13 GeV/cm²/s at 15 yr, scale as 1/√T
+  const F_fermi_ref = 4e-13;  // at 15 yr
+  const F_fermi = F_fermi_ref * Math.sqrt(15 / T_obs);
+
+  // CTA-South: fixed 50h sensitivity ~5e-14 GeV/cm²/s (>100 GeV, independent of obs time here)
+  const F_cta = 5e-14;
+
+  // Signal flux: P_BZ_W [W] → erg/s (* 1e7), then leakage fraction, at OC distance
+  const P_signal_erg = f_leak * P_BZ_W * 1e7;  // erg/s
+  const F_signal_erg = P_signal_erg / (4 * PI * OC_DIST_CM * OC_DIST_CM);
+  const F_signal_GeV = F_signal_erg / GEV_ERG;
+
+  // Ratios
+  const msp_sig_ratio = F_msp_GeV / (F_signal_GeV || 1e-300);
+  const SNR_signal = F_signal_GeV / F_fermi;
+  const SNR_sep = Math.abs(F_signal_GeV - F_msp_GeV) / F_fermi;
+
+  // Min f_leak for detection: F_signal_GeV = F_fermi
+  // f_leak * P_BZ_W * 1e7 / (4*PI*OC_DIST_CM²) / GEV_ERG = F_fermi
+  // f_leak_min = F_fermi * GEV_ERG * 4*PI*OC_DIST_CM² / (P_BZ_W * 1e7)
+  const f_min = F_fermi * GEV_ERG * 4 * PI * OC_DIST_CM * OC_DIST_CM / (P_BZ_W * 1e7);
+
+  // Verdict
+  let verdict, vclass;
+  if (SNR_signal >= 5 && SNR_sep >= 3) {
+    verdict = 'DETECTABLE'; vclass = 'detectable';
+  } else if (SNR_signal >= 2 || SNR_sep >= 1) {
+    verdict = 'MARGINAL'; vclass = 'marginal';
+  } else {
+    verdict = 'BELOW THRESHOLD'; vclass = 'below';
+  }
+
+  return { F_msp_GeV, F_fermi, F_cta, F_signal_GeV, msp_sig_ratio, SNR_signal, SNR_sep, f_min, verdict, vclass };
+}
+
+function render(){
+  const r = compute();
+  document.getElementById('out-fmsp').innerHTML = fmtSciSmall(r.F_msp_GeV)+'<span class="unit">GeV/cm²/s</span>';
+  document.getElementById('out-ferm').innerHTML = fmtSciSmall(r.F_fermi)+'<span class="unit">GeV/cm²/s</span>';
+  document.getElementById('out-cta').innerHTML  = fmtSciSmall(r.F_cta)+'<span class="unit">GeV/cm²/s</span>';
+  document.getElementById('out-fsig').innerHTML = fmtSciSmall(r.F_signal_GeV)+'<span class="unit">GeV/cm²/s</span>';
+  document.getElementById('out-ratio').innerHTML = isFinite(r.msp_sig_ratio) ? fmtSci(r.msp_sig_ratio,1) : '∞';
+  document.getElementById('out-snrs').innerHTML = r.SNR_signal < 0.01 ? fmtSci(r.SNR_signal,2) : r.SNR_signal.toFixed(1);
+  document.getElementById('out-snrsep').innerHTML = r.SNR_sep < 0.01 ? fmtSci(r.SNR_sep,2) : r.SNR_sep.toFixed(1);
+  const f_min_log = Math.log10(r.f_min);
+  document.getElementById('out-minfl').innerHTML = fmtSciSmall(r.f_min) + '<span class="unit">(log '+f_min_log.toFixed(1)+')</span>';
+
+  const vr = document.getElementById('verdict-row');
+  vr.className = 'verdict-row ' + r.vclass;
+  document.getElementById('verdict-text').textContent = r.verdict;
+
+  const note = document.getElementById('min-fleek-note');
+  note.innerHTML = `Minimum leakage fraction for Fermi-LAT detection at T = ${state.t} yr: <span class="v">${fmtSciSmall(r.f_min)}</span> — i.e. the BZ-driven signal must carry at least this fraction of P_BZ as gamma-ray flux. At the current log(f_leak) = ${state.f.toFixed(1)}, the signal is <span class="v">${r.SNR_signal.toFixed(2)}× Fermi sensitivity</span>.`;
+
+  // Update slider value displays
+  document.getElementById('val-nmsp').textContent = state.n + ' MSPs';
+  document.getElementById('val-lmsp').textContent = fmtSciSmall(Math.pow(10, state.l)) + ' erg/s';
+  document.getElementById('val-pbz').textContent  = '10' + supDigits(Math.round(state.p)) + ' W';
+  document.getElementById('val-fleak').textContent = fmtSciSmall(Math.pow(10, state.f));
+  document.getElementById('val-tobs').textContent = state.t + ' yr';
+}
+
+function bindSlider(id, stateKey, parseAs){
+  const el = document.getElementById(id);
+  el.value = state[stateKey];
+  el.addEventListener('input', ()=>{
+    state[stateKey] = parseAs === 'int' ? parseInt(el.value) : parseFloat(el.value);
+    saveHash(); render();
+  });
+}
+
+function wire(){
+  bindSlider('sl-nmsp', 'n', 'int');
+  bindSlider('sl-lmsp', 'l', 'float');
+  bindSlider('sl-pbz',  'p', 'float');
+  bindSlider('sl-fleak','f', 'float');
+  bindSlider('sl-tobs', 't', 'int');
+
+  document.querySelectorAll('[data-nmsp]').forEach(b=>b.addEventListener('click',()=>{state.n=parseInt(b.dataset.nmsp);document.getElementById('sl-nmsp').value=state.n;saveHash();render();}));
+  document.querySelectorAll('[data-lmsp]').forEach(b=>b.addEventListener('click',()=>{state.l=parseFloat(b.dataset.lmsp);document.getElementById('sl-lmsp').value=state.l;saveHash();render();}));
+  document.querySelectorAll('[data-pbz]').forEach(b=>b.addEventListener('click',()=>{state.p=parseFloat(b.dataset.pbz);document.getElementById('sl-pbz').value=state.p;saveHash();render();}));
+  document.querySelectorAll('[data-fleak]').forEach(b=>b.addEventListener('click',()=>{state.f=parseFloat(b.dataset.fleak);document.getElementById('sl-fleak').value=state.f;saveHash();render();}));
+  document.querySelectorAll('[data-tobs]').forEach(b=>b.addEventListener('click',()=>{state.t=parseInt(b.dataset.tobs);document.getElementById('sl-tobs').value=state.t;saveHash();render();}));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-body');
+  at.addEventListener('click',()=>{const open=!ab.classList.contains('open');ab.classList.toggle('open',open);at.classList.toggle('open',open);});
+}
+
+function init(){ loadHash(); wire(); render(); }
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>

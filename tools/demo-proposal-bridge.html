@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--
+  Demo - From Proposals to Numbers
+  Omega Centauri Society . omegacentauri.me
+  Five tools walk through each active observational proposal — showing detection threshold,
+  parameter sensitivity, and timeline each instrument brings.
+  Chains: lisa-emri . pulsar-timing . jwst-accretion . cw-sensitivity . constraint-stacker
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-06-01
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo - From Proposals to Numbers . OCS</title>
+<meta name="description" content="Five chained tools walk through each active OCS observational proposal — showing detection threshold, parameter sensitivity, and timeline for LISA, MeerKAT, JWST, LIGO O4/O5, and the constraint stacker.">
+<link rel="canonical" href="https://omegacentauri.me/tools/demo-proposal-bridge.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.06),transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.08);box-shadow:0 0 0 1px var(--teal-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s4{--accent:var(--red-bright)}
+.step.s5{--accent:var(--teal-glow)}
+.step.s5{border-color:var(--teal-mid);box-shadow:0 0 0 1px var(--teal-mid) inset}
+.step.s5 .step-title{color:var(--teal-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">&#9677; OCS</a>
+    <span class="nav-title">Demo &middot; From Proposals to Numbers</span>
+    <a href="/tools/" class="nav-link">&larr; All Demos</a>
+    <a href="#steps" class="nav-link">&#8599; Steps</a>
+    <a href="constraint-stacker.html" class="nav-link">Constraint Stacker &#8599;</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Demo &middot; Observational</div>
+    <h1>From Proposals to Numbers</h1>
+    <p class="hero-sub">Five tools walk through each active observational proposal &mdash; showing what detection threshold, parameter sensitivity, and timeline each instrument brings.</p>
+    <div class="hero-meta">5 tools &middot; ~25 min &middot; <strong>Science-ready</strong></div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Choose an instrument access window</div>
+    <p class="scenario-help">Some channels require instruments that are either not yet operational or at future sensitivity. Select which instrument epoch you want to evaluate to see how the detection thresholds change across all five tools.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="A">
+        <span class="name">Scenario A &mdash; Optimistic Instrument Access (Recommended start)</span>
+        <span class="desc">LISA operational (post-2034), MeerKAT extended baseline (2030+), ELT commissioning. Maximum sensitivity across all channels. The long-game convergence scenario.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="B">
+        <span class="name">Scenario B &mdash; Near-Term Only</span>
+        <span class="desc">O4/O5 LIGO, current MeerKAT (5 pulsars, 5-yr baseline), current JWST. What we can constrain today with operational instruments.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 1 &middot; Gravitational Wave Channel</div>
+        <div class="step-title">LISA: Inspiral SNR</div>
+        <p class="step-prose">A stellar-mass black hole (~10&nbsp;M&#9857;) inspiralling into OC&rsquo;s IMBH (8,200&nbsp;M&#9857;) produces a gravitational wave signal detectable by LISA if the mass ratio q = m/M &ge; 10&minus;&sup3;. The SNR scales with the number of GW cycles in band. At a separation of 0.01&nbsp;pc, the inspiral timescale is <strong>~10&sup7;&nbsp;yr</strong> &mdash; too slow for current LISA; but at 0.001&nbsp;pc (~3&nbsp;mpc), timescales become accessible. This is the channel that would provide a direct IMBH mass to &lt;1%. <em>No other channel can match LISA&rsquo;s mass precision once the signal is in band.</em> The EMRI calculator lets you vary the secondary mass, orbital separation, and eccentricity to explore the parameter space that LISA can reach in its nominal 4-year mission.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="lisa" href="lisa-emri.html">Open LISA EMRI Calculator &rarr;</a>
+          <span class="step-params" id="p1">M=8200 · m=10 · separation=0.001 pc</span>
+          <span class="tier-mini tier-t">LISA (2034+)</span>
+          <span class="tier-mini tier-e">GR waveform</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">LISA is the only instrument that can measure IMBH mass to &lt;1% precision via direct waveform fitting. It resolves the Haberle vs. Banares tension definitively &mdash; but only after ~2034 and only if a suitable EMRI is found in OC&rsquo;s core.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 2 &middot; Radio Channel</div>
+        <div class="step-title">MeerKAT: Closing the Upper Limit</div>
+        <p class="step-prose">Adding more OC pulsars to the timing array reduces &sigma;<sub>M</sub> &prop; 1/&radic;N<sub>psr</sub>. The Ba&ntilde;ares 2025 result used <strong>5 pulsars over 5 years</strong>. To push the upper limit below 6,000&nbsp;M&#9857; at the same significance requires either more pulsars or a longer baseline. TRAPUM (MeerKAT pulsar survey) is actively discovering new OC pulsars: each new discovery extends the array and tightens the constraint. <em>The pulsar timing tool shows the enclosed mass sensitivity as a function of pulsar radius, timing precision, and baseline length</em> &mdash; revealing that 15 pulsars at the same precision would halve the current upper limit, potentially pushing it below the H&auml;berle lower bound and resolving the tension from below.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="pulsar" href="pulsar-timing.html">Open Pulsar Timing Tool &rarr;</a>
+          <span class="step-params" id="p2">r=10&Prime; · precision=1 &mu;s · baseline=10 yr · N_psr=5</span>
+          <span class="tier-mini tier-e">Newtonian dynamics</span>
+          <span class="tier-mini tier-d">Banares 2025</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">More pulsars directly reduces the upper limit. TRAPUM has found at least 3 new OC pulsars in 2024&ndash;2025. If N_psr reaches 15&ndash;20, the timing upper limit will cross the Haberle lower bound and make the tension self-resolving.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 3 &middot; Infrared Channel</div>
+        <div class="step-title">JWST: Tightening the Accretion Limit</div>
+        <p class="step-prose">Chen et al. 2025 placed a non-detection limit at <strong>~0.05&nbsp;&mu;Jy at 3&ndash;4&nbsp;&mu;m</strong>. Deeper imaging &mdash; or a Cycle 4 follow-up at longer wavelengths, extending into the 10&ndash;20&nbsp;&mu;m range where Bondi accretion would peak for a ~8,000&nbsp;M&#9857; IMBH &mdash; could push the Bondi mass limit below 6,000&nbsp;M&#9857; for accretion efficiencies &epsilon; &gt; 10&minus;&sup3;. <em>The JWST accretion visualiser translates a flux non-detection into a mass limit as a function of accretion efficiency and density.</em> The key tension: the limit is efficiency-dependent, and low-efficiency (radiatively inefficient) accretion could hide an 8,200&nbsp;M&#9857; IMBH behind the current JWST threshold.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="jwst" href="jwst-accretion.html">Open JWST Accretion Visualiser &rarr;</a>
+          <span class="step-params" id="p3">flux limit=0.05 &mu;Jy · wavelength=3.6 &mu;m · d=5.49 kpc</span>
+          <span class="tier-mini tier-d">Chen 2025</span>
+          <span class="tier-mini tier-e">Bondi accretion</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The JWST limit is real but efficiency-dependent. Longer-wavelength follow-up (10&ndash;20 &mu;m) would be less sensitive to RIAF suppression and could set a more model-independent mass limit.</div></div>
+      </div>
+    </article>
+
+    <article class="step s4" id="step4">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 4 &middot; CW Channel (current data)</div>
+        <div class="step-title">LIGO O4: Ellipticity Upper Limits</div>
+        <p class="step-prose">An OC-targeted continuous-wave (CW) search using known MSP ephemerides can be run on public O4 data today. For a pulsar at 300&nbsp;Hz spinning in OC&rsquo;s core, the O4 ellipticity upper limit is <strong>&epsilon; &lt; 3&times;10&minus;&#8312;</strong> &mdash; below the spin-down limit for most OC MSPs. A non-detection at this level constrains the dark cluster hypothesis: many spinning NSs collectively exceeding this ellipticity would produce a detectable stochastic CW background from OC&rsquo;s direction. <em>The O5 run will push this limit another factor of ~3 lower</em>, further squeezing the dark-cluster parameter space. In Scenario A (with ET), the projected sensitivity reaches the spin-down limit of virtually every known OC pulsar.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="cw" href="cw-sensitivity.html">Open CW Sensitivity Estimator &rarr;</a>
+          <span class="step-params" id="p4">f=300 Hz · &epsilon;&lt;3&times;10&minus;&#8312; · run=O4</span>
+          <span class="tier-mini tier-e">GW strain sensitivity</span>
+          <span class="tier-mini tier-d">dark cluster</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">CW searches on O4 data are a zero-cost constraint: public data, existing pipelines, no new observing time. The dark-cluster interpretation requires a high-density NS population in OC&rsquo;s core, and each O4 null result tightens the ellipticity upper limit that population must satisfy.</div></div>
+      </div>
+    </article>
+
+    <article class="step s5" id="step5">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-kicker">Step 5 &middot; Combined Evidence</div>
+        <div class="step-title">Stacking All Channels</div>
+        <p class="step-prose">The constraint stacker shows all current IMBH mass estimates and limits on a single log-mass axis. The 6,000&ndash;8,200&nbsp;M&#9857; tension is visible: both the H&auml;berle lower bound and the Ba&ntilde;ares upper bound appear simultaneously. Adding the JWST accretion limit (parameter-dependent), the Chen 2025 result, and the pulsar timing data shows a <strong>cluster of constraints around 6,000&ndash;15,000&nbsp;M&#9857; with active tension.</strong> <em>The LISA and CW channels will eventually resolve this.</em> In Scenario A, the stacker shows where the LISA measurement would land relative to the current spread; in Scenario B, it shows what the current data can already rule out. The stacker is the best single-page summary of the observational status.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="stacker" href="constraint-stacker.html">Open Constraint Stacker &rarr;</a>
+          <span class="step-params" id="p5">all channels · 6,000&ndash;15,000 M&#9857; range</span>
+          <span class="tier-mini tier-d">Active tension</span>
+          <span class="tier-mini tier-e">Multi-method synthesis</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The stacker makes the situation legible: five independent methods, two incompatible results, one question. The LISA inspiral and a TRAPUM pulsar census are the two most likely paths to resolution within the next decade.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9878; Convergence Roadmap</div>
+    <div class="synth-prose">
+      <p>The five active observational channels &mdash; GW inspiral (LISA), radio pulsar timing (MeerKAT/SKA), infrared accretion (JWST), CW GW search (LIGO/ET), and astrometric lensing (Roman/ELT) &mdash; are approaching convergence. None individually resolves the 6,000&ndash;8,200&nbsp;M&#9857; tension; but a simultaneous detection or strong non-detection from two independent channels would close the question.</p>
+      <p>The most likely <strong>near-term resolution</strong>: a TRAPUM pulsar discovery (increasing N<sub>psr</sub> from 5 to 15+) would extend the MeerKAT timing baseline effectively, pushing the Ba&ntilde;ares upper limit below the H&auml;berle lower bound. This resolution requires no new instruments &mdash; only continued TRAPUM operation.</p>
+      <p>The most likely <strong>definitive resolution</strong>: LISA detection of a single EMRI in OC&rsquo;s core would provide mass to &lt;1% precision, making the Haberle vs. Banares question moot. LISA launches around 2034. The observational roadmap for all OCS claims is at the <a href="falsification-hub.html">Falsification &amp; Observational Roadmap</a>; the current constraint window is at the <a href="constraint-stacker.html">Constraint Stacker</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into five interactive tools.
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Demo - From Proposals to Numbers
+// Scenario -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=A|B
+//
+// Tool hash formats verified against each tool's loadHash() block.
+// cw-sensitivity: d=O4|O5|ET, f=Hz, e=log10(ellipticity), t=years
+// pulsar-timing: r=arcsec, precision=microsec, baseline=yr
+// =========================================================================
+
+var SCENARIOS = {
+  A: {
+    label: 'Optimistic Instrument Access LISA+MeerKAT+ELT',
+    lisa:    {M:'8200', m:'10', sep:'0.001'},
+    pulsar:  {r:'10.0', precision:'1.0', baseline:'15.0'},
+    jwst:    {flux:'0.05', wavelength:'3.6', dist:'5.49'},
+    cw:      {f:'300', e:'-7', d:'O5', t:'2'},
+    stacker: {show:'kinematics,propermotion,timing,accretion,nbody,msigma'},
+    summary: {
+      lisa:    'M=8200 · m=10 · separation=0.001 pc',
+      pulsar:  'r=10″ · precision=1 μs · baseline=15 yr · N_psr=15',
+      jwst:    'flux limit=0.05 μJy · wavelength=3.6 μm · d=5.49 kpc',
+      cw:      'f=300 Hz · ε<3×10⁻⁸ · run=O5',
+      stacker: 'all channels · 6,000–15,000 M☉ range'
+    }
+  },
+  B: {
+    label: 'Near-Term Only O4+MeerKAT+JWST',
+    lisa:    {M:'8200', m:'10', sep:'0.001'},
+    pulsar:  {r:'10.0', precision:'1.0', baseline:'5.0'},
+    jwst:    {flux:'0.05', wavelength:'3.6', dist:'5.49'},
+    cw:      {f:'300', e:'-7', d:'O4', t:'1'},
+    stacker: {show:'kinematics,propermotion,timing,accretion,nbody,msigma'},
+    summary: {
+      lisa:    'M=8200 · m=10 · separation=0.001 pc (projection only)',
+      pulsar:  'r=10″ · precision=1 μs · baseline=5 yr · N_psr=5',
+      jwst:    'flux limit=0.05 μJy · wavelength=3.6 μm · d=5.49 kpc',
+      cw:      'f=300 Hz · ε<3×10⁻⁸ · run=O4',
+      stacker: 'all channels · 6,000–15,000 M☉ range'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  if (!parts.length) return '';
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+  var links = {
+    lisa:    'lisa-emri.html'          + buildHash(s.lisa),
+    pulsar:  'pulsar-timing.html'      + buildHash(s.pulsar),
+    jwst:    'jwst-accretion.html'     + buildHash(s.jwst),
+    cw:      'cw-sensitivity.html'     + buildHash(s.cw),
+    stacker: 'constraint-stacker.html' + buildHash(s.stacker)
+  };
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+  document.getElementById('p1').textContent = s.summary.lisa;
+  document.getElementById('p2').textContent = s.summary.pulsar;
+  document.getElementById('p3').textContent = s.summary.jwst;
+  document.getElementById('p4').textContent = s.summary.cw;
+  document.getElementById('p5').textContent = s.summary.stacker;
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([A-Za-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'A';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>

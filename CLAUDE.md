@@ -1,6 +1,6 @@
 # CLAUDE.md — The Omega Centauri Society
 
-**Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-01
+**Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-02
 
 Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, Macro Transcension Hypothesis (MTH). No framework, no build pipeline, no npm — hand-written HTML/CSS/JS, all inline per file. Two content registers kept strictly separate: peer-reviewed science (DOI-sourced) and speculative engineering (MTH/computronium — always labeled).
 
@@ -59,20 +59,20 @@ repo/
 └── tools/
     ├── index.html                 ← tools landing page
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values
-    ├── [44 tool *.html files]     ← see categories below
-    ├── [4 workflow-*.html files]  ← end-to-end staged narrative calculators
-    └── [25 demo-*.html files]     ← chained-tool narrative demos
+    ├── [52 tool *.html files]     ← see categories below
+    ├── [7 workflow-*.html files]  ← end-to-end staged narrative calculators
+    └── [30 demo-*.html files]     ← chained-tool narrative demos
 ```
 
-**Tool categories (44 total):**
-- *IMBH evidence (9):* constraint-stacker, imbh-timeline, cluster-comparator, velocity-dispersion, pulsar-timing, orbital-dynamics, tidal-disruption, synthetic-observation, jwst-accretion
-- *Computronium / MTH (10):* bz-kardashev, bekenstein-landauer, time-dilation, hawking-evaporation, kerr-geometry, compute-in-space, matrioshka-brain, reversible-computing, stem-compression, penrose-process
-- *Fermi / SETI (14):* drake-monte-carlo, great-filter, aestivation, superradiance, dyson-swarm, lisa-emri, cmd-explorer, radio-seti, optical-seti, neutrino-seti, interstellar-link, multi-messenger-alert, passive-seti, iso-encounter
+**Tool categories (52 total):**
+- *IMBH evidence (11):* constraint-stacker, imbh-timeline, cluster-comparator, velocity-dispersion, pulsar-timing, orbital-dynamics, tidal-disruption, synthetic-observation, jwst-accretion, cw-sensitivity, oc-orbit-simulator
+- *Computronium / MTH (14):* bz-kardashev, bekenstein-landauer, time-dilation, hawking-evaporation, kerr-geometry, compute-in-space, matrioshka-brain, reversible-computing, stem-compression, penrose-process, magnetic-reconnection, spin-up-timeline, kugelblitz-dvali, barrow-scale
+- *Fermi / SETI (16):* drake-monte-carlo, great-filter, aestivation, superradiance, dyson-swarm, lisa-emri, cmd-explorer, radio-seti, optical-seti, neutrino-seti, interstellar-link, multi-messenger-alert, passive-seti, iso-encounter, gamma-ray-msp, jet-radio-detectability
 - *Cluster physics (8):* mass-segregation, omegacat-populations, omega-dwarf-origin, dark-cluster, dark-matter-flux, tidal-capture, imbh-growth-history, seed-formation
-- *Context (4):* cosmic-center, cosmological-natural-selection, astrometric-microlensing, orbital-dynamics (also IMBH)
+- *Context (3):* cosmic-center, cosmological-natural-selection, astrometric-microlensing
 - *Hub pages (2):* tools/index.html, tools/falsification-hub.html
 
-**Workflows (4):** workflow-mth-compute-budget, workflow-fermi-mth-crossover, workflow-bh-energy-budget, workflow-wait-or-act — staged calculators with live stage-to-stage handoff and copy-to-clipboard export. Use `demo-breaking-degeneracy.html` or an existing workflow as template for new ones.
+**Workflows (7):** workflow-mth-compute-budget, workflow-fermi-mth-crossover, workflow-bh-energy-budget, workflow-wait-or-act, workflow-constraint-window, workflow-survivability, workflow-spin-economics — staged calculators with live stage-to-stage handoff and copy-to-clipboard export. Use an existing workflow as template for new ones.
 
 ---
 

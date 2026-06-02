@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<!--
+  Continuous Gravitational Wave Sensitivity Estimator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #science
+  Epistemic tier(s): 🔬 Established GW physics · 🔬 Observational (O4 public data available)
+  Data sources:
+    - Abbott et al. (LIGO Scientific Collaboration) "All-sky search for continuous gravitational waves"
+        PRD 106, 102008 (2022) — O3 CW all-sky search results and sensitivity
+    - Prix, R. (2009) "Gravitational Waves from Spinning Neutron Stars" in Neutron Stars and Pulsars
+        (Springer), arXiv:0907.1100 — CW signal model and F-statistic
+    - proposal_ligo_auger.html — OC-targeted CW observing proposal context
+    - Abbott et al. (2020) "Prospects for Observing and Localizing GW Transients with LIGO and Virgo"
+        Living Rev. Rel. 21, 3 — O4/O5 design sensitivity
+    - Punturo et al. (2010) "The Einstein Telescope: a third-generation gravitational wave observatory"
+        CQG 27, 194002 — ET-D noise curve
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CW Sensitivity Estimator — Omega Centauri Society</title>
+<meta name="description" content="Ellipticity upper limits from O4/O5 LIGO and Einstein Telescope for rotating pulsars in Omega Centauri's core — the CW complement to the LISA inspiral channel.">
+<link rel="canonical" href="https://omegacentauri.me/tools/cw-sensitivity.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.context-banner{background:rgba(29,186,144,.06);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.context-banner strong{color:var(--teal-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:160px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.detector-row{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+.det-btn{font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:14px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.det-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.det-btn.active{color:var(--void);background:var(--teal-bright);border-color:var(--teal-bright)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-glow)}
+.row-value.red-v{color:var(--red-bright)}
+.row-value.green-v{color:var(--teal-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.verdict{display:inline-block;padding:4px 12px;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;font-weight:700;margin-left:8px}
+.verdict.detect{background:rgba(29,186,144,.15);color:var(--teal-glow);border:1px solid var(--teal-mid)}
+.verdict.below{background:rgba(138,32,32,.12);color:var(--red-bright);border:1px solid var(--red-mid)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">◉ OCS</a>
+    <span class="nav-title">CW Sensitivity Estimator</span>
+    <a class="nav-link" href="https://omegacentauri.me/tools/">← All Tools</a>
+    <a class="nav-link" href="https://omegacentauri.me/#science">↗ #science</a>
+    <a class="nav-link" href="https://omegacentauri.me/tools/lisa-emri.html">LISA EMRI ↗</a>
+    <a class="nav-link" href="https://omegacentauri.me/tools/pulsar-timing.html">Pulsar Timing ↗</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Continuous Gravitational Wave Sensitivity</h1>
+      <p class="tool-subtitle">Ellipticity upper limits from O4/O5 LIGO and Einstein Telescope for rotating pulsars in Omega Centauri's core — the CW complement to the LISA inspiral channel</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Established GW physics</span>
+      <span class="tier-badge tier-est">🔬 Observational (O4 public data available)</span>
+    </div>
+  </header>
+
+  <div class="context-banner">
+    <strong>The CW channel is complementary to LISA's inspiral channel.</strong>
+    LISA targets the final ~years of inspiral; CW searches target millisecond pulsars spinning stably today. O4 LIGO data is public via GWOSC — an OC-targeted CW search using known pulsar ephemerides requires no new observations.
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Pulsar &amp; Search Parameters</div>
+
+      <div class="slider-block">
+        <label>Spin frequency f_spin (Hz, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="freq-slider" min="1" max="3" step="0.005" value="2">
+          <span class="slider-value" id="freq-val">100 Hz</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-freq="50">PSR A (50 Hz)</button>
+          <button class="preset-btn" data-freq="100">PSR B (100 Hz)</button>
+          <button class="preset-btn" data-freq="200">PSR C (200 Hz)</button>
+          <button class="preset-btn" data-freq="300">PSR D (300 Hz)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Ellipticity ε = log₁₀(ε) — deviation from spherical</label>
+        <div class="slider-row">
+          <input type="range" id="eps-slider" min="-12" max="-4" step="0.05" value="-7">
+          <span class="slider-value" id="eps-val">ε = 10⁻⁷</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-loge="-6">theoretical max (10⁻⁶)</button>
+          <button class="preset-btn" data-loge="-7">crust yield (10⁻⁷)</button>
+          <button class="preset-btn" data-loge="-9">below SD limit (10⁻⁹)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Detector</label>
+        <div class="detector-row">
+          <button class="det-btn active" data-det="O4" id="det-O4">O4</button>
+          <button class="det-btn" data-det="O5" id="det-O5">O5</button>
+          <button class="det-btn" data-det="ET" id="det-ET">Einstein Telescope</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Observing time T_obs (years)</label>
+        <div class="slider-row">
+          <input type="range" id="tobs-slider" min="0.5" max="10" step="0.5" value="1">
+          <span class="slider-value" id="tobs-val">1.0 yr</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Sensitivity Results</div>
+
+      <div class="row">
+        <div class="row-label">GW frequency f_gw = 2 × f_spin</div>
+        <div class="row-value" id="fgw-val">—<span class="unit">Hz</span></div>
+      </div>
+      <div class="row">
+        <div class="row-label">Noise floor √S_h at f_gw</div>
+        <div class="row-value" id="noise-val">—<span class="unit">h/√Hz</span></div>
+      </div>
+      <div class="row">
+        <div class="row-label">Amplitude threshold h_thresh</div>
+        <div class="row-value" id="hthresh-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Strain h₀ from ε input</div>
+        <div class="row-value" id="h0-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">SNR = h₀ / h_thresh</div>
+        <div class="row-value" id="snr-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Ellipticity upper limit ε_UL</div>
+        <div class="row-value amber" id="epul-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Spin-down reference ε_SD</div>
+        <div class="row-value" id="epsd-val">—<span class="unit">(OC MSP)</span></div>
+      </div>
+      <div class="row">
+        <div class="row-label">Dark-cluster N BHs for detection</div>
+        <div class="row-value amber" id="nbh-val">—</div>
+        <div class="row-meta" id="nbh-meta"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>The signal model</h3>
+      <p>A rotating neutron star with a non-zero ellipticity ε = (I_xx − I_yy) / I_zz emits continuous GWs at twice the spin frequency. The strain amplitude reaching Earth at distance d is:</p>
+      <p><code>h₀ = (16π²G / c⁴) × (I_NS × ε × f_gw²) / d</code></p>
+      <p>where I_NS = 10³⁸ kg·m² is the canonical NS moment of inertia, f_gw = 2 × f_spin, and d = 5.49 kpc (Omega Centauri distance, Baumgardt &amp; Hilker 2018).</p>
+
+      <h3>Detection threshold (F-statistic)</h3>
+      <p>For a coherent F-statistic search of duration T_obs, the 95% CL detection threshold is approximately:</p>
+      <p><code>h_thresh ≈ 11.4 × √(S_h(f) / T_obs)</code></p>
+      <p>where S_h(f) is the one-sided power spectral density (units Hz⁻¹) and the factor 11.4 encodes the standard signal-to-noise threshold for the chi-squared F-statistic (Prix 2009). Sensitivity improves as √T_obs — halving the threshold requires 4× the observing time.</p>
+
+      <h3>Detector noise models</h3>
+      <p><strong>O4 (simplified analytic):</strong> <code>√S_h = 3.5×10⁻²⁴ × √(1 + (100/f)⁴ + (f/600)²)</code> h/√Hz — captures the seismic wall below ~30 Hz, shot-noise rise above ~300 Hz, and peak sensitivity near 100–150 Hz.</p>
+      <p><strong>O5:</strong> 2× better than O4 in strain amplitude (<code>√S_h_O5 = 0.5 × √S_h_O4</code>), consistent with the LIGO O5 design sensitivity document.</p>
+      <p><strong>Einstein Telescope (ET-D):</strong> <code>√S_h = 1.5×10⁻²⁴ × √(1 + (15/f)⁶ + (f/1500)²)</code> — extends low-frequency reach to ~5 Hz via underground siting and cryogenic mirrors (Punturo et al. 2010).</p>
+
+      <h3>Spin-down limit and ellipticity</h3>
+      <p>The spin-down limit ε_SD is the maximum ellipticity consistent with the observed spin-down rate being entirely due to GW emission. For an Omega Centauri millisecond pulsar (typical P ~ 3 ms, Ṗ ~ 10⁻²⁰), the estimate is:</p>
+      <p><code>ε_SD ≈ 10⁻⁸ × (100/f_gw)^(5/2)</code></p>
+      <p>MSPs typically have ε_SD ~ 10⁻⁹–10⁻⁸, well below the crust-yield limit (~10⁻⁷). Reaching ε_SD sensitivity requires years of coherent integration, which becomes computationally expensive for wide-band all-sky searches but is tractable for targeted searches with known ephemerides.</p>
+
+      <h3>Dark cluster note</h3>
+      <p>If Omega Centauri contains a dark cluster of N unseen black holes or neutron stars, each contributing a CW signal independently, the total incoherent power scales as N × h₀². Coherent combination across N sources is not feasible, but stacking raises the effective amplitude threshold. The displayed N is the number of identical ε emitters required so that one signal crosses the detection threshold (i.e., SNR_single = h₀/h_thresh > 1/√N for stacking purposes — simplified here to the number where SNR reaches 1).</p>
+
+      <h3>O4 data availability</h3>
+      <p>LIGO O4 data (from May 2023) is released publicly via the Gravitational Wave Open Science Center (GWOSC, gwosc.org) on a rolling basis. A targeted CW search on known OC pulsars from the ATNF catalog requires only the ephemerides and a few days of compute on a GPU cluster. No new telescope time is needed.</p>
+
+      <p class="meta-line">v1.0 — 2026-06-01 · Code MIT · Prose CC BY 4.0 · Abbott et al. PRD 106, 102008 (2022); Prix arXiv:0907.1100 (2009); Punturo et al. CQG 27:194002 (2010)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G = 6.674e-11, C = 2.998e8, MSUN = 1.989e30, PI = Math.PI;
+const KPC_M = 3.086e19, OC_DIST = 5.49 * KPC_M; // 1.694e20 m
+const I_NS = 1e38; // canonical NS moment of inertia, kg·m²
+const YR_S = 365.25 * 86400;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp){dp=dp===undefined?2:dp;if(!isFinite(x)||x===0)return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtEps(e){if(!isFinite(e)||e===0)return'0';const lg=Math.log10(Math.abs(e));const exp=Math.floor(lg);const man=e/Math.pow(10,exp);if(Math.abs(man-1)<0.01)return '10'+supDigits(exp);return man.toFixed(2)+'×10'+supDigits(exp)}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { freq: 100, logEps: -7, detector: 'O4', T_obs: 1 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.f){const v=parseFloat(p.f);if(isFinite(v)&&v>0)state.freq=v;}
+  if(p.e){const v=parseFloat(p.e);if(isFinite(v))state.logEps=v;}
+  if(p.d&&['O4','O5','ET'].includes(p.d))state.detector=p.d;
+  if(p.t){const v=parseFloat(p.t);if(isFinite(v)&&v>0)state.T_obs=v;}
+}
+function saveHash(){setHash({f:state.freq.toFixed(1),e:state.logEps.toFixed(3),d:state.detector,t:state.T_obs.toFixed(1)})}
+
+// Noise models: return sqrt(S_h) in h/sqrt(Hz)
+function sqrtSh_O4(f){
+  return 3.5e-24 * Math.sqrt(1 + Math.pow(100/f, 4) + Math.pow(f/600, 2));
+}
+function sqrtSh_O5(f){ return 0.5 * sqrtSh_O4(f); }
+function sqrtSh_ET(f){
+  return 1.5e-24 * Math.sqrt(1 + Math.pow(15/f, 6) + Math.pow(f/1500, 2));
+}
+function getSqrtSh(f, det){
+  if(det==='O5') return sqrtSh_O5(f);
+  if(det==='ET') return sqrtSh_ET(f);
+  return sqrtSh_O4(f);
+}
+
+function compute(){
+  const f_spin = state.freq;
+  const eps = Math.pow(10, state.logEps);
+  const det = state.detector;
+  const Tobs_s = state.T_obs * YR_S;
+
+  const f_gw = 2 * f_spin;
+  const sqSh = getSqrtSh(f_gw, det);
+  const Sh = sqSh * sqSh; // PSD in 1/Hz
+
+  // Amplitude threshold: h_thresh = 11.4 * sqrt(Sh / T_obs_s)
+  const h_thresh = 11.4 * Math.sqrt(Sh / Tobs_s);
+
+  // Strain from pulsar
+  const h0 = (16 * PI * PI * G / Math.pow(C, 4)) * (I_NS * eps * f_gw * f_gw) / OC_DIST;
+
+  // SNR
+  const snr = h0 / h_thresh;
+
+  // Ellipticity upper limit at threshold
+  const eps_UL = h_thresh * OC_DIST * Math.pow(C, 4) / (16 * PI * PI * G * I_NS * f_gw * f_gw);
+
+  // Spin-down limit for OC MSP (typical P~3ms → f_spin~333 Hz → f_gw~666 Hz)
+  const eps_SD = 1e-8 * Math.pow(100 / f_gw, 2.5);
+
+  // Dark cluster: N such that SNR = 1 (i.e. h0 * sqrt(N) = h_thresh)
+  let N_bh = null;
+  if(snr < 1 && snr > 0){
+    N_bh = Math.pow(1/snr, 2);
+  }
+
+  return { f_gw, sqSh, h_thresh, h0, snr, eps_UL, eps_SD, N_bh };
+}
+
+function render(){
+  const r = compute();
+
+  document.getElementById('fgw-val').innerHTML = (2*state.freq).toFixed(1) + '<span class="unit">Hz</span>';
+  document.getElementById('noise-val').innerHTML = fmtSci(r.sqSh, 2) + '<span class="unit">h/√Hz</span>';
+  document.getElementById('hthresh-val').textContent = fmtSci(r.h_thresh, 2);
+  document.getElementById('h0-val').textContent = fmtSci(r.h0, 2);
+
+  const snrEl = document.getElementById('snr-val');
+  const snrFmt = r.snr >= 0.01 ? r.snr.toFixed(2) : fmtSci(r.snr, 1);
+  const verdictClass = r.snr >= 1 ? 'detect' : 'below';
+  const verdictText = r.snr >= 1 ? 'DETECTABLE' : 'BELOW THRESHOLD';
+  snrEl.innerHTML = snrFmt + '<span class="verdict ' + verdictClass + '">' + verdictText + '</span>';
+
+  document.getElementById('epul-val').innerHTML = fmtEps(r.eps_UL) + '<span class="unit">upper limit</span>';
+  document.getElementById('epsd-val').innerHTML = fmtEps(r.eps_SD) + '<span class="unit">OC MSP</span>';
+
+  const nbhEl = document.getElementById('nbh-val');
+  const nbhMeta = document.getElementById('nbh-meta');
+  if(r.snr >= 1){
+    nbhEl.textContent = 'N/A';
+    nbhMeta.textContent = 'Single pulsar already detectable at this ε';
+  } else if(r.N_bh !== null){
+    nbhEl.textContent = r.N_bh >= 1e6 ? fmtSci(r.N_bh,1) : Math.round(r.N_bh).toLocaleString();
+    nbhMeta.textContent = 'NS with this ε needed for stacking to reach threshold';
+  } else {
+    nbhEl.textContent = '—';
+    nbhMeta.textContent = '';
+  }
+
+  // Sync slider displays
+  document.getElementById('freq-val').textContent = state.freq.toFixed(0) + ' Hz';
+  document.getElementById('eps-val').textContent = 'ε = 10' + supDigits(state.logEps.toFixed(1));
+  document.getElementById('tobs-val').textContent = state.T_obs.toFixed(1) + ' yr';
+}
+
+function wire(){
+  // Frequency slider (log)
+  const fSlider = document.getElementById('freq-slider');
+  fSlider.value = Math.log10(state.freq).toFixed(3);
+  fSlider.addEventListener('input', () => {
+    state.freq = Math.round(Math.pow(10, parseFloat(fSlider.value)));
+    saveHash(); render();
+  });
+
+  // Epsilon slider
+  const eSlider = document.getElementById('eps-slider');
+  eSlider.value = state.logEps;
+  eSlider.addEventListener('input', () => {
+    state.logEps = parseFloat(eSlider.value);
+    saveHash(); render();
+  });
+
+  // T_obs slider
+  const tSlider = document.getElementById('tobs-slider');
+  tSlider.value = state.T_obs;
+  tSlider.addEventListener('input', () => {
+    state.T_obs = parseFloat(tSlider.value);
+    saveHash(); render();
+  });
+
+  // Freq presets
+  document.querySelectorAll('[data-freq]').forEach(b => b.addEventListener('click', () => {
+    state.freq = parseFloat(b.dataset.freq);
+    fSlider.value = Math.log10(state.freq).toFixed(3);
+    saveHash(); render();
+  }));
+
+  // Eps presets
+  document.querySelectorAll('[data-loge]').forEach(b => b.addEventListener('click', () => {
+    state.logEps = parseFloat(b.dataset.loge);
+    eSlider.value = state.logEps;
+    saveHash(); render();
+  }));
+
+  // Detector buttons
+  document.querySelectorAll('[data-det]').forEach(b => b.addEventListener('click', () => {
+    state.detector = b.dataset.det;
+    document.querySelectorAll('[data-det]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    saveHash(); render();
+  }));
+  // Sync active state on load
+  document.querySelectorAll('[data-det]').forEach(b => b.classList.toggle('active', b.dataset.det === state.detector));
+
+  // About toggle
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-body');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

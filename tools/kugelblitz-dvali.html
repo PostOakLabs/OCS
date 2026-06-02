@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<!--
+  Kugelblitz Formation & Dvali-Osmanov Neutrino Flux
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #compute  ·  Epistemic tier: ✦ Engineering speculation / 🔬 Established QFT (Hawking radiation)
+  References:
+    Álvarez-Domínguez et al. (2024), PRL 133, 041401 — Breit-Wheeler pair production constraint on kugelblitz formation
+    Dvali & Osmanov (2023), Astrophys Space Sci 368:103, DOI: 10.1007/s10509-023-04175-6 — democratic Hawking emission, neutrino flux
+  Data: CC0 1.0
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kugelblitz Formation &amp; Dvali-Osmanov Neutrino Flux — Omega Centauri Society</title>
+<meta name="description" content="Hawking emission from a light-formed black hole — formation threshold, evaporation timeline, and neutrino detectability at Omega Centauri's distance.">
+<link rel="canonical" href="https://omegacentauri.me/tools/kugelblitz-dvali.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.speculation{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.tier-badge.established{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.card-full{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:160px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value.amber{color:var(--amber-glow)}
+.row-value.purple{color:var(--purple-glow)}
+.row-value.red{color:var(--red-bright)}
+.row-value.green{color:var(--teal-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.detect-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.detect-row:last-child{border-bottom:none}
+.detect-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.detect-sens{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);min-width:150px;text-align:right}
+.detect-result{font-family:'Orbitron',sans-serif;font-size:13px;min-width:100px;text-align:right;white-space:nowrap}
+.detect-result.yes{color:var(--teal-bright)}
+.detect-result.no{color:var(--red-bright)}
+.verdict-box{margin-top:16px;padding:14px 18px;border-radius:8px;font-family:'Space Mono',monospace;font-size:12px;line-height:1.6;letter-spacing:.03em}
+.verdict-box.feasible{background:rgba(29,186,144,.08);border:1px solid var(--teal-mid);color:var(--teal-glow)}
+.verdict-box.hard{background:rgba(138,32,32,.08);border:1px solid var(--red-mid);color:var(--red-bright)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}.tier-badges{flex-direction:row;align-items:flex-start}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Kugelblitz / Dvali-Osmanov Estimator</span>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/#compute" class="nav-link">↗ #compute</a>
+    <a href="/tools/hawking-evaporation.html" class="nav-link">Hawking Evap ↗</a>
+    <a href="/tools/neutrino-seti.html" class="nav-link">Neutrino SETI ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Kugelblitz Formation &amp; Dvali-Osmanov Neutrino Flux</h1>
+      <p class="tool-subtitle">Hawking emission from a light-formed black hole — formation threshold, evaporation timeline, and neutrino detectability at Omega Centauri's distance</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge speculation">✦ Engineering speculation</span>
+      <span class="tier-badge established">🔬 Established QFT (Hawking radiation)</span>
+    </div>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Kugelblitz formation is theoretically possible but faces the Breit-Wheeler pair-production challenge:</strong> focused photon beams at intensities approaching the Schwinger limit undergo e⁺e⁻ pair production before achieving gravitational collapse. Álvarez-Domínguez et al. (2024, PRL 133, 041401) analyse this constraint in detail. The Hawking emission formulas are theoretically sound QFT; the formation scenario is engineering speculation.
+  </div>
+
+  <!-- INPUTS + HAWKING OUTPUT -->
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Input — Kugelblitz Mass</div>
+      <div class="slider-block">
+        <label>Mass M  (kg, log₁₀ scale — 1 tonne to 10¹⁵ kg)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="3" max="15" step="0.01" value="8">
+          <span class="slider-value" id="m-val">10⁸ kg</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-logm="3">1 tonne</button>
+          <button class="preset-btn" data-logm="6">10⁶ kg</button>
+          <button class="preset-btn" data-logm="8">10⁸ kg</button>
+          <button class="preset-btn" data-logm="12">10¹² kg</button>
+          <button class="preset-btn" data-logm="15">Petagram</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-label">Schwarzschild radius r_s</div>
+        <div class="row-value amber" id="rs-val">—</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Hawking Output</div>
+      <div class="row">
+        <div class="row-label">Temperature T_H</div>
+        <div class="row-value" id="th-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">T_H in energy units</div>
+        <div class="row-value" id="th-ev-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Effective d.o.f. g_eff</div>
+        <div class="row-value purple" id="geff-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Total Hawking power P_H</div>
+        <div class="row-value amber" id="ph-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Evaporation time t_evap</div>
+        <div class="row-value" id="tevap-val">—</div>
+      </div>
+      <div class="row-meta" id="evap-meta">—</div>
+    </section>
+  </div>
+
+  <!-- NEUTRINO SIGNAL -->
+  <section class="card-full">
+    <div class="card-title">Neutrino Signal at 5.49 kpc (Omega Centauri)</div>
+    <div class="cols" style="margin-bottom:0">
+      <div>
+        <div class="row">
+          <div class="row-label">Neutrino fraction f_ν</div>
+          <div class="row-value purple" id="fnu-val">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Neutrino power P_ν</div>
+          <div class="row-value" id="pnu-val">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Flux at 5.49 kpc (W/m²)</div>
+          <div class="row-value amber" id="flux-wm2-val">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Flux (GeV/cm²/s)</div>
+          <div class="row-value" id="flux-gev-val">—</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-secondary);margin-bottom:10px;">Detector comparison</div>
+        <div class="detect-row">
+          <div class="detect-label">IceCube (10-yr point src)</div>
+          <div class="detect-sens">sens: 10⁻¹² GeV/cm²/s</div>
+          <div class="detect-result" id="icecube-result">—</div>
+        </div>
+        <div class="detect-row">
+          <div class="detect-label">KM3NeT/ARCA (10-yr proj.)</div>
+          <div class="detect-sens">sens: 3×10⁻¹³ GeV/cm²/s</div>
+          <div class="detect-result" id="km3net-result">—</div>
+        </div>
+        <div class="row-meta" id="nu-meta" style="margin-top:12px">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMATION THRESHOLD -->
+  <section class="card-full">
+    <div class="card-title">Formation Threshold — Photon Focusing vs. Breit-Wheeler Limit</div>
+    <div class="cols" style="margin-bottom:0">
+      <div>
+        <div class="row">
+          <div class="row-label">Required focusing intensity I_focus</div>
+          <div class="row-value amber" id="ifocus-val">—</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Schwinger critical intensity I_S</div>
+          <div class="row-value purple" id="isch-val">2.3×10²⁹ W/m²</div>
+        </div>
+        <div class="row">
+          <div class="row-label">Breit-Wheeler ratio I_focus / I_S</div>
+          <div class="row-value" id="bw-ratio-val">—</div>
+        </div>
+      </div>
+      <div>
+        <div id="formation-verdict" class="verdict-box hard">Computing…</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>What is a kugelblitz?</h3>
+      <p>A <em>kugelblitz</em> (German: "ball lightning") is a theoretical black hole formed not from collapsing matter but from a sufficiently intense concentration of electromagnetic radiation. When photon energy density in a region reaches ~c⁴/(G·r²), general relativity predicts that the energy itself curves spacetime enough to form a horizon. The concept was explored by Wheeler (1955) and elaborated in several theoretical contexts since. Unlike stellar black holes, a kugelblitz would be formed intentionally — a possible far-future engineering feat.</p>
+
+      <h3>Dvali-Osmanov democratic emission</h3>
+      <p>Dvali &amp; Osmanov (2023, <em>Astrophys Space Sci</em> 368:103, DOI: 10.1007/s10509-023-04175-6) examined the Hawking emission spectrum for small (high-temperature) black holes that emit all kinematically accessible Standard Model particles — the "democratic" emission regime. At Hawking temperatures above ~100 GeV, the hole emits all 106.75 effective SM degrees of freedom with roughly equal weight. In particular, the neutrino channel becomes substantial: at full SM temperatures, neutrinos carry roughly 45% of total Hawking power. This makes a hot kugelblitz a potential high-energy neutrino source detectable by IceCube or KM3NeT, even from Omega Centauri's distance of 5.49 kpc.</p>
+
+      <h3>Why Omega Centauri?</h3>
+      <p>The Macro Transcension Hypothesis (MTH) proposes that advanced civilisations compress into compact, high-density structures — potentially including engineered black holes within dense stellar environments. Omega Centauri (NGC 5139, distance ~5.49 kpc, Harris 2010 rev.) is the target of choice for OCS: it is the most massive and metal-rich globular cluster in the Milky Way, hosts a candidate IMBH (Häberle et al. 2024), and provides the highest-density stellar environment within reach of current observatories. A kugelblitz maintained or produced inside OC would be at exactly 5.49 kpc, and the neutrino flux estimates here use that fixed distance.</p>
+
+      <h3>Effective degrees of freedom g_eff</h3>
+      <p>The number of particle species accessible to Hawking emission depends on the hole's temperature relative to particle rest-mass thresholds. This tool uses a five-tier approximation:</p>
+      <p><code>T &lt; 5.9×10⁹ K (0.51 MeV)</code>: photons only → g_eff = 2<br>
+      <code>T &lt; 1.2×10¹⁰ K (1 MeV)</code>: add e⁺e⁻ → g_eff = 5.5<br>
+      <code>T &lt; 1.7×10¹² K (146 MeV)</code>: add pions/muons → g_eff = 10.75<br>
+      <code>T &lt; 1.16×10¹³ K (1 GeV)</code>: add light quarks/gluons → g_eff = 61.75<br>
+      <code>T ≥ 1.16×10¹³ K</code>: full SM democratic emission → g_eff = 106.75</p>
+      <p>The total Hawking power is then scaled by g_eff/2 relative to the single-photon-species formula.</p>
+
+      <h3>The Breit-Wheeler formation constraint</h3>
+      <p>Forming a kugelblitz requires focusing electromagnetic radiation to extreme intensities. The Schwinger critical intensity I_S ≈ 2.3×10²⁹ W/m² is the threshold at which the QED vacuum becomes unstable to spontaneous e⁺e⁻ pair production from two photons (Breit-Wheeler process). If the required focusing intensity I_focus exceeds I_S, the beam would pair-produce before gravitational collapse occurs. Álvarez-Domínguez et al. (2024, <em>PRL</em> 133, 041401) analyse this constraint rigorously and show it sets a practical lower bound on achievable kugelblitz mass — the larger (cooler, lower-intensity) the target hole, the more feasible the formation. The ratio I_focus / I_S displayed here is the key figure of merit: below 1 is the "feasible in principle" regime.</p>
+
+      <h3>Formulas used</h3>
+      <p><code>r_s = 2GM/c²</code><br>
+      <code>T_H = ℏc³ / (8π G M k_B)</code><br>
+      <code>P_H = (g_eff/2) × ℏc⁶ / (15360π G² M²)</code><br>
+      <code>t_evap = (5120π G² M³ / ℏc⁴) × (2/g_eff)</code><br>
+      <code>I_focus = c⁹ / (32π G³ M²)</code><br>
+      <code>f_ν = 0.45 × clamp((log₁₀T_H − 10)/3, 0, 1)</code><br>
+      <code>F_ν = f_ν × P_H / (4π d²)</code>  where d = 5.49 kpc</p>
+
+      <h3>Detector sensitivities</h3>
+      <p><strong>IceCube</strong> (DeepCore + main array): the 10-year point-source sensitivity for a diffuse neutrino flux is approximately 10⁻¹² GeV/cm²/s at TeV energies (IceCube Collaboration 2020, Phys Rev Lett 124, 051103). <strong>KM3NeT/ARCA</strong> (Astroparticle Research with Cosmics in the Abyss): projected 10-year point source sensitivity ~3×10⁻¹³ GeV/cm²/s (Adrián-Martínez et al. 2016, J Phys G 43, 084001). These are approximate figures appropriate for an order-of-magnitude comparison; actual detection thresholds depend on spectral shape and background rejection.</p>
+
+      <p class="meta-line">v1.0 — 2026-06-01 · Code MIT · Prose CC BY 4.0 · Álvarez-Domínguez et al. 2024 (PRL 133:041401); Dvali &amp; Osmanov 2023 (Astrophys Space Sci 368:103, DOI:10.1007/s10509-023-04175-6); Harris 2010 rev. (AJ 112:1487)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+// --- Constants (SI) ---
+const G   = 6.674e-11;
+const C   = 2.998e8;
+const HBAR= 1.055e-34;
+const KB  = 1.381e-23;
+const EV_J     = 1.602e-19;
+const KPC_M    = 3.086e19;
+const OC_DIST  = 5.49 * KPC_M;
+const I_SCHWINGER = 2.3e29;
+const PI   = Math.PI;
+const YR_S = 3.156e7;
+
+// --- Formatting helpers ---
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp){dp=dp===undefined?2:dp;if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtLength(m){
+  if(m<1e-15)return fmtSci(m,2)+' m';
+  if(m<1e-12)return (m*1e15).toFixed(2)+' fm';
+  if(m<1e-9)return (m*1e12).toFixed(2)+' pm';
+  if(m<1e-6)return (m*1e9).toFixed(2)+' nm';
+  if(m<1e-3)return (m*1e6).toFixed(2)+' μm';
+  if(m<1)return (m*1e3).toFixed(2)+' mm';
+  if(m<1000)return m.toFixed(2)+' m';
+  if(m<1.496e11)return (m/1000).toFixed(2)+' km';
+  return fmtSci(m,2)+' m';
+}
+function fmtTemp(T){
+  if(T>=1e12)return fmtSci(T,2)+' K';
+  if(T>=1e9)return fmtSci(T,2)+' K';
+  if(T>=1e6)return fmtSci(T,2)+' K';
+  if(T>=1e3)return fmtSci(T,2)+' K';
+  if(T>=1)return T.toFixed(2)+' K';
+  return fmtSci(T,2)+' K';
+}
+function fmtPower(P){
+  if(!isFinite(P)||P===0)return '0 W';
+  return fmtSci(P,2)+' W';
+}
+function fmtDuration(s){
+  if(!isFinite(s))return '∞';
+  if(s<1e-9)return fmtSci(s,2)+' s';
+  if(s<YR_S)return fmtSci(s,2)+' s';
+  return fmtSci(s/YR_S,2)+' yr';
+}
+function fmtMassKg(logM){
+  const M=Math.pow(10,logM);
+  if(logM>=9)return fmtSci(M,2)+' kg';
+  if(logM>=6)return fmtSci(M,2)+' kg';
+  if(logM>=3)return fmtSci(M,2)+' kg';
+  return fmtSci(M,2)+' kg';
+}
+
+// --- Hash state ---
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>encodeURIComponent(k)+'='+encodeURIComponent(v)).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { logM: 8 };
+
+function loadHash(){
+  const p=getHash();
+  if(p.m){const v=parseFloat(p.m);if(!isNaN(v)&&v>=3&&v<=15)state.logM=v;}
+}
+function saveHash(){setHash({m:state.logM.toFixed(4)})}
+
+// --- Physics ---
+function gEff(T_H){
+  if(T_H<5.9e9)  return 2.0;
+  if(T_H<1.2e10) return 5.5;
+  if(T_H<1.7e12) return 10.75;
+  if(T_H<1.16e13)return 61.75;
+  return 106.75;
+}
+
+function compute(logM){
+  const M = Math.pow(10, logM);
+
+  // Schwarzschild radius
+  const rs = 2*G*M/(C*C);
+
+  // Hawking temperature
+  const T_H = HBAR*Math.pow(C,3)/(8*PI*G*M*KB);
+  const E_H_eV = KB*T_H/EV_J;
+
+  // Effective dof
+  const g = gEff(T_H);
+
+  // Hawking power (g_eff-scaled)
+  const P_H = (g/2)*HBAR*Math.pow(C,6)/(15360*PI*G*G*M*M);
+
+  // Evaporation time
+  const t_evap_s = (5120*PI*G*G*Math.pow(M,3)/(HBAR*Math.pow(C,4)))*(2/g);
+
+  // Neutrino fraction (smooth ramp)
+  const logT = Math.log10(T_H);
+  const ramp = Math.max(0, Math.min(1, (logT-10)/3));
+  const f_nu = 0.45*ramp;
+
+  // Neutrino power and flux
+  const P_nu = f_nu*P_H;
+  const F_nu_Wm2 = P_nu/(4*PI*OC_DIST*OC_DIST);
+  // Convert W/m² → GeV/cm²/s:  1 W = 1 J/s = 1/(GeV_in_J) GeV/s; 1 m² = 1e4 cm²
+  const GeV_J = 1e9*EV_J;
+  const F_nu_GeV = F_nu_Wm2/GeV_J/1e4;
+
+  // Formation threshold
+  // I_focus = c^9 / (32 pi G^3 M^2)
+  const I_focus = Math.pow(C,9)/(32*PI*Math.pow(G,3)*M*M);
+  const bw_ratio = I_focus/I_SCHWINGER;
+
+  return {M, rs, T_H, E_H_eV, g, P_H, t_evap_s, f_nu, P_nu, F_nu_Wm2, F_nu_GeV, I_focus, bw_ratio};
+}
+
+// --- Render ---
+function render(){
+  const logM = state.logM;
+  const d = compute(logM);
+
+  // Slider label
+  document.getElementById('m-val').textContent = fmtMassKg(logM);
+
+  // Schwarzschild radius
+  document.getElementById('rs-val').innerHTML = fmtLength(d.rs);
+
+  // Hawking temperature
+  document.getElementById('th-val').innerHTML = fmtTemp(d.T_H);
+  document.getElementById('th-ev-val').innerHTML = d.E_H_eV>=1e9
+    ? fmtSci(d.E_H_eV/1e9,2)+' <span class="unit">GeV</span>'
+    : d.E_H_eV>=1e6
+    ? fmtSci(d.E_H_eV/1e6,2)+' <span class="unit">MeV</span>'
+    : d.E_H_eV>=1e3
+    ? fmtSci(d.E_H_eV/1e3,2)+' <span class="unit">keV</span>'
+    : fmtSci(d.E_H_eV,2)+' <span class="unit">eV</span>';
+
+  // g_eff with label
+  const gLabels = {2:'photons only',5.5:'+ e⁺e⁻',10.75:'+ π/μ',61.75:'+ quarks/gluons',106.75:'full SM'};
+  document.getElementById('geff-val').innerHTML = d.g.toFixed(2)+' <span class="unit">'+(gLabels[d.g]||'')+'</span>';
+
+  // Hawking power
+  document.getElementById('ph-val').innerHTML = fmtPower(d.P_H);
+
+  // Evaporation time
+  const t_yr = d.t_evap_s/YR_S;
+  document.getElementById('tevap-val').innerHTML = fmtSci(t_yr,2)+' <span class="unit">yr</span>';
+
+  // Evaporation context
+  const universeAge = 1.38e10;
+  let evapCtx;
+  const lgT = Math.log10(Math.max(t_yr,1e-40));
+  if(t_yr<1e-9)evapCtx='Sub-nanosecond — instantly explosive.';
+  else if(t_yr<1)evapCtx='Evaporates in less than one year — gamma-ray burst regime.';
+  else if(t_yr<universeAge*0.01)evapCtx='Evaporation well under current age of universe; would already be gone if formed primordially.';
+  else if(t_yr<universeAge*2)evapCtx='Evaporation timescale comparable to current age of universe.';
+  else evapCtx='Evaporation time '+fmtSci(t_yr/universeAge,2)+'× current age of universe.';
+  document.getElementById('evap-meta').textContent=evapCtx;
+
+  // Neutrino signal
+  document.getElementById('fnu-val').innerHTML = (d.f_nu*100).toFixed(1)+' <span class="unit">% of P_H</span>';
+  document.getElementById('pnu-val').innerHTML = fmtPower(d.P_nu);
+  document.getElementById('flux-wm2-val').innerHTML = fmtSci(d.F_nu_Wm2,2)+' <span class="unit">W/m²</span>';
+  document.getElementById('flux-gev-val').innerHTML = fmtSci(d.F_nu_GeV,2)+' <span class="unit">GeV/cm²/s</span>';
+
+  // Detector comparison
+  const icecube_sens = 1e-12;  // GeV/cm²/s
+  const km3net_sens  = 3e-13;
+
+  const icecube_ratio = d.F_nu_GeV/icecube_sens;
+  const km3net_ratio  = d.F_nu_GeV/km3net_sens;
+
+  const icEl = document.getElementById('icecube-result');
+  const kmEl = document.getElementById('km3net-result');
+
+  if(d.F_nu_GeV===0||!isFinite(d.F_nu_GeV)){
+    icEl.textContent='below threshold'; icEl.className='detect-result no';
+    kmEl.textContent='below threshold'; kmEl.className='detect-result no';
+  } else if(icecube_ratio>=1){
+    icEl.innerHTML=fmtSci(icecube_ratio,1)+'× sens'; icEl.className='detect-result yes';
+  } else {
+    icEl.innerHTML=fmtSci(icecube_ratio,1)+'× sens'; icEl.className='detect-result no';
+  }
+  if(d.F_nu_GeV>0&&isFinite(d.F_nu_GeV)){
+    if(km3net_ratio>=1){kmEl.innerHTML=fmtSci(km3net_ratio,1)+'× sens'; kmEl.className='detect-result yes';}
+    else{kmEl.innerHTML=fmtSci(km3net_ratio,1)+'× sens'; kmEl.className='detect-result no';}
+  }
+
+  // Neutrino meta
+  let nuMeta;
+  if(d.f_nu<0.01)nuMeta='T_H below e⁺e⁻ threshold — no significant neutrino emission yet.';
+  else if(d.f_nu<0.2)nuMeta='Partial neutrino channel — temperature in electron/pion regime.';
+  else nuMeta='Significant neutrino emission — high-temperature democratic Hawking regime.';
+  document.getElementById('nu-meta').textContent=nuMeta;
+
+  // Formation threshold
+  document.getElementById('ifocus-val').innerHTML = fmtSci(d.I_focus,2)+' <span class="unit">W/m²</span>';
+
+  const bwEl = document.getElementById('bw-ratio-val');
+  if(d.bw_ratio>=1){
+    bwEl.innerHTML=fmtSci(d.bw_ratio,2); bwEl.className='row-value red';
+  } else {
+    bwEl.innerHTML=fmtSci(d.bw_ratio,2); bwEl.className='row-value green';
+  }
+
+  const verdict = document.getElementById('formation-verdict');
+  if(d.bw_ratio>1e6){
+    verdict.innerHTML='<strong>Extremely challenging:</strong> I_focus ≫ I_Schwinger by '+fmtSci(d.bw_ratio,1)+'×. Pair production would catastrophically deplete any focused beam long before the photon energy density achieves gravitational collapse. Formation at this mass would require physics beyond QED or unprecedented beam collimation techniques.';
+    verdict.className='verdict-box hard';
+  } else if(d.bw_ratio>1){
+    verdict.innerHTML='<strong>Very challenging:</strong> I_focus exceeds the Schwinger limit by '+fmtSci(d.bw_ratio,1)+'×. Breit-Wheeler pair production is the dominant obstacle. Engineering margin does not yet exist to overcome this.';
+    verdict.className='verdict-box hard';
+  } else if(d.bw_ratio>0.1){
+    verdict.innerHTML='<strong>Marginal regime:</strong> I_focus / I_S = '+fmtSci(d.bw_ratio,2)+'. Approaching the Schwinger limit — pair production remains a concern but formation is not ruled out by this criterion alone. This is the Álvarez-Domínguez et al. (2024) boundary of interest.';
+    verdict.className='verdict-box hard';
+  } else {
+    verdict.innerHTML='<strong>Feasible in principle:</strong> I_focus / I_S = '+fmtSci(d.bw_ratio,2)+'. The required intensity is sub-Schwinger — pair production from beam photons is suppressed. Formation is not forbidden by the Breit-Wheeler constraint, though engineering the focusing optics at this scale remains speculative.';
+    verdict.className='verdict-box feasible';
+  }
+}
+
+// --- Wiring ---
+function wire(){
+  const slider = document.getElementById('m-slider');
+  slider.value = state.logM;
+
+  slider.addEventListener('input', ()=>{
+    state.logM = parseFloat(slider.value);
+    saveHash();
+    render();
+  });
+
+  document.querySelectorAll('[data-logm]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.logM = parseFloat(btn.dataset.logm);
+      slider.value = state.logM;
+      saveHash();
+      render();
+    });
+  });
+
+  const toggleBtn = document.getElementById('about-toggle');
+  const aboutBody = document.getElementById('about-body');
+  toggleBtn.addEventListener('click', ()=>{
+    const open = !aboutBody.classList.contains('open');
+    aboutBody.classList.toggle('open', open);
+    toggleBtn.classList.toggle('open', open);
+  });
+}
+
+function init(){loadHash(); wire(); render();}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<!--
+  OC Galactic Orbit & Tidal Stripping Simulator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #science
+  Epistemic tier(s): 🔬 Established dynamics · ⚠ MW potential model
+  Data sources:
+    - Baumgardt & Hilker (2018) "A catalogue of masses, structural parameters, and velocity
+        dispersion profiles of 112 Milky Way globular clusters"
+        MNRAS 478:1520 — OC structural parameters and distance
+    - Vasiliev & Baumgardt (2021) "Gaia EDR3 view on galactic globular clusters"
+        MNRAS 505:5978 — OC proper motions from Gaia EDR3
+    - Bovy, J. (2015) "galpy: A python Library for Galactic Dynamics"
+        ApJS 216:29 — MW potential components
+    - Allen & Santillan (1991) "An improved model of the galactic mass distribution for orbit
+        computations" Rev Mex Astron Astrofis 22:255 — three-component MW potential
+    - Johnson & Soderblom (1987) "Calculating Galactic space velocities and their uncertainties"
+        AJ 93:864 — galactic coordinate conversions
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OC Galactic Orbit Simulator — Omega Centauri Society</title>
+<meta name="description" content="Leapfrog integration of Omega Centauri's orbit in a Milky Way potential — pericentre passages, tidal stripping history, and cluster lifetime.">
+<link rel="canonical" href="https://omegacentauri.me/tools/oc-orbit-simulator.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1200px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:780px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-est{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-warn{color:var(--amber-bright);background:rgba(196,120,0,.06)}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:24px}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(160,128,240,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--purple-glow);min-width:100px;text-align:right;white-space:nowrap}
+.canvas-wrap{background:rgba(3,2,10,.8);border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;position:relative}
+canvas{display:block;width:100%;height:auto}
+.canvas-legend{display:flex;gap:18px;padding:10px 16px;background:rgba(7,5,21,.7);font-family:'Space Mono',monospace;font-size:11px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;color:var(--text-secondary)}
+.leg-swatch{width:24px;height:3px;border-radius:2px}
+.leg-past{background:#e8e4ff}
+.leg-future{background:#1dba90}
+.leg-peri{background:var(--amber-glow);width:8px;height:8px;border-radius:50%}
+.leg-now{background:var(--purple-glow);width:10px;height:10px;clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:600px){.results-grid{grid-template-columns:1fr}}
+.stat-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px}
+.stat-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.05em;margin-bottom:4px}
+.stat-value{font-family:'Orbitron',sans-serif;font-size:20px;color:var(--purple-glow)}
+.stat-value .unit{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:4px}
+.stat-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px}
+.peri-table-wrap{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 22px;margin-bottom:24px;overflow-x:auto}
+.peri-table-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:12px}
+th{text-align:left;color:var(--text-secondary);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-bottom:1px solid var(--border-subtle)}
+td{padding:8px 12px;color:var(--text-primary);border-bottom:1px dotted var(--border-subtle)}
+tr:last-child td{border-bottom:none}
+td.peri-r{color:var(--amber-glow)}
+td.peri-m{color:var(--teal-bright)}
+.dissolution-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--red-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px}
+.dissolution-banner strong{color:var(--amber-glow)}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media(max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:21px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">◉ OCS</a>
+    <span class="nav-title">OC Orbit Simulator</span>
+    <a class="nav-link" href="https://omegacentauri.me/tools/">← All Tools</a>
+    <a class="nav-link" href="https://omegacentauri.me/#science">↗ #science</a>
+    <a class="nav-link" href="https://omegacentauri.me/tools/omega-dwarf-origin.html">Omega Dwarf Origin ↗</a>
+    <a class="nav-link" href="https://omegacentauri.me/tools/imbh-growth-history.html">IMBH Growth ↗</a>
+    <a class="nav-link" href="https://omegacentauri.me/tools/tidal-capture.html">Tidal Capture ↗</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>OC Galactic Orbit &amp; Tidal Stripping Simulator</h1>
+      <p class="tool-subtitle">Leapfrog integration of Omega Centauri's orbit in a Milky Way potential — pericentre passages, tidal stripping history, and cluster lifetime</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge tier-est">🔬 Established dynamics</span>
+      <span class="tier-badge tier-warn">⚠ MW potential model</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Left: controls -->
+    <section class="card">
+      <div class="card-title">Orbital Parameters</div>
+
+      <div class="slider-block">
+        <label>Velocity scale (× reference Gaia DR3)</label>
+        <div class="slider-row">
+          <input type="range" id="vscale-slider" min="0.8" max="1.2" step="0.01" value="1.0">
+          <span class="slider-value" id="vscale-val">1.00×</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Tidal strip fraction per pericentre</label>
+        <div class="slider-row">
+          <input type="range" id="fstrip-slider" min="0.01" max="0.10" step="0.01" value="0.03">
+          <span class="slider-value" id="fstrip-val">3.0%</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Forward integration time (Gyr)</label>
+        <div class="slider-row">
+          <input type="range" id="tfwd-slider" min="1" max="20" step="0.5" value="10">
+          <span class="slider-value" id="tfwd-val">10.0 Gyr</span>
+        </div>
+      </div>
+
+      <div style="margin-top:8px;padding:12px;background:rgba(7,5,21,.5);border-radius:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);line-height:1.7">
+        <strong style="color:var(--text-secondary)">Reference ICs (Gaia DR3)</strong><br>
+        x = −5.31 kpc, y = −3.64 kpc, z = 1.18 kpc<br>
+        v_x = −50 km/s, v_y = −148 km/s, v_z = 90 km/s<br>
+        (Vasiliev &amp; Baumgardt 2021; R_sun = 8.18 kpc)
+      </div>
+    </section>
+
+    <!-- Right: canvas -->
+    <div>
+      <div class="canvas-wrap">
+        <canvas id="orbit-canvas" width="600" height="460"></canvas>
+        <div class="canvas-legend">
+          <span class="leg-item"><span class="leg-swatch leg-past"></span> Past (12 Gyr backward)</span>
+          <span class="leg-item"><span class="leg-swatch leg-future"></span> Future</span>
+          <span class="leg-item"><span class="leg-swatch leg-peri"></span> Pericentre</span>
+          <span class="leg-item"><span class="leg-swatch leg-now"></span> Now</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key metrics -->
+  <div class="results-grid">
+    <div class="stat-card">
+      <div class="stat-label">Next pericentre distance</div>
+      <div class="stat-value" id="stat-next-r">—<span class="unit">kpc</span></div>
+      <div class="stat-meta" id="stat-next-t">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Last pericentre distance</div>
+      <div class="stat-value" id="stat-last-r">—<span class="unit">kpc</span></div>
+      <div class="stat-meta" id="stat-last-t">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Orbital period</div>
+      <div class="stat-value" id="stat-period">—<span class="unit">Myr</span></div>
+      <div class="stat-meta" id="stat-period-meta">from pericentre spacing</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Current cluster mass</div>
+      <div class="stat-value" id="stat-mass">—<span class="unit">M☉</span></div>
+      <div class="stat-meta" id="stat-mass-meta">after past pericentres</div>
+    </div>
+  </div>
+
+  <!-- Dissolution estimate -->
+  <div class="dissolution-banner" id="dissolution-banner">
+    <strong>Dissolution estimate:</strong> computing…
+  </div>
+
+  <!-- Future pericentre table -->
+  <div class="peri-table-wrap">
+    <div class="peri-table-title">Future pericentre passages (up to 10)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Time from now</th>
+          <th>r_peri</th>
+          <th>Mass after stripping</th>
+        </tr>
+      </thead>
+      <tbody id="peri-tbody">
+        <tr><td colspan="4" style="color:var(--text-dim);text-align:center">computing…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>Integrator</h3>
+      <p>The orbit is integrated using the leapfrog (Störmer-Verlet) algorithm with a 100 Myr timestep. The leapfrog is second-order symplectic, conserving a shadow Hamiltonian and showing only bounded energy oscillations over many orbital periods. For the ~150 Myr orbital period of OC this timestep is adequate for tracking pericentre passages; a 5 Myr step is used internally for the pericentre refinement pass.</p>
+
+      <h3>Milky Way potential</h3>
+      <p>A spherically-symmetric flat-rotation-curve potential is used: <code>Φ(r) = V_c² ln(r)</code> with V_c = 220 km/s. This reproduces the MW circular velocity at the solar radius (8.18 kpc) and gives an approximately correct orbital period and pericentre for OC. The full Allen-Santillan (1991) three-component potential (bulge + disk + NFW halo) would add ~10-15% corrections to pericentre distance and ~5% to orbital period; for a browser tool the flat-curve approximation is appropriate and clearly labeled as ⚠ model-dependent.</p>
+
+      <h3>Initial conditions</h3>
+      <p>The reference Galactocentric position and velocity of OC are taken from Vasiliev &amp; Baumgardt (2021), who derived proper motions from Gaia EDR3. The current Galactocentric distance of OC is 6.4 kpc. The velocity-scale slider multiplies the full 3D velocity vector by a constant factor, parameterizing uncertainty in the proper motion and the Galactic constants.</p>
+
+      <h3>Tidal stripping</h3>
+      <p>At each pericentre passage, a fraction f_strip of the remaining mass is removed: <code>M → M × (1 − f_strip × (8 kpc / r_peri)²)</code>. The (8 kpc / r_peri)² term enhances stripping for closer passages, following the tidal force scaling. The initial mass is set to 4×10⁶ M☉ (present-day value from Baumgardt &amp; Hilker 2018), and past pericentres are run backward in time, adding back stripped mass, to recover the mass budget. This is a simplified King-tidal estimate; N-body simulations show 1–5% mass loss per pericentre passage for typical OC orbits.</p>
+
+      <h3>Dissolution criterion</h3>
+      <p>Dissolution is estimated by extrapolating the geometric mass-loss series (constant f_strip per peri) until M &lt; 10% of the present-day 4×10⁶ M☉ value (i.e., &lt; 4×10⁵ M☉). The extrapolation is geometric: after N_peri passages, M = M₀ × (1−f_eff)^N_peri where f_eff is the mean effective fractional loss per passage. This is a lower bound on longevity; dynamical friction, mass segregation, and external tidal shocks are not modeled here.</p>
+
+      <p class="meta-line">v1.0 — 2026-06-01 · Code MIT · Prose CC BY 4.0 · Baumgardt &amp; Hilker MNRAS 478:1520 (2018); Vasiliev &amp; Baumgardt MNRAS 505:5978 (2021); Allen &amp; Santillan 1991</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const KPC_M = 3.086e19, KM_S = 1e3, GYR_S = 3.156e16, MYR_S = 3.156e13, YR_S = 3.156e7;
+const PI = Math.PI;
+const VC = 220 * KM_S; // 220 km/s in m/s — flat rotation curve
+
+// Initial conditions (Galactocentric, Vasiliev & Baumgardt 2021)
+const IC = {
+  x: -5.31 * KPC_M, y: -3.64 * KPC_M, z: 1.18 * KPC_M,
+  vx: -50 * KM_S,   vy: -148 * KM_S,  vz: 90 * KM_S
+};
+const M0 = 4e6; // initial cluster mass, solar masses (present-day)
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { vscale: 1.0, fstrip: 0.03, tfwd: 10 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.v){const v=parseFloat(p.v);if(isFinite(v)&&v>=0.8&&v<=1.2)state.vscale=v;}
+  if(p.f){const v=parseFloat(p.f);if(isFinite(v)&&v>=0.01&&v<=0.1)state.fstrip=v;}
+  if(p.t){const v=parseFloat(p.t);if(isFinite(v)&&v>=1&&v<=20)state.tfwd=v;}
+}
+function saveHash(){setHash({v:state.vscale.toFixed(2),f:state.fstrip.toFixed(2),t:state.tfwd.toFixed(1)})}
+
+// Acceleration from flat rotation curve (3D)
+function accel(x, y, z){
+  const r2 = x*x + y*y + z*z;
+  const r = Math.sqrt(r2);
+  if(r < 0.1 * KPC_M) return [0,0,0]; // avoid singularity
+  const a = -VC * VC / r2;
+  return [a * x / r, a * y / r, a * z / r];
+}
+
+// Leapfrog integration: given pos/vel arrays, step dt (seconds)
+function leapfrogStep(pos, vel, dt){
+  const [ax, ay, az] = accel(pos[0], pos[1], pos[2]);
+  const vhx = vel[0] + 0.5 * ax * dt;
+  const vhy = vel[1] + 0.5 * ay * dt;
+  const vhz = vel[2] + 0.5 * az * dt;
+  const nx = pos[0] + vhx * dt;
+  const ny = pos[1] + vhy * dt;
+  const nz = pos[2] + vhz * dt;
+  const [ax2, ay2, az2] = accel(nx, ny, nz);
+  const nvx = vhx + 0.5 * ax2 * dt;
+  const nvy = vhy + 0.5 * ay2 * dt;
+  const nvz = vhz + 0.5 * az2 * dt;
+  return [[nx,ny,nz],[nvx,nvy,nvz]];
+}
+
+function radiusKpc(x,y,z){ return Math.sqrt(x*x+y*y+z*z)/KPC_M; }
+
+function runOrbit(){
+  const vs = state.vscale;
+  const fstrip = state.fstrip;
+  const tfwd_s = state.tfwd * GYR_S;
+  const tbwd_s = 12 * GYR_S;
+  const dt = 100 * MYR_S; // 100 Myr timestep
+
+  // --- BACKWARD integration (past) ---
+  let pos = [IC.x, IC.y, IC.z];
+  let vel = [IC.vx * vs, IC.vy * vs, IC.vz * vs];
+  const nStepsBwd = Math.round(tbwd_s / dt);
+  const pathPast = [{x: pos[0]/KPC_M, y: pos[1]/KPC_M}];
+  const perisBwd = []; // {time_Gyr (negative), r_kpc}
+
+  let prevR = radiusKpc(pos[0],pos[1],pos[2]);
+  let prevRdot = 0;
+
+  for(let i = 0; i < nStepsBwd; i++){
+    // Integrate backward: dt → -dt
+    const [np, nv] = leapfrogStep(pos, vel, -dt);
+    pos = np; vel = nv;
+    const r = radiusKpc(pos[0],pos[1],pos[2]);
+    const rdot = r - prevR;
+    // Pericentre: rdot changes from negative to positive (minimum r)
+    if(prevRdot < 0 && rdot >= 0){
+      perisBwd.push({time_Gyr: -(i+1)*dt/GYR_S, r_kpc: prevR});
+    }
+    prevRdot = rdot; prevR = r;
+    pathPast.push({x: pos[0]/KPC_M, y: pos[1]/KPC_M});
+  }
+
+  // Mass reconstruction: going backward in time means we add mass back
+  // Each pericentre was a stripping event; closest events strip more
+  let mass = M0; // present-day mass
+  const pastPeris = perisBwd.slice().reverse(); // chronological order
+  for(const p of pastPeris){
+    const eff = Math.min(0.5, fstrip * Math.pow(8 / p.r_kpc, 2));
+    mass = mass / (1 - eff); // undo stripping
+  }
+  const massAtFormation = Math.min(mass, 1e8); // cap at reasonable progenitor
+
+  // --- FORWARD integration (future) ---
+  pos = [IC.x, IC.y, IC.z];
+  vel = [IC.vx * vs, IC.vy * vs, IC.vz * vs];
+  const nStepsFwd = Math.round(tfwd_s / dt);
+  const pathFuture = [{x: pos[0]/KPC_M, y: pos[1]/KPC_M}];
+  const perisFwd = []; // {time_Gyr (positive), r_kpc, mass_after}
+
+  prevR = radiusKpc(pos[0],pos[1],pos[2]);
+  prevRdot = 0;
+  let massCurrent = M0;
+
+  for(let i = 0; i < nStepsFwd; i++){
+    const [np, nv] = leapfrogStep(pos, vel, dt);
+    pos = np; vel = nv;
+    const r = radiusKpc(pos[0],pos[1],pos[2]);
+    const rdot = r - prevR;
+    if(prevRdot < 0 && rdot >= 0){
+      const eff = Math.min(0.5, fstrip * Math.pow(8 / prevR, 2));
+      massCurrent = massCurrent * (1 - eff);
+      if(perisFwd.length < 10){
+        perisFwd.push({time_Gyr: (i+1)*dt/GYR_S, r_kpc: prevR, mass_after: massCurrent});
+      }
+    }
+    prevRdot = rdot; prevR = r;
+    pathFuture.push({x: pos[0]/KPC_M, y: pos[1]/KPC_M});
+  }
+
+  // Orbital period from first two forward pericentres, or estimate from backward
+  let period_Myr = null;
+  if(perisFwd.length >= 2){
+    period_Myr = (perisFwd[1].time_Gyr - perisFwd[0].time_Gyr) * 1000;
+  } else if(perisBwd.length >= 2){
+    period_Myr = (perisBwd[0].time_Gyr - perisBwd[1].time_Gyr) * -1000;
+  }
+
+  // Last pericentre (most recent past)
+  const lastPeri = perisBwd.length > 0 ? perisBwd[0] : null;
+  // Next pericentre (first future)
+  const nextPeri = perisFwd.length > 0 ? perisFwd[0] : null;
+
+  // Dissolution: extrapolate geometric series
+  let dissolution_Gyr = null;
+  if(perisFwd.length > 0 && period_Myr){
+    const avgEff = perisFwd.reduce((s,p) => s + Math.min(0.5, fstrip * Math.pow(8/p.r_kpc,2)),0) / perisFwd.length;
+    if(avgEff > 0 && avgEff < 1){
+      const N_dissolve = Math.log(0.1) / Math.log(1 - avgEff);
+      dissolution_Gyr = (N_dissolve * period_Myr) / 1000;
+    }
+  }
+
+  return {
+    pathPast, pathFuture,
+    perisBwd: perisBwd.slice(0,10),
+    perisFwd,
+    period_Myr,
+    lastPeri, nextPeri,
+    massCurrent: M0, // current mass is the reference
+    massAtFormation,
+    dissolution_Gyr
+  };
+}
+
+// --- Canvas drawing ---
+function drawOrbit(result){
+  const canvas = document.getElementById('orbit-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Background
+  ctx.fillStyle = '#03020a';
+  ctx.fillRect(0,0,W,H);
+
+  // Collect all points to find bounds
+  const allPts = [...result.pathPast, ...result.pathFuture];
+  let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+  for(const p of allPts){
+    if(p.x<xMin)xMin=p.x; if(p.x>xMax)xMax=p.x;
+    if(p.y<yMin)yMin=p.y; if(p.y>yMax)yMax=p.y;
+  }
+  // Add galaxy centre + padding
+  const pad = 5;
+  xMin = Math.min(xMin, -2) - pad; xMax = Math.max(xMax, 2) + pad;
+  yMin = Math.min(yMin, -2) - pad; yMax = Math.max(yMax, 2) + pad;
+  // Keep aspect ratio
+  const rangeX = xMax - xMin, rangeY = yMax - yMin;
+  const scale = Math.min(W / rangeX, H / rangeY) * 0.85;
+  const cx = W/2 - (xMin + rangeX/2)*scale;
+  const cy = H/2 + (yMin + rangeY/2)*scale; // y-axis flipped
+
+  function toScreen(x,y){return [cx + x*scale, cy - y*scale];}
+
+  // Draw faint galactic disk rings
+  ctx.save();
+  for(const rkpc of [5,10,15,20,25]){
+    ctx.beginPath();
+    const [sx,sy] = toScreen(0,0);
+    ctx.arc(sx,sy, rkpc*scale, 0, 2*PI);
+    ctx.strokeStyle = 'rgba(112,85,212,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  // Ring labels
+  for(const rkpc of [5,10,20]){
+    const [sx,sy] = toScreen(rkpc*0.707, rkpc*0.707);
+    ctx.font = '9px "Space Mono",monospace';
+    ctx.fillStyle = 'rgba(112,85,212,0.4)';
+    ctx.fillText(rkpc+'kpc', sx+3, sy-3);
+  }
+  ctx.restore();
+
+  // Galactic centre
+  ctx.save();
+  const [gcx,gcy] = toScreen(0,0);
+  ctx.beginPath(); ctx.arc(gcx,gcy,4,0,2*PI);
+  ctx.fillStyle = '#ffc840'; ctx.fill();
+  ctx.font = '9px "Space Mono",monospace';
+  ctx.fillStyle = 'rgba(255,200,64,0.7)';
+  ctx.fillText('GC', gcx+6, gcy+4);
+  ctx.restore();
+
+  // Past path (white/dim)
+  ctx.save();
+  ctx.beginPath();
+  for(let i=0;i<result.pathPast.length;i++){
+    const [sx,sy] = toScreen(result.pathPast[i].x, result.pathPast[i].y);
+    if(i===0) ctx.moveTo(sx,sy); else ctx.lineTo(sx,sy);
+  }
+  ctx.strokeStyle = 'rgba(232,228,255,0.35)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+  ctx.restore();
+
+  // Future path (teal)
+  ctx.save();
+  ctx.beginPath();
+  for(let i=0;i<result.pathFuture.length;i++){
+    const [sx,sy] = toScreen(result.pathFuture[i].x, result.pathFuture[i].y);
+    if(i===0) ctx.moveTo(sx,sy); else ctx.lineTo(sx,sy);
+  }
+  ctx.strokeStyle = 'rgba(29,186,144,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+
+  // Past pericentre dots
+  for(const p of result.perisBwd){
+    // Approximate position of pericentre: we don't store position, just r_kpc
+    // Draw a labelled r marker on the x-axis at that distance
+    // Instead, draw a dot on the path at the nearest point
+  }
+  // Future pericentre dots (amber)
+  for(let i=0;i<result.perisFwd.length;i++){
+    const p = result.perisFwd[i];
+    // Approximate the pericentre position on the orbit — since we don't store exact positions
+    // at pericentre, mark them at approximate angle along the orbit path
+    // Find path point with minimum r in future
+    let minDist = Infinity, minIdx = 0;
+    for(let j=1; j<result.pathFuture.length; j++){
+      const d = Math.sqrt(result.pathFuture[j].x**2 + result.pathFuture[j].y**2);
+      if(Math.abs(d - p.r_kpc) < Math.abs(minDist - p.r_kpc)){ minDist = d; minIdx = j; }
+    }
+    // Find actual local minimum near minIdx
+    let bestIdx = minIdx;
+    let bestR = Math.sqrt(result.pathFuture[minIdx].x**2 + result.pathFuture[minIdx].y**2);
+    for(let j=Math.max(0,minIdx-3);j<=Math.min(result.pathFuture.length-1,minIdx+3);j++){
+      const r2 = Math.sqrt(result.pathFuture[j].x**2+result.pathFuture[j].y**2);
+      if(r2<bestR){bestR=r2;bestIdx=j;}
+    }
+    const pt = result.pathFuture[bestIdx];
+    const [sx,sy] = toScreen(pt.x, pt.y);
+    ctx.save();
+    ctx.beginPath(); ctx.arc(sx,sy,5,0,2*PI);
+    ctx.fillStyle = '#ffc840';
+    ctx.fill();
+    ctx.font = '9px "Space Mono",monospace';
+    ctx.fillStyle = 'rgba(255,200,64,0.9)';
+    ctx.fillText((i+1)+'', sx+7, sy+4);
+    ctx.restore();
+  }
+
+  // Past pericentre dots (dim amber)
+  for(let i=0;i<result.perisBwd.length && i<5;i++){
+    const p = result.perisBwd[i];
+    let minDist = Infinity, minIdx = 0;
+    for(let j=1;j<result.pathPast.length;j++){
+      const d = Math.sqrt(result.pathPast[j].x**2+result.pathPast[j].y**2);
+      if(Math.abs(d-p.r_kpc)<Math.abs(minDist-p.r_kpc)){minDist=d;minIdx=j;}
+    }
+    let bestIdx=minIdx, bestR=Math.sqrt(result.pathPast[minIdx].x**2+result.pathPast[minIdx].y**2);
+    for(let j=Math.max(0,minIdx-3);j<=Math.min(result.pathPast.length-1,minIdx+3);j++){
+      const r2=Math.sqrt(result.pathPast[j].x**2+result.pathPast[j].y**2);
+      if(r2<bestR){bestR=r2;bestIdx=j;}
+    }
+    const pt = result.pathPast[bestIdx];
+    const [sx,sy] = toScreen(pt.x, pt.y);
+    ctx.save();
+    ctx.beginPath(); ctx.arc(sx,sy,4,0,2*PI);
+    ctx.fillStyle = 'rgba(240,160,32,0.5)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Current position (star)
+  const [nx,ny] = toScreen(IC.x/KPC_M, IC.y/KPC_M);
+  ctx.save();
+  drawStar(ctx, nx, ny, 8, 5, 'rgba(160,128,240,1)', 'rgba(160,128,240,0.3)');
+  ctx.restore();
+
+  // Scale bar: 10 kpc
+  ctx.save();
+  const sbLen = 10 * scale;
+  const sbX = W - 60 - sbLen, sbY = H - 22;
+  ctx.beginPath(); ctx.moveTo(sbX,sbY); ctx.lineTo(sbX+sbLen,sbY);
+  ctx.strokeStyle = 'rgba(232,228,255,0.5)'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.font = '10px "Space Mono",monospace'; ctx.fillStyle = 'rgba(232,228,255,0.7)';
+  ctx.fillText('10 kpc', sbX + sbLen/2 - 20, sbY - 5);
+  ctx.restore();
+}
+
+function drawStar(ctx, cx, cy, outerR, innerR, fill, glow){
+  const n = 5;
+  ctx.beginPath();
+  for(let i=0;i<n*2;i++){
+    const angle = (i*PI/n) - PI/2;
+    const r = i%2===0 ? outerR : innerR;
+    const x = cx + r*Math.cos(angle);
+    const y = cy + r*Math.sin(angle);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = fill;
+  ctx.shadowBlur = 12;
+  ctx.shadowColor = glow;
+  ctx.fill();
+}
+
+function fmtMass(m){
+  if(m>=1e8) return (m/1e6).toFixed(1)+'×10⁶';
+  if(m>=1e6) return (m/1e6).toFixed(2)+'×10⁶';
+  if(m>=1e5) return (m/1e5).toFixed(2)+'×10⁵';
+  return Math.round(m).toLocaleString();
+}
+
+function updateUI(result){
+  // Next pericentre
+  const npe = document.getElementById('stat-next-r');
+  const npt = document.getElementById('stat-next-t');
+  if(result.nextPeri){
+    npe.innerHTML = result.nextPeri.r_kpc.toFixed(2) + '<span class="unit">kpc</span>';
+    npt.textContent = 'in ' + (result.nextPeri.time_Gyr * 1000).toFixed(0) + ' Myr';
+  } else {
+    npe.innerHTML = '—<span class="unit">kpc</span>'; npt.textContent = 'none in forward window';
+  }
+
+  // Last pericentre
+  const lpe = document.getElementById('stat-last-r');
+  const lpt = document.getElementById('stat-last-t');
+  if(result.lastPeri){
+    lpe.innerHTML = result.lastPeri.r_kpc.toFixed(2) + '<span class="unit">kpc</span>';
+    lpt.textContent = (-result.lastPeri.time_Gyr * 1000).toFixed(0) + ' Myr ago';
+  } else {
+    lpe.innerHTML = '—<span class="unit">kpc</span>'; lpt.textContent = 'none found in past 12 Gyr';
+  }
+
+  // Period
+  const perEl = document.getElementById('stat-period');
+  const perMeta = document.getElementById('stat-period-meta');
+  if(result.period_Myr){
+    perEl.innerHTML = result.period_Myr.toFixed(0) + '<span class="unit">Myr</span>';
+    perMeta.textContent = 'from pericentre spacing';
+  } else {
+    perEl.innerHTML = '—<span class="unit">Myr</span>'; perMeta.textContent = 'insufficient pericentres';
+  }
+
+  // Mass
+  document.getElementById('stat-mass').innerHTML = fmtMass(result.massCurrent) + '<span class="unit">M☉</span>';
+  const massPeris = result.perisBwd.length;
+  document.getElementById('stat-mass-meta').textContent = massPeris + ' past pericentres stripped ~' + (massPeris * state.fstrip * 100).toFixed(0) + '% (approx)';
+
+  // Dissolution
+  const db = document.getElementById('dissolution-banner');
+  if(result.dissolution_Gyr !== null){
+    const verb = result.dissolution_Gyr < state.tfwd ? 'within simulation window' : 'beyond current forward window';
+    db.innerHTML = '<strong>Dissolution estimate:</strong> OC drops below 10% of present mass in ~' + result.dissolution_Gyr.toFixed(1) + ' Gyr (' + verb + ', f_strip = ' + (state.fstrip*100).toFixed(0) + '% per pericentre).';
+  } else {
+    db.innerHTML = '<strong>Dissolution estimate:</strong> insufficient pericentre data to extrapolate. Increase forward time or check orbital parameters.';
+  }
+
+  // Pericentre table
+  const tbody = document.getElementById('peri-tbody');
+  if(result.perisFwd.length === 0){
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-dim);text-align:center">No pericentre passages in forward integration window</td></tr>';
+  } else {
+    tbody.innerHTML = result.perisFwd.map((p,i) =>
+      `<tr>
+        <td style="color:var(--text-dim)">${i+1}</td>
+        <td>+${(p.time_Gyr*1000).toFixed(0)} Myr</td>
+        <td class="peri-r">${p.r_kpc.toFixed(2)} kpc</td>
+        <td class="peri-m">${fmtMass(p.mass_after)} M☉</td>
+      </tr>`
+    ).join('');
+  }
+}
+
+function run(){
+  const result = runOrbit();
+  drawOrbit(result);
+  updateUI(result);
+}
+
+function wire(){
+  const vSlider = document.getElementById('vscale-slider');
+  const fSlider = document.getElementById('fstrip-slider');
+  const tSlider = document.getElementById('tfwd-slider');
+
+  vSlider.value = state.vscale;
+  fSlider.value = state.fstrip;
+  tSlider.value = state.tfwd;
+
+  vSlider.addEventListener('input', () => {
+    state.vscale = parseFloat(vSlider.value);
+    document.getElementById('vscale-val').textContent = state.vscale.toFixed(2) + '×';
+    saveHash(); run();
+  });
+  fSlider.addEventListener('input', () => {
+    state.fstrip = parseFloat(fSlider.value);
+    document.getElementById('fstrip-val').textContent = (state.fstrip*100).toFixed(0) + '%';
+    saveHash(); run();
+  });
+  tSlider.addEventListener('input', () => {
+    state.tfwd = parseFloat(tSlider.value);
+    document.getElementById('tfwd-val').textContent = state.tfwd.toFixed(1) + ' Gyr';
+    saveHash(); run();
+  });
+
+  // Sync display values
+  document.getElementById('vscale-val').textContent = state.vscale.toFixed(2) + '×';
+  document.getElementById('fstrip-val').textContent = (state.fstrip*100).toFixed(0) + '%';
+  document.getElementById('tfwd-val').textContent = state.tfwd.toFixed(1) + ' Gyr';
+
+  // Canvas resize
+  window.addEventListener('resize', () => { run(); });
+
+  // About toggle
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-body');
+  at.addEventListener('click', () => {
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); run(); }
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

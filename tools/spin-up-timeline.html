@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<!--
+  IMBH Spin-Up Timeline
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-01
+  Site section: #compute  ·  Epistemic tier(s): 🔬 Established GR (thin-disk spin-up) · ✦ Engineering application (Phase 1)
+  References:
+    - Bardeen, J.M. (1970) Nature 226:64
+      "Kerr metric black holes" — spin-up via prograde disk accretion
+    - Thorne, K.S. (1974) ApJ 191:507
+      "Disk-accretion onto a black hole II" — thin-disk spin-up formula and 0.998 limit
+    - King, A.R. & Kolb, U. (1999) MNRAS 305:654
+      "The evolution of black-hole mass and angular momentum"
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMBH Spin-Up Timeline — Omega Centauri Society</title>
+<meta name="description" content="Time required to spin up ωCen's IMBH from a★=0 to near-maximum via controlled accretion. Phase 1 engineering bottleneck — Bardeen/Thorne thin-disk spin-up with ISCO integration.">
+<link rel="canonical" href="https://omegacentauri.me/tools/spin-up-timeline.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 15%,rgba(112,85,212,.08),transparent 50%),
+    radial-gradient(ellipse at 80% 70%,rgba(29,186,144,.05),transparent 50%)
+}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;
+  background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-stack{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;background:rgba(0,0,0,.2)}
+.tier-badge.estab{color:var(--teal-bright)}
+.tier-badge.eng{color:var(--purple-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:160px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:17px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+.row-value.teal{color:var(--teal-glow)}
+.row-value.purple{color:var(--purple-glow)}
+.row-value.red{color:var(--red-bright)}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:3px;margin-bottom:4px;font-family:'Space Mono',monospace}
+.context-banner{background:rgba(240,160,32,.06);border-left:3px solid var(--amber-bright);padding:16px 20px;margin-bottom:24px;border-radius:0 8px 8px 0;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.context-banner strong{color:var(--text-primary)}
+/* Spin progress bar */
+.spin-bar-wrap{margin:20px 0 8px}
+.spin-bar-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px;letter-spacing:.05em;display:flex;justify-content:space-between}
+.spin-bar-bg{background:rgba(112,85,212,.08);border:1px solid var(--border-subtle);border-radius:6px;height:22px;position:relative;overflow:hidden}
+.spin-bar-start{height:100%;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid));position:absolute;top:0;left:0}
+.spin-bar-gain{height:100%;background:linear-gradient(90deg,var(--amber-mid),var(--amber-glow));position:absolute;top:0}
+.spin-bar-text{position:absolute;right:8px;top:2px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-primary);line-height:18px;font-weight:600}
+/* Timeline strip */
+.timeline-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:26px 32px;margin-bottom:24px}
+.timeline-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:6px}
+.timeline-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:32px;font-style:italic}
+.timeline-strip{position:relative;height:18px;margin:36px 0 56px;background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid),var(--purple-mid),var(--amber-mid),var(--red-mid));border-radius:9px}
+.tl-tick{position:absolute;top:-6px;bottom:-6px;width:1px;background:rgba(255,255,255,.2)}
+.tl-tick-label{position:absolute;top:-38px;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);text-align:center;white-space:nowrap;line-height:1.3}
+.tl-tick-label .ref{display:block;color:var(--text-dim);font-size:9px;letter-spacing:.04em;margin-top:2px}
+.tl-marker{position:absolute;top:-14px;width:0;height:0;transform:translateX(-50%);transition:left .3s;color:var(--amber-glow)}
+.tl-marker .arrow{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:14px solid currentColor;filter:drop-shadow(0 0 6px currentColor)}
+.tl-marker .label{position:absolute;top:-28px;transform:translateX(-50%);white-space:nowrap;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.04em;color:currentColor;font-weight:600}
+.tl-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px}
+.tl-readout{margin-top:18px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);line-height:1.7;padding:14px 16px;background:rgba(7,5,21,.4);border-radius:6px;border-left:2px solid var(--amber-bright)}
+.tl-readout .v{color:var(--amber-glow);font-weight:600}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media(max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">IMBH Spin-Up Timeline</span>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/#compute" class="nav-link">↗ #compute</a>
+    <a href="/tools/bz-kardashev.html" class="nav-link">BZ Power ↗</a>
+    <a href="/tools/tidal-capture.html" class="nav-link">Tidal Capture ↗</a>
+    <a href="/tools/imbh-growth-history.html" class="nav-link">IMBH Growth ↗</a>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>IMBH Spin-Up Timeline</h1>
+      <p class="tool-subtitle">Time required to spin up the IMBH from a★ = 0 to near-maximum via controlled accretion — the Phase 1 engineering bottleneck</p>
+    </div>
+    <div class="tier-stack">
+      <span class="tier-badge estab">🔬 Established GR (thin-disk spin-up)</span>
+      <span class="tier-badge eng">✦ Engineering application (Phase 1)</span>
+    </div>
+  </header>
+
+  <div class="context-banner">
+    <strong>Phase 1</strong> of the OCS Macro Transcension Hypothesis involves spinning up the IMBH from its natural spin state (unknown, likely low) to near-maximum. The bottleneck is the accretion rate: the tidal capture rate in OC's core is estimated at ~10⁻³ M☉/yr, implying a spin-up timescale of billions of years. Phase 2 (active feeding) would accelerate this, but must itself be powered — the chicken-and-egg problem.
+  </div>
+
+  <div class="cols">
+    <!-- INPUTS -->
+    <section class="card">
+      <div class="card-title">Parameters</div>
+
+      <div class="slider-block">
+        <label>Initial IMBH mass M (log scale, M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="m-slider" min="3.0" max="7.0" step="0.01" value="3.914">
+          <span class="slider-value" id="m-val">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-param="m" data-log="3.778">6,000 M☉</button>
+          <button class="preset-btn" data-param="m" data-log="3.914">8,200 M☉</button>
+          <button class="preset-btn" data-param="m" data-log="4.477">30,000 M☉</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Starting spin a₀</label>
+        <div class="slider-row">
+          <input type="range" id="a0-slider" min="0.0" max="0.9" step="0.01" value="0.0">
+          <span class="slider-value" id="a0-val">a₀ = 0.00</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-param="a0" data-val="0.0">a₀=0 (Schwarzschild)</button>
+          <button class="preset-btn" data-param="a0" data-val="0.1">a₀=0.1</button>
+          <button class="preset-btn" data-param="a0" data-val="0.3">a₀=0.3</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Target spin a★</label>
+        <div class="slider-row">
+          <input type="range" id="af-slider" min="0.1" max="0.9999" step="0.001" value="0.95">
+          <span class="slider-value" id="af-val">a★ = 0.950</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-param="af" data-val="0.5">a=0.5 moderate</button>
+          <button class="preset-btn" data-param="af" data-val="0.9">a=0.9 high BZ</button>
+          <button class="preset-btn" data-param="af" data-val="0.95">a=0.95 target</button>
+          <button class="preset-btn" data-param="af" data-val="0.998">a=0.998 Thorne</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Accretion rate Ṁ (log scale, M☉/yr)</label>
+        <div class="slider-row">
+          <input type="range" id="mdot-slider" min="-6" max="0" step="0.1" value="-3">
+          <span class="slider-value" id="mdot-val">10⁻³ M☉/yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-param="mdot" data-log="-6">10⁻⁶ stellar wind</button>
+          <button class="preset-btn" data-param="mdot" data-log="-3">10⁻³ tidal capture</button>
+          <button class="preset-btn" data-param="mdot" data-log="-1">0.1 M☉/yr active</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Field strength B (log scale, T) — for BZ power comparison</label>
+        <div class="slider-row">
+          <input type="range" id="b-slider" min="3" max="8" step="0.1" value="6">
+          <span class="slider-value" id="b-val">10⁶ T</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-param="b" data-log="3">10³ T</button>
+          <button class="preset-btn" data-param="b" data-log="6">10⁶ T</button>
+          <button class="preset-btn" data-param="b" data-log="8">10⁸ T</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTPUTS -->
+    <section class="card">
+      <div class="card-title">Spin-up results</div>
+
+      <div class="spin-bar-wrap">
+        <div class="spin-bar-label">
+          <span>a★ = 0 (Schwarzschild)</span>
+          <span>a★ = 1 (extremal)</span>
+        </div>
+        <div class="spin-bar-bg">
+          <div class="spin-bar-start" id="bar-start"></div>
+          <div class="spin-bar-gain"  id="bar-gain"></div>
+          <span class="spin-bar-text" id="bar-text"></span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">r_ISCO at target spin</div>
+        <div class="row-value teal" id="risco-val">—</div>
+      </div>
+      <div class="row-meta" id="risco-meta">—</div>
+
+      <div class="row">
+        <div class="row-label">ΔM accreted</div>
+        <div class="row-value" id="dm-val">—</div>
+      </div>
+      <div class="row-meta" id="dm-meta">—</div>
+
+      <div class="row">
+        <div class="row-label">Final mass M_f</div>
+        <div class="row-value teal" id="mf-val">—</div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Spin-up time t</div>
+        <div class="row-value" id="t-val">—</div>
+      </div>
+      <div class="row-meta" id="t-meta">—</div>
+
+      <div class="row">
+        <div class="row-label">Fraction of OC age (12.1 Gyr)</div>
+        <div class="row-value purple" id="oc-frac">—</div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">P_BZ before spin-up</div>
+        <div class="row-value" id="pbz-before">—</div>
+      </div>
+
+      <div class="row">
+        <div class="row-label">P_BZ after spin-up</div>
+        <div class="row-value amber" id="pbz-after">—</div>
+      </div>
+      <div class="row-meta" id="pbz-ratio-meta">—</div>
+    </section>
+  </div>
+
+  <!-- TIMELINE STRIP -->
+  <section class="timeline-card">
+    <div class="timeline-title">Spin-up time on a log axis</div>
+    <div class="timeline-sub">Log scale 10⁰ to 10¹³ years — from 1 year to several times the age of the universe.</div>
+
+    <div class="timeline-strip" id="tl-strip">
+      <span class="tl-tick" style="left:0%">   <span class="tl-tick-label">10⁰<span class="ref">1 yr</span></span></span>
+      <span class="tl-tick" style="left:7.7%">  <span class="tl-tick-label">10¹<span class="ref">10 yr</span></span></span>
+      <span class="tl-tick" style="left:38.5%"> <span class="tl-tick-label">10⁵<span class="ref">100 kyr</span></span></span>
+      <span class="tl-tick" style="left:69.2%"> <span class="tl-tick-label">10⁹<span class="ref">1 Gyr</span></span></span>
+      <span class="tl-tick" style="left:78.5%"> <span class="tl-tick-label">10¹⁰·¹<span class="ref">age of universe</span></span></span>
+      <span class="tl-tick" style="left:84.6%"> <span class="tl-tick-label">10¹¹<span class="ref">10× universe age</span></span></span>
+      <span class="tl-tick" style="left:100%">  <span class="tl-tick-label">10¹³<span class="ref">stellar epoch end</span></span></span>
+
+      <span class="tl-marker" id="tl-marker" style="left:50%">
+        <span class="label" id="tl-marker-label">computing…</span>
+        <span class="arrow"></span>
+      </span>
+    </div>
+
+    <div class="tl-axis">
+      <span>10⁰ yr</span><span>10⁶·⁵ yr</span><span>10¹³ yr</span>
+    </div>
+
+    <div class="tl-readout" id="tl-readout">computing…</div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>The thin-disk spin-up formula</h3>
+      <p>When mass is accreted from the innermost stable circular orbit (ISCO) of a thin prograde disk, the specific angular momentum deposited per unit mass is L_ISCO. Bardeen (1970) and Thorne (1974) showed that the spin parameter evolves approximately as:</p>
+      <p><code>ΔM/M ≈ 1 − √(r_ISCO(a_f)/r_ISCO(a_0))</code></p>
+      <p>where r_ISCO is in units of the gravitational radius r_g = GM/c² and is given by the Bardeen-Press-Teukolsky formula:</p>
+      <p><code>z₁ = 1 + (1−a²)^(1/3)[(1+a)^(1/3) + (1−a)^(1/3)]</code><br>
+      <code>z₂ = √(3a² + z₁²)</code><br>
+      <code>r_ISCO(a) = 3 + z₂ − √[(3−z₁)(3+z₁+2z₂)]</code></p>
+      <p>For a=0: r_ISCO=6 (Schwarzschild ISCO = 3 Schwarzschild radii). For a=0.998: r_ISCO≈1.237.</p>
+
+      <h3>The approximation used here</h3>
+      <p>This calculator uses the Thorne (1974) result that the fractional mass needed to spin up from a₀ to a_f is proportional to the fractional change in √(r_ISCO). Specifically:</p>
+      <p><code>ΔM/M₀ = 1 − √(r_ISCO(a_f)/r_ISCO(a₀))</code></p>
+      <p>This is derived from the ratio of ISCO binding energies. The time is then simply ΔM/Ṁ. The Thorne limit a=0.998 arises from photon capture: above this spin, counter-rotating photons from the disk are gravitationally captured by the hole faster than co-rotating photons add angular momentum, creating a natural equilibrium.</p>
+
+      <h3>Why ΔM is large</h3>
+      <p>Spinning a black hole from a=0 to a=0.998 requires accreting ~54% of the initial mass. From a=0 to a=0.9 requires ~38%; from a=0 to a=0.5 requires ~16%. This is because most of the angular momentum is extracted from the final stages of approach to r_ISCO — the deeper the ISCO, the more angular momentum per unit accreted mass, but also the larger the total mass needed to close the gap from Schwarzschild. For an 8,200 M☉ IMBH at the tidal capture rate of 10⁻³ M☉/yr, reaching a=0.95 would require ~3.4 Gyr — comparable to the remaining stellar lifetime of a Sun-like star.</p>
+
+      <h3>BZ power comparison</h3>
+      <p>The BZ power before spin-up uses the starting spin a₀ (with a minimum of 0.01 to avoid exactly zero). The BZ power after uses the final mass M_f and target spin a_f. The power ratio illustrates the engineering motivation: a factor of ~30–100× increase in available BZ power after spin-up, driving the MTH Phase 2 infrastructure.</p>
+
+      <h3>The chicken-and-egg problem</h3>
+      <p>Phase 1 requires billions of years of passive tidal captures — the natural accretion rate is too slow to be deliberately engineered without already having the power output that Phase 2 would provide. The OCS MTH treats this as a hard boundary condition: either the IMBH's natural spin state is already high (possible if it formed from a merger or AGN episode), or Phase 1 is the multi-Gyr waiting period before any engineering is feasible.</p>
+
+      <h3>OC age reference</h3>
+      <p>Omega Centauri's age is estimated at 12.1 ± 1 Gyr (Baumgardt et al. 2019, MNRAS 482:5138; based on main-sequence turnoff and white dwarf cooling). The OC-age fraction shown is the spin-up time relative to this baseline — values above 1.0 mean the process would take longer than OC has existed.</p>
+
+      <p class="meta-line">v1.0 — 2026-06-01 · Code MIT · Prose CC BY 4.0 · Bardeen (1970) Nature 226:64 · Thorne (1974) ApJ 191:507 · King &amp; Kolb (1999) MNRAS 305:654</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// Constants (SI)
+const G    = 6.674e-11;
+const C    = 2.998e8;
+const MU0  = 4 * Math.PI * 1e-7;
+const MSUN = 1.989e30;
+const YR_S = 3.156e7;
+const GYR_S = 3.156e16;
+const OC_AGE_GYR = 12.1;
+const KAPPA = 0.044;
+
+// Helpers
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(!isFinite(x)||x===0)return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtMass(M_msun){
+  if(M_msun>=1e7)return fmtSci(M_msun,2)+' M☉';
+  if(M_msun>=1e4)return (M_msun/1e3).toFixed(1)+'×10³ M☉';
+  if(M_msun>=1000)return Math.round(M_msun).toLocaleString()+' M☉';
+  return Math.round(M_msun)+' M☉';
+}
+function fmtTime(yr){
+  if(!isFinite(yr)||yr<=0)return '—';
+  const gyr=yr/1e9;
+  if(gyr>=1e3)return fmtSci(yr,2)+' yr';
+  if(gyr>=1)return gyr.toFixed(2)+' Gyr';
+  const myr=yr/1e6;
+  if(myr>=1)return myr.toFixed(2)+' Myr';
+  const kyr=yr/1e3;
+  if(kyr>=1)return kyr.toFixed(2)+' kyr';
+  return Math.round(yr).toLocaleString()+' yr';
+}
+function fmtField(logB){return '10'+supDigits(logB.toFixed(0))+' T';}
+function fmtPow(P){if(!isFinite(P)||P<=0)return'~ 0 W';return fmtSci(P,2)+' W';}
+function fmtLength(m){
+  if(m>=1e9)return(m/1e9).toFixed(3)+'×10⁹ m';
+  if(m>=1000)return(m/1000).toFixed(2)+' km';
+  return Math.round(m)+' m';
+}
+
+// Hash state
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([,v])=>v!=null&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { logM: Math.log10(8200), a0: 0.0, af: 0.95, logMdot: -3, logB: 6 };
+
+function loadHash(){
+  const p=getHash();
+  if(p.M)   {const v=parseFloat(p.M);   if(isFinite(v)) state.logM=Math.log10(v);}
+  if(p.a0)  {const v=parseFloat(p.a0);  if(isFinite(v)&&v>=0&&v<1) state.a0=v;}
+  if(p.af)  {const v=parseFloat(p.af);  if(isFinite(v)&&v>0&&v<=0.9999) state.af=v;}
+  if(p.mdot){const v=parseFloat(p.mdot);if(isFinite(v)) state.logMdot=v;}
+  if(p.b)   {const v=parseFloat(p.b);   if(isFinite(v)) state.logB=v;}
+}
+function saveHash(){
+  const M_msun = Math.pow(10, state.logM);
+  setHash({
+    M:    M_msun.toFixed(0),
+    a0:   state.a0.toFixed(3),
+    af:   state.af.toFixed(4),
+    mdot: state.logMdot.toFixed(2),
+    b:    state.logB.toFixed(2)
+  });
+}
+
+// Physics: ISCO in r_g units (Bardeen-Press-Teukolsky)
+function riSCO(a){
+  const a_safe = Math.min(Math.abs(a), 0.9999);
+  const z1 = 1 + Math.pow(1 - a_safe*a_safe, 1/3)*(Math.pow(1 + a_safe, 1/3) + Math.pow(1 - a_safe, 1/3));
+  const z2 = Math.sqrt(3*a_safe*a_safe + z1*z1);
+  const disc = (3 - z1)*(3 + z1 + 2*z2);
+  return 3 + z2 - (disc > 0 ? Math.sqrt(disc) : 0);
+}
+
+function rg_m(M_msun){ return G * M_msun * MSUN / (C*C); }
+
+// Fractional mass accreted: ΔM/M = 1 - sqrt(r_ISCO(af)/r_ISCO(a0))
+// This is the Thorne (1974) result relating ISCO binding energies.
+function spinupFrac(a0, af){
+  const r0 = riSCO(a0);
+  const rf = riSCO(af);
+  // Clamp: if a0 >= af, no spin-up needed
+  if(af <= a0) return 0;
+  const frac = 1 - Math.sqrt(rf / r0);
+  return Math.max(0, frac);
+}
+
+// BZ power (SI)
+function rPlus(M_msun, a){ return rg_m(M_msun) * (1 + Math.sqrt(1 - a*a)); }
+function omegaH(M_msun, a){ return a * C / (2 * rPlus(M_msun, a)); }
+function pBZ(M_msun, a, B){
+  if(a < 1e-6) return 0;
+  const rp = rPlus(M_msun, a);
+  const oH = omegaH(M_msun, a);
+  return (KAPPA / (4*Math.PI*MU0)) * B*B * Math.pow(rp,4) * oH*oH / C;
+}
+
+function render(){
+  const M0     = Math.pow(10, state.logM);
+  const a0     = state.a0;
+  const af     = state.af;
+  const Mdot   = Math.pow(10, state.logMdot);   // M☉/yr
+  const B      = Math.pow(10, state.logB);       // T
+
+  // Update readouts
+  document.getElementById('m-val').textContent    = fmtMass(M0);
+  document.getElementById('a0-val').textContent   = 'a₀ = '+a0.toFixed(2);
+  document.getElementById('af-val').textContent   = 'a★ = '+af.toFixed(3);
+  document.getElementById('mdot-val').textContent = fmtSci(Mdot,1)+' M☉/yr';
+  document.getElementById('b-val').textContent    = fmtField(state.logB);
+
+  // ISCO values
+  const r_isco_af_rg = riSCO(af);
+  const r_isco_af_m  = r_isco_af_rg * rg_m(M0);
+
+  document.getElementById('risco-val').innerHTML =
+    r_isco_af_rg.toFixed(3)+'<span class="unit">r_g</span>';
+  document.getElementById('risco-meta').textContent =
+    '= '+fmtLength(r_isco_af_m)+' at M = '+fmtMass(M0);
+
+  // Spin-up mass
+  const frac = spinupFrac(a0, af);
+  const dM   = M0 * frac;                         // M☉
+  const Mf   = M0 + dM;
+  document.getElementById('dm-val').innerHTML =
+    fmtMass(dM)+'<span class="unit">'+(frac*100).toFixed(1)+'% of M₀</span>';
+  document.getElementById('dm-meta').textContent =
+    'Final mass M_f = '+fmtMass(Mf);
+  document.getElementById('mf-val').textContent = fmtMass(Mf);
+
+  // Time
+  const time_yr = (Mdot > 0) ? dM / Mdot : Infinity;
+  const time_gyr = time_yr / 1e9;
+  const oc_frac  = time_gyr / OC_AGE_GYR;
+  document.getElementById('t-val').textContent = fmtTime(time_yr);
+  document.getElementById('t-meta').textContent =
+    time_gyr >= 1 ? time_gyr.toFixed(2)+' Gyr' : (time_yr/1e6).toFixed(2)+' Myr';
+  document.getElementById('oc-frac').innerHTML =
+    oc_frac.toFixed(3)+'<span class="unit">× OC age</span>';
+
+  // BZ power before and after
+  const a_before = Math.max(a0, 0.01);  // avoid divide-by-zero at a=0
+  const PBZ_before = pBZ(M0, a_before, B);
+  const PBZ_after  = pBZ(Mf, af, B);
+  const bz_ratio   = (PBZ_before > 0) ? PBZ_after / PBZ_before : Infinity;
+
+  document.getElementById('pbz-before').textContent = fmtPow(PBZ_before);
+  document.getElementById('pbz-after').textContent  = fmtPow(PBZ_after);
+  document.getElementById('pbz-ratio-meta').textContent =
+    isFinite(bz_ratio) ? 'Power gain: ×'+bz_ratio.toFixed(1) : 'Power gain: → from near-zero';
+
+  // Spin progress bar (a★ goes 0 to 1)
+  const startPct = a0 * 100;
+  const gainPct  = (af - a0) * 100;
+  document.getElementById('bar-start').style.width = startPct + '%';
+  document.getElementById('bar-gain').style.width  = gainPct + '%';
+  document.getElementById('bar-gain').style.left   = startPct + '%';
+  document.getElementById('bar-text').textContent  = 'a₀='+a0.toFixed(2)+' → a★='+af.toFixed(3);
+
+  // Timeline strip: log10 axis from 10^0 to 10^13 (13 decades)
+  const lgT = isFinite(time_yr) ? Math.log10(Math.max(time_yr, 1)) : 14;
+  const pct  = Math.max(0, Math.min(100, (lgT / 13) * 100));
+  const marker = document.getElementById('tl-marker');
+  marker.style.left = pct + '%';
+  document.getElementById('tl-marker-label').textContent = fmtTime(time_yr);
+
+  // Timeline readout
+  let ctx;
+  if(!isFinite(time_yr)||time_yr<=0){
+    ctx = 'No spin-up needed — a₀ ≥ a★.';
+  } else if(time_yr < 1e6){
+    ctx = `Spin-up time <span class="v">${fmtTime(time_yr)}</span> — faster than a megayear. Requires aggressive accretion feeding.`;
+  } else if(time_yr < 1e9){
+    ctx = `Spin-up time <span class="v">${fmtTime(time_yr)}</span> — sub-gigayear at this accretion rate. Comparable to a stellar evolutionary timescale.`;
+  } else if(oc_frac < 1){
+    ctx = `Spin-up time <span class="v">${fmtTime(time_yr)}</span> = <span class="v">${oc_frac.toFixed(2)}× OC's age</span>. Feasible within OC's lifetime if accretion has been ongoing since cluster formation.`;
+  } else {
+    ctx = `Spin-up time <span class="v">${fmtTime(time_yr)}</span> = <span class="v">${oc_frac.toFixed(1)}× OC's age</span>. Exceeds the current age of the cluster — the process cannot have completed at this accretion rate since OC formed.`;
+  }
+  document.getElementById('tl-readout').innerHTML = ctx;
+}
+
+function wire(){
+  const mSlider    = document.getElementById('m-slider');
+  const a0Slider   = document.getElementById('a0-slider');
+  const afSlider   = document.getElementById('af-slider');
+  const mdotSlider = document.getElementById('mdot-slider');
+  const bSlider    = document.getElementById('b-slider');
+
+  // Sync to state
+  mSlider.value    = state.logM.toFixed(4);
+  a0Slider.value   = state.a0.toFixed(3);
+  afSlider.value   = state.af.toFixed(4);
+  mdotSlider.value = state.logMdot.toFixed(2);
+  bSlider.value    = state.logB.toFixed(2);
+
+  mSlider.addEventListener('input',()=>{state.logM=parseFloat(mSlider.value);saveHash();render();});
+  a0Slider.addEventListener('input',()=>{
+    state.a0=parseFloat(a0Slider.value);
+    // Enforce a0 < af
+    if(state.a0>=state.af){state.af=Math.min(0.9999,state.a0+0.01);afSlider.value=state.af.toFixed(4);}
+    saveHash();render();
+  });
+  afSlider.addEventListener('input',()=>{
+    state.af=parseFloat(afSlider.value);
+    if(state.af<=state.a0){state.a0=Math.max(0,state.af-0.01);a0Slider.value=state.a0.toFixed(3);}
+    saveHash();render();
+  });
+  mdotSlider.addEventListener('input',()=>{state.logMdot=parseFloat(mdotSlider.value);saveHash();render();});
+  bSlider.addEventListener('input',()=>{state.logB=parseFloat(bSlider.value);saveHash();render();});
+
+  // Preset buttons
+  document.querySelectorAll('.preset-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const param=btn.dataset.param;
+      if(param==='m'){state.logM=parseFloat(btn.dataset.log);mSlider.value=state.logM.toFixed(4);}
+      else if(param==='a0'){state.a0=parseFloat(btn.dataset.val);a0Slider.value=state.a0.toFixed(3);}
+      else if(param==='af'){state.af=parseFloat(btn.dataset.val);afSlider.value=state.af.toFixed(4);}
+      else if(param==='mdot'){state.logMdot=parseFloat(btn.dataset.log);mdotSlider.value=state.logMdot.toFixed(2);}
+      else if(param==='b'){state.logB=parseFloat(btn.dataset.log);bSlider.value=state.logB.toFixed(2);}
+      saveHash();render();
+    });
+  });
+
+  // About toggle
+  const at=document.getElementById('about-toggle');
+  const ab=document.getElementById('about-body');
+  at.addEventListener('click',()=>{
+    const open=!ab.classList.contains('open');
+    ab.classList.toggle('open',open);
+    at.classList.toggle('open',open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>
