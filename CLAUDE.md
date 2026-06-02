@@ -2,6 +2,8 @@
 
 **Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-02
 
+**Current counts:** 52 tools · 7 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
+
 Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, Macro Transcension Hypothesis (MTH). No framework, no build pipeline, no npm — hand-written HTML/CSS/JS, all inline per file. Two content registers kept strictly separate: peer-reviewed science (DOI-sourced) and speculative engineering (MTH/computronium — always labeled).
 
 ---
