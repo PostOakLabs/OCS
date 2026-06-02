@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!--
+  Gough Blowtorch — CNS Predictions vs JWST
+  Julian Gough's 2022 predictions from CNS, their JWST confirmation status,
+  and a model of the Blowtorch Theory (AGN jets carving large-scale structure)
+  OCS tool — omegacentauri.me
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gough Blowtorch — CNS Predictions vs JWST — Omega Centauri Society</title>
+<link rel="canonical" href="https://omegacentauri.me/tools/gough-blowtorch.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',serif;min-height:100vh}
+a{color:var(--amber-glow);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(3,2,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:16px}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.12em;color:var(--purple-glow);text-transform:uppercase}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);flex:1}
+.nav-links{display:flex;gap:16px}
+.nav-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.nav-links a:hover{color:var(--amber-glow);text-decoration:none}
+
+.hero{max-width:1100px;margin:0 auto;padding:56px 28px 32px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--text-dim)}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;background:linear-gradient(135deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero p{font-size:17px;color:var(--text-secondary);max-width:680px;line-height:1.6}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px 48px}
+
+/* PREDICTION TABLE */
+.pred-section{margin-bottom:40px}
+.section-head{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border-subtle)}
+
+.pred-card{border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(160deg,rgba(13,10,36,.4),rgba(7,5,21,.7))}
+.pred-header{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border-subtle)}
+.pred-status{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:8px;border:1px solid;white-space:nowrap;flex-shrink:0}
+.pred-status.confirmed{border-color:rgba(29,186,144,.4);color:var(--teal-glow);background:rgba(13,110,88,.1)}
+.pred-status.partial{border-color:rgba(240,160,32,.35);color:var(--amber-glow);background:rgba(196,120,0,.08)}
+.pred-status.open{border-color:rgba(112,85,212,.3);color:var(--purple-glow);background:rgba(61,45,138,.08)}
+.pred-title{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--text-primary)}
+.pred-body{padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.pred-body{grid-template-columns:1fr}}
+.pred-col-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.pred-col-label.cns{color:var(--purple-glow)}
+.pred-col-label.jwst{color:var(--teal-glow)}
+.pred-text{font-size:14px;color:var(--text-secondary);line-height:1.55}
+
+/* BLOWTORCH MODEL */
+.blowtorch-wrap{display:grid;grid-template-columns:280px 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:800px){.blowtorch-wrap{grid-template-columns:1fr}}
+.panel{background:linear-gradient(160deg,rgba(13,10,36,.5),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:13px;padding:20px}
+.panel-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:6px;letter-spacing:.04em}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--purple-mid);outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--purple-bright);cursor:pointer;border:2px solid var(--purple-glow)}
+.slider-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);min-width:60px;text-align:right}
+
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:12px;padding:16px}
+.chart-title{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+
+.output-row{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;padding:10px 14px;border-radius:8px;background:rgba(13,10,36,.5);border:1px solid var(--border-subtle)}
+.output-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;flex:1}
+.output-val{font-family:'Space Mono',monospace;font-size:14px;font-weight:700}
+
+.narrative-box{background:rgba(29,16,64,.3);border:1px solid rgba(112,85,212,.2);border-radius:10px;padding:14px;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-top:16px}
+.narrative-box strong{color:var(--text-primary)}
+
+.cite-title{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+.cite{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">Gough Blowtorch — CNS Predictions vs JWST</span>
+    <nav class="nav-links">
+      <a href="cosmological-natural-selection.html">← CNS Tool</a>
+      <a href="cns-fitness-landscape.html">Fitness Landscape</a>
+      <a href="index.html">All tools</a>
+    </nav>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Julian Gough · The Egg and the Rock · 2022–2025</div>
+  <h1>Gough Blowtorch — CNS Predictions vs JWST</h1>
+  <p>Julian Gough extended Lee Smolin's Cosmological Natural Selection to make specific observational predictions about early-universe structure — then JWST launched. This tool tracks those predictions against the data, and models the "Blowtorch Theory" of AGN jets carving cosmic structure.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- PREDICTIONS TABLE -->
+  <div class="pred-section">
+    <div class="section-head">CNS predictions vs JWST observations</div>
+
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-status confirmed">Confirmed</span>
+        <span class="pred-title">Massive galaxies exist at unexpectedly high redshift (z &gt; 10)</span>
+      </div>
+      <div class="pred-body">
+        <div>
+          <div class="pred-col-label cns">CNS prediction (Gough 2022)</div>
+          <div class="pred-text">If the universe is optimised by CNS for supermassive black hole formation, early structure formation should be accelerated beyond ΛCDM predictions. Massive galaxies should exist at z &gt; 10, earlier than standard cosmology expects.</div>
+        </div>
+        <div>
+          <div class="pred-col-label jwst">JWST observation (2022–2024)</div>
+          <div class="pred-text">JWST found multiple galaxy candidates at z = 10–16 with stellar masses of 10⁹–10¹¹ M☉ — 10–100× more massive than ΛCDM predicts at those epochs. The "Universe-breakers" (Labbe et al. 2023) caused significant theoretical revision.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-status confirmed">Confirmed</span>
+        <span class="pred-title">Supermassive black holes at very high redshift</span>
+      </div>
+      <div class="pred-body">
+        <div>
+          <div class="pred-col-label cns">CNS prediction</div>
+          <div class="pred-text">CNS optimisation for BH production predicts that SMBHs should form early and abundantly. The "recombination epoch" should be optimised for SMBH seeding, not merely for hydrogen atom formation.</div>
+        </div>
+        <div>
+          <div class="pred-col-label jwst">JWST observation</div>
+          <div class="pred-text">JWST detected SMBHs of 10⁷–10⁹ M☉ at z &gt; 6, including Gn-z11 at z = 10.6 with an active nucleus. Standard seeding mechanisms struggle to grow these on the available timescale.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-status partial">Partial / in progress</span>
+        <span class="pred-title">AGN jet feedback shaped large-scale structure (Blowtorch Theory)</span>
+      </div>
+      <div class="pred-body">
+        <div>
+          <div class="pred-col-label cns">Blowtorch Theory (Gough 2025)</div>
+          <div class="pred-text">Sustained, powerful jets from early SMBHs actively carved the large-scale structure we observe — galaxies, cosmic voids, and filaments. The universe's web is not just a passive result of gravity and dark matter but was actively sculpted by AGN outflows.</div>
+        </div>
+        <div>
+          <div class="pred-col-label jwst">Current observational status</div>
+          <div class="pred-text">AGN feedback is well-established in quenching star formation. Large-scale jet-driven cavities are observed in galaxy clusters. Whether jets shaped the cosmic web at the scales Gough proposes remains an active research question. eROSITA and JWST surveys are relevant.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pred-card">
+      <div class="pred-header">
+        <span class="pred-status open">Open prediction</span>
+        <span class="pred-title">Dark matter anomalies explained by CNS-modified gravity</span>
+      </div>
+      <div class="pred-body">
+        <div>
+          <div class="pred-col-label cns">CNS prediction</div>
+          <div class="pred-text">Gough argues CNS predicts a universe without conventional dark matter — the apparent DM signal arises from CNS-modified gravitational dynamics near cosmic structure. This is falsifiable and distinguishable from ΛCDM + DM.</div>
+        </div>
+        <div>
+          <div class="pred-col-label jwst">Status</div>
+          <div class="pred-text">Not yet conclusively tested. JWST rotation-curve data for high-z galaxies and Euclid weak-lensing maps will provide strong tests of this claim. This is the most speculative and most falsifiable of Gough's predictions.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOWTORCH MODEL -->
+  <div class="section-head">Blowtorch model — AGN jet power vs structure formation</div>
+  <div class="blowtorch-wrap">
+
+    <div class="panel">
+      <div class="panel-title">Jet parameters</div>
+
+      <div class="slider-block">
+        <label>SMBH mass (log M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-M" min="7" max="10" step="0.1" value="9" oninput="update()">
+          <span class="slider-val" id="lbl-M">10⁹ M☉</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Spin parameter a</label>
+        <div class="slider-row">
+          <input type="range" id="sl-a" min="0" max="0.998" step="0.01" value="0.9" oninput="update()">
+          <span class="slider-val" id="lbl-a">0.900</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Redshift (epoch)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-z" min="0" max="15" step="0.5" value="6" oninput="update()">
+          <span class="slider-val" id="lbl-z">z = 6</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Active fraction of Hubble time</label>
+        <div class="slider-row">
+          <input type="range" id="sl-duty" min="0.01" max="1" step="0.01" value="0.1" oninput="update()">
+          <span class="slider-val" id="lbl-duty">10%</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-title">Blowtorch outputs at current parameters</div>
+
+        <div class="output-row">
+          <span class="output-label">BZ jet power (P_BZ)</span>
+          <span class="output-val" id="out-pbz" style="color:var(--amber-glow)">—</span>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Jet luminosity distance at z</span>
+          <span class="output-val" id="out-dL" style="color:var(--teal-glow)">—</span>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Energy injected over active lifetime</span>
+          <span class="output-val" id="out-Etot" style="color:var(--purple-glow)">—</span>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Equivalent supernova count</span>
+          <span class="output-val" id="out-SN" style="color:var(--text-primary)">—</span>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Hubble time at redshift z</span>
+          <span class="output-val" id="out-tH" style="color:var(--text-secondary)">—</span>
+        </div>
+
+        <div style="position:relative;height:180px;margin-top:16px">
+          <canvas id="jet-chart" role="img" aria-label="AGN jet power vs redshift for current SMBH mass and spin"></canvas>
+        </div>
+      </div>
+
+      <div class="narrative-box" id="narrative">Adjust parameters to see the blowtorch output.</div>
+    </div>
+
+  </div>
+
+  <!-- CITATIONS -->
+  <div class="cite-title" style="margin-top:8px">References</div>
+  <span class="cite">Gough, J. (2022). Cosmological Natural Selection predictions. <em>The Egg and the Rock</em> (blog). <a href="https://theeggandtherock.com" target="_blank" rel="noopener">theeggandtherock.com</a></span>
+  <span class="cite">Gough, J. (2025). "The Blowtorch Theory." <em>The Egg and the Rock</em>. (Preprint/blog — AGN jets carving large-scale cosmic structure.)</span>
+  <span class="cite">Labbé, I., et al. (2023). "A population of red candidate massive galaxies ~600 Myr after the Big Bang." <em>Nature</em>, 616, 266–269. <a href="https://doi.org/10.1038/s41586-023-05786-2" target="_blank" rel="noopener">doi:10.1038/s41586-023-05786-2</a> (JWST "Universe-breakers" — massive early galaxies inconsistent with ΛCDM.)</span>
+  <span class="cite">Smolin, L. (1992). "Did the Universe Evolve?" <em>Classical and Quantum Gravity</em>, 9, 173–191. (CNS original hypothesis.)</span>
+  <span class="cite">Blandford, R. D., &amp; Znajek, R. L. (1977). <em>MNRAS</em>, 179, 433–456. <a href="https://doi.org/10.1093/mnras/179.3.433" target="_blank" rel="noopener">doi:10.1093/mnras/179.3.433</a> (BZ jet power mechanism.)</span>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── Physics constants ────────────────────────────────────────────────
+const G   = 6.674e-11;
+const c   = 2.998e8;
+const MU0 = 4*Math.PI*1e-7;
+const KAPPA = 0.044;
+const M_SUN = 1.989e30;
+const E_SN  = 1e44; // Joules per supernova
+
+function rg(M_msun){ return G*M_msun*M_SUN/(c*c); }
+function rPlus(M_msun,a){ return rg(M_msun)*(1+Math.sqrt(Math.max(0,1-a*a))); }
+function omegaH(M_msun,a){ return a*c/(2*rPlus(M_msun,a)); }
+
+function pBZ(M_msun,a){
+  // Use equipartition B ~ sqrt(4πμ₀ ρ c²) near horizon; approximate B from Eddington constraint
+  // Simple estimate: B ≈ 10^4 * (M/10^9 M☉)^(-1/2) Tesla (standard scaling)
+  const B = 1e4 * Math.pow(M_msun/1e9, -0.5);
+  const rp = rPlus(M_msun,a);
+  const oh = omegaH(M_msun,a);
+  return Math.max(0, (KAPPA/(4*Math.PI*MU0))*B*B*Math.pow(rp,4)*oh*oh/c);
+}
+
+// Approximate Hubble time at redshift z (matter-dominated approximation)
+function tHubble_Gyr(z){
+  // t ≈ (2/3) * H0^{-1} / (1+z)^{3/2} for matter domination (rough)
+  const H0_inv_Gyr = 13.8;
+  return H0_inv_Gyr * Math.pow(1/(1+z), 1.5) * 0.67;
+}
+
+function fmtSI(x){
+  if(!isFinite(x)||x===0)return'0';
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  const exp=Math.round(e/1)*1;
+  const m=(x/Math.pow(10,exp)).toPrecision(3).replace(/\.?0+$/,'');
+  return `${m}×10<sup>${exp}</sup>`;
+}
+
+let jetChart = null;
+
+function update(){
+  const logM = parseFloat(document.getElementById('sl-M').value);
+  const a    = parseFloat(document.getElementById('sl-a').value);
+  const z    = parseFloat(document.getElementById('sl-z').value);
+  const duty = parseFloat(document.getElementById('sl-duty').value);
+
+  const M = Math.pow(10, logM);
+
+  document.getElementById('lbl-M').textContent = '10^'+logM.toFixed(1)+' M☉';
+  document.getElementById('lbl-a').textContent = a.toFixed(3);
+  document.getElementById('lbl-z').textContent = 'z = '+z.toFixed(1);
+  document.getElementById('lbl-duty').textContent = (duty*100).toFixed(0)+'%';
+
+  const Pbz   = pBZ(M, a); // Watts
+  const tH    = tHubble_Gyr(z) * 1e9 * 3.156e7; // seconds
+  const Etot  = Pbz * tH * duty;
+  const nSN   = Etot / E_SN;
+
+  // Luminosity distance (approximate)
+  const dL_Mpc = z < 0.5 ? z * 4285 : (1+z) * (z+0.5) * 4285 / 2;
+
+  document.getElementById('out-pbz').innerHTML = fmtSI(Pbz) + ' W';
+  document.getElementById('out-dL').textContent = dL_Mpc.toFixed(0) + ' Mpc';
+  document.getElementById('out-Etot').innerHTML = fmtSI(Etot) + ' J';
+  document.getElementById('out-SN').innerHTML = fmtSI(nSN) + ' SN-equivalents';
+  document.getElementById('out-tH').textContent = tHubble_Gyr(z).toFixed(2) + ' Gyr';
+
+  // Update narrative
+  const narr = nSN > 1e12
+    ? `<strong>Enormous blowtorch power.</strong> At z=${z.toFixed(0)}, this SMBH injects <strong>${fmtSI(Etot)} J</strong> into the surrounding intergalactic medium over its active lifetime — equivalent to ${fmtSI(nSN)} supernovae. At these energies, Gough's prediction that jets actively carved cosmic voids and filaments is physically plausible.`
+    : nSN > 1e8
+    ? `<strong>Significant feedback.</strong> Energy injection equivalent to ${fmtSI(nSN)} supernovae — powerful enough to quench star formation in surrounding halos and influence local large-scale structure, but below the scale needed to carve cosmic voids.`
+    : `<strong>Moderate jet.</strong> At these parameters, the AGN jet contributes local feedback but is unlikely to influence structure at the cosmic web scale. Increase mass, spin, or duty cycle to explore the blowtorch regime.`;
+  document.getElementById('narrative').innerHTML = narr;
+
+  // Redshift chart: P_BZ vs z for current M and a
+  const zVals = Array.from({length:30}, (_,i) => i*0.5);
+  const pVals = zVals.map(() => Pbz/1e39); // normalised
+
+  if(jetChart) jetChart.destroy();
+  jetChart = new Chart(document.getElementById('jet-chart'), {
+    type: 'line',
+    data: {
+      labels: zVals.map(z => 'z='+z.toFixed(0)),
+      datasets: [{
+        label: 'P_BZ (×10³⁹ W)',
+        data: pVals,
+        borderColor: '#f0a020',
+        backgroundColor: 'rgba(240,160,32,.1)',
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: true,
+        tension: 0.3
+      }, {
+        label: 'Hubble time (Gyr)',
+        data: zVals.map(z => tHubble_Gyr(z)),
+        borderColor: '#4de8c0',
+        borderWidth: 1.5,
+        borderDash: [4,3],
+        pointRadius: 0,
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y2'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false }
+      },
+      scales: {
+        x: { ticks: { color:'#504870', font:{ family:'Space Mono', size:9 }, maxTicksLimit:8 }, grid:{ color:'rgba(255,255,255,.04)' } },
+        y: { ticks: { color:'#f0a020', font:{ family:'Space Mono', size:9 } }, grid:{ color:'rgba(255,255,255,.04)' }, title:{ display:true, text:'P (×10³⁹ W)', color:'#f0a020', font:{size:9} } },
+        y2: { position:'right', ticks:{ color:'#4de8c0', font:{ family:'Space Mono', size:9 } }, grid:{ drawOnChartArea:false }, title:{ display:true, text:'t_H (Gyr)', color:'#4de8c0', font:{size:9} } }
+      }
+    }
+  });
+}
+
+update();
+</script>
+</body>
+</html>

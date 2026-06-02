@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<!--
+  MonkeyGod Universe Sampler
+  Inspired by Victor J. Stenger's MonkeyGod simulation (2011)
+  Randomly samples physical constants and classifies universes by habitability
+  OCS tool — omegacentauri.me
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MonkeyGod Universe Sampler — Omega Centauri Society</title>
+<link rel="canonical" href="https://omegacentauri.me/tools/monkeygod-simulator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',serif;min-height:100vh}
+a{color:var(--amber-glow);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(3,2,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:16px}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.12em;color:var(--purple-glow);text-transform:uppercase}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);flex:1}
+.nav-links{display:flex;gap:16px}
+.nav-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.nav-links a:hover{color:var(--amber-glow);text-decoration:none}
+
+.hero{max-width:1100px;margin:0 auto;padding:56px 28px 32px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--text-dim)}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;background:linear-gradient(135deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero p{font-size:17px;color:var(--text-secondary);max-width:680px;line-height:1.6}
+
+.epistemic{max-width:1100px;margin:0 auto;padding:0 28px 24px}
+.epistemic-box{border:1px solid rgba(208,64,64,.2);border-radius:10px;padding:14px 18px;background:rgba(138,32,32,.06);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.6}
+.epistemic-box strong{color:var(--red-bright)}
+
+.main{max-width:1100px;margin:0 auto;padding:0 28px 24px;display:grid;grid-template-columns:300px 1fr;gap:24px}
+@media(max-width:860px){.main{grid-template-columns:1fr}}
+
+.panel{background:linear-gradient(160deg,rgba(13,10,36,.5),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:13px;padding:22px}
+.panel-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:18px}
+
+.slider-block{margin-bottom:18px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:6px;letter-spacing:.04em}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--purple-mid);outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--purple-bright);cursor:pointer;border:2px solid var(--purple-glow)}
+.slider-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);min-width:48px;text-align:right}
+
+.range-toggle{margin-bottom:18px}
+.range-toggle label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:8px;letter-spacing:.04em}
+.toggle-row{display:flex;gap:8px}
+.toggle-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .2s}
+.toggle-btn.active{background:rgba(112,85,212,.2);border-color:var(--purple-bright);color:var(--text-primary)}
+
+.run-btn{width:100%;padding:12px;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;background:linear-gradient(135deg,var(--purple-mid),var(--purple-bright));color:var(--text-primary);border:none;border-radius:8px;cursor:pointer;transition:opacity .2s;margin-top:8px}
+.run-btn:hover{opacity:.85}
+.run-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.results-panel{display:flex;flex-direction:column;gap:18px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{padding:14px;border-radius:10px;border:1px solid var(--border-subtle);background:rgba(7,5,21,.5);text-align:center}
+.stat-num{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;margin-bottom:4px}
+.stat-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;line-height:1.4}
+.stat-card.sterile .stat-num{color:var(--red-bright)}
+.stat-card.stellar .stat-num{color:var(--amber-glow)}
+.stat-card.life .stat-num{color:var(--teal-glow)}
+.stat-card.fecund .stat-num{color:var(--purple-glow)}
+
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:12px;padding:18px}
+.chart-title{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+canvas{display:block;width:100%;border-radius:6px}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+.narrative-box{background:rgba(29,16,64,.3);border:1px solid rgba(112,85,212,.2);border-radius:10px;padding:16px;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.narrative-box strong{color:var(--text-primary)}
+
+.barnes-box{background:rgba(138,32,32,.06);border:1px solid rgba(208,64,64,.2);border-radius:10px;padding:14px;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-top:4px}
+.barnes-box .label{font-family:'Space Mono',monospace;font-size:9px;color:var(--red-bright);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+
+.progress-wrap{display:none;align-items:center;gap:12px;padding:12px 0}
+.progress-bar{flex:1;height:4px;background:rgba(112,85,212,.15);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--purple-bright);border-radius:2px;transition:width .1s}
+.progress-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);white-space:nowrap}
+
+.cite-section{max-width:1100px;margin:0 auto;padding:8px 28px 48px}
+.cite-title{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+.cite{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">MonkeyGod Universe Sampler</span>
+    <nav class="nav-links">
+      <a href="cosmological-natural-selection.html">← CNS Tool</a>
+      <a href="../index.html">Main site</a>
+      <a href="index.html">All tools</a>
+    </nav>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Inspired by Victor J. Stenger (2011)</div>
+  <h1>MonkeyGod Universe Sampler</h1>
+  <p>Randomly sample universes across the space of physical constants. What fraction permit stars, life, and black holes? The answer depends critically on how wide you draw the sampling range — which is itself the heart of the fine-tuning debate.</p>
+</div>
+
+<div class="epistemic">
+  <div class="epistemic-box">
+    <strong>Toy model.</strong> This simulation uses simplified physics: four constants (G, α, Λ, m_p/m_e), a Gaussian fitness function, and qualitative life/BH thresholds. Real fine-tuning calculations require full stellar evolution codes, nuclear network computations, and many more parameters. Stenger's original MonkeyGod was similarly simplified; Barnes (2012) identifies specific ways it undercounts fine-tuning. Results here are illustrative of the debate, not definitive.
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT: CONTROLS -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">Sampling parameters</div>
+
+      <div class="slider-block">
+        <label>Number of universes</label>
+        <div class="slider-row">
+          <input type="range" id="sl-n" min="3" max="5.3" step="0.05" value="4" oninput="updateN()">
+          <span class="slider-val" id="lbl-n">10,000</span>
+        </div>
+      </div>
+
+      <div class="range-toggle">
+        <label>Sampling range (orders of magnitude each side)</label>
+        <div class="toggle-row">
+          <button class="toggle-btn active" data-range="1" onclick="setRange(1,this)">±1 OOM</button>
+          <button class="toggle-btn" data-range="2" onclick="setRange(2,this)">±2 OOM</button>
+          <button class="toggle-btn" data-range="3" onclick="setRange(3,this)">±3 OOM</button>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:6px;line-height:1.5">Stenger used ~±2 OOM. Barnes argued ±10 OOM is more appropriate — the range assumption drives the result.</div>
+      </div>
+
+      <div class="range-toggle">
+        <label>Constants to vary</label>
+        <div class="toggle-row" style="flex-wrap:wrap">
+          <button class="toggle-btn active" id="tog-G" onclick="toggleConst('G',this)">G</button>
+          <button class="toggle-btn active" id="tog-alpha" onclick="toggleConst('alpha',this)">α</button>
+          <button class="toggle-btn active" id="tog-lambda" onclick="toggleConst('lambda',this)">Λ</button>
+          <button class="toggle-btn active" id="tog-mpme" onclick="toggleConst('mpme',this)">m_p/m_e</button>
+        </div>
+      </div>
+
+      <button class="run-btn" id="run-btn" onclick="runSim()">Run simulation</button>
+
+      <div class="progress-wrap" id="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-label" id="progress-label">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="results-panel">
+
+    <div class="stat-grid">
+      <div class="stat-card sterile">
+        <div class="stat-num" id="pct-sterile">—</div>
+        <div class="stat-label">Sterile<br>(no stars)</div>
+      </div>
+      <div class="stat-card stellar">
+        <div class="stat-num" id="pct-stellar">—</div>
+        <div class="stat-label">Star-forming<br>(no life)</div>
+      </div>
+      <div class="stat-card life">
+        <div class="stat-num" id="pct-life">—</div>
+        <div class="stat-label">Life-permitting<br>(fitness ≥ 0.5)</div>
+      </div>
+      <div class="stat-card fecund">
+        <div class="stat-num" id="pct-fecund">—</div>
+        <div class="stat-label">Hyper-fecund<br>(BH rate &gt; ours)</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Distribution of CNS fitness scores — log₁₀(BH production relative to our universe)</div>
+      <div style="position:relative;height:220px">
+        <canvas id="hist-canvas" role="img" aria-label="Histogram of CNS fitness scores across sampled universes"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#d04040"></div>Sterile (fitness &lt; 0.01)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f0a020"></div>Star-forming (0.01–0.5)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1dba90"></div>Life-permitting (0.5–1.0)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a080f0"></div>Hyper-fecund (&gt;1.0)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffc840;width:3px;height:10px;border-radius:1px"></div>Our universe</div>
+      </div>
+    </div>
+
+    <div class="narrative-box" id="narrative">Run the simulation to see results.</div>
+
+    <div class="barnes-box" id="barnes-box" style="display:none">
+      <div class="label">Barnes critique (2012)</div>
+      <span id="barnes-text"></span>
+    </div>
+
+  </div>
+</div>
+
+<div class="cite-section">
+  <div class="cite-title">References</div>
+  <span class="cite">Stenger, V. J. (2011). <em>The Fallacy of Fine-Tuning: Why the Universe Is Not Designed for Us.</em> Prometheus Books. (Primary MonkeyGod source.)</span>
+  <span class="cite">Barnes, L. A. (2012). "The Fine-Tuning of the Universe for Intelligent Life." <em>Publications of the Astronomical Society of Australia</em>, 29, 529–564. <a href="https://doi.org/10.1017/pas.2012.029">doi:10.1017/pas.2012.029</a> (Detailed critique of Stenger's MonkeyGod, identifying specific physical errors.)</span>
+  <span class="cite">Smolin, L. (1992). "Did the Universe Evolve?" <em>Classical and Quantum Gravity</em>, 9, 173–191. (Original CNS hypothesis.)</span>
+  <span class="cite">Vidal, C. (2014). <em>The Beginning and the End: The Meaning of Life in a Cosmological Perspective.</em> Springer. <a href="https://doi.org/10.1007/978-3-319-05062-1">doi:10.1007/978-3-319-05062-1</a></span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ── State ────────────────────────────────────────────────────────────
+let state = { n: 10000, range: 1, vary: { G: true, alpha: true, lambda: true, mpme: true } };
+let chart = null;
+
+// ── Fitness model (same toy model as CNS tool) ───────────────────────
+function gauss(x, mu, sigma){ return Math.exp(-0.5*Math.pow((x-mu)/sigma,2)); }
+
+function fitness(gR, aR, lR, mpmeR){
+  // Each ratio is relative to our universe (1.0 = our value)
+  const fG     = gauss(gR,    1.0, 0.7) * 2.5;
+  const fAlpha = gauss(aR,    1.0, 0.45);
+  const fL     = lR > 0 ? Math.exp(-Math.max(0, lR-1)*4) * gauss(lR, 0, 2)
+                        : Math.exp(-Math.abs(lR)*1.5);
+  const fMpMe  = gauss(mpmeR, 1.0, 1.0);
+  return Math.max(0, fG * fAlpha * fL * fMpMe);
+}
+
+function classify(f){
+  if(f < 0.01)  return 'sterile';
+  if(f < 0.5)   return 'stellar';
+  if(f < 1.0)   return 'life';
+  return 'fecund';
+}
+
+// ── Controls ─────────────────────────────────────────────────────────
+function updateN(){
+  const v = parseFloat(document.getElementById('sl-n').value);
+  state.n = Math.round(Math.pow(10, v));
+  document.getElementById('lbl-n').textContent = state.n.toLocaleString();
+}
+
+function setRange(r, btn){
+  state.range = r;
+  document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleConst(key, btn){
+  state.vary[key] = !state.vary[key];
+  btn.classList.toggle('active', state.vary[key]);
+}
+
+// ── Simulation ───────────────────────────────────────────────────────
+function randLog(range){ return Math.pow(10, (Math.random()*2-1)*range); }
+
+async function runSim(){
+  const btn = document.getElementById('run-btn');
+  const pw  = document.getElementById('progress-wrap');
+  btn.disabled = true;
+  pw.style.display = 'flex';
+
+  const N = state.n;
+  const R = state.range;
+  const counts = { sterile:0, stellar:0, life:0, fecund:0 };
+  const bins = 40;
+  const binMin = -4, binMax = 2;
+  const binW = (binMax-binMin)/bins;
+  const hist = new Array(bins).fill(0);
+
+  const CHUNK = 2000;
+  for(let k=0; k<N; k+=CHUNK){
+    const end = Math.min(k+CHUNK, N);
+    for(let i=k; i<end; i++){
+      const gR     = state.vary.G      ? randLog(R) : 1;
+      const aR     = state.vary.alpha  ? randLog(R) : 1;
+      const lR     = state.vary.lambda ? (Math.random()*2-1)*R*2 : 1; // lambda can be negative
+      const mpmeR  = state.vary.mpme   ? randLog(R) : 1;
+      const f = fitness(gR, aR, lR, mpmeR);
+      counts[classify(f)]++;
+      const logF = f > 0 ? Math.log10(f) : binMin - 1;
+      const b = Math.floor((logF - binMin) / binW);
+      if(b >= 0 && b < bins) hist[b]++;
+    }
+    const pct = Math.round((k+CHUNK)/N*100);
+    document.getElementById('progress-fill').style.width = Math.min(pct,100)+'%';
+    document.getElementById('progress-label').textContent = Math.min(pct,100)+'%';
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  pw.style.display = 'none';
+  btn.disabled = false;
+  renderResults(counts, hist, N);
+}
+
+function renderResults(counts, hist, N){
+  const pct = v => (v/N*100).toFixed(1)+'%';
+  document.getElementById('pct-sterile').textContent = pct(counts.sterile);
+  document.getElementById('pct-stellar').textContent = pct(counts.stellar);
+  document.getElementById('pct-life').textContent    = pct(counts.life);
+  document.getElementById('pct-fecund').textContent  = pct(counts.fecund);
+
+  // Colour bars by class
+  const bins = 40, binMin = -4, binMax = 2, binW = (binMax-binMin)/bins;
+  const colors = hist.map((_,i) => {
+    const f = Math.pow(10, binMin + (i+0.5)*binW);
+    if(f < 0.01) return '#d04040';
+    if(f < 0.5)  return '#f0a020';
+    if(f < 1.0)  return '#1dba90';
+    return '#a080f0';
+  });
+
+  // Our universe marker position
+  const ourBin = Math.floor((0 - binMin) / binW); // log10(1.0) = 0
+
+  const labels = hist.map((_,i) => {
+    const lo = binMin + i*binW;
+    return i % 8 === 0 ? '10'+sup(Math.round(lo)) : '';
+  });
+
+  if(chart) chart.destroy();
+  chart = new Chart(document.getElementById('hist-canvas'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Universes',
+        data: hist,
+        backgroundColor: colors,
+        borderWidth: 0,
+        borderRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        annotation: {},
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              const i = items[0].dataIndex;
+              const lo = (binMin + i*binW).toFixed(1);
+              const hi = (binMin + (i+1)*binW).toFixed(1);
+              return `log₁₀(fitness): ${lo} to ${hi}`;
+            },
+            label: (item) => `${item.raw.toLocaleString()} universes`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#504870', font: { family: 'Space Mono', size: 9 } } },
+        y: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#504870', font: { family: 'Space Mono', size: 9 } } }
+      }
+    }
+  });
+
+  // Narrative
+  const lifeF = (counts.life + counts.fecund) / N * 100;
+  const fecundF = counts.fecund / N * 100;
+  let narr = '';
+  if(lifeF > 10){
+    narr = `<strong>${lifeF.toFixed(1)}%</strong> of randomly sampled universes are life-permitting — a significant fraction. This is consistent with Stenger's argument that fine-tuning is not as extreme as claimed: random constants frequently produce viable universes within this sampling range.`;
+  } else if(lifeF > 1){
+    narr = `Only <strong>${lifeF.toFixed(1)}%</strong> of sampled universes are life-permitting. Fine-tuning appears non-trivial at this range, though not extreme.`;
+  } else {
+    narr = `<strong>Only ${lifeF.toFixed(1)}%</strong> of universes are life-permitting — a rare outcome suggesting significant fine-tuning within this parameter space.`;
+  }
+  narr += ` <strong>${fecundF.toFixed(1)}%</strong> exceed our universe's BH production (hyper-fecund).`;
+  document.getElementById('narrative').innerHTML = narr;
+
+  // Barnes box
+  const barnesBox = document.getElementById('barnes-box');
+  barnesBox.style.display = 'block';
+  document.getElementById('barnes-text').textContent =
+    `The sampling range is set to ±${state.range} orders of magnitude. Barnes (2012) argues that the choice of range is not physically motivated and that Stenger's ±2 OOM range is too narrow — physical reasoning suggests some constants could vary by many more orders of magnitude. ` +
+    `Try increasing the range: the life-permitting fraction drops sharply beyond ±2 OOM, illustrating how range assumptions drive fine-tuning conclusions.`;
+}
+
+function sup(n){ return n < 0 ? n.toString().replace('-','⁻') : n.toString(); }
+
+// Init
+updateN();
+</script>
+</body>
+</html>

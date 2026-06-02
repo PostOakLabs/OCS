@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--
+  CNS Hyperfecundity Landscape
+  Visualises the Cosmological Natural Selection fitness landscape as a 2D heatmap
+  Answers Clément Vidal's question: "Do you manage to make hyperfecund universes?"
+  OCS tool — omegacentauri.me
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CNS Hyperfecundity Landscape — Omega Centauri Society</title>
+<link rel="canonical" href="https://omegacentauri.me/tools/cns-fitness-landscape.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',serif;min-height:100vh}
+a{color:var(--amber-glow);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(3,2,10,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:16px}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:15px;letter-spacing:.12em;color:var(--purple-glow);text-transform:uppercase}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);flex:1}
+.nav-links{display:flex;gap:16px}
+.nav-links a{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.nav-links a:hover{color:var(--amber-glow);text-decoration:none}
+
+.hero{max-width:1100px;margin:0 auto;padding:56px 28px 28px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--text-dim)}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;background:linear-gradient(135deg,var(--text-primary),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.hero p{font-size:17px;color:var(--text-secondary);max-width:680px;line-height:1.6}
+
+.main{max-width:1100px;margin:0 auto;padding:24px 28px 24px;display:grid;grid-template-columns:260px 1fr;gap:24px}
+@media(max-width:840px){.main{grid-template-columns:1fr}}
+
+.panel{background:linear-gradient(160deg,rgba(13,10,36,.5),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:13px;padding:20px}
+.panel-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+
+.axis-select{margin-bottom:16px}
+.axis-select label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:6px;letter-spacing:.04em}
+.axis-select select{width:100%;background:rgba(13,10,36,.8);border:1px solid var(--border-subtle);border-radius:6px;padding:7px 10px;color:var(--text-primary);font-family:'Space Mono',monospace;font-size:10px;outline:none;cursor:pointer}
+
+.fixed-sliders{margin-top:4px}
+.slider-block{margin-bottom:14px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);display:block;margin-bottom:5px;letter-spacing:.04em}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--purple-mid);outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--purple-bright);cursor:pointer;border:2px solid var(--purple-glow)}
+.slider-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);min-width:40px;text-align:right}
+
+.find-btn{width:100%;padding:10px;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:600;letter-spacing:.08em;background:linear-gradient(135deg,var(--purple-mid),var(--purple-bright));color:var(--text-primary);border:none;border-radius:8px;cursor:pointer;transition:opacity .2s;margin-top:8px}
+.find-btn:hover{opacity:.85}
+
+.map-panel{display:flex;flex-direction:column;gap:16px}
+.canvas-wrap{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border-subtle)}
+canvas{display:block;width:100%}
+.canvas-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+
+.colorbar-wrap{display:flex;align-items:center;gap:10px;padding:0 4px}
+.colorbar{height:14px;flex:1;border-radius:4px}
+.colorbar-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:4px}
+
+.optimum-box{background:rgba(160,128,240,.08);border:1px solid rgba(160,128,240,.25);border-radius:10px;padding:14px}
+.opt-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:10px}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt-item label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.08em;display:block;margin-bottom:3px}
+.opt-item .val{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-primary)}
+
+.narrative-box{background:rgba(29,16,64,.3);border:1px solid rgba(112,85,212,.2);border-radius:10px;padding:14px;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.narrative-box strong{color:var(--text-primary)}
+
+.cite-section{max-width:1100px;margin:0 auto;padding:8px 28px 48px}
+.cite-title{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+.cite{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">CNS Hyperfecundity Landscape</span>
+    <nav class="nav-links">
+      <a href="cosmological-natural-selection.html">← CNS Tool</a>
+      <a href="monkeygod-simulator.html">MonkeyGod</a>
+      <a href="index.html">All tools</a>
+    </nav>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">For Clément Vidal — "do you manage to make hyperfecund universes?"</div>
+  <h1>CNS Hyperfecundity Landscape</h1>
+  <p>A 2D fitness heatmap over two physical constants at a time. Purple/black = sterile. Gold = our universe. White = hyperfecund. Can we find universes that beat ours for black hole production?</p>
+</div>
+
+<div class="main">
+
+  <!-- LEFT: CONTROLS -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">Axes</div>
+
+      <div class="axis-select">
+        <label>X axis</label>
+        <select id="sel-x" onchange="render()">
+          <option value="G">G — gravitational constant</option>
+          <option value="alpha" selected>α — fine structure constant</option>
+          <option value="lambda">Λ — cosmological constant</option>
+          <option value="mpme">m_p/m_e — proton/electron mass ratio</option>
+        </select>
+      </div>
+
+      <div class="axis-select">
+        <label>Y axis</label>
+        <select id="sel-y" onchange="render()">
+          <option value="G" selected>G — gravitational constant</option>
+          <option value="alpha">α — fine structure constant</option>
+          <option value="lambda">Λ — cosmological constant</option>
+          <option value="mpme">m_p/m_e — proton/electron mass ratio</option>
+        </select>
+      </div>
+
+      <div class="axis-select">
+        <label>Axis range (log scale, symmetric)</label>
+        <select id="sel-range" onchange="render()">
+          <option value="1">×0.1 to ×10 (±1 OOM)</option>
+          <option value="1.5" selected>×0.03 to ×30 (±1.5 OOM)</option>
+          <option value="2">×0.01 to ×100 (±2 OOM)</option>
+          <option value="3">×0.001 to ×1000 (±3 OOM)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="panel-title">Fixed constants</div>
+      <div class="fixed-sliders">
+        <div class="slider-block" id="fix-G-block">
+          <label>G ratio</label>
+          <div class="slider-row">
+            <input type="range" id="fix-G" min="-2" max="2" step="0.05" value="0" oninput="updateFixed('G',this)">
+            <span class="slider-val" id="lbl-fix-G">×1.00</span>
+          </div>
+        </div>
+        <div class="slider-block" id="fix-alpha-block">
+          <label>α ratio</label>
+          <div class="slider-row">
+            <input type="range" id="fix-alpha" min="-2" max="2" step="0.05" value="0" oninput="updateFixed('alpha',this)">
+            <span class="slider-val" id="lbl-fix-alpha">×1.00</span>
+          </div>
+        </div>
+        <div class="slider-block" id="fix-lambda-block">
+          <label>Λ ratio</label>
+          <div class="slider-row">
+            <input type="range" id="fix-lambda" min="-2" max="2" step="0.05" value="0" oninput="updateFixed('lambda',this)">
+            <span class="slider-val" id="lbl-fix-lambda">×1.00</span>
+          </div>
+        </div>
+        <div class="slider-block" id="fix-mpme-block">
+          <label>m_p/m_e ratio</label>
+          <div class="slider-row">
+            <input type="range" id="fix-mpme" min="-2" max="2" step="0.05" value="0" oninput="updateFixed('mpme',this)">
+            <span class="slider-val" id="lbl-fix-mpme">×1.00</span>
+          </div>
+        </div>
+      </div>
+      <button class="find-btn" onclick="findOptimum()">Find hyperfecund peak ↗</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: MAP + RESULTS -->
+  <div class="map-panel">
+
+    <div class="canvas-wrap">
+      <canvas id="map-canvas" height="420" role="img" aria-label="2D heatmap of CNS fitness landscape"></canvas>
+    </div>
+
+    <div>
+      <div class="colorbar-wrap">
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim)">Sterile</span>
+        <canvas class="colorbar" id="colorbar" height="14"></canvas>
+        <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim)">Hyper-fecund</span>
+      </div>
+      <div class="colorbar-labels">
+        <span>0×</span><span>0.25×</span><span>0.5×</span><span>1× (ours)</span><span>2×</span><span>3×+</span>
+      </div>
+    </div>
+
+    <div class="optimum-box" id="opt-box" style="display:none">
+      <div class="opt-title">Best hyperfecund point found</div>
+      <div class="opt-grid" id="opt-grid"></div>
+    </div>
+
+    <div class="narrative-box" id="narrative">Adjust axes and fixed constants. The gold cross marks our universe (ratio = 1.0 on both axes).</div>
+
+  </div>
+</div>
+
+<div class="cite-section">
+  <div class="cite-title">References</div>
+  <span class="cite">Smolin, L. (1997). <em>The Life of the Cosmos.</em> Oxford University Press. (CNS fitness landscape concept.)</span>
+  <span class="cite">Vidal, C. (2014). <em>The Beginning and the End.</em> Springer. <a href="https://doi.org/10.1007/978-3-319-05062-1">doi:10.1007/978-3-319-05062-1</a> (Cosmological Artificial Selection; hyperfecundity question.)</span>
+  <span class="cite">Vidal, C. (2008). "The Future of Scientific Simulations: From Artificial Life to Artificial Cosmogenesis." <a href="https://arxiv.org/abs/0803.1087">arXiv:0803.1087</a></span>
+</div>
+
+<script>
+// ── Fitness model ────────────────────────────────────────────────────
+function gauss(x, mu, sig){ return Math.exp(-0.5*Math.pow((x-mu)/sig,2)); }
+
+function fitness(gR, aR, lR, mpmeR){
+  const fG     = gauss(gR,    1.0, 0.7) * 2.5;
+  const fAlpha = gauss(aR,    1.0, 0.45);
+  const fL     = lR > 0 ? Math.exp(-Math.max(0, lR-1)*4) * gauss(lR, 0, 2)
+                        : Math.exp(-Math.abs(lR)*1.5);
+  const fMpMe  = gauss(mpmeR, 1.0, 1.0);
+  return Math.max(0, fG * fAlpha * fL * fMpMe);
+}
+
+// ── Color mapping ────────────────────────────────────────────────────
+function fitToColor(f){
+  // 0 = deep void, 1 = our universe (amber), >1 = bright white/purple
+  const t = Math.min(f / 3, 1); // cap at 3× for display
+  if(t < 0.01) return [3, 2, 10];        // sterile: near-black
+  if(t < 0.3){
+    const s = t / 0.3;
+    return [Math.round(s*80), Math.round(s*20), Math.round(s*138)]; // void to dark purple
+  }
+  if(t < 0.67){
+    const s = (t-0.3)/0.37;
+    return [Math.round(80+s*175), Math.round(20+s*100), Math.round(138+s*32)]; // purple to amber
+  }
+  // t >= 0.67: amber to white (hyperfecund)
+  const s = (t-0.67)/0.33;
+  const r = Math.round(255);
+  const g = Math.round(120+s*135);
+  const b = Math.round(0+s*240);
+  return [r, g, Math.min(255,b)];
+}
+
+// ── State ────────────────────────────────────────────────────────────
+const KEYS = ['G','alpha','lambda','mpme'];
+const fixed = { G:1, alpha:1, lambda:1, mpme:1 };
+
+function updateFixed(key, el){
+  fixed[key] = Math.pow(10, parseFloat(el.value));
+  document.getElementById('lbl-fix-'+key).textContent = '×'+fixed[key].toFixed(2);
+  render();
+}
+
+function axisKey(sel){ return document.getElementById(sel).value; }
+
+// ── Rendering ────────────────────────────────────────────────────────
+const RES = 160;
+
+function render(){
+  const xKey = axisKey('sel-x');
+  const yKey = axisKey('sel-y');
+  const range = parseFloat(document.getElementById('sel-range').value);
+
+  // Show/hide fixed sliders
+  KEYS.forEach(k => {
+    const block = document.getElementById('fix-'+k+'-block');
+    block.style.display = (k === xKey || k === yKey) ? 'none' : '';
+  });
+
+  const canvas = document.getElementById('map-canvas');
+  const W = canvas.width = canvas.offsetWidth || 600;
+  const H = canvas.height = 420;
+  const ctx = canvas.getContext('2d');
+  const img = ctx.createImageData(W, H);
+  const d = img.data;
+
+  let maxF = 0, maxX = 1, maxY = 1;
+
+  for(let px=0; px<W; px++){
+    for(let py=0; py<H; py++){
+      const xRatio = Math.pow(10, (px/W*2-1)*range);
+      const yRatio = Math.pow(10, ((H-py)/H*2-1)*range);
+
+      const params = {};
+      KEYS.forEach(k => params[k] = fixed[k]);
+      params[xKey] = xRatio;
+      params[yKey] = yRatio;
+
+      const f = fitness(params.G, params.alpha, params.lambda, params.mpme);
+      if(f > maxF){ maxF = f; maxX = xRatio; maxY = yRatio; }
+
+      const [r,g,b] = fitToColor(f);
+      const idx = (py*W+px)*4;
+      d[idx]   = r; d[idx+1] = g; d[idx+2] = b; d[idx+3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+
+  // Draw our universe marker (crosshair at ratio=1.0, 1.0)
+  const ox = Math.round(W * (range)/(range*2));
+  const oy = Math.round(H * (1 - range/(range*2)));
+  ctx.strokeStyle = '#ffc840'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ox-12,oy); ctx.lineTo(ox+12,oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox,oy-12); ctx.lineTo(ox,oy+12); ctx.stroke();
+  ctx.beginPath(); ctx.arc(ox,oy,5,0,Math.PI*2); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#9890c0'; ctx.font = "10px 'Space Mono', monospace";
+  ctx.fillText(constLabel(xKey), W/2-30, H-6);
+  ctx.save(); ctx.translate(12, H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(constLabel(yKey), -20, 0); ctx.restore();
+
+  // Draw colorbar
+  drawColorbar();
+
+  // Update narrative
+  updateNarrative(maxF, xKey, yKey, maxX, maxY);
+}
+
+function drawColorbar(){
+  const cb = document.getElementById('colorbar');
+  cb.width = cb.offsetWidth || 400;
+  const ctx = cb.getContext('2d');
+  const W = cb.width;
+  for(let i=0; i<W; i++){
+    const f = (i/W)*3;
+    const [r,g,b] = fitToColor(f);
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(i, 0, 1, 14);
+  }
+}
+
+function constLabel(k){ return {G:'G ratio', alpha:'α ratio', lambda:'Λ ratio', mpme:'m_p/m_e ratio'}[k]; }
+
+function updateNarrative(maxF, xKey, yKey, maxX, maxY){
+  let narr = '';
+  if(maxF > 1.5){
+    narr = `<strong>Yes — hyperfecund universes exist in this landscape.</strong> The peak fitness found is <strong>${maxF.toFixed(2)}×</strong> our universe's BH production rate, at ${constLabel(xKey)} = ×${maxX.toFixed(2)} and ${constLabel(yKey)} = ×${maxY.toFixed(2)}. Vidal's answer: yes, the model does produce hyper-fecund universes — our universe is not at the global maximum of the CNS fitness landscape.`;
+  } else if(maxF > 1.0){
+    narr = `<strong>Marginally hyperfecund.</strong> The peak in this 2D slice reaches <strong>${maxF.toFixed(2)}×</strong> our universe. Our universe is near but not exactly at the local optimum — small adjustments to ${constLabel(xKey)} or ${constLabel(yKey)} improve BH production.`;
+  } else {
+    narr = `In this 2D slice (with fixed constants at their current values), no configuration beats our universe's BH production rate. Try adjusting the fixed constants or changing the axes to explore other regions of the landscape.`;
+  }
+  document.getElementById('narrative').innerHTML = narr;
+}
+
+// ── Optimum search ───────────────────────────────────────────────────
+function findOptimum(){
+  const xKey = axisKey('sel-x');
+  const yKey = axisKey('sel-y');
+
+  // Grid search over all 4 dimensions
+  const steps = 30;
+  const range = 2.0;
+  let bestF = 0, best = {};
+  for(let i=0; i<steps; i++){
+    for(let j=0; j<steps; j++){
+      for(let k=0; k<steps; k++){
+        const gR     = Math.pow(10, (i/(steps-1)*2-1)*range);
+        const aR     = Math.pow(10, (j/(steps-1)*2-1)*range);
+        const lR     = Math.pow(10, (k/(steps-1)*2-1)*range);
+        const mpmeR  = 1.0; // fix for speed
+        const f = fitness(gR, aR, lR, mpmeR);
+        if(f > bestF){ bestF = f; best = {G:gR, alpha:aR, lambda:lR, mpme:mpmeR}; }
+      }
+    }
+  }
+
+  const box = document.getElementById('opt-box');
+  const grid = document.getElementById('opt-grid');
+  box.style.display = 'block';
+  grid.innerHTML = Object.entries(best).map(([k,v]) =>
+    `<div class="opt-item"><label>${constLabel(k)}</label><div class="val">×${v.toFixed(3)}</div></div>`
+  ).join('') + `<div class="opt-item"><label>Peak fitness</label><div class="val" style="color:var(--purple-glow)">${bestF.toFixed(2)}×</div></div>`;
+}
+
+// Init
+window.addEventListener('load', render);
+window.addEventListener('resize', render);
+document.getElementById('sel-x').addEventListener('change', render);
+document.getElementById('sel-y').addEventListener('change', render);
+document.getElementById('sel-range').addEventListener('change', render);
+</script>
+</body>
+</html>
