@@ -2,7 +2,7 @@
 
 **Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-02
 
-**Current counts:** 55 tools · 7 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
+**Current counts:** 59 tools · 7 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
 
 Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, Macro Transcension Hypothesis (MTH). No framework, no build pipeline, no npm — hand-written HTML/CSS/JS, all inline per file. Two content registers kept strictly separate: peer-reviewed science (DOI-sourced) and speculative engineering (MTH/computronium — always labeled).
 
@@ -61,7 +61,7 @@ repo/
 └── tools/
     ├── index.html                 ← tools landing page
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values
-    ├── [55 tool *.html files]     ← see categories below
+    ├── [59 tool *.html files]     ← see categories below
     ├── [7 workflow-*.html files]  ← end-to-end staged narrative calculators
     └── [30 scenario-*.html files]     ← chained-tool narrative demos
 ```
@@ -72,6 +72,7 @@ repo/
 - *Fermi / SETI (16):* drake-monte-carlo, great-filter, aestivation, superradiance, dyson-swarm, lisa-emri, cmd-explorer, radio-seti, optical-seti, neutrino-seti, interstellar-link, multi-messenger-alert, passive-seti, iso-encounter, gamma-ray-msp, jet-radio-detectability
 - *Cluster physics (8):* mass-segregation, omegacat-populations, omega-dwarf-origin, dark-cluster, dark-matter-flux, tidal-capture, imbh-growth-history, seed-formation
 - *Context (3):* cosmic-center, cosmological-natural-selection, astrometric-microlensing
+- *Civilisational cosmology (10):* monkeygod-simulator, cns-fitness-landscape, gough-blowtorch, cns-three-stage, starivore-energy, ferd-complexity-ladder, transcension-crossover, stem-compression, barrow-scale, kugelblitz-dvali
 - *Hub pages (2):* tools/index.html, tools/falsification-hub.html
 
 **Workflows (7):** workflow-mth-compute-budget, workflow-fermi-mth-crossover, workflow-bh-energy-budget, workflow-wait-or-act, workflow-constraint-window, workflow-survivability, workflow-spin-economics — staged calculators with live stage-to-stage handoff and copy-to-clipboard export. Use an existing workflow as template for new ones.

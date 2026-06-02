@@ -1,0 +1,506 @@
+<!--
+  Free Energy Rate Density Complexity Ladder
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-06-02
+
+  Inspired by: Eric J. Chaisson's cosmic complexity metric and the Evo Devo Universe
+  framework (John Smart, Clément Vidal)
+
+  Data sources:
+    - Chaisson, E. J. (2011). "Energy Rate Density as a Complexity Metric and
+      Evolutionary Driver." Complexity 16:27–40.
+      DOI: 10.1002/cplx.20323
+    - Chaisson, E. J. (2011). "Energy Rate Density. II. Probing Further a New
+      Complexity Metric." Complexity 17:44–63.
+      DOI: 10.1002/cplx.20367
+    - Chaisson, E. J. (2015). "Energy Flows in Low-Entropy Complex Systems."
+      Entropy 17:8007. DOI: 10.3390/e17127857
+    - Smart, J. M. (2012). "The transcension hypothesis." Acta Astronautica 78:55.
+      DOI: 10.1016/j.actaastro.2011.11.006
+    - Vidal, C. & Smart, J. M. (2009). "Evo Devo Universe? A Framework for
+      Speculations on Cosmic Culture." In Cosmos and Culture, NASA SP-2009-4802.
+    - Blandford, R. D. & Znajek, R. L. (1977). "Electromagnetic extraction of
+      energy from Kerr black holes." MNRAS 179:433.
+      DOI: 10.1093/mnras/179.3.433
+
+  Site section: #compute
+  Epistemic tier(s): 🔬 Established physics (Chaisson FERD values, BZ power formula)
+                     ✦ Engineering fiction (IMBH ergosphere as civilisational compute substrate)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FERD Complexity Ladder — Omega Centauri Society</title>
+<meta name="description" content="Chaisson's free energy rate density (ΦERD) across the cosmic hierarchy — from galaxies to brains to black hole ergospheres. Where does Omega Centauri's IMBH fall on the complexity ladder?">
+<link rel="canonical" href="https://omegacentauri.me/tools/ferd-complexity-ladder.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 30% 10%,rgba(29,186,144,.07),transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(112,85,212,.05),transparent 55%)}
+a{color:var(--teal-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--purple-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.88);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--text-primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.06);color:var(--teal-bright)}
+.badge-spec{border:1px solid var(--purple-mid);background:rgba(61,45,138,.06);color:var(--purple-glow)}
+/* Main two-column */
+.main-grid{display:grid;grid-template-columns:310px 1fr;gap:24px;margin-bottom:28px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:3px}
+.panel-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:18px;letter-spacing:.03em;line-height:1.5}
+/* Sliders */
+.sl-row{margin-bottom:16px}
+.sl-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.sl-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);font-weight:700}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer}
+input[type=range].teal-track{background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range].purple-track{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 8px rgba(77,232,192,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+/* Preset pills */
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.preset-pill{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.preset-pill:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.preset-pill.active{color:var(--void);background:var(--teal-bright);border-color:var(--teal-bright)}
+/* FERD ladder */
+.ladder-wrap{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:24px;margin-bottom:24px}
+.ladder-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);margin-bottom:18px}
+.rung{display:flex;align-items:center;gap:12px;margin-bottom:8px;min-height:30px}
+.rung-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);width:200px;flex-shrink:0;text-align:right}
+.rung-bar-wrap{flex:1;position:relative;height:20px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid var(--border-subtle);overflow:hidden}
+.rung-bar{height:100%;border-radius:10px;transition:width .4s ease}
+.rung-val{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);width:80px;flex-shrink:0;text-align:left;padding-left:8px}
+.rung-divider{height:1px;background:var(--border-subtle);margin:12px 0}
+.rung-highlight .rung-label{color:var(--teal-glow)}
+.rung-highlight .rung-val{color:var(--amber-glow)}
+/* Axis labels */
+.ladder-axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin:4px 0 0 212px;padding-right:92px}
+/* IMBH output cards */
+.imbh-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px}
+.out-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--teal-glow);line-height:1.2}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+/* Key insight */
+.insight-box{background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:10px;padding:16px 20px;font-size:15px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px}
+.insight-box strong{color:var(--teal-glow)}
+/* About */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:16px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.about-panel a{color:var(--teal-glow)}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px;line-height:1.5}
+.version{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:18px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">FERD Complexity Ladder</span>
+    <a href="https://omegacentauri.me/#compute" class="nav-link">← Main site</a>
+    <a href="index.html" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Free Energy Rate Density Complexity Ladder</h1>
+  <p class="subtitle">Chaisson's Φ_m metric — power per unit mass (erg s⁻¹ g⁻¹) — across the cosmic hierarchy. Where does a black hole ergosphere fall on the ladder of complexity?</p>
+
+  <div class="badges">
+    <span class="badge badge-sci">🔬 Established physics (Chaisson FERD values)</span>
+    <span class="badge badge-spec">✦ Engineering fiction (IMBH as compute substrate)</span>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT: IMBH controls -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">IMBH Ergosphere Parameters</div>
+        <div class="panel-sub">Set the black hole mass and spin to compute the ergosphere's FERD — the top rung of the ladder</div>
+
+        <div class="preset-bar">
+          <button class="preset-pill active" id="p-haberle" onclick="applyPreset('haberle')">Häberle ≥8,200</button>
+          <button class="preset-pill" id="p-banares" onclick="applyPreset('banares')">Bañares ≤6,000</button>
+          <button class="preset-pill" id="p-chen" onclick="applyPreset('chen')">Chen ~20,000</button>
+          <button class="preset-pill" id="p-stellar" onclick="applyPreset('stellar')">Stellar (10 M☉)</button>
+          <button class="preset-pill" id="p-sgra" onclick="applyPreset('sgra')">Sgr A* (4×10⁶)</button>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Black hole mass M (M☉)</span>
+            <span class="sl-val" id="disp-M">8,200</span>
+          </div>
+          <input type="range" id="sl-M" class="teal-track" min="0.5" max="8" step="0.05" value="3.914"
+            oninput="sliderChange('M',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>3 M☉</span><span>10³</span><span>10⁵</span><span>10⁸</span>
+          </div>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Spin parameter a</span>
+            <span class="sl-val" id="disp-a">0.90</span>
+          </div>
+          <input type="range" id="sl-a" class="purple-track" min="0" max="0.998" step="0.002" value="0.90"
+            oninput="sliderChange('a',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>0 (Schwarzschild)</span><span style="text-align:right">0.998 (maximal)</span>
+          </div>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">BZ efficiency ε</span>
+            <span class="sl-val" id="disp-eps">0.20</span>
+          </div>
+          <input type="range" id="sl-eps" class="teal-track" min="0.01" max="0.50" step="0.01" value="0.20"
+            oninput="sliderChange('eps',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>1% (inefficient)</span><span>50% (maximal)</span>
+          </div>
+        </div>
+
+        <div style="background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:8px;padding:14px;margin-top:4px">
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase">Computed FERD</div>
+          <div id="ferd-imbh" style="font-family:'Orbitron',sans-serif;font-size:28px;font-weight:600;color:var(--teal-glow)">2.23×10²⁰</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-top:4px">erg s⁻¹ g⁻¹</div>
+          <div id="ferd-note" style="font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim);margin-top:8px;line-height:1.5">FERD = ε c⁵ / (2GM) — power per unit mass at the ergosphere, independent of accretion rate</div>
+        </div>
+
+        <div style="margin-top:14px" class="imbh-grid">
+          <div class="out-box">
+            <div class="out-label">r_ergosphere</div>
+            <div class="out-val" id="out-rerg">—</div>
+            <div class="out-unit">km (= 2r_g at equator)</div>
+          </div>
+          <div class="out-box">
+            <div class="out-label">Orders above human brain</div>
+            <div class="out-val" id="out-orders">—</div>
+            <div class="out-unit">decades above 1.5×10⁵ erg/s/g</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Ladder visualization -->
+    <div>
+      <div class="ladder-wrap">
+        <div class="ladder-title">Φ_m — Free Energy Rate Density  (log scale, erg s⁻¹ g⁻¹)</div>
+        <div class="ladder-axis">
+          <span>10⁻¹</span><span>10¹</span><span>10³</span><span>10⁵</span><span>10⁷</span><span>10⁹</span><span>10¹¹</span>
+        </div>
+
+        <!-- Static rungs (Chaisson values) -->
+        <div id="ladder-container" style="margin-top:10px"></div>
+
+        <div style="margin-top:16px;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);line-height:1.6">
+          Static values from Chaisson (2011) · IMBH ergosphere computed from BZ power formula · All values ± 1–2 orders of magnitude
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <strong>Key insight:</strong> The FERD of an IMBH ergosphere is
+        <strong id="insight-val">~10²⁰</strong> erg s⁻¹ g⁻¹ —
+        approximately <strong id="insight-orders">15 orders of magnitude</strong> above a modern microprocessor
+        and <strong id="insight-brain">15 decades</strong> above a human brain.
+        The formula FERD = ε c⁵ / (2GM) shows that FERD is <em>independent of accretion rate</em>:
+        what matters is how efficiently the gravitational engine converts infalling mass-energy,
+        not how much mass is falling in. Smaller (less massive) black holes have <em>higher</em> FERD —
+        the engine runs hotter per unit mass. This is the quantitative foundation of the
+        Macro Transcension Hypothesis: an ergosphere-scale computer operates at a fundamentally
+        different thermodynamic tier from anything achievable with conventional matter.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- About -->
+  <div style="margin-top:16px">
+    <button class="about-toggle" onclick="toggleAbout()" id="about-btn">
+      <span class="about-arrow" id="about-arrow">▶</span> About this tool
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>This tool visualises Eric J. Chaisson's Free Energy Rate Density (FERD, or Φ_m) — the power flowing through a system per unit of its mass, measured in erg s⁻¹ g⁻¹. Chaisson proposed FERD as a universal complexity metric: systems higher on the ladder process energy more intensively per unit mass, and the trend across cosmic evolution is toward higher FERD. The ladder spans from galaxies (~0.5 erg/s/g) through stars, biospheres, animals, brains, and modern computers (~10⁸–10⁹ erg/s/g).</p>
+      <p>The interactive component computes where a black hole ergosphere falls on this ladder. The formula used is FERD_erg = ε c⁵ / (2GM), derived from the Blandford-Znajek power formula (P_BZ ≈ ε Ṁ c²) combined with the mass residence time in the ergosphere (t_res ≈ 2GM/c³). Crucially, the accretion rate Ṁ cancels: FERD depends only on BH mass and BZ efficiency. Less massive black holes have higher FERD per unit ergospheric mass.</p>
+      <h3>The formula in detail</h3>
+      <p>For a Kerr black hole with mass M and BZ efficiency ε: the ergosphere radius at the equator is r_erg = 2GM/c² (independent of spin). The BZ power scales as P_BZ ≈ ε × Ṁ × c². The characteristic mass in the ergosphere at any instant scales as M_erg ≈ Ṁ × (r_erg/c) = Ṁ × 2GM/c³. Therefore FERD = P_BZ/M_erg = ε c² / (2GM/c³) = ε c⁵ / (2GM). The BZ efficiency ε ranges from ~0.05 (low spin) to ~0.42 (maximal spin, Kerr limit).</p>
+      <h3>Epistemic status</h3>
+      <p>The Chaisson FERD values for galaxies through computers are <strong>🔬 established physics</strong> — well-cited observational and engineering values. The IMBH ergosphere calculation uses the BZ formula, which is <strong>⚠ theoretically well-grounded but approximate</strong> (it assumes the split-monopole field geometry). The interpretation of the ergosphere as a compute substrate is <strong>✦ engineering fiction</strong> — speculative but grounded in the established physics of the BZ mechanism.</p>
+      <h3>Connection to the MTH</h3>
+      <p>John Smart's Transcension Hypothesis proposes that advanced civilisations compress toward STEM-dense environments rather than expanding outward. The FERD ladder provides the quantitative motivation: the ergosphere of even a relatively modest IMBH processes energy at a rate per unit mass that exceeds current human technology by ~11–15 orders of magnitude. The Evo Devo Universe framework (Smart & Vidal 2009) interprets this as the next "rung" of cosmic developmental complexity after technological civilisation.</p>
+      <h3>References</h3>
+      <span class="cite">Chaisson, E. J. (2011). "Energy Rate Density as a Complexity Metric and Evolutionary Driver." Complexity 16:27–40. DOI: 10.1002/cplx.20323</span>
+      <span class="cite">Chaisson, E. J. (2011). "Energy Rate Density. II. Probing Further a New Complexity Metric." Complexity 17:44–63. DOI: 10.1002/cplx.20367</span>
+      <span class="cite">Chaisson, E. J. (2015). "Energy Flows in Low-Entropy Complex Systems." Entropy 17:8007. DOI: 10.3390/e17127857</span>
+      <span class="cite">Smart, J. M. (2012). "The transcension hypothesis." Acta Astronautica 78:55–68. DOI: 10.1016/j.actaastro.2011.11.006</span>
+      <span class="cite">Vidal, C. & Smart, J. M. (2009). "Evo Devo Universe?" In Cosmos and Culture, NASA SP-2009-4802.</span>
+      <span class="cite">Blandford, R. D. & Znajek, R. L. (1977). MNRAS 179:433. DOI: 10.1093/mnras/179.3.433</span>
+      <p class="version">v1.0 — 2026-06-02 · Tool content may be revised as scientific knowledge evolves.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Constants ────────────────────────────────────────────────────
+const G   = 6.674e-8;   // CGS: cm³ g⁻¹ s⁻²
+const c   = 3e10;       // CGS: cm/s
+const M_sun_g = 1.989e33; // grams
+
+// ─── Chaisson published FERD values (erg/s/g) ─────────────────────
+// Source: Chaisson 2011a, 2011b, 2015
+const RUNGS = [
+  { label: 'Milky Way (ordered motions)',  logFerd: -0.30, color: '#504870', tier: 'sci' },
+  { label: 'Sun (total luminosity)',        logFerd:  0.30, color: '#7055d4', tier: 'sci' },
+  { label: 'Earth biosphere (average)',     logFerd:  1.88, color: '#3d2d8a', tier: 'sci' },
+  { label: 'Plant leaf (photosynthesis)',   logFerd:  2.95, color: '#0d6e58', tier: 'sci' },
+  { label: 'Animal body (metabolism)',      logFerd:  4.30, color: '#1dba90', tier: 'sci' },
+  { label: 'Human brain (gray matter)',     logFerd:  5.18, color: '#4de8c0', tier: 'sci' },
+  { label: 'Modern society (per capita)',   logFerd:  5.70, color: '#f0a020', tier: 'sci' },
+  { label: 'Modern microprocessor chip',   logFerd:  9.00, color: '#ffc840', tier: 'sci' },
+];
+
+// ─── State ────────────────────────────────────────────────────────
+const state = { logM: 3.914, a: 0.90, eps: 0.20 };
+
+// ─── Presets ──────────────────────────────────────────────────────
+const PRESETS = {
+  haberle: { logM: 3.914, a: 0.90, eps: 0.20 },
+  banares: { logM: 3.778, a: 0.90, eps: 0.20 },
+  chen:    { logM: 4.301, a: 0.90, eps: 0.20 },
+  stellar: { logM: 1.000, a: 0.70, eps: 0.10 },
+  sgra:    { logM: 6.602, a: 0.90, eps: 0.20 },
+};
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  Object.assign(state, p);
+  document.getElementById('sl-M').value   = p.logM;
+  document.getElementById('sl-a').value   = p.a;
+  document.getElementById('sl-eps').value = p.eps;
+  ['haberle','banares','chen','stellar','sgra'].forEach(id =>
+    document.getElementById('p-'+id).classList.toggle('active', id===key));
+  compute(); saveHash();
+}
+
+function sliderChange(key, val) {
+  if (key==='M')   { state.logM = parseFloat(val); }
+  if (key==='a')   { state.a    = parseFloat(val); }
+  if (key==='eps') { state.eps  = parseFloat(val); }
+  ['haberle','banares','chen','stellar','sgra'].forEach(id =>
+    document.getElementById('p-'+id).classList.remove('active'));
+  compute(); saveHash();
+}
+
+// ─── Physics ──────────────────────────────────────────────────────
+function calcFERD(logM, eps) {
+  // FERD = ε c⁵ / (2 G M)  [CGS: erg/s/g]
+  const M_g = Math.pow(10, logM) * M_sun_g;
+  return eps * Math.pow(c, 5) / (2 * G * M_g);
+}
+function ergosphereRadius_km(logM) {
+  // r_erg = 2GM/c² [equatorial, any spin]  in km
+  const M_g = Math.pow(10, logM) * M_sun_g;
+  const cm = 2 * G * M_g / (c * c);
+  return cm / 1e5; // cm → km
+}
+
+// ─── Ladder rendering ─────────────────────────────────────────────
+const LOG_LO = -1.0;   // log10 scale min
+const LOG_HI = 25.0;   // log10 scale max (room for IMBH)
+
+function logToPercent(logV) {
+  return Math.min(Math.max((logV - LOG_LO) / (LOG_HI - LOG_LO) * 100, 0.5), 99.5);
+}
+
+function fmtFerd(logV) {
+  if (!isFinite(logV)) return '—';
+  const e = Math.round(logV);
+  const m = Math.pow(10, logV - e);
+  if (Math.abs(m - 1) < 0.15) return '10' + supStr(e);
+  return m.toFixed(1) + '×10' + supStr(e);
+}
+
+function supStr(n) {
+  const sup = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+  const s = Math.abs(n).toString();
+  const mapped = s.split('').map(c=>(c>='0'&&c<='9')?sup[parseInt(c)]:c).join('');
+  return (n<0?'⁻':'') + mapped;
+}
+function fmtSci(v, digits) {
+  digits = digits || 3;
+  if (!isFinite(v) || v<=0) return '—';
+  const e = Math.floor(Math.log10(v));
+  const m = v / Math.pow(10, e);
+  return m.toFixed(digits-1) + '×10' + supStr(e);
+}
+
+function buildLadder(logFerdImbh) {
+  const container = document.getElementById('ladder-container');
+  container.innerHTML = '';
+
+  // Build all rungs including dynamic IMBH
+  const allRungs = RUNGS.slice();
+  allRungs.push({
+    label: '⊙ OC IMBH ergosphere (computed)',
+    logFerd: logFerdImbh,
+    color: '#4de8c0',
+    tier: 'imbh',
+    isImbh: true,
+  });
+
+  // Sort by FERD ascending
+  allRungs.sort((a, b) => a.logFerd - b.logFerd);
+
+  allRungs.forEach((rung) => {
+    const row = document.createElement('div');
+    row.className = 'rung' + (rung.isImbh ? ' rung-highlight' : '');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:10px;min-height:28px';
+
+    const pct = logToPercent(rung.logFerd);
+
+    const labelEl = document.createElement('div');
+    labelEl.style.cssText = 'font-family:\'Space Mono\',monospace;font-size:10px;color:' +
+      (rung.isImbh ? 'var(--teal-glow)' : 'var(--text-secondary)') +
+      ';width:220px;flex-shrink:0;text-align:right;line-height:1.3';
+    labelEl.textContent = rung.label;
+
+    const barWrap = document.createElement('div');
+    barWrap.style.cssText = 'flex:1;position:relative;height:' + (rung.isImbh?'24':'18') + 'px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid var(--border-subtle);overflow:hidden';
+
+    const bar = document.createElement('div');
+    bar.style.cssText = 'height:100%;border-radius:10px;background:' + rung.color + ';width:' + pct + '%';
+    if (rung.isImbh) {
+      bar.style.background = 'linear-gradient(90deg, var(--teal-dark), var(--teal-glow))';
+      bar.style.boxShadow = '0 0 12px rgba(77,232,192,.4)';
+    }
+    barWrap.appendChild(bar);
+
+    const valEl = document.createElement('div');
+    valEl.style.cssText = 'font-family:\'Space Mono\',monospace;font-size:10px;color:' +
+      (rung.isImbh ? 'var(--amber-glow)' : 'var(--text-dim)') +
+      ';width:90px;flex-shrink:0;padding-left:8px';
+    valEl.textContent = fmtFerd(rung.logFerd);
+
+    row.appendChild(labelEl);
+    row.appendChild(barWrap);
+    row.appendChild(valEl);
+    container.appendChild(row);
+
+    // Divider before IMBH
+    if (rung.isImbh) {
+      const d = document.createElement('div');
+      d.style.cssText = 'height:1px;background:var(--border-teal);margin:4px 0';
+      container.insertBefore(d, row);
+    }
+  });
+
+  // Axis ticks below
+  const axis = document.createElement('div');
+  axis.style.cssText = 'display:flex;justify-content:space-between;font-family:\'Space Mono\',monospace;font-size:9px;color:var(--text-dim);margin:6px 0 0 232px;padding-right:106px';
+  axis.innerHTML = ['10⁻¹','10¹','10³','10⁵','10⁷','10⁹','10¹¹','10¹⁵','10²⁰','10²⁵'].join('<span></span>');
+  container.appendChild(axis);
+}
+
+// ─── Main compute ─────────────────────────────────────────────────
+function compute() {
+  const M_display = Math.pow(10, state.logM);
+  document.getElementById('disp-M').textContent = M_display >= 1000
+    ? (M_display/1000).toFixed(1) + ',000'
+    : M_display.toFixed(0);
+  document.getElementById('disp-M').textContent = M_display.toLocaleString(undefined,{maximumFractionDigits:0});
+  document.getElementById('disp-a').textContent = state.a.toFixed(3);
+  document.getElementById('disp-eps').textContent = state.eps.toFixed(2);
+
+  const ferd = calcFERD(state.logM, state.eps);
+  const logFerd = Math.log10(ferd);
+  document.getElementById('ferd-imbh').textContent = fmtSci(ferd, 3);
+
+  const rerg = ergosphereRadius_km(state.logM);
+  document.getElementById('out-rerg').textContent = rerg >= 1e6
+    ? fmtSci(rerg,3) + ' km'
+    : rerg.toFixed(0) + ' km';
+
+  const logBrain = 5.18; // human brain
+  const logChip  = 9.00;
+  const ordersAboveBrain = (logFerd - logBrain).toFixed(1);
+  const ordersAboveChip  = (logFerd - logChip).toFixed(1);
+  document.getElementById('out-orders').textContent = ordersAboveBrain;
+
+  document.getElementById('insight-val').textContent = '~10' + Math.round(logFerd).toString().split('').map(c=>c==='0'?'⁰':c==='1'?'¹':c==='2'?'²':c==='3'?'³':c==='4'?'⁴':c==='5'?'⁵':c==='6'?'⁶':c==='7'?'⁷':c==='8'?'⁸':c==='9'?'⁹':c).join('');
+  document.getElementById('insight-orders').textContent = ordersAboveChip + ' orders of magnitude';
+  document.getElementById('insight-brain').textContent = ordersAboveBrain + ' decades';
+
+  buildLadder(logFerd);
+}
+
+function toggleAbout() {
+  const p = document.getElementById('about-panel');
+  const a = document.getElementById('about-arrow');
+  p.classList.toggle('visible');
+  a.style.transform = p.classList.contains('visible') ? 'rotate(90deg)' : '';
+}
+
+// ─── Hash ────────────────────────────────────────────────────────
+function saveHash() {
+  window.location.hash = `logM=${state.logM.toFixed(3)}&a=${state.a.toFixed(3)}&eps=${state.eps.toFixed(2)}`;
+}
+function loadHash() {
+  const h = window.location.hash.replace('#','');
+  if (!h) return;
+  const params = Object.fromEntries(h.split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));
+  if (params.logM) { state.logM=parseFloat(params.logM); document.getElementById('sl-M').value=state.logM; }
+  if (params.a)    { state.a=parseFloat(params.a);       document.getElementById('sl-a').value=state.a; }
+  if (params.eps)  { state.eps=parseFloat(params.eps);   document.getElementById('sl-eps').value=state.eps; }
+  ['haberle','banares','chen','stellar','sgra'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));
+}
+
+window.addEventListener('load', () => { loadHash(); compute(); });
+</script>
+</body>
+</html>

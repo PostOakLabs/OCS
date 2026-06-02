@@ -1,0 +1,634 @@
+<!--
+  Three-Stage CNS Black Hole Yield Calculator
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-06-02
+
+  Inspired by: Julian Gough's Three-Stage Cosmological Natural Selection (2020s)
+  and Lee Smolin's original CNS (1992)
+
+  Data sources:
+    - Smolin, L. (1992). "Did the Universe Evolve?" Classical and Quantum Gravity 9:173.
+      DOI: 10.1088/0264-9381/9/1/016
+    - Gough, J. (2022–2025). The Egg and the Rock. theeggandtherock.com
+      Blowtorch Theory: https://theeggandtherock.com/p/the-blowtorch-theory-a-new-model
+    - Salpeter, E. E. (1955). "The Luminosity Function and Stellar Evolution."
+      ApJ 121:161. DOI: 10.1086/145971
+    - Madau, P. & Dickinson, M. (2014). "Cosmic Star-Formation History."
+      ARA&A 52:415. DOI: 10.1146/annurev-astro-081811-125615
+    - Vito, F. et al. (2018). "High-z direct-collapse BH candidates from JWST."
+      MNRAS 473:2378.
+    - Harikane, Y. et al. (2023). "A Comprehensive Study of Galaxies at z > 10 found in JWST."
+      ApJS 265:5. DOI: 10.3847/1538-4365/acaaa9
+    - Drake, F. D. (1961). "Discussion at Project Ozma." Physics Today 14:40.
+
+  Site section: #fermi
+  Epistemic tier(s): ✦ Engineering fiction / speculative framework (three-stage CNS, civilisational BH creation)
+                     ⚠ Theoretical (CNS framework, stellar IMF extrapolation)
+                     🔬 Established physics (stellar BH formation from Salpeter IMF)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three-Stage CNS Black Hole Yield — Omega Centauri Society</title>
+<meta name="description" content="Julian Gough's three-stage CNS: direct-collapse SMBHs, stellar evolution BHs, and intelligent-life-created BHs. When does civilisational black hole production overtake natural stellar evolution?">
+<link rel="canonical" href="https://omegacentauri.me/tools/cns-three-stage.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 25%,rgba(138,32,32,.06),transparent 50%),radial-gradient(ellipse at 85% 75%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.88);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:24px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--red-bright),var(--amber-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.06);color:var(--teal-bright)}
+.badge-theory{border:1px solid var(--amber-mid);background:rgba(196,120,0,.06);color:var(--amber-bright)}
+.badge-spec{border:1px solid var(--purple-mid);background:rgba(61,45,138,.06);color:var(--purple-glow)}
+.note-box{background:rgba(196,120,0,.05);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.note-box strong{color:var(--amber-glow)}
+/* Three panels */
+.stages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:24px}
+@media(max-width:900px){.stages-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.stages-grid{grid-template-columns:1fr}}
+.stage-panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.stage-badge{display:inline-block;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;margin-bottom:10px}
+.s1-badge{border:1px solid var(--red-mid);background:rgba(138,32,32,.1);color:var(--red-bright)}
+.s2-badge{border:1px solid var(--amber-mid);background:rgba(196,120,0,.08);color:var(--amber-bright)}
+.s3-badge{border:1px solid var(--purple-mid);background:rgba(61,45,138,.1);color:var(--purple-glow)}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:3px}
+.stage-desc{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:16px;line-height:1.5;letter-spacing:.03em}
+/* Sliders */
+.sl-row{margin-bottom:13px}
+.sl-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-val{font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer}
+input[type=range].red-track{background:linear-gradient(90deg,var(--red-mid),var(--red-bright))}
+input[type=range].amber-track{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-track{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 8px rgba(160,128,240,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+/* Stage output */
+.stage-out{margin-top:14px;padding:12px 14px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:8px}
+.stage-out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.stage-out-val{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600;line-height:1.1}
+.s1-val{color:var(--red-bright)}
+.s2-val{color:var(--amber-glow)}
+.s3-val{color:var(--purple-glow)}
+.stage-out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+/* Results chart area */
+.results-panel{background:linear-gradient(160deg,rgba(13,10,36,.5),rgba(7,5,21,.8));border:1px solid var(--border-subtle);border-radius:12px;padding:24px;margin-bottom:24px}
+.results-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border-subtle)}
+.ratio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:600px){.ratio-grid{grid-template-columns:1fr 1fr}}
+.ratio-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px;text-align:center}
+.ratio-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.ratio-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;line-height:1.1;color:var(--text-primary)}
+.ratio-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:4px}
+/* Bar comparison */
+.bar-section{margin-bottom:20px}
+.bar-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-stage-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);width:80px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:22px;background:rgba(255,255,255,.03);border-radius:11px;border:1px solid var(--border-subtle);overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:11px;transition:width .4s ease;min-width:3px}
+.bar-val-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);width:100px;padding-left:10px;flex-shrink:0}
+/* Chart canvas */
+.chart-area{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:14px;margin-bottom:16px}
+.chart-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+canvas{display:block;width:100%;border-radius:6px}
+/* Crossover narrative */
+.narrative-box{background:rgba(61,45,138,.07);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 20px;font-size:15px;color:var(--text-secondary);line-height:1.7}
+.narrative-box strong{color:var(--text-primary)}
+/* About */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0}
+.about-toggle:hover{color:var(--purple-glow)}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:16px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px;line-height:1.5}
+.version{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:18px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Three-Stage CNS Black Hole Yield</span>
+    <a href="https://omegacentauri.me/#fermi" class="nav-link">← Main site</a>
+    <a href="gough-blowtorch.html" class="nav-link">Gough Blowtorch</a>
+    <a href="cosmological-natural-selection.html" class="nav-link">CNS Tool</a>
+    <a href="index.html" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Three-Stage CNS Black Hole Yield Calculator</h1>
+  <p class="subtitle">Julian Gough's extension of Smolin's CNS: when does intelligent-life-created black holes overtake natural stellar production? Universe fitness is the total BH mass density per Mpc³.</p>
+
+  <div class="badges">
+    <span class="badge badge-sci">🔬 Established physics (stellar IMF, BH formation rate)</span>
+    <span class="badge badge-theory">⚠ Theoretical (CNS framework, direct-collapse BHs)</span>
+    <span class="badge badge-spec">✦ Engineering fiction (Stage 3: civilisational BH creation)</span>
+  </div>
+
+  <div class="note-box">
+    <strong>Context.</strong> Lee Smolin's Cosmological Natural Selection (1992) proposes that universes reproduce via black holes, so physical constants are selected to maximise BH production. Julian Gough extends this with a three-stage model: Stage 1 — direct-collapse supermassive BHs in the early universe; Stage 2 — stellar black holes from normal evolution; Stage 3 — BHs created by intelligent civilisations (the "third stage" that JWST evidence is beginning to constrain). This tool asks: at what civilisational density and BH-creation rate does Stage 3 become the dominant contribution to the universe's BH yield?
+  </div>
+
+  <div class="stages-grid">
+
+    <!-- Stage 1 -->
+    <div class="stage-panel">
+      <div class="stage-badge s1-badge">Stage 1</div>
+      <div class="stage-title">Direct-Collapse SMBHs</div>
+      <div class="stage-desc">Early-universe (z > 6) supermassive BH seeds formed by direct gas collapse — no stellar progenitor. JWST is actively constraining this population.</div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">DCBH number density n_DC (Mpc⁻³)</span>
+          <span class="sl-val s1-val" id="disp-nDC">10⁻³</span>
+        </div>
+        <input type="range" id="sl-nDC" class="red-track" min="-6" max="1" step="0.1" value="-3"
+          oninput="sliderChange('nDC',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁻⁶</span><span>10⁻³</span><span>10⁰</span></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">Mean DCBH mass M_DC (M☉)</span>
+          <span class="sl-val s1-val" id="disp-MDC">10⁶</span>
+        </div>
+        <input type="range" id="sl-MDC" class="red-track" min="4" max="9" step="0.1" value="6"
+          oninput="sliderChange('MDC',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁴ M☉</span><span>10⁶</span><span>10⁹</span></div>
+      </div>
+
+      <div class="stage-out">
+        <div class="stage-out-label">Stage 1 BH mass density</div>
+        <div class="stage-out-val s1-val" id="out-S1">—</div>
+        <div class="stage-out-unit">M☉ Mpc⁻³</div>
+      </div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="stage-panel">
+      <div class="stage-badge s2-badge">Stage 2</div>
+      <div class="stage-title">Stellar Black Holes</div>
+      <div class="stage-desc">BHs from normal stellar evolution. Massive stars (M > 20 M☉) collapse to BHs at the end of their lives. Salpeter IMF gives the fraction of stellar mass that ends up in BHs.</div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">Total stellar mass formed (M☉ Mpc⁻³)</span>
+          <span class="sl-val s2-val" id="disp-Mstar">5×10⁸</span>
+        </div>
+        <input type="range" id="sl-Mstar" class="amber-track" min="6" max="11" step="0.1" value="8.70"
+          oninput="sliderChange('Mstar',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁶</span><span>10⁸</span><span>10¹¹</span></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">BH mass fraction f_BH</span>
+          <span class="sl-val s2-val" id="disp-fBH">0.30%</span>
+        </div>
+        <input type="range" id="sl-fBH" class="amber-track" min="-3" max="-0.7" step="0.05" value="-2.52"
+          oninput="sliderChange('fBH',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.01%</span><span>1%</span><span>20%</span></div>
+      </div>
+
+      <div class="stage-out">
+        <div class="stage-out-label">Stage 2 BH mass density</div>
+        <div class="stage-out-val s2-val" id="out-S2">—</div>
+        <div class="stage-out-unit">M☉ Mpc⁻³</div>
+      </div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:8px;line-height:1.5">Salpeter IMF prediction: ~0.3% of stellar mass ends in stellar BHs (M > 20 M☉, assuming no fallback). Observed total cosmic stellar mass density ~5×10⁸ M☉ Mpc⁻³ (Madau & Dickinson 2014).</div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="stage-panel">
+      <div class="stage-badge s3-badge">Stage 3</div>
+      <div class="stage-title">Civilisational BH Creation</div>
+      <div class="stage-desc">✦ Engineering fiction. Intelligent civilisations create BHs directly — via particle colliders at extreme energies, engineered stellar collapse, or micro-BH factories. Gough's third stage.</div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">Civilisation density n_civ (Mpc⁻³)</span>
+          <span class="sl-val s3-val" id="disp-nciv">10⁻³</span>
+        </div>
+        <input type="range" id="sl-nciv" class="purple-track" min="-10" max="6" step="0.1" value="-3"
+          oninput="sliderChange('nciv',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁻¹⁰</span><span>10⁻³</span><span>10⁶</span></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">BH creation rate R_BH (BH yr⁻¹ civ⁻¹)</span>
+          <span class="sl-val s3-val" id="disp-RBH">1</span>
+        </div>
+        <input type="range" id="sl-RBH" class="purple-track" min="-6" max="10" step="0.2" value="0"
+          oninput="sliderChange('RBH',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁻⁶/yr</span><span>1/yr</span><span>10¹⁰/yr</span></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">BH mass per creation M_civ (M☉)</span>
+          <span class="sl-val s3-val" id="disp-Mciv">10</span>
+        </div>
+        <input type="range" id="sl-Mciv" class="purple-track" min="-6" max="9" step="0.2" value="1"
+          oninput="sliderChange('Mciv',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁻⁶ M☉</span><span>1</span><span>10⁹</span></div>
+      </div>
+
+      <div class="sl-row">
+        <div class="sl-label-row">
+          <span class="sl-label">Stage 3 duration T_civ (Gyr)</span>
+          <span class="sl-val s3-val" id="disp-Tciv">1.0</span>
+        </div>
+        <input type="range" id="sl-Tciv" class="purple-track" min="-2" max="1.3" step="0.1" value="0"
+          oninput="sliderChange('Tciv',this.value)">
+        <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.01 Gyr</span><span>1</span><span>20 Gyr</span></div>
+      </div>
+
+      <div class="stage-out">
+        <div class="stage-out-label">Stage 3 BH mass density</div>
+        <div class="stage-out-val s3-val" id="out-S3">—</div>
+        <div class="stage-out-unit">M☉ Mpc⁻³</div>
+      </div>
+    </div>
+
+  </div><!-- /stages-grid -->
+
+  <!-- Results -->
+  <div class="results-panel">
+    <div class="results-title">Universe Fitness Accounting</div>
+
+    <div class="ratio-grid">
+      <div class="ratio-box">
+        <div class="ratio-label">Total BH mass density</div>
+        <div class="ratio-val" id="r-total">—</div>
+        <div class="ratio-unit">M☉ Mpc⁻³</div>
+      </div>
+      <div class="ratio-box">
+        <div class="ratio-label">Stage 3 / Stage 2 ratio</div>
+        <div class="ratio-val" id="r-s3s2">—</div>
+        <div class="ratio-unit">civilisational dominance</div>
+      </div>
+      <div class="ratio-box">
+        <div class="ratio-label">Stage 3 / total</div>
+        <div class="ratio-val" id="r-s3frac">—</div>
+        <div class="ratio-unit">fraction of yield</div>
+      </div>
+    </div>
+
+    <!-- Bar comparison -->
+    <div class="bar-section">
+      <div class="bar-title">Relative BH mass density by stage (log scale)</div>
+      <div class="bar-row">
+        <div class="bar-stage-label">Stage 1</div>
+        <div class="bar-track"><div class="bar-fill" id="bar1" style="background:var(--red-bright)"></div></div>
+        <div class="bar-val-label" id="bv1">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-stage-label">Stage 2</div>
+        <div class="bar-track"><div class="bar-fill" id="bar2" style="background:var(--amber-bright)"></div></div>
+        <div class="bar-val-label" id="bv2">—</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-stage-label">Stage 3 ✦</div>
+        <div class="bar-track"><div class="bar-fill" id="bar3" style="background:var(--purple-bright)"></div></div>
+        <div class="bar-val-label" id="bv3">—</div>
+      </div>
+    </div>
+
+    <!-- Crossover condition -->
+    <div class="chart-area">
+      <div class="chart-title">Civilisation density required for Stage 3 dominance, vs. BH creation rate (log-log)</div>
+      <canvas id="crossover-chart" height="200"></canvas>
+    </div>
+
+    <div class="narrative-box" id="narrative">—</div>
+  </div>
+
+  <!-- About -->
+  <div>
+    <button class="about-toggle" onclick="toggleAbout()">
+      <span class="about-arrow" id="about-arrow">▶</span> About this tool
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>This tool implements Julian Gough's three-stage extension of Lee Smolin's Cosmological Natural Selection. Smolin (1992) proposed that our universe's physical constants are optimised by natural selection to maximise black hole production. Gough (2020s) argues there are three distinct production channels, and that in late-time universes the third stage — intelligent life creating BHs — could become the dominant contribution to the total BH yield.</p>
+      <h3>The three stages</h3>
+      <p><strong>Stage 1 — Direct-collapse SMBHs:</strong> In the first ~100 Myr after the Big Bang, massive gas clouds could collapse directly into black holes of 10⁴–10⁹ M☉ without forming stars first. JWST has found evidence for unexpectedly massive BHs at z > 10 (Harikane et al. 2023), which Gough interprets as support for this channel. Number density n_DC is highly uncertain — the tool spans the observational range (10⁻⁶ to 1 per Mpc³).</p>
+      <p><strong>Stage 2 — Stellar BHs:</strong> Massive stars (roughly M > 20 M☉) end their lives as black holes. The Salpeter IMF (dN/dM ∝ M⁻²·³⁵) predicts roughly 0.1–1% of total stellar mass ends up in stellar BHs. Integrated over the cosmic star formation history, the total stellar mass formed is ~5×10⁸ M☉ Mpc⁻³ (Madau & Dickinson 2014), giving a Stage 2 yield of ~10⁶–10⁷ M☉ Mpc⁻³.</p>
+      <p><strong>Stage 3 — Civilisational BHs (✦):</strong> Gough's distinctive addition. Advanced civilisations could create BHs deliberately — via particle accelerator chains reaching Planck energies, engineered supernova triggering, or direct gravitational collapse of structured matter. The parameters here are unconstrained by observation; the tool explores the consequences of different assumptions. M_civ = mass per created BH is a key free parameter: if civilisations create stellar-mass BHs (10–100 M☉), the yield per creation is small; if they create IMBH-scale BHs (10³–10⁵ M☉), the yield is much larger.</p>
+      <h3>Universe fitness</h3>
+      <p>In CNS, universe "fitness" is measured by total BH production per unit volume. A universe that produces intelligent life capable of Stage 3 BH creation may be more reproductively fit than one that only runs Stages 1 and 2 — but only if Stage 3 yields are substantial. This creates a potential selection pressure for universes that support life.</p>
+      <h3>Epistemic status</h3>
+      <p>Stage 2 calculations are 🔬 — the Salpeter IMF and stellar evolution are well-established. Stage 1 is ⚠ theoretical — supported by some JWST evidence but the model is debated. Stage 3 is ✦ engineering fiction — there is no observational evidence for civilisational BH creation and the parameter range spans many orders of magnitude.</p>
+      <h3>References</h3>
+      <span class="cite">Smolin, L. (1992). "Did the Universe Evolve?" Classical and Quantum Gravity 9:173. DOI: 10.1088/0264-9381/9/1/016</span>
+      <span class="cite">Gough, J. (2022–2025). "Blowtorch Theory." The Egg and the Rock. https://theeggandtherock.com/p/the-blowtorch-theory-a-new-model</span>
+      <span class="cite">Salpeter, E. E. (1955). "The Luminosity Function and Stellar Evolution." ApJ 121:161. DOI: 10.1086/145971</span>
+      <span class="cite">Madau, P. & Dickinson, M. (2014). "Cosmic Star-Formation History." ARA&A 52:415. DOI: 10.1146/annurev-astro-081811-125615</span>
+      <span class="cite">Harikane, Y. et al. (2023). "A Comprehensive Study of Galaxies at z > 10 found in JWST." ApJS 265:5. DOI: 10.3847/1538-4365/acaaa9</span>
+      <p class="version">v1.0 — 2026-06-02 · Tool content may be revised as scientific knowledge evolves.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── State ─────────────────────────────────────────────────────
+const state = {
+  lognDC:  -3,    // log10(n_DC / Mpc^-3)
+  logMDC:   6,    // log10(M_DC / M_sun)
+  logMstar: 8.70, // log10(total stellar mass / M_sun Mpc^-3)  ≈ 5e8
+  logfBH:  -2.52, // log10(f_BH)  ≈ 0.003
+  lognciv: -3,    // log10(n_civ / Mpc^-3)
+  logRBH:   0,    // log10(R_BH / BH yr^-1 civ^-1)
+  logMciv:  1,    // log10(M_civ / M_sun)
+  logTciv:  0,    // log10(T_civ / Gyr)
+};
+
+function sliderChange(key, val) {
+  const v = parseFloat(val);
+  if (key==='nDC')  { state.lognDC  = v; }
+  if (key==='MDC')  { state.logMDC  = v; }
+  if (key==='Mstar'){ state.logMstar= v; }
+  if (key==='fBH')  { state.logfBH  = v; }
+  if (key==='nciv') { state.lognciv = v; }
+  if (key==='RBH')  { state.logRBH  = v; }
+  if (key==='Mciv') { state.logMciv = v; }
+  if (key==='Tciv') { state.logTciv = v; }
+  compute(); saveHash();
+}
+
+// ─── Physics ───────────────────────────────────────────────────
+function S1(lognDC, logMDC) {
+  // M_BH_density = n_DC * M_DC  [M_sun Mpc^-3]
+  return Math.pow(10, lognDC) * Math.pow(10, logMDC);
+}
+function S2(logMstar, logfBH) {
+  return Math.pow(10, logMstar) * Math.pow(10, logfBH);
+}
+function S3(lognciv, logRBH, logMciv, logTciv) {
+  // M_BH = n_civ * R_BH * M_civ * T_civ * 1e9 (Gyr to yr)
+  return Math.pow(10, lognciv) * Math.pow(10, logRBH) * Math.pow(10, logMciv) * Math.pow(10, logTciv) * 1e9;
+}
+
+// ─── Formatting ─────────────────────────────────────────────────
+function supStr(n) {
+  const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+  return (n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('');
+}
+function fmtSci(v, d) {
+  d=d||3;
+  if(!isFinite(v)||v<=0) return '—';
+  const e=Math.floor(Math.log10(v));
+  const m=v/Math.pow(10,e);
+  if(Math.abs(m-1)<0.01) return '10'+supStr(e);
+  return m.toFixed(d-1)+'×10'+supStr(e);
+}
+function fmtSciShort(v) {
+  if(!isFinite(v)||v<=0) return '—';
+  const e=Math.floor(Math.log10(v));
+  return '10'+supStr(e);
+}
+
+// ─── Compute ────────────────────────────────────────────────────
+function compute() {
+  // Stage 2 BH fraction display
+  const fBH_pct = (Math.pow(10, state.logfBH) * 100).toFixed(2);
+
+  document.getElementById('disp-nDC').textContent   = fmtSciShort(Math.pow(10,state.lognDC));
+  document.getElementById('disp-MDC').textContent   = fmtSciShort(Math.pow(10,state.logMDC));
+  document.getElementById('disp-Mstar').textContent = fmtSci(Math.pow(10,state.logMstar),2);
+  document.getElementById('disp-fBH').textContent   = fBH_pct + '%';
+  document.getElementById('disp-nciv').textContent  = fmtSciShort(Math.pow(10,state.lognciv));
+  document.getElementById('disp-RBH').textContent   = fmtSci(Math.pow(10,state.logRBH),2);
+  document.getElementById('disp-Mciv').textContent  = fmtSci(Math.pow(10,state.logMciv),2);
+  document.getElementById('disp-Tciv').textContent  = Math.pow(10,state.logTciv).toFixed(2);
+
+  const ms1 = S1(state.lognDC, state.logMDC);
+  const ms2 = S2(state.logMstar, state.logfBH);
+  const ms3 = S3(state.lognciv, state.logRBH, state.logMciv, state.logTciv);
+  const total = ms1 + ms2 + ms3;
+
+  document.getElementById('out-S1').textContent = fmtSci(ms1);
+  document.getElementById('out-S2').textContent = fmtSci(ms2);
+  document.getElementById('out-S3').textContent = fmtSci(ms3);
+  document.getElementById('r-total').textContent = fmtSci(total);
+
+  const s3s2 = ms3 / ms2;
+  const s3frac = ms3 / total;
+  document.getElementById('r-s3s2').textContent  = fmtSci(s3s2, 3);
+  document.getElementById('r-s3frac').textContent = (s3frac*100).toFixed(1)+'%';
+
+  // Bars
+  const maxLog = Math.max(Math.log10(ms1||1e-10), Math.log10(ms2||1e-10), Math.log10(ms3||1e-10), 1);
+  const minLog = maxLog - 15;
+  function toBarPct(v) {
+    if (!v || v <= 0) return 0;
+    const l = Math.log10(v);
+    return Math.max(0, Math.min(100, (l - minLog) / (maxLog - minLog) * 100));
+  }
+  document.getElementById('bar1').style.width = toBarPct(ms1) + '%';
+  document.getElementById('bar2').style.width = toBarPct(ms2) + '%';
+  document.getElementById('bar3').style.width = toBarPct(ms3) + '%';
+  document.getElementById('bv1').textContent = fmtSci(ms1, 2);
+  document.getElementById('bv2').textContent = fmtSci(ms2, 2);
+  document.getElementById('bv3').textContent = fmtSci(ms3, 2);
+
+  // Narrative
+  const nb = document.getElementById('narrative');
+  if (s3s2 > 100) {
+    nb.innerHTML = `<strong>Stage 3 dominates:</strong> at these parameters, civilisational BH creation outpaces stellar evolution by <strong>${fmtSci(s3s2,2)}×</strong>. If this held across the observable universe, intelligent life would be the primary driver of black hole production — the universe would be "biocentric" in Gough's CNS fitness sense. This is the condition under which natural selection would strongly favour universes that produce life.`;
+  } else if (s3s2 > 1) {
+    nb.innerHTML = `<strong>Stage 3 is competitive:</strong> civilisational BH production is comparable to stellar evolution (${fmtSci(s3s2,2)}× Stage 2). This is the marginal regime — small changes in civilisation density or creation rate tip the balance. Stage 3 contributes ${(s3frac*100).toFixed(1)}% of total BH mass density.`;
+  } else {
+    const need_nciv = ms2 / (Math.pow(10,state.logRBH) * Math.pow(10,state.logMciv) * Math.pow(10,state.logTciv) * 1e9);
+    nb.innerHTML = `<strong>Stage 2 dominates:</strong> stellar BH production is ${fmtSci(1/s3s2,2)}× larger than Stage 3. To reach civilisational dominance at current R_BH and M_civ, civilisation density would need to be at least <strong>${fmtSci(need_nciv,2)} Mpc⁻³</strong>. For reference, the Milky Way alone is in a ~1 Mpc³ volume, so n_civ ~ 10⁻⁶ Mpc⁻³ would mean roughly one civilisation per 10⁶ Mpc³ — ~10,000× less than one per galaxy.`;
+  }
+
+  drawChart(ms2);
+}
+
+// ─── Crossover chart ──────────────────────────────────────────
+function drawChart(ms2) {
+  const canvas = document.getElementById('crossover-chart');
+  const W = canvas.offsetWidth || 600;
+  const H = 200;
+  canvas.width = W * window.devicePixelRatio;
+  canvas.height = H * window.devicePixelRatio;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const pad = { left:60, right:20, top:20, bottom:38 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(7,5,21,0.5)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(112,85,212,0.1)';
+  ctx.lineWidth = 1;
+  const logR_range = [-6, 10];
+  const logN_range = [-10, 6];
+  for (let i = 0; i <= 8; i++) {
+    const x = pad.left + (i/8)*cw;
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top+ch); ctx.stroke();
+  }
+  for (let i = 0; i <= 8; i++) {
+    const y = pad.top + (i/8)*ch;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left+cw, y); ctx.stroke();
+  }
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(80,72,112,0.9)';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'center';
+  const R_ticks = [-6,-4,-2,0,2,4,6,8,10];
+  R_ticks.forEach(r => {
+    const x = pad.left + (r - logR_range[0]) / (logR_range[1]-logR_range[0]) * cw;
+    ctx.fillText('10'+supStr(r), x, H - 6);
+  });
+  ctx.textAlign = 'right';
+  const N_ticks = [-10,-8,-6,-4,-2,0,2,4,6];
+  N_ticks.forEach(n => {
+    const y = pad.top + ch - (n - logN_range[0]) / (logN_range[1]-logN_range[0]) * ch;
+    ctx.fillText('10'+supStr(n), pad.left-5, y+4);
+  });
+
+  // Axis titles
+  ctx.fillStyle = 'rgba(144,136,192,0.7)';
+  ctx.textAlign = 'center';
+  ctx.font = '9px Space Mono, monospace';
+  ctx.fillText('R_BH (BH yr⁻¹ civ⁻¹) →', pad.left + cw/2, H-1);
+  ctx.save();
+  ctx.translate(10, pad.top + ch/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('n_civ (Mpc⁻³)', 0, 0);
+  ctx.restore();
+
+  // Crossover line: S3 = S2
+  // n_civ * R_BH * M_civ * T_civ * 1e9 = ms2
+  // n_civ = ms2 / (R_BH * M_civ * T_civ * 1e9)
+  const logMciv_T = state.logMciv + state.logTciv + 9; // log10(M_civ * T_civ * 1e9)
+  const log_ms2 = Math.log10(ms2);
+
+  ctx.strokeStyle = 'rgba(240,160,32,0.7)';
+  ctx.setLineDash([4,4]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let xi = 0; xi <= cw; xi += 2) {
+    const logR = logR_range[0] + (xi/cw)*(logR_range[1]-logR_range[0]);
+    const logN_cross = log_ms2 - logR - logMciv_T;
+    const yi = ch - (logN_cross - logN_range[0]) / (logN_range[1]-logN_range[0]) * ch;
+    if (xi===0) ctx.moveTo(pad.left+xi, pad.top+yi);
+    else ctx.lineTo(pad.left+xi, pad.top+yi);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Current operating point
+  const xPt = pad.left + (state.logRBH - logR_range[0]) / (logR_range[1]-logR_range[0]) * cw;
+  const yPt = pad.top + ch - (state.lognciv - logN_range[0]) / (logN_range[1]-logN_range[0]) * ch;
+  ctx.fillStyle = '#a080f0';
+  ctx.beginPath(); ctx.arc(xPt, yPt, 6, 0, 2*Math.PI); ctx.fill();
+  ctx.fillStyle = 'rgba(160,128,240,0.3)';
+  ctx.beginPath(); ctx.arc(xPt, yPt, 10, 0, 2*Math.PI); ctx.fill();
+
+  // Legend
+  ctx.font = '9px Space Mono, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(240,160,32,0.7)'; ctx.fillText('— Stage 3 = Stage 2 crossover', pad.left+8, pad.top+14);
+  ctx.fillStyle = '#a080f0'; ctx.fillText('◉ Current parameters', pad.left+8, pad.top+26);
+
+  // Shading: above line = Stage 3 dominates
+  ctx.fillStyle = 'rgba(112,85,212,0.05)';
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top);
+  for (let xi = 0; xi <= cw; xi += 2) {
+    const logR = logR_range[0] + (xi/cw)*(logR_range[1]-logR_range[0]);
+    const logN_cross = log_ms2 - logR - logMciv_T;
+    const yi = ch - (logN_cross - logN_range[0]) / (logN_range[1]-logN_range[0]) * ch;
+    ctx.lineTo(pad.left+xi, Math.max(pad.top, pad.top+yi));
+  }
+  ctx.lineTo(pad.left+cw, pad.top);
+  ctx.closePath(); ctx.fill();
+}
+
+function supStr(n) {
+  const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+  return (n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('');
+}
+
+function toggleAbout() {
+  const p=document.getElementById('about-panel');
+  const a=document.getElementById('about-arrow');
+  p.classList.toggle('visible');
+  a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';
+}
+
+// ─── Hash ─────────────────────────────────────────────────────
+function saveHash() {
+  const s = state;
+  window.location.hash = `lognDC=${s.lognDC.toFixed(1)}&logMDC=${s.logMDC.toFixed(1)}&logMstar=${s.logMstar.toFixed(2)}&logfBH=${s.logfBH.toFixed(2)}&lognciv=${s.lognciv.toFixed(1)}&logRBH=${s.logRBH.toFixed(1)}&logMciv=${s.logMciv.toFixed(1)}&logTciv=${s.logTciv.toFixed(1)}`;
+}
+function loadHash() {
+  const h=window.location.hash.replace('#','');
+  if(!h) return;
+  const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));
+  const map={lognDC:'sl-nDC',logMDC:'sl-MDC',logMstar:'sl-Mstar',logfBH:'sl-fBH',lognciv:'sl-nciv',logRBH:'sl-RBH',logMciv:'sl-Mciv',logTciv:'sl-Tciv'};
+  Object.entries(map).forEach(([sk,eid])=>{
+    if(p[sk]!==undefined){state[sk]=parseFloat(p[sk]);document.getElementById(eid).value=state[sk];}
+  });
+}
+
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{compute();});
+</script>
+</body>
+</html>

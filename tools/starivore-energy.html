@@ -1,0 +1,575 @@
+<!--
+  Starivore Energy Budget Calculator
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-06-02
+
+  Inspired by: Clément Vidal's stellivore / starivore hypothesis
+
+  Data sources:
+    - Vidal, C. (2016). "Stellivore Extraterrestrials? Binary Stars as Living Systems."
+      Acta Astronautica 128:251–256. DOI: 10.1016/j.actaastro.2016.06.038
+    - Vidal, C. (2014). The Beginning and the End: The Meaning of Life in a
+      Cosmological Perspective. Springer.
+    - Fruchter, A. S., Stinebring, D. R., & Taylor, J. H. (1988).
+      "A millisecond pulsar in an eclipsing binary." Nature 333:237.
+      DOI: 10.1038/333237a0
+    - Stappers, B. W., et al. (1996). "Probing the Eclipse of PSR J2051–0827."
+      ApJ 465:L119. DOI: 10.1086/310145
+    - Archibald, A. M., et al. (2009). "A Radio Pulsar/X-ray Binary Link."
+      Science 324:1411. DOI: 10.1126/science.1172740
+    - Taylor, J. H. & Cordes, J. M. (1993). Pulsar distances + DM.
+
+  Site section: #fermi
+  Epistemic tier(s): ⚠ Theoretical (stellivore hypothesis, spider pulsar astroengineering interpretation)
+                     🔬 Established physics (pulsar spin-down, binary geometry)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starivore Energy Budget — Omega Centauri Society</title>
+<meta name="description" content="Clément Vidal's stellivore hypothesis: compute the spin-down luminosity, companion irradiation flux, and Kardashev position of a spider pulsar binary — could it be a civilisation feeding on its star?">
+<link rel="canonical" href="https://omegacentauri.me/tools/starivore-energy.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 25% 15%,rgba(112,85,212,.07),transparent 50%),radial-gradient(ellipse at 75% 80%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.88);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.2;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:16px;max-width:780px}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap}
+.badge-theory{border:1px solid var(--amber-mid);background:rgba(196,120,0,.06);color:var(--amber-bright)}
+.badge-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.06);color:var(--teal-bright)}
+.badge-spec{border:1px solid var(--purple-mid);background:rgba(61,45,138,.06);color:var(--purple-glow)}
+.note-box{background:rgba(196,120,0,.05);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:28px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.note-box strong{color:var(--amber-glow)}
+/* Grid layout */
+.main-grid{display:grid;grid-template-columns:340px 1fr;gap:24px;margin-bottom:28px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:3px}
+.panel-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:18px;letter-spacing:.03em;line-height:1.5}
+.section-head{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin:18px 0 10px;display:flex;align-items:center;gap:10px}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border-subtle)}
+/* Sliders */
+.sl-row{margin-bottom:16px}
+.sl-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.sl-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--amber-glow);font-weight:700}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer}
+input[type=range].amber-track{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-track{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range].teal-track{background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 8px rgba(160,128,240,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+/* Preset pills */
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.preset-pill{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.preset-pill:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.preset-pill.active{color:var(--void);background:var(--amber-bright);border-color:var(--amber-bright)}
+/* Output boxes */
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:500px){.out-grid{grid-template-columns:1fr}}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px;transition:border-color .3s}
+.out-box.highlight{border-color:var(--amber-bright)}
+.out-box.highlight-teal{border-color:var(--teal-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600;color:var(--text-primary);line-height:1.2}
+.out-val.amber{color:var(--amber-glow)}
+.out-val.teal{color:var(--teal-glow)}
+.out-val.purple{color:var(--purple-glow)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+/* Kardashev strip */
+.kard-wrap{background:rgba(13,10,36,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.kard-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.kard-track{position:relative;height:20px;background:rgba(255,255,255,.04);border-radius:10px;border:1px solid var(--border-subtle);overflow:visible;margin-bottom:6px}
+.kard-fill{position:absolute;left:0;top:0;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--teal-bright),var(--amber-bright),var(--red-bright));transition:width .35s ease;min-width:3px}
+.kard-tick{position:absolute;top:-6px;width:1px;background:var(--text-dim);height:32px}
+.kard-tick-label{position:absolute;top:28px;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);transform:translateX(-50%);white-space:nowrap}
+.kard-level{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--amber-glow);text-align:right;margin-top:8px}
+/* Interpretation */
+.interp-box{background:rgba(7,5,21,.5);border:1px solid var(--border-teal);border-radius:10px;padding:16px 18px;font-size:15px;color:var(--text-secondary);line-height:1.65}
+.interp-box strong{color:var(--text-primary)}
+.interp-box .verdict{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;margin-bottom:10px;padding:8px 12px;border-radius:6px}
+.verdict.natural{background:rgba(29,186,144,.1);border:1px solid var(--teal-mid);color:var(--teal-glow)}
+.verdict.ambiguous{background:rgba(196,120,0,.1);border:1px solid var(--amber-mid);color:var(--amber-glow)}
+.verdict.anomalous{background:rgba(138,32,32,.15);border:1px solid var(--red-mid);color:var(--red-bright)}
+/* About */
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-bottom:0}
+.about-toggle:hover{color:var(--purple-glow)}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 26px;margin-top:14px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:16px 0 8px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:10px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.03em;display:block;margin-bottom:6px;line-height:1.5}
+.version{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:18px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Starivore Energy Budget Calculator</span>
+    <a href="https://omegacentauri.me/#fermi" class="nav-link">← Main site</a>
+    <a href="index.html" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>Starivore Energy Budget</h1>
+  <p class="subtitle">Clément Vidal's stellivore hypothesis: spider pulsars as possible civilisations feeding on a companion star — spin-down power, interception fraction, and Kardashev position</p>
+
+  <div class="badges">
+    <span class="badge badge-sci">🔬 Established physics (spin-down, binary geometry)</span>
+    <span class="badge badge-theory">⚠ Theoretical (stellivore interpretation)</span>
+    <span class="badge badge-spec">✦ Engineering fiction (Kardashev application)</span>
+  </div>
+
+  <div class="note-box">
+    <strong>Context.</strong> In <em>Stellivore Extraterrestrials? Binary Stars as Living Systems</em> (Vidal 2016),
+    Clément Vidal proposes that advanced civilisations could feed on the radiation output of a companion star via
+    a binary pulsar arrangement. Spider pulsars — millisecond pulsars whose wind is actively ablating a low-mass
+    companion — are the observational candidates. This tool applies Vidal's energy budget formalism to any pulsar
+    binary and asks: is the intercepted luminosity anomalous relative to natural stellar evolution?
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT: Inputs -->
+    <div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-title">Pulsar Parameters</div>
+        <div class="panel-sub">Period, spin-down rate, and moment of inertia determine the rotational energy reservoir and luminosity</div>
+
+        <div class="preset-bar">
+          <button class="preset-pill active" id="p-b1957" onclick="applyPreset('b1957')">PSR B1957+20</button>
+          <button class="preset-pill" id="p-j2051" onclick="applyPreset('j2051')">PSR J2051−0827</button>
+          <button class="preset-pill" id="p-j1023" onclick="applyPreset('j1023')">PSR J1023+0038</button>
+          <button class="preset-pill" id="p-custom" onclick="applyPreset('custom')">Custom</button>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Spin period P (ms)</span>
+            <span class="sl-val" id="disp-P">1.607</span>
+          </div>
+          <input type="range" id="sl-P" class="amber-track" min="-0.2" max="2.0" step="0.01" value="0.206"
+            oninput="sliderChange('P',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>0.63 ms</span><span>10 ms</span><span>100 ms</span>
+          </div>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Period derivative Ṗ (s/s)</span>
+            <span class="sl-val" id="disp-Pdot">1.68×10⁻²⁰</span>
+          </div>
+          <input type="range" id="sl-Pdot" class="amber-track" min="-22" max="-15" step="0.05" value="-19.775"
+            oninput="sliderChange('Pdot',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>10⁻²²</span><span>10⁻¹⁹</span><span>10⁻¹⁶</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Binary Geometry</div>
+        <div class="panel-sub">Orbital separation and companion size set the interception fraction of the pulsar wind</div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Orbital separation a (R☉)</span>
+            <span class="sl-val" id="disp-a">2.49</span>
+          </div>
+          <input type="range" id="sl-a" class="purple-track" min="-0.3" max="1.7" step="0.02" value="0.396"
+            oninput="sliderChange('a',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>0.5 R☉</span><span>3</span><span>10</span><span>50</span>
+          </div>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Companion radius R_c (R☉)</span>
+            <span class="sl-val" id="disp-Rc">0.14</span>
+          </div>
+          <input type="range" id="sl-Rc" class="purple-track" min="-2.0" max="0.5" step="0.02" value="-0.854"
+            oninput="sliderChange('Rc',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>0.01 R☉</span><span>0.1</span><span>1.0</span><span>3.0</span>
+          </div>
+        </div>
+
+        <div class="sl-row">
+          <div class="sl-label-row">
+            <span class="sl-label">Companion mass M_c (M☉)</span>
+            <span class="sl-val" id="disp-Mc">0.025</span>
+          </div>
+          <input type="range" id="sl-Mc" class="teal-track" min="-2.0" max="0.5" step="0.02" value="-1.602"
+            oninput="sliderChange('Mc',this.value)">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px">
+            <span>0.01 M☉</span><span>0.1</span><span>1.0</span><span>3.0</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;padding:10px 14px;background:rgba(112,85,212,.07);border:1px solid var(--border-subtle);border-radius:8px">
+          <div class="sl-label" style="margin-bottom:6px">Geometric interception fraction f</div>
+          <div id="disp-fgeom" style="font-family:'Orbitron',sans-serif;font-size:20px;color:var(--purple-glow)">0.000796</div>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:3px">R_c² / (4a²) — fraction of pulsar wind intercepted by companion</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Outputs -->
+    <div>
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-title">Energy Budget</div>
+        <div class="panel-sub">Rotational energy reservoir, spin-down luminosity, and intercepted flux</div>
+
+        <div class="out-grid">
+          <div class="out-box highlight">
+            <div class="out-label">Spin-down luminosity L_sd</div>
+            <div class="out-val amber" id="out-Lsd">1.60×10²⁸</div>
+            <div class="out-unit">W &nbsp;·&nbsp; <span id="out-Lsd-sol">4.18×10¹ L☉</span></div>
+          </div>
+          <div class="out-box highlight-teal">
+            <div class="out-label">Intercepted luminosity L_int</div>
+            <div class="out-val teal" id="out-Lint">1.27×10²⁵</div>
+            <div class="out-unit">W &nbsp;·&nbsp; <span id="out-Lint-sol">3.32×10⁻² L☉</span></div>
+          </div>
+          <div class="out-box">
+            <div class="out-label">Surface B-field B_s</div>
+            <div class="out-val purple" id="out-B">3.31×10⁸</div>
+            <div class="out-unit">G (gauss)</div>
+          </div>
+          <div class="out-box">
+            <div class="out-label">Characteristic age τ_c</div>
+            <div class="out-val" id="out-tau">1.52×10⁹</div>
+            <div class="out-unit">yr (= P / 2Ṗ)</div>
+          </div>
+          <div class="out-box">
+            <div class="out-label">Eddington limit L_Edd</div>
+            <div class="out-val" id="out-Ledd">3.15×10²⁹</div>
+            <div class="out-unit">W (for companion mass)</div>
+          </div>
+          <div class="out-box">
+            <div class="out-label">Companion ablation time</div>
+            <div class="out-val" id="out-tabl">1.78×10¹⁶</div>
+            <div class="out-unit">yr (M_c c² / L_int)</div>
+          </div>
+        </div>
+
+        <div style="padding:10px 14px;background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:8px;font-size:14px;color:var(--text-secondary)">
+          <strong style="color:var(--teal-glow)">L_int / L_companion_natural = </strong>
+          <span id="out-ratio" style="font-family:'Orbitron',sans-serif;font-size:16px;color:var(--amber-glow)">—</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:8px">(ratio &gt;1 means irradiation dominates)</span>
+        </div>
+      </div>
+
+      <div class="kard-wrap">
+        <div class="kard-title">Kardashev position — spin-down luminosity L_sd (watts, log scale)</div>
+        <div class="kard-track" style="margin-bottom:24px">
+          <div class="kard-fill" id="kard-fill-sd"></div>
+          <div class="kard-tick" style="left:14.3%"><span class="kard-tick-label">Type I (10¹⁶)</span></div>
+          <div class="kard-tick" style="left:47.6%"><span class="kard-tick-label">Type II (4×10²⁶)</span></div>
+          <div class="kard-tick" style="left:80.9%"><span class="kard-tick-label">Type III (4×10³⁷)</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">K-level (L_sd)</span>
+          <span class="kard-level" id="kard-level-sd">K = 1.76</span>
+        </div>
+        <div class="kard-title" style="margin-top:14px">Intercepted luminosity L_int</div>
+        <div class="kard-track" style="margin-bottom:24px">
+          <div class="kard-fill" id="kard-fill-int" style="background:linear-gradient(90deg,var(--purple-bright),var(--teal-bright))"></div>
+          <div class="kard-tick" style="left:14.3%"></div>
+          <div class="kard-tick" style="left:47.6%"></div>
+          <div class="kard-tick" style="left:80.9%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">K-level (L_int)</span>
+          <span class="kard-level" id="kard-level-int" style="font-size:14px;color:var(--teal-glow)">K = 1.08</span>
+        </div>
+      </div>
+
+      <div class="interp-box">
+        <div id="verdict-div" class="verdict natural">🟢 Consistent with natural pulsar wind</div>
+        <div id="interp-text">The intercepted luminosity at these parameters is comparable to the companion's natural stellar luminosity (if any). The system is consistent with a natural black widow / redback pulsar.</div>
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+
+  <!-- About -->
+  <div style="margin-top:32px">
+    <button class="about-toggle" onclick="toggleAbout()" id="about-btn">
+      <span class="about-arrow" id="about-arrow">▶</span> About this tool
+    </button>
+    <div class="about-panel" id="about-panel">
+      <h3>What this tool does</h3>
+      <p>This tool implements the energy budget formalism from Vidal (2016) — "Stellivore Extraterrestrials? Binary Stars as Living Systems" — applied to any pulsar–binary system. It computes the spin-down luminosity L_sd of the pulsar from its timing parameters, calculates the geometric fraction of that power intercepted by the companion, and places the result on the Kardashev scale.</p>
+      <p>Spider pulsars (black widows and redbacks) are binaries in which the pulsar wind is actively ablating a low-mass companion. Vidal proposes that such systems could, in principle, represent a stable energy-harvesting arrangement by an advanced civilisation: the pulsar acts as an energy source, and the companion is the "fuel." This tool tests whether the energetics of observed spider pulsars fall in a plausible range for such a scenario.</p>
+      <h3>Key formulas</h3>
+      <p><strong>Spin-down luminosity:</strong> L_sd = 4π² I Ṗ / P³, with canonical moment of inertia I = 10⁴⁵ g cm² = 10³⁸ kg m².</p>
+      <p><strong>Geometric interception fraction:</strong> f = R_c² / (4a²), where R_c is the companion radius and a is the orbital semi-major axis. This is the solid angle subtended by the companion divided by 4π.</p>
+      <p><strong>Intercepted luminosity:</strong> L_int = f × L_sd. This is the maximum power the companion can intercept; actual coupling efficiency depends on the pulsar wind structure and magnetic field geometry.</p>
+      <p><strong>Surface magnetic field:</strong> B_s = 3.2 × 10¹⁹ √(P Ṗ) gauss (assuming a dipole spin-down with I = 10⁴⁵ g cm²).</p>
+      <p><strong>Characteristic age:</strong> τ_c = P / (2Ṗ) — an upper limit on the pulsar age assuming it was born spinning much faster.</p>
+      <p><strong>Companion ablation timescale:</strong> M_c c² / L_int — the time to convert the companion's full rest-mass energy at the current irradiation rate. A very rough lower bound; real evaporation involves complex wind-stripping physics.</p>
+      <h3>Epistemic status</h3>
+      <p>The spin-down luminosity formula and binary geometry are <strong>🔬 established physics</strong>. The interpretation of spider pulsars as starivores is Vidal's hypothesis: <strong>⚠ Theoretical</strong>. It has been published in a peer-reviewed journal but is not mainstream astrophysics. Placing the system on the Kardashev scale is <strong>✦ Engineering fiction</strong>.</p>
+      <h3>Presets</h3>
+      <p><strong>PSR B1957+20</strong> (the original "Black Widow"): P = 1.607 ms, Ṗ = 1.68×10⁻²⁰ s/s, orbital period 9.165 hr, companion mass ~ 0.025 M☉. Discovered by Fruchter et al. 1988.</p>
+      <p><strong>PSR J2051−0827</strong>: P = 4.509 ms, Ṗ = 1.27×10⁻²⁰ s/s, orbital period 2.378 hr, companion mass ~ 0.027 M☉. Stappers et al. 1996.</p>
+      <p><strong>PSR J1023+0038</strong>: P = 1.688 ms, Ṗ ≈ 5.59×10⁻²¹ s/s, orbital period 4.75 hr, companion mass ~ 0.2 M☉ (redback — Roche-lobe filling companion). Archibald et al. 2009.</p>
+      <h3>References</h3>
+      <span class="cite">Vidal, C. (2016). "Stellivore Extraterrestrials? Binary Stars as Living Systems." Acta Astronautica 128:251–256. DOI: 10.1016/j.actaastro.2016.06.038</span>
+      <span class="cite">Vidal, C. (2014). The Beginning and the End: The Meaning of Life in a Cosmological Perspective. Springer. DOI: 10.1007/978-3-319-05062-1</span>
+      <span class="cite">Fruchter, A. S., Stinebring, D. R., & Taylor, J. H. (1988). "A millisecond pulsar in an eclipsing binary." Nature 333:237–239. DOI: 10.1038/333237a0</span>
+      <span class="cite">Stappers, B. W. et al. (1996). "Probing the Eclipse of PSR J2051−0827." ApJ 465:L119. DOI: 10.1086/310145</span>
+      <span class="cite">Archibald, A. M. et al. (2009). "A Radio Pulsar/X-ray Binary Link." Science 324:1411. DOI: 10.1126/science.1172740</span>
+      <p class="version">v1.0 — 2026-06-02 · Tool content may be revised as scientific knowledge evolves.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── Constants ───────────────────────────────────────────────────
+const I_canon = 1e38;       // kg m² (canonical moment of inertia = 10^45 g cm²)
+const L_sun   = 3.828e26;   // W
+const M_sun   = 1.989e30;   // kg
+const c       = 3e8;        // m/s
+const K1      = 1e16;       // W — Kardashev I
+const K2      = 4e26;       // W — Kardashev II
+const K3      = 4e37;       // W — Kardashev III
+
+// ─── State ───────────────────────────────────────────────────────
+const state = {
+  logP:    0.206,   // log10(P_ms)
+  logPdot: -19.775, // log10(Pdot)
+  loga:    0.396,   // log10(a_Rsun)
+  logRc:  -0.854,   // log10(Rc_Rsun)
+  logMc:  -1.602,   // log10(Mc_Msun)
+};
+
+// ─── Presets (log10 values) ───────────────────────────────────────
+const PRESETS = {
+  b1957:  { logP:  0.206, logPdot: -19.775, loga:  0.396, logRc: -0.854, logMc: -1.602 },
+  j2051:  { logP:  0.654, logPdot: -19.896, loga:  0.000, logRc: -1.222, logMc: -1.569 },
+  j1023:  { logP:  0.227, logPdot: -20.252, loga:  0.248, logRc: -0.523, logMc: -0.699 },
+  custom: { logP:  0.500, logPdot: -20.000, loga:  0.300, logRc: -0.700, logMc: -1.000 },
+};
+
+function applyPreset(key) {
+  const p = PRESETS[key];
+  Object.assign(state, p);
+  document.getElementById('sl-P').value    = p.logP;
+  document.getElementById('sl-Pdot').value = p.logPdot;
+  document.getElementById('sl-a').value    = p.loga;
+  document.getElementById('sl-Rc').value   = p.logRc;
+  document.getElementById('sl-Mc').value   = p.logMc;
+  ['b1957','j2051','j1023','custom'].forEach(id => {
+    document.getElementById('p-'+id).classList.toggle('active', id===key);
+  });
+  compute(); saveHash();
+}
+
+function sliderChange(key, val) {
+  const v = parseFloat(val);
+  if (key === 'P')    { state.logP    = v; }
+  if (key === 'Pdot') { state.logPdot = v; }
+  if (key === 'a')    { state.loga    = v; }
+  if (key === 'Rc')   { state.logRc   = v; }
+  if (key === 'Mc')   { state.logMc   = v; }
+  // clear preset active
+  ['b1957','j2051','j1023','custom'].forEach(id => document.getElementById('p-'+id).classList.remove('active'));
+  compute(); saveHash();
+}
+
+// ─── Physics ─────────────────────────────────────────────────────
+function spindownLum(P_ms, Pdot) {
+  // L_sd = 4π² I Ṗ / P³  [W]
+  const P = P_ms * 1e-3;
+  return 4 * Math.PI * Math.PI * I_canon * Pdot / (P * P * P);
+}
+function surfaceB(P_ms, Pdot) {
+  // B = 3.2×10¹⁹ √(P[s]·Ṗ) gauss
+  return 3.2e19 * Math.sqrt(P_ms * 1e-3 * Pdot);
+}
+function charAge(P_ms, Pdot) {
+  return (P_ms * 1e-3) / (2 * Pdot) / (365.25 * 24 * 3600); // yr
+}
+function intercept(Rc_Rsun, a_Rsun) {
+  return (Rc_Rsun * Rc_Rsun) / (4 * a_Rsun * a_Rsun);
+}
+function eddLum(Mc_Msun) {
+  return 1.26e31 * Mc_Msun; // W
+}
+function naturalLum(Mc_Msun) {
+  // Very rough MS: L ~ L☉ × (M/M☉)^4 for M < ~2 M☉
+  return L_sun * Math.pow(Mc_Msun, 4);
+}
+function ablationTime(Mc_Msun, L_int_W) {
+  // t = Mc c² / L_int  [yr]
+  return (Mc_Msun * M_sun * c * c / L_int_W) / (365.25 * 24 * 3600);
+}
+function kardashevLevel(L_W) {
+  const logL = Math.log10(L_W);
+  const logK1 = Math.log10(K1), logK3 = Math.log10(K3);
+  return 1 + (logL - logK1) / (logK3 - logK1) * 2;
+}
+function kardashevStrip(L_W) {
+  // Returns % position on a strip spanning log10 8 to 46 (a comfortable range)
+  const lo = 8, hi = 46;
+  const pos = (Math.log10(L_W) - lo) / (hi - lo) * 100;
+  return Math.min(Math.max(pos, 1), 99);
+}
+
+// ─── Formatting ──────────────────────────────────────────────────
+function fmtSci(v, digits=3) {
+  if (!isFinite(v) || v <= 0) return '—';
+  const e = Math.floor(Math.log10(v));
+  const m = v / Math.pow(10, e);
+  const ms = m.toFixed(digits-1);
+  if (e===0) return ms;
+  return ms + '×10' + supStr(e);
+}
+function supStr(n) {
+  const sup = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+  const neg = '⁻';
+  const s = Math.abs(n).toString();
+  const mapped = s.split('').map(c=>(c>='0'&&c<='9')?sup[parseInt(c)]:c).join('');
+  return (n<0? neg:'') + mapped;
+}
+function fmtFloat(v, decimals=3) {
+  if (v < 0.001) return fmtSci(v, 3);
+  return v.toPrecision(3);
+}
+
+// ─── Compute & render ─────────────────────────────────────────────
+function compute() {
+  const P_ms   = Math.pow(10, state.logP);
+  const Pdot   = Math.pow(10, state.logPdot);
+  const a      = Math.pow(10, state.loga);
+  const Rc     = Math.pow(10, state.logRc);
+  const Mc     = Math.pow(10, state.logMc);
+
+  // Update slider display values
+  document.getElementById('disp-P').textContent    = P_ms < 10 ? P_ms.toFixed(3) : P_ms.toFixed(1);
+  document.getElementById('disp-Pdot').textContent = fmtSci(Pdot, 3);
+  document.getElementById('disp-a').textContent    = a.toFixed(3);
+  document.getElementById('disp-Rc').textContent   = Rc < 0.1 ? Rc.toFixed(3) : Rc.toFixed(2);
+  document.getElementById('disp-Mc').textContent   = Mc < 0.1 ? Mc.toFixed(3) : Mc.toFixed(2);
+
+  const f    = intercept(Rc, a);
+  const Lsd  = spindownLum(P_ms, Pdot);
+  const Lint = f * Lsd;
+  const Bs   = surfaceB(P_ms, Pdot);
+  const tau  = charAge(P_ms, Pdot);
+  const Ledd = eddLum(Mc);
+  const Lnat = naturalLum(Mc);
+  const tabl = ablationTime(Mc, Lint);
+
+  document.getElementById('disp-fgeom').textContent = f.toExponential(3);
+  document.getElementById('out-Lsd').textContent    = fmtSci(Lsd);
+  document.getElementById('out-Lsd-sol').textContent= fmtSci(Lsd/L_sun) + ' L☉';
+  document.getElementById('out-Lint').textContent   = fmtSci(Lint);
+  document.getElementById('out-Lint-sol').textContent= fmtSci(Lint/L_sun) + ' L☉';
+  document.getElementById('out-B').textContent      = fmtSci(Bs);
+  document.getElementById('out-tau').textContent    = fmtSci(tau);
+  document.getElementById('out-Ledd').textContent   = fmtSci(Ledd);
+  document.getElementById('out-tabl').textContent   = isFinite(tabl) && tabl > 0 ? fmtSci(tabl) : '—';
+
+  const ratio = Lint / Lnat;
+  document.getElementById('out-ratio').textContent = ratio < 0.001 ? '< 10⁻³' : fmtSci(ratio, 2);
+
+  // Kardashev strips
+  document.getElementById('kard-fill-sd').style.width  = kardashevStrip(Lsd)  + '%';
+  document.getElementById('kard-fill-int').style.width = kardashevStrip(Lint) + '%';
+  const ksd  = kardashevLevel(Lsd);
+  const kint = kardashevLevel(Lint);
+  document.getElementById('kard-level-sd').textContent  = 'K = ' + ksd.toFixed(2);
+  document.getElementById('kard-level-int').textContent = 'K = ' + kint.toFixed(2);
+
+  // Interpretation
+  const vd = document.getElementById('verdict-div');
+  const it = document.getElementById('interp-text');
+  if (ratio > 1000) {
+    vd.className = 'verdict anomalous';
+    vd.textContent = '🔴 Strongly anomalous — irradiation dominates natural stellar output by >' + fmtSci(ratio,2) + '×';
+    it.textContent = 'The intercepted pulsar luminosity is ' + fmtSci(ratio,2) + ' times the companion\'s natural stellar luminosity. Under Vidal\'s framework this is the hallmark of a starivore system: the companion\'s energy budget is dominated by external irradiation, not its own nuclear burning. For a naturally evolving binary this would require an explanation.';
+  } else if (ratio > 10) {
+    vd.className = 'verdict ambiguous';
+    vd.textContent = '🟡 Ambiguous — irradiation ' + fmtSci(ratio,2) + '× natural luminosity';
+    it.textContent = 'Irradiation is significantly above the companion\'s natural luminosity — consistent with observed spider pulsar behavior. Whether this represents engineered energy harvesting or natural pulsar wind ablation is indistinguishable from this energy budget alone.';
+  } else {
+    vd.className = 'verdict natural';
+    vd.textContent = '🟢 Consistent with natural pulsar wind ablation';
+    it.textContent = 'The intercepted luminosity is close to or below the companion\'s natural stellar luminosity at these parameters. The system is consistent with a natural black widow / redback binary under normal pulsar wind physics.';
+  }
+}
+
+function toggleAbout() {
+  const p = document.getElementById('about-panel');
+  const a = document.getElementById('about-arrow');
+  const b = document.getElementById('about-btn');
+  const open = p.classList.toggle('visible');
+  a.style.transform = open ? 'rotate(90deg)' : '';
+}
+
+// ─── Hash state ───────────────────────────────────────────────────
+function saveHash() {
+  const p = state;
+  window.location.hash = `logP=${p.logP.toFixed(3)}&logPdot=${p.logPdot.toFixed(3)}&loga=${p.loga.toFixed(3)}&logRc=${p.logRc.toFixed(3)}&logMc=${p.logMc.toFixed(3)}`;
+}
+function loadHash() {
+  const h = window.location.hash.replace('#','');
+  if (!h) return;
+  const params = Object.fromEntries(h.split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));
+  if (params.logP)    { state.logP    = parseFloat(params.logP);    document.getElementById('sl-P').value    = state.logP; }
+  if (params.logPdot) { state.logPdot = parseFloat(params.logPdot); document.getElementById('sl-Pdot').value = state.logPdot; }
+  if (params.loga)    { state.loga    = parseFloat(params.loga);    document.getElementById('sl-a').value    = state.loga; }
+  if (params.logRc)   { state.logRc   = parseFloat(params.logRc);   document.getElementById('sl-Rc').value   = state.logRc; }
+  if (params.logMc)   { state.logMc   = parseFloat(params.logMc);   document.getElementById('sl-Mc').value   = state.logMc; }
+  ['b1957','j2051','j1023','custom'].forEach(id => document.getElementById('p-'+id).classList.remove('active'));
+}
+
+window.addEventListener('load', () => { loadHash(); compute(); });
+</script>
+</body>
+</html>
