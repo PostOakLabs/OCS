@@ -6,7 +6,7 @@
   Curated data tables: CC0 1.0 Universal
   Author: The Omega Centauri Society (Tim Swanson)
   Schema version: 1.0
-  Last updated: 2026-05-14
+  Last updated: 2026-06-01
 
   This file is the single source of truth for IMBH mass measurements,
   globular cluster properties, and Omega Centauri pulsar timing data
@@ -135,6 +135,21 @@ window.OCS_MEASUREMENTS = {
       url: "https://arxiv.org/abs/2511.20945",
       notes: "JWST NIRSpec observations show no detectable accretion signature. The mass upper limit derived from this depends sensitively on assumed ADAF radiative efficiency and ambient gas density — see the JWST Accretion Limit tool for the full curve.",
       isParameterDependent: true
+    },
+    {
+      id: "gonzalezprieto2025",
+      year: 2025,
+      authors: "González Prieto, Rodriguez & Cabrera",
+      value: 5e4,
+      uncertaintyLo: 2e4,
+      uncertaintyHi: 2e4,
+      limitType: "detection",
+      method: "nbody",
+      methodLabel: "Monte Carlo N-body (loss-cone dynamics, TDE + BH mergers)",
+      journal: "ApJL",
+      doi: "10.3847/2041-8213/adfd4a",
+      url: "https://arxiv.org/abs/2507.06316",
+      notes: "Monte Carlo N-body models of OC with detailed loss-cone dynamics. Seeds of 500–5,000 M☉ grow to ~50,000 M☉ over 12 Gyr via TDE accretion and compact-object mergers while reproducing observed surface brightness and velocity dispersion. Model-derived estimate, not a direct kinematic measurement."
     },
     {
       id: "trapum2026",
@@ -299,7 +314,7 @@ window.OCS_MEASUREMENTS = {
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-05-14",
+    lastUpdated: "2026-06-01",
     schemaVersion: "1.0",
     sources: [
       "10.1086/529002",
@@ -309,7 +324,8 @@ window.OCS_MEASUREMENTS = {
       "10.1051/0004-6361/202451763",
       "10.3847/1538-4357/adbe67",
       "10.48550/arXiv.2511.20945",
-      "10.48550/arXiv.2603.21845"
+      "10.48550/arXiv.2603.21845",
+      "10.3847/2041-8213/adfd4a"
     ],
     methodColors: {
       kinematics:   "#1dba90",  // teal-bright
