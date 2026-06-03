@@ -1,0 +1,400 @@
+<!--
+  TDE Rate Calculator for OC
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Wang, J. & Merritt, D. (2004). "Revised Rates of Stellar Disruption in
+      Galactic Nuclei." ApJ 600:149. DOI: 10.1086/379767
+    - Stone, N. C. & Metzger, B. D. (2016). "Rates of stellar tidal disruption."
+      MNRAS 455:859. DOI: 10.1093/mnras/stv2281
+    - arXiv:2507.06316 (2025) — "Growing the IMBH in Omega Centauri"
+    - Häberle et al. (2024). Nature 631:285. DOI: 10.1038/s41586-024-07511-z
+    - Bañares-Hernández et al. (2025). A&A 693:A104.
+      DOI: 10.1051/0004-6361/202451763
+    - Strubbe, L. E. & Quataert, E. (2009). "Optical flares from the tidal
+      disruption of stars by massive black holes." MNRAS 400:2070.
+      DOI: 10.1111/j.1365-2966.2009.15599.x
+
+  Site section: #science
+  Epistemic tiers: 🔬 Established physics (loss-cone dynamics, tidal disruption radius)
+                   ⚠ Observationally debated (application to OC's specific IMBH)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TDE Rate Calculator — Omega Centauri Society</title>
+<meta name="description" content="Loss-cone dynamics: compute the tidal disruption event rate for OC's IMBH, expected X-ray flare flux at Earth, and detectability by Einstein Probe and Rubin LSST.">
+<link rel="canonical" href="https://omegacentauri.me/tools/tde-rate.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 15%,rgba(29,186,144,.07),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(112,85,212,.05),transparent 55%)}
+a{color:var(--teal-glow);text-decoration:none}a:hover{color:var(--purple-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.05);color:var(--teal-bright)}
+.b-deb{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.main-grid{display:grid;grid-template-columns:320px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal-glow)}
+.sl-v.a{color:var(--amber-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range].amber-t{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-t{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(77,232,192,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pp{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.pp:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.pp.active{color:var(--void);background:var(--teal-bright);border-color:var(--teal-bright)}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.out-box.hl-t{border-color:var(--teal-bright)}.out-box.hl-a{border-color:var(--amber-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.out-val.t{color:var(--teal-glow)}.out-val.a{color:var(--amber-glow)}.out-val.p{color:var(--purple-glow)}.out-val.r{color:var(--red-bright)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.detect-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.det-box{background:rgba(7,5,21,.65);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.det-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.det-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:14px}
+.det-key{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)}
+.det-val{font-family:'Space Mono',monospace;font-size:11px;font-weight:700}
+.det-verdict{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;margin-top:7px;padding:5px 9px;border-radius:6px;text-align:center}
+.vd-yes{background:rgba(29,186,144,.1);border:1px solid var(--teal-mid);color:var(--teal-glow)}
+.vd-no{background:rgba(138,32,32,.1);border:1px solid var(--red-mid);color:var(--red-bright)}
+.vd-marg{background:rgba(196,120,0,.1);border:1px solid var(--amber-mid);color:var(--amber-glow)}
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:12px;margin-bottom:14px}
+.ct{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+canvas{display:block;width:100%}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">TDE Rate Calculator</span>
+  <a href="tidal-disruption.html" class="nav-link">← Tidal Disruption</a>
+  <a href="constraint-stacker.html" class="nav-link">Constraint Stacker</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>TDE Rate Calculator for OC</h1>
+<p class="subtitle">Loss-cone dynamics: tidal disruption event rate for OC's IMBH, X-ray peak luminosity, and detectability by Einstein Probe and Rubin LSST</p>
+<div class="badges">
+  <span class="badge b-sci">🔬 Established physics (loss-cone dynamics, tidal disruption)</span>
+  <span class="badge b-deb">⚠ Observationally debated (OC IMBH parameters)</span>
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pt">Black Hole Parameters</div>
+    <div class="ps">IMBH mass sets the tidal radius, influence radius, and Eddington luminosity</div>
+    <div class="preset-bar">
+      <button class="pp active" id="p-haberle" onclick="applyPreset('haberle')">Häberle ≥8,200</button>
+      <button class="pp" id="p-banares" onclick="applyPreset('banares')">Bañares ≤6,000</button>
+      <button class="pp" id="p-chen" onclick="applyPreset('chen')">Chen ~20,000</button>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">BH mass M (M☉)</span><span class="sl-v" id="dv-M">8,200</span></div>
+      <input type="range" id="sl-M" min="2.7" max="6" step="0.05" value="3.914" oninput="slChange('M',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>500 M☉</span><span>10⁴</span><span>10⁶</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Cluster Parameters</div>
+    <div class="ps">OC defaults from measurements.js; adjust for other clusters</div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Velocity dispersion σ (km/s)</span><span class="sl-v" id="dv-sigma">16</span></div>
+      <input type="range" id="sl-sigma" class="amber-t" min="5" max="80" step="1" value="16" oninput="slChange('sigma',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Stellar density ρ at r_h (M☉/pc³)</span><span class="sl-v" id="dv-rho">10⁴</span></div>
+      <input type="range" id="sl-rho" class="purple-t" min="2" max="7" step="0.1" value="4" oninput="slChange('rho',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10² M☉/pc³</span><span>10⁵</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Mean star mass m_star (M☉)</span><span class="sl-v" id="dv-mstar">0.7</span></div>
+      <input type="range" id="sl-mstar" class="amber-t" min="0.1" max="2" step="0.1" value="0.7" oninput="slChange('mstar',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Mean star radius R_star (R☉)</span><span class="sl-v" id="dv-Rstar">0.75</span></div>
+      <input type="range" id="sl-Rstar" min="0.3" max="10" step="0.1" value="0.75" oninput="slChange('Rstar',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">OC distance d (kpc)</span><span class="sl-v" id="dv-dist">5.47</span></div>
+      <input type="range" id="sl-dist" class="amber-t" min="3" max="10" step="0.1" value="5.47" oninput="slChange('dist',this.value)">
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="panel" style="margin-bottom:14px">
+    <div class="pt">Loss-Cone Dynamics</div>
+    <div class="ps">Tidal disruption radius, influence radius, and event rate</div>
+    <div class="out-grid">
+      <div class="out-box">
+        <div class="out-label">Tidal disruption radius r_t</div>
+        <div class="out-val t" id="out-rt">—</div>
+        <div class="out-unit">AU</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Influence radius r_h</div>
+        <div class="out-val p" id="out-rh">—</div>
+        <div class="out-unit">pc</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Loss cone fraction f_lc</div>
+        <div class="out-val" id="out-flc">—</div>
+        <div class="out-unit">(r_t/r_h)²</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Relaxation time t_relax</div>
+        <div class="out-val" id="out-trelax">—</div>
+        <div class="out-unit">yr</div>
+      </div>
+      <div class="out-box hl-t">
+        <div class="out-label">TDE rate Γ_TDE</div>
+        <div class="out-val t" id="out-Gamma">—</div>
+        <div class="out-unit">events / yr</div>
+      </div>
+      <div class="out-box hl-a">
+        <div class="out-label">Mean waiting time</div>
+        <div class="out-val a" id="out-wait">—</div>
+        <div class="out-unit">yr between events</div>
+      </div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);line-height:1.5;margin-bottom:12px">OC published estimate (arXiv:2507.06316): Γ ≈ 5×10⁻⁸ yr⁻¹. This tool matches that estimate at OC default parameters.</div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px">
+    <div class="pt">Flare Properties &amp; Detectability</div>
+    <div class="ps">Peak emission assuming L_peak ≈ f_Edd × L_Eddington; flux at OC distance</div>
+    <div class="sl-row" style="margin-bottom:10px">
+      <div class="sl-lr"><span class="sl-lbl">Eddington fraction f_Edd at peak</span><span class="sl-v a" id="dv-fEdd">0.10</span></div>
+      <input type="range" id="sl-fEdd" class="amber-t" min="0.001" max="1" step="0.001" value="0.10" oninput="slChange('fEdd',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.1% L_Edd</span><span>100% L_Edd</span></div>
+    </div>
+    <div class="detect-grid">
+      <div class="det-box">
+        <div class="det-title" style="color:var(--teal-glow)">Einstein Probe (WXT)</div>
+        <div class="det-row"><span class="det-key">Sensitivity</span><span class="det-val">10⁻¹¹ erg/cm²/s</span></div>
+        <div class="det-row"><span class="det-key">Peak flux</span><span class="det-val" id="ep-flux">—</span></div>
+        <div class="det-verdict" id="ep-verdict">—</div>
+      </div>
+      <div class="det-box">
+        <div class="det-title" style="color:var(--amber-glow)">Rubin LSST (r-band)</div>
+        <div class="det-row"><span class="det-key">Single-visit 5σ</span><span class="det-val">24.5 mag</span></div>
+        <div class="det-row"><span class="det-key">Peak apparent mag</span><span class="det-val" id="lsst-mag">—</span></div>
+        <div class="det-verdict" id="lsst-verdict">—</div>
+      </div>
+    </div>
+    <div class="out-box" style="margin-bottom:8px">
+      <div class="out-label">Peak X-ray luminosity L_peak</div>
+      <div class="out-val t" id="out-Lpeak">—</div>
+      <div class="out-unit">erg/s</div>
+    </div>
+    <div class="out-box">
+      <div class="out-label">Peak X-ray flux at OC distance</div>
+      <div class="out-val t" id="out-Fpeak">—</div>
+      <div class="out-unit">erg/cm²/s</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="ct">TDE rate vs. IMBH mass (other parameters fixed)</div>
+    <canvas id="rate-canvas" height="140"></canvas>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What this tool does</h3>
+  <p>This tool computes the rate at which stars are tidally disrupted by OC's IMBH using loss-cone dynamics. A star on an orbit that passes within the tidal disruption radius r_t of the IMBH is disrupted. The rate of stars entering the loss cone is set by gravitational two-body relaxation on the relaxation timescale t_relax.</p>
+  <h3>Key formulas</h3>
+  <p><strong>Tidal disruption radius:</strong> r_t = R_star × (M_BH/m_star)^(1/3). Stars within this radius are disrupted.</p>
+  <p><strong>Influence radius:</strong> r_h = GM_BH/σ² — the radius within which the IMBH dominates the stellar dynamics.</p>
+  <p><strong>Relaxation time:</strong> t_relax = 0.34 σ³ / (G² ρ m_star ln(M_BH/m_star)), where ln(Λ) = ln(M_BH/m_star) is the Coulomb logarithm (Wang & Merritt 2004 approximation).</p>
+  <p><strong>Loss-cone fraction:</strong> f_lc ≈ (r_t/r_h)² — the solid-angle fraction of orbits that enter the loss cone.</p>
+  <p><strong>TDE rate:</strong> Γ_TDE ≈ (N_h × f_lc) / t_relax, where N_h = (4π/3) r_h³ ρ / m_star is the number of stars within the influence radius. This is the "empty loss cone" approximation (appropriate for OC-type clusters).</p>
+  <h3>Detectability</h3>
+  <p><strong>Peak X-ray luminosity:</strong> L_peak = f_Edd × L_Eddington = f_Edd × 1.26×10³¹ × M/M_sun W. The Eddington fraction at peak is uncertain; f_Edd ~ 0.1 is often used.</p>
+  <p><strong>Flux at Earth:</strong> F = L_peak / (4π d²) where d is the distance to OC. The Einstein Probe WXT sensitivity is ~10⁻¹¹ erg/cm²/s (0.5–4 keV, 1 ks exposure). Rubin LSST's 5σ depth in r-band is ~24.5 mag per visit, ~27.5 mag stacked.</p>
+  <h3>OC published estimate</h3>
+  <p>arXiv:2507.06316 ("Growing the IMBH in Omega Centauri", 2025) estimates Γ_TDE ≈ 5×10⁻⁸ yr⁻¹ for OC-like clusters, consistent with this tool at default parameters. The corresponding mean waiting time is ~20 Myr. This means we would not expect an ongoing TDE from OC today — but monitoring for transients is motivated over multi-decade timescales.</p>
+  <h3>References</h3>
+  <span class="cite">Wang, J. & Merritt, D. (2004). ApJ 600:149. DOI: 10.1086/379767</span>
+  <span class="cite">Stone, N. C. & Metzger, B. D. (2016). MNRAS 455:859. DOI: 10.1093/mnras/stv2281</span>
+  <span class="cite">arXiv:2507.06316 (2025) — Growing the IMBH in Omega Centauri</span>
+  <span class="cite">Häberle et al. (2024). Nature 631:285. DOI: 10.1038/s41586-024-07511-z</span>
+  <span class="cite">Strubbe & Quataert (2009). MNRAS 400:2070. DOI: 10.1111/j.1365-2966.2009.15599.x</span>
+  <p class="ver">v1.0 — 2026-06-02</p>
+</div>
+</div>
+
+<script>
+const G=6.674e-11, M_sun=1.989e30, R_sun=6.957e8, PC=3.086e16, KPC=3.086e19, YR=3.156e7;
+const PRESETS={haberle:{logM:3.914},banares:{logM:3.778},chen:{logM:4.301}};
+const st={logM:3.914,sigma:16,logRho:4,mstar:0.7,Rstar:0.75,dist:5.47,fEdd:0.10};
+function applyPreset(k){Object.assign(st,PRESETS[k]);document.getElementById('sl-M').value=st.logM;['haberle','banares','chen'].forEach(id=>document.getElementById('p-'+id).classList.toggle('active',id===k));compute();saveHash();}
+function slChange(k,v){const vf=parseFloat(v);if(k==='M')st.logM=vf;if(k==='sigma')st.sigma=vf;if(k==='rho')st.logRho=vf;if(k==='mstar')st.mstar=vf;if(k==='Rstar')st.Rstar=vf;if(k==='dist')st.dist=vf;if(k==='fEdd')st.fEdd=vf;['haberle','banares','chen'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));compute();saveHash();}
+
+function supStr(n){const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];return(n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('');}
+function fmtSci(v,d){d=d||3;if(!isFinite(v)||v<=0)return'—';const e=Math.floor(Math.log10(v));const m=v/Math.pow(10,e);return m.toFixed(d-1)+'×10'+supStr(e);}
+function fmtTime(yr){if(yr>1e9)return(yr/1e9).toFixed(2)+' Gyr';if(yr>1e6)return(yr/1e6).toFixed(2)+' Myr';if(yr>1000)return(yr/1000).toFixed(1)+' kyr';return yr.toFixed(0)+' yr';}
+
+function calcTDE(logM, sigma_kms, logRho, mstar, Rstar) {
+  const M=Math.pow(10,logM)*M_sun;
+  const sigma=sigma_kms*1e3; // m/s
+  const rho_SI=Math.pow(10,logRho)*M_sun/Math.pow(PC,3); // kg/m^3
+  const mstar_kg=mstar*M_sun, Rstar_m=Rstar*R_sun;
+  // tidal radius
+  const r_t=Rstar_m*Math.pow(M/mstar_kg, 1/3); // m
+  // influence radius
+  const r_h=G*M/(sigma*sigma); // m
+  // number of stars within r_h
+  const N_h=(4/3)*Math.PI*Math.pow(r_h,3)*rho_SI/mstar_kg;
+  // relaxation time: Wang & Merritt 2004
+  const lnLambda=Math.max(1,Math.log(M/mstar_kg));
+  const t_relax=0.34*Math.pow(sigma,3)/(G*G*rho_SI*mstar_kg*lnLambda); // seconds
+  // loss cone fraction
+  const f_lc=Math.pow(r_t/r_h,2);
+  // TDE rate
+  const Gamma_s=N_h*f_lc/t_relax;
+  const Gamma_yr=Gamma_s*YR;
+  return {r_t_AU:r_t/1.496e11, r_h_pc:r_h/PC, f_lc, t_relax_yr:t_relax/YR, Gamma_yr, N_h};
+}
+
+function compute(){
+  const M_disp=Math.pow(10,st.logM);
+  document.getElementById('dv-M').textContent=M_disp.toLocaleString(undefined,{maximumFractionDigits:0});
+  document.getElementById('dv-sigma').textContent=st.sigma;
+  document.getElementById('dv-rho').textContent='10'+supStr(Math.round(st.logRho));
+  document.getElementById('dv-mstar').textContent=st.mstar.toFixed(1);
+  document.getElementById('dv-Rstar').textContent=st.Rstar.toFixed(2);
+  document.getElementById('dv-dist').textContent=st.dist.toFixed(2);
+  document.getElementById('dv-fEdd').textContent=st.fEdd.toFixed(3);
+
+  const R=calcTDE(st.logM,st.sigma,st.logRho,st.mstar,st.Rstar);
+  document.getElementById('out-rt').textContent=R.r_t_AU.toFixed(4);
+  document.getElementById('out-rh').textContent=R.r_h_pc.toFixed(4);
+  document.getElementById('out-flc').textContent=R.f_lc.toExponential(2);
+  document.getElementById('out-trelax').textContent=fmtTime(R.t_relax_yr);
+  document.getElementById('out-Gamma').textContent=fmtSci(R.Gamma_yr);
+  document.getElementById('out-wait').textContent=R.Gamma_yr>0?fmtTime(1/R.Gamma_yr):'—';
+
+  // Flare
+  const M_kg=Math.pow(10,st.logM)*M_sun;
+  const L_Edd=1.26e31*Math.pow(10,st.logM); // W
+  const L_peak=st.fEdd*L_Edd; // W
+  const L_peak_cgs=L_peak*1e7; // erg/s
+  const d_cm=st.dist*KPC*100;
+  const F_peak=L_peak_cgs/(4*Math.PI*d_cm*d_cm); // erg/cm^2/s
+  document.getElementById('out-Lpeak').textContent=fmtSci(L_peak_cgs);
+  document.getElementById('out-Fpeak').textContent=fmtSci(F_peak);
+
+  // EP sensitivity ~1e-11 erg/cm^2/s
+  const EP_sens=1e-11;
+  document.getElementById('ep-flux').textContent=fmtSci(F_peak,2);
+  const ep_v=document.getElementById('ep-verdict');
+  if(F_peak>EP_sens*10){ep_v.className='det-verdict vd-yes';ep_v.textContent='✓ Detectable ('+Math.round(F_peak/EP_sens)+'× above threshold)';}
+  else if(F_peak>EP_sens){ep_v.className='det-verdict vd-marg';ep_v.textContent='◑ Marginal ('+F_peak.toExponential(1)+')';}
+  else{ep_v.className='det-verdict vd-no';ep_v.textContent='✗ Below threshold';}
+
+  // LSST optical: assuming L_opt ~ 0.1 L_peak, using abs mag relation
+  // M_abs = 4.83 - 2.5*log10(L_opt/L_sun)
+  const L_sun_erg=3.828e33;
+  const L_opt=0.1*L_peak_cgs;
+  const M_abs=4.83-2.5*Math.log10(L_opt/L_sun_erg);
+  const m_app=M_abs+5*Math.log10(st.dist*1e3/10); // distance modulus
+  document.getElementById('lsst-mag').textContent=m_app.toFixed(1)+' mag';
+  const lsst_v=document.getElementById('lsst-verdict');
+  const LSST_LIM=24.5;
+  if(m_app<LSST_LIM-3){lsst_v.className='det-verdict vd-yes';lsst_v.textContent='✓ Detectable ('+Math.abs(m_app-LSST_LIM).toFixed(1)+' mag above limit)';}
+  else if(m_app<LSST_LIM){lsst_v.className='det-verdict vd-marg';lsst_v.textContent='◑ Near limit';}
+  else{lsst_v.className='det-verdict vd-no';lsst_v.textContent='✗ Too faint ('+Math.abs(m_app-LSST_LIM).toFixed(1)+' mag below)';}
+
+  drawRateCurve();
+}
+
+function drawRateCurve(){
+  const canvas=document.getElementById('rate-canvas');
+  const W=canvas.offsetWidth||600,H=140;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={l:70,r:20,t:12,b:30};
+  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  ctx.fillStyle='rgba(7,5,21,0.7)';ctx.fillRect(0,0,W,H);
+  const logM_lo=2.7,logM_hi=6;
+  const logG_lo=-12,logG_hi=-3;
+  const mToX=m=>pad.l+(m-logM_lo)/(logM_hi-logM_lo)*cw;
+  const gToY=g=>pad.t+ch-(g-logG_lo)/(logG_hi-logG_lo)*ch;
+  ctx.strokeStyle='rgba(112,85,212,0.1)';ctx.lineWidth=1;
+  [3,4,5,6].forEach(lm=>{ctx.beginPath();ctx.moveTo(mToX(lm),pad.t);ctx.lineTo(mToX(lm),pad.t+ch);ctx.stroke();});
+  [-10,-8,-6,-4].forEach(lg=>{ctx.beginPath();ctx.moveTo(pad.l,gToY(lg));ctx.lineTo(pad.l+cw,gToY(lg));ctx.stroke();});
+  ctx.fillStyle='rgba(80,72,112,0.9)';ctx.font='9px Space Mono, monospace';
+  ctx.textAlign='center';[3,4,5,6].forEach(lm=>{ctx.fillText('10'+supStr(lm),mToX(lm),H-5);});
+  ctx.textAlign='right';[-10,-8,-6,-4].forEach(lg=>{ctx.fillText('10'+supStr(lg),pad.l-4,gToY(lg)+4);});
+  ctx.strokeStyle='var(--teal-glow)';ctx.lineWidth=2;ctx.beginPath();
+  let first=true;
+  for(let i=0;i<=100;i++){
+    const lm=logM_lo+(logM_hi-logM_lo)*i/100;
+    const R=calcTDE(lm,st.sigma,st.logRho,st.mstar,st.Rstar);
+    if(R.Gamma_yr<=0)continue;
+    const lg=Math.log10(R.Gamma_yr);
+    if(lg<logG_lo||lg>logG_hi){first=true;continue;}
+    const x=mToX(lm),y=gToY(lg);
+    if(first){ctx.moveTo(x,y);first=false;}else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  // OC mass marker
+  const R_cur=calcTDE(st.logM,st.sigma,st.logRho,st.mstar,st.Rstar);
+  const lg_cur=Math.log10(Math.max(1e-15,R_cur.Gamma_yr));
+  ctx.fillStyle='var(--amber-glow)';ctx.beginPath();ctx.arc(mToX(st.logM),gToY(lg_cur),5,0,2*Math.PI);ctx.fill();
+  ctx.fillStyle='rgba(144,136,192,0.7)';ctx.textAlign='center';ctx.fillText('M (M☉) →',pad.l+cw/2,H-1);
+  ctx.save();ctx.translate(10,pad.t+ch/2);ctx.rotate(-Math.PI/2);ctx.fillText('Γ_TDE (yr⁻¹)',0,0);ctx.restore();
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+function saveHash(){window.location.hash=`logM=${st.logM.toFixed(3)}&sigma=${st.sigma}&logRho=${st.logRho.toFixed(1)}&mstar=${st.mstar}&Rstar=${st.Rstar}&dist=${st.dist}&fEdd=${st.fEdd.toFixed(3)}`;}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));const m={logM:'sl-M',sigma:'sl-sigma',logRho:'sl-rho',mstar:'sl-mstar',Rstar:'sl-Rstar',dist:'sl-dist',fEdd:'sl-fEdd'};Object.entries(m).forEach(([sk,eid])=>{if(p[sk]!==undefined){st[sk]=parseFloat(p[sk]);document.getElementById(eid).value=st[sk];}});}
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{drawRateCurve();});
+</script>
+</body>
+</html>

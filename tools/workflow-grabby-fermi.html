@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--
+  Workflow — The Grabby Fermi Chain
+  Omega Centauri Society — omegacentauri.me
+  Five-stage workflow: Grabby Aliens → Drake MC → Great Filter →
+  Aestivation → Passive SETI.
+  "From appearance rate to Fermi silence — the complete arc."
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-02
+  Site section: #fermi
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grabby Fermi Chain Workflow — Omega Centauri Society</title>
+<meta name="description" content="Five-stage Fermi Paradox chain: Grabby Aliens expansion model → Drake Monte Carlo → Great Filter → Aestivation → Passive SETI. From civilisation appearance rate to Fermi silence.">
+<link rel="canonical" href="https://omegacentauri.me/tools/workflow-grabby-fermi.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);--s1:#d04040;--s2:#f0a020;--s3:#7055d4;--s4:#4de8c0;--s5:#1dba90}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(208,64,64,.05),transparent 50%),radial-gradient(ellipse at 80% 85%,rgba(112,85,212,.06),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1200px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.flow-bar{background:rgba(13,10,36,.7);border-bottom:1px solid var(--border-subtle);position:sticky;top:48px;z-index:190;overflow-x:auto}
+.flow-inner{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:stretch}
+.flow-step{display:flex;align-items:center;gap:8px;padding:10px 12px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none}
+.flow-step.active{color:var(--text-primary);border-color:var(--s-color,var(--red-bright))}
+.flow-step.s1{--s-color:var(--s1)}.flow-step.s2{--s-color:var(--s2)}.flow-step.s3{--s-color:var(--s3)}.flow-step.s4{--s-color:var(--s4)}.flow-step.s5{--s-color:var(--s5)}
+.flow-num{width:18px;height:18px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.flow-step.s1 .flow-num{background:rgba(208,64,64,.12);border-color:var(--s1);color:var(--s1)}
+.flow-step.s2 .flow-num{background:rgba(240,160,32,.12);border-color:var(--s2);color:var(--s2)}
+.flow-step.s3 .flow-num{background:rgba(112,85,212,.12);border-color:var(--s3);color:var(--s3)}
+.flow-step.s4 .flow-num{background:rgba(77,232,192,.12);border-color:var(--s4);color:var(--s4)}
+.flow-step.s5 .flow-num{background:rgba(29,186,144,.12);border-color:var(--s5);color:var(--s5)}
+.flow-arrow{color:var(--text-dim);padding:0 2px;flex-shrink:0}
+.container{max-width:1200px;margin:0 auto;padding:36px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:34px;line-height:1.1;margin-bottom:10px;background:linear-gradient(120deg,var(--red-bright),var(--purple-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;font-style:italic;max-width:820px;margin-bottom:10px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:8px;white-space:nowrap;border:1px solid currentColor;display:inline-block;margin-right:5px;margin-top:5px}
+.tier-t{color:var(--amber-bright);background:rgba(240,160,32,.06)}.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.06)}
+.stage{border-radius:12px;border:1px solid var(--border-subtle);background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));margin-bottom:10px;overflow:hidden}
+.stage.s1{border-color:rgba(208,64,64,.25)}.stage.s2{border-color:rgba(240,160,32,.2)}.stage.s3{border-color:rgba(112,85,212,.2)}.stage.s4{border-color:rgba(77,232,192,.2)}.stage.s5{border-color:rgba(29,186,144,.2)}
+.stage-header{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;user-select:none}
+.stage-num{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;line-height:1;min-width:28px}
+.stage.s1 .stage-num{color:var(--s1)}.stage.s2 .stage-num{color:var(--s2)}.stage.s3 .stage-num{color:var(--s3)}.stage.s4 .stage-num{color:var(--s4)}.stage.s5 .stage-num{color:var(--s5)}
+.stage-header-text{flex:1}
+.stage-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:2px}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary)}
+.stage-summary{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:2px}
+.chevron{font-size:13px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.stage.open .chevron{transform:rotate(90deg)}
+.stage-body{display:none;padding:0 20px 20px}
+.stage.open .stage-body{display:block}
+.stage-prose{font-size:15px;color:var(--text-secondary);line-height:1.65;margin-bottom:16px;max-width:820px}
+.stage-prose strong{color:var(--text-primary)}
+.tool-cta{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:10px;border:1px solid var(--border-subtle);background:rgba(7,5,21,.5);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;transition:all .2s;margin-bottom:14px;margin-right:8px}
+.tool-cta:hover{color:var(--teal-glow);border-color:var(--teal-bright);background:rgba(13,42,36,.4)}
+.tool-cta-arrow{font-size:14px}
+.key-result{background:rgba(7,5,21,.5);border-radius:9px;padding:12px 16px;border:1px solid rgba(255,255,255,.05);margin-bottom:10px}
+.kr-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.kr-val{font-family:'Orbitron',sans-serif;font-size:19px;font-weight:600}
+.stage.s1 .kr-val{color:var(--s1)}.stage.s2 .kr-val{color:var(--s2)}.stage.s3 .kr-val{color:var(--s3)}.stage.s4 .kr-val{color:var(--s4)}.stage.s5 .kr-val{color:var(--s5)}
+.kr-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.handoff{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:7px;border:1px dashed rgba(255,255,255,.1);background:rgba(7,5,21,.4);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:8px}
+.handoff strong{color:var(--text-primary)}
+.synthesis{border-radius:12px;border:1px solid var(--border-teal);background:linear-gradient(180deg,rgba(13,42,36,.4),rgba(7,5,21,.8));padding:24px 28px;margin-top:20px}
+.syn-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:12px}
+.syn-body{color:var(--text-secondary);font-size:15px;line-height:1.7}
+.syn-body strong{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Grabby Fermi Chain Workflow</span>
+  <a href="https://omegacentauri.me/#fermi" class="nav-link">← Main site</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="flow-bar"><div class="flow-inner">
+  <a href="#s1" class="flow-step s1 active" onclick="openStage('s1')"><span class="flow-num">1</span>Grabby Aliens</a>
+  <span class="flow-arrow">→</span>
+  <a href="#s2" class="flow-step s2" onclick="openStage('s2')"><span class="flow-num">2</span>Drake MC</a>
+  <span class="flow-arrow">→</span>
+  <a href="#s3" class="flow-step s3" onclick="openStage('s3')"><span class="flow-num">3</span>Great Filter</a>
+  <span class="flow-arrow">→</span>
+  <a href="#s4" class="flow-step s4" onclick="openStage('s4')"><span class="flow-num">4</span>Aestivation</a>
+  <span class="flow-arrow">→</span>
+  <a href="#s5" class="flow-step s5" onclick="openStage('s5')"><span class="flow-num">5</span>Passive SETI</a>
+</div></div>
+
+<div class="container">
+  <div style="margin-bottom:28px">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--red-bright);margin-bottom:10px">Fermi Paradox · Hanson 2021 · Drake · Sandberg · Civiletti 2025</div>
+    <h1>The Grabby Fermi Chain</h1>
+    <p class="hero-sub">From the cosmic appearance rate of grabby civilisations to the statistical silence of our sky — five linked frameworks building a consistent picture of why we don't see anyone, and what that means for OC.</p>
+    <div class="hero-meta">5 stages · Tools: Grabby Aliens, Drake Monte Carlo, Great Filter, Aestivation, Passive SETI</div>
+    <div style="margin-top:10px">
+      <span class="tier-badge tier-t">⚠ Theoretical (Fermi Paradox frameworks)</span>
+      <span class="tier-badge tier-s">✦ Speculative (aestivation, MTH)</span>
+    </div>
+  </div>
+
+  <div class="stage s1 open" id="s1">
+    <div class="stage-header" onclick="toggleStage('s1')">
+      <div class="stage-num">1</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Hanson, Martín, McCarter &amp; Paulson 2021 · ApJ 922:182</div>
+        <div class="stage-title">Grabby Aliens Expansion Model</div>
+        <div class="stage-summary">How many expanding civilisations exist, and have any reached us yet?</div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">Hanson et al. (2021) divide civilisations into "grabby" (expanding at fraction s of c, permanently colonising volumes) and "quiet" (staying local). The model has three parameters: n (hard steps, ~6 from Earth history), s (expansion speed), and k (appearance rate). At the Hanson best-estimate parameters (n=6, s=0.5c), only ~0.1–1% of the observable universe is currently colonised by grabby aliens — consistent with the observed silence. <strong>The nearest grabby alien is expected to be ~1–10 Gly away</strong>, and their expanding front will reach us in ~1–10 Gyr. This sets the cosmic context: quiet civilisations like ours must exist in the unclaimed gaps.</p>
+      <a class="tool-cta" href="grabby-aliens.html#n=6&s=0.50&logk=-27" target="_blank"><span class="tool-cta-arrow">→</span> Open Grabby Aliens (n=6, s=0.5c, Hanson estimate)</a>
+      <a class="tool-cta" href="grabby-aliens.html#n=3&s=0.90&logk=-22" target="_blank"><span class="tool-cta-arrow">→</span> Open Grabby Aliens (optimistic: n=3, s=0.9c)</a>
+      <div class="key-result">
+        <div class="kr-label">Expected nearest grabby alien (n=6, s=0.5c)</div>
+        <div class="kr-val">~2–5 Gly</div>
+        <div class="kr-sub">f_GA ~ 0.1–1% · time to contact ~4–10 Gyr · consistent with observed Fermi silence</div>
+      </div>
+      <div class="handoff">↓ Handoff: grabby civilisations are rare and distant. Stage 2 asks: <strong>how many quiet communicating civilisations exist in our local volume?</strong></div>
+    </div>
+  </div>
+
+  <div class="stage s2" id="s2">
+    <div class="stage-header" onclick="toggleStage('s2')">
+      <div class="stage-num">2</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Drake 1961 · Monte Carlo</div>
+        <div class="stage-title">Drake Monte Carlo</div>
+        <div class="stage-summary">Sampling the Drake equation — distribution of communicating civilisation counts N</div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">The Drake Monte Carlo samples all seven Drake factors from probability distributions, running 10,000 simulations to produce a distribution of N (communicating civilisations in the Milky Way). The median N is highly sensitive to the final factor L (civilisation lifetime). At L ~ 10,000 years and optimistic biological factors, the median N ~ 20–100. At pessimistic L ~ 100 years, median N ~ 0.01. <strong>The Drake equation is consistent with rare or common civilisations</strong> — the uncertainty spans 6 orders of magnitude.</p>
+      <a class="tool-cta" href="drake-monte-carlo.html" target="_blank"><span class="tool-cta-arrow">→</span> Open Drake Monte Carlo (default parameters)</a>
+      <div class="key-result">
+        <div class="kr-label">Median N (communicating civs, Milky Way)</div>
+        <div class="kr-val">~0.01 – 1,000</div>
+        <div class="kr-sub">Spans 5–6 orders of magnitude · L (lifetime) is the dominant uncertain factor · consistent with both rare Earth and optimistic SETI</div>
+      </div>
+      <div class="handoff">↓ Handoff: N is highly uncertain. Stage 3 asks: <strong>is the silence itself evidence for a Great Filter ahead of or behind us?</strong></div>
+    </div>
+  </div>
+
+  <div class="stage s3" id="s3">
+    <div class="stage-header" onclick="toggleStage('s3')">
+      <div class="stage-num">3</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Hanson 1998 · Hart 1975</div>
+        <div class="stage-title">Great Filter Position</div>
+        <div class="stage-summary">Given Fermi silence, where does the Great Filter most likely fall?</div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">The Great Filter represents whatever evolutionary step(s) are astronomically rare, making visible spacefaring civilisations essentially non-existent. The question isn't whether a filter exists (we know one does — we don't see galactic colonisation) but whether it's behind us (making us a rare success) or ahead of us (threatening our future). The Great Filter tool implements Hanson's framework: combine the N estimate from Stage 2 with Hart's colonisation argument to derive the implied filter strength at each step from chemistry to civilisation.</p>
+      <a class="tool-cta" href="great-filter.html" target="_blank"><span class="tool-cta-arrow">→</span> Open Great Filter (default)</a>
+      <div class="key-result">
+        <div class="kr-label">Implication of Stage 1 + Stage 2</div>
+        <div class="kr-val">Filter is real and large</div>
+        <div class="kr-sub">If grabby aliens are ~0.1% of volume and Drake N ~ 1–100, the filter reduces visible civs by ~10⁻⁹ from expected · likely behind us (biology) or ahead (extinction)</div>
+      </div>
+      <div class="handoff">↓ Handoff: the filter is real. Stage 4 asks: <strong>could advanced civilisations be hiding rather than filtered out — the aestivation scenario?</strong></div>
+    </div>
+  </div>
+
+  <div class="stage s4" id="s4">
+    <div class="stage-header" onclick="toggleStage('s4')">
+      <div class="stage-num">4</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Sandberg, Armstrong &amp; Cirkovic 2017</div>
+        <div class="stage-title">Aestivation Hypothesis</div>
+        <div class="stage-summary">Are advanced civilisations hibernating until the cool, dark future?</div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">Sandberg et al. proposed that advanced civilisations may "aestivate" — hibernate at low metabolic rates during the hot current epoch, waiting for a cooler, lower-entropy universe where computation is more efficient (the Landauer limit drops with temperature). The computational gain from waiting: L_final × (T_now/T_CMB_final) where T_CMB falls as the universe expands. <strong>At current temperatures, every joule buys ~3×10⁹ times fewer bit erasures than it will in 10 trillion years.</strong> This means an advanced civilisation that hibernates preserves resources for an astronomically larger payoff.</p>
+      <a class="tool-cta" href="aestivation.html" target="_blank"><span class="tool-cta-arrow">→</span> Open Aestivation Calculator</a>
+      <div class="key-result">
+        <div class="kr-label">Computational gain from waiting to T_CMB = 10⁻⁶ K</div>
+        <div class="kr-val">~10⁹× more ops/joule</div>
+        <div class="kr-sub">OC's IMBH ergosphere provides a time-dilation shortcut · aestivation + transcension are complementary strategies</div>
+      </div>
+      <div class="handoff">↓ Handoff: aestivation explains absence without requiring a filter. Stage 5 asks: <strong>can passive SETI searches detect dormant civilisations anyway?</strong></div>
+    </div>
+  </div>
+
+  <div class="stage s5" id="s5">
+    <div class="stage-header" onclick="toggleStage('s5')">
+      <div class="stage-num">5</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Civiletti 2025</div>
+        <div class="stage-title">Passive SETI Detection Probability</div>
+        <div class="stage-summary">Given N civilisations and signal duration δ, what's the probability of passive detection?</div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">The Passive SETI tool implements Civiletti's (2025) geometrical framework: if N civilisations each broadcast for duration δ, the probability that at least one signal cone intersects our location at this moment is P(≥1) = 1 − (1 − δ/T_universe)^N. Combining with the Drake N estimate from Stage 2 and the filter constraints from Stage 3: if N ~ 100 and δ ~ 10⁶ years, P ~ 0.7% at any given moment. <strong>We are likely missing most signals</strong>, not because they don't exist but because of the thin temporal window of overlap.</p>
+      <a class="tool-cta" href="passive-seti.html" target="_blank"><span class="tool-cta-arrow">→</span> Open Passive SETI (Civiletti framework)</a>
+      <div class="key-result">
+        <div class="kr-label">P(≥1 detection) at N=100, δ=10⁶ yr</div>
+        <div class="kr-val">~0.7%</div>
+        <div class="kr-sub">Temporal window effect dominates · most signals are in the past or future · aestivating civs have δ → 0 (no signals at all during hibernation)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="synthesis">
+    <div class="syn-eyebrow">Workflow synthesis — the Grabby Fermi arc</div>
+    <div class="syn-body">
+      The five stages build a consistent resolution of the Fermi Paradox: <strong>silence is not surprising.</strong> Grabby civilisations are rare and far away (Stage 1). The Drake equation's enormous uncertainty means N could be very small (Stage 2). A Great Filter of unknown position but real magnitude keeps grabby civs sparse (Stage 3). Advanced civilisations that survive the filter may rationally choose to hibernate rather than expand (Stage 4). And the passive SETI probability of detecting even broadcasting civilisations is low at any given moment (Stage 5). Together: we are probably alone in our local volume, probably not alone in the galaxy, and probably will never encounter a grabby alien — but OC's IMBH, as a potential transcension substrate, may be the closest thing in the galaxy to the attractor that advanced civilisations converge toward.
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleStage(id){document.getElementById(id).classList.toggle('open');}
+function openStage(id){document.querySelectorAll('.stage').forEach(s=>{if(s.id===id)s.classList.add('open');});}
+</script>
+</body>
+</html>

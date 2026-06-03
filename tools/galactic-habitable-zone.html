@@ -1,0 +1,383 @@
+<!--
+  Galactic Habitable Zone Explorer
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Lineweaver, C. H., Fenner, Y., & Gibson, B. K. (2004).
+      "The Galactic Habitable Zone and the Age Distribution of Complex Life in the Milky Way."
+      Science, 303(5654), 59–62. DOI: 10.1126/science.1092322
+    - Metallicity gradient: Rolleston et al. 2000; Afflerbach et al. 1997
+    - SN rate model: Lineweaver et al. 2004 §2.3
+
+  Site section: #fermi
+  Epistemic tier: ⚠ Observationally debated
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Galactic Habitable Zone Explorer — Omega Centauri Society</title>
+<meta name="description" content="Lineweaver et al. 2004 Galactic Habitable Zone: combine metallicity probability, supernova sterilisation rate, and time window to find where complex life is most probable. Is Omega Centauri (r≈6 kpc) in the GHZ?">
+<link rel="canonical" href="https://omegacentauri.me/tools/galactic-habitable-zone.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 30%,rgba(77,232,192,.04),transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-th{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.b-obs{border:1px solid rgba(112,85,212,.4);background:rgba(112,85,212,.05);color:var(--purple-glow)}
+.main-grid{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal-glow)}
+.sl-v.a{color:var(--amber-glow)}.sl-v.p{color:var(--purple-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--teal-dark),var(--teal-bright))}
+input[type=range].amber-t{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-t{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(77,232,192,.4)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.out-val.a{color:var(--amber-glow)}.out-val.t{color:var(--teal-glow)}.out-val.p{color:var(--purple-glow)}.out-val.g{color:#60d060}.out-val.r{color:var(--red-bright)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:10px;margin-bottom:14px}
+.ct{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+canvas{display:block;width:100%}
+.ghz-verdict{padding:14px 16px;border-radius:9px;font-size:15px;margin-bottom:14px;line-height:1.6}
+.ghz-verdict.yes{background:rgba(77,232,192,.05);border:1px solid rgba(77,232,192,.3);color:var(--teal-glow)}
+.ghz-verdict.no{background:rgba(208,64,64,.05);border:1px solid rgba(208,64,64,.3);color:var(--red-bright)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Galactic Habitable Zone Explorer</span>
+  <a href="galaxy-percolation.html" class="nav-link">← Percolation</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>Galactic Habitable Zone Explorer</h1>
+<p class="subtitle">Lineweaver et al. 2004: metallicity and supernova sterilisation combine to define an annular zone 7–9 kpc from galactic centre — but where does Omega Centauri (r ≈ 6 kpc) sit?</p>
+<div class="badges">
+  <span class="badge b-th">⚠ Observationally debated</span>
+  <span class="badge b-obs">Lineweaver et al. 2004</span>
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel">
+    <div class="pt">GHZ Parameters</div>
+    <div class="ps">Metallicity gradient and SN rate from Lineweaver 2004. Adjust threshold, rate scale, and time window.</div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Metallicity threshold [Fe/H]_min</span><span class="sl-v" id="dv-feh">−0.50</span></div>
+      <input type="range" id="sl-feh" min="-1.0" max="0.0" step="0.05" value="-0.5" oninput="slChange('feh',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>−1.0</span><span>−0.5 (default)</span><span>0.0</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">SN rate scale Γ₀</span><span class="sl-v a" id="dv-sn">1.0×</span></div>
+      <input type="range" id="sl-sn" class="amber-t" min="0.1" max="5.0" step="0.1" value="1.0" oninput="slChange('sn',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.1×</span><span>1.0× (fiducial)</span><span>5.0×</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Time window (Gyr)</span><span class="sl-v p" id="dv-tw">9.0</span></div>
+      <input type="range" id="sl-tw" class="purple-t" min="4" max="14" step="0.5" value="9.0" oninput="slChange('tw',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>4 Gyr</span><span>9 Gyr</span><span>14 Gyr</span></div>
+    </div>
+
+    <div class="out-grid">
+      <div class="out-box">
+        <div class="out-label">GHZ peak radius</div>
+        <div class="out-val t" id="out-peak">—</div>
+        <div class="out-unit">kpc from centre</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">P_hab at OC (r=6)</div>
+        <div class="out-val a" id="out-phab-oc">—</div>
+        <div class="out-unit">relative probability</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">P_hab at Sun (r=8)</div>
+        <div class="out-val t" id="out-phab-sun">—</div>
+        <div class="out-unit">relative probability</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">OC in GHZ?</div>
+        <div class="out-val" id="out-in-ghz">—</div>
+        <div class="out-unit">relative to Sun P_hab</div>
+      </div>
+    </div>
+
+    <div class="ghz-verdict" id="ghz-verdict">
+      <strong id="ghz-verdict-title">—</strong>
+      <div id="ghz-verdict-text" style="font-size:14px;margin-top:3px">Computing…</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="chart-wrap">
+    <div class="ct">P_hab(r) vs galactocentric radius — 1 to 15 kpc</div>
+    <canvas id="ghz-canvas" width="760" height="380"></canvas>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-bottom:10px">
+    <span><span style="display:inline-block;width:24px;height:3px;background:var(--teal-glow);vertical-align:middle;margin-right:5px"></span>P_hab(r) = P_metal × P_survive</span>
+    <span><span style="display:inline-block;width:24px;height:3px;background:rgba(160,128,240,0.7);vertical-align:middle;margin-right:5px"></span>P_metal(r)</span>
+    <span><span style="display:inline-block;width:24px;height:3px;background:rgba(255,200,64,0.7);vertical-align:middle;margin-right:5px"></span>P_survive(r)</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:var(--teal-glow);border-radius:50%;vertical-align:middle;margin-right:5px"></span>OC r=6 kpc</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:var(--amber-glow);border-radius:50%;vertical-align:middle;margin-right:5px"></span>Sun r=8 kpc</span>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()">
+  <span class="about-arrow" id="about-arrow">▶</span> About this tool
+</button>
+<div class="about-panel" id="about-panel">
+  <h3>Physics</h3>
+  <p>The Galactic Habitable Zone combines two factors. <strong>Metallicity:</strong> stellar systems need sufficient heavy elements to form rocky planets. The metallicity gradient [Fe/H](r) = −0.07(r−8) is approximately linear; P_metal uses a logistic function peaked where [Fe/H] exceeds the threshold. <strong>Supernova sterilisation:</strong> high-energy events at the galactic centre suppress complex life. The SN rate Γ_SN(r) = Γ₀·exp(−r/3.5) falls off exponentially; P_survive(r) = exp(−Γ_SN(r)·0.1) is the probability of surviving a 0.1 Gyr sterilisation window. P_hab(r) = P_metal(r) × P_survive(r).</p>
+  <p>Omega Centauri orbits at r ≈ 6 kpc, inside the Sun's orbit at r ≈ 8 kpc. The GHZ peak in Lineweaver et al. 2004 is centred near 7–9 kpc. Whether OC falls inside the GHZ depends sensitively on the metallicity threshold and SN rate assumed — this tool makes that dependence explicit.</p>
+  <h3>Limitations</h3>
+  <p>The linear metallicity gradient is an approximation. SN rate models are uncertain by factors of a few. The sterilisation cross-section (0.1 Gyr window) is a simplification. The model does not account for galactic secular evolution, spiral arm passages, or the Milky Way's specific star formation history. It is a first-order illustration of competing effects.</p>
+  <h3>Citation</h3>
+  <span class="cite">Lineweaver, C. H., Fenner, Y., & Gibson, B. K. (2004). "The Galactic Habitable Zone and the Age Distribution of Complex Life in the Milky Way." Science, 303(5654), 59–62. DOI: 10.1126/science.1092322.</span>
+  <div class="ver">v1.0 — 2026-06-02</div>
+</div>
+</div>
+
+<script>
+let state={feh:-0.5,sn:1.0,tw:9.0};
+
+function slChange(k,v){
+  state[k]=parseFloat(v);
+  const fmt={feh:v=>parseFloat(v).toFixed(2),sn:v=>parseFloat(v).toFixed(1)+'×',tw:v=>parseFloat(v).toFixed(1)};
+  document.getElementById('dv-'+k).textContent=fmt[k](v);
+  saveHash();
+  compute();
+}
+
+function saveHash(){
+  history.replaceState(null,'','#'+btoa(JSON.stringify(state)));
+}
+
+function loadHash(){
+  try{
+    if(!location.hash)return;
+    const s=JSON.parse(atob(location.hash.slice(1)));
+    if(s.feh!==undefined)state.feh=s.feh;
+    if(s.sn!==undefined)state.sn=s.sn;
+    if(s.tw!==undefined)state.tw=s.tw;
+    document.getElementById('sl-feh').value=state.feh;
+    document.getElementById('sl-sn').value=state.sn;
+    document.getElementById('sl-tw').value=state.tw;
+    document.getElementById('dv-feh').textContent=state.feh.toFixed(2);
+    document.getElementById('dv-sn').textContent=state.sn.toFixed(1)+'×';
+    document.getElementById('dv-tw').textContent=state.tw.toFixed(1);
+  }catch(e){}
+}
+
+function logistic(x,k,x0){return 1/(1+Math.exp(-k*(x-x0)));}
+
+function computePhab(r,feh_thresh,sn_scale){
+  // metallicity at r
+  const feh=-0.07*(r-8)+0.0;
+  // P_metal: logistic, viability rises as feh exceeds threshold
+  const p_metal=logistic(feh-feh_thresh,8,0);
+  // SN rate
+  const gamma_sn=sn_scale*Math.exp(-r/3.5);
+  // P_survive
+  const p_survive=Math.exp(-gamma_sn*0.1);
+  return{p_metal,p_survive,p_hab:p_metal*p_survive};
+}
+
+function compute(){
+  const{feh,sn}=state;
+  const R=[];
+  const Phab=[],Pmet=[],Psurv=[];
+  let maxPhab=0,peakR=1;
+  for(let r=1;r<=15;r+=0.1){
+    const v=computePhab(r,feh,sn);
+    R.push(r);
+    Phab.push(v.p_hab);
+    Pmet.push(v.p_metal);
+    Psurv.push(v.p_survive);
+    if(v.p_hab>maxPhab){maxPhab=v.p_hab;peakR=r;}
+  }
+
+  const oc=computePhab(6,feh,sn);
+  const sun=computePhab(8,feh,sn);
+
+  document.getElementById('out-peak').textContent=peakR.toFixed(1);
+  document.getElementById('out-phab-oc').textContent=(oc.p_hab/maxPhab).toFixed(3);
+  document.getElementById('out-phab-sun').textContent=(sun.p_hab/maxPhab).toFixed(3);
+
+  const ocRel=oc.p_hab/sun.p_hab;
+  const inGHZ=ocRel>0.5;
+  const inGHZEl=document.getElementById('out-in-ghz');
+  inGHZEl.textContent=inGHZ?'YES':'NO';
+  inGHZEl.className='out-val '+(inGHZ?'t':'r');
+  document.getElementById('out-in-ghz').parentElement.querySelector('.out-unit').textContent=
+    'P_OC / P_Sun = '+(ocRel).toFixed(3);
+
+  const verd=document.getElementById('ghz-verdict');
+  const vt=document.getElementById('ghz-verdict-title');
+  const vtxt=document.getElementById('ghz-verdict-text');
+  if(inGHZ){
+    verd.className='ghz-verdict yes';
+    vt.textContent='OC is within the GHZ';
+    vtxt.textContent='At [Fe/H]_min = '+feh.toFixed(2)+', OC at r=6 kpc has '+Math.round(ocRel*100)+'% the habitability of the Solar neighbourhood. It qualifies as GHZ-interior.';
+  } else {
+    verd.className='ghz-verdict no';
+    vt.textContent='OC lies outside the GHZ';
+    vtxt.textContent='At [Fe/H]_min = '+feh.toFixed(2)+', OC at r=6 kpc has only '+Math.round(ocRel*100)+'% the habitability of the Sun. High SN rate or low metallicity suppresses it.';
+  }
+
+  drawChart(R,Phab,Pmet,Psurv,maxPhab,peakR);
+}
+
+function drawChart(R,Phab,Pmet,Psurv,maxPhab,peakR){
+  const canvas=document.getElementById('ghz-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const pad={l:54,r:28,t:24,b:44};
+  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#070415';ctx.fillRect(0,0,W,H);
+
+  // axes
+  ctx.strokeStyle='rgba(80,60,140,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+ch);ctx.lineTo(pad.l+cw,pad.t+ch);ctx.stroke();
+
+  // grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad.t+ch*(1-i/4);
+    ctx.strokeStyle='rgba(80,60,140,0.15)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cw,y);ctx.stroke();
+    ctx.fillStyle='rgba(148,136,192,0.7)';ctx.font='10px Space Mono,monospace';ctx.textAlign='right';
+    ctx.fillText((i*0.25).toFixed(2),pad.l-6,y+3.5);
+  }
+  for(let r=1;r<=15;r+=2){
+    const x=pad.l+cw*(r-1)/14;
+    ctx.strokeStyle='rgba(80,60,140,0.12)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+ch);ctx.stroke();
+    ctx.fillStyle='rgba(148,136,192,0.7)';ctx.font='10px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText(r,x,pad.t+ch+14);
+  }
+
+  function toXY(r,val){
+    return{x:pad.l+cw*(r-1)/14,y:pad.t+ch*(1-val)};
+  }
+
+  function drawCurve(arr,color,lw){
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=lw;
+    for(let i=0;i<R.length;i++){
+      const {x,y}=toXY(R[i],arr[i]);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+
+  // shaded GHZ region (P_hab > 0.5 * maxPhab)
+  ctx.beginPath();
+  let inZone=false;
+  for(let i=0;i<R.length;i++){
+    if(Phab[i]>0.5*maxPhab){
+      const {x,y}=toXY(R[i],Phab[i]);
+      if(!inZone){ctx.moveTo(x,pad.t+ch);ctx.lineTo(x,y);inZone=true;}
+      else ctx.lineTo(x,y);
+    } else if(inZone){
+      const {x}=toXY(R[i-1],0);
+      ctx.lineTo(x,pad.t+ch);ctx.closePath();
+      ctx.fillStyle='rgba(77,232,192,0.06)';ctx.fill();
+      ctx.beginPath();inZone=false;
+    }
+  }
+  if(inZone){
+    const {x}=toXY(R[R.length-1],0);
+    ctx.lineTo(x,pad.t+ch);ctx.closePath();
+    ctx.fillStyle='rgba(77,232,192,0.06)';ctx.fill();
+  }
+
+  drawCurve(Pmet,'rgba(160,128,240,0.55)',1.5);
+  drawCurve(Psurv,'rgba(255,200,64,0.55)',1.5);
+  drawCurve(Phab,'rgba(77,232,192,0.9)',2.5);
+
+  // GHZ peak marker
+  const pk=toXY(peakR,maxPhab);
+  ctx.strokeStyle='rgba(77,232,192,0.4)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(pk.x,pad.t);ctx.lineTo(pk.x,pad.t+ch);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // OC at r=6
+  const oc=computePhab2(6);
+  const ocPt=toXY(6,oc);
+  ctx.beginPath();ctx.arc(pad.l+cw*(6-1)/14,pad.t+ch*(1-oc),5,0,Math.PI*2);
+  ctx.fillStyle='var(--teal-glow)';ctx.shadowColor='var(--teal-glow)';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(77,232,192,0.9)';ctx.font='10px Space Mono,monospace';ctx.textAlign='left';
+  ctx.fillText('OC',pad.l+cw*(6-1)/14+7,pad.t+ch*(1-oc)+4);
+
+  // Sun at r=8
+  const sunP=computePhab2(8);
+  ctx.beginPath();ctx.arc(pad.l+cw*(8-1)/14,pad.t+ch*(1-sunP),5,0,Math.PI*2);
+  ctx.fillStyle='var(--amber-glow)';ctx.shadowColor='var(--amber-glow)';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(255,200,64,0.9)';ctx.font='10px Space Mono,monospace';ctx.textAlign='left';
+  ctx.fillText('Sun',pad.l+cw*(8-1)/14+7,pad.t+ch*(1-sunP)+4);
+
+  // axis labels
+  ctx.fillStyle='rgba(148,136,192,0.7)';ctx.font='10px Space Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('Galactocentric radius (kpc)',pad.l+cw/2,H-6);
+  ctx.save();ctx.translate(13,pad.t+ch/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText('Relative probability',0,0);ctx.restore();
+}
+
+function computePhab2(r){
+  const v=computePhab(r,state.feh,state.sn);
+  return v.p_hab;
+}
+
+function toggleAbout(){
+  const p=document.getElementById('about-panel');
+  const a=document.getElementById('about-arrow');
+  const vis=p.classList.toggle('visible');
+  a.style.transform=vis?'rotate(90deg)':'rotate(0deg)';
+}
+
+loadHash();
+compute();
+</script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!--
+  Cosmic Life Viability Landscape
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Vidal, C. (2010). "Computational and Biological Analogies for Understanding
+      Fine-Tuned Parameters in Physics." arXiv:1002.3905
+    - Vidal, C. (2014). The Beginning and the End. Springer.
+      DOI: 10.1007/978-3-319-05062-1
+    - Barrow, J. D. & Tipler, F. J. (1986). The Anthropic Cosmological Principle.
+      Oxford University Press.
+    - Tegmark, M., et al. (2006). "Dimensionless constants, cosmology, and
+      other dark matters." Phys. Rev. D 73:023505.
+      DOI: 10.1103/PhysRevD.73.023505
+
+  Site section: #fermi
+  Epistemic tiers: ⚠ Theoretical (Vidal's life-viability framework)
+                   ✦ Engineering fiction (cosmological parameter exploration)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cosmic Life Viability Landscape — Omega Centauri Society</title>
+<meta name="description" content="Clément Vidal's life viability framework: 2D heatmap over pairs of fundamental constants showing which universe configurations support stars, long-lived main sequence, carbon chemistry, and habitable temperatures.">
+<link rel="canonical" href="https://omegacentauri.me/tools/life-viability-landscape.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 25% 20%,rgba(112,85,212,.07),transparent 50%),radial-gradient(ellipse at 75% 75%,rgba(29,186,144,.05),transparent 55%)}
+a{color:var(--teal-glow);text-decoration:none}a:hover{color:var(--purple-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--purple-glow),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-th{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.b-sp{border:1px solid var(--purple-mid);background:rgba(61,45,138,.05);color:var(--purple-glow)}
+.main-grid{display:grid;grid-template-columns:300px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+select{width:100%;background:rgba(7,5,21,.8);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:7px;padding:8px 10px;font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;margin-bottom:16px;outline:none}
+.conditions-list{margin-bottom:14px}
+.cond-row{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;margin-bottom:5px;background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);font-size:14px;color:var(--text-secondary)}
+.cond-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cond-yes{background:var(--teal-glow)}
+.cond-no{background:var(--red-bright)}
+.cond-text{font-family:'Space Mono',monospace;font-size:10px}
+.legend-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.leg-swatch{width:16px;height:16px;border-radius:3px;flex-shrink:0}
+.leg-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.stat-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:8px;padding:10px 12px}
+.stat-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+.stat-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--teal-glow)}
+.stat-val.p{color:var(--purple-glow)}.stat-val.a{color:var(--amber-glow)}
+canvas{display:block;width:100%;border-radius:8px}
+.our-box{background:rgba(255,200,64,.06);border:1px solid rgba(255,200,64,.3);border-radius:9px;padding:12px 15px;margin-top:12px;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.our-box strong{color:var(--amber-glow)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Cosmic Life Viability Landscape</span>
+  <a href="monkeygod-simulator.html" class="nav-link">← MonkeyGod</a>
+  <a href="cns-fitness-landscape.html" class="nav-link">CNS Fitness</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>Cosmic Life Viability Landscape</h1>
+<p class="subtitle">Clément Vidal's framework: which combinations of fundamental constants support stars, carbon chemistry, long-lived main sequence, and habitable temperatures?</p>
+<div class="badges">
+  <span class="badge b-th">⚠ Theoretical (Vidal 2010/2014 framework)</span>
+  <span class="badge b-sp">✦ Speculative (cosmological parameter exploration)</span>
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel">
+    <div class="pt">Parameter Space</div>
+    <div class="ps">Choose two fundamental constants to vary; all others held at their observed values</div>
+    <select id="mode-sel" onchange="compute();saveHash()">
+      <option value="A">Mode A: α (fine-structure) vs β (m_p/m_e)</option>
+      <option value="B">Mode B: G_rel vs Λ_rel</option>
+      <option value="C">Mode C: α_s_rel vs m_p_rel</option>
+    </select>
+
+    <div id="mode-desc" class="ps" style="margin-bottom:14px">Mode A: x-axis = fine-structure constant α (0.001–0.1); y-axis = proton/electron mass ratio β = m_p/m_e (100–5000). Our universe: α = 1/137 ≈ 0.0073, β = 1836.</div>
+
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">Life conditions checked per cell:</div>
+    <div class="conditions-list" id="cond-list"></div>
+
+    <div style="margin-top:14px;margin-bottom:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">Viability score legend</div>
+    <div class="legend-row"><div class="leg-swatch" style="background:#8a2020"></div><div class="leg-lbl">0/4 — sterile (no stars or no chemistry)</div></div>
+    <div class="legend-row"><div class="leg-swatch" style="background:#7a4010"></div><div class="leg-lbl">1/4 — barely viable</div></div>
+    <div class="legend-row"><div class="leg-swatch" style="background:#c47800"></div><div class="leg-lbl">2/4 — marginal</div></div>
+    <div class="legend-row"><div class="leg-swatch" style="background:#0d6e58"></div><div class="leg-lbl">3/4 — plausible</div></div>
+    <div class="legend-row"><div class="leg-swatch" style="background:#1dba90"></div><div class="leg-lbl">4/4 — life-viable (like our universe)</div></div>
+    <div class="legend-row" style="margin-top:5px"><div class="leg-swatch" style="background:rgba(255,200,64,0.8);border:1px solid gold"></div><div class="leg-lbl">✦ Our universe</div></div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-lbl">Viable fraction</div><div class="stat-val" id="s-frac">—</div></div>
+      <div class="stat-box"><div class="stat-lbl">Our score</div><div class="stat-val a" id="s-ours">—</div></div>
+      <div class="stat-box"><div class="stat-lbl">Fully viable cells</div><div class="stat-val" id="s-full">—</div></div>
+      <div class="stat-box"><div class="stat-lbl">Sterile fraction</div><div class="stat-val p" id="s-sterile">—</div></div>
+    </div>
+
+    <div class="our-box" id="our-box">—</div>
+  </div>
+</div>
+
+<div>
+  <div class="panel">
+    <div class="pt">Life Viability Heatmap</div>
+    <div class="ps">Colour = number of life conditions met. Gold cross = our universe. Brighter teal = more viable.</div>
+    <canvas id="heatmap" height="440"></canvas>
+    <div id="axis-labels" style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px">
+      <span id="x-lo">—</span><span id="x-mid">—</span><span id="x-hi">—</span>
+    </div>
+    <div style="text-align:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:2px" id="x-label">x axis →</div>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What this tool does</h3>
+  <p>This tool visualises Clément Vidal's life-viability framework from "The Beginning and the End" (2014) and his 2010 arXiv paper on computational analogies for fine-tuned parameters. For each pair of fundamental constants, the tool asks: would a universe with these values support the chain of conditions necessary for life as we know it?</p>
+  <h3>The four life conditions</h3>
+  <p>Each cell in the heatmap scores 0–4 based on how many of the following conditions are met, using simplified but physically motivated criteria drawn from Barrow &amp; Tipler (1986) and Tegmark et al. (2006):</p>
+  <p><strong>Mode A (α, m_p/m_e):</strong> (1) Stars form and fuse hydrogen: requires α in a viable range — too large and electromagnetic repulsion prevents fusion, too small and stars can't radiate. (2) Main sequence lasts >1 Gyr: stellar lifetimes scale roughly as (1/α²). (3) Carbon chemistry possible: both α and the mass ratio must permit triple-alpha and CNO synthesis. (4) Habitable temperatures: stellar luminosity and planetary chemistry constraints on α.</p>
+  <p><strong>Mode B (G_rel, Λ_rel):</strong> (1) Galaxies and stars form before Λ-dominated expansion: requires Λ_rel not too large. (2) Stars exist: requires G_rel not too small (gravity needed for collapse). (3) Stars live long enough: G_rel not too large (over-luminous, short-lived). (4) Stable large-scale structure: both parameters in compatible range.</p>
+  <p><strong>Mode C (α_s_rel, m_p_rel):</strong> (1) Protons stable (no rapid decay): m_p_rel in reasonable range. (2) Deuterium forms in Big Bang nucleosynthesis: requires α_s above threshold. (3) Carbon and oxygen synthesised in stars: triple-alpha requires fine-tuned α_s. (4) Life-supporting chemistry: m_p_rel close to 1 for familiar biochemistry.</p>
+  <h3>Relationship to MonkeyGod and CNS Hyperfecundity</h3>
+  <p>This tool asks "which universes support life?", complementing the MonkeyGod simulator (which asks "what fraction of random universes are fine-tuned for stars?") and the CNS Hyperfecundity Landscape (which asks "which universes produce the most black holes?"). Together they form a triptych of Vidal-inspired tools exploring the parameter space of possible universes.</p>
+  <h3>References</h3>
+  <span class="cite">Vidal, C. (2010). arXiv:1002.3905 — Computational and Biological Analogies for Fine-Tuned Parameters</span>
+  <span class="cite">Vidal, C. (2014). The Beginning and the End. Springer. DOI: 10.1007/978-3-319-05062-1</span>
+  <span class="cite">Barrow, J. D. & Tipler, F. J. (1986). The Anthropic Cosmological Principle. OUP.</span>
+  <span class="cite">Tegmark, M. et al. (2006). Phys. Rev. D 73:023505. DOI: 10.1103/PhysRevD.73.023505</span>
+  <p class="ver">v1.0 — 2026-06-02</p>
+</div>
+</div>
+
+<script>
+const MODES = {
+  A: {
+    xLabel:'Fine-structure constant α', yLabel:'Proton/electron mass ratio β',
+    xLo:0.001, xHi:0.1, yLo:100, yHi:5000,
+    ourX:1/137, ourY:1836,
+    xLog:true, yLog:false,
+    xTicks:['0.001','0.003','0.01','0.03','0.1'],
+    desc:'Mode A: x-axis = fine-structure constant α (0.001–0.1, log scale); y-axis = proton/electron mass ratio β (100–5000). Our universe: α ≈ 0.0073, β = 1836.',
+    conds:[
+      'Stars form and fuse H: requires α in [0.001, 0.08]',
+      'Main sequence > 1 Gyr: requires α < 0.04 AND β > 500',
+      'Carbon chemistry: requires α > 0.003 AND 800 < β < 4500',
+      'Habitable temperatures: requires α < 0.03 AND β > 800',
+    ],
+    score(x,y){
+      let s=0;
+      if(x>=0.001&&x<=0.08) s++;
+      if(x<0.04&&y>500) s++;
+      if(x>0.003&&y>800&&y<4500) s++;
+      if(x<0.03&&y>800) s++;
+      return s;
+    }
+  },
+  B: {
+    xLabel:'Gravitational constant G_rel', yLabel:'Cosmological constant Λ_rel',
+    xLo:0.01, xHi:100, yLo:0.01, yHi:100,
+    ourX:1, ourY:1,
+    xLog:true, yLog:true,
+    xTicks:['0.01','0.1','1','10','100'],
+    desc:'Mode B: x-axis = G relative to our G (0.01–100, log scale); y-axis = Λ relative to ours (0.01–100, log scale). Both axes log. Our universe is at (1, 1) — gold cross.',
+    conds:[
+      'Galaxies form: requires Λ_rel < 50 (else expansion too fast)',
+      'Stars form: requires G_rel > 0.05 (else no gravitational collapse)',
+      'Stars live >1 Gyr: requires G_rel < 15 (else over-luminous)',
+      'Stable large-scale structure: G_rel and Λ_rel both in viable range',
+    ],
+    score(x,y){
+      let s=0;
+      if(y<50) s++;
+      if(x>0.05) s++;
+      if(x<15) s++;
+      if(x>0.1&&x<10&&y<10) s++;
+      return s;
+    }
+  },
+  C: {
+    xLabel:'Strong coupling α_s (relative)', yLabel:'Proton mass m_p (relative)',
+    xLo:0.5, xHi:2.0, yLo:0.5, yHi:2.0,
+    ourX:1.0, ourY:1.0,
+    xLog:false, yLog:false,
+    xTicks:['0.5','0.875','1.25','1.625','2.0'],
+    desc:'Mode C: x-axis = strong coupling α_s relative to ours (0.5–2.0); y-axis = proton mass m_p relative to ours (0.5–2.0). Our universe at (1, 1).',
+    conds:[
+      'Protons stable: requires m_p_rel > 0.4 AND α_s_rel < 1.8',
+      'Deuterium forms in BBN: requires α_s_rel > 0.85',
+      'Carbon synthesised (triple-alpha): requires 0.85 < α_s_rel < 1.25',
+      'Life-supporting biochemistry: 0.7 < m_p_rel < 1.4 AND 0.9 < α_s_rel < 1.15',
+    ],
+    score(x,y){
+      let s=0;
+      if(y>0.4&&x<1.8) s++;
+      if(x>0.85) s++;
+      if(x>0.85&&x<1.25) s++;
+      if(x>0.9&&x<1.15&&y>0.7&&y<1.4) s++;
+      return s;
+    }
+  }
+};
+
+const st = { mode:'A' };
+function compute(){
+  st.mode = document.getElementById('mode-sel').value;
+  const M = MODES[st.mode];
+  document.getElementById('mode-desc').textContent = M.desc;
+
+  // Update conditions list
+  const cl = document.getElementById('cond-list'); cl.innerHTML='';
+  const ourScore = M.score(M.ourX, M.ourY);
+  M.conds.forEach((c,i)=>{
+    const d=document.createElement('div'); d.className='cond-row';
+    const dotClass = i < ourScore ? 'cond-dot cond-yes' : 'cond-dot cond-no';
+    d.innerHTML=`<span class="${dotClass}"></span><span class="cond-text">${c}</span>`;
+    cl.appendChild(d);
+  });
+
+  drawHeatmap(M);
+  saveHash();
+}
+
+function scoreToColor(s) {
+  const colors = ['#6b1010','#7a3010','#c47800','#0d6e58','#1dba90'];
+  return colors[Math.min(s,4)];
+}
+
+function drawHeatmap(M) {
+  const canvas = document.getElementById('heatmap');
+  const W = canvas.offsetWidth || 700, H = 440;
+  canvas.width = W*devicePixelRatio; canvas.height = H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={l:60,r:20,t:20,b:50};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  const N=80; // grid resolution
+  const imgData = ctx.createImageData(cw, ch);
+
+  // Fill background
+  ctx.fillStyle='rgba(7,5,21,0.95)'; ctx.fillRect(0,0,W,H);
+
+  // Compute score grid and draw pixels
+  let totalCells=0, viableCells=0, fullCells=0, sterileCells=0;
+  for(let iy=0;iy<ch;iy++){
+    for(let ix=0;ix<cw;ix++){
+      const fx = ix/cw, fy = (ch-1-iy)/ch;
+      let x,y;
+      if(M.xLog) x=Math.exp(Math.log(M.xLo)+fx*(Math.log(M.xHi)-Math.log(M.xLo)));
+      else x=M.xLo+fx*(M.xHi-M.xLo);
+      if(M.yLog) y=Math.exp(Math.log(M.yLo)+fy*(Math.log(M.yHi)-Math.log(M.yLo)));
+      else y=M.yLo+fy*(M.yHi-M.yLo);
+      const s=M.score(x,y);
+      totalCells++;
+      if(s>=2)viableCells++;
+      if(s===4)fullCells++;
+      if(s===0)sterileCells++;
+      const c=scoreToColor(s);
+      const r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);
+      const idx=(iy*cw+ix)*4;
+      imgData.data[idx]=r; imgData.data[idx+1]=g; imgData.data[idx+2]=b; imgData.data[idx+3]=255;
+    }
+  }
+  ctx.putImageData(imgData,pad.l,pad.t);
+
+  // Grid lines
+  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const x=pad.l+i/4*cw; ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+ch);ctx.stroke();
+    const y=pad.t+i/4*ch; ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cw,y);ctx.stroke();
+  }
+
+  // Axis labels
+  ctx.fillStyle='rgba(80,72,112,0.9)'; ctx.font='9px Space Mono, monospace';
+  ctx.textAlign='center';
+  M.xTicks.forEach((t,i)=>{
+    const x=pad.l+i/4*cw; ctx.fillText(t,x,H-5);
+  });
+  ctx.textAlign='right';
+  const yTicks=5; const yRange=M.yHi-M.yLo;
+  for(let i=0;i<=yTicks;i++){
+    const yFrac=i/yTicks;
+    let yVal;
+    if(M.yLog) yVal=Math.exp(Math.log(M.yLo)+yFrac*(Math.log(M.yHi)-Math.log(M.yLo)));
+    else yVal=M.yLo+yFrac*yRange;
+    const y=pad.t+ch-yFrac*ch;
+    const label = yVal>=1000?(yVal/1000).toFixed(1)+'k':yVal>=10?yVal.toFixed(0):yVal.toFixed(2);
+    ctx.fillText(label,pad.l-4,y+3);
+  }
+
+  // Y-axis title
+  ctx.save(); ctx.translate(12,pad.t+ch/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='rgba(144,136,192,0.7)'; ctx.textAlign='center';
+  ctx.fillText(M.yLabel,0,0); ctx.restore();
+  ctx.fillStyle='rgba(144,136,192,0.7)'; ctx.textAlign='center';
+  ctx.fillText(M.xLabel,pad.l+cw/2,H-16);
+
+  // Our universe cross
+  let ourXfrac, ourYfrac;
+  if(M.xLog) ourXfrac=(Math.log(M.ourX)-Math.log(M.xLo))/(Math.log(M.xHi)-Math.log(M.xLo));
+  else ourXfrac=(M.ourX-M.xLo)/(M.xHi-M.xLo);
+  if(M.yLog) ourYfrac=(Math.log(M.ourY)-Math.log(M.yLo))/(Math.log(M.yHi)-Math.log(M.yLo));
+  else ourYfrac=(M.ourY-M.yLo)/(M.yHi-M.yLo);
+  if(ourXfrac>=0&&ourXfrac<=1&&ourYfrac>=0&&ourYfrac<=1){
+    const cx=pad.l+ourXfrac*cw, cy=pad.t+(1-ourYfrac)*ch;
+    ctx.strokeStyle='rgba(255,200,64,0.9)'; ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx-10,cy);ctx.lineTo(cx+10,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy-10);ctx.lineTo(cx,cy+10);ctx.stroke();
+    ctx.fillStyle='rgba(255,200,64,0.7)';ctx.beginPath();ctx.arc(cx,cy,4,0,2*Math.PI);ctx.fill();
+    ctx.fillStyle='rgba(255,200,64,0.9)';ctx.font='bold 10px Space Mono,monospace';ctx.textAlign='left';
+    ctx.fillText('our universe',cx+7,cy-5);
+  }
+
+  // Stats update
+  const ourScore=M.score(M.ourX,M.ourY);
+  document.getElementById('s-frac').textContent=(viableCells/totalCells*100).toFixed(1)+'%';
+  document.getElementById('s-ours').textContent=ourScore+'/4';
+  document.getElementById('s-full').textContent=(fullCells/totalCells*100).toFixed(1)+'%';
+  document.getElementById('s-sterile').textContent=(sterileCells/totalCells*100).toFixed(1)+'%';
+
+  document.getElementById('our-box').innerHTML=`<strong>Our universe scores ${ourScore}/4</strong> in Mode ${st.mode}. ${fullCells/totalCells*100<5?'Life-viable universes are rare in this parameter space — our universe is in a narrow habitable window.':fullCells/totalCells*100>30?'Life-viable universes are relatively common in this parameter space.':'Our universe is in one of several life-viable regions.'} ${viableCells/totalCells*100 < 20 ? 'Only '+((viableCells/totalCells)*100).toFixed(1)+'% of this parameter space supports ≥2 life conditions.' : ''}`;
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+function saveHash(){window.location.hash='mode='+st.mode;}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));if(p.mode){st.mode=p.mode;document.getElementById('mode-sel').value=st.mode;}}
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{compute();});
+</script>
+</body>
+</html>

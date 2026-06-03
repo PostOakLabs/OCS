@@ -1,0 +1,335 @@
+<!--
+  Spider Stellar Engine Thrust Calculator
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Vidal, C. (2024). "The Spider Stellar Engine: a Fully Steerable Extraterrestrial
+      Design?" Journal of the British Interplanetary Society 77:156–166.
+      arXiv:2411.05038
+    - Vidal, C. (2016). "Stellivore Extraterrestrials? Binary Stars as Living Systems."
+      Acta Astronautica 128:251–256. DOI: 10.1016/j.actaastro.2016.06.038
+    - Fruchter, A. S. et al. (1988). Nature 333:237. DOI: 10.1038/333237a0
+
+  Site section: #fermi
+  Epistemic tiers: 🔬 Established physics (thrust equation, pulsar spin-down)
+                   ⚠ Theoretical (spider pulsar as propulsion system)
+                   ✦ Engineering fiction (galactic-scale travel)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spider Stellar Engine Thrust — Omega Centauri Society</title>
+<meta name="description" content="Vidal 2024: compute the thrust, acceleration, and galactic travel time of a spider pulsar stellar engine. Pulsed companion ablation → directed momentum → trajectory calculator.">
+<link rel="canonical" href="https://omegacentauri.me/tools/spider-stellar-engine.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 20%,rgba(240,160,32,.06),transparent 50%),radial-gradient(ellipse at 80% 70%,rgba(112,85,212,.05),transparent 55%)}
+a{color:var(--amber-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--amber-glow),var(--text-primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.05);color:var(--teal-bright)}
+.b-th{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.b-sp{border:1px solid var(--purple-mid);background:rgba(61,45,138,.05);color:var(--purple-glow)}
+.note-box{background:rgba(196,120,0,.05);border-left:3px solid var(--amber-bright);padding:13px 18px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.note-box strong{color:var(--amber-glow)}
+.main-grid{display:grid;grid-template-columns:340px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--amber-glow)}
+.sl-v.t{color:var(--teal-glow)}.sl-v.p{color:var(--purple-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].teal-t{background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range].purple-t{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(240,160,32,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pp{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.pp:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.pp.active{color:var(--void);background:var(--amber-bright);border-color:var(--amber-bright)}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.out-box.hl-a{border-color:var(--amber-bright)}.out-box.hl-t{border-color:var(--teal-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.out-val.a{color:var(--amber-glow)}.out-val.t{color:var(--teal-glow)}.out-val.p{color:var(--purple-glow)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.journey-box{background:rgba(61,45,138,.08);border:1px solid var(--border-subtle);border-radius:10px;padding:14px 18px}
+.jt{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.jr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(112,85,212,.1)}
+.jr:last-child{border-bottom:none}
+.jr-dest{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.jr-time{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--purple-glow)}
+.interp-box{background:rgba(29,186,144,.04);border:1px solid var(--border-teal);border-radius:9px;padding:14px 16px;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.interp-box strong{color:var(--text-primary)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Spider Stellar Engine Thrust Calculator</span>
+  <a href="starivore-energy.html" class="nav-link">← Starivore Energy</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>Spider Stellar Engine Thrust Calculator</h1>
+<p class="subtitle">Vidal 2024: pulsed companion ablation generates directed thrust — compute the propulsive force, system acceleration, and galactic travel timescales for any spider pulsar</p>
+<div class="badges">
+  <span class="badge b-sci">🔬 Established physics (rocket equation, pulsar spin-down)</span>
+  <span class="badge b-th">⚠ Theoretical (spider engine propulsion mechanism)</span>
+  <span class="badge b-sp">✦ Engineering fiction (galactic travel)</span>
+</div>
+<div class="note-box">
+  <strong>Vidal (2024)</strong> proposes that spider pulsars — binaries where the pulsar wind ablates a low-mass companion — are naturally configured as stellar engines. By ejecting companion mass preferentially during the "backward" orbital phase (when the companion trails the desired direction of motion), the system generates net thrust. The companion is both fuel and propellant; when it is exhausted the engine stops. This tool computes the propulsive budget for any pulsar–companion binary.
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pt">Pulsar Engine Parameters</div>
+    <div class="ps">Spin-down luminosity + pulsed ejection efficiency → ablation rate → thrust</div>
+    <div class="preset-bar">
+      <button class="pp active" id="p-b1957" onclick="applyPreset('b1957')">PSR B1957+20</button>
+      <button class="pp" id="p-j2051" onclick="applyPreset('j2051')">PSR J2051−0827</button>
+      <button class="pp" id="p-j1023" onclick="applyPreset('j1023')">PSR J1023+0038</button>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Period P (ms)</span><span class="sl-v" id="dv-P">1.607</span></div>
+      <input type="range" id="sl-P" min="-0.2" max="2.0" step="0.01" value="0.206" oninput="slChange('P',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Period derivative Ṗ (s/s)</span><span class="sl-v" id="dv-Pd">1.68×10⁻²⁰</span></div>
+      <input type="range" id="sl-Pd" min="-22" max="-15" step="0.05" value="-19.775" oninput="slChange('Pd',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Ejection efficiency η_ej (fraction of L_sd)</span><span class="sl-v" id="dv-eta">0.01</span></div>
+      <input type="range" id="sl-eta" class="teal-t" min="-4" max="-0.5" step="0.05" value="-2" oninput="slChange('eta',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.01%</span><span>1%</span><span>30%</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Pulsed fraction f_pulse</span><span class="sl-v" id="dv-fp">0.20</span></div>
+      <input type="range" id="sl-fp" class="purple-t" min="0.05" max="0.50" step="0.01" value="0.20" oninput="slChange('fp',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>5% (tight beam)</span><span>50% (half orbit)</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Companion & System</div>
+    <div class="ps">Companion provides propellant; ejection velocity sets thrust per unit mass rate</div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Companion mass M_c (M☉)</span><span class="sl-v" id="dv-Mc">0.025</span></div>
+      <input type="range" id="sl-Mc" min="-2" max="0.3" step="0.02" value="-1.602" oninput="slChange('Mc',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Companion radius R_c (R☉)</span><span class="sl-v" id="dv-Rc">0.14</span></div>
+      <input type="range" id="sl-Rc" min="-2" max="0.5" step="0.02" value="-0.854" oninput="slChange('Rc',this.value)">
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Ejection velocity v_ej (× v_esc)</span><span class="sl-v" id="dv-vej">1.0</span></div>
+      <input type="range" id="sl-vej" min="0.5" max="5" step="0.1" value="1.0" oninput="slChange('vej',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.5× escape</span><span>5× escape</span></div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pt">Propulsive Budget</div>
+    <div class="ps">Spin-down power → ablation rate → thrust → acceleration</div>
+    <div class="out-grid">
+      <div class="out-box hl-a">
+        <div class="out-label">Spin-down luminosity L_sd</div>
+        <div class="out-val a" id="out-Lsd">—</div>
+        <div class="out-unit">W</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Ablation power L_abl</div>
+        <div class="out-val" id="out-Labl">—</div>
+        <div class="out-unit">W (η_ej × L_sd)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Companion escape velocity</div>
+        <div class="out-val t" id="out-vesc">—</div>
+        <div class="out-unit">km/s</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Ejection velocity v_ej</div>
+        <div class="out-val t" id="out-vej-abs">—</div>
+        <div class="out-unit">km/s</div>
+      </div>
+      <div class="out-box hl-a">
+        <div class="out-label">Mass ablation rate Ṁ</div>
+        <div class="out-val a" id="out-Mdot">—</div>
+        <div class="out-unit">kg/s</div>
+      </div>
+      <div class="out-box hl-t">
+        <div class="out-label">Thrust F = Ṁ × v_ej × f_pulse</div>
+        <div class="out-val t" id="out-F">—</div>
+        <div class="out-unit">N</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">System mass M_sys</div>
+        <div class="out-val" id="out-Msys">—</div>
+        <div class="out-unit">kg</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Acceleration a_sys</div>
+        <div class="out-val p" id="out-acc">—</div>
+        <div class="out-unit">m/s² (= F/M)</div>
+      </div>
+    </div>
+    <div class="out-box" style="margin-bottom:10px">
+      <div class="out-label">Companion fuel lifetime</div>
+      <div class="out-val a" id="out-tlife">—</div>
+      <div class="out-unit">yr (M_c / Ṁ)</div>
+    </div>
+    <div class="out-box">
+      <div class="out-label">Total Δv over companion lifetime</div>
+      <div class="out-val t" id="out-dv">—</div>
+      <div class="out-unit">km/s</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Journey Time Estimator ✦</div>
+    <div class="ps">Constant-acceleration travel under thrust F for duration T_fuel (companion lifetime)</div>
+    <div class="journey-box">
+      <div class="jt">Travel time to destination (constant acceleration)</div>
+      <div class="jr"><span class="jr-dest">Omega Centauri (17,900 ly)</span><span class="jr-time" id="jt-oc">—</span></div>
+      <div class="jr"><span class="jr-dest">Galactic centre (26,000 ly)</span><span class="jr-time" id="jt-gc">—</span></div>
+      <div class="jr"><span class="jr-dest">Milky Way diameter (100,000 ly)</span><span class="jr-time" id="jt-mw">—</span></div>
+      <div class="jr"><span class="jr-dest">Andromeda (2.5 Mly)</span><span class="jr-time" id="jt-m31">—</span></div>
+    </div>
+    <div class="interp-box" id="interp-box" style="margin-top:10px">—</div>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What this tool does</h3>
+  <p>This tool implements the propulsion budget from Vidal (2024, JBIS 77:156). A spider pulsar irradiates its companion star with its wind at luminosity L_int. A fraction η_ej of that power accelerates companion material to ejection velocity v_ej. If ejection is pulsed — occurring only during the fraction f_pulse of the orbit when the companion is "behind" relative to the desired direction of travel — the momentum impulse is directed, producing net thrust.</p>
+  <h3>Key formulas</h3>
+  <p><strong>Ablation power:</strong> L_abl = η_ej × L_sd (the fraction of spin-down power that actually accelerates companion mass)</p>
+  <p><strong>Mass ablation rate:</strong> Ṁ = 2L_abl / v_ej² (from kinetic energy balance: L_abl = ½Ṁv_ej²)</p>
+  <p><strong>Thrust:</strong> F = Ṁ × v_ej × f_pulse (momentum per second, directed by pulsing)</p>
+  <p><strong>Companion escape velocity:</strong> v_esc = √(2GM_c/R_c) — sets the natural ejection floor</p>
+  <p><strong>System acceleration:</strong> a = F / M_sys where M_sys = M_pulsar (1.4 M☉) + M_companion</p>
+  <p><strong>Fuel lifetime:</strong> T_fuel = M_c / Ṁ</p>
+  <p><strong>Travel distance at constant acceleration:</strong> d = ½ a T_fuel² (non-relativistic; formula breaks down for Δv > 0.1c)</p>
+  <h3>Caveats</h3>
+  <p>The ejection efficiency η_ej is the largest source of uncertainty — Vidal (2024) does not give a single value. Typical estimates range from 0.1% to 10% of L_sd. The pulsed fraction f_pulse depends on the orbital geometry and the beaming of the pulsar wind. For maximum thrust, f_pulse ≈ 0.1–0.2 (narrowly collimated ejection window). Travel times assume constant acceleration throughout the companion lifetime, which is an overestimate for massive companions (the system mass decreases as fuel is consumed).</p>
+  <h3>References</h3>
+  <span class="cite">Vidal, C. (2024). "The Spider Stellar Engine." JBIS 77:156. arXiv:2411.05038</span>
+  <span class="cite">Vidal, C. (2016). "Stellivore Extraterrestrials?" Acta Astronautica 128:251. DOI: 10.1016/j.actaastro.2016.06.038</span>
+  <p class="ver">v1.0 — 2026-06-02</p>
+</div>
+</div>
+
+<script>
+const G=6.674e-11, c=3e8, M_sun=1.989e30, R_sun=6.957e8, I_canon=1e38, LY=9.461e15;
+const PRESETS={
+  b1957:{logP:0.206,logPd:-19.775,logMc:-1.602,logRc:-0.854,eta:-2,fp:0.20},
+  j2051:{logP:0.654,logPd:-19.896,logMc:-1.569,logRc:-1.222,eta:-2,fp:0.15},
+  j1023:{logP:0.227,logPd:-20.252,logMc:-0.699,logRc:-0.523,eta:-2,fp:0.25},
+};
+const st={logP:0.206,logPd:-19.775,logMc:-1.602,logRc:-0.854,eta:-2,fp:0.20,vej_mult:1.0};
+function applyPreset(k){Object.assign(st,PRESETS[k]);document.getElementById('sl-P').value=st.logP;document.getElementById('sl-Pd').value=st.logPd;document.getElementById('sl-Mc').value=st.logMc;document.getElementById('sl-Rc').value=st.logRc;document.getElementById('sl-eta').value=st.eta;document.getElementById('sl-fp').value=st.fp;['b1957','j2051','j1023'].forEach(id=>document.getElementById('p-'+id).classList.toggle('active',id===k));compute();saveHash();}
+function slChange(k,v){const vf=parseFloat(v);if(k==='P')st.logP=vf;if(k==='Pd')st.logPd=vf;if(k==='Mc')st.logMc=vf;if(k==='Rc')st.logRc=vf;if(k==='eta')st.eta=vf;if(k==='fp')st.fp=vf;if(k==='vej')st.vej_mult=vf;['b1957','j2051','j1023'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));compute();saveHash();}
+
+function supStr(n){const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];return(n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('');}
+function fmtSci(v,d){d=d||3;if(!isFinite(v)||v<=0)return'—';const e=Math.floor(Math.log10(v));const m=v/Math.pow(10,e);return m.toFixed(d-1)+'×10'+supStr(e);}
+function fmtTime(yr){if(yr>1e12)return fmtSci(yr,3)+' yr';if(yr>1e9)return(yr/1e9).toFixed(2)+' Gyr';if(yr>1e6)return(yr/1e6).toFixed(2)+' Myr';if(yr>1000)return(yr/1000).toFixed(1)+' kyr';return yr.toFixed(0)+' yr';}
+
+function compute(){
+  const P_ms=Math.pow(10,st.logP), Pdot=Math.pow(10,st.logPd);
+  const Mc_sol=Math.pow(10,st.logMc), Rc_sol=Math.pow(10,st.logRc);
+  const eta=Math.pow(10,st.eta);
+  const P_s=P_ms*1e-3;
+  const Lsd=4*Math.PI*Math.PI*I_canon*Pdot/(P_s*P_s*P_s);
+  const Mc_kg=Mc_sol*M_sun, Rc_m=Rc_sol*R_sun;
+  const v_esc=Math.sqrt(2*G*Mc_kg/Rc_m);
+  const v_ej=st.vej_mult*v_esc;
+  const L_abl=eta*Lsd;
+  const Mdot=2*L_abl/(v_ej*v_ej);
+  const F=Mdot*v_ej*st.fp;
+  const M_psr=1.4*M_sun;
+  const M_sys=M_psr+Mc_kg;
+  const acc=F/M_sys;
+  const yr=365.25*24*3600;
+  const T_fuel_s=Mc_kg/Mdot;
+  const T_fuel_yr=T_fuel_s/yr;
+  const dv=(acc*T_fuel_s)/1e3;
+
+  document.getElementById('dv-P').textContent=P_ms.toFixed(3);
+  document.getElementById('dv-Pd').textContent=fmtSci(Pdot,3);
+  document.getElementById('dv-eta').textContent=eta.toFixed(4);
+  document.getElementById('dv-fp').textContent=st.fp.toFixed(2);
+  document.getElementById('dv-Mc').textContent=Mc_sol.toFixed(3);
+  document.getElementById('dv-Rc').textContent=Rc_sol.toFixed(3);
+  document.getElementById('dv-vej').textContent=st.vej_mult.toFixed(1);
+  document.getElementById('out-Lsd').textContent=fmtSci(Lsd);
+  document.getElementById('out-Labl').textContent=fmtSci(L_abl);
+  document.getElementById('out-vesc').textContent=(v_esc/1e3).toFixed(1);
+  document.getElementById('out-vej-abs').textContent=(v_ej/1e3).toFixed(1);
+  document.getElementById('out-Mdot').textContent=fmtSci(Mdot);
+  document.getElementById('out-F').textContent=fmtSci(F);
+  document.getElementById('out-Msys').textContent=fmtSci(M_sys);
+  document.getElementById('out-acc').textContent=fmtSci(acc);
+  document.getElementById('out-tlife').textContent=fmtTime(T_fuel_yr);
+  document.getElementById('out-dv').textContent=dv.toFixed(3);
+
+  function journeyTime(d_ly){
+    const d_m=d_ly*LY;
+    if(acc<=0)return'—';
+    const t_half_s=Math.sqrt(2*d_m/acc);
+    return fmtTime(t_half_s/yr*2);
+  }
+  document.getElementById('jt-oc').textContent=journeyTime(17900);
+  document.getElementById('jt-gc').textContent=journeyTime(26000);
+  document.getElementById('jt-mw').textContent=journeyTime(100000);
+  document.getElementById('jt-m31').textContent=journeyTime(2.5e6);
+
+  const ib=document.getElementById('interp-box');
+  const F_compare=F<1e-3?'sub-milliNewton':F<1?'milliNewton-range':F<1e3?'Newton-range':'kN-range';
+  ib.innerHTML=`Net thrust is <strong>${fmtSci(F)} N</strong> (${F_compare}). System acceleration: <strong>${fmtSci(acc)} m/s²</strong>. The companion provides ${fmtTime(T_fuel_yr)} of fuel at this ablation rate; total Δv accumulated: <strong>${dv.toFixed(3)} km/s</strong>. At constant acceleration, OC is reachable in ${journeyTime(17900)} — <strong style="color:${T_fuel_yr>parseFloat(journeyTime(17900))?'var(--teal-glow)':'var(--red-bright)'}">${T_fuel_yr*yr/2>Math.sqrt(2*17900*LY/acc)?'companion exhausted before arrival':'sufficient fuel for one-way trip to OC'}</strong>.`;
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+function saveHash(){window.location.hash=`logP=${st.logP.toFixed(3)}&logPd=${st.logPd.toFixed(3)}&logMc=${st.logMc.toFixed(3)}&logRc=${st.logRc.toFixed(3)}&eta=${st.eta.toFixed(2)}&fp=${st.fp.toFixed(2)}&vej=${st.vej_mult.toFixed(1)}`;}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));const map={logP:'sl-P',logPd:'sl-Pd',logMc:'sl-Mc',logRc:'sl-Rc',eta:'sl-eta',fp:'sl-fp',vej:'sl-vej'};const smap={logP:'logP',logPd:'logPd',logMc:'logMc',logRc:'logRc',eta:'eta',fp:'fp',vej:'vej_mult'};Object.entries(map).forEach(([sk,eid])=>{if(p[sk]!==undefined){st[smap[sk]]=parseFloat(p[sk]);document.getElementById(eid).value=st[smap[sk]];}});}
+window.addEventListener('load',()=>{loadHash();compute();});
+</script>
+</body>
+</html>

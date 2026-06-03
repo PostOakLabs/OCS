@@ -1,0 +1,326 @@
+<!--
+  Grabby Aliens Expansion Model
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Hanson, R., Martin, D., McCarter, C., & Paulson, L. (2021).
+      "If Loud Aliens Explain Human Earliness, Quiet Aliens Are Also Rare."
+      ApJ 922:182. DOI: 10.3847/1538-4357/ac2369
+    - Grabby Aliens model: https://grabbyaliens.com/
+    - For the power-law hard-steps derivation: Carter, B. (1983). Phil. Trans.
+      R. Soc. London A310:347.
+
+  Site section: #fermi
+  Epistemic tiers: ⚠ Theoretical (grabby aliens model — published, quantitative, not consensus)
+                   🔬 Established physics (power-law appearance rate from Earth history)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grabby Aliens Expansion Model — Omega Centauri Society</title>
+<meta name="description" content="Robin Hanson's grabby aliens model: power-law civilisation appearance rate × light-speed expansion. Compute expected N_GA, nearest distance, volume fraction colonised, and date of first contact.">
+<link rel="canonical" href="https://omegacentauri.me/tools/grabby-aliens.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 20%,rgba(208,64,64,.05),transparent 50%),radial-gradient(ellipse at 85% 75%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--red-bright),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.05);color:var(--teal-bright)}
+.b-th{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.main-grid{display:grid;grid-template-columns:310px 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:15px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--red-bright)}
+.sl-v.a{color:var(--amber-glow)}.sl-v.p{color:var(--purple-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--red-mid),var(--red-bright))}
+input[type=range].amber-t{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-t{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(208,64,64,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.out-box.hl-r{border-color:var(--red-bright)}.out-box.hl-a{border-color:var(--amber-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.out-val.r{color:var(--red-bright)}.out-val.a{color:var(--amber-glow)}.out-val.t{color:var(--teal-glow)}.out-val.p{color:var(--purple-glow)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:10px;margin-bottom:14px}
+.ct{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
+canvas{display:block;width:100%}
+.fermi-box{background:rgba(61,45,138,.07);border:1px solid var(--border-subtle);border-radius:9px;padding:14px 16px;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.fermi-box strong{color:var(--text-primary)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:10px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:12px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">Grabby Aliens Expansion Model</span>
+  <a href="great-filter.html" class="nav-link">← Great Filter</a>
+  <a href="drake-monte-carlo.html" class="nav-link">Drake MC</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>Grabby Aliens Expansion Model</h1>
+<p class="subtitle">Hanson et al. 2021: civilisations appear at rate ∝ t^n and expand at fraction s of c — compute the volume fraction colonised, expected nearest distance, and date of first contact</p>
+<div class="badges">
+  <span class="badge b-th">⚠ Theoretical (Hanson et al. 2021 model)</span>
+  <span class="badge b-sci">🔬 Established (power-law from Earth evolutionary history)</span>
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel">
+    <div class="pt">Model Parameters</div>
+    <div class="ps">Three parameters fully specify the grabby aliens model: n (hard steps), s (expansion speed as fraction of c), and k (appearance rate normalization)</div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Hard steps n</span><span class="sl-v" id="dv-n">6</span></div>
+      <input type="range" id="sl-n" min="2" max="12" step="0.5" value="6" oninput="slChange('n',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>2 (fast)</span><span>6 (Hanson est.)</span><span>12 (slow)</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Expansion speed s (fraction of c)</span><span class="sl-v" id="dv-s" class="a">0.50</span></div>
+      <input type="range" id="sl-s" class="amber-t" min="0.01" max="0.99" step="0.01" value="0.50" oninput="slChange('s',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>1% c</span><span>50%c</span><span>99%c</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Appearance rate constant log₁₀(k)</span><span class="sl-v" id="dv-k" class="p">−27.0</span></div>
+      <input type="range" id="sl-k" class="purple-t" min="-35" max="-18" step="0.5" value="-27" oninput="slChange('k',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>10⁻³⁵</span><span>10⁻²⁷</span><span>10⁻¹⁸</span></div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:6px;line-height:1.5">Appearance rate: dN/dV/dt = k × t^(n−1) [Gly⁻³ Gyr⁻¹]. Hanson et al. estimate n ≈ 6 from Earth's hard-step history. The constant k is calibrated by assuming ~1 GA in the Hubble volume just ahead of us.</div>
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(208,64,64,.05);border:1px solid rgba(138,32,32,.3);border-radius:8px">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:6px">OBSERVATIONAL CONSTRAINT</div>
+      <div style="font-size:14px;color:var(--text-secondary)">We observe <em>no grabby alien volumes</em> in our sky → f_GA < 1. The tool shows whether current parameters violate this constraint.</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="panel" style="margin-bottom:14px">
+    <div class="pt">Grabby Aliens Census</div>
+    <div class="ps">Current snapshot at t = 13.8 Gyr</div>
+    <div class="out-grid">
+      <div class="out-box hl-r">
+        <div class="out-label">N_GA in Hubble volume</div>
+        <div class="out-val r" id="out-NGA">—</div>
+        <div class="out-unit">grabby civilisations (total ever)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Mean GA origin age</div>
+        <div class="out-val a" id="out-tGA">—</div>
+        <div class="out-unit">Gyr after Big Bang</div>
+      </div>
+      <div class="out-box hl-a">
+        <div class="out-label">Fraction of universe colonised</div>
+        <div class="out-val a" id="out-fGA">—</div>
+        <div class="out-unit">of observable volume</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Observable constraint?</div>
+        <div class="out-val" id="out-ok">—</div>
+        <div class="out-unit">f_GA should be ≲ 1</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Nearest GA distance</div>
+        <div class="out-val p" id="out-dGA">—</div>
+        <div class="out-unit">Gly (expected nearest)</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Time to first contact</div>
+        <div class="out-val p" id="out-tcontact">—</div>
+        <div class="out-unit">Gyr from now</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:14px">
+    <div class="pt">Expansion Map (schematic, 2D projection)</div>
+    <div class="ps">Expanding discs represent GA volumes at t = 13.8 Gyr. Our position (⊕) is at centre.</div>
+    <div class="chart-wrap" style="padding:0">
+      <canvas id="exp-canvas" height="260"></canvas>
+    </div>
+  </div>
+
+  <div class="fermi-box" id="fermi-box">—</div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What the model says</h3>
+  <p>Hanson et al. (2021) divide alien civilisations into "grabby" (those that expand rapidly, making visible and permanent changes to the volumes they enter) and "quiet" (those that stay home and are hard to detect). Grabby aliens are important because their expanding spheres prevent the emergence of other intelligent life in the captured volume.</p>
+  <p>The model has three parameters: (1) n, the number of "hard steps" that evolution must pass through to produce intelligence — estimated from Earth history at ~6; (2) s, the expansion speed as a fraction of c; and (3) k, the rate at which grabby civilisations appear per unit volume per unit time.</p>
+  <h3>Key formulas</h3>
+  <p><strong>Appearance rate:</strong> dN/dV/dt = k × t^(n−1) [Gly⁻³ Gyr⁻¹], giving a power-law increase with cosmic time. The total number of GAs born in the Hubble volume by time t is N(t) ≈ k × t^n × V_H / n.</p>
+  <p><strong>Volume per GA:</strong> V_GA(t_born) = (4π/3) × (s × c × (t_now − t_born))³. GAs born earlier claim more volume today.</p>
+  <p><strong>Universe fraction claimed:</strong> f = N_GA × V_GA / V_H (summed over the distribution of birth times). The observation that we haven't been colonised constrains f ≲ 1.</p>
+  <p><strong>Nearest GA distance:</strong> d ≈ n_GA^(−1/3) where n_GA = N_GA/V_H.</p>
+  <p><strong>Time to first contact:</strong> t_contact = d/s (the expanding front of the nearest GA reaches us).</p>
+  <h3>Calibration</h3>
+  <p>Hanson et al. calibrate k by assuming that our appearance date (t ≈ 13.8 Gyr) is typical of quiet civilisations, who appear in the unclaimed fraction of the universe at a rate proportional to t^(n−1). This constrains k × t_now^n / (n+1) ≈ 1/V_H (roughly one GA ahead of us in our past light cone). Use this to estimate k: at n=6, k ≈ 10⁻²⁷ Gly⁻³ Gyr⁻¹.</p>
+  <h3>Connection to OCS themes</h3>
+  <p>If grabby aliens exist, their expanding spheres would encounter any IMBH-based civilisation in Omega Centauri (if one were there). The expected time-to-contact at s=0.5c and nearest distance ~1 Gly is ~2 Gyr — potentially comparable to the lifetime of an MTH civilisation aestivating near OC's IMBH.</p>
+  <h3>References</h3>
+  <span class="cite">Hanson, R. et al. (2021). ApJ 922:182. DOI: 10.3847/1538-4357/ac2369</span>
+  <span class="cite">Carter, B. (1983). Phil. Trans. R. Soc. London A310:347. (Hard steps model)</span>
+  <p class="ver">v1.0 — 2026-06-02</p>
+</div>
+</div>
+
+<script>
+const GYR=3.156e16, GLY=9.461e24, C=3e8;
+const t_now=13.8; // Gyr
+const V_H = (4/3)*Math.PI*Math.pow(45,3); // Hubble volume in Gly^3 (observable ~45 Gly radius)
+
+const st={n:6, s:0.50, logk:-27};
+function slChange(k,v){const vf=parseFloat(v);if(k==='n')st.n=vf;if(k==='s')st.s=vf;if(k==='k')st.logk=vf;compute();saveHash();}
+
+function supStr(n){const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];return(n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('');}
+function fmtSci(v,d){d=d||3;if(!isFinite(v)||v<=0)return'—';const e=Math.floor(Math.log10(v));const m=v/Math.pow(10,e);if(Math.abs(m-1)<0.05)return'10'+supStr(e);return m.toFixed(d-1)+'×10'+supStr(e);}
+
+function compute(){
+  document.getElementById('dv-n').textContent=st.n.toFixed(1);
+  document.getElementById('dv-s').textContent=st.s.toFixed(2);
+  document.getElementById('dv-k').textContent=st.logk.toFixed(1);
+
+  const k=Math.pow(10,st.logk); // Gly^-3 Gyr^-1 (appearance rate per volume per time)
+  // Total GAs born by t_now: N = k*t_now^n/n * V_H (approximate, ignoring expansion effects)
+  const N_GA = k * Math.pow(t_now, st.n) / st.n * V_H;
+  // Mean formation time of GAs (from power law): <t> = n/(n+1) * t_now
+  const t_mean = st.n/(st.n+1) * t_now;
+  // Mean age of GA: t_now - t_mean
+  const t_age = t_now - t_mean;
+  // Volume per GA (using mean age): V_GA = (4pi/3)*(s*c*(t_age in Gly))^3
+  const r_GA = st.s * t_age; // in Gly (since speed is fraction of c, and c * 1 Gyr = 1 Gly)
+  const V_GA_each = (4/3)*Math.PI*Math.pow(r_GA, 3); // Gly^3
+  // Total fraction colonised
+  const f_GA = Math.min(N_GA * V_GA_each / V_H, 1.0);
+  // Number density
+  const n_GA = N_GA / V_H; // per Gly^3
+  // Nearest GA: mean nearest-neighbour in 3D Poisson process = Gamma(4/3)/(4pi*n_GA/3)^(1/3)
+  const d_near = n_GA>0 ? 0.8873 / Math.pow((4*Math.PI*n_GA/3), 1/3) : Infinity; // Gly
+  // Time to contact: distance / speed (GA expanding at s*c toward us)
+  const t_contact = d_near / st.s; // Gyr
+
+  document.getElementById('out-NGA').textContent = N_GA>=1e6?fmtSci(N_GA):Math.round(N_GA).toLocaleString();
+  document.getElementById('out-tGA').textContent = t_mean.toFixed(2);
+  document.getElementById('out-fGA').textContent = (f_GA*100).toFixed(2)+'%';
+  const okEl=document.getElementById('out-ok');
+  okEl.textContent = f_GA<=1.0?'✓ Consistent':'⚠ Violates obs.';
+  okEl.style.color = f_GA<=0.5?'var(--teal-glow)':f_GA<=1?'var(--amber-glow)':'var(--red-bright)';
+  document.getElementById('out-dGA').textContent = d_near>1e4?'>10⁴':d_near.toFixed(2);
+  document.getElementById('out-tcontact').textContent = t_contact>1e4?'>10⁴ Gyr':t_contact.toFixed(2);
+
+  // Fermi interpretation
+  const fb=document.getElementById('fermi-box');
+  let msg;
+  if(f_GA > 1){
+    msg=`<strong>⚠ Parameters inconsistent with observations:</strong> at these settings, ${(f_GA*100).toFixed(0)}% of the observable universe would already be colonised — but we see no such signatures. Reduce k or s, or increase n.`;
+  } else if(f_GA > 0.1) {
+    msg=`<strong>⚠ Marginal:</strong> ${(f_GA*100).toFixed(1)}% of the universe is colonised. Nearest GA at ${d_near.toFixed(1)} Gly, contact in ${t_contact.toFixed(1)} Gyr. We are already within range of several GA volumes — their absence is significant.`;
+  } else {
+    msg=`<strong>⊙ Consistent with silence:</strong> only ${(f_GA*100).toFixed(3)}% of the universe is colonised. Nearest GA is at ${d_near.toFixed(1)} Gly — first contact expected in ${t_contact.toFixed(1)} Gyr. The Fermi silence is not surprising at these parameters.`;
+  }
+  fb.innerHTML=msg;
+
+  drawMap(N_GA, r_GA, d_near, f_GA);
+}
+
+function drawMap(N_GA, r_GA_gly, d_near, f_GA) {
+  const canvas=document.getElementById('exp-canvas');
+  const W=canvas.offsetWidth||600, H=260;
+  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio);
+  ctx.fillStyle='rgba(7,5,21,0.95)'; ctx.fillRect(0,0,W,H);
+
+  // Observable universe boundary
+  const cx=W/2, cy=H/2;
+  const R_obs=Math.min(W,H)*0.45; // pixels for 45 Gly
+  const scale=R_obs/45; // px per Gly
+
+  ctx.strokeStyle='rgba(112,85,212,0.15)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(cx,cy,R_obs,0,2*Math.PI); ctx.stroke();
+  ctx.fillStyle='rgba(144,136,192,0.5)'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='center';
+  ctx.fillText('Observable universe boundary (45 Gly)',cx,cy-R_obs-5);
+
+  // Generate pseudo-random GA positions using seeded-ish approach
+  const seed = Math.round(st.n*100 + st.s*100 + st.logk*10);
+  const rng = (i) => {const x=Math.sin(seed+i*7.3)*43758.5453;return x-Math.floor(x);};
+  const N_draw = Math.min(Math.round(N_GA), 50);
+  const r_px = r_GA_gly * scale;
+
+  for(let i=0;i<N_draw;i++){
+    // Random position in observable universe
+    const phi=rng(i*3)*2*Math.PI;
+    const r_rand=rng(i*3+1)*R_obs;
+    const gx=cx+r_rand*Math.cos(phi), gy=cy+r_rand*Math.sin(phi);
+    // Distance from Earth in Gly
+    const dist=(r_rand/scale);
+    // Only expand if born before t_now
+    const r_draw=Math.max(r_px*0.8,3);
+    const alpha=Math.min(0.3, 0.05+0.25*(r_draw/R_obs));
+    ctx.fillStyle=`rgba(208,64,64,${alpha})`;
+    ctx.beginPath(); ctx.arc(gx,gy,r_draw,0,2*Math.PI); ctx.fill();
+    ctx.strokeStyle='rgba(208,64,64,0.4)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.arc(gx,gy,r_draw,0,2*Math.PI); ctx.stroke();
+  }
+  if(N_GA>50){ctx.fillStyle='rgba(208,64,64,0.6)';ctx.font='10px Space Mono, monospace';ctx.textAlign='center';ctx.fillText(`(${Math.round(N_GA).toLocaleString()} GAs total; ${N_draw} shown)`,cx,H-8);}
+
+  // Nearest GA ring
+  if(d_near<45){
+    const r_near=d_near*scale;
+    ctx.strokeStyle='rgba(255,200,64,0.4)'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,r_near,0,2*Math.PI); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,200,64,0.6)'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='left';
+    ctx.fillText('nearest GA',cx+r_near*Math.cos(-0.3)+4,cy+r_near*Math.sin(-0.3));
+  }
+
+  // Earth marker
+  ctx.fillStyle='var(--teal-glow)'; ctx.beginPath(); ctx.arc(cx,cy,5,0,2*Math.PI); ctx.fill();
+  ctx.fillStyle='var(--text-primary)'; ctx.font='bold 10px Space Mono, monospace'; ctx.textAlign='center';
+  ctx.fillText('⊕',cx,cy-8);
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+function saveHash(){window.location.hash=`n=${st.n}&s=${st.s.toFixed(2)}&logk=${st.logk}`;}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));if(p.n){st.n=parseFloat(p.n);document.getElementById('sl-n').value=st.n;}if(p.s){st.s=parseFloat(p.s);document.getElementById('sl-s').value=st.s;}if(p.logk){st.logk=parseFloat(p.logk);document.getElementById('sl-k').value=st.logk;}}
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{compute();});
+</script>
+</body>
+</html>

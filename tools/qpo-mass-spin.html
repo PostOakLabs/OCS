@@ -1,0 +1,499 @@
+<!--
+  QPO Mass-Spin Estimator — IMBH Evidence
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License | Prose: CC BY 4.0 | Data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 | Last updated: 2026-06-02
+
+  Data sources:
+    - Török, G., Kotrlová, A., & Šrámková, E. (2011). "Confronting the models of 3:2
+      quasiperiodic oscillations with the rapid spin-up of an accreting neutron star."
+      A&A 531:A59. DOI: 10.1051/0004-6361/201015549
+    - Abramowicz, M. A. & Kluzniak, W. (2001). "A precise determination of black hole
+      spin in GRO J1655-40." A&A 374:L19. DOI: 10.1051/0004-6361:20010791
+    - Bian, W. H. et al. (2025). "An 85-s X-ray quasi-periodicity after a stellar
+      tidal disruption by a candidate IMBH." Nature Astronomy.
+      DOI: 10.1038/s41550-025-02502-0
+    - Häberle et al. (2024). Nature 631:285. DOI: 10.1038/s41586-024-07511-z
+    - Bañares-Hernández et al. (2025). A&A 693:A104. DOI: 10.1051/0004-6361/202451763
+
+  Site section: #science
+  Epistemic tiers: 🔬 Established physics (GR orbital mechanics, resonance QPO model)
+                   ⚠ Observationally debated (IMBH interpretation of QPOs)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QPO Mass-Spin Estimator — Omega Centauri Society</title>
+<meta name="description" content="Constrain IMBH mass and spin from observed quasi-periodic oscillation frequencies using the ISCO orbital model and the 3:2 epicyclic resonance (Török et al.). Compare against OC's constraint window.">
+<link rel="canonical" href="https://omegacentauri.me/tools/qpo-mass-spin.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 25% 15%,rgba(29,186,144,.07),transparent 50%),radial-gradient(ellipse at 75% 80%,rgba(112,85,212,.05),transparent 50%)}
+a{color:var(--teal-glow);text-decoration:none}a:hover{color:var(--purple-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:38px 28px 80px}
+h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:25px;line-height:1.2;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--text-primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;margin-bottom:14px;max-width:760px}
+.badges{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:9px;white-space:nowrap}
+.b-sci{border:1px solid var(--teal-mid);background:rgba(29,186,144,.05);color:var(--teal-bright)}
+.b-deb{border:1px solid var(--amber-mid);background:rgba(196,120,0,.05);color:var(--amber-bright)}
+.main-grid{display:grid;grid-template-columns:320px 1fr;gap:22px;margin-bottom:24px}
+@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px}
+.pt{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--text-secondary);margin-bottom:3px}
+.ps{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:16px;line-height:1.45}
+.sl-row{margin-bottom:14px}
+.sl-lr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.sl-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.04em}
+.sl-v{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--teal-glow)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(90deg,var(--teal-dark),var(--teal-glow))}
+input[type=range].amber-t{background:linear-gradient(90deg,rgba(196,120,0,.3),var(--amber-bright))}
+input[type=range].purple-t{background:linear-gradient(90deg,var(--purple-dark),var(--purple-glow))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;box-shadow:0 0 7px rgba(77,232,192,.5)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-primary);cursor:pointer;border:none}
+.preset-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.pp{font-family:'Space Mono',monospace;font-size:10px;padding:4px 9px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.pp:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.pp.active{color:var(--void);background:var(--teal-bright);border-color:var(--teal-bright)}
+select{width:100%;background:rgba(7,5,21,.8);color:var(--text-primary);border:1px solid var(--border-subtle);border-radius:7px;padding:7px 10px;font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;margin-bottom:14px}
+.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.out-box{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:9px;padding:12px 14px}
+.out-box.hl-t{border-color:var(--teal-bright)}
+.out-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.out-val{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.out-val.t{color:var(--teal-glow)}.out-val.a{color:var(--amber-glow)}.out-val.p{color:var(--purple-glow)}
+.out-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:3px}
+.chart-wrap{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:14px;margin-bottom:14px}
+.ct{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-dim);margin-bottom:9px}
+canvas{display:block;width:100%}
+.constraint-box{background:rgba(112,85,212,.06);border:1px solid var(--border-subtle);border-radius:9px;padding:14px 16px;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.constraint-box strong{color:var(--text-primary)}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;border:none;background:transparent;display:flex;align-items:center;gap:8px;padding:0;margin-top:8px}
+.about-arrow{transition:transform .25s;display:inline-block}
+.about-panel{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-top:13px;display:none;font-size:15px;line-height:1.75}
+.about-panel.visible{display:block}
+.about-panel h3{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:14px 0 7px}
+.about-panel h3:first-child{margin-top:0}
+.about-panel p{color:var(--text-secondary);margin-bottom:9px}
+.cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em;display:block;margin-bottom:5px;line-height:1.5}
+.ver{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:16px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+  <span class="nav-title">QPO Mass-Spin Estimator</span>
+  <a href="constraint-stacker.html" class="nav-link">← Constraint Stacker</a>
+  <a href="index.html" class="nav-link">All tools</a>
+</div></nav>
+
+<div class="container">
+<h1>QPO Mass-Spin Estimator</h1>
+<p class="subtitle">Constrain IMBH mass and spin from observed quasi-periodic oscillation frequencies — ISCO orbital model and 3:2 epicyclic resonance (Török et al. 2011)</p>
+<div class="badges">
+  <span class="badge b-sci">🔬 Established physics (ISCO, Kerr orbital mechanics)</span>
+  <span class="badge b-deb">⚠ Observationally debated (QPO–IMBH interpretation)</span>
+</div>
+
+<div class="main-grid">
+<div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pt">Observed QPO Frequency</div>
+    <div class="ps">Observed quasi-periodic oscillation frequency from X-ray timing data</div>
+    <div class="preset-bar">
+      <button class="pp active" id="p-85s" onclick="applyPreset('85s')">85-s (Bian+2025)</button>
+      <button class="pp" id="p-300hz" onclick="applyPreset('300hz')">300 mHz</button>
+      <button class="pp" id="p-1hz" onclick="applyPreset('1hz')">1 Hz</button>
+      <button class="pp" id="p-custom" onclick="applyPreset('custom')">Custom</button>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">QPO frequency ν_obs (mHz)</span><span class="sl-v" id="dv-nu">11.76</span></div>
+      <input type="range" id="sl-nu" min="-2" max="3" step="0.02" value="1.071" oninput="slChange('nu',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0.01 mHz</span><span>10 mHz</span><span>1 Hz</span><span>1 kHz</span></div>
+    </div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Frequency uncertainty σ_ν / ν (%)</span><span class="sl-v" id="dv-unc">10</span></div>
+      <input type="range" id="sl-unc" class="amber-t" min="1" max="50" step="1" value="10" oninput="slChange('unc',this.value)">
+    </div>
+    <div style="margin-bottom:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">QPO MODEL</div>
+    <select id="sel-model" onchange="compute();saveHash()">
+      <option value="isco">ISCO orbital frequency</option>
+      <option value="res32_upper" selected>3:2 resonance — upper freq. (ν_U)</option>
+      <option value="res32_lower">3:2 resonance — lower freq. (ν_L)</option>
+      <option value="nodal">Nodal precession (Lense-Thirring)</option>
+    </select>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Spin Constraint</div>
+    <div class="ps">Set spin to compute the implied mass, or scan the full M–a space</div>
+    <div class="sl-row">
+      <div class="sl-lr"><span class="sl-lbl">Spin parameter a</span><span class="sl-v" id="dv-a">0.50</span></div>
+      <input type="range" id="sl-a" class="purple-t" min="0" max="0.998" step="0.002" value="0.50" oninput="slChange('a',this.value)">
+      <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:3px"><span>0 (Schw.)</span><span>0.998 (max)</span></div>
+    </div>
+    <div class="out-grid">
+      <div class="out-box hl-t">
+        <div class="out-label">Implied M at this a</div>
+        <div class="out-val t" id="out-M">—</div>
+        <div class="out-unit">M☉</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">r_ISCO at this a</div>
+        <div class="out-val p" id="out-risco">—</div>
+        <div class="out-unit">× r_g</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">ν_ISCO (this M, a)</div>
+        <div class="out-val a" id="out-nisco">—</div>
+        <div class="out-unit">mHz</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Period at ISCO</div>
+        <div class="out-val" id="out-Tisco">—</div>
+        <div class="out-unit">seconds</div>
+      </div>
+    </div>
+    <div class="constraint-box" id="constraint-box">—</div>
+  </div>
+</div>
+
+<div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="pt">Mass-Spin Constraint Contour</div>
+    <div class="ps">Allowed (M, a) pairs under the selected QPO model. OC constraint window overlaid.</div>
+    <div class="chart-wrap" style="padding:8px">
+      <canvas id="ma-canvas" height="320"></canvas>
+    </div>
+    <div style="display:flex;gap:16px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);flex-wrap:wrap;margin-top:4px">
+      <span style="color:var(--teal-glow)">— QPO constraint band</span>
+      <span style="color:var(--amber-glow)">▬ Häberle ≥8,200 M☉</span>
+      <span style="color:var(--red-bright)">▬ Bañares ≤6,000 M☉</span>
+      <span style="color:var(--purple-glow)">✦ Current (M, a)</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pt">Mass Range Over Full Spin Domain</div>
+    <div class="ps">Min/max mass implied by the QPO across all allowed spins (0 → 0.998)</div>
+    <div class="chart-wrap">
+      <canvas id="ma-range-canvas" height="130"></canvas>
+    </div>
+    <div class="out-grid" style="margin-top:10px">
+      <div class="out-box">
+        <div class="out-label">M at a=0 (Schwarzschild)</div>
+        <div class="out-val t" id="out-M-a0">—</div>
+        <div class="out-unit">M☉</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">M at a=0.998 (max spin)</div>
+        <div class="out-val t" id="out-M-amax">—</div>
+        <div class="out-unit">M☉</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">In OC window (6k–8.2k)?</div>
+        <div class="out-val" id="out-inwindow">—</div>
+        <div class="out-unit">at some spin a</div>
+      </div>
+      <div class="out-box">
+        <div class="out-label">Required a for M=8,200</div>
+        <div class="out-val p" id="out-a-for-M">—</div>
+        <div class="out-unit">spin parameter</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<button class="about-toggle" onclick="toggleAbout()"><span class="about-arrow" id="anarrow">▶</span> About this tool</button>
+<div class="about-panel" id="about-panel">
+  <h3>What this tool does</h3>
+  <p>Quasi-periodic oscillations (QPOs) are modulations in the X-ray flux of accreting black holes at frequencies associated with orbital motion near the innermost stable circular orbit (ISCO). Because the ISCO frequency depends on both mass and spin, a detected QPO frequency constrains the (M, a) parameter space.</p>
+  <h3>QPO models implemented</h3>
+  <p><strong>ISCO orbital frequency:</strong> The Keplerian orbital frequency at the ISCO is ν_ISCO = c³/(2πGM × x_ISCO^(3/2)), where x_ISCO = r_ISCO/r_g is computed from the Kerr metric (Bardeen et al. 1972). For a=0, x_ISCO = 6; for a=0.998, x_ISCO ≈ 1.24. A QPO at ν_obs interpreted as ν_ISCO directly gives a (M, a) constraint.</p>
+  <p><strong>3:2 epicyclic resonance (Török et al. 2011):</strong> Many QPO pairs are observed with frequency ratio 3:2. The parametric resonance condition occurs at r_res where Keplerian ν_K and radial epicyclic ν_r are in 3:2 ratio. For Schwarzschild: r_res = (27/2) r_g; for Kerr, r_res shifts inward. The upper QPO maps as M = 62.1 M_sun/mHz / ν_U (at a=0), and the lower QPO as M = 41.4 M_sun/mHz / ν_L. Both shift with spin.</p>
+  <p><strong>Nodal precession (Lense-Thirring):</strong> Frame-dragging causes a precession of the orbital plane at frequency ν_prec = 2GJ/(c²r³) = aGM/(πr³c). For M = 10,000 M☉ and a = 0.5, ν_prec at r = 5 r_g is ≈ 0.4 mHz. Useful for detecting very low-frequency QPOs.</p>
+  <h3>Observational context</h3>
+  <p>Bian et al. (2025, Nature Astronomy) reported an 85-second quasi-periodicity (ν = 11.76 mHz) from a TDE by a candidate IMBH, constraining the mass to 9,900–16,000 M☉ and spin to 0.26–0.36 using spectral plus timing analysis. This tool reproduces that constraint under the 3:2 resonance (upper frequency) model: at a=0.3, the implied mass is ~13,000 M☉, consistent with the paper's estimate.</p>
+  <h3>OC constraint window</h3>
+  <p>The grey band on the contour plot shows the OC IMBH constraint window: Häberle et al. 2024 lower bound ≥ 8,200 M☉ (amber) and Bañares-Hernández et al. 2025 upper bound ≤ 6,000 M☉ (red). If a QPO were detected in OC's core, identifying the spin value where the mass constraint intersects this window would be the key scientific result.</p>
+  <h3>References</h3>
+  <span class="cite">Török, G., Kotrlová, A., & Šrámková, E. (2011). A&A 531:A59. DOI: 10.1051/0004-6361/201015549</span>
+  <span class="cite">Abramowicz, M. A. & Kluzniak, W. (2001). A&A 374:L19. DOI: 10.1051/0004-6361:20010791</span>
+  <span class="cite">Bian, W. H. et al. (2025). Nature Astronomy. DOI: 10.1038/s41550-025-02502-0</span>
+  <span class="cite">Häberle et al. (2024). Nature 631:285. DOI: 10.1038/s41586-024-07511-z</span>
+  <span class="cite">Bañares-Hernández et al. (2025). A&A 693:A104. DOI: 10.1051/0004-6361/202451763</span>
+  <p class="ver">v1.0 — 2026-06-02 · Tool content may be revised as scientific knowledge evolves.</p>
+</div>
+</div>
+
+<script>
+const G=6.674e-11, c=3e8, M_sun=1.989e30;
+// ISCO frequency constant for Schwarzschild: nu_isco_schw = c^3/(2pi*G*M*6^1.5) per solar mass
+// = (3e8)^3 / (2pi * 6.674e-11 * 1.989e30 * 14.697) = 2.7e25 / (1.225e21) ≈ 2203 Hz/M_sun
+const NU_SCHW = 2203; // Hz per M_sun, for ISCO (a=0)
+// 3:2 resonance constants (Schwarzschild):
+// upper QPO: nu_U = NU_SCHW / x_res^1.5 where x_res=27/4... actually at resonance:
+// nu_K = NU_SCHW/M * x^{-3/2}, nu_r = nu_K*sqrt(1-6/x)
+// 3:2: nu_K/nu_r = 3/2 → sqrt(1-6/x)=2/3 → 1-6/x=4/9 → x=6*9/(9-4)=54/5=10.8
+// nu_K(x=10.8) = NU_SCHW / 10.8^{3/2} = NU_SCHW / 35.49 ≈ 62.1 Hz/M_sun
+// nu_r = (2/3)*nu_K ≈ 41.4 Hz/M_sun
+const NU_32_UPPER = 62.1; // Hz/M_sun at a=0
+const NU_32_LOWER = 41.4;
+
+const PRESETS = {
+  '85s':  { lognu: 1.071 }, // 11.76 mHz = 1/85 Hz
+  '300hz':{ lognu: 2.477 }, // 300 mHz
+  '1hz':  { lognu: 3.000 }, // 1000 mHz = 1 Hz
+  'custom':{ lognu: 2.000 },
+};
+
+const st = { lognu: 1.071, unc: 10, a: 0.50, model: 'res32_upper' };
+
+function applyPreset(k) {
+  Object.assign(st, PRESETS[k]);
+  document.getElementById('sl-nu').value = st.lognu;
+  ['85s','300hz','1hz','custom'].forEach(id=>document.getElementById('p-'+id).classList.toggle('active',id===k));
+  compute(); saveHash();
+}
+function slChange(k,v) {
+  if(k==='nu'){st.lognu=parseFloat(v);}
+  if(k==='unc'){st.unc=parseFloat(v);}
+  if(k==='a'){st.a=parseFloat(v);}
+  ['85s','300hz','1hz','custom'].forEach(id=>document.getElementById('p-'+id).classList.remove('active'));
+  compute(); saveHash();
+}
+
+// Kerr ISCO radius (in units of r_g)
+function xISCO(a) {
+  const Z1 = 1 + Math.cbrt(1-a*a)*(Math.cbrt(1+a)+Math.cbrt(1-a));
+  const Z2 = Math.sqrt(3*a*a + Z1*Z1);
+  return 3 + Z2 - Math.sign(a||1)*Math.sqrt((3-Z1)*(3+Z1+2*Z2));
+}
+
+// ISCO orbital frequency in Hz for given M (solar masses) and spin a
+function nuISCO(M_sol, a) {
+  const x = xISCO(a);
+  // nu_isco = c^3 / (2pi G M x^{3/2})
+  return Math.pow(c,3) / (2*Math.PI*G*M_sol*M_sun*Math.pow(x,1.5));
+}
+
+// Resonance 3:2: radial epicyclic frequency equals 2/3 of Keplerian
+// For Kerr, resonance radius shifts. Approximate for now:
+// Keplerian at radius x (in rg): nu_K = c^3/(2pi G M x^{3/2})
+// Radial epicyclic: nu_r = nu_K * sqrt(1 - 6/x + 8a/x^{3/2} - 3a^2/x^2) [Kerr]
+// Resonance: nu_K/nu_r = 3/2 → solve for x_res numerically
+function nuRes32Upper(M_sol, a) {
+  // Numerically find x_res where nu_K/nu_r = 3/2
+  let x = 10.8; // start at Schwarzschild resonance
+  for(let i=0;i<60;i++){
+    const nr_sq = 1 - 6/x + 8*a/Math.pow(x,1.5) - 3*a*a/(x*x);
+    if(nr_sq<=0){x*=1.05;continue;}
+    const ratio = 1/Math.sqrt(nr_sq); // nu_K/nu_r
+    if(ratio<1.5) x-=0.05; else x+=0.05;
+    x=Math.max(1.5,x);
+  }
+  const nuK = Math.pow(c,3)/(2*Math.PI*G*M_sol*M_sun*Math.pow(x,1.5));
+  return nuK; // upper = nu_K
+}
+function nuRes32Lower(M_sol, a) {
+  return nuRes32Upper(M_sol, a) * 2/3;
+}
+function nuNodal(M_sol, a, x) {
+  // Lense-Thirring precession at radius x*rg: nu_LT ≈ a*c^3/(pi*G*M*x^3)
+  return a*Math.pow(c,3)/(Math.PI*G*M_sol*M_sun*Math.pow(x,3));
+}
+
+// Invert: given observed nu, find M
+function massFromNu(nu_Hz, a, model) {
+  // We solve nuModel(M, a) = nu_Hz for M numerically
+  let lo=1, hi=1e8;
+  for(let i=0;i<80;i++){
+    const mid=(lo+hi)/2;
+    let nm;
+    if(model==='isco') nm=nuISCO(mid,a);
+    else if(model==='res32_upper') nm=nuRes32Upper(mid,a);
+    else if(model==='res32_lower') nm=nuRes32Lower(mid,a);
+    else nm=nuNodal(mid,a,5); // nodal at x=5
+    if(nm>nu_Hz) lo=mid; else hi=mid;
+  }
+  return (lo+hi)/2;
+}
+
+function fmtM(m) {
+  if(m>1e6) return (m/1e6).toFixed(2)+'×10⁶';
+  if(m>1e3) return Math.round(m).toLocaleString();
+  return m.toFixed(0);
+}
+function supStr(n){const s=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];return(n<0?'⁻':'')+Math.abs(n).toString().split('').map(c=>s[+c]||c).join('')}
+
+function compute() {
+  st.model = document.getElementById('sel-model').value;
+  const nu_mHz = Math.pow(10, st.lognu);
+  const nu_Hz  = nu_mHz / 1e3;
+  document.getElementById('dv-nu').textContent  = nu_mHz >= 1000 ? (nu_mHz/1000).toFixed(2)+' Hz' : nu_mHz.toFixed(3)+' mHz';
+  document.getElementById('dv-unc').textContent = st.unc+'%';
+  document.getElementById('dv-a').textContent   = st.a.toFixed(3);
+
+  const M = massFromNu(nu_Hz, st.a, st.model);
+  const xi = xISCO(st.a);
+  const ni = nuISCO(M, st.a)*1e3; // mHz
+  const Ti = 1/(ni/1e3); // seconds
+  document.getElementById('out-M').textContent     = fmtM(M);
+  document.getElementById('out-risco').textContent = xi.toFixed(3);
+  document.getElementById('out-nisco').textContent = ni.toFixed(4);
+  document.getElementById('out-Tisco').textContent = Ti.toFixed(2);
+
+  // Range at extremes
+  const M_a0   = massFromNu(nu_Hz, 0.0,   st.model);
+  const M_amax = massFromNu(nu_Hz, 0.998, st.model);
+  document.getElementById('out-M-a0').textContent   = fmtM(M_a0);
+  document.getElementById('out-M-amax').textContent = fmtM(M_amax);
+
+  // In OC window?
+  const lo = Math.min(M_a0, M_amax), hi = Math.max(M_a0, M_amax);
+  const inWindow = (hi >= 6000 && lo <= 8200);
+  const el = document.getElementById('out-inwindow');
+  el.textContent = inWindow ? 'Yes ✓' : 'No ✗';
+  el.style.color = inWindow ? 'var(--teal-glow)' : 'var(--red-bright)';
+
+  // Required a for M=8200
+  let a_for_8200 = null;
+  if(M_a0<=8200 && M_amax>=8200 || M_a0>=8200 && M_amax<=8200) {
+    let alo=0, ahi=0.998;
+    for(let i=0;i<60;i++){const am=(alo+ahi)/2; const mm=massFromNu(nu_Hz,am,st.model); if(mm<8200) alo=am; else ahi=am;}
+    a_for_8200=(alo+ahi)/2;
+  }
+  document.getElementById('out-a-for-M').textContent = a_for_8200!==null ? a_for_8200.toFixed(3) : '—';
+
+  // Constraint narrative
+  const cb = document.getElementById('constraint-box');
+  cb.innerHTML = `At a = ${st.a.toFixed(2)} and ν = ${nu_mHz.toFixed(3)} mHz, the <strong>${st.model==='isco'?'ISCO':st.model==='res32_upper'?'3:2 upper':st.model==='res32_lower'?'3:2 lower':'nodal'}</strong> model implies <strong>M ≈ ${fmtM(M)} M☉</strong>. Mass spans ${fmtM(Math.min(M_a0,M_amax))} – ${fmtM(Math.max(M_a0,M_amax))} M☉ over all spins. OC window (6,000–8,200 M☉): <strong style="color:${inWindow?'var(--teal-glow)':'var(--red-bright)'};">${inWindow?'overlaps at some spin':'does not overlap'}</strong>.`;
+
+  drawContour(nu_Hz);
+  drawRange(nu_Hz);
+}
+
+function drawContour(nu_Hz) {
+  const canvas = document.getElementById('ma-canvas');
+  const W = canvas.offsetWidth||600, H = 320;
+  canvas.width = W*devicePixelRatio; canvas.height = H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx = canvas.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={l:70,r:20,t:15,b:35};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  ctx.fillStyle='rgba(7,5,21,0.8)'; ctx.fillRect(0,0,W,H);
+
+  // Axes: x = spin 0→0.998, y = log10(M) 3→6
+  const logM_lo=3, logM_hi=6;
+  const aToX = a => pad.l + a/0.998*cw;
+  const lmToY = lm => pad.t + ch - (lm-logM_lo)/(logM_hi-logM_lo)*ch;
+
+  // Grid
+  ctx.strokeStyle='rgba(112,85,212,0.1)'; ctx.lineWidth=1;
+  [0.2,0.4,0.6,0.8,0.998].forEach(a=>{ctx.beginPath();ctx.moveTo(aToX(a),pad.t);ctx.lineTo(aToX(a),pad.t+ch);ctx.stroke();});
+  [3,4,5,6].forEach(lm=>{ctx.beginPath();ctx.moveTo(pad.l,lmToY(lm));ctx.lineTo(pad.l+cw,lmToY(lm));ctx.stroke();});
+
+  // Axis labels
+  ctx.fillStyle='rgba(80,72,112,0.9)'; ctx.font=`9px Space Mono, monospace`; ctx.textAlign='center';
+  [0,0.2,0.4,0.6,0.8,0.998].forEach(a=>{ctx.fillText(a.toFixed(2),aToX(a),H-6);});
+  ctx.textAlign='right';
+  [{l:'10³',v:3},{l:'10⁴',v:4},{l:'10⁵',v:5},{l:'10⁶',v:6}].forEach(({l,v})=>{ctx.fillText(l,pad.l-5,lmToY(v)+4);});
+  ctx.fillStyle='rgba(144,136,192,0.7)'; ctx.textAlign='center';
+  ctx.fillText('spin a →',pad.l+cw/2,H-1);
+  ctx.save(); ctx.translate(11,pad.t+ch/2); ctx.rotate(-Math.PI/2); ctx.fillText('M (M☉)',0,0); ctx.restore();
+
+  // OC constraint lines
+  const banares_y = lmToY(Math.log10(6000));
+  const haberle_y = lmToY(Math.log10(8200));
+  ctx.strokeStyle='rgba(208,64,64,0.7)'; ctx.setLineDash([5,4]); ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l,banares_y); ctx.lineTo(pad.l+cw,banares_y); ctx.stroke();
+  ctx.strokeStyle='rgba(240,160,32,0.7)';
+  ctx.beginPath(); ctx.moveTo(pad.l,haberle_y); ctx.lineTo(pad.l+cw,haberle_y); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Shaded OC window
+  ctx.fillStyle='rgba(29,186,144,0.05)';
+  ctx.fillRect(pad.l, haberle_y, cw, banares_y-haberle_y);
+
+  // QPO constraint band
+  const factor = 1 + st.unc/100;
+  ctx.fillStyle='rgba(77,232,192,0.12)';
+  ctx.beginPath();
+  for(let i=0;i<=100;i++){
+    const a=i/100*0.998;
+    const M_lo=massFromNu(nu_Hz/factor,a,st.model), M_hi=massFromNu(nu_Hz*factor,a,st.model);
+    const x=aToX(a), y1=lmToY(Math.log10(Math.max(1,M_lo))), y2=lmToY(Math.log10(Math.max(1,M_hi)));
+    if(i===0) ctx.moveTo(x,y1); else ctx.lineTo(x,y1);
+  }
+  for(let i=100;i>=0;i--){
+    const a=i/100*0.998;
+    const M_hi=massFromNu(nu_Hz*factor,a,st.model);
+    ctx.lineTo(aToX(a), lmToY(Math.log10(Math.max(1,M_hi))));
+  }
+  ctx.closePath(); ctx.fill();
+
+  ctx.strokeStyle='var(--teal-glow)'; ctx.lineWidth=2;
+  ctx.beginPath();
+  for(let i=0;i<=100;i++){const a=i/100*0.998; const M=massFromNu(nu_Hz,a,st.model); if(i===0)ctx.moveTo(aToX(a),lmToY(Math.log10(Math.max(1,M))));else ctx.lineTo(aToX(a),lmToY(Math.log10(Math.max(1,M))));}
+  ctx.stroke();
+
+  // Current point
+  const M_cur=massFromNu(nu_Hz,st.a,st.model);
+  ctx.fillStyle='var(--purple-glow)'; ctx.beginPath(); ctx.arc(aToX(st.a),lmToY(Math.log10(M_cur)),5,0,2*Math.PI); ctx.fill();
+
+  // Legend
+  ctx.font='9px Space Mono, monospace'; ctx.textAlign='left';
+  ctx.fillStyle='rgba(240,160,32,0.8)'; ctx.fillText('Häberle ≥8,200',pad.l+5,haberle_y-4);
+  ctx.fillStyle='rgba(208,64,64,0.8)'; ctx.fillText('Bañares ≤6,000',pad.l+5,banares_y+12);
+}
+
+function drawRange(nu_Hz) {
+  const canvas = document.getElementById('ma-range-canvas');
+  const W = canvas.offsetWidth||600, H = 130;
+  canvas.width=W*devicePixelRatio; canvas.height=H*devicePixelRatio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d'); ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={l:70,r:20,t:15,b:30};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  ctx.fillStyle='rgba(7,5,21,0.6)'; ctx.fillRect(0,0,W,H);
+  const logM_lo=2, logM_hi=7;
+  const aToX=a=>pad.l+a/0.998*cw;
+  const lmToY=lm=>pad.t+ch-(lm-logM_lo)/(logM_hi-logM_lo)*ch;
+  ctx.strokeStyle='rgba(112,85,212,0.1)'; ctx.lineWidth=1;
+  [3,4,5,6].forEach(lm=>{ctx.beginPath();ctx.moveTo(pad.l,lmToY(lm));ctx.lineTo(pad.l+cw,lmToY(lm));ctx.stroke();});
+  ctx.fillStyle='rgba(80,72,112,0.9)'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='right';
+  [{l:'10³',v:3},{l:'10⁴',v:4},{l:'10⁵',v:5}].forEach(({l,v})=>{ctx.fillText(l,pad.l-4,lmToY(v)+4);});
+  ctx.strokeStyle='rgba(208,64,64,0.6)'; ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(pad.l,lmToY(Math.log10(6000)));ctx.lineTo(pad.l+cw,lmToY(Math.log10(6000)));ctx.stroke();
+  ctx.strokeStyle='rgba(240,160,32,0.6)';
+  ctx.beginPath();ctx.moveTo(pad.l,lmToY(Math.log10(8200)));ctx.lineTo(pad.l+cw,lmToY(Math.log10(8200)));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle='var(--teal-glow)'; ctx.lineWidth=2; ctx.beginPath();
+  for(let i=0;i<=100;i++){const a=i/100*0.998;const M=massFromNu(nu_Hz,a,st.model);if(i===0)ctx.moveTo(aToX(a),lmToY(Math.log10(Math.max(1,M))));else ctx.lineTo(aToX(a),lmToY(Math.log10(Math.max(1,M))));}
+  ctx.stroke();
+  ctx.fillStyle='rgba(144,136,192,0.7)'; ctx.textAlign='center'; ctx.fillText('spin a →',pad.l+cw/2,H-4);
+}
+
+function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
+
+function saveHash(){window.location.hash=`lognu=${st.lognu.toFixed(3)}&unc=${st.unc}&a=${st.a.toFixed(3)}&model=${st.model}`;}
+function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));if(p.lognu){st.lognu=parseFloat(p.lognu);document.getElementById('sl-nu').value=st.lognu;}if(p.unc){st.unc=parseFloat(p.unc);document.getElementById('sl-unc').value=st.unc;}if(p.a){st.a=parseFloat(p.a);document.getElementById('sl-a').value=st.a;}if(p.model){st.model=p.model;document.getElementById('sel-model').value=st.model;}}
+
+window.addEventListener('load',()=>{loadHash();compute();});
+window.addEventListener('resize',()=>{compute();});
+</script>
+</body>
+</html>

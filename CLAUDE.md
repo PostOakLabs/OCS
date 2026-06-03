@@ -2,7 +2,7 @@
 
 **Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-02
 
-**Current counts:** 59 tools · 7 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
+**Current counts:** 67 tools · 10 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
 
 Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, Macro Transcension Hypothesis (MTH). No framework, no build pipeline, no npm — hand-written HTML/CSS/JS, all inline per file. Two content registers kept strictly separate: peer-reviewed science (DOI-sourced) and speculative engineering (MTH/computronium — always labeled).
 
@@ -61,30 +61,18 @@ repo/
 └── tools/
     ├── index.html                 ← tools landing page
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values
-    ├── [59 tool *.html files]     ← see categories below
+    ├── [67 tool *.html files]     ← see categories below
     ├── [7 workflow-*.html files]  ← end-to-end staged narrative calculators
     └── [30 scenario-*.html files]     ← chained-tool narrative demos
 ```
 
 **Tool categories (52 total):**
-- *IMBH evidence (11):* constraint-stacker, imbh-timeline, cluster-comparator, velocity-dispersion, pulsar-timing, orbital-dynamics, tidal-disruption, synthetic-observation, jwst-accretion, cw-sensitivity, oc-orbit-simulator
+- *IMBH evidence (13):* constraint-stacker, imbh-timeline, cluster-comparator, velocity-dispersion, pulsar-timing, orbital-dynamics, tidal-disruption, synthetic-observation, jwst-accretion, cw-sensitivity, oc-orbit-simulator, qpo-mass-spin, tde-rate
 - *Computronium / MTH (14):* bz-kardashev, bekenstein-landauer, time-dilation, hawking-evaporation, kerr-geometry, compute-in-space, matrioshka-brain, reversible-computing, stem-compression, penrose-process, magnetic-reconnection, spin-up-timeline, kugelblitz-dvali, barrow-scale
-- *Fermi / SETI (16):* drake-monte-carlo, great-filter, aestivation, superradiance, dyson-swarm, lisa-emri, cmd-explorer, radio-seti, optical-seti, neutrino-seti, interstellar-link, multi-messenger-alert, passive-seti, iso-encounter, gamma-ray-msp, jet-radio-detectability
+- *Fermi / SETI (19):* drake-monte-carlo, great-filter, aestivation, superradiance, dyson-swarm, lisa-emri, cmd-explorer, radio-seti, optical-seti, neutrino-seti, interstellar-link, multi-messenger-alert, passive-seti, iso-encounter, gamma-ray-msp, jet-radio-detectability, galaxy-percolation, galactic-habitable-zone
 - *Cluster physics (8):* mass-segregation, omegacat-populations, omega-dwarf-origin, dark-cluster, dark-matter-flux, tidal-capture, imbh-growth-history, seed-formation
 - *Context (3):* cosmic-center, cosmological-natural-selection, astrometric-microlensing
-- *Civilisational cosmology (10):* monkeygod-simulator, cns-fitness-landscape, gough-blowtorch, cns-three-stage, starivore-energy, ferd-complexity-ladder, transcension-crossover, stem-compression, barrow-scale, kugelblitz-dvali
+- *Civilisational cosmology (14):* monkeygod-simulator, cns-fitness-landscape, gough-blowtorch, cns-three-stage, starivore-energy, ferd-complexity-ladder, transcension-crossover, stem-compression, barrow-scale, kugelblitz-dvali, spider-stellar-engine, life-viability-landscape, gough-spiral-galaxy, grabby-aliens
 - *Hub pages (2):* tools/index.html, tools/falsification-hub.html
 
-**Workflows (7):** workflow-mth-compute-budget, workflow-fermi-mth-crossover, workflow-bh-energy-budget, workflow-wait-or-act, workflow-constraint-window, workflow-survivability, workflow-spin-economics — staged calculators with live stage-to-stage handoff and copy-to-clipboard export. Use an existing workflow as template for new ones.
-
----
-
-## After every edit session
-
-```powershell
-cd "C:\dev\Claude\Projects\The Omega Centauri Society\repo"
-if (Test-Path .git/index.lock) { Remove-Item .git/index.lock -Force }
-git add <files>
-git commit -m "<message>"
-git push
-```
+**Workflows (10):** workflow-mth-compute-budget, workflow-fermi-mth-crossover, workflow-bh-energy-budget, workflow-wait-or-act, workflow-constraint-window, workflow-survivability, workflow-spin-economics, workflow-evodevouniverse, workflow-tde-detection, workflow-grabby-fermi 
