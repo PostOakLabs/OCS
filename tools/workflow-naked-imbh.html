@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<!--
+  Workflow — The Naked IMBH
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 · Last updated: 2026-06-03
+  Epistemic tier: 🔬 Established (stages 1–2) · 🔭 Observational forecast (stage 3)
+  References: Baumgardt & Makino 2003 (MNRAS 340:227), Merritt 2001 (AJ 121:2385),
+              AXIS White Paper 2025, González Prieto et al. 2025 (arXiv:2512.09649)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Naked IMBH Workflow — Omega Centauri Society</title>
+<meta name="description" content="Three-stage workflow: OC dissolution timeline → IMBH wander post-dissolution → detectability as a naked wandering IMBH by Roman/AXIS. What happens to OC's IMBH when OC is gone?">
+<link rel="canonical" href="https://omegacentauri.me/tools/workflow-naked-imbh.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);--s1:#1dba90;--s2:#f0a020;--s3:#a080f0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 8%,rgba(29,186,144,.07),transparent 45%),radial-gradient(ellipse at 85% 60%,rgba(160,128,240,.07),transparent 45%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1200px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.flow-bar{background:rgba(13,10,36,.7);border-bottom:1px solid var(--border-subtle);position:sticky;top:48px;z-index:190;overflow-x:auto}
+.flow-inner{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:stretch}
+.flow-step{display:flex;align-items:center;gap:9px;padding:11px 16px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none}
+.flow-step.active{color:var(--text-primary);border-color:var(--s-color)}
+.flow-step.s1{--s-color:var(--s1)}.flow-step.s2{--s-color:var(--s2)}.flow-step.s3{--s-color:var(--s3)}
+.flow-num{width:20px;height:20px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.flow-step.s1 .flow-num{background:rgba(29,186,144,.12);border-color:var(--s1);color:var(--s1)}
+.flow-step.s2 .flow-num{background:rgba(240,160,32,.12);border-color:var(--s2);color:var(--s2)}
+.flow-step.s3 .flow-num{background:rgba(160,128,240,.12);border-color:var(--s3);color:var(--s3)}
+.flow-arrow{color:var(--text-dim);padding:0 2px;font-size:13px}
+.container{max-width:1200px;margin:0 auto;padding:36px 28px 80px}
+.hero{margin-bottom:32px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:10px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:34px;line-height:1.1;letter-spacing:.01em;margin-bottom:12px;background:linear-gradient(120deg,var(--teal-bright),var(--amber-bright),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:820px;margin-bottom:8px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.05em;margin-top:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:8px;white-space:nowrap;border:1px solid currentColor;display:inline-block;margin-right:5px;margin-top:4px}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.06)}.tier-o{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.stage{border-radius:12px;border:1px solid var(--border-subtle);background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));margin-bottom:10px;overflow:hidden}
+.stage.s1{border-color:rgba(29,186,144,.25)}.stage.s2{border-color:rgba(240,160,32,.2)}.stage.s3{border-color:rgba(160,128,240,.2)}
+.stage-header{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;user-select:none}
+.stage-num{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;line-height:1;min-width:30px}
+.stage.s1 .stage-num{color:var(--s1)}.stage.s2 .stage-num{color:var(--s2)}.stage.s3 .stage-num{color:var(--s3)}
+.stage-header-text{flex:1}
+.stage-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:2px}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary);line-height:1.2}
+.stage-chevron{font-size:14px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.stage.open .stage-chevron{transform:rotate(90deg)}
+.stage-body{display:none;padding:0 20px 20px}
+.stage.open .stage-body{display:block}
+.stage-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:14px}
+@media(max-width:700px){.stage-cols{grid-template-columns:1fr}}
+.col-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--border-subtle)}
+.stage-prose{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px;max-width:860px}
+.stage-prose strong{color:var(--text-primary)}
+.slider-block{margin-bottom:12px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:4px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cursor:pointer;border:none}
+.s1 .slider-row input{background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid))}.s1 input::-webkit-slider-thumb,.s1 input::-moz-range-thumb{background:var(--s1)}
+.s2 .slider-row input{background:linear-gradient(90deg,var(--amber-mid),rgba(240,160,32,.4))}.s2 input::-webkit-slider-thumb,.s2 input::-moz-range-thumb{background:var(--s2)}
+.s3 .slider-row input{background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid))}.s3 input::-webkit-slider-thumb,.s3 input::-moz-range-thumb{background:var(--s3)}
+.slider-value{font-family:'Space Mono',monospace;font-size:11px;min-width:120px;text-align:right;white-space:nowrap}
+.s1 .slider-value{color:var(--s1)}.s2 .slider-value{color:var(--s2)}.s3 .slider-value{color:var(--s3)}
+.preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:9px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{border-color:var(--text-secondary);color:var(--text-secondary)}
+.output-grid{display:flex;flex-direction:column;gap:6px}
+.output-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 10px;border-radius:6px;background:rgba(7,5,21,.45);border:1px solid rgba(255,255,255,.04)}
+.output-row.primary{background:rgba(7,5,21,.65);border-color:rgba(255,255,255,.08)}
+.output-row.ok{background:rgba(29,186,144,.08);border-color:rgba(29,186,144,.25)}
+.output-row.warn{background:rgba(240,160,32,.08);border-color:rgba(240,160,32,.25)}
+.output-row.bad{background:rgba(208,64,64,.08);border-color:rgba(208,64,64,.25)}
+.out-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.03em}
+.out-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;white-space:nowrap}
+.out-val.big{font-size:20px}
+.s1 .out-val{color:var(--s1)}.s2 .out-val{color:var(--s2)}.s3 .out-val{color:var(--s3)}
+.out-sub{font-family:'Crimson Pro',serif;font-size:11px;color:var(--text-dim);margin-left:4px;font-style:italic}
+.handoff{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;border:1px dashed rgba(255,255,255,.1);background:rgba(7,5,21,.4);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:4px}
+.export-card{border-radius:12px;border:1px solid var(--border-teal);background:linear-gradient(180deg,rgba(13,42,36,.45),rgba(7,5,21,.8));padding:24px 28px;margin-top:20px}
+.export-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.export-narrative{font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-primary);line-height:1.75;margin-bottom:14px;max-width:860px}
+.tool-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-subtle)}
+.tool-link{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:10px;border:1px solid var(--border-subtle);color:var(--text-dim);transition:all .15s}
+.tool-link:hover{color:var(--teal-glow);border-color:var(--teal-bright)}
+.footer{margin-top:50px;padding:20px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.05em;line-height:1.9}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:600px){.hero h1{font-size:24px}.container{padding:20px 14px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">The Naked IMBH</span>
+    <a href="/tools/" class="nav-link">← All Workflows</a>
+    <a href="/tools/cluster-dissolution.html" class="nav-link">Dissolution ↗</a>
+    <a href="/tools/imbh-proper-motion.html" class="nav-link">IMBH Wander ↗</a>
+    <a href="/tools/workflow-survivability.html" class="nav-link">Survivability ↗</a>
+  </div>
+</nav>
+<div class="flow-bar">
+  <div class="flow-inner">
+    <a class="flow-step s1 active" href="#stage-1" onclick="activateStep(1)"><span class="flow-num">1</span>OC Dissolution</a>
+    <span class="flow-arrow">→</span>
+    <a class="flow-step s2" href="#stage-2" onclick="activateStep(2)"><span class="flow-num">2</span>Wander Rate</a>
+    <span class="flow-arrow">→</span>
+    <a class="flow-step s3" href="#stage-3" onclick="activateStep(3)"><span class="flow-num">3</span>Future Detectability</a>
+    <span class="flow-arrow" style="opacity:.4">→</span>
+    <a class="flow-step" href="#export"><span class="flow-num" style="border-color:var(--teal-bright);color:var(--teal-bright);background:rgba(29,186,144,.1)">✓</span>Fate</a>
+  </div>
+</div>
+<div class="container">
+  <header class="hero">
+    <div class="hero-eyebrow">Three-stage workflow · dissolution → wander → future detection</div>
+    <h1>The Naked IMBH</h1>
+    <p class="hero-sub">Omega Centauri is dissolving. In ~15 Gyr, it will be gone. This workflow asks: what happens to the IMBH when its host cluster evaporates? Three stages trace the transition from stellar captive to naked wandering black hole in the Milky Way halo.</p>
+    <div>
+      <span class="tier-badge tier-e">🔬 Established dynamics (stages 1–2)</span>
+      <span class="tier-badge tier-o">🔭 Observational forecast (stage 3)</span>
+    </div>
+    <div class="hero-meta">Refs: Baumgardt &amp; Makino 2003 · Merritt 2001 · AXIS White Paper 2025 · v1.0 · 2026-06-03</div>
+  </header>
+
+  <!-- Stage 1 -->
+  <div class="stage s1 open" id="stage-1">
+    <div class="stage-header" onclick="toggleStage(1)">
+      <div class="stage-num">01</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Baumgardt &amp; Makino 2003 · two-body evaporation + tidal stripping</div>
+        <div class="stage-title">OC Dissolution Timeline</div>
+      </div>
+      <span class="stage-chevron">▶</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">OC loses mass through both tidal stripping at each Galactic pericentre (~300 Myr orbital period) and continuous two-body evaporation. Current mass ~4 × 10⁶ M☉; dissolution (1% threshold) is expected in <strong>~15–25 Gyr</strong> under nominal parameters.</p>
+      <div class="stage-cols">
+        <div>
+          <div class="col-title">Inputs</div>
+          <div class="slider-block">
+            <label>Tidal stripping per pericentre f<sub>strip</sub> (%)</label>
+            <div class="slider-row"><input type="range" id="s1-f" min="0.5" max="10" step="0.25" value="3"><span class="slider-value" id="s1-f-lbl">3.0 %</span></div>
+            <div class="preset-row">
+              <button class="preset-btn" onclick="setS1f(1.5)">Conservative 1.5%</button>
+              <button class="preset-btn" onclick="setS1f(3)">Nominal 3%</button>
+              <button class="preset-btn" onclick="setS1f(6)">Strong 6%</button>
+            </div>
+          </div>
+          <div class="slider-block">
+            <label>Two-body evaporation timescale t<sub>rh</sub> (Gyr)</label>
+            <div class="slider-row"><input type="range" id="s1-rh" min="5" max="30" step="0.5" value="14"><span class="slider-value" id="s1-rh-lbl">14.0 Gyr</span></div>
+          </div>
+          <div class="slider-block">
+            <label>IMBH mass M<sub>BH</sub> (M☉)</label>
+            <div class="slider-row"><input type="range" id="s1-Mb" min="3.0" max="4.7" step="0.05" value="3.914"><span class="slider-value" id="s1-Mb-lbl">8,200 M☉</span></div>
+            <div class="preset-row">
+              <button class="preset-btn" onclick="setS1Mb(Math.log10(6000))">6,000</button>
+              <button class="preset-btn" onclick="setS1Mb(Math.log10(8200))">8,200 (Häberle)</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Stage 1 outputs</div>
+          <div class="output-grid">
+            <div class="output-row primary"><span class="out-label">Dissolution time T<sub>diss</sub></span><span><span class="out-val big" id="s1-tdiss">—</span><span class="out-sub">Gyr</span></span></div>
+            <div class="output-row"><span class="out-label">Half-mass time T<sub>½</sub></span><span><span class="out-val" id="s1-thalf">—</span><span class="out-sub">Gyr</span></span></div>
+            <div class="output-row"><span class="out-label">Mass at T+10 Gyr</span><span><span class="out-val" id="s1-m10">—</span><span class="out-sub">M☉</span></span></div>
+            <div class="output-row ok"><span class="out-label">IMBH ejection probability</span><span class="out-val">~0% (too massive)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="handoff"><span>→</span> T<sub>diss</sub> = <strong><span id="s1-handoff-T">—</span> Gyr</strong> · M<sub>BH</sub> = <span id="s1-handoff-M">—</span> M☉</div>
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage s2" id="stage-2">
+    <div class="stage-header" onclick="toggleStage(2)">
+      <div class="stage-num">02</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Merritt 2001 · equipartition Brownian motion</div>
+        <div class="stage-title">Post-Dissolution Wander</div>
+      </div>
+      <span class="stage-chevron">▶</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">During dissolution, the stellar cusp surrounding the IMBH depletes. The Brownian wander speed v_BH = σ × sqrt(⟨m★⟩/M_BH) drops as σ → 0. After full dissolution, the IMBH drifts through the Milky Way halo at the speed it had when the last stars departed — then wanders freely.</p>
+      <div class="stage-cols">
+        <div>
+          <div class="col-title">Inputs (T_diss, M_BH from Stage 1)</div>
+          <div class="slider-block">
+            <label>Stellar velocity dispersion σ at dissolution (km/s)</label>
+            <div class="slider-row"><input type="range" id="s2-sig" min="1" max="20" step="0.5" value="5"><span class="slider-value" id="s2-sig-lbl">5.0 km/s</span></div>
+            <div class="preset-row">
+              <button class="preset-btn" onclick="setS2sig(2)">2 km/s (near-dissolution)</button>
+              <button class="preset-btn" onclick="setS2sig(5)">5 km/s</button>
+              <button class="preset-btn" onclick="setS2sig(20)">20 km/s (today)</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Stage 2 outputs</div>
+          <div class="output-grid">
+            <div class="output-row primary"><span class="out-label">IMBH kick speed at dissolution</span><span><span class="out-val big" id="s2-vbh">—</span><span class="out-sub">km/s</span></span></div>
+            <div class="output-row"><span class="out-label">Proper motion in halo</span><span><span class="out-val" id="s2-mu">—</span><span class="out-sub">µas/yr (from Sun)</span></span></div>
+            <div class="output-row"><span class="out-label">Displacement in 1 Gyr</span><span><span class="out-val" id="s2-disp">—</span><span class="out-sub">kpc</span></span></div>
+            <div class="output-row"><span class="out-label">OC remnant orbit</span><span class="out-val" style="font-size:11px">Halo wanderer — retrograde</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="handoff"><span>→</span> IMBH wander speed = <strong><span id="s2-handoff">—</span> km/s</strong> at dissolution · μ = <span id="s2-handoff-mu">—</span> µas/yr</div>
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage s3" id="stage-3">
+    <div class="stage-header" onclick="toggleStage(3)">
+      <div class="stage-num">03</div>
+      <div class="stage-header-text">
+        <div class="stage-kicker">Roman · AXIS · LISA · future instruments</div>
+        <div class="stage-title">Future Detectability</div>
+      </div>
+      <span class="stage-chevron">▶</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-prose">A naked wandering IMBH is detectable by several methods: <strong>Roman</strong> microlensing events (if it crosses dense fields), <strong>AXIS/Chandra</strong> X-ray emission from ISM Bondi accretion, and eventually <strong>LISA</strong> gravitational wave detection if it encounters a compact object. The detectability depends critically on the IMBH's location in the halo and the ISM density.</p>
+      <div class="stage-cols">
+        <div>
+          <div class="col-title">Inputs</div>
+          <div class="slider-block">
+            <label>Halo ISM gas density n<sub>H</sub> (cm⁻³)</label>
+            <div class="slider-row"><input type="range" id="s3-n" min="-3" max="0" step="0.1" value="-2"><span class="slider-value" id="s3-n-lbl">0.010 cm⁻³</span></div>
+            <div class="preset-row">
+              <button class="preset-btn" onclick="setS3n(-3)">10⁻³ halo</button>
+              <button class="preset-btn" onclick="setS3n(-2)">10⁻² warm halo</button>
+              <button class="preset-btn" onclick="setS3n(-1)">10⁻¹ disc</button>
+            </div>
+          </div>
+          <div class="slider-block">
+            <label>Galactocentric radius at T<sub>diss</sub> (kpc)</label>
+            <div class="slider-row"><input type="range" id="s3-rgal" min="2" max="30" step="0.5" value="8"><span class="slider-value" id="s3-rgal-lbl">8.0 kpc</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="col-title">Stage 3 outputs</div>
+          <div class="output-grid">
+            <div class="output-row primary"><span class="out-label">Bondi accretion rate (halo ISM)</span><span><span class="out-val big" id="s3-mdot">—</span><span class="out-sub">M☉/yr</span></span></div>
+            <div class="output-row"><span class="out-label">Predicted X-ray luminosity (ADAF)</span><span><span class="out-val" id="s3-lx">—</span><span class="out-sub">W</span></span></div>
+            <div class="output-row" id="s3-axis-row"><span class="out-label">AXIS/Chandra detectable?</span><span class="out-val" id="s3-axis" style="font-size:11px">—</span></div>
+            <div class="output-row" id="s3-roman-row"><span class="out-label">Roman microlensing event rate</span><span class="out-val" id="s3-roman" style="font-size:11px">—</span></div>
+            <div class="output-row"><span class="out-label">LISA GW detection possible?</span><span class="out-val" style="font-size:11px">If encounter q≥10⁻³ in next Gyr</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="export-card" id="export">
+    <div class="export-eyebrow">✓ The Naked IMBH — Fate Summary</div>
+    <p class="export-narrative" id="exp-narrative">Computing…</p>
+    <div class="tool-links">
+      <a class="tool-link" href="cluster-dissolution.html">Dissolution Timeline</a>
+      <a class="tool-link" href="imbh-proper-motion.html">IMBH Proper Motion</a>
+      <a class="tool-link" href="accretion-state.html">Accretion State</a>
+      <a class="tool-link" href="workflow-survivability.html">Survivability Workflow</a>
+    </div>
+  </div>
+  <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-03</footer>
+</div>
+<script>
+'use strict';
+const G=6.674e-11,C=2.998e8,MSUN=1.989e30,MP=1.673e-27,GYR_S=3.156e16,YR_S=3.156e7,KPC_M=3.086e19;
+function sup(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x){if(!isFinite(x)||x<=0)return'—';const e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);return m.toFixed(2)+'×10'+sup(e)}
+function fmtM(m){if(m>=1e6)return(m/1e6).toFixed(2)+'×10⁶';if(m>=1e3)return m.toLocaleString(undefined,{maximumFractionDigits:0});return m.toPrecision(3)}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+const S={f:3,rh:14,logMb:Math.log10(8200),sig:5,logn:-2,rgal:8};
+function setS1f(v){S.f=v;document.getElementById('s1-f').value=v;compute();}
+function setS1Mb(v){S.logMb=v;document.getElementById('s1-Mb').value=v;compute();}
+function setS2sig(v){S.sig=v;document.getElementById('s2-sig').value=v;compute();}
+function setS3n(v){S.logn=v;document.getElementById('s3-n').value=v;compute();}
+['s1-f','s1-rh','s1-Mb','s2-sig','s3-n','s3-rgal'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    S.f=parseFloat(document.getElementById('s1-f').value);
+    S.rh=parseFloat(document.getElementById('s1-rh').value);
+    S.logMb=parseFloat(document.getElementById('s1-Mb').value);
+    S.sig=parseFloat(document.getElementById('s2-sig').value);
+    S.logn=parseFloat(document.getElementById('s3-n').value);
+    S.rgal=parseFloat(document.getElementById('s3-rgal').value);
+    compute();
+  });
+});
+function massAt(t){const f=S.f/100,n=t*1000/300;return Math.pow(1-f,n)*Math.exp(-t/S.rh);}
+function dissolveTime(){let lo=0,hi=500;for(let i=0;i<60;i++){const m=(lo+hi)/2;massAt(m)<0.01?hi=m:lo=m;}return(lo+hi)/2;}
+function compute(){
+  const Mb=Math.pow(10,S.logMb),f=S.f,rh=S.rh,sig=S.sig,n_ism=Math.pow(10,S.logn),rgal=S.rgal;
+  setText('s1-f-lbl',f.toFixed(1)+' %');setText('s1-rh-lbl',rh.toFixed(1)+' Gyr');setText('s1-Mb-lbl',fmtM(Math.round(Mb))+' M☉');
+  const tdiss=dissolveTime();
+  const thalf=(()=>{let lo=0,hi=500;for(let i=0;i<60;i++){const m=(lo+hi)/2;massAt(m)<0.5?hi=m:lo=m;}return(lo+hi)/2;})();
+  const m10=4e6*massAt(10);
+  setText('s1-tdiss',tdiss.toFixed(1));setText('s1-thalf',thalf.toFixed(1));setText('s1-m10',fmtM(Math.round(m10)));
+  setText('s1-handoff-T',tdiss.toFixed(1));setText('s1-handoff-M',fmtM(Math.round(Mb)));
+  // Stage 2
+  const vbh=sig*Math.sqrt(0.5/Mb); // 1D Brownian
+  const mu_uasyr=vbh/(4.74*5.43)*1000; // µas/yr at 5.43 kpc (today)
+  const disp1gyr=vbh*1000*3.156e16/3.086e19; // kpc in 1 Gyr
+  setText('s2-sig-lbl',sig.toFixed(1)+' km/s');
+  setText('s2-vbh',vbh.toExponential(2));setText('s2-mu',mu_uasyr.toFixed(3));setText('s2-disp',disp1gyr.toExponential(2));
+  setText('s2-handoff',vbh.toExponential(2));setText('s2-handoff-mu',mu_uasyr.toFixed(3));
+  // Stage 3
+  const rho=n_ism*1e6*MP,cs=150e3; // halo warm gas sound speed ~150 km/s
+  const mdotB=4*Math.PI*G*G*Mb*Mb*MSUN*MSUN*rho/Math.pow(cs,3);
+  const mdotB_solar=mdotB*YR_S/MSUN;
+  const Ledd=1.26e31*Mb;
+  const lambda=mdotB_solar*0.03*0.1*MSUN/(YR_S*Ledd/(C*C))*C*C/Ledd;
+  const Lx_adaf=1e-3*lambda*lambda*Ledd;
+  setText('s3-n-lbl',Math.pow(10,S.logn).toFixed(S.logn>=-1?3:4)+' cm⁻³');
+  setText('s3-rgal-lbl',rgal.toFixed(1)+' kpc');
+  setText('s3-mdot',fmtSci(mdotB_solar));setText('s3-lx',fmtSci(Lx_adaf));
+  const dist_m=rgal*KPC_M;
+  const F_xray=Lx_adaf/(4*Math.PI*dist_m*dist_m);
+  const axisDetects=F_xray>1e-17; // AXIS ~10^-17 erg/cm^2/s ~ 10^-24 W/m^2
+  setText('s3-axis',axisDetects?'✓ Detectable at '+rgal.toFixed(1)+' kpc':'✗ Below AXIS limit at '+rgal.toFixed(1)+' kpc');
+  document.getElementById('s3-axis-row').className='output-row'+(axisDetects?' ok':' warn');
+  // Roman microlensing: very rough event rate estimate
+  const tau_E=Math.sqrt(4*G*Mb*MSUN*10*KPC_M)/(C*C*C*365.25*86400); // Einstein crossing time in days
+  setText('s3-roman','Einstein crossing ~'+tau_E.toFixed(0)+' days (detectable if in bulge patrol)');
+  document.getElementById('s3-roman-row').className='output-row'+(tau_E>10&&tau_E<1000?' ok':' warn');
+  setText('exp-narrative','Omega Centauri dissolves in ~'+tdiss.toFixed(1)+' Gyr ('+f.toFixed(1)+'% tidal stripping / pericentre, t_rh = '+rh.toFixed(1)+' Gyr). When the cluster evaporates, its '+fmtM(Math.round(Mb))+' M☉ IMBH is released as a naked wandering black hole in the Milky Way halo — too massive to be ejected by stellar kicks. At dissolution, the IMBH carries a kick speed of ~'+vbh.toExponential(1)+' km/s (equipartition with the depleted cusp at σ = '+sig.toFixed(1)+' km/s). It will wander the halo for Hubble times. From a halo ISM density of '+Math.pow(10,S.logn).toExponential(1)+' cm⁻³, the Bondi rate is ~'+fmtSci(mdotB_solar)+' M☉/yr and predicted ADAF X-ray luminosity is '+(axisDetects?'potentially detectable by AXIS':'below AXIS sensitivity')+'. Roman Space Telescope microlensing could detect it if the wander trajectory crosses a dense stellar field (Einstein crossing time ~'+tau_E.toFixed(0)+' days).');
+}
+function toggleStage(n){document.getElementById('stage-'+n).classList.toggle('open');activateStep(n);}
+function activateStep(n){document.querySelectorAll('.flow-step').forEach((s,i)=>s.classList.toggle('active',i===n-1));}
+compute();
+</script>
+</body>
+</html>

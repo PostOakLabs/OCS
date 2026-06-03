@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<!--
+  IMBH Accretion State Diagnostic
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 · Last updated: 2026-06-03
+  Refs: González Prieto et al. 2025 (arXiv:2512.09649), Narayan & Yi 1994 (ApJ 428:L13),
+        Merloni et al. 2003 (MNRAS 345:1057), Bondi 1952 (MNRAS 112:195)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMBH Accretion State Diagnostic — Omega Centauri Society</title>
+<meta name="description" content="Given radio, X-ray, and IR upper limits on OC's IMBH, determine which accretion modes (ADAF, jet, thin disc) are consistent with current observations. Anchored in arXiv:2512.09649.">
+<link rel="canonical" href="https://omegacentauri.me/tools/accretion-state.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(240,160,32,.06),transparent 45%),radial-gradient(ellipse at 80% 60%,rgba(160,128,240,.07),transparent 45%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:20px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.obs{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.alert{background:rgba(240,160,32,.07);border:1px solid rgba(240,160,32,.3);border-radius:9px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--text-primary);line-height:1.6}
+.alert strong{color:var(--amber-glow)}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:20px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:720px){.two-col{grid-template-columns:1fr}.tool-header{flex-direction:column-reverse}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
+.slider-block{margin-bottom:13px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:5px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,200,64,.4)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none}
+.slval{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:9px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.mode-table{width:100%;border-collapse:collapse;margin-top:16px}
+.mode-table th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:6px 10px;border-bottom:1px solid var(--border-subtle);text-align:left}
+.mode-table td{font-family:'Space Mono',monospace;font-size:10px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.mode-table tr:last-child td{border-bottom:none}
+.tag-ok{color:var(--teal-bright);background:rgba(29,186,144,.1);border:1px solid rgba(29,186,144,.25);padding:2px 7px;border-radius:6px;font-size:9px;white-space:nowrap}
+.tag-bad{color:var(--red-bright);background:rgba(208,64,64,.1);border:1px solid rgba(208,64,64,.25);padding:2px 7px;border-radius:6px;font-size:9px;white-space:nowrap}
+.out-grid{display:flex;flex-direction:column;gap:5px}
+.out-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 10px;border-radius:6px;background:rgba(7,5,21,.45);border:1px solid rgba(255,255,255,.04)}
+.out-row.primary{background:rgba(7,5,21,.65);border-color:rgba(255,255,255,.08)}
+.out-lbl{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.03em}
+.out-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--amber-glow);white-space:nowrap}
+.out-val.big{font-size:19px}
+.out-unit{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-left:3px}
+.verdict-card{border-radius:10px;padding:16px 20px;margin-top:16px;border:1px solid}
+.verdict-card.ok{border-color:rgba(29,186,144,.3);background:rgba(29,186,144,.06)}
+.verdict-card.warn{border-color:rgba(240,160,32,.3);background:rgba(240,160,32,.06)}
+.verdict-card.bad{border-color:rgba(208,64,64,.3);background:rgba(208,64,64,.06)}
+.verdict-title{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.verdict-card.ok .verdict-title{color:var(--teal-bright)}
+.verdict-card.warn .verdict-title{color:var(--amber-bright)}
+.verdict-card.bad .verdict-title{color:var(--red-bright)}
+.verdict-text{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.about{border-top:1px solid var(--border-subtle);padding-top:20px;margin-top:10px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arr{transition:transform .2s}
+.about-toggle.open .arr{transform:rotate(90deg)}
+.about-body{display:none;margin-top:14px;padding:18px 22px;background:rgba(13,10,36,.3);border-radius:8px;font-size:14px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:14px 0 6px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:8px}
+.footer{margin-top:40px;padding:18px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.05em;line-height:2}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">IMBH Accretion State Diagnostic</span>
+    <a href="/tools/" class="nav-link">← All Tools</a>
+    <a href="/tools/jwst-accretion.html" class="nav-link">JWST Accretion ↗</a>
+    <a href="/tools/jet-radio-detectability.html" class="nav-link">Jet Radio ↗</a>
+    <a href="/tools/bz-kardashev.html" class="nav-link">BZ Power ↗</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>IMBH Accretion State Diagnostic</h1>
+      <p class="tool-subtitle">Given radio, X-ray, and IR upper limits on OC's IMBH, compute the Bondi accretion rate and determine which radiative modes (ADAF, jet-dominated, thin disc) survive current observational constraints.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Bondi accretion physics</span>
+      <span class="tier-badge obs">🔭 arXiv:2512.09649 (2025)</span>
+    </div>
+  </header>
+
+  <div class="alert"><strong>2025 result:</strong> González Prieto et al. (arXiv:2512.09649) report <em>no accretion signature</em> around OC's IMBH candidate in deep VLA/MeerKAT + Chandra/XMM observations. Radio efficiency upper limit: η ≲ 8 × 10⁻⁵ (adiabatic) or ≲ 9 × 10⁻⁷ (isothermal) at F<sub>Bondi</sub> = 0.03. Default inputs reflect these constraints.</div>
+
+  <div class="panel">
+    <div class="panel-title">Inputs</div>
+    <div class="two-col">
+      <div>
+        <div class="slider-block">
+          <label>IMBH mass M<sub>BH</sub> (log₁₀ M☉)</label>
+          <div class="slider-row"><input type="range" id="sl-Mb" min="3.0" max="4.7" step="0.02" value="3.914"><span class="slval" id="lbl-Mb">8,200 M☉</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-Mb="3.778">6,000 (Bañares)</button>
+            <button class="preset-btn" data-Mb="3.914">8,200 (Häberle)</button>
+            <button class="preset-btn" data-Mb="4.477">30,000</button>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>Ambient gas density n<sub>H</sub> (log₁₀ cm⁻³)</label>
+          <div class="slider-row"><input type="range" id="sl-logn" min="-2" max="2" step="0.1" value="0"><span class="slval" id="lbl-n">1.0 cm⁻³</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-logn="-1">0.1 cm⁻³</button>
+            <button class="preset-btn" data-logn="0">1 cm⁻³</button>
+            <button class="preset-btn" data-logn="1">10 cm⁻³</button>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>Gas sound speed c<sub>s</sub> (km/s)</label>
+          <div class="slider-row"><input type="range" id="sl-cs" min="5" max="50" step="1" value="12"><span class="slval" id="lbl-cs">12 km/s</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-cs="8">8 km/s</button>
+            <button class="preset-btn" data-cs="12">12 km/s</button>
+            <button class="preset-btn" data-cs="25">25 km/s</button>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>Bondi fraction F<sub>Bondi</sub></label>
+          <div class="slider-row"><input type="range" id="sl-fb" min="0.001" max="0.1" step="0.001" value="0.03"><span class="slval" id="lbl-fb">0.030</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-fb="0.01">0.01</button>
+            <button class="preset-btn" data-fb="0.03">0.03 (Xie &amp; Yuan)</button>
+            <button class="preset-btn" data-fb="0.1">0.1</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="slider-block">
+          <label>Radio upper limit log₁₀(L<sub>R</sub>) (W/Hz)</label>
+          <div class="slider-row"><input type="range" id="sl-lr" min="-11" max="-5" step="0.1" value="-8"><span class="slval" id="lbl-lr">10⁻⁸ W/Hz</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-lr="-9">−9 deep</button>
+            <button class="preset-btn" data-lr="-8">−8 VLA</button>
+            <button class="preset-btn" data-lr="-7">−7 shallow</button>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>X-ray upper limit log₁₀(L<sub>X</sub>) (W)</label>
+          <div class="slider-row"><input type="range" id="sl-lx" min="26" max="32" step="0.2" value="29"><span class="slval" id="lbl-lx">10²⁹ W</span></div>
+          <div class="preset-row">
+            <button class="preset-btn" data-lx="28">10²⁸ W</button>
+            <button class="preset-btn" data-lx="29">10²⁹ W (Chandra)</button>
+            <button class="preset-btn" data-lx="30">10³⁰ W</button>
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <div style="margin-bottom:8px;font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim)">Derived quantities</div>
+          <div class="out-grid">
+            <div class="out-row"><span class="out-lbl">Bondi rate ṁ<sub>B</sub></span><span><span class="out-val" id="out-mdot">—</span><span class="out-unit">M☉/yr</span></span></div>
+            <div class="out-row"><span class="out-lbl">Bondi radius r<sub>B</sub></span><span><span class="out-val" id="out-rB">—</span><span class="out-unit">pc</span></span></div>
+            <div class="out-row"><span class="out-lbl">Accretion rate ṁ<sub>acc</sub> = F × ṁ<sub>B</sub></span><span><span class="out-val" id="out-macc">—</span><span class="out-unit">M☉/yr</span></span></div>
+            <div class="out-row primary"><span class="out-lbl">Eddington fraction λ</span><span class="out-val big" id="out-ledd">—</span></div>
+            <div class="out-row primary"><span class="out-lbl">Eddington luminosity L<sub>Edd</sub></span><span><span class="out-val" id="out-Ledd">—</span><span class="out-unit">W</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Mode Comparison — Predicted vs. Observed Upper Limits</div>
+    <table class="mode-table" id="mode-table">
+      <thead>
+        <tr>
+          <th>Mode</th>
+          <th>Valid when</th>
+          <th>Predicted L<sub>X</sub> (W)</th>
+          <th>vs. X-ray limit</th>
+          <th>Predicted L<sub>R</sub> (W/Hz)</th>
+          <th>vs. radio limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--teal-glow);font-weight:700">ADAF</td>
+          <td id="adaf-valid" style="color:var(--text-dim)">—</td>
+          <td id="adaf-lx">—</td>
+          <td id="adaf-lx-tag">—</td>
+          <td id="adaf-lr">—</td>
+          <td id="adaf-lr-tag">—</td>
+        </tr>
+        <tr>
+          <td style="color:var(--amber-glow);font-weight:700">Jet-dominated</td>
+          <td id="jet-valid" style="color:var(--text-dim)">—</td>
+          <td id="jet-lx">—</td>
+          <td id="jet-lx-tag">—</td>
+          <td id="jet-lr">—</td>
+          <td id="jet-lr-tag">—</td>
+        </tr>
+        <tr>
+          <td style="color:var(--purple-glow);font-weight:700">Thin disc</td>
+          <td id="disc-valid" style="color:var(--text-dim)">—</td>
+          <td id="disc-lx">—</td>
+          <td id="disc-lx-tag">—</td>
+          <td id="disc-lr">—</td>
+          <td id="disc-lr-tag">—</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="verdict-card warn" id="verdict-card">
+      <div class="verdict-title" id="verdict-title">Verdict</div>
+      <div class="verdict-text" id="verdict-text">Computing…</div>
+    </div>
+  </div>
+
+  <section class="about">
+    <button class="about-toggle" id="about-btn"><span class="arr">▶</span> About this tool</button>
+    <div class="about-body" id="about-body">
+      <h3>Bondi accretion</h3>
+      <p>The Bondi–Hoyle–Lyttleton rate ṁ_B = 4π (GM)² ρ / c_s³ gives the maximum rate at which a black hole accretes from a uniform gas medium at rest. In OC's core, gas density is uncertain but estimated ~0.1–10 cm⁻³ at temperatures of ~8,000–25,000 K (c_s ~ 10–15 km/s). F_Bondi ≈ 0.03 is a commonly used fraction (Xie &amp; Yuan 2012) accounting for winds and outflows that prevent all Bondi material from reaching the horizon.</p>
+      <h3>Accretion modes</h3>
+      <p><strong>ADAF</strong> (advection-dominated accretion flow, Narayan &amp; Yi 1994): at λ ≪ 0.01, the accretion flow is radiatively very inefficient. L_X ≈ 10⁻³ × λ² × L_Edd (from ADAF cooling function scaling). Radio emission from the ADAF corona follows the fundamental plane (Merloni et al. 2003).</p>
+      <p><strong>Jet-dominated</strong>: low-power jet with mechanical efficiency η_jet ≈ 10⁻⁵. Radio luminosity L_R = η_jet × ṁ_acc × c²; X-ray from the jet base ≈ 10× L_R.</p>
+      <p><strong>Thin disc</strong> (Shakura–Sunyaev): valid at λ > 0.01. Radiative efficiency η = 0.1. L_bol = η × ṁ_acc × c². X-ray = 20% of bolometric; radio much weaker.</p>
+      <h3>Current observational limits</h3>
+      <p>González Prieto et al. 2025 (arXiv:2512.09649, published in ApJ): VLA 8.5 GHz and MeerKAT 1.3 GHz upper limits on OC's IMBH candidate, plus archival Chandra data. No counterpart detected. The resulting efficiency constraints are stronger than any prior work for this system.</p>
+      <h3>References</h3>
+      <p>González Prieto et al. 2025 (arXiv:2512.09649) · Bondi 1952 (MNRAS 112:195) · Narayan &amp; Yi 1994 (ApJ 428:L13) · Merloni et al. 2003 (MNRAS 345:1057) · Xie &amp; Yuan 2012 (MNRAS 427:1580)</p>
+    </div>
+  </section>
+  <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-03</footer>
+</div>
+<script>
+'use strict';
+const G=6.674e-11,C=2.998e8,MSUN=1.989e30,MP=1.673e-27,PC_M=3.086e16,YR_S=3.156e7;
+function sup(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x){if(!isFinite(x)||x<=0)return'—';const e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);return m.toFixed(2)+'×10'+sup(e)}
+function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
+function setHTML(id,v){const el=document.getElementById(id);if(el)el.innerHTML=v}
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function saveHash(){history.replaceState(null,'','#Mb='+S.Mb.toFixed(3)+'&n='+S.logn.toFixed(1)+'&cs='+S.cs+'&fb='+S.fb.toFixed(3)+'&lr='+S.lr.toFixed(1)+'&lx='+S.lx.toFixed(1))}
+
+const S={Mb:Math.log10(8200),logn:0,cs:12,fb:0.03,lr:-8,lx:29};
+
+function statusTag(predicted,limit,higherIsBad){
+  // higherIsBad: if predicted > limit, it's ruled out
+  const ratio=Math.log10(predicted)-limit;
+  if(higherIsBad){
+    if(ratio>0)return '<span class="tag-bad">RULED OUT</span>';
+    if(ratio>-1)return '<span class="tag-ok">Marginal</span>';
+    return '<span class="tag-ok">Consistent</span>';
+  }
+  return '<span class="tag-ok">Consistent</span>';
+}
+
+function compute(){
+  const Mbh=Math.pow(10,S.Mb)*MSUN; // kg
+  const n=Math.pow(10,S.logn); // cm^-3
+  const rho=n*1e6*MP; // kg/m^3 (converting cm^-3 → m^-3)
+  const cs=S.cs*1e3; // m/s
+  const fb=S.fb;
+
+  // Eddington luminosity
+  const Ledd=1.26e31*(Mbh/MSUN); // W
+  const MdotEdd=Ledd/(0.1*C*C); // kg/s (thin disc efficiency 0.1)
+
+  // Bondi rate
+  const rB=G*Mbh/(cs*cs); // m
+  const mdotB=4*Math.PI*G*G*Mbh*Mbh*rho/Math.pow(cs,3); // kg/s
+  const mdotAcc=fb*mdotB; // actual accretion rate
+  const lambda=mdotAcc*C*C/Ledd; // dimensionless Eddington fraction
+
+  // Conversions
+  const mdotB_solar=mdotB*YR_S/MSUN;
+  const mdotAcc_solar=mdotAcc*YR_S/MSUN;
+  const rB_pc=rB/PC_M;
+
+  setText('lbl-Mb',Math.round(Math.pow(10,S.Mb)).toLocaleString()+' M☉');
+  setText('lbl-n',(Math.pow(10,S.logn)).toFixed(S.logn>=0?1:2)+' cm⁻³');
+  setText('lbl-cs',S.cs+' km/s');
+  setText('lbl-fb',S.fb.toFixed(3));
+  setText('lbl-lr','10'+sup(S.lr.toFixed(0))+' W/Hz');
+  setText('lbl-lx','10'+sup(S.lx.toFixed(0))+' W');
+
+  setText('out-mdot',fmtSci(mdotB_solar));
+  setText('out-rB',rB_pc.toExponential(2));
+  setText('out-macc',fmtSci(mdotAcc_solar));
+  setText('out-ledd',fmtSci(Ledd));
+  setText('out-ledd',fmtSci(Ledd));
+  // Eddington fraction display
+  const doc=document.getElementById('out-ledd');
+  const ldoc=document.getElementById('out-Ledd');
+  if(doc) doc.textContent=fmtSci(Ledd);
+  document.getElementById('out-ledd').textContent=lambda<1e-6?fmtSci(lambda):lambda.toPrecision(3);
+  if(ldoc) ldoc.textContent=fmtSci(Ledd);
+
+  // ADAF mode predictions
+  const Lx_adaf=1e-3*lambda*lambda*Ledd; // Narayan & Yi scaling: L_X ~ 0.001 ṁ^2 L_Edd
+  // Radio via simplified fundamental plane (log in W, W/Hz)
+  // log(L_R [W/Hz]) ≈ 0.6 log(L_X [W]) - 0.78 log(M_BH/1e8 M_sun) - 2.3  (rough from Merloni 2003 converted to W)
+  const logLr_adaf=0.6*Math.log10(Math.max(Lx_adaf,1e20))-0.78*Math.log10(Math.max(Mbh/MSUN/1e8,1e-5))-2.3;
+  const Lr_adaf=Math.pow(10,logLr_adaf);
+
+  // Jet mode
+  const eta_jet=1e-5;
+  const Lr_jet=eta_jet*mdotAcc*C*C/(3e9); // spectral L_R at ~1 GHz: L_R[W/Hz] ~ L_jet / bandwidth; rough: L_R = P_jet/1e9
+  const Lx_jet=10*Lr_jet*3e9; // X-ray ~ 10× radio luminosity (W)
+
+  // Thin disc mode
+  const Lbol_disc=0.1*mdotAcc*C*C;
+  const Lx_disc=0.2*Lbol_disc;
+  const Lr_disc=Math.pow(10,logLr_adaf)*0.01; // disc is radio-quiet, ~1% of ADAF radio
+
+  const Lrlim=Math.pow(10,S.lr); // W/Hz
+  const Lxlim=Math.pow(10,S.lx); // W
+
+  setText('adaf-valid',lambda<0.01?'λ<0.01 ✓':'λ>0.01 (marginal)');
+  setText('adaf-lx',fmtSci(Lx_adaf)+' W');
+  setHTML('adaf-lx-tag',Lx_adaf>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setText('adaf-lr',fmtSci(Lr_adaf)+' W/Hz');
+  setHTML('adaf-lr-tag',Lr_adaf>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+
+  setText('jet-valid','any λ (low-power)');
+  setText('jet-lx',fmtSci(Lx_jet)+' W');
+  setHTML('jet-lx-tag',Lx_jet>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setText('jet-lr',fmtSci(Lr_jet)+' W/Hz');
+  setHTML('jet-lr-tag',Lr_jet>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+
+  setText('disc-valid',lambda>0.01?'λ>0.01 ✓':'λ<0.01 (not applicable)');
+  setText('disc-lx',fmtSci(Lx_disc)+' W');
+  setHTML('disc-lx-tag',Lx_disc>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setText('disc-lr',fmtSci(Lr_disc)+' W/Hz');
+  setHTML('disc-lr-tag',Lr_disc>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+
+  // Verdict
+  const adaf_ok=(Lx_adaf<=Lxlim)&&(Lr_adaf<=Lrlim);
+  const jet_ok=(Lx_jet<=Lxlim)&&(Lr_jet<=Lrlim);
+  const disc_ok=(Lx_disc<=Lxlim)&&(Lr_disc<=Lrlim);
+  const survivors=[];
+  if(adaf_ok)survivors.push('ADAF');
+  if(jet_ok)survivors.push('jet-dominated');
+  if(disc_ok)survivors.push('thin disc');
+
+  const vc=document.getElementById('verdict-card');
+  const vt=document.getElementById('verdict-title');
+  const vtx=document.getElementById('verdict-text');
+  if(survivors.length===3){vc.className='verdict-card ok';vt.textContent='All modes consistent';}
+  else if(survivors.length>0){vc.className='verdict-card warn';vt.textContent='Partial constraints';}
+  else{vc.className='verdict-card bad';vt.textContent='All modes ruled out — parameters inconsistent with upper limits';}
+
+  vtx.textContent=survivors.length>0?
+    'Modes surviving all constraints: '+survivors.join(', ')+'. Eddington fraction λ = '+lambda.toExponential(2)+'. Bondi radius r_B = '+rB_pc.toExponential(2)+' pc.':
+    'No standard accretion mode survives all constraints. Try lower gas density or higher Bondi fraction.';
+}
+
+// Wire sliders
+['sl-Mb','sl-logn','sl-cs','sl-fb','sl-lr','sl-lx'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    S.Mb=parseFloat(document.getElementById('sl-Mb').value);
+    S.logn=parseFloat(document.getElementById('sl-logn').value);
+    S.cs=parseFloat(document.getElementById('sl-cs').value);
+    S.fb=parseFloat(document.getElementById('sl-fb').value);
+    S.lr=parseFloat(document.getElementById('sl-lr').value);
+    S.lx=parseFloat(document.getElementById('sl-lx').value);
+    compute();saveHash();
+  });
+});
+// Wire preset buttons
+document.querySelectorAll('[data-Mb]').forEach(b=>b.addEventListener('click',()=>{S.Mb=parseFloat(b.dataset.Mb);document.getElementById('sl-Mb').value=S.Mb;compute();saveHash();}));
+document.querySelectorAll('[data-logn]').forEach(b=>b.addEventListener('click',()=>{S.logn=parseFloat(b.dataset.logn);document.getElementById('sl-logn').value=S.logn;compute();saveHash();}));
+document.querySelectorAll('[data-cs]').forEach(b=>b.addEventListener('click',()=>{S.cs=parseFloat(b.dataset.cs);document.getElementById('sl-cs').value=S.cs;compute();saveHash();}));
+document.querySelectorAll('[data-fb]').forEach(b=>b.addEventListener('click',()=>{S.fb=parseFloat(b.dataset.fb);document.getElementById('sl-fb').value=S.fb;compute();saveHash();}));
+document.querySelectorAll('[data-lr]').forEach(b=>b.addEventListener('click',()=>{S.lr=parseFloat(b.dataset.lr);document.getElementById('sl-lr').value=S.lr;compute();saveHash();}));
+document.querySelectorAll('[data-lx]').forEach(b=>b.addEventListener('click',()=>{S.lx=parseFloat(b.dataset.lx);document.getElementById('sl-lx').value=S.lx;compute();saveHash();}));
+document.getElementById('about-btn').addEventListener('click',()=>{const b=document.getElementById('about-body');const t=document.getElementById('about-btn');const o=!b.classList.contains('open');b.classList.toggle('open',o);t.classList.toggle('open',o);});
+
+// Init
+(function(){const h=getHash();if(h.Mb)S.Mb=parseFloat(h.Mb);if(h.n)S.logn=parseFloat(h.n);if(h.cs)S.cs=parseFloat(h.cs);if(h.fb)S.fb=parseFloat(h.fb);if(h.lr)S.lr=parseFloat(h.lr);if(h.lx)S.lx=parseFloat(h.lx);['sl-Mb','sl-logn','sl-cs','sl-fb','sl-lr','sl-lx'].forEach(id=>{const k={'sl-Mb':'Mb','sl-logn':'logn','sl-cs':'cs','sl-fb':'fb','sl-lr':'lr','sl-lx':'lx'}[id];document.getElementById(id).value=S[k];});compute();})();
+</script>
+</body>
+</html>
