@@ -99,6 +99,21 @@ a:hover{color:var(--teal-glow)}
 .footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 
 @media (max-width:720px){.hero h1{font-size:34px}.hero-sub{font-size:16px}.container{padding:40px 18px 60px}.section{margin-bottom:40px}.section-title{font-size:15px}}
+
+/* ── Search bar ── */
+.search-bar{position:sticky;top:47px;z-index:99;background:rgba(7,5,21,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border-subtle);padding:9px 0}
+.search-inner{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:10px}
+.search-icon{font-size:15px;color:var(--text-dim);flex-shrink:0;line-height:1}
+#search-input{flex:1;background:rgba(13,10,36,.85);border:1px solid var(--border-subtle);border-radius:8px;padding:7px 13px;color:var(--text-primary);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.03em;outline:none;transition:border-color .15s;-webkit-appearance:none}
+#search-input:focus{border-color:var(--purple-bright);box-shadow:0 0 0 2px rgba(112,85,212,.12)}
+#search-input::placeholder{color:var(--text-dim)}
+#search-input::-webkit-search-cancel-button{display:none}
+.search-clear{font-size:15px;line-height:1;color:var(--text-dim);background:none;border:none;cursor:pointer;padding:4px 7px;border-radius:5px;display:none;transition:color .12s}
+.search-clear:hover{color:var(--text-primary)}
+#search-count{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);white-space:nowrap;min-width:60px;text-align:right;letter-spacing:.04em}
+.no-results{display:none;padding:40px 20px;text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:.06em}
+.no-results.visible{display:block}
+@media (max-width:560px){.search-inner{padding:0 14px}}
 </style>
 </head>
 <body>
@@ -111,6 +126,15 @@ a:hover{color:var(--teal-glow)}
     <a class="nav-link" href="https://omegacentauri.me/membership.html">Membership</a>
   </div>
 </nav>
+
+<div class="search-bar" role="search">
+  <div class="search-inner">
+    <span class="search-icon" aria-hidden="true">&#128269;</span>
+    <input id="search-input" type="search" placeholder="Search tools, workflows, scenarios…" autocomplete="off" spellcheck="false" aria-label="Search tools">
+    <button class="search-clear" id="search-clear" aria-label="Clear search">&#10005;</button>
+    <span id="search-count"></span>
+  </div>
+</div>
 
 <div class="container">
 
@@ -1053,5 +1077,89 @@ a:hover{color:var(--teal-glow)}
   </section>
 
 </main>
+
+<div class="no-results" id="no-results">No tools match &#8220;<span id="no-results-term"></span>&#8221;</div>
+
+<script>
+(function(){
+  var inp = document.getElementById('search-input');
+  var clr = document.getElementById('search-clear');
+  var cnt = document.getElementById('search-count');
+  var noR = document.getElementById('no-results');
+  var noT = document.getElementById('no-results-term');
+
+  var cards = Array.from(document.querySelectorAll('.tool-card')).map(function(el){
+    return { el: el, text: el.textContent.toLowerCase() };
+  });
+  var total = cards.length;
+
+  var sections = Array.from(document.querySelectorAll('.section'));
+
+  function filter(q){
+    q = q.trim().toLowerCase();
+    var matched = 0;
+
+    cards.forEach(function(c){
+      var show = !q || c.text.indexOf(q) !== -1;
+      c.el.style.display = show ? '' : 'none';
+      if(show) matched++;
+    });
+
+    // Hide scenario track headers if all their cards are hidden
+    sections.forEach(function(sec){
+      var grid = sec.querySelector('.tools-grid');
+      if(!grid) return;
+      var children = Array.from(grid.children);
+      var lastHeader = null;
+      var headerHasVisible = false;
+
+      children.forEach(function(el){
+        if(el.classList.contains('scenario-track-header')){
+          if(lastHeader) lastHeader.style.display = headerHasVisible ? '' : 'none';
+          lastHeader = el;
+          headerHasVisible = false;
+        } else if(el.classList.contains('tool-card')){
+          if(el.style.display !== 'none') headerHasVisible = true;
+        }
+      });
+      if(lastHeader) lastHeader.style.display = headerHasVisible ? '' : 'none';
+
+      // Hide entire section when nothing visible
+      var anyVisible = children.some(function(el){
+        return el.classList.contains('tool-card') && el.style.display !== 'none';
+      });
+      sec.style.display = anyVisible ? '' : 'none';
+    });
+
+    if(q){
+      cnt.textContent = matched + ' / ' + total;
+      clr.style.display = '';
+      noR.classList.toggle('visible', matched === 0);
+      if(matched === 0) noT.textContent = q;
+    } else {
+      cnt.textContent = '';
+      clr.style.display = 'none';
+      noR.classList.remove('visible');
+    }
+  }
+
+  inp.addEventListener('input', function(){ filter(inp.value); });
+
+  clr.addEventListener('click', function(){
+    inp.value = '';
+    inp.focus();
+    filter('');
+  });
+
+  // Restore search term from URL hash (#search=keyword)
+  var hash = location.hash;
+  if(hash && hash.indexOf('#search=') === 0){
+    var term = decodeURIComponent(hash.slice(8));
+    inp.value = term;
+    filter(term);
+  }
+})();
+</script>
+
 </body>
 </html>
