@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<!--
+  The Great Silence — Dark Forest Visualization II
+  Omega Centauri Society · omegacentauri.me
+  Dark Forest Series · Part II of III
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society
+  Version: 1.1 · 2026-06-03
+  Site section: #fermi #mth #seti
+  Enhancements: nebula dust lanes, re-fogging mechanic (revealed areas fade after 25s)
+  Data sources:
+    - Ćirković, M.M. (2018) The Great Silence. Oxford University Press.
+    - Webb, S. (2002) If the Universe Is Teeming with Aliens...Where Is Everybody? Copernicus.
+    - Liu, C. (2008/2015) The Dark Forest. Tor Books.
+    - Sandberg, A., Armstrong, S., Ćirković, M.M. (2017) arXiv:1705.03394
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Silence — Dark Forest II · OCS</title>
+<meta name="description" content="A fog-of-war visualization of the Fermi Paradox. Scan the galaxy, reveal civilizations, and discover why each one is silent.">
+<link rel="canonical" href="https://omegacentauri.me/tools/dark-forest-silence.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 20% 20%,rgba(139,0,0,.06),transparent 55%),
+    radial-gradient(ellipse at 80% 65%,rgba(112,85,212,.07),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:48px 28px 80px}
+.hero{margin-bottom:24px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-glow);margin-bottom:14px;opacity:.85}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:38px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;
+  background:linear-gradient(120deg,var(--text-primary) 10%,var(--purple-glow) 50%,var(--red-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;max-width:780px}
+.how-to{background:linear-gradient(180deg,rgba(7,5,21,.7),rgba(13,10,36,.4));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.how-to-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.how-to-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px}
+@media(max-width:760px){.how-to-steps{grid-template-columns:1fr}}
+.how-step{display:flex;gap:12px;align-items:flex-start}
+.how-step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;color:var(--purple-glow);line-height:1;flex-shrink:0;margin-top:2px;min-width:20px}
+.how-step-body{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.how-step-body strong{color:var(--text-primary);font-weight:600}
+.canvas-section{margin-bottom:24px}
+.canvas-wrap{position:relative;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:#000005}
+#galaxy{display:block;width:100%;height:auto;cursor:crosshair}
+.info-panel{position:absolute;top:16px;right:16px;width:272px;background:rgba(3,2,10,.95);border:1px solid;border-radius:12px;padding:18px 20px;opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:10;backdrop-filter:blur(8px);border-color:var(--panel-color,var(--purple-bright))}
+.info-panel.visible{opacity:1;pointer-events:auto}
+.info-close{position:absolute;top:10px;right:12px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);cursor:pointer;background:none;border:none;padding:2px 4px;line-height:1}
+.info-close:hover{color:var(--teal-glow)}
+.info-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:8px;border:1px solid currentColor;display:inline-block;margin-bottom:10px}
+.info-name{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:8px;line-height:1.3}
+.info-body{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.info-detail{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-subtle);font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.04em;line-height:1.8}
+.info-hint{margin-top:14px;font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:.06em;text-align:center;opacity:.6;text-transform:uppercase}
+.controls-bar{display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px 32px;margin-bottom:14px}
+.ctrl-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px}
+.era-row{display:flex;gap:7px;flex-wrap:wrap}
+.era-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;padding:6px 14px;border-radius:20px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .2s;line-height:1.4;text-align:center}
+.era-btn .era-sub{display:block;font-size:8px;color:var(--text-dim);margin-top:1px}
+.era-btn:hover{border-color:var(--purple-bright);color:var(--purple-glow)}
+.era-btn.active{border-color:var(--purple-bright);background:rgba(112,85,212,.08);color:var(--purple-glow)}
+.scan-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.reset-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid rgba(208,64,64,.4);background:transparent;color:rgba(208,64,64,.7);cursor:pointer;transition:all .2s}
+.reset-btn:hover{border-color:var(--red-glow);color:var(--red-glow)}
+.reveal-counter{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.reveal-counter span{color:var(--purple-glow)}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+.legend-item{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--text-secondary);text-transform:uppercase}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ld-fog{background:rgba(30,25,60,.9);border:1px dashed rgba(112,85,212,.3)}
+.ld-df{background:#7070e0;box-shadow:0 0 5px rgba(100,100,220,.5)}
+.ld-tr{background:var(--amber-glow);box-shadow:0 0 6px rgba(255,200,64,.4)}
+.ld-de{background:var(--red-glow);box-shadow:0 0 6px rgba(255,80,80,.4)}
+.ld-ps{background:rgba(80,72,112,.5)}
+.ld-ae{background:var(--teal-glow);box-shadow:0 0 5px rgba(77,232,192,.3)}
+.silence-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+@media(max-width:760px){.silence-cards{grid-template-columns:1fr}}
+.sc{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;border-left:3px solid var(--sc-accent)}
+.sc-df{--sc-accent:#7070e0}.sc-tr{--sc-accent:var(--amber-bright)}.sc-de{--sc-accent:var(--red-mid)}.sc-ps{--sc-accent:rgba(80,72,112,.6)}.sc-ae{--sc-accent:var(--teal-mid)}
+.sc-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.10em;text-transform:uppercase;margin-bottom:6px}
+.sc-df .sc-title{color:#9090ee}.sc-tr .sc-title{color:var(--amber-glow)}.sc-de .sc-title{color:var(--red-bright)}.sc-ps .sc-title{color:var(--text-dim)}.sc-ae .sc-title{color:var(--teal-glow)}
+.sc-body{font-size:14px;color:var(--text-secondary);line-height:1.65}
+.synthesis{background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:28px 30px;margin-bottom:28px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:12px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.85;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.series-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:16px 20px;border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)}
+.series-nav a{color:var(--purple-glow);letter-spacing:.08em}.series-nav a:hover{color:var(--amber-glow)}
+.footer{padding:28px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:760px){.hero h1{font-size:27px}.container{padding:36px 18px 60px}.info-panel{width:calc(100% - 24px);top:8px;right:12px}.controls-bar{flex-direction:column;gap:14px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Dark Forest · II — The Great Silence</span>
+    <a href="https://omegacentauri.me/" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Dark Forest Series · Part II of III</div>
+    <h1>The Great Silence</h1>
+    <p class="hero-sub">The galaxy is full of civilizations. You cannot see them. This is a SETI observatory. The fog is not empty space — it is everything we cannot detect. Click to scan. Discover why each civilization is silent.</p>
+  </div>
+  <div class="how-to">
+    <div class="how-to-title">How to use this visualization</div>
+    <div class="how-to-steps">
+      <div class="how-step"><div class="how-step-num">1</div><div class="how-step-body"><strong>The fog is the point.</strong> Nearly everything is hidden. This is what SETI actually observes: a dark, apparently empty galaxy. The question this tool asks is not "where is everyone?" but "why can't we see them?"</div></div>
+      <div class="how-step"><div class="how-step-num">2</div><div class="how-step-body"><strong>Watch for signals.</strong> Faint rings occasionally pulse through the fog — brief moments of detectability before a civilization suppresses its broadcast. These are your only clues before you click.</div></div>
+      <div class="how-step"><div class="how-step-num">3</div><div class="how-step-body"><strong>Click to reveal.</strong> Clicking clears fog in that area. Revealed regions re-fog after ~25 seconds — SETI data doesn't stay current forever. ωCen is pre-revealed as the site's primary candidate.</div></div>
+      <div class="how-step"><div class="how-step-num">4</div><div class="how-step-body"><strong>Shift the era.</strong> Era controls change the mix of silence types. In the far future, very few civilizations remain detectable at all. Use "Clear scan" to re-fog all revealed regions and start again.</div></div>
+    </div>
+  </div>
+  <div class="canvas-section">
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="galaxy" width="1060" height="530"></canvas>
+      <div class="info-panel" id="infoPanel">
+        <button class="info-close" id="infoClose" aria-label="Close">✕</button>
+        <span class="info-badge" id="infoBadge">—</span>
+        <div class="info-name" id="infoName">—</div>
+        <div class="info-body" id="infoBody">Click anywhere on the canvas to scan that region of the galaxy.</div>
+        <div class="info-detail" id="infoDetail"></div>
+        <div class="info-hint">← click another region to compare</div>
+      </div>
+    </div>
+    <div class="controls-bar" style="margin-top:14px">
+      <div>
+        <div class="ctrl-label">Cosmic Era</div>
+        <div class="era-row">
+          <button class="era-btn" data-era="early">Early Universe<span class="era-sub">~8 Gyr ago</span></button>
+          <button class="era-btn active" data-era="present">Present Day<span class="era-sub">today</span></button>
+          <button class="era-btn" data-era="future">Far Future<span class="era-sub">+10 Gyr hence</span></button>
+        </div>
+      </div>
+      <div>
+        <div class="ctrl-label">Scan log</div>
+        <div class="scan-controls">
+          <div class="reveal-counter">Revealed: <span id="revealCount">0</span> / <span id="totalCount">31</span></div>
+          <button class="reset-btn" id="resetBtn">↺ Clear scan</button>
+        </div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot ld-fog"></div>Unscanned</div>
+      <div class="legend-item"><div class="legend-dot ld-df"></div>Dark Forest</div>
+      <div class="legend-item"><div class="legend-dot ld-tr"></div>Transcended (MTH)</div>
+      <div class="legend-item"><div class="legend-dot ld-de"></div>Destroyed</div>
+      <div class="legend-item"><div class="legend-dot ld-ps"></div>Pre-signal / filtered</div>
+      <div class="legend-item"><div class="legend-dot ld-ae"></div>Aestivating</div>
+    </div>
+  </div>
+  <div class="silence-cards">
+    <div class="sc sc-df"><div class="sc-title">Dark Forest</div><div class="sc-body">Broadcasting is equivalent to painting a target. A civilization that detects any other civilization faces an irreducible dilemma: trust is impossible across interstellar distances. The rational move is silence — or preemption. Most choose silence.</div></div>
+    <div class="sc sc-tr"><div class="sc-title">Transcended (MTH)</div><div class="sc-body">Not destroyed, not hiding — departed from the observable substrate. Computation migrated inward to a denser, colder medium. MTH predicts exactly this signature: a populated galaxy that looks empty because its most advanced inhabitants have effectively become invisible to many forms of detection.</div></div>
+    <div class="sc sc-de"><div class="sc-title">Destroyed</div><div class="sc-body">Signal detected for 60–400 years, then abrupt cutoff. Not technological failure — the silence pattern is wrong for that. The leading explanation: another civilization detected the signal first and acted.</div></div>
+    <div class="sc sc-ps"><div class="sc-title">Pre-signal / Filtered</div><div class="sc-body">Either life never arose here, or it was stopped by the Great Filter before reaching signal-capable complexity. A suitable stellar system with no detectable signature. Either we are early, or the Filter is real.</div></div>
+    <div class="sc sc-ae"><div class="sc-title">Aestivating</div><div class="sc-body">Deliberately dormant, waiting for the universe to cool. Computation per joule scales inversely with temperature — a civilization maximizing long-run computational output runs cold and quiet now, then wakes into an exponentially richer future.</div></div>
+  </div>
+  <div class="synthesis">
+    <div class="synth-title">All Silences Are Not the Same</div>
+    <div class="synth-prose">
+      <p>The Fermi Paradox asks where everyone is. The better question is why every explanation produces the same observation — silence. Some civs went quiet by choice. Some were silenced. Some left the detectable substrate altogether. Some never made it. The fog here isn't empty space; it's the sum of those outcomes.</p>
+      <p>What changes across eras isn't the silence — it's what produced it. In the early universe, most nodes are pre-signal, the silence of youth. In the far future, the sky goes equally dark for entirely different reasons: transcension, aestivation, elimination. Same observation. Different story behind it.</p>
+      <p>ωCen anchors this view because at 11–12 Gyr it's had the longest run. <a href="dark-forest-mth.html">Part I covers the transcension arc</a> — what happens to a civilization dense and old enough to have completed it.</p>
+    </div>
+  </div>
+  <div class="series-nav">
+    <div style="display:flex;gap:20px"><a href="dark-forest-mth.html">← Part I: The Transcension Path</a></div>
+    <span>Dark Forest Series · II of III</span>
+    <div><a href="dark-forest-hunters.html">Part III: Every Hunter in the Dark →</a></div>
+  </div>
+</div>
+<footer class="footer">
+  <div><a href="https://omegacentauri.me/">omegacentauri.me</a> · Dark Forest Series · Visualization · Code: MIT · Prose: CC BY 4.0</div>
+  <div style="margin-top:4px">MTH: The Omega Centauri Society · Ćirković (2018) · Webb (2002) · Liu (2008/2015) · Sandberg et al. (2017)</div>
+</footer>
+<script>
+(function(){
+'use strict';
+const canvas=document.getElementById('galaxy');
+const ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height;
+const CX=W*0.47,CY=H*0.50;
+const fogCanvas=document.createElement('canvas');
+fogCanvas.width=W;fogCanvas.height=H;
+const fogCtx=fogCanvas.getContext('2d');
+const RNG=(n=>{let s=n;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296;};})(0xc0ffee42);
+
+const TYPES={
+  'dark-forest':{label:'Dark Forest',badgeColor:'#8888ee',glowRgb:'100,100,220',panelBorder:'#5555bb'},
+  'transcended':{label:'Transcended — MTH',badgeColor:'#ffc840',glowRgb:'255,200,64',panelBorder:'#c47800'},
+  'destroyed':{label:'Destroyed',badgeColor:'#ff6060',glowRgb:'220,80,80',panelBorder:'#8a2020'},
+  'pre-signal':{label:'Pre-signal / Filtered',badgeColor:'#504870',glowRgb:'80,72,112',panelBorder:'#302848'},
+  'aestivating':{label:'Aestivating',badgeColor:'#4de8c0',glowRgb:'77,232,192',panelBorder:'#0d6e58'}
+};
+
+const LORE={
+  'dark-forest':[
+    {body:'Broadcast for 310 years, then silence. Analysis rules out technological failure — the shutdown was simultaneous across all frequencies. The civilization detected something and made a decision. It has not broadcast since.',detail:'Silence type: deliberate suppression\nBroadcast window: 310 yr\nCurrent status: dark by choice\nDetection risk: existential'},
+    {body:'Never broadcast at all. Atmospheric spectroscopy suggests a technological civilization — industrial signatures, atmospheric chemistry anomalies — but no EM leakage at any frequency. They learned the cost before sending anything.',detail:'Silence type: preemptive\nEM leakage: none detected\nIndustrial signatures: present\nStage: dark from the start'},
+    {body:'Three brief, irregular pulse bursts across 40 years, consistent with accidental leakage. Then complete suppression. Either they discovered the risk, or they were warned.',detail:'Silence type: suppressed after leakage\nBurst count: 3 events / 40 yr\nPosition: not triangulable\nCurrent signal: zero'}
+  ],
+  'transcended':[
+    {body:'No signals. No megastructures. No waste heat at stellar scale. But a gravitational anomaly — a compact object in a system that should not have one. They went somewhere we cannot follow with current instruments.',detail:'Silence type: MTH departure\nGravitational anomaly: confirmed\nWaste heat: below threshold\nSubstrate: compact / unknown'},
+    {body:'The signature is entirely negative: everywhere this civilization might have left a trace, there is nothing. The Macro Transcension Hypothesis predicts exactly this — not destruction, not hiding, but departure.',detail:'Silence type: inner departure\nEM: absent\nHeat signature: stellar-normal\nMTH prediction: confirmed pattern'},
+    {body:'Detectable for ~800 years — active, noisy, expanding. Then a rapid contraction phase, then nothing. The contraction phase is distinctive: they were decommissioning outer infrastructure, not dying.',detail:'Silence type: transcension\nActive window: ~800 yr\nContraction phase: 60 yr\nCurrent location: inner substrate'}
+  ],
+  'destroyed':[
+    {body:'Signal detected for 62 years. Peak signal strength at year 51. Then an abrupt, total cutoff — no decay, no final transmission. The cutoff is inconsistent with natural causes.',detail:'Silence type: likely elimination\nBroadcast window: 62 yr\nCutoff type: instantaneous\nDetection-to-elimination lag: short'},
+    {body:'A clear, structured signal lasting 180 years, then silence. No debris field, no residual heat, no final burst. Whatever ended this civilization did so cleanly.',detail:'Silence type: destruction\nBroadcast window: 180 yr\nMethod: unknown — no residual\nOutcome: complete'},
+    {body:'Intermittent signals over 400 years, then 22 years of silence, then one last coherent burst — possibly a warning — then nothing.',detail:'Silence type: probable destruction\nBroadcast pattern: intermittent → terminal\nFinal burst: 1 event, unresolved\nCurrent signal: zero'}
+  ],
+  'pre-signal':[
+    {body:'A suitable stellar system with a habitable-zone planet. No detectable signal of any kind. Either life never arose here, the Great Filter operated here, or we are simply too early.',detail:'Silence type: null / pre-emergence\nHabitable zone: yes\nSignal: none detected\nFilter status: unknown'},
+    {body:'Atmospheric data suggests microbial life — oxygen anomaly, methane signature. But no EM leakage, no structured signals. The Filter is somewhere between microbial life and technological civilization here.',detail:'Silence type: filtered pre-signal\nBiological markers: microbial\nTechnological markers: none\nFilter location: post-abiogenesis'},
+    {body:'Empty. A stellar system with no planets in the habitable zone, no anomalous signatures, no hint of prior activity.',detail:'Silence type: non-emergence\nHabitable zone: marginal/absent\nSignal: none\nPrior activity: none detected'}
+  ],
+  'aestivating':[
+    {body:'A faint thermal signature — slightly cooler than expected for a civilization of this estimated age. Running at reduced clock speed, minimizing entropy production. Waiting for the universe to cool before waking.',detail:'Silence type: deliberate dormancy\nThermal excess: sub-threshold\nClock speed: minimized\nWake condition: CMB < threshold'},
+    {body:'No EM. No signals. But anomalously low heat waste for a stellar system with industrial markers. A civilization maximizing long-run computation runs cold.',detail:'Silence type: aestivation\nEM: absent\nHeat waste: below industrial baseline\nComputational rate: deferred'},
+    {body:'Oscillating thermal signature — brief periods of elevated output, then suppression — consistent with a civilization running in sleep cycles every ~10,000 years.',detail:'Silence type: cyclic aestivation\nCycle period: ~10 kyr\nDuration: 2 Myr confirmed\nCurrent phase: dormant'}
+  ],
+  'omegacen':{body:'NGC 5139 — Omega Centauri. Age: 11–12 Gyr. The oldest, most massive globular cluster in the Milky Way — pre-revealed here because it is the primary candidate this site investigates. Silence type: most likely transcension (MTH). Any civilization that arose here 8–10 Gyr ago has had more than enough time to complete the transcension arc.',detail:'Status: pre-revealed (candidate)\nSilence type: MTH transcension\nAge: 11–12 Gyr\nCandidate IMBH at core: yes\nDark matter halo: retained'}
+};
+
+const ERA_WEIGHTS={
+  early:{'pre-signal':0.55,'dark-forest':0.12,'transcended':0.08,'destroyed':0.08,'aestivating':0.17},
+  present:{'pre-signal':0.22,'dark-forest':0.28,'transcended':0.22,'destroyed':0.16,'aestivating':0.12},
+  future:{'pre-signal':0.08,'dark-forest':0.20,'transcended':0.38,'destroyed':0.18,'aestivating':0.16}
+};
+function weightedType(weights){const r=Math.random();let acc=0;for(const[type,w]of Object.entries(weights)){acc+=w;if(r<acc)return type;}return 'pre-signal';}
+
+const CIV_DEFS=[
+  {x:CX+28,y:CY-20,isOmegaCen:true,label:'NGC 5139 · ωCen'},
+  {x:CX-290,y:CY-58},{x:CX-248,y:CY+102},{x:CX-338,y:CY+30},{x:CX-210,y:CY-135},
+  {x:CX+300,y:CY+112},{x:CX+320,y:CY-78},{x:CX+248,y:CY-150},{x:CX-100,y:CY+196},
+  {x:CX+102,y:CY+188},{x:CX-378,y:CY-16},{x:CX-152,y:CY-80},{x:CX-178,y:CY+44},
+  {x:CX+128,y:CY-94},{x:CX+170,y:CY+50},{x:CX-68,y:CY-164},{x:CX+205,y:CY-18},
+  {x:CX-265,y:CY+170},{x:CX+262,y:CY+180},{x:CX-120,y:CY+130},{x:CX-78,y:CY-42},
+  {x:CX+82,y:CY+60},{x:CX-198,y:CY-12},{x:CX+42,y:CY-104},{x:CX+160,y:CY+140},
+  {x:CX-348,y:CY-42},{x:CX+68,y:CY+22},{x:CX-132,y:CY+30},{x:CX+182,y:CY-120},
+  {x:CX-58,y:CY+90},{x:CX+308,y:CY+32}
+];
+
+// Re-fog constants
+const REFOG_DELAY=25000,REFOG_DURATION=8000;
+let revealedCivs=new Map(); // id → revealTimestamp
+
+const civs=CIV_DEFS.map((def,i)=>({...def,id:i,label:def.label||'Scan region '+String.fromCharCode(65+(i%26)),silenceType:def.isOmegaCen?'transcended':'pre-signal',lore:def.isOmegaCen?LORE.omegacen:null,phase:RNG()*Math.PI*2,phaseSpeed:0.3+RNG()*0.5,signalTimer:RNG()*6000,signalInterval:5000+RNG()*10000,signalRings:[],signalFlash:0,sigProbability:RNG()<0.45?0.7:0,baseR:0}));
+
+function applyEra(eraKey){
+  const weights=ERA_WEIGHTS[eraKey];
+  civs.forEach(c=>{
+    if(c.isOmegaCen)return;
+    c.silenceType=weightedType(weights);
+    const arr=LORE[c.silenceType];
+    c.lore=arr[Math.floor(Math.random()*arr.length)];
+    c.signalRings=[];c.signalFlash=0;
+  });
+}
+applyEra('present');
+revealedCivs.set(0,performance.now()); // ωCen pre-revealed permanently
+
+const stars=Array.from({length:420},()=>({x:RNG()*W,y:RNG()*H,r:RNG()<0.82?0.4+RNG()*0.65:0.9+RNG()*0.9,baseOp:0.15+RNG()*0.5,twSpeed:0.2+RNG()*1.0,twPhase:RNG()*Math.PI*2}));
+
+function drawBackground(){
+  const bg=ctx.createRadialGradient(CX,CY,0,CX,CY,W*0.65);
+  bg.addColorStop(0,'#04010e');bg.addColorStop(0.5,'#020108');bg.addColorStop(1,'#010005');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+}
+
+function drawNebula(t){
+  const d=t*0.000025;
+  const nebulae=[
+    {x:CX-115,y:CY-72,sx:1.00,sy:0.55,r:235,c:'rgba(40,20,110,0.058)'},
+    {x:CX+198,y:CY+98,sx:1.35,sy:0.60,r:195,c:'rgba(15,40,90,0.046)'},
+    {x:CX-278,y:CY+58,sx:0.75,sy:1.10,r:168,c:'rgba(60,15,100,0.040)'},
+    {x:CX+68,y:CY-178,sx:1.20,sy:0.70,r:142,c:'rgba(20,50,80,0.036)'},
+  ];
+  nebulae.forEach((n,i)=>{
+    ctx.save();
+    ctx.translate(n.x+Math.sin(d+i*1.4)*11,n.y+Math.cos(d*0.85+i)*8);
+    ctx.scale(n.sx,n.sy);
+    const g=ctx.createRadialGradient(0,0,0,0,0,n.r);
+    g.addColorStop(0,n.c);g.addColorStop(1,n.c.replace(/[\d.]+\)$/,'0)'));
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,n.r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawStars(t){
+  stars.forEach(s=>{const op=s.baseOp+Math.sin(t*0.001*s.twSpeed+s.twPhase)*0.1;ctx.globalAlpha=Math.max(0,Math.min(1,op));ctx.fillStyle='#bab6e8';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+}
+
+function drawVignette(){
+  const vig=ctx.createRadialGradient(CX,CY,H*0.2,CX,CY,H*0.85);
+  vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,0.65)');
+  ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+}
+
+function buildFog(t){
+  fogCtx.clearRect(0,0,W,H);
+  fogCtx.fillStyle='rgba(2,1,10,0.92)';fogCtx.fillRect(0,0,W,H);
+  fogCtx.globalCompositeOperation='destination-out';
+  const toRemove=[];
+  revealedCivs.forEach((revealTime,idx)=>{
+    const c=civs[idx];
+    let strength=1.0;
+    if(!c.isOmegaCen){
+      const age=t-revealTime;
+      if(age>REFOG_DELAY)strength=Math.max(0,1-(age-REFOG_DELAY)/REFOG_DURATION);
+      if(strength<=0){toRemove.push(idx);return;}
+    }
+    const g=fogCtx.createRadialGradient(c.x,c.y,0,c.x,c.y,88);
+    g.addColorStop(0,`rgba(0,0,0,${strength})`);
+    g.addColorStop(0.48,`rgba(0,0,0,${0.82*strength})`);
+    g.addColorStop(0.80,`rgba(0,0,0,${0.30*strength})`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    fogCtx.fillStyle=g;fogCtx.beginPath();fogCtx.arc(c.x,c.y,88,0,Math.PI*2);fogCtx.fill();
+  });
+  fogCtx.globalCompositeOperation='source-over';
+  if(toRemove.length){
+    toRemove.forEach(idx=>{
+      revealedCivs.delete(idx);
+      if(civs[idx]){civs[idx].signalRings=[];civs[idx].signalFlash=0;civs[idx].signalTimer=1500+Math.random()*3000;}
+    });
+    updateCounter();
+  }
+}
+
+function drawNodeRevealed(civ,t){
+  const{x,y,silenceType,phase,phaseSpeed,isOmegaCen}=civ;
+  const td=TYPES[silenceType]||TYPES['pre-signal'];
+  const p=(t*0.001*phaseSpeed+phase)%(Math.PI*2);
+  if(isOmegaCen){
+    const baseR=13;civ.baseR=baseR;const pulse=1+Math.sin(p*0.8)*0.1;
+    const g=ctx.createRadialGradient(x,y,0,x,y,56*pulse);
+    g.addColorStop(0,'rgba(255,200,64,0.28)');g.addColorStop(0.38,'rgba(255,160,40,0.10)');g.addColorStop(1,'rgba(255,100,0,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,56*pulse,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,220,100,0.70)';ctx.beginPath();ctx.arc(x,y,baseR*0.45,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,200,64,0.50)';ctx.beginPath();ctx.arc(x,y,baseR,0,Math.PI*2);ctx.fill();
+    ctx.font='bold 9px "Space Mono"';ctx.textAlign='center';ctx.fillStyle='rgba(255,200,64,0.80)';ctx.fillText('ωCen',x,y+baseR+14);
+    return;
+  }
+  const baseR=7+Math.sin(p*0.6)*1;civ.baseR=baseR;
+  const rgb=td.glowRgb;
+  const g=ctx.createRadialGradient(x,y,0,x,y,baseR*4.5);
+  g.addColorStop(0,`rgba(${rgb},0.50)`);g.addColorStop(0.3,`rgba(${rgb},0.15)`);g.addColorStop(1,`rgba(${rgb},0)`);
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,baseR*4.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=`rgba(${rgb},0.75)`;ctx.beginPath();ctx.arc(x,y,baseR,0,Math.PI*2);ctx.fill();
+}
+
+function drawNodeHidden(civ){civ.baseR=2;ctx.globalAlpha=0.06;ctx.fillStyle='#8070c0';ctx.beginPath();ctx.arc(civ.x,civ.y,2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+
+function updateAndDrawSignals(civ,dtF){
+  if(!civ.isOmegaCen&&civ.sigProbability>0&&!revealedCivs.has(civ.id)){
+    civ.signalTimer-=dtF*16.667;
+    if(civ.signalTimer<=0&&civ.signalRings.length===0){
+      civ.signalTimer=civ.signalInterval;
+      if(Math.random()<civ.sigProbability){civ.signalRings.push({r:6,op:0.9},{r:18,op:0.55});civ.signalFlash=1.0;}
+    }
+    if(civ.signalFlash>0)civ.signalFlash-=0.03*dtF;
+  }
+  if(civ.signalFlash>0.05&&!revealedCivs.has(civ.id)){ctx.globalAlpha=civ.signalFlash*0.45;ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(civ.x,civ.y,4,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+  civ.signalRings=civ.signalRings.filter(r=>r.op>0.01);
+  civ.signalRings.forEach(ring=>{
+    const alpha=revealedCivs.has(civ.id)?ring.op*0.55:ring.op*0.22;
+    ctx.strokeStyle=`rgba(180,160,255,${alpha})`;ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(civ.x,civ.y,Math.max(ring.r,1),0,Math.PI*2);ctx.stroke();
+    ring.r+=0.55*dtF;ring.op-=0.010*dtF;if(ring.r>80)ring.op=0;
+  });
+}
+
+let selectedCiv=null;
+function drawSelectionRing(){
+  if(!selectedCiv||!revealedCivs.has(selectedCiv.id))return;
+  const r=(selectedCiv.baseR||8)+5;
+  ctx.save();ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.2;ctx.setLineDash([3,5]);
+  ctx.beginPath();ctx.arc(selectedCiv.x,selectedCiv.y,r,0,Math.PI*2);ctx.stroke();ctx.restore();
+}
+
+const panel=document.getElementById('infoPanel');
+const infoBadge=document.getElementById('infoBadge');
+const infoName=document.getElementById('infoName');
+const infoBody=document.getElementById('infoBody');
+const infoDetail=document.getElementById('infoDetail');
+const countEl=document.getElementById('revealCount');
+
+function updateCounter(){countEl.textContent=revealedCivs.size;}
+
+function showPanel(civ){
+  selectedCiv=civ;
+  const isOC=civ.isOmegaCen;const td=TYPES[civ.silenceType]||TYPES['pre-signal'];
+  infoBadge.textContent=isOC?'Candidate Host — MTH':td.label;
+  infoBadge.style.color=isOC?'#ffc840':td.badgeColor;
+  infoBadge.style.borderColor=isOC?'#c47800':td.panelBorder;
+  panel.style.setProperty('--panel-color',isOC?'#c47800':td.panelBorder);
+  infoName.textContent=civ.label;
+  const lore=civ.lore||{};infoBody.textContent=lore.body||'—';infoDetail.textContent=lore.detail||'';
+  panel.classList.add('visible');
+}
+
+document.getElementById('infoClose').addEventListener('click',()=>{panel.classList.remove('visible');});
+
+function getCanvasCoords(e){const rect=canvas.getBoundingClientRect();return{mx:(e.clientX-rect.left)*(W/rect.width),my:(e.clientY-rect.top)*(H/rect.height)};}
+function civAt(mx,my){let best=null,bestD=Infinity;civs.forEach(c=>{const dx=mx-c.x,dy=my-c.y,d=Math.sqrt(dx*dx+dy*dy),hr=(c.baseR||6)*2.5+10;if(d<hr&&d<bestD){bestD=d;best=c;}});return best;}
+
+canvas.addEventListener('click',e=>{
+  const{mx,my}=getCanvasCoords(e);const hit=civAt(mx,my);
+  if(hit){revealedCivs.set(hit.id,performance.now());showPanel(hit);}
+  else{
+    panel.style.setProperty('--panel-color','rgba(80,72,112,0.5)');
+    infoBadge.textContent='Empty Region';infoBadge.style.color='#504870';infoBadge.style.borderColor='#302848';
+    infoName.textContent='No civilization detected';
+    infoBody.textContent='This region shows no detectable signals, no anomalous heat signatures — nothing. Either no civilization arose here, or whatever was here is entirely invisible to our instruments.';
+    infoDetail.textContent='Scan result: null\nHabitable zone: unknown\nFilter status: indeterminate';
+    panel.classList.add('visible');selectedCiv=null;
+  }
+  updateCounter();
+});
+canvas.addEventListener('mousemove',e=>{const{mx,my}=getCanvasCoords(e);canvas.style.cursor=civAt(mx,my)?'pointer':'crosshair';});
+
+document.querySelectorAll('.era-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.era-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');applyEra(btn.dataset.era);
+    revealedCivs.clear();revealedCivs.set(0,performance.now());
+    panel.classList.remove('visible');selectedCiv=null;updateCounter();
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  revealedCivs.clear();revealedCivs.set(0,performance.now());
+  panel.classList.remove('visible');selectedCiv=null;
+  civs.forEach(c=>{c.signalRings=[];c.signalFlash=0;});updateCounter();
+});
+
+updateCounter();
+
+let lastT=0;
+function render(t){
+  const dt=Math.min(t-lastT,48);const dtF=dt/16.667;lastT=t;
+  ctx.clearRect(0,0,W,H);
+  drawBackground();
+  drawNebula(t);
+  drawStars(t);
+  civs.forEach(c=>{if(revealedCivs.has(c.id))drawNodeRevealed(c,t);else drawNodeHidden(c);});
+  buildFog(t);
+  ctx.drawImage(fogCanvas,0,0);
+  civs.forEach(c=>updateAndDrawSignals(c,dtF));
+  drawSelectionRing();
+  drawVignette();
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

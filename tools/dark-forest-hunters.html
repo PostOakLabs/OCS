@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<!--
+  Every Hunter in the Dark — Dark Forest Visualization III
+  Omega Centauri Society · omegacentauri.me
+  Dark Forest Series · Part III of III · Finale
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society
+  Version: 1.1 · 2026-06-03
+  Site section: #fermi #darkforest
+  Enhancements: nebula dust lanes (Ch1/Ch2), cosmic sociology game-theory labels
+  Narrative source: Liu Cixin, The Dark Forest (2008 / Tor 2015, tr. Joel Martinsen)
+  OCS concept: Macro Transcension Hypothesis — The Omega Centauri Society
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Every Hunter in the Dark — Dark Forest III · OCS</title>
+<meta name="description" content="A five-chapter narrative visualization of Liu Cixin's Dark Forest theory: the axioms, the chain of suspicion, elimination, the Wallfacers, and deterrence.">
+<link rel="canonical" href="https://omegacentauri.me/tools/dark-forest-hunters.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 30% 20%,rgba(80,0,0,.06),transparent 55%),
+    radial-gradient(ellipse at 75% 70%,rgba(112,85,212,.06),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:48px 28px 80px}
+.hero{margin-bottom:24px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-glow);margin-bottom:14px;opacity:.9}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:38px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;
+  background:linear-gradient(120deg,var(--text-primary) 5%,var(--purple-glow) 45%,var(--red-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;max-width:780px;margin-bottom:10px}
+.spoiler-note{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-dim);margin-top:10px;padding:6px 10px;border:1px dashed rgba(112,85,212,.2);border-radius:6px;display:inline-block}
+.spoiler-note em{font-style:italic;color:var(--text-secondary)}
+.how-to{background:linear-gradient(180deg,rgba(7,5,21,.7),rgba(13,10,36,.4));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.how-to-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.how-to-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px}
+@media(max-width:760px){.how-to-steps{grid-template-columns:1fr}}
+.how-step{display:flex;gap:12px;align-items:flex-start}
+.how-step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:18px;color:var(--red-glow);opacity:.8;line-height:1;flex-shrink:0;margin-top:2px;min-width:20px}
+.how-step-body{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.how-step-body strong{color:var(--text-primary);font-weight:600}
+.chapter-section{margin-bottom:28px}
+.chapter-header{display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.ch-dots{display:flex;gap:7px}
+.ch-dot{width:9px;height:9px;border-radius:50%;background:rgba(80,72,112,.3);border:1px solid rgba(112,85,212,.25);transition:all .4s}
+.ch-dot.active{background:var(--purple-glow);box-shadow:0 0 7px rgba(160,128,240,.6)}
+.ch-dot.done{background:var(--purple-mid);border-color:var(--purple-mid)}
+.ch-num{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+.ch-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary);margin-left:4px;transition:color .4s}
+.canvas-wrap{position:relative;border:1px solid var(--border-subtle);border-radius:14px 14px 0 0;overflow:hidden;background:#000004;border-bottom:none}
+#galaxy{display:block;width:100%;height:auto;cursor:crosshair}
+.info-panel{position:absolute;top:16px;right:16px;width:278px;background:rgba(3,2,10,.95);border:1px solid var(--amber-bright);border-radius:12px;padding:18px 20px;opacity:0;pointer-events:none;transition:opacity .22s;z-index:10;backdrop-filter:blur(8px)}
+.info-panel.visible{opacity:1;pointer-events:auto}
+.info-close{position:absolute;top:10px;right:12px;font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);cursor:pointer;background:none;border:none;padding:2px 4px;line-height:1}
+.info-close:hover{color:var(--teal-glow)}
+.info-wf-num{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:4px}
+.info-wf-name{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:10px;line-height:1.3}
+.info-wf-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.10em;text-transform:uppercase;color:var(--text-dim);margin-top:10px;margin-bottom:4px}
+.info-wf-body{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.info-wf-outcome{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--text-dim);margin-top:10px;padding-top:10px;border-top:1px dashed var(--border-subtle);line-height:1.8}
+.info-wf-outcome.success{color:var(--teal-glow)}
+.ch-text-panel{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:0 0 12px 12px;padding:22px 26px;border-top:none;min-height:100px}
+.ch-text{font-family:'Crimson Pro',serif;font-size:16px;color:var(--text-secondary);line-height:1.85;max-width:900px;transition:opacity .35s}
+.ch-text.fading{opacity:0}
+.ch-text.is-quote{font-style:italic;font-size:17px;color:var(--text-primary);padding-left:20px;border-left:2px solid var(--purple-bright)}
+.ch-attr{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);margin-top:12px;font-style:normal}
+.game-frame-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-dim);border:1px dashed rgba(112,85,212,.22);display:inline-block;padding:3px 9px;border-radius:6px;margin-bottom:12px}
+.ch-nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.ch-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 18px;border-radius:20px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.ch-btn:hover:not(:disabled){border-color:var(--purple-bright);color:var(--purple-glow)}
+.ch-btn:disabled{opacity:.28;cursor:not-allowed}
+.ch-btn.ready{border-color:var(--purple-bright);color:var(--purple-glow);animation:pulse-border 1.8s ease-in-out infinite}
+@keyframes pulse-border{0%,100%{box-shadow:0 0 0 0 rgba(160,128,240,0)}50%{box-shadow:0 0 0 4px rgba(160,128,240,.2)}}
+.ch-waiting{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.synthesis{background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:28px 30px;margin-bottom:28px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:12px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.85;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.series-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:16px 20px;border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)}
+.series-nav a{color:var(--purple-glow);letter-spacing:.08em}.series-nav a:hover{color:var(--amber-glow)}
+.footer{padding:28px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:760px){.hero h1{font-size:27px}.container{padding:36px 18px 60px}.info-panel{width:calc(100% - 24px);top:8px;right:12px}.ch-nav{flex-direction:column;gap:10px;align-items:flex-start}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Dark Forest · III — Every Hunter in the Dark</span>
+    <a href="https://omegacentauri.me/" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">Dark Forest Series · Part III of III · Finale</div>
+    <h1>Every Hunter in the Dark</h1>
+    <p class="hero-sub">Five chapters. Liu Cixin's Dark Forest theory told through the game it inspired — the axioms, the chain of suspicion, the eliminations, the Wallfacers, and the only equilibrium that turned out to be stable.</p>
+    <div class="spoiler-note">⚠ Contains plot elements from Liu Cixin's <em>The Dark Forest</em> (2008). Light spoilers — the theory stands on its own whether you've read it or not.</div>
+  </div>
+  <div class="how-to">
+    <div class="how-to-title">How to use this visualization</div>
+    <div class="how-to-steps">
+      <div class="how-step"><div class="how-step-num">1</div><div class="how-step-body"><strong>Navigate chapters.</strong> Use the Previous and Next Chapter buttons to move through the five-chapter narrative. Each chapter changes the canvas entirely and advances the argument.</div></div>
+      <div class="how-step"><div class="how-step-num">2</div><div class="how-step-body"><strong>Watch Chapter 3.</strong> The elimination animations play automatically — you will see the logic of the dark forest execute in real time. The Next button activates after the sequence completes.</div></div>
+      <div class="how-step"><div class="how-step-num">3</div><div class="how-step-body"><strong>Click the Wallfacers in Chapter 4.</strong> Each gold node reveals a secret strategy — three broken, one successful. The sophon particle represents the omniscient surveillance that made the Wallfacer program necessary.</div></div>
+      <div class="how-step"><div class="how-step-num">4</div><div class="how-step-body"><strong>Finish in Chapter 5.</strong> The final state: deterrence as the only stable equilibrium. The rings expand without stopping — the threat is permanent, or it is nothing.</div></div>
+    </div>
+  </div>
+  <div class="chapter-section">
+    <div class="chapter-header">
+      <div class="ch-dots" id="chDots">
+        <div class="ch-dot active" data-ch="1"></div>
+        <div class="ch-dot" data-ch="2"></div>
+        <div class="ch-dot" data-ch="3"></div>
+        <div class="ch-dot" data-ch="4"></div>
+        <div class="ch-dot" data-ch="5"></div>
+      </div>
+      <span class="ch-num" id="chNum">Chapter 1 of 5 —</span>
+      <span class="ch-title" id="chTitle">The Two Axioms</span>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="galaxy" width="1060" height="530"></canvas>
+      <div class="info-panel" id="infoPanel">
+        <button class="info-close" id="infoClose" aria-label="Close">✕</button>
+        <div class="info-wf-num" id="wfNum">Wallfacer I</div>
+        <div class="info-wf-name" id="wfName">—</div>
+        <div class="info-wf-label">Strategy</div>
+        <div class="info-wf-body" id="wfStrategy">—</div>
+        <div class="info-wf-outcome" id="wfOutcome">—</div>
+      </div>
+    </div>
+    <div class="ch-text-panel">
+      <div class="ch-text" id="chText">Loading…</div>
+    </div>
+    <div class="ch-nav">
+      <button class="ch-btn" id="prevBtn" disabled>← Previous</button>
+      <span class="ch-waiting" id="chWaiting"></span>
+      <button class="ch-btn" id="nextBtn">Next Chapter →</button>
+    </div>
+  </div>
+  <div class="synthesis">
+    <div class="synth-title">The Theory Behind the Fiction</div>
+    <div class="synth-prose">
+      <p>Liu Cixin's Dark Forest theory needs only two axioms and one inference. Survival is the primary need of every civilization. Resources are finite. And across interstellar distances, trust cannot be verified — not now, not ever. From those three facts, the math produces a particular conclusion: silence, or preemption. The result is a Nash equilibrium where every rational actor stays silent — and hypothetically may shoot anything that doesn't.</p>
+      <p>MTH, covered in <a href="dark-forest-mth.html">Part I</a>, doesn't need either axiom. If advanced civilizations transcend into inner space, the galaxy goes quiet for entirely different reasons — not hostility, but departure. The two explanations aren't mutually exclusive, and it's not obvious which one dominates.</p>
+      <p>ωCen is 11–12 Gyr old, nearly 7 billion years older than our sun. Any civilization that arose there has had geological eons to make a choice: transcend, go dark, or act on what the dark forest logic implies. The silence here is the same silence this series is trying to account for.</p>
+    </div>
+  </div>
+  <div class="series-nav">
+    <div style="display:flex;gap:20px">
+      <a href="dark-forest-mth.html">← Part I: The Transcension Path</a>
+      <a href="dark-forest-silence.html">← Part II: The Great Silence</a>
+    </div>
+    <span>Dark Forest Series · III of III</span>
+  </div>
+</div>
+<footer class="footer">
+  <div><a href="https://omegacentauri.me/">omegacentauri.me</a> · Dark Forest Series · Visualization · Code: MIT · Prose: CC BY 4.0</div>
+  <div style="margin-top:4px">MTH: The Omega Centauri Society · Liu Cixin, <em>The Dark Forest</em> (Tor, 2015, tr. Joel Martinsen)</div>
+</footer>
+<script>
+(function(){
+'use strict';
+const canvas=document.getElementById('galaxy');
+const ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height;
+const CX=W*0.50,CY=H*0.50;
+const RNG=(n=>{let s=n;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296;};})(0xfeed1234);
+
+const WF_LORE=[
+  {num:'Wallfacer I',name:'Rey Diaz',strategy:'Extract the mass of Mercury to manufacture sufficient antimatter for a stellar-scale weapon — capable of triggering a targeted nova in the Trisolaran solar system, eliminating the threat at its source before the fleet arrives.',outcome:"BROKEN. His family's safety was leveraged to extract the plan. Once public, it became useless.",success:false},
+  {num:'Wallfacer II',name:'Bill Hines',strategy:'Develop neuroweapons to suppress the self-preservation instinct at the neural level — soldiers incapable of fear or retreat. An army that could not surrender would be unstoppable against any aggressor.',outcome:'BROKEN. His wife Keiko became his Wallbreaker, publicly revealing the strategy — and the deeper danger: such a capability would make humanity itself a threat to the galaxy.',success:false},
+  {num:'Wallfacer III',name:'Frederick Tyler',strategy:'Train an elite space fleet to execute annihilation strikes — suicide missions designed to maximize damage to the Trisolaran fleet at the acceptable cost of the entire human expeditionary force.',outcome:'BROKEN. A Wallbreaker exposed the plan publicly. Tyler died in prison.',success:false},
+  {num:'Wallfacer IV',name:'Luo Ji',strategy:'Study cosmic sociology — the game theory of civilizations. Discover the dark forest. Learn the precise stellar coordinates of Trisolaris. Then threaten to broadcast those coordinates to the universe, inviting any hunter in the forest to eliminate it first.',outcome:'SUCCESS. The dark forest became a shield. The threat of revelation achieved what no weapon could: deterrence. The silence of the universe, turned into a guarantee of survival.',success:true}
+];
+
+const CH_DATA=[
+  {title:'The Two Axioms',gameFrame:'Cosmic Sociology — Survival Game',text:'The universe contains civilizations we cannot count. Each one faces the same two facts that cannot be escaped: survival is the primary need of every civilization, and civilizations grow while the resources of the universe are finite. Look at these nodes — each is a civilization, apparently at peace, broadcasting freely into the void. The axioms are already running. The consequences take time.',isQuote:false},
+  {title:'The Chain of Suspicion',gameFrame:'Cosmic Sociology — First Contact Game',text:'Each civilization can detect its neighbors. Each begins to calculate: are they a threat? Even a benign civilization will eventually grow — will eventually compete. Even if they are peaceful today, can you verify that they will remain peaceful as they expand? You cannot. And they know you cannot be certain of them, either. The lines between nodes are not alliances. They are threat assessments. The chain of suspicion has no exit.',isQuote:false},
+  {title:'The Forest Fires',gameFrame:'Cosmic Sociology — First Contact Game · Outcome',text:'"The universe is a dark forest. Every civilization is an armed hunter stalking through the trees like a ghost, gently pushing aside branches that block the path and trying to tread without sound. Even breathing is done with care. The hunter has to be careful, because the forest is full of hunters like himself. If he finds other life — another hunter, an angel or a demon, a delicate infant or a tottering old man, a fairy or a demigod — there is only one thing he can do: open fire and eliminate them."',attr:'— Liu Cixin, The Dark Forest',isQuote:true},
+  {title:'The Wallfacers',gameFrame:'Institutional Response — Information Asymmetry',text:'When the sophons made all human planning transparent — when every strategy could be intercepted by an omnipresent surveillance intelligence — four individuals were appointed Wallfacers. Their plans existed only in their own minds, beyond any surveillance. They were granted near-unlimited resources to pursue strategies known to no one but themselves. Three were broken. Click each gold node to reveal what they planned.',isQuote:false},
+  {title:'Deterrence',gameFrame:'Cosmic Sociology — Deterrence Game',text:"Luo Ji's strategy was not to fight. It was to threaten. By learning the location of the Trisolaran solar system and threatening to broadcast those coordinates to the universe — to every hunter in the forest — he achieved deterrence. If they came for Earth, every hunter would know where Trisolaris was. The dark forest, turned inward. The silence of the universe, weaponized as a shield. The rings expand without stopping. The threat must be permanent, or it is nothing.",isQuote:false}
+];
+
+const HUNTER_DEFS=[
+  {x:CX-262,y:CY-132,isWF:true,wfIdx:0,label:'Wallfacer I — Rey Diaz'},
+  {x:CX+268,y:CY-118,isWF:true,wfIdx:1,label:'Wallfacer II — Bill Hines'},
+  {x:CX+212,y:CY+158,isWF:true,wfIdx:2,label:'Wallfacer III — Tyler'},
+  {x:CX-18,y:CY+42,isWF:true,wfIdx:3,label:'Wallfacer IV — Luo Ji'},
+  {x:CX-95,y:CY-85},{x:CX+115,y:CY-158},{x:CX+75,y:CY+88},{x:CX-198,y:CY+96},
+  {x:CX-322,y:CY+22},{x:CX+338,y:CY-38},{x:CX-178,y:CY-178},{x:CX+196,y:CY+196},
+  {x:CX-398,y:CY-75},{x:CX+382,y:CY+96},{x:CX-58,y:CY-196},{x:CX+64,y:CY+218},
+  {x:CX-238,y:CY+175},{x:CX+260,y:CY-178},{x:CX-148,y:CY+54},{x:CX+148,y:CY-52},
+  {x:CX-348,y:CY+138},{x:CX+350,y:CY+54}
+];
+const hunters=HUNTER_DEFS.map((def,i)=>({...def,id:i,phase:RNG()*Math.PI*2,phaseSpeed:0.32+RNG()*0.52,rings:[],ringTimer:RNG()*90,baseR:0}));
+
+const stars=Array.from({length:400},()=>({x:RNG()*W,y:RNG()*H,r:RNG()<0.82?0.4+RNG()*0.65:0.9+RNG()*0.9,baseOp:0.12+RNG()*0.48,twSpeed:0.2+RNG()*1.0,twPhase:RNG()*Math.PI*2}));
+
+let chapter=1,ch3StartTime=0,ch3FiredSet=new Set(),ch3Elims=[],ch3Done=false;
+let suspLines=[],wfRevealed=new Set();
+const CH3_VICTIMS=[4,5,6,7],CH3_DELAYS=[1200,4100,7200,10600];
+
+function enterChapter(n){
+  chapter=Math.max(1,Math.min(5,n));
+  if(chapter===2&&suspLines.length===0)computeSuspLines();
+  if(chapter===3){ch3StartTime=performance.now();ch3FiredSet=new Set();ch3Elims=[];ch3Done=false;}
+  if(chapter===4)wfRevealed=new Set();
+  updateChapterUI();setChapterText();
+}
+
+function computeSuspLines(){
+  suspLines=[];
+  for(let i=0;i<hunters.length;i++)for(let j=i+1;j<hunters.length;j++){
+    const dx=hunters[i].x-hunters[j].x,dy=hunters[i].y-hunters[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<225)suspLines.push({a:hunters[i],b:hunters[j]});
+  }
+}
+
+function updateChapterUI(){
+  document.querySelectorAll('.ch-dot').forEach((dot,i)=>{dot.classList.toggle('active',i+1===chapter);dot.classList.toggle('done',i+1<chapter);});
+  document.getElementById('chNum').textContent=`Chapter ${chapter} of 5 —`;
+  document.getElementById('chTitle').textContent=CH_DATA[chapter-1].title;
+  document.getElementById('prevBtn').disabled=chapter<=1;
+  const nextBtn=document.getElementById('nextBtn'),waiting=document.getElementById('chWaiting');
+  nextBtn.disabled=chapter>=5;nextBtn.classList.remove('ready');
+  if(chapter===3&&!ch3Done){nextBtn.disabled=true;waiting.textContent='Waiting for sequence to complete…';}
+  else if(chapter>=5){waiting.textContent='';}
+  else{nextBtn.classList.add('ready');waiting.textContent='';}
+}
+
+function setChapterText(){
+  const el=document.getElementById('chText');const dat=CH_DATA[chapter-1];
+  el.classList.add('fading');
+  setTimeout(()=>{
+    const tag=dat.gameFrame?`<div class="game-frame-tag">${dat.gameFrame}</div>`:'';
+    el.innerHTML=tag+(dat.isQuote?`<span>${dat.text}</span>${dat.attr?`<div class="ch-attr">${dat.attr}</div>`:''}`:`${dat.text}`);
+    el.className='ch-text'+(dat.isQuote?' is-quote':'');
+  },340);
+}
+
+function drawBackground(ch,t){
+  ctx.fillStyle='#01000a';ctx.fillRect(0,0,W,H);
+  let rc='rgba(0,0,0,0)';
+  if(ch===1)rc='rgba(20,50,110,0.07)';
+  else if(ch===2)rc='rgba(80,60,150,0.08)';
+  else if(ch===3)rc='rgba(100,20,20,0.09)';
+  else if(ch===5)rc='rgba(180,130,0,0.06)';
+  if(rc!=='rgba(0,0,0,0)'){const g=ctx.createRadialGradient(CX,CY,0,CX,CY,W*0.55);g.addColorStop(0,rc);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+}
+
+function drawNebula(t){
+  const d=t*0.000025;
+  const nebulae=[
+    {x:CX-115,y:CY-72,sx:1.00,sy:0.55,r:235,c:'rgba(100,30,160,0.055)'},
+    {x:CX+198,y:CY+98,sx:1.35,sy:0.60,r:195,c:'rgba(120,20,40,0.044)'},
+    {x:CX-278,y:CY+58,sx:0.75,sy:1.10,r:168,c:'rgba(60,30,140,0.040)'},
+    {x:CX+68,y:CY-178,sx:1.20,sy:0.70,r:142,c:'rgba(90,15,30,0.034)'},
+  ];
+  nebulae.forEach((n,i)=>{
+    ctx.save();
+    ctx.translate(n.x+Math.sin(d+i*1.4)*11,n.y+Math.cos(d*0.85+i)*8);
+    ctx.scale(n.sx,n.sy);
+    const g=ctx.createRadialGradient(0,0,0,0,0,n.r);
+    g.addColorStop(0,n.c);g.addColorStop(1,n.c.replace(/[\d.]+\)$/,'0)'));
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,n.r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawStars(t){
+  const dim=chapter>=3?0.55:1;
+  stars.forEach(s=>{const op=(s.baseOp+Math.sin(t*0.001*s.twSpeed+s.twPhase)*0.09)*dim;ctx.globalAlpha=Math.max(0,Math.min(1,op));ctx.fillStyle='#bab6e8';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+}
+
+function drawVignette(){
+  const strength=chapter>=3?0.72:0.55;
+  const vig=ctx.createRadialGradient(CX,CY,H*0.2,CX,CY,H*0.85);
+  vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,`rgba(0,0,0,${strength})`);
+  ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+}
+
+function drawActiveNode(h,t,alpha){
+  const p=(t*0.001*h.phaseSpeed+h.phase)%(Math.PI*2);
+  const baseR=8+Math.sin(p)*1.2;h.baseR=baseR;const a=alpha!==undefined?alpha:1;
+  ctx.globalAlpha=a;
+  const g=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,baseR*4.5);
+  g.addColorStop(0,'rgba(77,232,192,0.52)');g.addColorStop(0.3,'rgba(77,232,192,0.15)');g.addColorStop(1,'rgba(77,232,192,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(h.x,h.y,baseR*4.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(220,255,240,0.85)';ctx.beginPath();ctx.arc(h.x,h.y,baseR*0.38,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(77,232,192,0.78)';ctx.beginPath();ctx.arc(h.x,h.y,baseR,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+}
+
+function updateRings(h,dtF,rgb){
+  const color=rgb||'77,232,192';
+  h.ringTimer-=dtF;
+  if(h.ringTimer<=0&&h.rings.length<4){h.rings.push({r:h.baseR>0?h.baseR:8,op:0.65});h.ringTimer=88+Math.random()*20;}
+  h.rings=h.rings.filter(r=>r.op>0.01);
+  h.rings.forEach(ring=>{
+    ctx.strokeStyle=`rgba(${color},${ring.op*0.38})`;ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(h.x,h.y,Math.max(ring.r,1),0,Math.PI*2);ctx.stroke();
+    ring.r+=0.5*dtF;ring.op-=0.008*dtF;if(ring.r>85)ring.op=0;
+  });
+}
+
+function drawRemnant(h){h.baseR=2;ctx.globalAlpha=0.14;ctx.fillStyle='#403860';ctx.beginPath();ctx.arc(h.x,h.y,2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+
+function drawWallfacerNode(h,t){
+  const p=(t*0.001*0.45+h.phase)%(Math.PI*2);const baseR=11;h.baseR=baseR;
+  const g=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,52);
+  g.addColorStop(0,'rgba(255,200,64,0.32)');g.addColorStop(0.4,'rgba(255,160,40,0.10)');g.addColorStop(1,'rgba(255,100,0,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(h.x,h.y,52,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,220,90,0.72)';ctx.beginPath();ctx.arc(h.x,h.y,baseR*0.4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,200,64,0.52)';ctx.beginPath();ctx.arc(h.x,h.y,baseR,0,Math.PI*2);ctx.fill();
+  if(!wfRevealed.has(h.wfIdx)){
+    ctx.save();ctx.strokeStyle='rgba(255,200,64,0.42)';ctx.lineWidth=1;ctx.setLineDash([3,7]);ctx.lineDashOffset=-(t*0.018%10);
+    ctx.beginPath();ctx.arc(h.x,h.y,20,0,Math.PI*2);ctx.stroke();ctx.restore();
+  } else {
+    ctx.strokeStyle='rgba(255,200,64,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(h.x,h.y,20,0,Math.PI*2);ctx.stroke();
+  }
+  ctx.font='bold 9px "Space Mono"';ctx.textAlign='center';ctx.fillStyle='rgba(255,200,64,0.72)';
+  ctx.fillText('WF '+['I','II','III','IV'][h.wfIdx],h.x,h.y+baseR+15);
+}
+
+function startElim(victimIdx){
+  const h=hunters[victimIdx];h.eliminated=true;
+  ch3Elims.push({hunter:h,startT:performance.now(),duration:1700,attackAngle:RNG()*Math.PI*2+Math.PI});
+}
+
+function drawAndUpdateElims(now){
+  ch3Elims=ch3Elims.filter(elim=>{
+    const prog=Math.min((now-elim.startT)/elim.duration,1);
+    const{x,y}=elim.hunter;
+    if(prog<0.38){
+      const lp=prog/0.38,dist=170;
+      const ax=x+Math.cos(elim.attackAngle)*dist,ay=y+Math.sin(elim.attackAngle)*dist*0.7;
+      ctx.strokeStyle=`rgba(220,60,60,${lp*0.75})`;ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(x+(ax-x)*(1-lp),y+(ay-y)*(1-lp));ctx.stroke();
+    }
+    if(prog>0.28&&prog<0.62){const fp=Math.sin(((prog-0.28)/0.34)*Math.PI);ctx.globalAlpha=fp*0.9;ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+    if(prog>0.52){
+      const sp=(prog-0.52)/0.48;
+      ctx.strokeStyle=`rgba(220,60,60,${(1-sp)*0.65})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,sp*62,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle=`rgba(255,120,60,${(1-sp)*0.30})`;ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,sp*38,0,Math.PI*2);ctx.stroke();
+    }
+    return prog<1;
+  });
+}
+
+let sophonTrail=[];
+function updateSophon(t){
+  const speed=t*0.0028;
+  const sx=CX+Math.sin(speed*2.4)*W*0.39,sy=CY+Math.sin(speed*1.65+0.7)*H*0.36;
+  sophonTrail.push({x:sx,y:sy});if(sophonTrail.length>18)sophonTrail.shift();
+  sophonTrail.forEach((pt,i)=>{ctx.globalAlpha=(i/sophonTrail.length)*0.35;ctx.fillStyle='#a0e8ff';ctx.beginPath();ctx.arc(pt.x,pt.y,1.5,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#e0f8ff';ctx.beginPath();ctx.arc(sx,sy,3,0,Math.PI*2);ctx.fill();
+  const g=ctx.createRadialGradient(sx,sy,0,sx,sy,12);g.addColorStop(0,'rgba(160,232,255,0.4)');g.addColorStop(1,'rgba(160,232,255,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,sy,12,0,Math.PI*2);ctx.fill();
+}
+
+function renderChapter1(t,dtF){
+  drawBackground(1,t);drawNebula(t);drawStars(t);
+  hunters.forEach(h=>{updateRings(h,dtF);drawActiveNode(h,t);});
+  drawVignette();
+}
+
+function renderChapter2(t,dtF){
+  drawBackground(2,t);drawNebula(t);drawStars(t);
+  const op=0.12+Math.sin(t*0.001*0.8)*0.06;
+  ctx.strokeStyle=`rgba(140,110,240,${op})`;ctx.lineWidth=1;
+  suspLines.forEach(l=>{ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.b.x,l.b.y);ctx.stroke();});
+  hunters.forEach(h=>{updateRings(h,dtF,'180,160,255');drawActiveNode(h,t,0.82);});
+  drawVignette();
+}
+
+function renderChapter3(t,dtF,now){
+  drawBackground(3,t);drawStars(t);
+  if(!ch3Done){
+    const elapsed=now-ch3StartTime;
+    CH3_DELAYS.forEach((delay,i)=>{if(elapsed>delay&&!ch3FiredSet.has(i)){ch3FiredSet.add(i);startElim(CH3_VICTIMS[i]);}});
+    if(ch3FiredSet.size===4&&ch3Elims.length===0){
+      ch3Done=true;const nb=document.getElementById('nextBtn');
+      nb.disabled=false;nb.classList.add('ready');document.getElementById('chWaiting').textContent='';
+    }
+  }
+  for(let i=8;i<hunters.length;i++)drawRemnant(hunters[i]);
+  for(let i=4;i<=7;i++){if(ch3FiredSet.has(i-4))drawRemnant(hunters[i]);else{updateRings(hunters[i],dtF);drawActiveNode(hunters[i],t);}}
+  for(let i=0;i<=3;i++){updateRings(hunters[i],dtF);drawActiveNode(hunters[i],t);}
+  drawAndUpdateElims(now);drawVignette();
+}
+
+function renderChapter4(t,dtF){
+  drawBackground(4,t);drawStars(t);
+  for(let i=4;i<hunters.length;i++)drawRemnant(hunters[i]);
+  hunters.slice(0,4).forEach(h=>drawWallfacerNode(h,t));
+  updateSophon(t);drawVignette();
+}
+
+function renderChapter5(t){
+  drawBackground(5,t);drawStars(t);
+  for(let i=0;i<3;i++)drawRemnant(hunters[i]);
+  for(let i=4;i<hunters.length;i++)drawRemnant(hunters[i]);
+  const period=9500;
+  for(let i=0;i<6;i++){const phase=((t+i*(period/6))%period)/period,r=phase*270,alpha=(1-phase)*0.38;ctx.strokeStyle=`rgba(255,190,48,${alpha})`;ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(CX,CY,r,0,Math.PI*2);ctx.stroke();}
+  for(let i=0;i<3;i++){const phase=((t+2200+i*(period/3))%period)/period,r=phase*220,alpha=(1-phase)*0.15;ctx.strokeStyle=`rgba(160,128,240,${alpha})`;ctx.lineWidth=1;ctx.beginPath();ctx.arc(CX,CY,r,0,Math.PI*2);ctx.stroke();}
+  const lh=hunters[3];lh.baseR=13;
+  const g1=ctx.createRadialGradient(CX,CY,0,CX,CY,68);
+  g1.addColorStop(0,'rgba(255,220,80,0.58)');g1.addColorStop(0.38,'rgba(255,170,40,0.22)');g1.addColorStop(1,'rgba(255,80,0,0)');
+  ctx.fillStyle=g1;ctx.beginPath();ctx.arc(CX,CY,68,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,240,130,0.90)';ctx.beginPath();ctx.arc(CX,CY,13,0,Math.PI*2);ctx.fill();
+  ctx.font='bold 9px "Space Mono"';ctx.textAlign='center';ctx.fillStyle='rgba(255,200,64,0.80)';ctx.fillText('LUO JI — DARK FOREST STRIKE',CX,CY+28);
+  drawVignette();
+}
+
+const panel=document.getElementById('infoPanel');
+function showWFPanel(wfIdx){
+  const lore=WF_LORE[wfIdx];
+  document.getElementById('wfNum').textContent=lore.num;document.getElementById('wfName').textContent=lore.name;
+  document.getElementById('wfStrategy').textContent=lore.strategy;
+  const outEl=document.getElementById('wfOutcome');outEl.textContent=lore.outcome;
+  outEl.className='info-wf-outcome'+(lore.success?' success':'');
+  wfRevealed.add(wfIdx);panel.classList.add('visible');
+}
+document.getElementById('infoClose').addEventListener('click',()=>panel.classList.remove('visible'));
+
+function getCoords(e){const r=canvas.getBoundingClientRect();return{mx:(e.clientX-r.left)*(W/r.width),my:(e.clientY-r.top)*(H/r.height)};}
+canvas.addEventListener('click',e=>{
+  if(chapter!==4)return;
+  const{mx,my}=getCoords(e);let hit=null,bestD=Infinity;
+  hunters.slice(0,4).forEach(h=>{const dx=mx-h.x,dy=my-h.y,d=Math.sqrt(dx*dx+dy*dy);if(d<(h.baseR||12)*3+8&&d<bestD){bestD=d;hit=h;}});
+  if(hit)showWFPanel(hit.wfIdx);else panel.classList.remove('visible');
+});
+canvas.addEventListener('mousemove',e=>{
+  if(chapter!==4){canvas.style.cursor='default';return;}
+  const{mx,my}=getCoords(e);let hit=false;
+  hunters.slice(0,4).forEach(h=>{const dx=mx-h.x,dy=my-h.y;if(Math.sqrt(dx*dx+dy*dy)<(h.baseR||12)*3+8)hit=true;});
+  canvas.style.cursor=hit?'pointer':'crosshair';
+});
+
+document.getElementById('prevBtn').addEventListener('click',()=>{panel.classList.remove('visible');enterChapter(chapter-1);});
+document.getElementById('nextBtn').addEventListener('click',()=>{panel.classList.remove('visible');enterChapter(chapter+1);});
+
+let lastT=0;
+function render(t){
+  const dt=Math.min(t-lastT,50);const dtF=dt/16.667;lastT=t;
+  ctx.clearRect(0,0,W,H);
+  switch(chapter){
+    case 1:renderChapter1(t,dtF);break;
+    case 2:renderChapter2(t,dtF);break;
+    case 3:renderChapter3(t,dtF,t);break;
+    case 4:renderChapter4(t,dtF);break;
+    case 5:renderChapter5(t);break;
+  }
+  requestAnimationFrame(render);
+}
+
+computeSuspLines();enterChapter(1);requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
