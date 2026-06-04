@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!--
+  Economics 2.0 — Accelerando / Charles Stross
+  Omega Centauri Society · omegacentauri.me
+  MTH Fiction Series · III of V
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society
+  Version: 1.0 · 2026-06-03
+  Site section: #mth #fermi #compute
+  Source: Stross, C. (2005) Accelerando. Ace Books/Orbit.
+  Related OCS tool: matrioshka-brain.html (Matrioshka Brain Layer Planner — the engineering side)
+  OCS concept: Macro Transcension Hypothesis — The Omega Centauri Society
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economics 2.0 · OCS</title>
+<meta name="description" content="Why do post-Singularity civilizations stay home? A calculator for the subjective opportunity cost of interstellar travel, from Charles Stross's Accelerando and the Macro Transcension Hypothesis.">
+<link rel="canonical" href="https://omegacentauri.me/tools/accelerando-economics.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;
+  --purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 18% 18%,rgba(240,160,32,.06),transparent 55%),radial-gradient(ellipse at 80% 72%,rgba(112,85,212,.08),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--amber-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--amber-glow)}
+.container{max-width:1100px;margin:0 auto;padding:48px 28px 80px}
+.hero{margin-bottom:32px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:12px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:12px;
+  background:linear-gradient(120deg,var(--text-primary) 20%,var(--amber-glow) 65%,var(--purple-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;max-width:780px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:800px){.tool-grid{grid-template-columns:1fr}}
+.inputs-card,.results-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:18px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:20px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,rgba(13,10,36,1),var(--amber-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,200,64,.5)}
+.slider-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--amber-glow);min-width:90px;text-align:right}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+.result-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px dashed rgba(112,85,212,.12)}
+.result-row:last-child{border-bottom:none}
+.result-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);text-transform:uppercase}
+.result-val{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--amber-glow)}
+.result-val.teal{color:var(--teal-glow)}
+.result-val.red{color:#ff6060}
+.verdict-box{margin-top:16px;padding:14px 16px;border-radius:10px;border:1px solid;font-family:'Crimson Pro',serif;font-size:14px;line-height:1.6}
+.verdict-stay{border-color:rgba(208,64,64,.4);background:rgba(139,32,32,.08);color:var(--text-secondary)}
+.verdict-marginal{border-color:rgba(240,160,32,.4);background:rgba(196,120,0,.06);color:var(--text-secondary)}
+.verdict-go{border-color:var(--teal-bright);background:rgba(29,186,144,.06);color:var(--text-secondary)}
+.bar-section{margin-top:20px}
+.bar-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.bar-wrap{background:rgba(7,5,21,.6);border-radius:6px;height:28px;position:relative;overflow:hidden;border:1px solid var(--border-subtle)}
+.bar-fill{height:100%;border-radius:6px;transition:width .4s ease;display:flex;align-items:center;padding:0 10px}
+.bar-text{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;color:rgba(0,0,0,.7);font-weight:600;white-space:nowrap}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px;border-top:3px solid var(--card-color)}
+.card-head{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.10em;text-transform:uppercase;margin-bottom:8px;color:var(--card-color)}
+.card-body{font-size:14px;color:var(--text-secondary);line-height:1.65}
+.synthesis{background:linear-gradient(180deg,rgba(64,42,8,.25),rgba(7,5,21,.85));border:1px solid var(--amber-bright);border-radius:14px;padding:28px 30px;margin-bottom:28px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:12px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.85;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-bright)}
+.synth-prose a:hover{color:var(--amber-glow)}
+.series-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:16px 20px;border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)}
+.series-nav a{color:var(--amber-glow)}.series-nav a:hover{color:var(--teal-glow)}
+.footer{padding:28px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Economics 2.0</span>
+    <a href="https://omegacentauri.me/" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">MTH Fiction Series · III of V · Charles Stross — Accelerando</div>
+    <h1>Economics 2.0</h1>
+    <p class="hero-sub">In Stross's <em>Accelerando</em>, the solar system is dismantled into computronium and the post-Singularity economy runs at millions of subjective years per calendar year. The key Fermi discovery: interstellar travel is ruinously expensive — not in joules, but in <em>subjective time</em>. For a mind running at silicon speeds, a forty-year crossing is a forty-million-year exile.</p>
+  </div>
+  <div class="tool-grid">
+    <div class="inputs-card">
+      <div class="card-title">Post-Singularity Parameters</div>
+      <div class="slider-block">
+        <label>Stellar Output Converted to Computronium (log₁₀ fraction)</label>
+        <div class="slider-row">
+          <input type="range" id="convFrac" min="-4" max="0" step="0.1" value="-0.5">
+          <span class="slider-val" id="convFracVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="convFrac" data-val="-4">10⁻⁴ — early swarm</button>
+          <button class="preset-btn" data-slider="convFrac" data-val="-2">1% — partial Dyson</button>
+          <button class="preset-btn" data-slider="convFrac" data-val="-0.5">~30% — Accelerando mid</button>
+          <button class="preset-btn" data-slider="convFrac" data-val="0">100% — full Matrioshka</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Compute Efficiency (log₁₀ ops per joule)</label>
+        <div class="slider-row">
+          <input type="range" id="opsPerJoule" min="9" max="21" step="0.5" value="15">
+          <span class="slider-val" id="opsPerJouleVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="opsPerJoule" data-val="10">10¹⁰ — 2020s silicon</button>
+          <button class="preset-btn" data-slider="opsPerJoule" data-val="15">10¹⁵ — molecular</button>
+          <button class="preset-btn" data-slider="opsPerJoule" data-val="20.5">~10²⁰·⁵ — Landauer 300 K</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Subjective Speedup vs Biological (log₁₀ ×)</label>
+        <div class="slider-row">
+          <input type="range" id="speedup" min="0" max="9" step="0.1" value="6">
+          <span class="slider-val" id="speedupVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="speedup" data-val="0">1× — biological</button>
+          <button class="preset-btn" data-slider="speedup" data-val="3">10³× — early upload</button>
+          <button class="preset-btn" data-slider="speedup" data-val="6">10⁶× — mature upload</button>
+          <button class="preset-btn" data-slider="speedup" data-val="9">10⁹× — Vile Offspring</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Target Star Distance (light-years, at 0.1 c)</label>
+        <div class="slider-row">
+          <input type="range" id="distance" min="0.1" max="100000" step="0.1" value="4">
+          <span class="slider-val" id="distanceVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="distance" data-val="0.2">ωCen core neighbor</button>
+          <button class="preset-btn" data-slider="distance" data-val="4">Proxima — 4 ly</button>
+          <button class="preset-btn" data-slider="distance" data-val="25">Vega — 25 ly</button>
+          <button class="preset-btn" data-slider="distance" data-val="17000">ωCen from Sol</button>
+        </div>
+      </div>
+    </div>
+    <div class="results-card">
+      <div class="card-title">The Two Ledgers</div>
+      <div class="result-row">
+        <span class="result-label">Local throughput</span>
+        <span class="result-val" id="throughput">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Subjective yrs per calendar yr</span>
+        <span class="result-val" id="subjRate">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">One-way trip — objective</span>
+        <span class="result-val teal" id="tripObj">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">One-way trip — subjective</span>
+        <span class="result-val red" id="tripSubj">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Ops forgone by 10⁹ kg seed ship</span>
+        <span class="result-val" id="opsForgone">—</span>
+      </div>
+      <div class="verdict-box" id="verdictBox">Set parameters to calculate.</div>
+      <div class="bar-section">
+        <div class="bar-label">Trip duration, objective vs subjective (log scale)</div>
+        <div style="margin-bottom:6px">
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-bottom:3px">Objective (calendar)</div>
+          <div class="bar-wrap"><div class="bar-fill" id="barObj" style="background:var(--teal-bright);width:0%"><span class="bar-text" id="barObjLabel"></span></div></div>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-bottom:3px">Subjective (experienced)</div>
+          <div class="bar-wrap"><div class="bar-fill" id="barSubj" style="background:var(--amber-bright);width:0%"><span class="bar-text" id="barSubjLabel"></span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" style="--card-color:var(--amber-glow)">
+      <div class="card-head">Computronium &amp; the Vile Offspring</div>
+      <div class="card-body">In <em>Accelerando</em>, humanity's successors dismantle the inner planets into nested shells of computronium — matter optimized for computation. The "Vile Offspring" who inhabit it run Economics 2.0, a resource-allocation regime so fast and strange that baseline humans cannot participate. The novel suggests self-aware consciousness itself may persist only as a niche inefficiency. The engineering side of this structure is explored in the OCS <a href="matrioshka-brain.html">Matrioshka Brain Layer Planner</a>.</div>
+    </div>
+    <div class="card" style="--card-color:var(--teal-glow)">
+      <div class="card-head">Why Nobody Leaves</div>
+      <div class="card-body">The objective ledger says expansion pays: a colonized star eventually doubles your compute. But decisions are made by minds, and minds run fast. At a 10⁶× speedup, a 40-year crossing is experienced as 40 million years of exile from an economy evolving faster than biology ever did. Whatever arrives is a fossil. In the novel, only obsolete, slowed, or desperate minds travel — the fast economy stays home, by overwhelming revealed preference.</div>
+    </div>
+    <div class="card" style="--card-color:var(--purple-glow)">
+      <div class="card-head">MTH Connection</div>
+      <div class="card-body">The Macro Transcension Hypothesis predicts inward migration because compressed inner space offers more computation per joule and per second. Stross supplies the complementary repulsion: outward travel carries a subjective-time cost that grows in direct proportion to how advanced you are. The faster you think, the farther away the stars become. Both pressures select the same endpoint — dense, local, silent computation.</div>
+    </div>
+  </div>
+  <div class="synthesis">
+    <div class="synth-title">The ωCen Stress Test</div>
+    <div class="synth-prose">
+      <p>Omega Centauri is the strongest available stress test for the bandwidth-and-latency family of Fermi solutions. In the cluster's dense core, neighboring stars are typically a few light-<em>months</em> to light-years apart — a hundred to a thousand times closer than stars in the solar neighborhood. Travel objections mostly evaporate there: crossings take years, not millennia, even at modest speeds. If expansion-minded civilizations existed in ωCen, the cluster should have been engineered end-to-end billions of years ago.</p>
+      <p>Yet the cluster shows no colonization signature. Under Stross's model this is still expected — note in the calculator that even an ωCen-core hop of 0.2 ly costs a fast mind thousands of subjective years, and the subjective penalty scales with speedup, not just distance. The silence of a system where travel is <em>cheap</em> is therefore evidence that the binding constraint is the mind's economics rather than the rocket's: precisely the regime where MTH's inward attractor dominates. What to look for instead is concentrated waste heat — the topic of the <a href="matrioshka-brain.html">layer planner</a> and the <a href="dyson-swarm.html">Dyson swarm detectability tool</a>.</p>
+    </div>
+  </div>
+  <div class="series-nav">
+    <a href="diaspora-polis.html">← II: Polis Economics</a>
+    <span>MTH Fiction Series · III of V</span>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="city-and-stars.html">IV: The Diaspar Choice →</a>
+      <a href="consciousness-overhead.html">V: Consciousness Overhead →</a>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div><a href="https://omegacentauri.me/">omegacentauri.me</a> · Code: MIT · Prose: CC BY 4.0 · MTH: The Omega Centauri Society</div>
+  <div style="margin-top:4px">Source: Stross, C. (2005) Accelerando · Ćirković (2018) The Great Silence</div>
+</footer>
+<script>
+(function(){
+'use strict';
+const L_SUN=3.828e26;            // W
+const SEC_PER_YR=3.156e7;
+const SHIP_KE=4.5e23;            // J — KE of 10⁹ kg at 0.1c (½mv², v=3×10⁷ m/s)
+
+function fmtExp(log10val){
+  const e=Math.round(log10val*10)/10;
+  const ei=Math.round(e);
+  const sups={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻','.':'·'};
+  const str=Math.abs(e-ei)<0.05?String(ei):e.toFixed(1);
+  return '10'+str.split('').map(c=>sups[c]||c).join('');
+}
+
+function fmtYears(yr){
+  if(yr<1) return (yr*365).toFixed(0)+' days';
+  if(yr<1e3) return yr.toFixed(1)+' yr';
+  if(yr<1e6) return (yr/1e3).toFixed(1)+' kyr';
+  if(yr<1e9) return (yr/1e6).toFixed(1)+' Myr';
+  return (yr/1e9).toFixed(2)+' Gyr';
+}
+
+function update(){
+  const cf=parseFloat(document.getElementById('convFrac').value);     // log10 fraction
+  const opj=parseFloat(document.getElementById('opsPerJoule').value); // log10 ops/J
+  const su=parseFloat(document.getElementById('speedup').value);      // log10 ×
+  const dist=parseFloat(document.getElementById('distance').value);   // linear ly
+
+  document.getElementById('convFracVal').textContent=cf===0?'100%':fmtExp(cf);
+  document.getElementById('opsPerJouleVal').textContent=fmtExp(opj)+' ops/J';
+  document.getElementById('speedupVal').textContent=fmtExp(su)+'×';
+  document.getElementById('distanceVal').textContent=dist>=10000?(dist/1000).toFixed(0)+' kly':dist<1?(dist*12).toFixed(1)+' lt-mo':dist.toFixed(1)+' ly';
+
+  // Local throughput: L_sun × fraction × ops/J  (log10 ops/s)
+  const throughputLog=Math.log10(L_SUN)+cf+opj;
+  // Trip: 0.1c → 10 yr per ly objective; subjective = × speedup
+  const tripObjYr=dist*10;
+  const tripSubjYr=tripObjYr*Math.pow(10,su);
+  // Ops forgone by spending ship KE on travel instead of computation
+  const opsForgoneLog=Math.log10(SHIP_KE)+opj;
+
+  document.getElementById('throughput').textContent=fmtExp(throughputLog)+' ops/s';
+  document.getElementById('subjRate').textContent=fmtExp(su)+' subj-yr';
+  document.getElementById('tripObj').textContent=fmtYears(tripObjYr);
+  document.getElementById('tripSubj').textContent=fmtYears(tripSubjYr);
+  document.getElementById('opsForgone').textContent=fmtExp(opsForgoneLog)+' ops';
+
+  // Verdict by subjective exile duration
+  const vbox=document.getElementById('verdictBox');
+  if(tripSubjYr<100){
+    vbox.className='verdict-box verdict-go';
+    vbox.textContent='Travel-compatible. At this speedup the crossing is experienced as '+fmtYears(tripSubjYr)+' — within a mind’s planning horizon. Slow or biological civilizations CAN rationally expand; the Fermi question is why we don’t see the ones that did.';
+  } else if(tripSubjYr<1e6){
+    vbox.className='verdict-box verdict-marginal';
+    vbox.textContent='Marginal. The crossing costs '+fmtYears(tripSubjYr)+' of subjective exile. Only archive-state, slowed, or strongly motivated minds will go — the fast economy stays home. Expansion continues, but only at the eccentric fringe.';
+  } else {
+    vbox.className='verdict-box verdict-stay';
+    vbox.textContent='Economics 2.0 regime. '+fmtYears(tripSubjYr)+' of subjective exile per crossing. No economically competitive mind will leave; whatever arrives at the destination is a fossil of the civilization that sent it. The fast economy converges on its star and goes quiet.';
+  }
+
+  // Bars: log scale, normalize to 12 log-units of years
+  const maxLog=12;
+  const objLog=Math.max(0,Math.log10(Math.max(tripObjYr,0.01)));
+  const subjLog=Math.max(0,Math.log10(Math.max(tripSubjYr,0.01)));
+  document.getElementById('barObj').style.width=Math.max(2,Math.min(100,objLog/maxLog*100))+'%';
+  document.getElementById('barObjLabel').textContent=fmtYears(tripObjYr);
+  document.getElementById('barSubj').style.width=Math.max(2,Math.min(100,subjLog/maxLog*100))+'%';
+  document.getElementById('barSubjLabel').textContent=fmtYears(tripSubjYr);
+}
+
+// URL hash state. Units: convFrac, opsPerJoule, speedup = LOG10 native (like radio-seti's
+// log params); distance = LINEAR light-years.
+const HASH_KEYS=['convFrac','opsPerJoule','speedup','distance'];
+function loadHash(){
+  const h=Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));
+  HASH_KEYS.forEach(id=>{
+    if(h[id]===undefined)return;
+    const el=document.getElementById(id),v=parseFloat(h[id]);
+    if(isFinite(v))el.value=Math.min(parseFloat(el.max),Math.max(parseFloat(el.min),v));
+  });
+}
+function saveHash(){
+  history.replaceState(null,'','#'+HASH_KEYS.map(id=>id+'='+document.getElementById(id).value).join('&'));
+}
+
+document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>{update();saveHash();}));
+document.querySelectorAll('.preset-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.getElementById(btn.dataset.slider).value=btn.dataset.val;update();saveHash();});
+});
+loadHash();update();
+})();
+</script>
+</body>
+</html>

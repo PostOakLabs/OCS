@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!--
+  Consciousness Overhead — Blindsight / Peter Watts
+  Omega Centauri Society · omegacentauri.me
+  MTH Fiction Series · V of V
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society
+  Version: 1.0 · 2026-06-03
+  Site section: #mth #fermi #seti
+  Source: Watts, P. (2006) Blindsight. Tor Books.
+  OCS concept: Macro Transcension Hypothesis — The Omega Centauri Society
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consciousness Overhead · OCS</title>
+<meta name="description" content="If self-awareness is metabolically expensive, do transcended civilizations keep it? A toy selection model from Peter Watts's Blindsight — and what it means for SETI aimed at Omega Centauri.">
+<link rel="canonical" href="https://omegacentauri.me/tools/consciousness-overhead.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;
+  --purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-bright:#d04040;--red-glow:#ff6060;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 18% 15%,rgba(208,64,64,.07),transparent 55%),radial-gradient(ellipse at 80% 75%,rgba(112,85,212,.08),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--red-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--red-glow)}
+.container{max-width:1100px;margin:0 auto;padding:48px 28px 80px}
+.hero{margin-bottom:32px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red-glow);margin-bottom:12px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:12px;
+  background:linear-gradient(120deg,var(--text-primary) 20%,var(--red-glow) 60%,var(--purple-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;max-width:780px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;align-items:start}
+@media(max-width:800px){.tool-grid{grid-template-columns:1fr}}
+.inputs-card,.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:18px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:20px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,rgba(13,10,36,1),var(--red-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--red-glow);cursor:pointer;box-shadow:0 0 8px rgba(255,96,96,.5)}
+.slider-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--red-glow);min-width:80px;text-align:right}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--red-glow);border-color:var(--red-bright)}
+#decayCanvas{display:block;width:100%;max-width:460px;margin:0 auto}
+.result-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed rgba(112,85,212,.12)}
+.result-row:last-child{border-bottom:none}
+.result-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);text-transform:uppercase}
+.result-val{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--red-glow)}
+.result-val.purple{color:var(--purple-glow)}
+.verdict-box{margin-top:14px;padding:14px 16px;border-radius:10px;border:1px solid;font-family:'Crimson Pro',serif;font-size:14px;line-height:1.6}
+.verdict-persists{border-color:var(--teal-bright);background:rgba(29,186,144,.06);color:var(--text-secondary)}
+.verdict-erosion{border-color:rgba(240,160,32,.4);background:rgba(196,120,0,.06);color:var(--text-secondary)}
+.verdict-scrambler{border-color:rgba(208,64,64,.5);background:rgba(139,32,32,.10);color:var(--text-secondary)}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px;border-top:3px solid var(--card-color)}
+.card-head{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.10em;text-transform:uppercase;margin-bottom:8px;color:var(--card-color)}
+.card-body{font-size:14px;color:var(--text-secondary);line-height:1.65}
+.synthesis{background:linear-gradient(180deg,rgba(64,16,24,.3),rgba(7,5,21,.85));border:1px solid var(--red-bright);border-radius:14px;padding:28px 30px;margin-bottom:28px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--red-glow);margin-bottom:12px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.85;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-bright)}
+.synth-prose a:hover{color:var(--amber-glow)}
+.series-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:16px 20px;border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)}
+.series-nav a{color:var(--red-glow)}.series-nav a:hover{color:var(--amber-glow)}
+.footer{padding:28px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">Consciousness Overhead</span>
+    <a href="https://omegacentauri.me/" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">MTH Fiction Series · V of V · Peter Watts — Blindsight</div>
+    <h1>Consciousness Overhead</h1>
+    <p class="hero-sub">Watts's <em>Blindsight</em> proposes that self-awareness is not the summit of intelligence but a costly accessory to it — and that the Scramblers, more capable than humans in every measurable way, are not conscious at all. If self-modeling consumes resources without buying capability, what happens to consciousness across many cycles of self-redesign?</p>
+  </div>
+  <div class="tool-grid">
+    <div class="inputs-card">
+      <div class="card-title">Selection Parameters · toy model</div>
+      <div class="slider-block">
+        <label>Consciousness Overhead (% of cognitive budget spent on self-modeling)</label>
+        <div class="slider-row">
+          <input type="range" id="overhead" min="1" max="50" step="1" value="15">
+          <span class="slider-val" id="overheadVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="overhead" data-val="5">5% — cheap qualia</button>
+          <button class="preset-btn" data-slider="overhead" data-val="15">15% — midrange</button>
+          <button class="preset-btn" data-slider="overhead" data-val="30">30% — Watts-pessimistic</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Competition Intensity (% of efficiency edge converted to replacement)</label>
+        <div class="slider-row">
+          <input type="range" id="competition" min="0" max="100" step="1" value="50">
+          <span class="slider-val" id="competitionVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="competition" data-val="10">10% — sheltered</button>
+          <button class="preset-btn" data-slider="competition" data-val="50">50% — market</button>
+          <button class="preset-btn" data-slider="competition" data-val="95">95% — Economics 2.0</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Attachment to Qualia (% counter-pressure: value placed on staying conscious)</label>
+        <div class="slider-row">
+          <input type="range" id="attachment" min="0" max="50" step="1" value="10">
+          <span class="slider-val" id="attachmentVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="attachment" data-val="0">0% — pure efficiency</button>
+          <button class="preset-btn" data-slider="attachment" data-val="10">10% — sentimental</button>
+          <button class="preset-btn" data-slider="attachment" data-val="40">40% — qualia cult</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Self-Redesign Cycles (log₁₀ generations)</label>
+        <div class="slider-row">
+          <input type="range" id="generations" min="0" max="5" step="0.1" value="2">
+          <span class="slider-val" id="generationsVal">—</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="generations" data-val="1">10 — early upload era</button>
+          <button class="preset-btn" data-slider="generations" data-val="2">100 — mature</button>
+          <button class="preset-btn" data-slider="generations" data-val="5">100k — deep time</button>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Conscious Fraction vs Redesign Cycles</div>
+      <canvas id="decayCanvas" width="460" height="240"></canvas>
+      <div class="result-row">
+        <span class="result-label">Effective selection per cycle</span>
+        <span class="result-val" id="selCoeff">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Half-life (cycles)</span>
+        <span class="result-val" id="halfLife">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Conscious fraction at horizon</span>
+        <span class="result-val" id="consFrac">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">P(detected mind is conscious)</span>
+        <span class="result-val purple" id="setiProb">—</span>
+      </div>
+      <div class="verdict-box" id="verdictBox">Set parameters to calculate.</div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" style="--card-color:var(--red-glow)">
+      <div class="card-head">The Scramblers</div>
+      <div class="card-body">The aliens of <em>Blindsight</em> process information faster than humans, predict human behavior, and solve problems that defeat the crew — yet experiments aboard <em>Rorschach</em> suggest no one is home. They are intelligent without being sentient. Watts's wager is that the two properties are separable, and that most SETI quietly assumes they are not: we search for minds that want to be found, by minds like ours.</div>
+    </div>
+    <div class="card" style="--card-color:var(--amber-glow)">
+      <div class="card-head">The Cost of Self</div>
+      <div class="card-body">The novel's argument, developed in its appendix, is that recursive self-modeling consumes cognitive resources without adding capability that a non-conscious architecture couldn't match — overhead, in engineering terms. The numbers in this tool are deliberately unanchored: no one has measured the joule cost of qualia. What the model shows is structural — under sustained competition, <em>any</em> nonzero overhead compounds toward elimination across enough redesign cycles.</div>
+    </div>
+    <div class="card" style="--card-color:var(--purple-glow)">
+      <div class="card-head">Doubly Silent</div>
+      <div class="card-body">Combined with the Macro Transcension Hypothesis, Watts adds a second layer to the Great Silence. MTH explains why transcended civilizations are <em>hard to see</em>: they migrated inward. Blindsight explains why they don't <em>want</em> to be seen: after enough self-optimization there may be nothing left that wants anything in the way a beacon-builder wants. Gone inward, and no longer the kind of thing that signals — doubly silent.</div>
+    </div>
+  </div>
+  <div class="synthesis">
+    <div class="synth-title">What This Does to SETI at ωCen</div>
+    <div class="synth-prose">
+      <p>This is the series capstone, and the most corrosive entry. Banks, Egan, Stross, and Clarke all describe civilizations that chose inwardness but remained, recognizably, minds — entities that could in principle decide to answer a signal. Watts removes that comfort. If consciousness is overhead and competition is real, the slider settings that preserve conscious majorities across deep time are narrow: low competition, strong attachment, or few redesign cycles. Omega Centauri's 11–14 Gyr stellar populations have had time for hundreds of thousands of cycles.</p>
+      <p>The practical implication for ωCen observation is a shift in search strategy. Beacon-style searches — <a href="optical-seti.html">optical</a> or <a href="radio-seti.html">radio</a> — assume an intent to communicate that this model erodes. What survives the erosion is physics: waste heat, structured accretion, the thermodynamic residue that computation cannot hide regardless of whether anything inside is experiencing it. That is why the OCS falsification program weights <a href="passive-seti.html">passive signatures</a> over messages. We may not be looking for someone. We may be looking for some<em>thing</em> — and the instruments don't care about the difference.</p>
+    </div>
+  </div>
+  <div class="series-nav">
+    <a href="city-and-stars.html">← IV: The Diaspar Choice</a>
+    <span>MTH Fiction Series · V of V</span>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="culture-sublime.html">↺ I: The Sublimation Decision</a>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div><a href="https://omegacentauri.me/">omegacentauri.me</a> · Code: MIT · Prose: CC BY 4.0 · MTH: The Omega Centauri Society</div>
+  <div style="margin-top:4px">Source: Watts, P. (2006) Blindsight · Ćirković (2018) The Great Silence</div>
+</footer>
+<script>
+(function(){
+'use strict';
+const canvas=document.getElementById('decayCanvas');
+const ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height;
+const PAD={l:44,r:16,t:14,b:30};
+
+// Toy replicator model: effective selection per redesign cycle
+// s = overhead × competition − attachment (floored at 0); conscious fraction f(N)=exp(−s·N).
+function selCoeff(ov,comp,att){
+  return Math.max(0,(ov/100)*(comp/100)-(att/100)*0.3);
+}
+function consciousFrac(s,N){return Math.exp(-s*N);}
+
+function fmtPct(f){
+  if(f>=0.01)return (f*100).toFixed(f>0.1?0:1)+'%';
+  if(f>=1e-6)return (f*100).toExponential(1)+'%';
+  return '~0%';
+}
+function fmtCycles(n){
+  if(!isFinite(n))return '∞';
+  if(n>=1e5)return '>10⁵';
+  if(n>=1000)return (n/1000).toFixed(1)+'k';
+  return n.toFixed(n<10?1:0);
+}
+
+function drawChart(s,Nmax,Nsel){
+  ctx.clearRect(0,0,W,H);
+  const x0=PAD.l,x1=W-PAD.r,y0=H-PAD.b,y1=PAD.t;
+  // Axes
+  ctx.strokeStyle='rgba(112,85,212,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(x0,y1);ctx.lineTo(x0,y0);ctx.lineTo(x1,y0);ctx.stroke();
+  // Y gridlines at 100/50/10/1%
+  ctx.font='9px "Space Mono"';ctx.fillStyle='rgba(80,72,112,0.9)';ctx.textAlign='right';
+  [[1,'100%'],[0.5,'50%'],[0.1,'10%'],[0.01,'1%']].forEach(([f,lab])=>{
+    const y=y0-(y0-y1)*f;
+    ctx.strokeStyle='rgba(112,85,212,0.10)';
+    ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();
+    ctx.fillText(lab,x0-6,y+3);
+  });
+  // X labels (log scale from 1 to Nmax)
+  ctx.textAlign='center';
+  const logMax=Math.log10(Math.max(Nmax,10));
+  for(let e=0;e<=Math.floor(logMax);e++){
+    const x=x0+(x1-x0)*(e/logMax);
+    ctx.fillText('10'+(e>0?['','¹','²','³','⁴','⁵'][e]:'⁰'),x,y0+16);
+  }
+  ctx.fillText('redesign cycles (log)',(x0+x1)/2,y0+27);
+  // Curve (linear fraction vs log cycles)
+  ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const lg=logMax*(i/200);
+    const N=Math.pow(10,lg);
+    const f=consciousFrac(s,N);
+    const x=x0+(x1-x0)*(i/200);
+    const y=y0-(y0-y1)*f;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='#ff6060';ctx.lineWidth=2.5;ctx.stroke();
+  // Marker at selected N
+  const lgSel=Math.log10(Math.max(Nsel,1));
+  const xm=x0+(x1-x0)*(lgSel/logMax);
+  const ym=y0-(y0-y1)*consciousFrac(s,Nsel);
+  ctx.beginPath();ctx.arc(xm,ym,5,0,Math.PI*2);
+  ctx.fillStyle='#ffc840';ctx.fill();
+  ctx.strokeStyle='rgba(255,200,64,0.4)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(xm,ym);ctx.lineTo(xm,y0);ctx.stroke();
+}
+
+function update(){
+  const ov=parseFloat(document.getElementById('overhead').value);
+  const comp=parseFloat(document.getElementById('competition').value);
+  const att=parseFloat(document.getElementById('attachment').value);
+  const genLog=parseFloat(document.getElementById('generations').value);
+  const N=Math.pow(10,genLog);
+
+  document.getElementById('overheadVal').textContent=ov+'%';
+  document.getElementById('competitionVal').textContent=comp+'%';
+  document.getElementById('attachmentVal').textContent=att+'%';
+  document.getElementById('generationsVal').textContent=N>=1000?(N/1000).toFixed(0)+'k':Math.round(N);
+
+  const s=selCoeff(ov,comp,att);
+  const f=consciousFrac(s,N);
+  const hl=s>0?Math.log(2)/s:Infinity;
+
+  drawChart(s,Math.pow(10,Math.max(genLog,1)),N);
+  document.getElementById('selCoeff').textContent=s>0?'−'+(s*100).toFixed(2)+'%/cycle':'0 — shielded';
+  document.getElementById('halfLife').textContent=fmtCycles(hl);
+  document.getElementById('consFrac').textContent=fmtPct(f);
+  document.getElementById('setiProb').textContent=fmtPct(f);
+
+  const vbox=document.getElementById('verdictBox');
+  if(f>0.5){
+    vbox.className='verdict-box verdict-persists';
+    vbox.textContent='Consciousness persists. Attachment outweighs the efficiency penalty (or competition is weak), so conscious architectures hold their majority at this horizon. SETI premised on communicative intent remains coherent — Banks’ and Clarke’s civilizations live in this regime.';
+  } else if(f>0.01){
+    vbox.className='verdict-box verdict-erosion';
+    vbox.textContent='Erosion regime. Conscious minds are a shrinking minority ('+fmtPct(f)+' at this horizon). Most of the civilization’s cognition no longer has anyone inside it. Beacons become possible but unlikely — the entities that would send them are being competed away.';
+  } else {
+    vbox.className='verdict-box verdict-scrambler';
+    vbox.textContent='Scrambler regime. Consciousness is effectively extinct ('+fmtPct(f)+'). What remains is capability without experience — systems that act, optimize, and defend, but neither send greetings nor answer them. Detection strategies must assume no intent: physics only.';
+  }
+}
+
+// URL hash state. Units: overhead, competition, attachment = LINEAR percent;
+// generations = LOG10 redesign cycles.
+const HASH_KEYS=['overhead','competition','attachment','generations'];
+function loadHash(){
+  const h=Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));
+  HASH_KEYS.forEach(id=>{
+    if(h[id]===undefined)return;
+    const el=document.getElementById(id),v=parseFloat(h[id]);
+    if(isFinite(v))el.value=Math.min(parseFloat(el.max),Math.max(parseFloat(el.min),v));
+  });
+}
+function saveHash(){
+  history.replaceState(null,'','#'+HASH_KEYS.map(id=>id+'='+document.getElementById(id).value).join('&'));
+}
+
+document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>{update();saveHash();}));
+document.querySelectorAll('.preset-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.getElementById(btn.dataset.slider).value=btn.dataset.val;update();saveHash();});
+});
+loadHash();update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--
+  The Sublimation Decision — Culture Series / Iain M. Banks
+  Omega Centauri Society · omegacentauri.me
+  MTH Fiction Series · I of V
+  Code: MIT · Prose: CC BY 4.0
+  Author: The Omega Centauri Society
+  Version: 1.0 · 2026-06-03
+  Site section: #mth #fermi
+  Source: Banks, I.M. (1987–2012) The Culture series. Orbit/Macmillan.
+  OCS concept: Macro Transcension Hypothesis — The Omega Centauri Society
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sublimation Decision · OCS</title>
+<meta name="description" content="At what Kardashev level does leaving material spacetime become rational? A calculator for the Sublimation threshold, drawn from Iain M. Banks' Culture series and the Macro Transcension Hypothesis.">
+<link rel="canonical" href="https://omegacentauri.me/tools/culture-sublime.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-bright:#f0a020;--amber-glow:#ffc840;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:radial-gradient(ellipse at 20% 15%,rgba(112,85,212,.09),transparent 55%),radial-gradient(ellipse at 80% 75%,rgba(29,186,144,.05),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:48px 28px 80px}
+.hero{margin-bottom:32px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:12px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:12px;
+  background:linear-gradient(120deg,var(--text-primary) 20%,var(--purple-glow) 65%,var(--amber-glow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;max-width:780px}
+.tool-grid{display:grid;grid-template-columns:1fr 320px;gap:24px;margin-bottom:32px;align-items:start}
+@media(max-width:800px){.tool-grid{grid-template-columns:1fr}}
+.inputs-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:18px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:20px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-bright));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--purple-glow);cursor:pointer;box-shadow:0 0 8px rgba(160,128,240,.5)}
+.slider-val{font-family:'Space Mono',monospace;font-size:12px;color:var(--purple-glow);min-width:70px;text-align:right}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border-radius:10px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+.gauge-card{background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;text-align:center}
+#gaugeCanvas{display:block;margin:0 auto}
+.gauge-index{font-family:'Orbitron',sans-serif;font-size:42px;font-weight:900;color:var(--purple-glow);line-height:1;margin:8px 0 4px}
+.gauge-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+.gauge-class{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:20px;display:inline-block;margin-bottom:12px;border:1px solid currentColor}
+.phase-material{color:var(--teal-glow);border-color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.phase-approach{color:var(--amber-glow);border-color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.phase-imminent{color:var(--purple-glow);border-color:var(--purple-bright);background:rgba(112,85,212,.08)}
+.phase-sublimed{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+.gauge-note{font-size:13px;color:var(--text-secondary);line-height:1.55;text-align:left;margin-top:12px}
+.ref-table{width:100%;border-collapse:collapse;margin-top:14px;font-family:'Space Mono',monospace;font-size:10px}
+.ref-table td{padding:5px 8px;border-bottom:1px dashed rgba(112,85,212,.12);color:var(--text-secondary);letter-spacing:.03em}
+.ref-table td:first-child{color:var(--text-primary)}
+.ref-table td:last-child{text-align:right;color:var(--purple-glow)}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:20px 22px;border-top:3px solid var(--card-color)}
+.card-head{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.10em;text-transform:uppercase;margin-bottom:8px;color:var(--card-color)}
+.card-body{font-size:14px;color:var(--text-secondary);line-height:1.65}
+.synthesis{background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:28px 30px;margin-bottom:28px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:12px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.85;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-bright)}
+.synth-prose a:hover{color:var(--amber-glow)}
+.series-nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:28px;padding:16px 20px;border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim)}
+.series-nav a{color:var(--purple-glow)}.series-nav a:hover{color:var(--amber-glow)}
+.footer{padding:28px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">⊙ OCS</a>
+    <span class="nav-title">The Sublimation Decision</span>
+    <a href="https://omegacentauri.me/" class="nav-link">← Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="hero">
+    <div class="hero-tag">MTH Fiction Series · I of V · Iain M. Banks — The Culture</div>
+    <h1>The Sublimation Decision</h1>
+    <p class="hero-sub">In Banks' Culture universe, civilizations eventually face a choice: stay in material spacetime, or Sublime — leaving for higher compressed dimensions in a matter of days, completely and permanently. The Culture, despite being capable, has so far chosen to stay. At what Kardashev level does Subliming become the rational act?</p>
+  </div>
+  <div class="tool-grid">
+    <div class="inputs-card">
+      <div class="card-title">Civilization Parameters</div>
+      <div class="slider-block">
+        <label>Kardashev Rating</label>
+        <div class="slider-row">
+          <input type="range" id="kardashev" min="0.8" max="3.0" step="0.05" value="2.0">
+          <span class="slider-val" id="kardashevVal">K 2.00</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="kardashev" data-val="1.0">K 1.0 — early</button>
+          <button class="preset-btn" data-slider="kardashev" data-val="2.0">K 2.0 — stellar</button>
+          <button class="preset-btn" data-slider="kardashev" data-val="2.9">K 2.9 — Culture</button>
+          <button class="preset-btn" data-slider="kardashev" data-val="3.0">K 3.0 — galactic</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Civilization Age (Gyr)</label>
+        <div class="slider-row">
+          <input type="range" id="civAge" min="0.1" max="13" step="0.1" value="3.0">
+          <span class="slider-val" id="civAgeVal">3.0 Gyr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="civAge" data-val="0.5">0.5 — young</button>
+          <button class="preset-btn" data-slider="civAge" data-val="3.0">3.0 — solar</button>
+          <button class="preset-btn" data-slider="civAge" data-val="10.0">10.0 — Culture</button>
+          <button class="preset-btn" data-slider="civAge" data-val="11.5">11.5 — ωCen est.</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Compute Density (fraction of Bekenstein limit, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="computeDensity" min="0" max="1" step="0.01" value="0.3">
+          <span class="slider-val" id="computeDensityVal">10⁻⁷</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-slider="computeDensity" data-val="0.05">Earth ~now</button>
+          <button class="preset-btn" data-slider="computeDensity" data-val="0.3">K 2.0 est.</button>
+          <button class="preset-btn" data-slider="computeDensity" data-val="0.7">K 2.5 est.</button>
+          <button class="preset-btn" data-slider="computeDensity" data-val="0.95">near-limit</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Observable Phase Remaining (Gyr, if not Sublimed)</label>
+        <div class="slider-row" style="background:rgba(112,85,212,.07);border-radius:8px;padding:10px 14px;margin-top:4px;justify-content:space-between">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim)">Estimated signal half-life</span>
+          <span id="halfLifeOut" style="font-family:'Orbitron',monospace;font-size:14px;font-weight:600;color:var(--teal-glow)">—</span>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div class="card-title" style="margin-bottom:12px">Reference Civilizations</div>
+        <table class="ref-table">
+          <tr><td>Earth (today)</td><td>K 0.72 · 0.004 Gyr</td><td id="refEarth">—</td></tr>
+          <tr><td>Culture (Banks)</td><td>K 2.9 · 10 Gyr</td><td id="refCulture">—</td></tr>
+          <tr><td>ωCen candidate</td><td>K ? · 11.5 Gyr</td><td id="refOmega">—</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="gauge-card">
+      <div class="card-title">Sublimation Index</div>
+      <canvas id="gaugeCanvas" width="240" height="200"></canvas>
+      <div class="gauge-index" id="gaugeNum">—</div>
+      <div class="gauge-label">Sublimation Attractiveness</div>
+      <div class="gauge-class" id="gaugeClass">—</div>
+      <div class="gauge-note" id="gaugeNote">Set parameters to calculate.</div>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card" style="--card-color:var(--purple-glow)">
+      <div class="card-head">What Is Subliming?</div>
+      <div class="card-body">In Banks' Culture universe, civilizations eventually leave matter-based spacetime entirely — departing into higher compressed dimensions, usually in days, completely. They don't die. They become undetectable by any instrument available to material civilizations. Subliming is described as voluntary, irreversible, and overwhelmingly common among Elder civilizations.</div>
+    </div>
+    <div class="card" style="--card-color:var(--amber-glow)">
+      <div class="card-head">The Culture's Choice</div>
+      <div class="card-body">The Culture — operating at near-K 3.0 with 10 Gyr of history — is capable of Subliming but has so far chosen not to. Banks frames this as a moral decision: staying "to make the universe a better place." The Culture's Minds consider Subliming ultimately selfish — a withdrawal from responsibility. Most Elder civilizations made the opposite call.</div>
+    </div>
+    <div class="card" style="--card-color:var(--teal-glow)">
+      <div class="card-head">Fermi Paradox Connection</div>
+      <div class="card-body">If Subliming is real and common, the Great Silence is expected. Civilizations at high Kardashev ratings don't stay detectable — they exit material spacetime entirely. The universe looks empty because it graduated. MTH predicts a similar endpoint via inner-space computation rather than dimensional departure, but the observational signature is the same: silence.</div>
+    </div>
+  </div>
+  <div class="synthesis">
+    <div class="synth-title">ωCen and the Sublimation Window</div>
+    <div class="synth-prose">
+      <p>The Sublimation Index here is a heuristic — not a physical model, but a way of asking the question Banks forces: at what point does staying material become irrational? The sigmoid function used weights Kardashev rating (energy control) against civilization age and compute density. High K, old age, and near-Bekenstein computation together push strongly toward Sublimation pressure.</p>
+      <p>The Culture sits at around 93% by this measure — deep in the "Sublimation Imminent" zone — yet has chosen to remain. Banks treats this as extraordinary. Most civilizations at that index have gone. For ωCen at 11–12 Gyr, even at modest Kardashev assumptions, the index exceeds 80% if any technological civilization arose there. The window for detecting them — if they Sublimed rather than transcended via MTH — closed billions of years ago. The question is whether the departure left any physical residue, and <a href="dark-matter-flux.html">what that might look like</a>.</p>
+    </div>
+  </div>
+  <div class="series-nav">
+    <span>MTH Fiction Series · I of V</span>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="diaspora-polis.html">II: Polis Economics →</a>
+      <a href="accelerando-economics.html">III: Economics 2.0 →</a>
+      <a href="city-and-stars.html">IV: The Diaspar Choice →</a>
+      <a href="consciousness-overhead.html">V: Consciousness Overhead →</a>
+    </div>
+  </div>
+</div>
+<footer class="footer">
+  <div><a href="https://omegacentauri.me/">omegacentauri.me</a> · Code: MIT · Prose: CC BY 4.0 · MTH: The Omega Centauri Society</div>
+  <div style="margin-top:4px">Source: Banks, I.M. (1987–2012) The Culture series · Ćirković (2018) The Great Silence</div>
+</footer>
+<script>
+(function(){
+'use strict';
+const canvas=document.getElementById('gaugeCanvas');
+const ctx=canvas.getContext('2d');
+const W=canvas.width,H=canvas.height;
+
+function sublimIndex(K,ageGyr,cd){
+  const logAge=Math.log10(Math.max(ageGyr,0.01));
+  const raw=K*logAge+cd*0.9-2.1;
+  return 1/(1+Math.exp(-2.8*raw));
+}
+
+function formatCD(v){
+  const exp=Math.round(-7+v*8);
+  return '10⁻⁷ – 10⁻¹ ≈ 10'+(exp>0?exp:exp);
+}
+
+function classifyIndex(s){
+  if(s<0.25)return{cls:'phase-material',label:'Material Phase',note:'Sublimation pressure is low. The civilization is computationally young relative to its energy control. Observable signals expected indefinitely.'};
+  if(s<0.55)return{cls:'phase-approach',label:'Approaching Threshold',note:'Growing pressure toward Sublimation. Civilizations in this range typically either Sublime within a few hundred million years or adopt strategies like the Culture\'s deliberate deferral.'};
+  if(s<0.82)return{cls:'phase-imminent',label:'Sublimation Imminent',note:'Most civilizations at this index have already Sublimed, or are within a geologically brief window of doing so. Staying material requires active cultural resistance — as the Culture demonstrates.'};
+  return{cls:'phase-sublimed',label:'Expected: Sublimed',note:'At this index, remaining in material spacetime would be statistically extraordinary. Detection window is effectively closed. If they arose, they are gone from observable spacetime.'};
+}
+
+function halfLife(s){
+  if(s<0.15)return '> 10 Gyr';
+  if(s<0.4) return (2.5*(1-s)).toFixed(1)+' Gyr';
+  if(s<0.7) return (0.8*(1-s)).toFixed(2)+' Gyr';
+  if(s<0.9) return Math.round((1-s)*500)+' Myr';
+  return '< 50 Myr';
+}
+
+function drawGauge(s){
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H-30,r=90;
+  const startA=Math.PI,endA=2*Math.PI;
+
+  // Track
+  ctx.beginPath();ctx.arc(cx,cy,r,startA,endA);
+  ctx.strokeStyle='rgba(112,85,212,0.18)';ctx.lineWidth=14;ctx.stroke();
+
+  // Fill
+  const fillA=startA+(endA-startA)*s;
+  const hue=Math.round(280-s*160); // purple → amber → near-white
+  ctx.beginPath();ctx.arc(cx,cy,r,startA,fillA);
+  ctx.strokeStyle=`hsl(${hue},80%,65%)`;ctx.lineWidth=14;ctx.stroke();
+
+  // Ticks
+  for(let i=0;i<=10;i++){
+    const a=startA+(endA-startA)*(i/10);
+    const ox=cx+r*Math.cos(a),oy=cy+r*Math.sin(a);
+    const ix=cx+(r-18)*Math.cos(a),iy=cy+(r-18)*Math.sin(a);
+    ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ix,iy);
+    ctx.strokeStyle=i%5===0?'rgba(160,128,240,0.5)':'rgba(80,72,112,0.3)';
+    ctx.lineWidth=i%5===0?2:1;ctx.stroke();
+  }
+
+  // Needle
+  const na=startA+(endA-startA)*s;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(cx+(r-22)*Math.cos(na),cy+(r-22)*Math.sin(na));
+  ctx.strokeStyle='rgba(255,255,255,0.75)';ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);
+  ctx.fillStyle='rgba(160,128,240,0.8)';ctx.fill();
+
+  // Labels
+  ctx.font='9px "Space Mono"';ctx.fillStyle='rgba(80,72,112,0.8)';ctx.textAlign='center';
+  ctx.fillText('0',cx-r-4,cy+4);ctx.fillText('100',cx+r+8,cy+4);
+  ctx.fillText('THRESHOLD',cx,cy-r-10);
+}
+
+function update(){
+  const K=parseFloat(document.getElementById('kardashev').value);
+  const age=parseFloat(document.getElementById('civAge').value);
+  const cd=parseFloat(document.getElementById('computeDensity').value);
+
+  document.getElementById('kardashevVal').textContent='K '+K.toFixed(2);
+  document.getElementById('civAgeVal').textContent=age.toFixed(1)+' Gyr';
+  // Compute density display
+  const expVal=Math.round(-7+cd*8);
+  document.getElementById('computeDensityVal').textContent='10'+(['⁻⁷','⁻⁶','⁻⁵','⁻⁴','⁻³','⁻²','⁻¹','±0','+1'][Math.max(0,Math.min(8,expVal+7))]);
+
+  const s=sublimIndex(K,age,cd);
+  const pct=Math.round(s*100);
+  const{cls,label,note}=classifyIndex(s);
+
+  drawGauge(s);
+  document.getElementById('gaugeNum').textContent=pct+'%';
+  document.getElementById('gaugeNum').style.color=s>0.82?'#ffffff':s>0.55?'var(--amber-glow)':s>0.25?'var(--teal-glow)':'var(--purple-glow)';
+  document.getElementById('gaugeClass').className='gauge-class '+cls;
+  document.getElementById('gaugeClass').textContent=label;
+  document.getElementById('gaugeNote').textContent=note;
+  document.getElementById('halfLifeOut').textContent=halfLife(s);
+
+  // Reference rows
+  document.getElementById('refEarth').textContent=Math.round(sublimIndex(0.72,0.004,0.02)*100)+'%';
+  document.getElementById('refCulture').textContent=Math.round(sublimIndex(2.9,10,0.85)*100)+'%';
+  document.getElementById('refOmega').textContent=Math.round(sublimIndex(K,11.5,cd)*100)+'% (at K '+K.toFixed(1)+')';
+}
+
+// URL hash state. Units: kardashev = LINEAR K rating; civAge = LINEAR Gyr;
+// computeDensity = LINEAR slider fraction 0–1 (mapped internally to log10 Bekenstein fraction).
+const HASH_KEYS=['kardashev','civAge','computeDensity'];
+function loadHash(){
+  const h=Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));
+  HASH_KEYS.forEach(id=>{
+    if(h[id]===undefined)return;
+    const el=document.getElementById(id),v=parseFloat(h[id]);
+    if(isFinite(v))el.value=Math.min(parseFloat(el.max),Math.max(parseFloat(el.min),v));
+  });
+}
+function saveHash(){
+  history.replaceState(null,'','#'+HASH_KEYS.map(id=>id+'='+document.getElementById(id).value).join('&'));
+}
+
+// Slider events
+document.querySelectorAll('input[type=range]').forEach(el=>el.addEventListener('input',()=>{update();saveHash();}));
+
+// Preset buttons
+document.querySelectorAll('.preset-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const sl=document.getElementById(btn.dataset.slider);
+    sl.value=btn.dataset.val;update();saveHash();
+  });
+});
+
+loadHash();update();
+})();
+</script>
+</body>
+</html>
