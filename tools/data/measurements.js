@@ -200,12 +200,12 @@ window.OCS_MEASUREMENTS = {
       halfLightRadius: 1.06,
       ageGyr: 12.0,
       imbhSummary: {
-        value: 2000,
+        value: 500,
         limitType: "upper",
         sigma: 3,
         reference: "Kirsten & Vlemmings 2012",
-        doi: "10.1051/0004-6361/201219049",
-        note: "Radio + VLBI proper motion limit. Earlier Gerssen 2002 claim of ~4,000 M☉ was contested and is no longer favored."
+        doi: "10.1051/0004-6361/201218928",
+        note: "Radio + VLBI proper motion: < 500 M☉ (3σ). DOI corrected (was 201219049). Earlier Gerssen 2002 claim of ~4,000 M☉ was contested and is no longer favored."
       }
     },
     {

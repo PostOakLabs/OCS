@@ -255,7 +255,7 @@ a:hover{color:var(--teal-glow)}
     <div class="about-body" id="about-body">
       <h3>The fundamental plane of black hole activity</h3>
       <p>The "fundamental plane" of black hole activity (Merloni et al. 2003, Falcke &amp; Biermann 1995) is an empirical correlation among radio luminosity, X-ray luminosity, and black hole mass that holds across ten decades in mass — from stellar-mass X-ray binaries to AGN. The relation used here is:</p>
-      <p><code>log(S_ν [mJy]) = 0.6·log(L_X [erg/s]) + 0.78·log(M [M☉]) − 0.6·log(D [pc]) − 11.9</code></p>
+      <p><code>log(S_ν [mJy]) = 0.6·log(L_X [erg/s]) + 0.78·log(M [M☉]) − 2·log(D [pc]) − 14.446</code></p>
       <p>where L_X is approximated by the effective jet power P_jet × η_jet converted to erg/s (1 W = 10⁷ erg/s), and D is the OC distance in parsecs (5490 pc). This approximation is robust within ~0.5 dex given the scatter in the fundamental plane.</p>
 
       <h3>Flat-spectrum assumption</h3>
@@ -326,10 +326,12 @@ function compute(){
   const theta_uas = theta_rad * (180 / PI) * 3600 * 1e6;
 
   // Fundamental plane flux (Merloni et al. 2003):
-  // log(S_mJy) = 0.6*log(L_X_erg) + 0.78*log(M_msun) - 0.6*log(D_pc) - 11.9
+  // log(S_mJy) = 0.6*log(L_X_erg) + 0.78*log(M_msun) - 2*log(D_pc) - 14.446
+  // Derived: L_R [νLν erg/s] = 0.6*log(L_X)+0.78*log(M)+7.33; convert to S_ν [mJy]
+  // via S = L_R/(4π D² ν) with ν=5e9 Hz, D in cm, 1 mJy = 1e-26 erg/s/Hz/cm²
   const L_X_erg = P_jet_W * 1e7;  // W -> erg/s
   if (L_X_erg <= 0) return null;
-  const log_S = 0.6 * Math.log10(L_X_erg) + 0.78 * Math.log10(M_msun) - 0.6 * Math.log10(OC_DIST_PC) - 11.9;
+  const log_S = 0.6 * Math.log10(L_X_erg) + 0.78 * Math.log10(M_msun) - 2 * Math.log10(OC_DIST_PC) - 14.446;
   const S_mJy = Math.pow(10, log_S);
 
   // Instrument comparisons

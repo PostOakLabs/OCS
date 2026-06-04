@@ -265,7 +265,7 @@ canvas{width:100%;display:block}
     <div class="about-body">
       <p><strong>The ergosphere</strong> is the region between the event horizon r₊ and the static limit r_ergo = 2GM/c² (equatorial). Inside it, spacetime drags so strongly that no object can remain stationary — but it is <em>outside</em> the horizon, so objects can still escape. This makes negative-energy orbits possible.</p>
       <p><strong>Rotational energy reservoir:</strong> the Christodoulou (1970) irreducible mass M_irr = √(r₊·M/2) defines a floor below which no process can reduce the BH mass. The rotational energy E_rot = (M − M_irr)c² is the maximum energy available to any extraction process — Penrose, BZ, or otherwise. At a* → 1 this fraction approaches 1 − 1/√2 ≈ 29.3% of Mc².</p>
-      <p><strong>Single-particle Penrose efficiency:</strong> for a particle decaying from rest at the ergosphere, the escaping fragment can carry at most η_P ≈ a*/(2(1 + √(1 − a*²))) of the infalling rest mass as extracted energy. At a*=0.998 this is ≈ 20.7%. Collisional variants (Bañados, Silk &amp; West 2009) can exceed 100% of rest-mass energy near the horizon, but are limited by astrophysical constraints.</p>
+      <p><strong>Single-particle Penrose efficiency:</strong> for a particle decaying at the equatorial ergosphere, the maximum fraction of the infalling rest mass extractable as energy is η_P = (√(1 + a*²) − 1)/2 (Wald 1974). At a*=1 this equals (√2 − 1)/2 ≈ 20.71%; at a*=0.998 it is ≈ 20.6%. Collisional variants (Bañados, Silk &amp; West 2009) can exceed 100% of rest-mass energy near the horizon, but are limited by astrophysical constraints.</p>
       <p><strong>ωCen IMBH context:</strong> spin is not yet directly measured. Pulsar timing upper limits (Bañares-Hernández et al. 2025) constrain the mass ≤6,000 M☉; stellar kinematics (Häberle et al. 2024) give ≥8,200 M☉. The default preset uses log M = 3.914 (≈ 8,200 M☉). Spin range a* = 0.5–0.9 is typical for IMBHs grown by repeated mergers.</p>
       <p><strong>References:</strong> <a href="https://doi.org/10.1086/152756" target="_blank" rel="noopener">Wald 1974 ApJ 191:231</a> · <a href="https://arxiv.org/abs/2508.01683" target="_blank" rel="noopener">Schnittman 2025 (arXiv:2508.01683)</a> · Christodoulou 1970 PRL 25:1596 · Penrose 1969 Riv. Nuovo Cimento 1:252</p>
     </div>
@@ -334,10 +334,11 @@ function rotEnergyFrac(aStar){
   return 1 - irrMassFrac(aStar);
 }
 function singleParticlePenroseEff(aStar){
-  // Approximate classical max efficiency from Wald (1974):
-  // η_P ≈ a* / (2(1 + sqrt(1-a*²)))
+  // Classical single-particle Penrose maximum efficiency (Wald 1974):
+  // η_P = (√(1 + a*²) − 1) / 2
+  // Limits: η(0)=0, η(1)=(√2−1)/2=20.71% (extremal). Gives ≈20.6% at a*=0.998.
   if(aStar < 1e-6) return 0;
-  return aStar / (2 * (1 + Math.sqrt(1 - aStar*aStar)));
+  return (Math.sqrt(1 + aStar*aStar) - 1) / 2;
 }
 
 function render(){

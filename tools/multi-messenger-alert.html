@@ -266,7 +266,7 @@ canvas{width:100%;display:block;border-radius:10px;background:rgba(7,5,21,.6);bo
         <strong>Fermi-LAT threshold</strong>: point-source sensitivity ~8×10⁻¹² erg/cm²/s (E≥100 MeV, 10-yr survey, high latitude).
         <strong>CTA threshold</strong>: ~5×10⁻¹³ erg/cm²/s (E≥30 GeV, 50-hr pointing).
         <strong>KM3NeT threshold</strong>: effective area A_eff ~2×10⁴ m² at 10 TeV for OC declination (−47°); background rate ~0.01 events/100s in 5° cone above 10 TeV (upgoing).
-        Distance to OC: 5.49 kpc = 1.694×10²³ cm. All sensitivities are order-of-magnitude estimates for scoping purposes.
+        Distance to OC: 5.49 kpc = 1.694×10²² cm. All sensitivities are order-of-magnitude estimates for scoping purposes.
       </div>
 
       <div class="context-banner">
@@ -286,8 +286,8 @@ canvas{width:100%;display:block;border-radius:10px;background:rgba(7,5,21,.6);bo
 const G   = 6.674e-11;   // m³ kg⁻¹ s⁻²
 const C   = 3e8;          // m/s
 const MSUN = 1.989e30;    // kg
-const D_OC = 1.694e23;    // cm  (5.49 kpc)
-const D_OC_m = 1.694e23 * 0.01; // metres
+const D_OC = 1.694e22;    // cm  (5.49 kpc)
+const D_OC_m = 1.694e22 * 0.01; // metres
 const KPC_M = 3.086e19;   // m per kpc
 
 // ---- State ----
@@ -335,7 +335,12 @@ function lisaSNR(logM, m2, tobs, e){
   const Sn = 1.44e-47 * Math.pow(0.001/f,4) + 1.36e-55 + 1.80e-52 * f*f; // Hz⁻¹
   // Eccentricity enhancement (Peters formula)
   const eFactor = Math.pow(1 + 0.27*e*e + 2.4*e*e*e + 1.6*e*e*e*e, 1.2);
-  const h_eff = h0 * Math.sqrt(tobs * 3.156e7) * eFactor;  // strain * sqrt(T)
+  // Coherent integration time: time remaining until merger from current GW frequency
+  // (Peters 1964) t_remain = (5/96π) * (G Mc/c³)^{-5/3} / (π f)^{8/3} in seconds
+  const Mc_sec = G * Mc_kg / (C*C*C);
+  const t_remain = (5 / (256 * Math.pow(Math.PI, 8/3))) * Math.pow(Mc_sec, -5/3) * Math.pow(f, -8/3);
+  const T_eff = Math.min(tobs * 3.156e7, t_remain);  // cap at merger time
+  const h_eff = h0 * Math.sqrt(T_eff) * eFactor;  // strain × sqrt(coherent integration time)
   const snr = h_eff / Math.sqrt(Sn);
   return { snr, f_peak, h0, Mc };
 }

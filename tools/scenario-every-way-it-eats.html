@@ -201,7 +201,7 @@ footer a{color:var(--text-secondary)}
           The distinction between full TDE and tidal capture (step 1) depends on the star's penetration parameter β = r_T / r_pericenter. At β &lt; 1 the star survives as an EMRI; at β &gt; 1 it is disrupted. The borderline — <em>partial TDEs</em> — strips the envelope and leaves a compact remnant on an eccentric orbit, potentially a recurrent source. The tool covers all three outcomes for MS, WD, and NS star types.
         </p>
         <div class="step-meta">
-          <a class="step-cta" id="cta-td" href="tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.000" target="_blank">Open Tidal Disruption →</a>
+          <a class="step-cta" id="cta-td" href="tidal-disruption.html#object=star&mass=8.200e%2B3&spin=0.000" target="_blank">Open Tidal Disruption →</a>
           <span class="step-params" id="params-td">Object: MS star · M_BH = 8,200 M☉ · a★ = 0</span>
           <span class="tier-mini tier-e">🔬 Established physics</span>
         </div>
@@ -225,7 +225,7 @@ footer a{color:var(--text-secondary)}
           This tool lets you set the accretion efficiency η, ambient gas density, and sound speed to find the maximum allowed Bondi-Hoyle accretion rate consistent with the JWST non-detection. The constraint is tight: the environment within ~0.01 pc of the IMBH must be essentially evacuated. <strong>This silence is the primary observational tension</strong> with the IMBH hypothesis under standard accretion models — and the starting point for both the gas-starvation null hypothesis and the OCS managed-feeding speculation.
         </p>
         <div class="step-meta">
-          <a class="step-cta" id="cta-jwst" href="jwst-accretion.html#eps=1.000e-01&rho=1.000e-04&cs=10.000" target="_blank">Open JWST Accretion Limit →</a>
+          <a class="step-cta" id="cta-jwst" href="jwst-accretion.html#eps=1.000e-01&rho=6.770e-24&cs=1.000e%2B04" target="_blank">Open JWST Accretion Limit →</a>
           <span class="step-params" id="params-jwst">η = 0.1 · ρ_∞ = 10⁻⁴ M☉/pc³ · cs = 10 km/s</span>
           <span class="tier-mini tier-e">🔬 JWST observation 2025</span>
         </div>
@@ -301,32 +301,32 @@ footer a{color:var(--text-secondary)}
 const SCENARIOS = {
   natural: {
     tc:   'tidal-capture.html#m=3.914&r=5.50&s=22&a=12',
-    td:   'tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.000',
-    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-04&cs=10.000',
+    td:   'tidal-disruption.html#object=star&mass=8.200e%2B3&spin=0.000',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=6.770e-24&cs=1.000e%2B04',
     gh:   'imbh-growth-history.html#s=2.70&t=-1.00&m=1.00&q=0.20',
     tcP:  'M = 8,200 M☉ · ρ = 10⁵·⁵ M☉/pc³ · σ = 22 km/s',
-    tdP:  'Object: MS star · M_BH = 8,200 M☉ · a★ = 0',
-    jwP:  'η = 0.1 · ρ_∞ = 10⁻⁴ M☉/pc³ · cs = 10 km/s',
+    tdP:  'Object: Sun-like star · M_BH = 8,200 M☉ · a★ = 0',
+    jwP:  'η = 0.1 · ρ_∞ = 6.77×10⁻²⁴ kg/m³ (≈10⁻⁴ M☉/pc³) · cs = 10 km/s',
     ghP:  'Seed: 10²·⁷ M☉ · TDE rate: 10⁻¹ M☉/yr',
   },
   tde: {
     tc:   'tidal-capture.html#m=3.914&r=6.50&s=30&a=6',
-    td:   'tidal-disruption.html#object=ms&mass=8.200e%2B3&spin=0.300',
-    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-01&cs=15.000',
+    td:   'tidal-disruption.html#object=star&mass=8.200e%2B3&spin=0.300',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=6.770e-21&cs=1.500e%2B04',
     gh:   'imbh-growth-history.html#s=2.70&t=0.30&m=1.00&q=0.30',
     tcP:  'M = 8,200 M☉ · ρ = 10⁶·⁵ (early dense core) · σ = 30 km/s',
-    tdP:  'Object: MS star · M_BH = 8,200 M☉ · a★ = 0.3',
-    jwP:  'η = 0.1 · ρ_∞ = 0.1 M☉/pc³ · cs = 15 km/s (early)',
+    tdP:  'Object: Sun-like star · M_BH = 8,200 M☉ · a★ = 0.3',
+    jwP:  'η = 0.1 · ρ_∞ = 6.77×10⁻²¹ kg/m³ (≈0.1 M☉/pc³) · cs = 15 km/s (early)',
     ghP:  'Seed: 10²·⁷ M☉ · TDE rate: 10⁰·³ M☉/yr (peak)',
   },
   managed: {
     tc:   'tidal-capture.html#m=3.914&r=5.50&s=22&a=12',
     td:   'tidal-disruption.html#object=custom&mass=8.200e%2B3&spin=0.998&cm=8.000e-02&cr=9.000e-02',
-    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=1.000e-06&cs=5.000',
+    jwst: 'jwst-accretion.html#eps=1.000e-01&rho=6.770e-26&cs=5.000e%2B03',
     gh:   'imbh-growth-history.html#s=2.70&t=-2.00&m=0.50&q=0.50',
     tcP:  'M = 8,200 M☉ · ρ = 10⁵·⁵ M☉/pc³ · σ = 22 km/s',
     tdP:  'Custom: BD (0.08 M☉, 0.09 R☉) · a★ = 0.998 · managed prograde',
-    jwP:  'η = 0.1 · ρ_∞ = 10⁻⁶ M☉/pc³ (evacuated) · cs = 5 km/s',
+    jwP:  'η = 0.1 · ρ_∞ = 6.77×10⁻²⁶ kg/m³ (≈10⁻⁶ M☉/pc³, evacuated) · cs = 5 km/s',
     ghP:  'Seed: 10²·⁷ M☉ · late-phase controlled growth',
   }
 };

@@ -149,7 +149,7 @@ footer a{color:var(--text-secondary)}
     <div class="scenario-row">
       <button class="scenario-btn active" id="sc-max" onclick="setScenario('max')">
         <span class="name">Maximally Spun &nbsp;a★ → 1 (Recommended)</span>
-        <span class="desc">a★ = 0.998. Ergosphere maximally inflated. Penrose yields 20.7% efficiency; BZ power ~10³⁷ W; superradiance instability in the resonant window. The civilisation's target operating state after a feeding campaign.</span>
+        <span class="desc">a★ = 0.998. Ergosphere maximally inflated. Penrose yields 20.7% efficiency; BZ power ~3.5×10³³ W at B=10⁴ T; superradiance instability in the resonant window. The civilisation's target operating state after a feeding campaign.</span>
       </button>
       <button class="scenario-btn" id="sc-mod" onclick="setScenario('mod')">
         <span class="name">Operational Baseline &nbsp;a★ = 0.9</span>
@@ -223,11 +223,11 @@ footer a{color:var(--text-secondary)}
           The Blandford-Znajek (BZ) process is the electromagnetic version of Penrose extraction, and it scales to civilisational power levels. An ordered magnetic field threading the BH ergosphere, maintained by accreting plasma, extracts rotational energy as a Poynting-flux jet. The power scales as <code>P<sub>BZ</sub> ∝ B² M² a²</code> — quadratically in both mass and spin, linearly in field strength squared.
         </p>
         <p class="step-prose">
-          At a★ = 0.998 with a field of ~10⁴ Gauss (consistent with an Eddington-limited accretion disk), an 8,200 M☉ IMBH delivers <strong>~10³⁶–10³⁷ W</strong> — comparable to the total luminosity of a galaxy. At a★ = 0.3 the same BH delivers ~10³³ W: still Kardashev II territory, but ~10⁴× less capable. The jet is the power supply for the entire computronium swarm.
+          At a★ = 0.998 with a field of 10⁴ T (consistent with an Eddington-limited accretion disk; note: the tool uses Tesla, not Gauss), an 8,200 M☉ IMBH delivers <strong>~3.5×10³³ W</strong>. At a★ = 0.3 the same BH and field delivers ~4×10³³ W (BZ power changes very little with spin for fixed B and M; see table below). The absolute power level is primarily set by B². The jet is the power supply for the entire computronium swarm.
         </p>
         <div class="step-meta">
           <a class="step-cta" id="cta-bz" href="bz-kardashev.html#mode=forward&mass=8.200e%2B3&spin=0.998&power=1.000e%2B37&B=1.000e%2B04" target="_blank">Open BZ / Kardashev →</a>
-          <span class="step-params" id="params-bz">a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ G · P<sub>BZ</sub> ~10³⁷ W</span>
+          <span class="step-params" id="params-bz">a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ T · P<sub>BZ</sub> ~3.5×10³³ W</span>
           <span class="tier-mini tier-e">🔬 Confirmed in AGN jets</span>
         </div>
         <div class="payoff">
@@ -268,7 +268,7 @@ footer a{color:var(--text-secondary)}
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;">Extraction efficiency vs spin</div>
     <div class="eff-table">
       <div class="et-row header"><span>Spin a★</span><span>Penrose η_max</span><span>BZ power (relative)</span><span>ISCO / r_g (prograde)</span></div>
-      <div class="et-row"><span class="hi">0.998</span><span class="hi">20.7 %</span><span class="hi">~10³⁷ W baseline</span><span class="hi">1.24</span></div>
+      <div class="et-row"><span class="hi">0.998</span><span class="hi">20.7 %</span><span class="hi">~3.5×10³³ W (at B=10⁴ T)</span><span class="hi">1.24</span></div>
       <div class="et-row"><span class="med">0.900</span><span class="med">13.4 %</span><span class="med">~4 × 10³⁵ W</span><span class="med">2.32</span></div>
       <div class="et-row"><span>0.600</span><span>5.1 %</span><span>~3 × 10³⁴ W</span><span>3.83</span></div>
       <div class="et-row"><span class="lo">0.300</span><span class="lo">1.9 %</span><span class="lo">~4 × 10³³ W</span><span class="lo">4.98</span></div>
@@ -308,7 +308,7 @@ const SCENARIOS = {
     kerr:    'kerr-geometry.html#a=0.998&view=equatorial&mass=8.200e%2B3',
     pParams: 'a★ = 0.998 · M = 8,200 M☉ · ηₘₐχ ≈ 20.7%',
     sParams: 'a★ = 0.998 · M = 8,200 M☉ · μ = 10⁻¹⁹ eV',
-    bParams: 'a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ G · P₂ᴢ ~10³⁷ W',
+    bParams: 'a★ = 0.998 · M = 8,200 M☉ · B = 10⁴ T · P_BZ ~3.5×10³³ W',
     kParams: 'a★ = 0.998 · equatorial view · M = 8,200 M☉',
   },
   mod: {

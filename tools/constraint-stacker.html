@@ -915,10 +915,11 @@ function jwstUpperLimitMsun(epsilon, rho_inf, opts = JWST_DEFAULTS) {
 
 // ---------- M-σ prediction for Omega Centauri ----------
 // Using observed central σ ≈ 20 km/s (NOT the naive virial estimate).
-// Gültekin et al. 2009: M_BH = 8.5e6 · (σ/200)^4.38
+// Gültekin et al. 2009 (ApJ 698:198) Table 3 (E sample, all galaxies):
+// log(M_BH/M☉) = 8.12 + 4.24 · log(σ/200)  ⟹  M_BH = 10^8.12 · (σ/200)^4.24
 const OC_SIGMA_KMS = 20.0;
 function mSigmaPrediction(sigma_kms = OC_SIGMA_KMS) {
-  return 8.5e6 * Math.pow(sigma_kms / 200, 4.38);
+  return Math.pow(10, 8.12) * Math.pow(sigma_kms / 200, 4.24);
 }
 
 // ---------- URL hash state ----------

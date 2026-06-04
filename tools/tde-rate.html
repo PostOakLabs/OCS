@@ -179,7 +179,7 @@ canvas{display:block;width:100%}
       <div class="out-box">
         <div class="out-label">Loss cone fraction f_lc</div>
         <div class="out-val" id="out-flc">—</div>
-        <div class="out-unit">(r_t/r_h)²</div>
+        <div class="out-unit">1/ln(r_h/r_t)</div>
       </div>
       <div class="out-box">
         <div class="out-label">Relaxation time t_relax</div>
@@ -249,8 +249,8 @@ canvas{display:block;width:100%}
   <p><strong>Tidal disruption radius:</strong> r_t = R_star × (M_BH/m_star)^(1/3). Stars within this radius are disrupted.</p>
   <p><strong>Influence radius:</strong> r_h = GM_BH/σ² — the radius within which the IMBH dominates the stellar dynamics.</p>
   <p><strong>Relaxation time:</strong> t_relax = 0.34 σ³ / (G² ρ m_star ln(M_BH/m_star)), where ln(Λ) = ln(M_BH/m_star) is the Coulomb logarithm (Wang & Merritt 2004 approximation).</p>
-  <p><strong>Loss-cone fraction:</strong> f_lc ≈ (r_t/r_h)² — the solid-angle fraction of orbits that enter the loss cone.</p>
-  <p><strong>TDE rate:</strong> Γ_TDE ≈ (N_h × f_lc) / t_relax, where N_h = (4π/3) r_h³ ρ / m_star is the number of stars within the influence radius. This is the "empty loss cone" approximation (appropriate for OC-type clusters).</p>
+  <p><strong>Loss-cone suppression factor:</strong> f_lc = 1/ln(r_h/r_t) — the logarithmic suppression appropriate for the empty loss-cone regime (Wang &amp; Merritt 2004).</p>
+  <p><strong>TDE rate:</strong> Γ_TDE ≈ N_h / (t_relax × ln(r_h/r_t)), where N_h = (4π/3) r_h³ ρ / m_star is the number of stars within the influence radius. This is the standard empty-loss-cone rate (Wang &amp; Merritt 2004), appropriate for OC-type clusters where relaxation is slow compared to the orbital period.</p>
   <h3>Detectability</h3>
   <p><strong>Peak X-ray luminosity:</strong> L_peak = f_Edd × L_Eddington = f_Edd × 1.26×10³¹ × M/M_sun W. The Eddington fraction at peak is uncertain; f_Edd ~ 0.1 is often used.</p>
   <p><strong>Flux at Earth:</strong> F = L_peak / (4π d²) where d is the distance to OC. The Einstein Probe WXT sensitivity is ~10⁻¹¹ erg/cm²/s (0.5–4 keV, 1 ks exposure). Rubin LSST's 5σ depth in r-band is ~24.5 mag per visit, ~27.5 mag stacked.</p>
@@ -291,10 +291,13 @@ function calcTDE(logM, sigma_kms, logRho, mstar, Rstar) {
   // relaxation time: Wang & Merritt 2004
   const lnLambda=Math.max(1,Math.log(M/mstar_kg));
   const t_relax=0.34*Math.pow(sigma,3)/(G*G*rho_SI*mstar_kg*lnLambda); // seconds
-  // loss cone fraction
-  const f_lc=Math.pow(r_t/r_h,2);
+  // Empty loss-cone rate (Wang & Merritt 2004):
+  // Γ ≈ N_h / (t_relax · ln(r_h/r_t))
+  // The ln-suppression factor replaces the incorrect squared (r_t/r_h)² used previously.
+  const ln_rh_rt = Math.max(1, Math.log(r_h / r_t));
+  const f_lc = 1 / ln_rh_rt;  // effective loss-cone suppression factor
   // TDE rate
-  const Gamma_s=N_h*f_lc/t_relax;
+  const Gamma_s = N_h * f_lc / t_relax;
   const Gamma_yr=Gamma_s*YR;
   return {r_t_AU:r_t/1.496e11, r_h_pc:r_h/PC, f_lc, t_relax_yr:t_relax/YR, Gamma_yr, N_h};
 }

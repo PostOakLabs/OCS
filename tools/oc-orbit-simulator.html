@@ -282,7 +282,7 @@ function accel(x, y, z){
   const r2 = x*x + y*y + z*z;
   const r = Math.sqrt(r2);
   if(r < 0.1 * KPC_M) return [0,0,0]; // avoid singularity
-  const a = -VC * VC / r2;
+  const a = -VC * VC / r;
   return [a * x / r, a * y / r, a * z / r];
 }
 

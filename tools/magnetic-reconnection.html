@@ -255,8 +255,8 @@ a:hover{color:var(--teal-glow)}
 
       <h3>The reconnection formula (Meringolo et al. 2025)</h3>
       <p>In plasmoid-mediated reconnection the current sheet near the ergosphere boundary breaks into a chain of magnetic islands (plasmoids), dramatically accelerating the reconnection rate. The energy tap is approximately:</p>
-      <p><code>P_rec = η_rec × (B²/2μ₀) × A_layer × c</code></p>
-      <p>where <code>A_layer ≈ π r_g²</code> is the order-r_g² reconnection layer cross-section. Simplifying: <code>P_rec = η_rec × B² × π × r_g² × c / (2μ₀)</code>. The reconnection efficiency η_rec is the reconnection inflow speed as a fraction of the Alfvén speed; the Meringolo 2025 GRPIC runs find a median of ~0.15 at high spin.</p>
+      <p><code>P_rec ≈ 1.646 × η_rec × a*² × P_BZ</code></p>
+      <p>This is a phenomenological calibration to the Meringolo et al. (2025) GRPIC result that reconnection contributes ~10–30% of P_BZ at spin a* &gt; 0.9. The factor 1.646 is fixed so that η_rec = 0.15 at a* = 0.9 gives exactly 20% of P_BZ. The reconnection efficiency η_rec is the reconnection inflow speed as a fraction of the Alfvén speed; the Meringolo 2025 GRPIC runs find a median of ~0.15 at high spin. (An earlier analytic formula P_rec = η(B²/2μ₀)πrg²c overestimated by ~160× because the effective reconnecting layer area is far smaller than the full ergosphere cross-section.)</p>
 
       <h3>Why two channels add</h3>
       <p>BZ extracts energy via the Poynting flux of the global magnetosphere threaded through the horizon. Reconnection extracts energy locally in the current sheet where field lines of opposite polarity annihilate; the liberated magnetic energy goes partly into particle kinetic energy (some of which escapes) and partly into electromagnetic radiation. In the Kerr geometry both channels draw on the same reservoir — the spin energy of the hole — but via distinct pathways that operate simultaneously. For engineering purposes they sum as parallel power channels with the same magnetic field as fuel.</p>
@@ -344,8 +344,10 @@ function pBZ(M_msun,a,B){
   return (KAPPA/(4*Math.PI*MU0))*B*B*Math.pow(rp,4)*oH*oH/C;
 }
 function pRec(M_msun,a,B,eta){
-  const rg=rg_m(M_msun);
-  return eta*B*B*Math.PI*rg*rg*C/(2*MU0);
+  // Phenomenological calibration to Meringolo et al. (2025) GRPIC:
+  // P_rec ≈ 1.646 × η_rec × a*² × P_BZ  →  ~20% at a*=0.9, η_rec=0.15; ~10-30% range
+  // (Previous formula P_rec = η·B²·πrg²·c/2μ₀ overestimated by ~160× at defaults.)
+  return 1.646 * eta * a * a * pBZ(M_msun, a, B);
 }
 function penroseEta(a){ return 1-Math.sqrt((1+Math.sqrt(1-a*a))/2); }
 

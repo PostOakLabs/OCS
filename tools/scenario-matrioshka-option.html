@@ -223,5 +223,42 @@ a:hover{color:var(--teal-glow)}
   </footer>
 
 </div>
+<script>
+"use strict";
+// Scenario deeplink configs keyed by step selector and scenario
+const SCENARIOS = {
+  ambitious:   {
+    '#step1 .step-cta': 'bz-kardashev.html#mode=forward&M=8200&a=0.9&B=10000',
+    '#step2 .step-cta': 'matrioshka-brain.html#P=36&N=5&T=3.0',
+    '#step4 .step-cta': 'reversible-computing.html#T=1.0&O=30&R=0.9'
+  },
+  conservative: {
+    '#step1 .step-cta': 'bz-kardashev.html#mode=forward&M=8200&a=0.5&B=10000',
+    '#step2 .step-cta': 'matrioshka-brain.html#P=34&N=3&T=5.0',
+    '#step4 .step-cta': 'reversible-computing.html#T=1.0&O=30&R=0.5'
+  },
+  ultimate: {
+    '#step1 .step-cta': 'bz-kardashev.html#mode=forward&M=8200&a=0.998&B=10000',
+    '#step2 .step-cta': 'matrioshka-brain.html#P=38&N=7&T=3.0',
+    '#step4 .step-cta': 'reversible-computing.html#T=0.1&O=35&R=0.99'
+  }
+};
+
+function applyScenario(name) {
+  document.querySelectorAll('.scenario-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.scenario === name);
+  });
+  const cfg = SCENARIOS[name] || {};
+  Object.entries(cfg).forEach(([sel, href]) => {
+    const el = document.querySelector(sel);
+    if (el) el.href = href;
+  });
+}
+
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyScenario(btn.dataset.scenario));
+});
+applyScenario('ambitious'); // initialise default
+</script>
 </body>
 </html>

@@ -219,7 +219,7 @@ a:hover{color:var(--teal-glow)}
     <div class="about-body" id="about-body">
       <h3>The signal model</h3>
       <p>A rotating neutron star with a non-zero ellipticity ε = (I_xx − I_yy) / I_zz emits continuous GWs at twice the spin frequency. The strain amplitude reaching Earth at distance d is:</p>
-      <p><code>h₀ = (16π²G / c⁴) × (I_NS × ε × f_gw²) / d</code></p>
+      <p><code>h₀ = (4π²G / c⁴) × (I_NS × ε × f_gw²) / d</code></p>
       <p>where I_NS = 10³⁸ kg·m² is the canonical NS moment of inertia, f_gw = 2 × f_spin, and d = 5.49 kpc (Omega Centauri distance, Baumgardt &amp; Hilker 2018).</p>
 
       <h3>Detection threshold (F-statistic)</h3>
@@ -300,14 +300,14 @@ function compute(){
   // Amplitude threshold: h_thresh = 11.4 * sqrt(Sh / T_obs_s)
   const h_thresh = 11.4 * Math.sqrt(Sh / Tobs_s);
 
-  // Strain from pulsar
-  const h0 = (16 * PI * PI * G / Math.pow(C, 4)) * (I_NS * eps * f_gw * f_gw) / OC_DIST;
+  // Strain from pulsar: h₀ = (4π²G/c⁴)(I ε f_gw²/d)  — f_gw = 2×f_spin already applied
+  const h0 = (4 * PI * PI * G / Math.pow(C, 4)) * (I_NS * eps * f_gw * f_gw) / OC_DIST;
 
   // SNR
   const snr = h0 / h_thresh;
 
   // Ellipticity upper limit at threshold
-  const eps_UL = h_thresh * OC_DIST * Math.pow(C, 4) / (16 * PI * PI * G * I_NS * f_gw * f_gw);
+  const eps_UL = h_thresh * OC_DIST * Math.pow(C, 4) / (4 * PI * PI * G * I_NS * f_gw * f_gw);
 
   // Spin-down limit for OC MSP (typical P~3ms → f_spin~333 Hz → f_gw~666 Hz)
   const eps_SD = 1e-8 * Math.pow(100 / f_gw, 2.5);

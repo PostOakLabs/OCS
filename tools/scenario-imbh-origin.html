@@ -206,5 +206,30 @@ a:hover{color:var(--teal-glow)}
   </footer>
 
 </div>
+<script>
+"use strict";
+// Scenario deeplink configs: per-scenario hash params for imbh-growth-history
+const SCENARIO_LINKS = {
+  runaway: 'imbh-growth-history.html#s=2.7&t=-1.0&m=1.0&q=0.2',
+  merger:  'imbh-growth-history.html#s=2.0&t=-1.5&m=3.0&q=0.4',
+  modest:  'imbh-growth-history.html#s=2.0&t=-1.5&m=0.5&q=0.1'
+};
+let currentScenario = 'runaway';
+
+function applyScenario(name) {
+  currentScenario = name;
+  document.querySelectorAll('.scenario-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.scenario === name);
+  });
+  // Update step 2 CTA with scenario-specific growth-history link
+  const step2Cta = document.querySelector('#step2 .step-cta');
+  if (step2Cta && SCENARIO_LINKS[name]) step2Cta.href = SCENARIO_LINKS[name];
+}
+
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyScenario(btn.dataset.scenario));
+});
+applyScenario('runaway'); // initialise default
+</script>
 </body>
 </html>
