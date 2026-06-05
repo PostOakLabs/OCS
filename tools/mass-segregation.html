@@ -301,7 +301,7 @@ a:hover{color:var(--teal-glow)}
       <p>It sets every dynamical evolution timescale in a globular cluster. Two-body relaxation drives mass segregation, core collapse, BH-binary hardening, dynamical BH ejection via three-body encounters, and ultimately the runaway-merger channel for IMBH formation. If <code>t &lt;&lt; t_rh</code> the cluster is dynamically young — its present stellar distribution still reflects initial conditions. If <code>t &gt;&gt; t_rh</code> the cluster has forgotten its initial state and is fully dynamically processed.</p>
 
       <h3 style="color:var(--amber-bright)">Why ω Cen is unusual</h3>
-      <p>For ω Cen's default parameters (M ≈ 4×10⁶ M☉, r_h ≈ 4.8 pc) the half-mass relaxation time comes out around 10 Gyr — comparable to the cluster's age. ω Cen is therefore only <em>marginally</em> relaxed at its current age. The central dark mass observed today is the integrated result of roughly one t_rh of mass segregation acting on an initially heavy-remnant-rich population (the progenitor dwarf galaxy was metal-poor, so produced relatively more black holes via the low-Z high-mass-cutoff channel).</p>
+      <p>For ω Cen's default parameters (M ≈ 4×10⁶ M☉, r_h ≈ 4.8 pc, ⟨m⟩ = 0.5 M☉) the half-mass relaxation time comes out around 5.8 Gyr (Spitzer 1987 Eq. 2.62) — somewhat shorter than the cluster's age. ω Cen is therefore only <em>marginally</em> relaxed at its current age. The central dark mass observed today is the integrated result of roughly one t_rh of mass segregation acting on an initially heavy-remnant-rich population (the progenitor dwarf galaxy was metal-poor, so produced relatively more black holes via the low-Z high-mass-cutoff channel).</p>
 
       <h3 style="color:var(--purple-glow)">The runaway-merger IMBH channel</h3>
       <p>Portegies Zwart et al. (Nature 428:724, 2004) showed numerically that in <em>very dense young</em> clusters, stellar-mass BHs can repeatedly merge into a runaway central object, growing an IMBH within ~10⁷ yr — before stellar feedback disrupts the dense core. The channel requires two thresholds simultaneously: high central density (greater than ~10⁶ M☉/pc³) and a large population of heavy seeds (more than ~10³). The verdict panel checks whether your current slider parameters satisfy both.</p>
@@ -365,15 +365,16 @@ function saveHash(){
 }
 
 // ========== Physics ==========
-// Spitzer 1987 half-mass relaxation time
-//   t_rh ≈ 0.138 · (M_cl / <m_star>)^(1/2) · r_h^(3/2) / ( G^(1/2) · ln Λ )
-// with Coulomb log ln Λ ≈ ln(0.4 N), N = M_cl / <m_star>.
-// Units: with G in pc^3 / (M☉ · Gyr^2), the result is in Gyr directly.
+// Spitzer 1987 half-mass relaxation time (Eq. 2.62):
+//   t_rh ≈ 0.138 · N^(1/2) · r_h^(3/2) / ( G^(1/2) · <m>^(1/2) · ln Λ )
+// where N = M_cl/<m>, so equivalently t_rh = 0.138 · M_cl^(1/2) · r_h^(3/2) / ( G^(1/2) · <m> · ln Λ )
+// Units: with G in pc^3 / (M☉ · Gyr^2), result is in Gyr.
+// NOTE: previous code omitted <m>^(1/2) in denominator → was 0.707× canonical at <m>=0.5 M☉.
 function relaxationTimeGyr(Mcl, rh_pc, mstar) {
   const N = Mcl / mstar;
   const lnL = Math.log(Math.max(0.4 * N, Math.E)); // floor to avoid negative log
   const num = 0.138 * Math.sqrt(N) * Math.pow(rh_pc, 1.5);
-  const den = Math.sqrt(G_ASTRO) * lnL;
+  const den = Math.sqrt(G_ASTRO) * Math.sqrt(mstar) * lnL;  // <m>^(1/2) factor added
   return num / den;
 }
 

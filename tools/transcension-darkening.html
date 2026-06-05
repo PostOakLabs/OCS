@@ -299,8 +299,9 @@ function compute(){
       setText('status-'+ch.id,'Currently detectable');
       summaries.push(ch.name+': detectable beyond 2000 yr post-singularity');
     } else {
-      const gyrAgo=(age-(t_dark/1e9)).toFixed(2);
-      const gyrStr=parseFloat(gyrAgo)>0?gyrAgo+' Gyr ago':'in the future from now';
+      // t_dark is typically years to decades — negligible vs. age in Gyr, so gyrAgo ≈ age
+      const gyrAgo = age.toFixed(2); // ≈ age Gyr ago (t_dark/1e9 << 1 is negligible)
+      const gyrStr = parseFloat(gyrAgo)>0 ? '~'+gyrAgo+' Gyr ago' : 'in the future from now';
       if(already_dark){
         card.className='channel-card dark';
         setText('dark-'+ch.id,t_dark.toFixed(0)+' yr after singularity = '+gyrStr);

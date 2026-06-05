@@ -11,7 +11,7 @@ Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific soc
 ## What's on the site
 
 - **Observational proposals** — peer-reviewed instrument proposals spanning JWST, HST, MeerKAT, LIGO/Auger, IceCube, KM3NeT, Fermi/CTA, ELT/MICADO, and radio SETI
-- **Interactive science tools** — 29 browser-based calculators and simulators covering stellar dynamics, black hole physics, gravitational waves, cosmology, and SETI
+- **Interactive science tools** — 87+ browser-based calculators and simulators covering stellar dynamics, black hole physics, gravitational waves, cosmology, and SETI; plus 15 multi-stage workflow chains
 - **Membership & advisors** — society structure, advisory board, and how to get involved
 - **FAQ** — foundational questions about Omega Centauri and the society's mission
 
@@ -27,7 +27,7 @@ OCS/
 ├── advisors.html                   ← Advisory board
 ├── proposals.html                  ← Proposals index
 ├── proposal_*.html                 ← Individual instrument proposals
-├── tools/                          ← 29 interactive science tools
+├── tools/                          ← 87+ interactive science tools + 15 workflow chains
 ├── sitemap.xml                     ← XML sitemap
 ├── robots.txt                      ← Crawler directives
 ├── llms.txt                        ← LLM-readable site summary

@@ -259,7 +259,7 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
 
       <h3>The hydrogenic spectrum</h3>
       <p>The bound modes are labelled (n, l, m) like a hydrogen atom, with the dimensionless gravitational fine-structure constant <code>α = GM·μ/(ℏc³)</code> in place of the electromagnetic α. The fastest-growing mode is generally (n=2, l=1, m=1). Detweiler's 1980 leading-order expression for the growth rate is:</p>
-      <p><code>Γ ≈ (1/24) · a · α⁸ · (1 + √(1−a²)) · c³/(GM)</code></p>
+      <p><code>Γ ≈ (1/24) · a · α⁹ · (1 + √(1−a²)) · c³/(GM)</code></p>
       <p>This is accurate for small α. At α ~ 0.4–0.5 the rate peaks; for α &gt; 1 (where the Compton wavelength is smaller than r_g) the formula breaks down and the rate falls off fast. The tool uses a smooth interpolation across this region that captures the qualitative behaviour but should not be trusted to better than ~30% near the peak.</p>
 
       <h3>What this tool reports</h3>
@@ -363,8 +363,8 @@ function growthRate(M_kg, a, mu_eV) {
   if (om >= oH) return -1e-30;  // not superradiant — return tiny negative
   // Leading-order rate (Detweiler 1980, m=1)
   const tg = G * M_kg / Math.pow(C, 3);  // GM/c^3 in seconds
-  // (1/24) a (1+sqrt(1-a^2)) α^8 / (GM/c^3)
-  const lead = (1/24) * a * (1 + Math.sqrt(1 - a*a)) * Math.pow(al, 8) / tg;
+  // (1/24) a (1+sqrt(1-a^2)) α^9 / (GM/c^3)  — standard α⁹ (Detweiler 1980 / Arvanitaki-Dubovsky 2011)
+  const lead = (1/24) * a * (1 + Math.sqrt(1 - a*a)) * Math.pow(al, 9) / tg;
   // Damp for large α — approximate cap. Real formula uses confluent Heun;
   // for our purposes a Gaussian cutoff at α≈0.42 gives qualitatively right shape.
   const sigma = 0.18;

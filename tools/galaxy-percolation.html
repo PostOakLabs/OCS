@@ -107,7 +107,7 @@ canvas{display:block;width:100%}
 <div>
   <div class="panel">
     <div class="pt">Model Parameters</div>
-    <div class="ps">BFS from galactic centre. Each neighbour of a colonised cell is colonised with probability p (seeded PRNG). p_c ≈ 0.31 for 2D bond percolation.</div>
+    <div class="ps">BFS from galactic centre. Each neighbour of a colonised cell is colonised with probability p (seeded PRNG). p_c ≈ 0.31 (Landis 1998; note: 3D-cubic site threshold, not 2D bond).</div>
     <div class="sl-row">
       <div class="sl-lr"><span class="sl-lbl">Colonisation probability p</span><span class="sl-v" id="dv-p">0.30</span></div>
       <input type="range" id="sl-p" min="0" max="1" step="0.01" value="0.30" oninput="slChange('p',this.value)">
@@ -172,7 +172,7 @@ canvas{display:block;width:100%}
 <div class="about-panel" id="about-panel">
   <h3>Model description</h3>
   <p>This tool implements the Landis (1998) percolation model of galactic colonisation. A 40×40 grid of stellar systems is initialised with Earth at the centre. BFS expands outward: for each colonised cell, each of its 4 neighbours (N/S/E/W) is colonised with probability p, independently. The process terminates when no further expansion is possible.</p>
-  <p>The critical percolation threshold p<sub>c</sub> ≈ 0.31 for 2D bond percolation on a square lattice. Below p<sub>c</sub> the colonised region is bounded and fragmented; above p<sub>c</sub> a spanning cluster forms. Landis argues this explains the Fermi Paradox: if p &lt; p<sub>c</sub> for any one civilisation, the galaxy is never fully colonised regardless of how many civilisations exist.</p>
+  <p>Landis (1998) cites a critical percolation threshold of p<sub>c</sub> ≈ 0.31, which he attributes to 2D bond percolation. Note: the actual threshold for 2D square-lattice bond percolation is exactly 0.5; the value 0.31 matches the 3D simple-cubic <em>site</em> percolation threshold. The Landis paper's model geometry is ambiguous; 0.31 is retained here as the historically cited value. The qualitative argument is unchanged: below threshold the colonised region is bounded; above it a spanning cluster forms. Landis argues this explains the Fermi Paradox: if p &lt; p<sub>c</sub> for any one civilisation, the galaxy is never fully colonised regardless of how many civilisations exist.</p>
   <h3>Limitations</h3>
   <p>The 2D grid is a severe simplification. Real galaxies are 3D structures with inhomogeneous stellar densities, travel times, and varying habitability. The model also assumes a single origin, constant p, and no re-colonisation of abandoned systems. These simplifications make it a conceptual illustration, not a predictive model.</p>
   <h3>Citation</h3>

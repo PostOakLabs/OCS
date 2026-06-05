@@ -234,7 +234,7 @@ a:hover{color:var(--teal-glow)}
         <div class="preset-row">
           <button class="preset-btn" data-d="0.633">α Cen (4.3)</button>
           <button class="preset-btn" data-d="1.079">Tau Ceti (12)</button>
-          <button class="preset-btn" data-d="4.215">ω Cen (16,400)</button>
+          <button class="preset-btn" data-d="4.253">ω Cen (17,900)</button>
           <button class="preset-btn" data-d="4.415">Galactic centre (26,000)</button>
           <button class="preset-btn" data-d="5">Andromeda (2.5×10⁶, off-scale)</button>
         </div>
@@ -321,7 +321,7 @@ a:hover{color:var(--teal-glow)}
       <div class="row"><span class="row-label">SNR ratio N_det / N_thr</span><span class="row-value" id="snr">—</span></div>
       <div class="row"><span class="row-label">At current target distance</span><span class="row-value" id="det">—</span></div>
       <div class="row"><span class="row-label">Detection horizon d_max</span><span class="row-value amber" id="dmax">—</span></div>
-      <div class="row"><span class="row-label">ω Cen reach (16,400 ly)?</span><span class="row-value" id="omega-reach">—</span></div>
+      <div class="row"><span class="row-label">ω Cen reach (17,900 ly)?</span><span class="row-value" id="omega-reach">—</span></div>
     </section>
   </div>
 
@@ -380,7 +380,7 @@ a:hover{color:var(--teal-glow)}
       <p>Near-infrared (1–2.5 μm) penetrates galactic dust much better than visible light, extending useful detection distance across the Galactic plane and into the bulge. Visible (400–700 nm) is the original SETI band and is well-served by APF, VERITAS, and TMT. <strong>UV is effectively blocked</strong> by interstellar absorption beyond a few hundred parsecs — too short for galactic SETI. Most NIROSETI signal-search is in the 1.3–1.8 μm window, chosen specifically because it pierces dust toward the galactic centre and ω Centauri.</p>
 
       <h3>The ω Cen connection</h3>
-      <p>Tools 23 (radio) and 32 (optical) together establish that, for the EIRP regimes a transcended civilisation might plausibly use, ω Centauri is well within reach of <em>current</em> instruments in at least one window. The non-detection of either radio or optical signals at ω Cen distance therefore puts a real constraint on the population of high-EIRP transmitters there. This tool quantifies the optical half of that constraint: move the EIRP slider until d_max ≈ 16,400 ly and read off the EIRP required for a positive detection at any given aperture.</p>
+      <p>Tools 23 (radio) and 32 (optical) together establish that, for the EIRP regimes a transcended civilisation might plausibly use, ω Centauri is well within reach of <em>current</em> instruments in at least one window. The non-detection of either radio or optical signals at ω Cen distance therefore puts a real constraint on the population of high-EIRP transmitters there. This tool quantifies the optical half of that constraint: move the EIRP slider until d_max ≈ 17,900 ly and read off the EIRP required for a positive detection at any given aperture.</p>
 
       <h3>Method &amp; equations</h3>
       <p>Photon energy: <code>E_γ = hc/λ</code> with <code>h = 6.626×10⁻³⁴ J·s</code>, <code>c = 3×10⁸ m/s</code>. Photons per pulse from a transmitter of EIRP P over duration τ: <code>N_emit = P·τ / E_γ</code>. Photons per m² at distance d: <code>Φ = N_emit / (4π d²)</code>. Photons collected by aperture D: <code>N_det = Φ · π D²/4 = P·τ·D² / (16 E_γ d²)</code>. Inverting for the detection horizon at threshold N_thr: <code>d_max = √(P·τ·D² / (16 E_γ N_thr))</code>. The tool assumes background-limited regime (N_bg ≈ 0 over a ns gate), 100% quantum efficiency, perfect pointing, and ignores atmospheric extinction (~30% loss at zenith in visible, less in NIR). Real surveys typically lose another factor 2–10 to these effects.</p>
@@ -408,7 +408,7 @@ const H_PLANCK = 6.626e-34;  // J·s
 const C_LIGHT  = 3.0e8;      // m/s
 const LY_M     = 9.461e15;   // m per light-year
 const EV_J     = 1.602e-19;  // J per eV
-const OMEGA_CEN_LY = 16400;
+const OMEGA_CEN_LY = 17900;  // ly, updated to 5.49 kpc (Häberle et al. 2025)
 
 // State: log10 of physical quantities (except lambda, nthr)
 const state = {
@@ -678,8 +678,4 @@ function wire() {
 }
 
 function init(){ loadHash(); wire(); render(); }
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-else init();
-</script>
-</body>
-</html>
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoad

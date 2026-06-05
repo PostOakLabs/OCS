@@ -213,6 +213,28 @@ a:hover{color:var(--teal-glow)}
     <span class="tier-mini tier-s">Speculative</span> = physically motivated extrapolation, not yet observationally constrained.
   </div>
 
+  <script>
+"use strict";
+// Scenario configs: DM flux params keyed by scenario name
+const DS_SCENARIOS = {
+  thermal: { dm: 'dark-matter-flux.html#m=2.0&s=-26&c=bb&p=cusp&a=0.5&b=0' },
+  light:   { dm: 'dark-matter-flux.html#m=1.0&s=-26&c=bb&p=cusp&a=0.5&b=0' },
+  heavy:   { dm: 'dark-matter-flux.html#m=3.0&s=-24&c=bb&p=cusp&a=0.5&b=0' }
+};
+function applyDSScenario(name) {
+  document.querySelectorAll('.scenario-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.scenario === name);
+  });
+  const cfg = DS_SCENARIOS[name] || {};
+  const dmLink = document.querySelector('a[href*="dark-matter-flux"]');
+  if (dmLink && cfg.dm) dmLink.href = cfg.dm;
+}
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyDSScenario(btn.dataset.scenario));
+});
+applyDSScenario('thermal');
+  </script>
+
   <footer class="footer">
     Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into four interactive tools.
     <div class="footer-licenses">

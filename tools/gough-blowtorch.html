@@ -146,7 +146,7 @@ a:hover{text-decoration:underline}
         </div>
         <div>
           <div class="pred-col-label jwst">JWST observation</div>
-          <div class="pred-text">JWST detected SMBHs of 10⁷–10⁹ M☉ at z &gt; 6, including Gn-z11 at z = 10.6 with an active nucleus. Standard seeding mechanisms struggle to grow these on the available timescale.</div>
+          <div class="pred-text">JWST detected SMBHs at z &gt; 6, including GN-z11 at z = 10.6 (~1.6×10⁶ M☉) and quasars with SMBHs of 10⁸–10⁹ M☉ at z ~ 7. Standard seeding mechanisms struggle to grow to these masses on the available timescale.</div>
         </div>
       </div>
     </div>
@@ -295,11 +295,18 @@ function pBZ(M_msun,a){
   return Math.max(0, (KAPPA/(4*Math.PI*MU0))*B*B*Math.pow(rp,4)*oh*oh/c);
 }
 
-// Approximate Hubble time at redshift z (matter-dominated approximation)
+// ΛCDM Hubble time at redshift z (flat, Ωm=0.3, ΩΛ=0.7, H₀=67.74 km/s/Mpc)
+// Numerical integral: t(z) = (1/H₀) ∫₀^{1/(1+z)} da / √(Ωm/a + ΩΛ a²)
 function tHubble_Gyr(z){
-  // t ≈ (2/3) * H0^{-1} / (1+z)^{3/2} for matter domination (rough)
-  const H0_inv_Gyr = 13.8;
-  return H0_inv_Gyr * Math.pow(1/(1+z), 1.5) * 0.67;
+  const H0inv = 14.43; // 1/H₀ in Gyr (H₀ = 67.74 km/s/Mpc)
+  const Wm = 0.3, Wl = 0.7;
+  const amax = 1.0 / (1.0 + z);
+  let sum = 0, N = 200;
+  for(let i = 0; i < N; i++){
+    const a = amax * (i + 0.5) / N;
+    sum += 1.0 / Math.sqrt(Wm / a + Wl * a * a);
+  }
+  return H0inv * (amax / N) * sum; // gives 13.8 Gyr at z=0
 }
 
 function fmtSI(x){
