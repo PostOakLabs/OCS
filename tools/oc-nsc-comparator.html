@@ -158,6 +158,10 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 <script>
 'use strict';
 // Data: mass in M_sun, r_eff in pc, sigma0 in M_sun/pc^2, age in Gyr, feH_spread in dex, m_bh in M_sun (null=no constraint)
+// NOTE: r_eff values here use photometric half-light radii (varied sources) and may differ from
+// the Baumgardt & Hilker 2018 half-mass radii in measurements.js by ~1.5-1.6x for M15 and 47 Tuc.
+// This is expected: half-light vs. half-mass radius conventions differ, especially for clusters
+// with mass segregation. Both are valid for their intended comparisons.
 const DATA=[
   {name:'Omega Centauri (NGC 5139)',type:'oc',mass:4e6,reff:7.0,sigma0:1.4e5,age:12.1,feH_spread:1.5,mbh:8200,mbh_note:'≥8,200 M☉ (Häberle 2024, lower limit); ≤6,000 M☉ (Bañares-Hernández 2025, upper limit). Active tension.'},
   {name:'M54 (NGC 6715, Sgr dSph NSC)',type:'nsc',mass:1.4e6,reff:5.8,sigma0:8e4,age:12.5,feH_spread:1.2,mbh:9400,mbh_note:'~9,400 M☉ from HST kinematics (Ibata et al. 2009). Nucleus of the Sgr dwarf galaxy.'},

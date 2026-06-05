@@ -129,11 +129,11 @@ window.OCS_MEASUREMENTS = {
       value: null,
       limitType: "parameterDependent",
       method: "accretion",
-      methodLabel: "JWST NIRSpec (no accretion signature)",
+      methodLabel: "JWST NIRCam + MIRI photometry (no accretion signature)",
       journal: "arXiv:2511.20945",
       doi: "10.48550/arXiv.2511.20945",
       url: "https://arxiv.org/abs/2511.20945",
-      notes: "JWST NIRSpec observations show no detectable accretion signature. The mass upper limit derived from this depends sensitively on assumed ADAF radiative efficiency and ambient gas density — see the JWST Accretion Limit tool for the full curve.",
+      notes: "JWST NIRCam + MIRI photometric observations (not NIRSpec) show no detectable accretion signature. The mass upper limit derived from this depends sensitively on assumed ADAF radiative efficiency and ambient gas density — see the JWST Accretion Limit tool for the full curve.",
       isParameterDependent: true
     },
     {
@@ -154,7 +154,7 @@ window.OCS_MEASUREMENTS = {
     {
       id: "trapum2026",
       year: 2026,
-      authors: "TRAPUM (Padmanabh et al.)",
+      authors: "TRAPUM (Colom i Bernadich et al.)",
       value: 1e5,
       limitType: "upper",
       sigma: 1.65,
@@ -171,15 +171,19 @@ window.OCS_MEASUREMENTS = {
   /* ================================================================
      Globular cluster properties (Tool 5 — Cluster Comparator)
      ================================================================
-     Source: Baumgardt & Hilker (2018) for cluster properties unless
-     noted; IMBH values via imbhRefs[] cross-reference.
+     Source: Baumgardt & Hilker (2018) for most cluster properties (masses, radii)
+     unless noted. OC totalMass uses the Harris/dynamical 4.0×10⁶ value (B&H give 3.5×10⁶).
+     halfLightRadius values are in parsecs (B&H half-mass radii); Harris catalogue gives
+     angular half-light radii (arcmin) which at cluster distances convert to somewhat
+     different pc values due to distance and photometric vs. mass-based conventions.
+     IMBH values via imbhRefs[] cross-reference.
   */
   clusters: [
     {
       id: "ngc5139",
       name: "Omega Centauri (NGC 5139)",
-      totalMass: 4.0e6,
-      halfLightRadius: 7.0,
+      totalMass: 4.0e6,   // Harris/dynamical estimate; Baumgardt & Hilker 2018 give 3.5×10⁶ M☉ (source differs — see FAQ)
+      halfLightRadius: 7.0,  // parsecs, Baumgardt & Hilker 2018 half-mass radius ~6.9 pc; Harris r_h ~5.0′ = ~8 pc at 5.49 kpc (different convention)
       ageGyr: 12.1,  // oMEGACat IV mean (Häberle et al. 2024); individual populations span ~11–14 Gyr
       isOmegaCentauri: true,
       imbhRefs: ["noyola2008", "vandermarel2010", "baumgardt2017",
@@ -239,8 +243,8 @@ window.OCS_MEASUREMENTS = {
     {
       id: "ngc104",
       name: "47 Tucanae (NGC 104)",
-      totalMass: 7.0e5,
-      halfLightRadius: 3.66,
+      totalMass: 9.5e5,   // Baumgardt & Hilker 2018: ~0.9–1.0×10⁶ M☉; earlier 7.0×10⁵ was ~30% low
+      halfLightRadius: 3.66,  // parsecs, Baumgardt & Hilker 2018; Harris r_h ~3.17′ = ~4.2 pc at 4.5 kpc (different convention)
       ageGyr: 11.8,
       imbhSummary: {
         value: 2300,
@@ -305,7 +309,7 @@ window.OCS_MEASUREMENTS = {
     {
       id: "j1326_4728s", name: "PSR J1326-4728S",
       period_ms: 4.54, dist_arcsec: 38, timing_us: 3.0,
-      discovery: "TRAPUM (Padmanabh et al.) 2026", doi: "10.48550/arXiv.2603.21845",
+      discovery: "TRAPUM (Colom i Bernadich et al.) 2026", doi: "10.48550/arXiv.2603.21845",
       notes: "Newly discovered isolated MSP, closer to cluster centre — informative for IMBH constraint."
     }
   ],
@@ -314,7 +318,7 @@ window.OCS_MEASUREMENTS = {
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-06-01",
+    lastUpdated: "2026-06-04",
     schemaVersion: "1.0",
     sources: [
       "10.1086/529002",
