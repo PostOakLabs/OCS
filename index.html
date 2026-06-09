@@ -4792,3 +4792,49 @@ document.querySelectorAll('.faq-q').forEach(q => {
 });
 
 // ═══════════════════ SCROLL REVEAL ═══════════
+// (If you add scroll reveal logic later, place it here)
+
+// ═══════════════════ LANGUAGE TOGGLE SYSTEM ═══════════════════
+function switchLanguage(lang) {
+  // 1. Toggle body class for Chinese font support
+  if (lang === 'zh') {
+    document.body.classList.add('lang-zh');
+  } else {
+    document.body.classList.remove('lang-zh');
+  }
+
+  // 2. Update toggle button active states & accessibility
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const isTargetLang = btn.getAttribute('data-lang') === lang;
+    btn.classList.toggle('active', isTargetLang);
+    btn.setAttribute('aria-pressed', String(isTargetLang));
+  });
+
+  // 3. Translate all elements with data-en and data-zh attributes
+  document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+    const translation = el.getAttribute(`data-${lang}`);
+    if (translation) {
+      el.innerHTML = translation;
+    }
+  });
+
+  // 4. Specifically handle the document tab/page title
+  const pageTitle = document.querySelector('title');
+  if (pageTitle) {
+    const titleTranslation = pageTitle.getAttribute(`data-${lang}`);
+    if (titleTranslation) {
+      pageTitle.textContent = titleTranslation;
+    }
+  }
+}
+
+// Attach click event listeners to the buttons
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const selectedLang = btn.getAttribute('data-lang');
+    switchLanguage(selectedLang);
+  });
+});
+</script>
+</body>
+</html>
