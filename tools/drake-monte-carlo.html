@@ -697,8 +697,19 @@ function init() {
   wire();
   schedule();
 }
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.preset && PRESETS[obj.preset]) { state.preset = obj.preset; state.priors = deepCopy(PRESETS[obj.preset]); }
+  else if (obj.preset === 'custom') state.preset = 'custom';
+  STRINGS.factors.forEach(function(f) {
+    if (obj[f.key + '_lo'] !== undefined) { var v = parseFloat(obj[f.key + '_lo']); if (!isNaN(v)) state.priors[f.key][0] = v; }
+    if (obj[f.key + '_hi'] !== undefined) { var v = parseFloat(obj[f.key + '_hi']); if (!isNaN(v)) state.priors[f.key][1] = v; }
+  });
+  if (obj.n !== undefined) { var n = parseInt(obj.n); if ([1000,10000,50000,200000].includes(n)) state.nSamples = n; }
+  saveHash(); schedule();
+};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

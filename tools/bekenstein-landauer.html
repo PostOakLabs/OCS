@@ -515,9 +515,16 @@ function wire(){
   });
 }
 
+window.OCS_APPLY_PREFILL = function(obj) {
+  for (var k of Object.keys(state)) {
+    if (obj[k] !== undefined) { var v = parseFloat(obj[k]); if (!isNaN(v) && v > 0) state[k] = v; }
+  }
+  saveHash(); render();
+};
 function init(){ loadHash(); wire(); render(); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

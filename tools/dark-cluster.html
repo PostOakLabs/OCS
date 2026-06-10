@@ -623,8 +623,17 @@ function init() {
   wire();
   render();
 }
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.Mdark !== undefined) { var v = parseFloat(obj.Mdark); if (!isNaN(v) && v > 0) state.Mdark = v; }
+  if (obj.Mmean !== undefined) { var v = parseFloat(obj.Mmean); if (!isNaN(v) && v > 0) state.Mmean = v; }
+  if (obj.aPlum !== undefined) { var v = parseFloat(obj.aPlum); if (!isNaN(v) && v > 0) state.aPlum = v; }
+  if (obj.beta  !== undefined) { var v = parseFloat(obj.beta);  if (!isNaN(v)) state.beta = v; }
+  if (obj.MBH   !== undefined) { var v = parseFloat(obj.MBH);   if (!isNaN(v) && v > 0) state.MBH = v; }
+  saveHash(); render();
+};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

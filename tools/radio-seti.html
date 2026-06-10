@@ -550,10 +550,20 @@ function wire() {
   });
 }
 
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.eirp !== undefined) { var v = parseFloat(obj.eirp); if (!isNaN(v)) state.logEirp = clamp(v, 0, 30); }
+  if (obj.dist !== undefined) { var v = parseFloat(obj.dist); if (!isNaN(v)) state.logDist = clamp(v, -6, 7); }
+  if (obj.aeff !== undefined) { var v = parseFloat(obj.aeff); if (!isNaN(v)) state.logAeff = clamp(v, 0, 6); }
+  if (obj.tsys !== undefined) { var v = parseFloat(obj.tsys); if (!isNaN(v)) state.logTsys = clamp(v, 0.5, 3); }
+  if (obj.tau  !== undefined) { var v = parseFloat(obj.tau);  if (!isNaN(v)) state.logTau  = clamp(v, 0, 7); }
+  if (obj.bw   !== undefined) { var v = parseFloat(obj.bw);   if (!isNaN(v)) state.logBw   = clamp(v, -1, 9); }
+  saveHash(); render();
+};
 function init(){ loadHash(); wire(); render(); }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 <div style="max-width:900px;margin:0 auto;padding:8px 28px 32px;border-top:1px solid rgba(112,85,212,0.15)">
   <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#504870">Related proposals: </span>
   <a href="../proposal_radio_seti.html" style="font-family:'Space Mono',monospace;font-size:10px;color:#ffc840;letter-spacing:.04em;margin-left:8px">Radio Technosignature Survey →</a>

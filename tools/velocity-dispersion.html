@@ -388,8 +388,15 @@ function init() {
   wire();
   render();
 }
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.mass !== undefined) { var v = parseFloat(obj.mass); if (!isNaN(v) && v > 0) state.mass = v; }
+  if (obj.rh   !== undefined) { var v = parseFloat(obj.rh);   if (!isNaN(v) && v > 0) state.rh = v; }
+  if (obj.sig  !== undefined) { var v = parseFloat(obj.sig);  if (!isNaN(v) && v >= 0) state.sigOverride = v; }
+  saveHash(); render();
+};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

@@ -452,8 +452,17 @@ function init(){
   wire();
   render();
 }
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.preset && PRESETS[obj.preset]) { state.preset = obj.preset; state.p = Object.assign({}, PRESETS[obj.preset]); }
+  else if (obj.preset === 'custom') state.preset = 'custom';
+  STAGES.forEach(function(s) { if (obj[s.key] !== undefined) { var v = parseFloat(obj[s.key]); if (!isNaN(v)) state.p[s.key] = v; } });
+  if (obj.you !== undefined) { var v = parseInt(obj.you); if (!isNaN(v) && v >= 0 && v <= 8) { state.youStep = v; var el = document.getElementById('you-step'); if (el) el.value = v; } }
+  if (obj.H   !== undefined) { var v = parseFloat(obj.H); if (!isNaN(v) && v > 0) { state.habitable = v; var el = document.getElementById('target-input'); if (el) el.value = v.toExponential(2); } }
+  saveHash(); render();
+};
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

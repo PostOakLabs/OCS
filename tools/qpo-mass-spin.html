@@ -491,8 +491,16 @@ function toggleAbout(){const p=document.getElementById('about-panel');const a=do
 function saveHash(){window.location.hash=`lognu=${st.lognu.toFixed(3)}&unc=${st.unc}&a=${st.a.toFixed(3)}&model=${st.model}`;}
 function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));if(p.lognu){st.lognu=parseFloat(p.lognu);document.getElementById('sl-nu').value=st.lognu;}if(p.unc){st.unc=parseFloat(p.unc);document.getElementById('sl-unc').value=st.unc;}if(p.a){st.a=parseFloat(p.a);document.getElementById('sl-a').value=st.a;}if(p.model){st.model=p.model;document.getElementById('sel-model').value=st.model;}}
 
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.lognu !== undefined) { var v = parseFloat(obj.lognu); if (!isNaN(v)) { st.lognu = v; var el = document.getElementById('sl-nu');  if (el) el.value = v; } }
+  if (obj.unc   !== undefined) { var v = parseFloat(obj.unc);   if (!isNaN(v)) { st.unc = v;   var el = document.getElementById('sl-unc'); if (el) el.value = v; } }
+  if (obj.a     !== undefined) { var v = parseFloat(obj.a);     if (!isNaN(v)) { st.a = v;     var el = document.getElementById('sl-a');   if (el) el.value = v; } }
+  if (obj.model !== undefined) { st.model = obj.model; var el = document.getElementById('sel-model'); if (el) el.value = obj.model; }
+  saveHash(); compute();
+};
 window.addEventListener('load',()=>{loadHash();compute();});
 window.addEventListener('resize',()=>{compute();});
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>

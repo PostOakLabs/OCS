@@ -595,6 +595,14 @@ function wire(){
   });
 }
 
+window.OCS_APPLY_PREFILL = function(obj) {
+  if (obj.mode  !== undefined && (obj.mode === 'forward' || obj.mode === 'inverse')) state.mode = obj.mode;
+  if (obj.mass  !== undefined) { var v = parseFloat(obj.mass);  if (!isNaN(v) && v > 0) state.M = v; }
+  if (obj.spin  !== undefined) { var v = parseFloat(obj.spin);  if (!isNaN(v) && v >= 0 && v < 1) state.a = v; }
+  if (obj.power !== undefined) { var v = parseFloat(obj.power); if (!isNaN(v) && v > 0) state.P = v; }
+  if (obj.B     !== undefined) { var v = parseFloat(obj.B);     if (!isNaN(v) && v > 0) state.B = v; }
+  saveHash(); setMode(state.mode, {skipTransfer: true}); render();
+};
 function init(){
   loadHash();
   setMode(state.mode, {skipTransfer: true});
@@ -603,5 +611,6 @@ function init(){
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
 </script>
+<script src="data/prefill.js"></script>
 </body>
 </html>
