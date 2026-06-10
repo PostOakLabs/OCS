@@ -2,7 +2,8 @@
 
 **Site:** omegacentauri.me | **Owner:** Tim (tim@postoaklabs.com) | **Updated:** 2026-06-02
 
-**Current counts:** 67 tools · 10 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page
+**Current counts (verified 2026-06-09):** 82 tools · 15 workflows · 30 scenarios · 2 narrative/dashboard pages · 11 proposals · 1 pathways page · 2 hubs
+(New since the category list below was written: imbh-spin-synthesizer, accretion-state, oc-nsc-comparator, imbh-proper-motion, cluster-dissolution, ergosphere-orbit, transcension-darkening, and the 8-tool sci-fi batch: accelerando-economics, city-and-stars, consciousness-overhead, culture-sublime, dark-forest-hunters, dark-forest-mth, dark-forest-silence, diaspora-polis. New workflows: mass-tension, naked-imbh, accretion-to-spin, multimessenger-campaign, cns-reproduction.)
 
 Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, Macro Transcension Hypothesis (MTH). No framework, no build pipeline, no npm — hand-written HTML/CSS/JS, all inline per file. Two content registers kept strictly separate: peer-reviewed science (DOI-sourced) and speculative engineering (MTH/computronium — always labeled).
 
@@ -61,9 +62,9 @@ repo/
 └── tools/
     ├── index.html                 ← tools landing page
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values
-    ├── [67 tool *.html files]     ← see categories below
-    ├── [7 workflow-*.html files]  ← end-to-end staged narrative calculators
-    └── [30 scenario-*.html files]     ← chained-tool narrative demos
+    ├── [82 tool *.html files]     ← see categories below (category list partially stale)
+    ├── [15 workflow-*.html files] ← end-to-end staged narrative calculators
+    └── [30 scenario-*.html files] ← chained-tool narrative demos (incl. scenario-bh-tap)
 ```
 
 **Tool categories (52 total):**

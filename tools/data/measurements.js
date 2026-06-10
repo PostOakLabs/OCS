@@ -6,7 +6,7 @@
   Curated data tables: CC0 1.0 Universal
   Author: The Omega Centauri Society (Tim Swanson)
   Schema version: 1.0
-  Last updated: 2026-06-01
+  Last updated: 2026-06-04
 
   This file is the single source of truth for IMBH mass measurements,
   globular cluster properties, and Omega Centauri pulsar timing data
