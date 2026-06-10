@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP Connector — The Omega Centauri Society</title>
+<meta name="description" content="Connect Claude and other AI assistants to the OCS science tools via the Model Context Protocol endpoint at mcp.omegacentauri.me.">
+<meta name="author" content="The Omega Centauri Society">
+
+<link rel="canonical" href="https://omegacentauri.me/mcp.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Omega Centauri Society">
+<meta property="og:title" content="MCP Connector — The Omega Centauri Society">
+<meta property="og:description" content="Connect Claude to the OCS science tools via the Model Context Protocol. Endpoint: https://mcp.omegacentauri.me/mcp">
+<meta property="og:url" content="https://omegacentauri.me/mcp.html">
+<meta property="og:image" content="https://omegacentauri.me/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --void:#03020a; --deep:#070515; --nebula:#0d0a24;
+  --purple-mid:#3d2d8a; --purple-bright:#7055d4; --purple-glow:#a080f0;
+  --teal-dark:#042a24; --teal-mid:#0d6e58; --teal-bright:#1dba90; --teal-glow:#4de8c0;
+  --amber-bright:#f0a020; --amber-glow:#ffc840;
+  --text-primary:#e8e4ff; --text-secondary:#9890c0; --text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2); --border-teal:rgba(29,186,144,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:radial-gradient(ellipse at 50% 0%, var(--nebula), var(--void) 70%);
+  color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;
+  font-size:17px; line-height:1.75;
+  min-height:100vh;
+  padding:0 0 6rem;
+}
+
+/* ── Nav ── */
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:960px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;color:var(--text-primary);text-decoration:none;text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-sep{color:var(--text-dim);margin:0 2px}
+.nav-cur{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em}
+
+/* ── Page wrap ── */
+.wrap{max-width:820px;margin:0 auto;padding:3.5rem 1.5rem 0}
+
+/* ── Typography ── */
+h1{
+  font-family:'Orbitron',sans-serif;
+  font-size:2.4rem; font-weight:900; letter-spacing:.02em;
+  line-height:1.12; margin-bottom:.5rem;
+  background:linear-gradient(90deg,#e8e4ff 0%,#a080f0 50%,#4de8c0 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.lede{font-size:1.08rem;color:var(--text-secondary);font-style:italic;margin-bottom:.5rem;max-width:680px}
+.meta{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--text-dim);letter-spacing:.1em;margin-bottom:3rem}
+
+h2{
+  font-family:'Orbitron',sans-serif;
+  font-size:1rem; font-weight:600; letter-spacing:.18em;
+  color:var(--amber-glow); text-transform:uppercase;
+  margin:2.8rem 0 1.2rem; padding-bottom:.4rem;
+  border-bottom:1px solid var(--border-subtle);
+}
+h3{
+  font-family:'Space Mono',monospace;
+  font-size:.85rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--teal-glow); margin:1.6rem 0 .6rem;
+}
+p{margin-bottom:1rem; max-width:700px}
+
+/* ── Endpoint box ── */
+.endpoint-box{
+  display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+  background:rgba(4,42,36,.45);
+  border:1px solid var(--border-teal);
+  border-radius:6px; padding:1.1rem 1.4rem;
+  margin-bottom:2rem;
+}
+.endpoint-url{
+  font-family:'Space Mono',monospace;
+  font-size:.95rem; color:var(--teal-glow);
+  word-break:break-all; flex:1;
+}
+.copy-btn{
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  letter-spacing:.08em; text-transform:uppercase;
+  background:rgba(29,186,144,.12); border:1px solid var(--border-teal);
+  color:var(--teal-bright); padding:.35rem .8rem; border-radius:4px;
+  cursor:pointer; transition:background .15s;
+  white-space:nowrap;
+}
+.copy-btn:hover{background:rgba(29,186,144,.22)}
+.copy-btn.copied{color:var(--teal-glow); border-color:var(--teal-glow)}
+
+/* ── Tool cards ── */
+.tool-card{
+  background:rgba(13,10,36,.5);
+  border:1px solid var(--border-subtle);
+  border-radius:8px; padding:1.3rem 1.5rem;
+  margin-bottom:1.2rem;
+  transition:border-color .2s;
+}
+.tool-card:hover{border-color:var(--purple-bright)}
+.tool-name{
+  font-family:'Orbitron',sans-serif; font-size:.95rem; font-weight:600;
+  color:var(--text-primary); margin-bottom:.4rem;
+}
+.tool-desc{color:var(--text-secondary); font-size:.97rem; margin-bottom:.85rem}
+.params-label{
+  font-family:'Space Mono',monospace; font-size:.65rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--text-dim); margin-bottom:.5rem;
+}
+.param-list{list-style:none; display:flex; flex-direction:column; gap:.35rem}
+.param-list li{
+  font-family:'Space Mono',monospace; font-size:.75rem;
+  color:var(--text-secondary); padding-left:1rem;
+}
+.param-list li::before{content:'▸ '; color:var(--teal-mid); margin-left:-1rem}
+.param-name{color:var(--teal-glow)}
+.param-opt{color:var(--text-dim);font-size:.68rem}
+
+/* ── Steps ── */
+.steps{list-style:none; counter-reset:step}
+.steps li{
+  counter-increment:step;
+  display:flex; gap:1rem; align-items:flex-start;
+  padding:1rem 0; border-bottom:1px solid var(--border-subtle);
+}
+.steps li:last-child{border-bottom:none}
+.step-num{
+  flex-shrink:0;
+  font-family:'Orbitron',sans-serif; font-size:.75rem; font-weight:600;
+  color:var(--void); background:var(--purple-bright);
+  width:1.6rem; height:1.6rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:.2rem;
+}
+.step-body{flex:1; font-size:.97rem; color:var(--text-secondary)}
+.step-body strong{color:var(--text-primary); font-weight:600}
+.step-body code{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--teal-glow);background:rgba(29,186,144,.08);padding:.1rem .35rem;border-radius:3px}
+
+/* ── Note / callout ── */
+.note{
+  background:rgba(160,128,240,.06);
+  border-left:3px solid var(--purple-bright);
+  padding:.8rem 1.1rem; border-radius:0 5px 5px 0;
+  margin:1.2rem 0; font-size:.93rem; color:var(--text-secondary);
+}
+.note strong{color:var(--text-primary)}
+
+/* ── Chain list ── */
+.chain-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:.5rem; margin-top:.8rem;
+}
+.chain-tag{
+  font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:.06em;
+  padding:.35rem .6rem; border-radius:4px; color:var(--text-secondary);
+  border:1px solid var(--border-subtle); background:rgba(13,10,36,.5);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ── Footer ── */
+footer{
+  margin-top:5rem; padding-top:1.5rem;
+  border-top:1px solid var(--border-subtle);
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  color:var(--text-dim); letter-spacing:.06em; text-align:center;
+}
+footer a{color:var(--teal-glow); text-decoration:none}
+footer a:hover{text-decoration:underline}
+.sep{margin:0 .6rem; opacity:.4}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Site navigation">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">◉ Omega Centauri Society</a>
+    <span class="nav-sep">·</span>
+    <span class="nav-cur">MCP Connector</span>
+  </div>
+</nav>
+
+<div class="wrap">
+<main>
+
+<h1>MCP Connector</h1>
+<p class="lede">Connect Claude — and any MCP-compatible AI assistant — directly to the OCS interactive science tools via the Model Context Protocol.</p>
+<p class="meta">omegacentauri.me &nbsp;·&nbsp; Live endpoint · Updated 2026-06-10</p>
+
+<h2>Endpoint</h2>
+<div class="endpoint-box">
+  <span class="endpoint-url" id="ep-url">https://mcp.omegacentauri.me/mcp</span>
+  <button class="copy-btn" id="copy-ep" onclick="copyEndpoint()" aria-label="Copy endpoint URL">Copy</button>
+</div>
+<p>The server is a stateless Cloudflare Worker running on the <a href="https://spec.modelcontextprotocol.io/" target="_blank" rel="noopener" style="color:var(--teal-glow)">Streamable HTTP MCP transport (2025-11-25)</a>. All tool logic runs client-side in your browser — the MCP server only returns deep-links and metadata; zero data leaves your machine.</p>
+
+<h2>Connecting to Claude</h2>
+<ol class="steps">
+  <li>
+    <div class="step-num">1</div>
+    <div class="step-body">Open the <strong>Claude desktop app</strong> and go to <strong>Settings → Connectors</strong>.</div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div class="step-body">Click <strong>Add connector</strong> and select <strong>Custom MCP server</strong>.</div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div class="step-body">Paste the endpoint URL: <code>https://mcp.omegacentauri.me/mcp</code></div>
+  </li>
+  <li>
+    <div class="step-num">4</div>
+    <div class="step-body">Name it <strong>Omega Centauri Society</strong> and save. Both tools will appear under Read-only tools.</div>
+  </li>
+</ol>
+
+<div class="note">
+  <strong>Health check:</strong> <a href="https://mcp.omegacentauri.me/health" target="_blank" rel="noopener" style="color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:.85rem">mcp.omegacentauri.me/health</a> returns <code>{"status":"ok"}</code>. Use this to confirm the server is up before connecting.
+</div>
+
+<h2>Available tools</h2>
+
+<div class="tool-card">
+  <div class="tool-name">list_ocs_tools</div>
+  <div class="tool-desc">Search the OCS interactive calculator suite. Returns deep-links to client-side browser tools. The 10 flagship tools are prefill-enabled: the returned URL includes an <code>#in=</code> fragment that opens the tool pre-filled with your values.</div>
+  <div class="params-label">Parameters (all optional)</div>
+  <ul class="param-list">
+    <li><span class="param-name">query</span> <span class="param-opt">string</span> — free-text search against title and description</li>
+    <li><span class="param-name">category</span> <span class="param-opt">string</span> — filter: <code>imbh-evidence</code> · <code>fermi-paradox</code> · <code>fermi-seti</code> · <code>mth</code></li>
+    <li><span class="param-name">register</span> <span class="param-opt">string</span> — filter: <code>peer-reviewed</code> · <code>speculative</code></li>
+    <li><span class="param-name">limit</span> <span class="param-opt">number</span> — max results (default 20)</li>
+  </ul>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">build_ocs_workflow_links</div>
+  <div class="tool-desc">Constructs an ordered set of ready-to-use deep-links for a named OCS scenario or workflow chain, or an ad-hoc sequence of tools. Pass <code>fields</code> per step to receive pre-filled URLs via the <code>#in=</code> fragment convention.</div>
+  <div class="params-label">Parameters</div>
+  <ul class="param-list">
+    <li><span class="param-name">chain</span> <span class="param-opt">string, exclusive with steps</span> — name of a pre-defined chain (36 available, see below)</li>
+    <li><span class="param-name">steps</span> <span class="param-opt">array, exclusive with chain</span> — ad-hoc list of <code>{tool, fields?}</code> objects</li>
+  </ul>
+</div>
+
+<h3>Named chains (36)</h3>
+<p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:.8rem">Pass any of these as the <code>chain</code> parameter to <code>build_ocs_workflow_links</code>.</p>
+<div class="chain-grid">
+  <span class="chain-tag">scenario-breaking-degeneracy</span>
+  <span class="chain-tag">scenario-imbh-evidence</span>
+  <span class="chain-tag">scenario-fermi-honest</span>
+  <span class="chain-tag">scenario-fermi-mth-crossover</span>
+  <span class="chain-tag">scenario-dark-cluster-alt</span>
+  <span class="chain-tag">scenario-bh-physics</span>
+  <span class="chain-tag">scenario-bh-tap</span>
+  <span class="chain-tag">scenario-decision-tree</span>
+  <span class="chain-tag">scenario-fermi-five-ways</span>
+  <span class="chain-tag">scenario-dvali-signal</span>
+  <span class="chain-tag">scenario-dwarf-inheritance</span>
+  <span class="chain-tag">scenario-every-way-it-eats</span>
+  <span class="chain-tag">scenario-kardashev-two</span>
+  <span class="chain-tag">scenario-lisas-shot</span>
+  <span class="chain-tag">scenario-oc-vs-gc</span>
+  <span class="chain-tag">scenario-proposal-bridge</span>
+  <span class="chain-tag">scenario-reconnection-bz</span>
+  <span class="chain-tag">scenario-spin-up-economics</span>
+  <span class="chain-tag">scenario-spin-up-tap</span>
+  <span class="chain-tag">scenario-wait-compute</span>
+  <span class="chain-tag">scenario-cosmology-browser</span>
+  <span class="chain-tag">workflow-mth-compute-budget</span>
+  <span class="chain-tag">workflow-fermi-mth-crossover</span>
+  <span class="chain-tag">workflow-bh-energy-budget</span>
+  <span class="chain-tag">workflow-wait-or-act</span>
+  <span class="chain-tag">workflow-constraint-window</span>
+  <span class="chain-tag">workflow-survivability</span>
+  <span class="chain-tag">workflow-spin-economics</span>
+  <span class="chain-tag">workflow-evodevouniverse</span>
+  <span class="chain-tag">workflow-tde-detection</span>
+  <span class="chain-tag">workflow-grabby-fermi</span>
+  <span class="chain-tag">workflow-mass-tension</span>
+  <span class="chain-tag">workflow-naked-imbh</span>
+  <span class="chain-tag">workflow-accretion-to-spin</span>
+  <span class="chain-tag">workflow-multimessenger-campaign</span>
+  <span class="chain-tag">workflow-cns-reproduction</span>
+</div>
+
+<h2>Prefill-enabled tools</h2>
+<p>The following 10 flagship tools accept <code>#in=&lt;base64url(JSON)&gt;</code> URL fragments. Pass values as a <code>fields</code> object in <code>build_ocs_workflow_links</code> steps to receive a pre-filled URL.</p>
+
+<div class="note">
+  <strong>Log10 param warning:</strong> <code>radio-seti</code> — all 6 params (<code>eirp</code>, <code>dist</code>, <code>aeff</code>, <code>tsys</code>, <code>tau</code>, <code>bw</code>) are log₁₀. <code>qpo-mass-spin</code> — <code>lognu</code> is log₁₀(Hz). <code>bz-kardashev</code> — hash keys are <code>spin</code> (not <code>a</code>) and <code>power</code> (not <code>P</code>). Do not pass linear values to log₁₀ parameters.
+</div>
+
+<div class="chain-grid" style="margin-top:.8rem">
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">constraint-stacker</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">velocity-dispersion</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">dark-cluster</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">astrometric-microlensing</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">qpo-mass-spin</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">drake-monte-carlo</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">great-filter</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">radio-seti</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">bekenstein-landauer</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">bz-kardashev</span>
+</div>
+
+<h2>Technical details</h2>
+<p><strong>Transport:</strong> Streamable HTTP, MCP spec 2025-11-25. POST <code>/mcp</code>, JSON-RPC 2.0, stateless (no session IDs).</p>
+<p><strong>Runtime:</strong> Cloudflare Workers (free plan), deployed globally. Data fixture (<code>tools-manifest.json</code>) served via ASSETS binding, cached per isolate.</p>
+<p><strong>CORS:</strong> <code>omegacentauri.me</code>, <code>claude.ai</code>, <code>app.claude.ai</code>, and localhost are in the allowed-origins set.</p>
+<p><strong>Privacy:</strong> The MCP server returns only URLs and metadata. All physics calculations run client-side in your browser — no inputs or results pass through the server.</p>
+<p><strong>Source:</strong> <a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener" style="color:var(--teal-glow)">github.com/PostOakLabs/OCS</a></p>
+
+</main>
+</div><!-- /wrap -->
+
+<footer>
+  <div style="max-width:820px;margin:0 auto;padding:0 1.5rem">
+    <a href="/">◉ The Omega Centauri Society</a>
+    <span class="sep">·</span>
+    <a href="/tools/index.html">Tools</a>
+    <span class="sep">·</span>
+    <a href="/sitemap.html">Sitemap</a>
+    <span class="sep">·</span>
+    <a href="/contact.html">Contact</a>
+    <span class="sep">·</span>
+    <a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a>
+    <br style="margin-bottom:.6rem">
+    <span>© 2026 The Omega Centauri Society · CC BY 4.0</span>
+  </div>
+</footer>
+
+<script>
+function copyEndpoint() {
+  const url = document.getElementById('ep-url').textContent;
+  const btn = document.getElementById('copy-ep');
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    btn.textContent = 'Copy manually';
+  });
+}
+</script>
+
+</body>
+</html>
