@@ -265,3 +265,69 @@ jobs:
               echo "| Site | ${{ secrets.DH_SITE_URL }} |"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # Job 3 – Sync manifest to MCP worker repo
+  #
+  # After every live DreamHost deploy, copies tools/data/tools-manifest.json
+  # to PostOakLabs/ocs-mcp-worker data/tools-manifest.json, commits if the
+  # file changed, and pushes. The push triggers the Cloudflare GitHub App
+  # to auto-deploy the updated worker — no manual generate.mjs run needed.
+  #
+  # Skipped on dry runs (no live rsync happened, manifest may not reflect HEAD).
+  #
+  # Required secret (Settings → Secrets → Actions in PostOakLabs/OCS):
+  #   GH_DISPATCH_TOKEN — GitHub fine-grained PAT, Contents: write,
+  #                       scoped to PostOakLabs/ocs-mcp-worker only.
+  # ───────────────────────────────────────────────────────────────────────────
+  sync-worker:
+    name: Sync MCP worker manifest
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: ${{ github.event.inputs.dry_run != 'true' }}
+
+    steps:
+      - name: Checkout site repo (shallow)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Clone worker repo and sync manifest
+        env:
+          GH_TOKEN: ${{ secrets.GH_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git clone \
+            "https://x-access-token:${GH_TOKEN}@github.com/PostOakLabs/ocs-mcp-worker.git" \
+            /tmp/ocs-mcp-worker
+
+          cp tools/data/tools-manifest.json /tmp/ocs-mcp-worker/data/tools-manifest.json
+
+          cd /tmp/ocs-mcp-worker
+          git config user.email "ci@omegacentauri.me"
+          git config user.name "OCS Deploy Bot"
+          git add data/tools-manifest.json
+
+          if git diff --quiet --cached; then
+            echo "Manifest unchanged — no commit. Cloudflare deploy not triggered."
+          else
+            UPDATED=$(date -u +%Y-%m-%d)
+            git commit -m "auto: sync manifest from site deploy ${UPDATED} (${{ github.sha }})"
+            git push
+            echo "Manifest synced and pushed — Cloudflare deploy triggered."
+          fi
+
+      - name: Sync summary
+        if: always()
+        run: |
+          {
+            echo "## MCP worker sync"
+            echo ""
+            echo "| Field | Value |"
+            echo "|---|---|"
+            echo "| Worker repo | \`PostOakLabs/ocs-mcp-worker\` |"
+            echo "| Branch | \`master\` |"
+            echo "| Source manifest | \`tools/data/tools-manifest.json\` |"
+            echo "| Cloudflare deploy | auto-triggered on push (GitHub App) |"
+          } >> "$GITHUB_STEP_SUMMARY"
