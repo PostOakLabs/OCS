@@ -216,7 +216,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">The IMBH mass is the single most important free parameter in the MTH argument. It sets both the BZ power (Stage 2) and the Schwarzschild radius for time dilation (Stage 4). The current observational window spans roughly <strong>8,200 M☉</strong> (Häberle 2024 kinematic lower bound) to <strong>~70,000 M☉</strong> (older kinematic upper region). The JWST non-detection (Chen et al. 2025) pushes the mass above ~20,000 M☉.</p>
+      <p class="stage-prose">The IMBH mass is the single most important free parameter in the MTH argument. It sets both the BZ power (Stage 2) and the Schwarzschild radius for time dilation (Stage 4). Two current bounds are in genuine tension: <strong>Häberle et al. 2024</strong> (stellar kinematics) places a lower limit of ≥8,200 M☉, while <strong>Bañares-Hernández et al. 2025</strong> (pulsar timing) places an upper limit of ≤6,000 M☉ — the ranges do not overlap. The Chen et al. 2025 JWST non-detection constrains the product <em>M × accretion efficiency</em> from above, not mass alone; it is not a lower bound on mass.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Input</div>
@@ -227,8 +227,8 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
               <span class="slider-value" id="s1-mass-lbl">30,000 M☉</span>
             </div>
             <div class="preset-row">
+              <button class="preset-btn" onclick="setMass(6000)">Bañares limit (6,000)</button>
               <button class="preset-btn" onclick="setMass(8200)">Häberle lower (8,200)</button>
-              <button class="preset-btn" onclick="setMass(20000)">JWST floor (20,000)</button>
               <button class="preset-btn active" onclick="setMass(30000)">Consensus (30,000)</button>
               <button class="preset-btn" onclick="setMass(47000)">Noyola (47,000)</button>
             </div>
@@ -576,7 +576,7 @@ function compute(){
   // Stage 1
   const rsVal=rs(M), rgVal=rg(M);
   const rsAU=rsVal/(1.496e11), rgKm=rgVal/1000;
-  const window_label=M<8200?'Below Häberle lower bound':M<20000?'Below JWST floor (possibly excluded)':M<50000?'Inside preferred window':M<70000?'Above Noyola estimate':'Above most upper limits';
+  const window_label=M<6000?'Within Bañares upper limit (≤6k); below Häberle (≥8.2k)':M<8200?'Between Bañares (≤6k) and Häberle (≥8.2k) — excluded by both':M<20000?'Above Häberle lower bound; above Bañares upper limit (tension)':M<50000?'Above Häberle; Chen/JWST constrains M×efficiency, not mass alone':M<70000?'Above Noyola estimate':'Above most upper limits';
   setText('s1-mass-lbl', M.toLocaleString()+' M☉');
   setText('s1-out-mass', M.toLocaleString());
   setText('s1-out-rs', rsAU.toPrecision(3));
