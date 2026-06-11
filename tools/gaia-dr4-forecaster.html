@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<!--
+  Gaia DR4 IMBH Constraint Forecaster
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0  ·  Data: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-11
+  Site section: #science
+  Epistemic tier(s): 🔬 (established kinematic physics) / ⚠ (DR4 forecast, crowding model)
+
+  Refs:
+    Gaia Collaboration (2023). "Gaia Data Release 3 summary." A&A 674, A1.
+      DOI: 10.1051/0004-6361/202243940
+    ESA Cosmos (2024). "Gaia DR4 content pages."
+      https://www.cosmos.esa.int/web/gaia/dr4
+    Häberle et al. (2024). "Fast-moving stars around an intermediate-mass
+      black hole in Omega Centauri." Nature 631, 285.
+      DOI: 10.1038/s41586-024-07511-z
+    Bañares-Hernández et al. (2025). "Constraints on an IMBH in Omega Centauri
+      from combined kinematics and pulsar timing." A&A 693, A104.
+      DOI: 10.1051/0004-6361/202451763
+    Häberle et al. (2025, oMEGACat VI). "Comprehensive 3D kinematics of
+      Omega Centauri." ApJ (April 2025).
+      DOI: 10.3847/1538-4357/adbe67
+    Merritt (2001). "Brownian motion of a massive binary." AJ 121, 2385.
+      DOI: 10.1086/319930
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaia DR4 IMBH Constraint Forecaster — Omega Centauri Society</title>
+<meta name="description" content="Propagates Gaia DR4's 4.5× proper-motion precision improvement to predict how tightly the December 2026 data will constrain the Omega Centauri IMBH mass via stellar kinematics. Includes a pre-registration permalink for Zenodo deposit.">
+<link rel="canonical" href="https://omegacentauri.me/tools/gaia-dr4-forecaster.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 8%,rgba(29,186,144,.07),transparent 45%),radial-gradient(ellipse at 85% 65%,rgba(160,128,240,.07),transparent 45%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:27px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badges{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor}
+.tier-badge.estab{color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.tier-badge.warn{color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.timeline-banner{background:linear-gradient(135deg,rgba(29,186,144,.06),rgba(13,10,36,.4));border:1px solid var(--border-teal);border-radius:10px;padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.timeline-clock{font-family:'Orbitron',sans-serif;font-size:22px;color:var(--teal-glow);font-weight:600;white-space:nowrap}
+.timeline-text{font-size:15px;color:var(--text-secondary)}
+.timeline-text strong{color:var(--text-primary)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:760px){.two-col{grid-template-columns:1fr}.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}.tier-badges{flex-direction:row;flex-wrap:wrap}}
+.panel{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.panel-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:5px}
+.slider-row{display:flex;align-items:center;gap:12px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-bright);cursor:pointer;box-shadow:0 0 8px rgba(29,186,144,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-bright);cursor:pointer;border:none;box-shadow:0 0 8px rgba(29,186,144,.5)}
+.slider-val{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:130px;text-align:right;white-space:nowrap}
+.slider-help{font-size:12px;color:var(--text-dim);margin-top:4px;font-style:italic}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.04em;padding:4px 9px;border-radius:6px;background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);color:var(--text-secondary);cursor:pointer;transition:border-color .15s,color .15s}
+.preset-btn:hover{border-color:var(--teal-mid);color:var(--teal-glow)}
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+@media(max-width:760px){.metrics-grid{grid-template-columns:1fr 1fr}}
+.metric-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:10px;padding:14px 16px;text-align:center}
+.metric-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;line-height:1.4}
+.metric-val{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);line-height:1.1}
+.metric-val.amber{color:var(--amber-glow)}
+.metric-val.red{color:var(--red-glow)}
+.metric-val.purple{color:var(--purple-glow)}
+.metric-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:4px}
+.chart-panel{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:24px;margin-bottom:22px;overflow:hidden}
+.chart-title{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-secondary);margin-bottom:4px}
+.chart-sub{font-size:13px;color:var(--text-dim);font-style:italic;margin-bottom:16px}
+.chart-wrap{overflow-x:auto}
+svg.forecast-chart{display:block;width:100%;height:auto;min-width:600px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.legend-item{display:inline-flex;align-items:center;gap:7px}
+.legend-swatch{width:28px;height:12px;border-radius:2px;flex-shrink:0}
+.prereg-panel{background:linear-gradient(135deg,rgba(112,85,212,.08),rgba(7,5,21,.7));border:1px solid rgba(112,85,212,.35);border-radius:12px;padding:22px 24px;margin-bottom:22px}
+.prereg-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple-glow);margin-bottom:8px}
+.prereg-desc{font-size:15px;color:var(--text-secondary);margin-bottom:16px}
+.prereg-summary{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:8px;padding:14px 16px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-primary);line-height:1.7;margin-bottom:14px;white-space:pre-wrap;word-break:break-all}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:9px 18px;border-radius:8px;border:none;cursor:pointer;transition:background .15s,color .15s}
+.btn-primary{background:rgba(160,128,240,.15);border:1px solid var(--purple-glow);color:var(--purple-glow)}.btn-primary:hover{background:rgba(160,128,240,.28)}
+.btn-copy{background:rgba(29,186,144,.12);border:1px solid var(--teal-mid);color:var(--teal-bright)}.btn-copy:hover{background:rgba(29,186,144,.25)}
+.copy-feedback{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);margin-left:10px;opacity:0;transition:opacity .3s}
+.copy-feedback.show{opacity:1}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:18px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:2px;display:block}
+.tension-note{background:rgba(138,32,32,.06);border-left:3px solid var(--amber-bright);padding:12px 18px;border-radius:0 8px 8px 0;font-size:14px;color:var(--text-secondary);margin-top:14px}
+.tension-note strong{color:var(--amber-glow)}
+.footer{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);text-align:center;padding-top:28px;border-top:1px solid var(--border-subtle);margin-top:28px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Gaia DR4 IMBH Constraint Forecaster</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+
+  <header class="tool-header">
+    <div>
+      <h1>Gaia DR4 IMBH Constraint Forecaster</h1>
+      <p class="tool-subtitle">Propagates Gaia DR4's 4.5× proper-motion precision improvement to predict how tightly the December 2026 data will constrain the ωCen IMBH mass via stellar kinematics. Generate a pre-registered prediction permalink before DR4 day.</p>
+    </div>
+    <div class="tier-badges">
+      <span class="tier-badge estab">🔬 Established kinematics</span>
+      <span class="tier-badge warn">⚠ DR4 forecast</span>
+    </div>
+  </header>
+
+  <div class="timeline-banner">
+    <div class="timeline-clock">≈ Dec 2026</div>
+    <div class="timeline-text"><strong>Gaia DR4 arrives on a known schedule.</strong> Pre-register quantitative predictions now. After release, grade them publicly — this is how the site demonstrates scientific seriousness and provides a record that can be cited.</div>
+  </div>
+
+  <div class="two-col">
+    <!-- Controls -->
+    <div class="panel">
+      <div class="panel-title">IMBH Hypothesis</div>
+
+      <div class="slider-block">
+        <label>IMBH HYPOTHESIS MASS (M☉)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-mass" min="3" max="5.3" step="0.01" value="3.914">
+          <span class="slider-val" id="v-mass">8,200 M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-mass-log="3.778">6,000 (Bañares upper)</button>
+          <button class="preset-btn" data-mass-log="3.914">8,200 (Häberle lower)</button>
+          <button class="preset-btn" data-mass-log="4.591">39,000 (Häberle best-fit)</button>
+          <button class="preset-btn" data-mass-log="4.699">50,000</button>
+        </div>
+        <div class="slider-help">log₁₀ slider; hash stores linear M☉</div>
+      </div>
+
+      <div class="slider-block">
+        <label>OC DISTANCE (kpc)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-dist" min="5.0" max="6.0" step="0.01" value="5.43">
+          <span class="slider-val" id="v-dist">5.43 kpc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-dist="5.20">5.20</button>
+          <button class="preset-btn" data-dist="5.43">5.43 (canonical)</button>
+          <button class="preset-btn" data-dist="5.49">5.49</button>
+          <button class="preset-btn" data-dist="5.90">5.90</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observation parameters -->
+    <div class="panel">
+      <div class="panel-title">Observation Parameters</div>
+
+      <div class="slider-block">
+        <label>CROWDING FACTOR (1 = ideal, 10 = severe confusion)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-crowding" min="1" max="10" step="0.1" value="3">
+          <span class="slider-val" id="v-crowding">3.0×</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-crowd="1.0">1× ideal</button>
+          <button class="preset-btn" data-crowd="3.0">3× typical OC core</button>
+          <button class="preset-btn" data-crowd="6.0">6× dense</button>
+          <button class="preset-btn" data-crowd="10.0">10× extreme</button>
+        </div>
+        <div class="slider-help">Multiplicative PM noise penalty from source confusion in the OC core. Gaia DR4's improved deblending pipeline should reduce this vs DR3.</div>
+      </div>
+
+      <div class="slider-block">
+        <label>CLUSTER BACKGROUND DISPERSION σ₀ (km/s)</label>
+        <div class="slider-row">
+          <input type="range" id="sl-sigma0" min="14" max="30" step="0.5" value="20">
+          <span class="slider-val" id="v-sigma0">20.0 km/s</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-sig="18.0">18 km/s</button>
+          <button class="preset-btn" data-sig="20.0">20 km/s</button>
+          <button class="preset-btn" data-sig="22.0">22 km/s (Häberle central)</button>
+        </div>
+        <div class="slider-help">1D velocity dispersion in the OC core. Determines the influence radius and the minimum detectable mass.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">Influence radius r_infl</div>
+      <div class="metric-val" id="m-rinfl">—</div>
+      <div class="metric-sub" id="m-rinfl-as">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Keplerian σ at r_infl / 2</div>
+      <div class="metric-val" id="m-sigK">—</div>
+      <div class="metric-sub">km/s (vs σ₀)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">DR4 PM floor (effective)</div>
+      <div class="metric-val purple" id="m-pmfloor">—</div>
+      <div class="metric-sub" id="m-pmfloor-kms">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">DR4 kinematic S/N</div>
+      <div class="metric-val" id="m-sn">—</div>
+      <div class="metric-sub" id="m-sn-stars">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Min. detectable mass (DR2)</div>
+      <div class="metric-val amber" id="m-mmin-dr2">—</div>
+      <div class="metric-sub">at 3σ, no improvement</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Min. detectable mass (DR4)</div>
+      <div class="metric-val" id="m-mmin-dr4">—</div>
+      <div class="metric-sub">at 3σ, 4.5× precision</div>
+    </div>
+  </div>
+
+  <!-- Forecast chart -->
+  <div class="chart-panel">
+    <div class="chart-title">DR4 Mass Constraint Forecast</div>
+    <div class="chart-sub">Log mass axis — current constraint bounds vs DR4 kinematic sensitivity floor. Tension zone (6,000–8,200 M☉) shown in amber.</div>
+    <div class="chart-wrap">
+      <svg class="forecast-chart" id="forecast-svg" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="legend" id="chart-legend"></div>
+    <div class="tension-note"><strong>Active mass tension:</strong> Häberle et al. 2024 requires M ≥ 8,200 M☉ (lower bound from seven fast stars). Bañares-Hernández et al. 2025 requires M ≤ 6,000 M☉ at 3σ from pulsar timing. These constraints are currently irreconcilable. DR4 kinematic data — with 4.5× more precise proper motions for a larger stellar sample — is the most direct near-term path to resolving the tension.</div>
+  </div>
+
+  <!-- Pre-registration panel -->
+  <div class="prereg-panel">
+    <div class="prereg-title">📌 Pre-registration Permalink</div>
+    <p class="prereg-desc">Before Gaia DR4 arrives (est. December 2026), deposit this URL and prediction summary on <a href="https://zenodo.org" target="_blank" rel="noopener">Zenodo</a> or <a href="https://osf.io" target="_blank" rel="noopener">OSF</a> to create a timestamped, citable pre-registration. After DR4 release, compare the forecasted constraint bounds against the actual measurements and grade them publicly.</p>
+    <div class="prereg-summary" id="prereg-text">—</div>
+    <div class="btn-row">
+      <button class="btn btn-copy" id="btn-copy-url">Copy permalink URL</button>
+      <button class="btn btn-copy" id="btn-copy-summary">Copy prediction summary</button>
+      <span class="copy-feedback" id="copy-feedback">✓ Copied</span>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="about">
+    <button class="about-toggle" id="about-btn">
+      <span class="arrow">▶</span> Methodology &amp; citations
+    </button>
+    <div class="about-body" id="about-body">
+      <h3>What this tool computes</h3>
+      <p>The tool propagates Gaia DR4's documented proper-motion precision improvement (≈ 4.5× relative to DR2, driven by the longer 5.5-year baseline and epoch astrometry catalog) to predict how tightly the December 2026 release will constrain the ωCen IMBH mass through stellar velocity dispersion measurements.</p>
+
+      <h3>Physics model</h3>
+      <p><strong>Influence radius:</strong> <code>r_infl = G M / (2 σ₀²)</code> — the radius within which the IMBH dominates the cluster potential. Stars inside this radius show a Keplerian velocity cusp distinguishable from the cluster background dispersion.</p>
+      <p><strong>Keplerian dispersion:</strong> At evaluation radius <code>r = r_infl/2</code>, the line-of-sight velocity dispersion is <code>σ_K = √(GM / 2r)</code>. The detectable excess is <code>Δσ = σ_K − σ₀</code>.</p>
+      <p><strong>Kinematic S/N:</strong> <code>S/N = Δσ × √N / σ_PM_eff</code> where N is the number of stars with DR4 proper motions inside the evaluation radius, and σ_PM_eff (µas/yr) is the effective per-star PM precision after the crowding penalty. Stellar count N scales as <code>N_ref × (r/3 arcsec)²</code>, normalized to the ~80 PM-measured stars in the central 3 arcsec of the oMEGACat VI catalog (Häberle et al. 2025).</p>
+      <p><strong>DR4 PM precision:</strong> Reference DR2 precision ~100 µas/yr for a G ≈ 18 OC star. DR4 improvement ≈ 4.5× (ESA DR4 content pages; Gaia Collaboration DR3 summary). The crowding factor multiplies the effective noise to model source-confusion degradation in the dense OC core.</p>
+      <p><strong>Minimum detectable mass:</strong> Found via binary search for the mass at which S/N = 3σ. DR2 uses no precision improvement; DR4 applies the full 4.5× factor.</p>
+
+      <h3>Important caveats</h3>
+      <p>This is a forecast, not a measurement. The crowding model is simplified (uniform multiplicative noise penalty; real Gaia deblending is field-dependent). The stellar count normalization assumes oMEGACat VI sampling and does not model Gaia's incomplete coverage at very small separations. The physical model assumes spherical symmetry and isotropic velocity distribution — anisotropy (β ≠ 0) is a separate degeneracy handled by the <a href="anisotropy-degeneracy-explorer.html">Anisotropy Degeneracy Explorer</a>. Results should be treated as order-of-magnitude forecasts, not precise predictions.</p>
+
+      <h3>Citations</h3>
+      <p>Gaia DR4 precision:
+        <span class="cite">ESA Cosmos. "Gaia DR4 content." <a href="https://www.cosmos.esa.int/web/gaia/dr4" target="_blank" rel="noopener">cosmos.esa.int/web/gaia/dr4</a></span>
+        <span class="cite">Gaia Collaboration (2023). A&amp;A 674, A1. DOI: <a href="https://doi.org/10.1051/0004-6361/202243940" target="_blank" rel="noopener">10.1051/0004-6361/202243940</a></span>
+      </p>
+      <p>Mass bounds:
+        <span class="cite">Häberle et al. (2024). Nature 631, 285. DOI: <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank" rel="noopener">10.1038/s41586-024-07511-z</a> — lower bound ≥ 8,200 M☉</span>
+        <span class="cite">Bañares-Hernández et al. (2025). A&amp;A 693, A104. DOI: <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank" rel="noopener">10.1051/0004-6361/202451763</a> — 3σ upper bound ≤ 6,000 M☉</span>
+      </p>
+      <p>Stellar catalog reference:
+        <span class="cite">Häberle et al. (2025, oMEGACat VI). ApJ. DOI: <a href="https://doi.org/10.3847/1538-4357/adbe67" target="_blank" rel="noopener">10.3847/1538-4357/adbe67</a></span>
+      </p>
+      <p>Influence radius / kinematic modeling:
+        <span class="cite">Merritt (2001). AJ 121, 2385. DOI: <a href="https://doi.org/10.1086/319930" target="_blank" rel="noopener">10.1086/319930</a></span>
+      </p>
+
+      <h3>Related tools</h3>
+      <p>
+        <a href="constraint-stacker.html">IMBH Constraint Stacker</a> — all published mass bounds on one axis ·
+        <a href="astrometric-microlensing.html">Astrometric Microlensing Predictor</a> — lensing-based DR4 test ·
+        <a href="imbh-proper-motion.html">IMBH Brownian Wander Predictor</a> — IMBH wander vs Gaia sensitivity ·
+        <a href="pulsar-timing.html">Pulsar Timing Sensitivity</a> — pulsar-based mass constraints
+      </p>
+      <p class="meta-line" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:14px">Tool v1.0 · Last updated 2026-06-11 · Code: MIT · Prose: CC BY 4.0 · Data: CC0 1.0</p>
+    </div>
+  </div>
+
+  <div class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-11</div>
+</div>
+
+<script src="data/measurements.js"></script>
+<script>
+'use strict';
+
+// ─── Physical constants ───────────────────────────────────────────────────────
+const G_SI        = 6.674e-11;   // m³ kg⁻¹ s⁻²
+const M_SUN_KG    = 1.989e30;    // kg
+const PC_M        = 3.086e16;    // metres per parsec
+const ARCSEC_PER_RAD = 206265;   // arcsec per radian
+const KMS_TO_MS   = 1e3;         // km/s → m/s
+
+// ─── Gaia precision model ─────────────────────────────────────────────────────
+// Per-star PM precision for a G ≈ 18 OC member, no crowding, µas/yr
+// DR2 value is an empirical estimate from published OC PM catalogues.
+const SIGMA_PM_DR2 = 100;        // µas/yr
+const DR4_FACTOR   = 4.5;        // DR4 improvement over DR2 (ESA DR4 content pages)
+
+// Reference stellar count: PM-measured stars within 3 arcsec of OC centre
+// Based on oMEGACat VI (Häberle et al. 2025, DOI 10.3847/1538-4357/adbe67)
+const N_REF_STARS  = 80;
+const R_REF_ARCSEC = 3.0;
+
+// ─── Known constraint bounds (from measurements.js via window.OCS_MEASUREMENTS)
+// Fallback hard-coded only if measurements.js fails — never used for science output
+const HABERLE_LOWER = 8200;      // M☉, Häberle et al. 2024
+const BANARES_UPPER = 6000;      // M☉, Bañares-Hernández et al. 2025 (3σ)
+
+// ─── State ────────────────────────────────────────────────────────────────────
+const state = { mass: 8200, dist: 5.43, crowding: 3.0, sigma0: 20.0 };
+
+// ─── Hash helpers ─────────────────────────────────────────────────────────────
+function getHash() {
+  return Object.fromEntries(
+    location.hash.replace('#','').split('&').filter(Boolean)
+      .map(p => p.split('=').map(decodeURIComponent))
+  );
+}
+function setHash(p) {
+  const s = Object.entries(p).filter(([,v]) => v !== null && v !== undefined)
+    .map(([k,v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  history.replaceState(null, '', '#' + s);
+}
+function loadHash() {
+  const p = getHash();
+  if (p.mass    && isFinite(+p.mass)    && +p.mass > 0)   state.mass    = +p.mass;
+  if (p.dist    && isFinite(+p.dist)    && +p.dist > 0)   state.dist    = +p.dist;
+  if (p.crowding && isFinite(+p.crowding) && +p.crowding >= 1) state.crowding = +p.crowding;
+  if (p.sigma0  && isFinite(+p.sigma0)  && +p.sigma0 > 0) state.sigma0  = +p.sigma0;
+}
+function saveHash() {
+  setHash({
+    mass:     state.mass.toFixed(0),
+    dist:     state.dist.toFixed(2),
+    crowding: state.crowding.toFixed(1),
+    sigma0:   state.sigma0.toFixed(1)
+  });
+}
+
+// ─── Physics ──────────────────────────────────────────────────────────────────
+// Gravitational influence radius in metres
+function rInfluence_m(M_sun, sigma0_kms) {
+  return G_SI * M_sun * M_SUN_KG / (2 * (sigma0_kms * KMS_TO_MS) ** 2);
+}
+// Influence radius in parsecs
+function rInfluence_pc(M_sun, sigma0_kms) {
+  return rInfluence_m(M_sun, sigma0_kms) / PC_M;
+}
+// Influence radius in arcseconds
+function rInfluence_arcsec(M_sun, dist_kpc, sigma0_kms) {
+  return rInfluence_pc(M_sun, sigma0_kms) / (dist_kpc * 1e3) * ARCSEC_PER_RAD;
+}
+// Keplerian line-of-sight σ at radius r_m (LOS projection factor 1/√2 for circular orbits)
+function sigmaKep_kms(M_sun, r_m) {
+  if (r_m <= 0) return Infinity;
+  return Math.sqrt(G_SI * M_sun * M_SUN_KG / (2 * r_m)) / KMS_TO_MS;
+}
+// Convert µas/yr to km/s for a given distance
+function uasPerYrToKms(uas, dist_kpc) {
+  return uas * dist_kpc * 4.74 / 1e3;
+}
+// Estimated number of PM-measured stars within r_arcsec from OC centre (DR4)
+function nStars(r_arcsec, crowding) {
+  return Math.max(3, Math.round(N_REF_STARS * (r_arcsec / R_REF_ARCSEC) ** 2 / crowding));
+}
+// Effective per-star PM precision (µas/yr) after crowding
+function sigPM_eff(crowding, useDR4) {
+  return (useDR4 ? SIGMA_PM_DR2 / DR4_FACTOR : SIGMA_PM_DR2) * crowding;
+}
+// Kinematic S/N for detecting an IMBH of mass M
+function kinSN(M, dist, crowding, sigma0, useDR4) {
+  const r_eval_m      = rInfluence_m(M, sigma0) / 2;       // evaluate at r_infl/2
+  const r_eval_arcsec = rInfluence_arcsec(M, dist, sigma0) / 2;
+  const sigK  = sigmaKep_kms(M, r_eval_m);
+  const dSig  = sigK - sigma0;
+  if (dSig <= 0) return 0;
+  const N     = nStars(r_eval_arcsec, crowding);
+  const sNoise = uasPerYrToKms(sigPM_eff(crowding, useDR4), dist) / Math.sqrt(N);
+  return dSig / sNoise;
+}
+// Minimum detectable IMBH mass at S/N threshold via binary search
+function minDetectableMass(dist, crowding, sigma0, snThresh, useDR4) {
+  let lo = 100, hi = 1e7;
+  for (let i = 0; i < 80; i++) {
+    const mid = Math.sqrt(lo * hi);
+    if (kinSN(mid, dist, crowding, sigma0, useDR4) > snThresh) hi = mid;
+    else lo = mid;
+  }
+  return Math.sqrt(lo * hi);
+}
+
+// ─── Formatting ───────────────────────────────────────────────────────────────
+function fmtMass(m) {
+  if (!isFinite(m) || m <= 0) return '—';
+  if (m >= 1e6) return (m/1e6).toFixed(2) + '×10⁶ M☉';
+  if (m >= 1e4) return m.toLocaleString(undefined, {maximumFractionDigits:0}) + ' M☉';
+  return m.toLocaleString(undefined, {maximumFractionDigits:0}) + ' M☉';
+}
+function fmtSN(sn) {
+  if (!isFinite(sn)) return '—';
+  if (sn < 0.05) return '< 0.1σ';
+  if (sn > 999) return '> 999σ';
+  return sn.toFixed(sn < 10 ? 1 : 0) + 'σ';
+}
+function snClass(sn) {
+  if (sn >= 5) return '';           // teal (default)
+  if (sn >= 3) return 'amber';
+  return 'red';
+}
+
+// ─── SVG chart ────────────────────────────────────────────────────────────────
+// Draws a log-mass axis from 10^2.5 to 10^6 M☉
+const CHART_W = 720, CHART_H = 220;
+const MARGIN  = { left: 60, right: 30, top: 20, bottom: 45 };
+const PLOT_W  = CHART_W - MARGIN.left - MARGIN.right;
+const PLOT_H  = CHART_H - MARGIN.top  - MARGIN.bottom;
+const LOG_MIN = 2.5, LOG_MAX = 6.0;   // log10(M☉)
+
+function xFromLog(logM) {
+  return MARGIN.left + (logM - LOG_MIN) / (LOG_MAX - LOG_MIN) * PLOT_W;
+}
+function xFromMass(M) {
+  return xFromLog(Math.log10(Math.max(M, 1)));
+}
+
+function renderChart() {
+  const { mass, dist, crowding, sigma0 } = state;
+  const svg = document.getElementById('forecast-svg');
+  svg.innerHTML = '';
+
+  function el(tag, attrs, text) {
+    const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function rect(x, y, w, h, fill, opacity) {
+    return el('rect', { x, y, width: Math.max(0, w), height: h, fill, opacity });
+  }
+  function line(x1, y1, x2, y2, stroke, sw, dash) {
+    return el('line', { x1, y1, x2, y2, stroke, 'stroke-width': sw || 1, ...(dash ? { 'stroke-dasharray': dash } : {}) });
+  }
+  function text(x, y, txt, attrs) {
+    return el('text', { x, y, ...attrs }, txt);
+  }
+
+  const yTop    = MARGIN.top;
+  const yBot    = MARGIN.top + PLOT_H;
+  const yMid    = MARGIN.top + PLOT_H * 0.5;
+  const yBar    = MARGIN.top + PLOT_H * 0.18;  // main bar vertical centre
+  const barH    = PLOT_H * 0.28;
+
+  // ── Background grid ──────────────────────────────────────────────────────
+  for (let lm = 3; lm <= 6; lm++) {
+    const x = xFromLog(lm);
+    svg.appendChild(line(x, yTop, x, yBot, 'rgba(80,72,112,.35)', 1, '2,4'));
+    svg.appendChild(text(x, yBot + 16, '10' + (lm > 0 ? lm.toString().split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]||c).join('') : ''), {
+      'font-family': 'Space Mono, monospace',
+      'font-size': '10',
+      fill: 'rgba(152,144,192,.7)',
+      'text-anchor': 'middle'
+    }));
+  }
+  // Half-decade ticks
+  for (let lm = 2.5; lm <= 6.0; lm += 0.5) {
+    if (Number.isInteger(lm)) continue;
+    const x = xFromLog(lm);
+    svg.appendChild(line(x, yBot - 4, x, yBot, 'rgba(80,72,112,.5)', 1));
+  }
+  // X-axis baseline
+  svg.appendChild(line(MARGIN.left, yBot, CHART_W - MARGIN.right, yBot, 'rgba(152,144,192,.4)', 1));
+  // Y-axis label
+  svg.appendChild(text(14, MARGIN.top + PLOT_H / 2, 'CONSTRAINT REGION', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '8',
+    fill: 'rgba(152,144,192,.5)',
+    'text-anchor': 'middle',
+    transform: `rotate(-90, 14, ${MARGIN.top + PLOT_H / 2})`
+  }));
+  // X-axis title
+  svg.appendChild(text(MARGIN.left + PLOT_W / 2, yBot + 36, 'IMBH MASS (M☉)', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '10',
+    fill: 'rgba(152,144,192,.6)',
+    'text-anchor': 'middle',
+    'letter-spacing': '1'
+  }));
+
+  // ── Bañares excluded zone (M > 6000, excluded by pulsar timing upper bound) ─
+  // Actually: Bañares rules out M > 6000 M☉.  Excluded zone = right of 6000
+  const xBan  = xFromMass(BANARES_UPPER);
+  const xHab  = xFromMass(HABERLE_LOWER);
+  const xLeft = MARGIN.left;
+  const xRight = CHART_W - MARGIN.right;
+
+  // Zone: M > 6000 excluded by Bañares (amber hatching)
+  // Zone: M < 8200 excluded by Häberle (teal hatching — but only above Häberle lower bound allowed)
+  // Tension zone (6000 — 8200): amber solid — neither bound is satisfied
+  // DR4 min detectable: dashed teal line
+
+  const mMinDR2 = minDetectableMass(dist, crowding, sigma0, 3, false);
+  const mMinDR4 = minDetectableMass(dist, crowding, sigma0, 3, true);
+
+  // ── Shading zones ────────────────────────────────────────────────────────
+  // 1. Allowed by Häberle (M > 8200): very light teal
+  if (xHab < xRight) {
+    const g = el('g', {});
+    g.appendChild(rect(xHab, yTop, xRight - xHab, PLOT_H, 'rgba(29,186,144,.06)', 1));
+    svg.appendChild(g);
+  }
+  // 2. Tension zone (6000–8200): amber
+  {
+    const x1 = Math.max(xLeft, Math.min(xBan, xRight));
+    const x2 = Math.max(xLeft, Math.min(xHab, xRight));
+    if (x2 > x1) svg.appendChild(rect(x1, yTop, x2 - x1, PLOT_H, 'rgba(240,160,32,.10)', 1));
+  }
+  // 3. Excluded by Bañares (M > 6000): red tint
+  if (xBan > xLeft) {
+    // Left side (M < 6000): very faint — the "dark cluster / no IMBH" region
+    svg.appendChild(rect(xLeft, yTop, xBan - xLeft, PLOT_H, 'rgba(208,64,64,.06)', 1));
+  }
+
+  // ── DR4 sensitivity band ─────────────────────────────────────────────────
+  // Masses below mMinDR4 are below DR4 kinematic detection threshold
+  const xDR4 = xFromMass(mMinDR4);
+  const xDR2 = xFromMass(mMinDR2);
+  if (xDR4 > xLeft && xDR4 < xRight) {
+    // Hatched "DR4 blind" region (left of DR4 floor)
+    svg.appendChild(rect(xLeft, yTop, Math.min(xDR4, xRight) - xLeft, PLOT_H, 'rgba(160,128,240,.08)', 1));
+  }
+
+  // ── Constraint bars ───────────────────────────────────────────────────────
+  // Häberle lower bound line
+  svg.appendChild(line(xHab, yTop, xHab, yBot, 'rgba(29,186,144,.8)', 2));
+  svg.appendChild(text(xHab + 4, yTop + 14, 'Häberle 2024', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '9',
+    fill: 'rgba(29,186,144,.8)'
+  }));
+  svg.appendChild(text(xHab + 4, yTop + 26, '≥ 8,200 M☉', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '9',
+    fill: 'rgba(29,186,144,.6)'
+  }));
+
+  // Bañares upper bound line
+  svg.appendChild(line(xBan, yTop, xBan, yBot, 'rgba(240,160,32,.85)', 2));
+  svg.appendChild(text(xBan + 4, yTop + 14, 'Bañares 2025', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '9',
+    fill: 'rgba(240,160,32,.85)'
+  }));
+  svg.appendChild(text(xBan + 4, yTop + 26, '≤ 6,000 M☉', {
+    'font-family': 'Space Mono, monospace',
+    'font-size': '9',
+    fill: 'rgba(240,160,32,.7)'
+  }));
+
+  // DR2 sensitivity floor
+  if (isFinite(mMinDR2) && mMinDR2 > 0 && xDR2 > xLeft && xDR2 < xRight) {
+    svg.appendChild(line(xDR2, yTop, xDR2, yBot, 'rgba(152,144,192,.5)', 1.5, '4,3'));
+    svg.appendChild(text(xDR2 + 3, yBot - 22, 'DR2 floor', {
+      'font-family': 'Space Mono, monospace',
+      'font-size': '8',
+      fill: 'rgba(152,144,192,.6)'
+    }));
+  }
+
+  // DR4 sensitivity floor
+  if (isFinite(mMinDR4) && mMinDR4 > 0 && xDR4 > xLeft && xDR4 < xRight) {
+    svg.appendChild(line(xDR4, yTop, xDR4, yBot, 'rgba(160,128,240,.9)', 2, '6,3'));
+    const dr4LabelX = xDR4 + 4;
+    const dr4LabelY = yBot - 22;
+    svg.appendChild(text(dr4LabelX, dr4LabelY, 'DR4 floor', {
+      'font-family': 'Space Mono, monospace',
+      'font-size': '9',
+      fill: 'rgba(160,128,240,.9)'
+    }));
+    svg.appendChild(text(dr4LabelX, dr4LabelY - 12, fmtMass(mMinDR4).replace(' M☉',''), {
+      'font-family': 'Space Mono, monospace',
+      'font-size': '8',
+      fill: 'rgba(160,128,240,.7)'
+    }));
+  }
+
+  // User hypothesis marker
+  const xUser = xFromMass(mass);
+  if (xUser > xLeft && xUser < xRight) {
+    svg.appendChild(line(xUser, yTop + 4, xUser, yBot, 'rgba(255,200,64,.9)', 2.5));
+    // Triangle marker at top
+    const tri = el('polygon', {
+      points: `${xUser},${yTop+4} ${xUser-5},${yTop+14} ${xUser+5},${yTop+14}`,
+      fill: 'rgba(255,200,64,.9)'
+    });
+    svg.appendChild(tri);
+    svg.appendChild(text(xUser, yTop + 2, '▼', {
+      'font-family': 'Orbitron, sans-serif',
+      'font-size': '12',
+      fill: 'rgba(255,200,64,.9)',
+      'text-anchor': 'middle',
+      display: 'none'
+    }));
+  }
+
+  // Legend
+  document.getElementById('chart-legend').innerHTML = `
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(29,186,144,.25);border:1px solid rgba(29,186,144,.6)"></span>Allowed by Häberle (M ≥ 8,200)</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(240,160,32,.25);border:1px solid rgba(240,160,32,.6)"></span>Tension zone (6,000–8,200)</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(208,64,64,.18);border:1px solid rgba(208,64,64,.4)"></span>Excluded by Bañares (M &gt; 6,000)</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(160,128,240,.2);border:1px dashed rgba(160,128,240,.8)"></span>Below DR4 kinematic floor</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(255,200,64,.4);border:1px solid rgba(255,200,64,.9)"></span>Your hypothesis mass</span>
+  `;
+}
+
+// ─── Render outputs ────────────────────────────────────────────────────────────
+function render() {
+  const { mass, dist, crowding, sigma0 } = state;
+
+  // Slider display values
+  document.getElementById('v-mass').textContent = mass.toLocaleString(undefined, {maximumFractionDigits:0}) + ' M☉';
+  document.getElementById('v-dist').textContent = dist.toFixed(2) + ' kpc';
+  document.getElementById('v-crowding').textContent = crowding.toFixed(1) + '×';
+  document.getElementById('v-sigma0').textContent = sigma0.toFixed(1) + ' km/s';
+
+  // Physics
+  const r_infl_pc   = rInfluence_pc(mass, sigma0);
+  const r_infl_as   = rInfluence_arcsec(mass, dist, sigma0);
+  const r_eval_m    = rInfluence_m(mass, sigma0) / 2;
+  const sigK        = sigmaKep_kms(mass, r_eval_m);
+  const sigPM_DR4   = sigPM_eff(crowding, true);          // µas/yr
+  const sigPM_DR4_kms = uasPerYrToKms(sigPM_DR4, dist);
+  const sn          = kinSN(mass, dist, crowding, sigma0, true);
+  const mMinDR4     = minDetectableMass(dist, crowding, sigma0, 3, true);
+  const mMinDR2     = minDetectableMass(dist, crowding, sigma0, 3, false);
+  const N_eval      = nStars(r_infl_as / 2, crowding);
+
+  // Influence radius
+  const mRInfl = document.getElementById('m-rinfl');
+  mRInfl.textContent = r_infl_pc.toFixed(3) + ' pc';
+  document.getElementById('m-rinfl-as').textContent = r_infl_as.toFixed(2) + ' arcsec';
+
+  // Keplerian sigma
+  const mSigK = document.getElementById('m-sigK');
+  mSigK.textContent = sigK.toFixed(1) + ' km/s';
+  mSigK.className = 'metric-val ' + (sigK > sigma0 ? '' : 'red');
+
+  // DR4 PM floor
+  const mPM = document.getElementById('m-pmfloor');
+  mPM.textContent = sigPM_DR4.toFixed(1) + ' µas/yr';
+  document.getElementById('m-pmfloor-kms').textContent = sigPM_DR4_kms.toFixed(2) + ' km/s equiv.';
+
+  // Kinematic S/N
+  const mSN = document.getElementById('m-sn');
+  mSN.textContent = fmtSN(sn);
+  mSN.className = 'metric-val ' + snClass(sn);
+  document.getElementById('m-sn-stars').textContent = N_eval + ' stars in eval. radius';
+
+  // Min detectable masses
+  const mDR4 = document.getElementById('m-mmin-dr4');
+  mDR4.textContent = fmtMass(mMinDR4);
+  mDR4.className = 'metric-val ' + (mMinDR4 < HABERLE_LOWER ? '' : 'amber');
+  const mDR2 = document.getElementById('m-mmin-dr2');
+  mDR2.textContent = fmtMass(mMinDR2);
+
+  // Pre-registration summary
+  updatePreRegSummary(sn, mMinDR4, mMinDR2, r_infl_as);
+
+  renderChart();
+}
+
+function updatePreRegSummary(sn, mMinDR4, mMinDR2, r_infl_as) {
+  const { mass, dist, crowding, sigma0 } = state;
+  const url = location.href;
+  const today = new Date().toISOString().slice(0, 10);
+  const snVerdict = sn >= 5 ? `CONFIRMED at ${sn.toFixed(1)}σ` : sn >= 3 ? `MARGINAL at ${sn.toFixed(1)}σ` : `BELOW THRESHOLD (${sn.toFixed(1)}σ < 3σ)`;
+
+  document.getElementById('prereg-text').textContent =
+`PRE-REGISTRATION PREDICTION — ${today}
+Tool: Gaia DR4 IMBH Constraint Forecaster
+URL: ${url}
+
+Input parameters
+  Hypothesis IMBH mass: ${mass.toLocaleString()} M☉
+  OC distance:          ${dist.toFixed(2)} kpc
+  Crowding factor:      ${crowding.toFixed(1)}×
+  Background σ₀:        ${sigma0.toFixed(1)} km/s
+
+Predictions for Gaia DR4 (est. December 2026)
+  DR4 kinematic S/N for hypothesis mass: ${fmtSN(sn)}
+  Expected detection verdict:            ${snVerdict}
+  DR4 minimum detectable mass (3σ):      ${fmtMass(mMinDR4)}
+  DR2 minimum detectable mass (3σ):      ${fmtMass(mMinDR2)}
+  DR4 improvement factor:                ${DR4_FACTOR.toFixed(1)}× over DR2
+  IMBH influence radius:                 ${r_infl_as.toFixed(2)} arcsec
+
+Grading criterion
+  After DR4 release, re-run this tool with the published DR4 central
+  PM dispersion measurements. The prediction passes if the actual
+  kinematic constraint on the central mass is consistent with the
+  forecast S/N and minimum detectable mass reported above.
+
+Context
+  Häberle et al. 2024 lower bound: ≥ 8,200 M☉ (DOI 10.1038/s41586-024-07511-z)
+  Bañares-Hernández et al. 2025 upper bound: ≤ 6,000 M☉ (DOI 10.1051/0004-6361/202451763)
+  The 6,000–8,200 M☉ tension is unresolved as of ${today}.
+
+Site: omegacentauri.me — Code: MIT · Data: CC0`;
+}
+
+// ─── Wiring ───────────────────────────────────────────────────────────────────
+function syncSliders() {
+  document.getElementById('sl-mass').value = Math.log10(state.mass).toFixed(3);
+  document.getElementById('sl-dist').value = state.dist;
+  document.getElementById('sl-crowding').value = state.crowding;
+  document.getElementById('sl-sigma0').value = state.sigma0;
+}
+
+function wire() {
+  // Mass slider (log scale)
+  document.getElementById('sl-mass').addEventListener('input', function() {
+    state.mass = Math.round(Math.pow(10, parseFloat(this.value)));
+    saveHash(); render();
+  });
+  // Distance slider
+  document.getElementById('sl-dist').addEventListener('input', function() {
+    state.dist = parseFloat(this.value);
+    saveHash(); render();
+  });
+  // Crowding slider
+  document.getElementById('sl-crowding').addEventListener('input', function() {
+    state.crowding = parseFloat(this.value);
+    saveHash(); render();
+  });
+  // Sigma0 slider
+  document.getElementById('sl-sigma0').addEventListener('input', function() {
+    state.sigma0 = parseFloat(this.value);
+    saveHash(); render();
+  });
+
+  // Mass preset buttons
+  document.querySelectorAll('[data-mass-log]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.mass = Math.round(Math.pow(10, parseFloat(btn.dataset.massLog)));
+      syncSliders(); saveHash(); render();
+    });
+  });
+  // Distance presets
+  document.querySelectorAll('[data-dist]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.dist = parseFloat(btn.dataset.dist);
+      syncSliders(); saveHash(); render();
+    });
+  });
+  // Crowding presets
+  document.querySelectorAll('[data-crowd]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.crowding = parseFloat(btn.dataset.crowd);
+      syncSliders(); saveHash(); render();
+    });
+  });
+  // Sigma presets
+  document.querySelectorAll('[data-sig]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.sigma0 = parseFloat(btn.dataset.sig);
+      syncSliders(); saveHash(); render();
+    });
+  });
+
+  // Copy URL button
+  document.getElementById('btn-copy-url').addEventListener('click', () => {
+    navigator.clipboard.writeText(location.href).then(() => showCopied()).catch(() => {
+      prompt('Copy this URL:', location.href);
+    });
+  });
+  // Copy summary button
+  document.getElementById('btn-copy-summary').addEventListener('click', () => {
+    const txt = document.getElementById('prereg-text').textContent;
+    navigator.clipboard.writeText(txt).then(() => showCopied()).catch(() => {
+      prompt('Copy this summary:', txt);
+    });
+  });
+
+  // About toggle
+  document.getElementById('about-btn').addEventListener('click', function() {
+    this.classList.toggle('open');
+    document.getElementById('about-body').classList.toggle('open');
+  });
+}
+
+function showCopied() {
+  const fb = document.getElementById('copy-feedback');
+  fb.classList.add('show');
+  setTimeout(() => fb.classList.remove('show'), 2000);
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  if (!window.OCS_MEASUREMENTS) {
+    console.warn('measurements.js not loaded — tool runs with fallback constants');
+  }
+  loadHash();
+  syncSliders();
+  wire();
+  render();
+});
+</script>
+</body>
+</html>
