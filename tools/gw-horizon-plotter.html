@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GW Horizon Plotter — Omega Centauri Society</title>
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="data/measurements.js"></script>
+<style>
+:root{
+  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
+  --text-sec:#8890a0;--text-dim:#5a6070;
+  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
+  --green:#30b860;
+  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
+  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+  --purple-dim:rgba(160,128,240,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{display:flex;align-items:center;gap:1rem;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;background:var(--surface)}
+nav a{color:var(--text-sec)}
+nav a:hover{color:var(--text)}
+.nav-sep{color:var(--text-dim)}
+.tool-header{padding:1.5rem 1.5rem .5rem}
+.tool-header h1{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:680px}
+.badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(64,144,208,.25)}
+.badge-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(160,128,240,.25)}
+main{display:grid;grid-template-columns:275px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1180px}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.9rem}
+.ctrl-row{margin-bottom:.85rem}
+.ctrl-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem}
+.ctrl-label span{color:var(--text-sec)}
+.ctrl-val{color:var(--text);font-weight:500}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal);border:none;cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:.75rem}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem}
+.metric-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+.metric-val{font-size:.95rem;font-weight:600;margin-top:.15rem}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem}
+.chart-wrap h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
+#chart-svg{width:100%;height:auto;display:block}
+.verdict-box{margin-top:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem}
+.verdict-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.3rem}
+#verdict-text{font-size:.95rem;font-weight:600}
+.verdict-sub{font-size:.8rem;color:var(--text-sec);margin-top:.3rem}
+.deeplinks{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.deeplink-btn{font-size:.75rem;padding:.3rem .65rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+.deeplink-btn:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+hr.divider{border:none;border-top:1px solid var(--border);margin:.6rem 0}
+details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select:none}
+details summary::marker{color:var(--text-dim)}
+.about-body{font-size:.82rem;color:var(--text-sec);line-height:1.75;margin-top:.6rem}
+.about-body p{margin-bottom:.55rem}
+.about-body code{font-size:.78rem;background:var(--border);padding:.1rem .3rem;border-radius:3px}
+.ref{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;line-height:1.6}
+.ref a{color:var(--text-dim)}
+.ref a:hover{color:var(--text-sec)}
+.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">Omega Centauri Society</a>
+  <span class="nav-sep">/</span>
+  <a href="index.html">Tools</a>
+  <span class="nav-sep">/</span>
+  <span>GW Horizon Plotter</span>
+</nav>
+
+<div class="tool-header">
+  <h1>GW Horizon Plotter</h1>
+  <p>Characteristic strain tracks for IMRI / EMRI / IMBH–IMBH compact binaries overlaid on analytic detector sensitivity curves spanning PTA (nHz) to next-generation ground-based (kHz). Default shows both ωCen IMBH bounds at 5.43&nbsp;kpc.</p>
+  <div class="badges">
+    <span class="badge badge-blue">Multi-messenger</span>
+    <span class="badge badge-teal">IMBH Evidence</span>
+    <span class="badge badge-purple">GW Detectability</span>
+    <span class="badge badge-amber">LISA / ET / CE</span>
+  </div>
+</div>
+
+<main>
+  <!-- Controls -->
+  <div>
+    <div class="panel">
+      <h2>Source Parameters</h2>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Primary mass m<sub>1</sub></span>
+          <span class="ctrl-val" id="lbl-m1">8,200 M☉</span>
+        </div>
+        <input type="range" id="sl-m1" min="2" max="5" step="0.02" value="3.9138">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Secondary mass m<sub>2</sub></span>
+          <span class="ctrl-val" id="lbl-m2">10 M☉</span>
+        </div>
+        <input type="range" id="sl-m2" min="0" max="5" step="0.02" value="1">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Distance</span>
+          <span class="ctrl-val" id="lbl-dist">5.43 kpc</span>
+        </div>
+        <input type="range" id="sl-dist" min="0.1" max="50" step="0.05" value="5.43">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Primary spin χ</span>
+          <span class="ctrl-val" id="lbl-spin">0.00</span>
+        </div>
+        <input type="range" id="sl-spin" min="-0.998" max="0.998" step="0.01" value="0">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>← retrograde</span><span>prograde →</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div style="font-size:.75rem;color:var(--text-dim);line-height:1.6">
+        <b style="color:var(--text-sec)">ωCen bounds shown as dashed tracks:</b><br>
+        <span style="color:var(--teal)">─ ─</span> Häberle 2024: ≥ 8,200 M☉ lower bound<br>
+        <span style="color:var(--amber)">─ ─</span> Bañares 2025: ≤ 6,000 M☉ upper bound<br>
+        Both valid; unreconciled tension preserved.
+      </div>
+    </div>
+
+    <div class="deeplinks">
+      <a class="deeplink-btn" id="lnk-emri" href="lisa-emri.html" title="LISA EMRI tool (future)">→ LISA EMRI</a>
+      <a class="deeplink-btn" id="lnk-cw" href="cw-sensitivity.html" title="CW sensitivity tool (future)">→ CW Sensitivity</a>
+    </div>
+
+    <details style="margin-top:.75rem">
+      <summary>Physics &amp; citations</summary>
+      <div class="about-body" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:.3rem">
+        <p>Characteristic strain for a circular inspiral (sky/polarisation averaged, Cutler &amp; Flanagan 1994):
+        <code>h_c(f) = 2√(5/24)/π^{2/3} · c/d · (GM_c/c³)^{5/6} · f^{-1/6}</code>
+        where M_c = (m₁m₂)^{3/5}/(m₁+m₂)^{1/5} is the chirp mass. Track is cut off at the ISCO frequency.</p>
+        <p>ISCO frequency (Bardeen 1972, prograde equatorial):
+        <code>f_ISCO = c³/(πGM) / ((r_ISCO/r_g)^{3/2} + χ)</code>
+        where χ is the dimensionless spin and r_ISCO/r_g follows from the Kerr ISCO formulae.</p>
+        <p>Sensitivity curves are analytic approximations (see below). LISA uses the Robson, Cornish &amp; Liu 2019 parameterisation; ET / CE / aLIGO use simplified power-law fits normalised to published design PSDs; DECIGO uses a simplified Yagi &amp; Seto 2011 model; PTA shows approximate SKA-era single-source sensitivity.</p>
+        <div class="note-box">⚠ Häberle 2024 (≥ 8,200 M☉ lower bound) and Bañares-Hernández 2025 (≤ 6,000 M☉ 3σ upper bound) are both valid and unreconciled. The dual dashed tracks preserve this tension.</div>
+        <div class="ref">
+          Robson, Cornish &amp; Liu 2019 (LISA sensitivity) — <a href="https://doi.org/10.1088/1361-6382/ab1101" target="_blank">doi:10.1088/1361-6382/ab1101</a><br>
+          Cutler &amp; Flanagan 1994 (characteristic strain) — <a href="https://doi.org/10.1103/PhysRevD.49.2658" target="_blank">doi:10.1103/PhysRevD.49.2658</a><br>
+          Bardeen, Press &amp; Teukolsky 1972 (Kerr ISCO) — <a href="https://doi.org/10.1086/151796" target="_blank">doi:10.1086/151796</a><br>
+          Hild et al. 2011 (ET-D sensitivity) — <a href="https://doi.org/10.1088/0264-9381/28/9/094013" target="_blank">doi:10.1088/0264-9381/28/9/094013</a><br>
+          Evans et al. 2021 (Cosmic Explorer) — <a href="https://doi.org/10.3847/2041-8213/abe938" target="_blank">doi:10.3847/2041-8213/abe938</a><br>
+          Häberle et al. 2024, Nature 631:285 — <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank">doi:10.1038/s41586-024-07511-z</a><br>
+          Bañares-Hernández et al. 2025, A&amp;A 693:A104 — <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank">doi:10.1051/0004-6361/202451763</a>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Chirp Mass M_c</div>
+        <div class="metric-val" id="met-mc">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">f_ISCO</div>
+        <div class="metric-val" id="met-fisco">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">h_c @ 3 mHz</div>
+        <div class="metric-val" id="met-hc3">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">h_c @ 30 Hz</div>
+        <div class="metric-val" id="met-hc30">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Detectors Above</div>
+        <div class="metric-val" id="met-det">—</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <h2>Characteristic strain h_c(f) vs frequency</h2>
+      <svg id="chart-svg" viewBox="0 0 720 370" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <defs>
+          <clipPath id="plot-clip">
+            <rect x="72" y="18" width="628" height="284"/>
+          </clipPath>
+        </defs>
+        <g id="chart-content"></g>
+      </svg>
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">Detectability verdict</div>
+      <div id="verdict-text">—</div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+// ── Constants ──────────────────────────────────────────────────────────────
+const G       = 6.674e-11;   // m³/(kg s²)
+const C       = 2.998e8;     // m/s
+const M_SUN   = 1.989e30;    // kg
+const KPC_M   = 3.086e19;    // m per kpc
+const L_LISA  = 2.5e9;       // LISA arm (m)
+const FSTAR   = C / (2*Math.PI*L_LISA);  // ~0.01909 Hz
+
+// ── Physics helpers ────────────────────────────────────────────────────────
+function chirpMass(m1, m2) {
+  return Math.pow(m1*m2, 0.6) / Math.pow(m1+m2, 0.2);
+}
+
+function fISCO(mTotal_sun, spin) {
+  const a  = Math.max(-0.998, Math.min(0.998, spin));
+  const GM = G * mTotal_sun * M_SUN;
+  // Bardeen+1972 Kerr ISCO radius in units of r_g = GM/c²
+  const Z1 = 1 + Math.pow(1 - a*a, 1/3) * (Math.pow(1+a, 1/3) + Math.pow(1-a, 1/3));
+  const Z2 = Math.sqrt(3*a*a + Z1*Z1);
+  const sgn = a >= 0 ? 1 : -1;
+  const rISCO_rg = 3 + Z2 - sgn * Math.sqrt((3 - Z1)*(3 + Z1 + 2*Z2));
+  // GW frequency = 2 × orbital frequency
+  // Kerr orbital freq: Ω = c³/(GM) / ((r/rg)^{3/2} + a)
+  const omega = (C*C*C / GM) / (Math.pow(rISCO_rg, 1.5) + a);
+  return omega / Math.PI;  // f_GW = Ω/π
+}
+
+// h_c(f) for circular inspiral (Cutler & Flanagan 1994), returns 0 if f > f_ISCO
+function hcInspiral(m1_sun, m2_sun, dist_kpc, spin, f_hz) {
+  const fi = fISCO(m1_sun + m2_sun, spin);
+  if (f_hz > fi) return 0;
+  const mc_sun = chirpMass(m1_sun, m2_sun);
+  const tc    = G * mc_sun * M_SUN / (C*C*C);   // G M_c / c³  [s]
+  const d_m   = dist_kpc * KPC_M;
+  // h_c = 2√(5/24)/π^{2/3} · (c/d) · tc^{5/6} · f^{-1/6}
+  const coeff = 2 * Math.sqrt(5/24) / Math.pow(Math.PI, 2/3);
+  return coeff * (C / d_m) * Math.pow(tc, 5/6) * Math.pow(f_hz, -1/6);
+}
+
+// ── Sensitivity curves — returns h_n(f) = sqrt(f·Sn(f)) ───────────────────
+function lisaHn(f) {
+  if (f < 5e-6 || f > 2) return null;
+  const Poms  = 2.25e-22 * (1 + Math.pow(2e-3/f, 4));   // (1.5e-11)² · (1+(2mHz/f)⁴)
+  const Pacc  = 9e-30 * (1 + Math.pow(4e-4/f, 2)) * (1 + Math.pow(f/8e-3, 4));
+  const twopiF = 2*Math.PI*f;
+  const Sn    = (20/(3*L_LISA*L_LISA)) * (Poms + Pacc/Math.pow(twopiF, 4)) * (1 + Math.pow(f/FSTAR, 2));
+  return Math.sqrt(f * Sn);
+}
+
+function decigoHn(f) {
+  if (f < 3e-4 || f > 200) return null;
+  const S0 = 9e-48;  // floor near (3e-24)²
+  const Sn = S0 * (Math.pow(0.1/f, 4) + 1 + Math.pow(f/10, 2));
+  return Math.sqrt(f * Sn);
+}
+
+function etHn(f) {
+  if (f < 3 || f > 5000) return null;
+  const S0 = 1.6e-49;
+  const x  = f / 10;
+  const Sn = S0 * (0.5*Math.pow(x, -6) + 1 + 0.5*Math.pow(x/10, 2));
+  return Math.sqrt(f * Sn);
+}
+
+function ceHn(f) {
+  if (f < 5 || f > 5000) return null;
+  const S0 = 3e-51;
+  const x  = f / 20;
+  const Sn = S0 * (0.5*Math.pow(x, -4) + 1 + 0.5*Math.pow(x/15, 2));
+  return Math.sqrt(f * Sn);
+}
+
+function aLIGOHn(f) {
+  if (f < 20 || f > 5000) return null;
+  const S0 = 1e-47;
+  const x  = f / 100;
+  const Sn = S0 * (0.1*Math.pow(x, -4) + 1 + 0.5*Math.pow(x, 2));
+  return Math.sqrt(f * Sn);
+}
+
+function ptaHn(f) {
+  if (f < 5e-10 || f > 5e-7) return null;
+  // SKA-era sensitivity ~ A·(f/f_yr)^{-2/3}, A ~ 3e-15 at f_yr = 3.17e-8 Hz
+  const fyr = 3.17e-8;
+  return 3e-15 * Math.pow(f/fyr, -2/3);
+}
+
+const DETECTORS = [
+  { id:'pta',    label:'PTA',    fn: ptaHn,    color:'#7070a0', fill:'rgba(100,100,160,0.15)' },
+  { id:'lisa',   label:'LISA',   fn: lisaHn,   color:'#4090d0', fill:'rgba(64,144,208,0.15)'  },
+  { id:'decigo', label:'DECIGO', fn: decigoHn, color:'#30b860', fill:'rgba(48,184,96,0.15)'   },
+  { id:'et',     label:'ET',     fn: etHn,     color:'#1dba90', fill:'rgba(29,186,144,0.15)'  },
+  { id:'ce',     label:'CE',     fn: ceHn,     color:'#a080f0', fill:'rgba(160,128,240,0.15)' },
+  { id:'aligo',  label:'aLIGO',  fn: aLIGOHn,  color:'#f0a020', fill:'rgba(240,160,32,0.15)'  },
+];
+
+// ── Chart layout ───────────────────────────────────────────────────────────
+const PL = 72, PR = 16, PT = 18, PB = 52;
+const VW = 720, VH = 370;
+const plotW = VW - PL - PR;   // 632
+const plotH = VH - PT - PB;   // 300
+
+const LGF_MIN = -9.5, LGF_MAX = 3.5;   // log10(Hz)
+const LGH_MIN = -26,  LGH_MAX = -12;   // log10(h_c)
+
+function xPx(lgf)  { return PL + (lgf - LGF_MIN)/(LGF_MAX - LGF_MIN) * plotW; }
+function yPx(lgH)  { return PT + (LGH_MAX - lgH)/(LGH_MAX - LGH_MIN) * plotH; }
+
+// ── Frequency grid ─────────────────────────────────────────────────────────
+const NF = 350;
+const LGF_ARR = Array.from({length:NF}, (_,i) => LGF_MIN + i*(LGF_MAX - LGF_MIN)/(NF-1));
+const F_ARR   = LGF_ARR.map(x => Math.pow(10, x));
+
+// ── SVG helpers ────────────────────────────────────────────────────────────
+function svgEl(tag, attrs={}, text='') {
+  const ns = 'http://www.w3.org/2000/svg';
+  const el = document.createElementNS(ns, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  if (text) el.textContent = text;
+  return el;
+}
+
+function buildPath(pts) {   // [{x,y}] → SVG d= string
+  if (!pts.length) return '';
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length; i++) d += ` L${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)}`;
+  return d;
+}
+
+function clampedPts(fn) {
+  const pts = [];
+  for (let i = 0; i < F_ARR.length; i++) {
+    const h = fn(F_ARR[i]);
+    if (h == null || !isFinite(h) || h <= 0) continue;
+    const lgH = Math.log10(h);
+    if (lgH < LGH_MIN - 0.5 || lgH > LGH_MAX + 0.5) continue;
+    pts.push({ x: xPx(LGF_ARR[i]), y: yPx(Math.max(LGH_MIN, Math.min(LGH_MAX, lgH))) });
+  }
+  return pts;
+}
+
+// ── Draw chart ─────────────────────────────────────────────────────────────
+function drawChart(state) {
+  const g = document.getElementById('chart-content');
+  while (g.firstChild) g.removeChild(g.firstChild);
+
+  const yBottom = yPx(LGH_MIN);
+  const cliped  = {'clip-path':'url(#plot-clip)'};
+
+  // ── Background
+  g.appendChild(svgEl('rect', {x:PL, y:PT, width:plotW, height:plotH, fill:'#0c0e13'}));
+
+  // ── Grid lines
+  for (let lgf = Math.ceil(LGF_MIN); lgf <= Math.floor(LGF_MAX); lgf++) {
+    const x = xPx(lgf);
+    g.appendChild(svgEl('line', {x1:x, y1:PT, x2:x, y2:PT+plotH,
+      stroke:'#1e2128', 'stroke-width':'1', ...cliped}));
+  }
+  for (let lgh = LGH_MIN; lgh <= LGH_MAX; lgh += 2) {
+    const y = yPx(lgh);
+    g.appendChild(svgEl('line', {x1:PL, y1:y, x2:PL+plotW, y2:y,
+      stroke:'#1e2128', 'stroke-width':'1'}));
+  }
+
+  // ── Detector sensitivity bands ─────────────────────────────────────────
+  for (const det of DETECTORS) {
+    const pts = clampedPts(det.fn);
+    if (!pts.length) continue;
+
+    // Filled region from h_n down to bottom
+    const first = pts[0], last = pts[pts.length-1];
+    let d = buildPath(pts);
+    d += ` L${last.x.toFixed(1)},${yBottom.toFixed(1)}`;
+    d += ` L${first.x.toFixed(1)},${yBottom.toFixed(1)} Z`;
+    g.appendChild(svgEl('path', {d, fill:det.fill, ...cliped}));
+
+    // Curve line
+    g.appendChild(svgEl('path', {d: buildPath(pts), fill:'none', stroke:det.color,
+      'stroke-width':'1.5', ...cliped}));
+  }
+
+  // ── Source tracks helper ───────────────────────────────────────────────
+  function drawTrack(m1, m2, dist, spin, stroke, sw, dash) {
+    const fi = fISCO(m1 + m2, spin);
+    if (!isFinite(fi) || fi <= 0) return;
+
+    const pts = [];
+    for (let i = 0; i < F_ARR.length; i++) {
+      const f = F_ARR[i];
+      if (f > fi * 1.001) break;
+      const h = hcInspiral(m1, m2, dist, spin, f);
+      if (h <= 0 || !isFinite(h)) continue;
+      const lgH = Math.log10(h);
+      pts.push({ x: xPx(LGF_ARR[i]), y: yPx(Math.max(LGH_MIN, Math.min(LGH_MAX, lgH))) });
+    }
+    if (pts.length < 2) return;
+
+    const attrs = {d: buildPath(pts), fill:'none', stroke,
+      'stroke-width': sw, ...cliped};
+    if (dash) attrs['stroke-dasharray'] = dash;
+    g.appendChild(svgEl('path', attrs));
+
+    // ISCO tick
+    const lgFi = Math.log10(fi);
+    if (lgFi >= LGF_MIN && lgFi <= LGF_MAX) {
+      const xI = xPx(lgFi);
+      const last = pts[pts.length-1];
+      g.appendChild(svgEl('circle', {cx:xI, cy:last.y, r:'4',
+        fill:stroke, opacity:'0.9', ...cliped}));
+    }
+  }
+
+  // Canonical dashed tracks (always shown)
+  drawTrack(8200, state.m2, state.dist, state.spin, '#1dba90', 1.2, '5,4');  // Häberle
+  drawTrack(6000, state.m2, state.dist, state.spin, '#f0a020', 1.2, '5,4');  // Bañares
+
+  // User track (solid, white-ish)
+  drawTrack(state.m1, state.m2, state.dist, state.spin, '#d0d8e8', 2, null);
+
+  // ── Axes ──────────────────────────────────────────────────────────────
+  // Box
+  g.appendChild(svgEl('rect', {x:PL, y:PT, width:plotW, height:plotH,
+    fill:'none', stroke:'#2e3240', 'stroke-width':'1'}));
+
+  // X-axis ticks & labels
+  const xLabels = [
+    [-9,'1 nHz'],[-8,'10 nHz'],[-7,'100 nHz'],[-6,'1 μHz'],[-5,'10 μHz'],
+    [-4,'100 μHz'],[-3,'1 mHz'],[-2,'10 mHz'],[-1,'0.1 Hz'],[0,'1 Hz'],
+    [1,'10 Hz'],[2,'100 Hz'],[3,'1 kHz']
+  ];
+  for (const [lgf, lbl] of xLabels) {
+    if (lgf < LGF_MIN || lgf > LGF_MAX) continue;
+    const x = xPx(lgf);
+    g.appendChild(svgEl('line', {x1:x,y1:PT+plotH,x2:x,y2:PT+plotH+5,
+      stroke:'#5a6070','stroke-width':'1'}));
+    // Show every 3 decades to avoid crowding
+    if (lgf % 3 === 0) {
+      const t = svgEl('text', {x, y: PT+plotH+16, 'text-anchor':'middle',
+        'font-size':'9.5', fill:'#8890a0'}, lbl);
+      g.appendChild(t);
+    }
+  }
+  // x-axis title
+  g.appendChild(svgEl('text', {x: PL + plotW/2, y: VH-4, 'text-anchor':'middle',
+    'font-size':'10.5', fill:'#8890a0'}, 'Frequency (Hz)'));
+
+  // Y-axis ticks & labels
+  for (let lgh = LGH_MIN; lgh <= LGH_MAX; lgh += 2) {
+    const y = yPx(lgh);
+    g.appendChild(svgEl('line', {x1:PL-5,y1:y,x2:PL,y2:y,
+      stroke:'#5a6070','stroke-width':'1'}));
+    const t = svgEl('text', {x:PL-8, y:y+3.5, 'text-anchor':'end',
+      'font-size':'9', fill:'#8890a0'}, '10^'+lgh);
+    g.appendChild(t);
+  }
+  // y-axis title
+  const ytitle = svgEl('text', {
+    x: 11, y: PT + plotH/2,
+    'text-anchor':'middle', 'font-size':'10.5', fill:'#8890a0',
+    transform:`rotate(-90, 11, ${PT + plotH/2})`
+  }, 'Characteristic strain h_c(f)');
+  g.appendChild(ytitle);
+
+  // ── Legend ─────────────────────────────────────────────────────────────
+  const legItems = [
+    ...DETECTORS.map(d => ({label: d.label, color: d.color, dash: null, lw: 2})),
+    {label: 'User',    color:'#d0d8e8', dash:null,  lw:2},
+    {label:'Häberle',  color:'#1dba90', dash:'5,3', lw:1.5},
+    {label:'Bañares',  color:'#f0a020', dash:'5,3', lw:1.5},
+  ];
+  const cols = 3, legX0 = PL + 8, legY0 = PT + 8;
+  const colW = 90;
+  legItems.forEach((it, i) => {
+    const col = i % cols, row = Math.floor(i/cols);
+    const lx = legX0 + col*colW, ly = legY0 + row*14;
+    const la = {'stroke-width': String(it.lw), stroke: it.color};
+    if (it.dash) la['stroke-dasharray'] = it.dash;
+    g.appendChild(svgEl('line', {x1:String(lx), y1:String(ly), x2:String(lx+18), y2:String(ly),
+      fill:'none', ...la}));
+    g.appendChild(svgEl('text', {x: String(lx+21), y: String(ly+3.5),
+      'font-size':'9', fill:'#8890a0'}, it.label));
+  });
+
+  // Dot annotation for ISCO
+  g.appendChild(svgEl('circle', {cx:'640', cy: String(PT+plotH-8), r:'3', fill:'#d0d8e8'}));
+  g.appendChild(svgEl('text', {x:'645', y: String(PT+plotH-4.5),
+    'font-size':'8.5', fill:'#8890a0'}, '● ISCO'));
+}
+
+// ── State & hash ───────────────────────────────────────────────────────────
+const DEF = { m1:8200, m2:10, dist:5.43, spin:0 };
+let state = {...DEF};
+
+function saveHash(s) {
+  const p = new URLSearchParams();
+  p.set('m1',   s.m1.toFixed(0));
+  p.set('m2',   s.m2.toFixed(2));
+  p.set('dist', s.dist.toFixed(3));
+  p.set('spin', s.spin.toFixed(3));
+  history.replaceState(null, '', '#' + p.toString());
+}
+
+function loadHash() {
+  const h = location.hash.slice(1);
+  if (!h) return;
+  const p = new URLSearchParams(h);
+  if (p.has('m1'))   { const v=parseFloat(p.get('m1'));   if(isFinite(v)&&v>0)   state.m1   = v; }
+  if (p.has('m2'))   { const v=parseFloat(p.get('m2'));   if(isFinite(v)&&v>0)   state.m2   = v; }
+  if (p.has('dist')) { const v=parseFloat(p.get('dist')); if(isFinite(v)&&v>0)   state.dist = v; }
+  if (p.has('spin')) { const v=parseFloat(p.get('spin')); if(isFinite(v))        state.spin = Math.max(-0.998,Math.min(0.998,v)); }
+}
+
+// ── Slider sync ────────────────────────────────────────────────────────────
+function syncSliders() {
+  const slM1 = document.getElementById('sl-m1');
+  const slM2 = document.getElementById('sl-m2');
+  // sliders are in log10 for m1 and m2
+  slM1.value = state.m1 > 0 ? Math.log10(state.m1).toFixed(4) : '2';
+  slM2.value = state.m2 > 0 ? Math.log10(state.m2).toFixed(4) : '0';
+  document.getElementById('sl-dist').value = state.dist.toFixed(3);
+  document.getElementById('sl-spin').value = state.spin.toFixed(3);
+  updateLabels();
+}
+
+function fmt(x) {
+  if (x >= 1e6) return (x/1e6).toFixed(2)+' M';
+  if (x >= 1e3) return (x/1e3).toFixed(1)+'k';
+  if (x >= 100) return Math.round(x).toString();
+  if (x >= 10)  return x.toFixed(1);
+  return x.toPrecision(3);
+}
+
+function fmtHz(f) {
+  if (f >= 1000) return (f/1000).toFixed(2)+' kHz';
+  if (f >= 1)    return f.toFixed(3)+' Hz';
+  if (f >= 1e-3) return (f*1e3).toFixed(2)+' mHz';
+  if (f >= 1e-6) return (f*1e6).toFixed(2)+' μHz';
+  if (f >= 1e-9) return (f*1e9).toFixed(2)+' nHz';
+  return f.toExponential(2)+' Hz';
+}
+
+function fmtHc(h) {
+  if (!isFinite(h) || h <= 0) return '—';
+  const lg = Math.log10(h);
+  const exp = Math.floor(lg);
+  const man = Math.pow(10, lg - exp);
+  return man.toFixed(1)+'×10^'+exp;
+}
+
+function updateLabels() {
+  document.getElementById('lbl-m1').textContent   = fmt(state.m1)+' M☉';
+  document.getElementById('lbl-m2').textContent   = fmt(state.m2)+' M☉';
+  document.getElementById('lbl-dist').textContent = state.dist.toFixed(2)+' kpc';
+  document.getElementById('lbl-spin').textContent = state.spin.toFixed(2);
+}
+
+// ── Metrics ────────────────────────────────────────────────────────────────
+function updateMetrics() {
+  const {m1, m2, dist, spin} = state;
+  const mc  = chirpMass(m1, m2);
+  const fi  = fISCO(m1 + m2, spin);
+  const h3  = fi > 3e-3 ? hcInspiral(m1, m2, dist, spin, 3e-3) : 0;
+  const h30 = fi > 30   ? hcInspiral(m1, m2, dist, spin, 30)   : 0;
+
+  document.getElementById('met-mc').textContent   = fmt(mc)+' M☉';
+  document.getElementById('met-fisco').textContent = fmtHz(fi);
+  document.getElementById('met-hc3').textContent  = fmtHc(h3);
+  document.getElementById('met-hc30').textContent = fmtHc(h30);
+
+  // Which detectors is the user's source above?
+  const above = [];
+  const testFreqs = [
+    {f:1e-4, det:'PTA',    fn:ptaHn},
+    {f:3e-3, det:'LISA',   fn:lisaHn},
+    {f:0.5,  det:'DECIGO', fn:decigoHn},
+    {f:30,   det:'ET',     fn:etHn},
+    {f:30,   det:'CE',     fn:ceHn},
+    {f:100,  det:'aLIGO',  fn:aLIGOHn},
+  ];
+  for (const {f, det, fn} of testFreqs) {
+    if (fi <= f) continue;
+    const hs = hcInspiral(m1, m2, dist, spin, f);
+    const hn = fn(f);
+    if (hn && isFinite(hn) && hs > hn) above.push(det);
+  }
+  document.getElementById('met-det').textContent = above.length ? above.join(', ') : 'None';
+  document.getElementById('met-det').style.color =
+    above.length >= 3 ? 'var(--teal)' : above.length >= 1 ? 'var(--amber)' : 'var(--red)';
+
+  // Verdict
+  const vt = document.getElementById('verdict-text');
+  const vs = document.getElementById('verdict-sub');
+  if (above.length === 0) {
+    vt.textContent = 'BELOW ALL SENSITIVITY CURVES';
+    vt.style.color = 'var(--red)';
+    vs.textContent = 'Source too weak or outside all detector bands at given parameters.';
+  } else if (above.includes('LISA') || above.includes('DECIGO')) {
+    vt.textContent = 'SPACE-BASED DETECTABLE';
+    vt.style.color = 'var(--teal)';
+    vs.textContent = 'Detectable by: '+above.join(', ')+'. '+(above.includes('LISA') ? 'Strong LISA candidate.' : '');
+  } else {
+    vt.textContent = 'GROUND-BASED DETECTABLE';
+    vt.style.color = 'var(--blue)';
+    vs.textContent = 'Detectable by: '+above.join(', ')+'. Above mHz-band detectors at this m2/f_ISCO.';
+  }
+
+  // Deeplinks
+  const p = new URLSearchParams({mass:Math.round(m1), m2:m2.toFixed(1),
+    dist:dist.toFixed(2), spin:spin.toFixed(2)});
+  document.getElementById('lnk-emri').href = 'lisa-emri.html#'+p.toString();
+  document.getElementById('lnk-cw').href   = 'cw-sensitivity.html#mass='+Math.round(m1)+'&dist='+dist.toFixed(2);
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  updateLabels();
+  updateMetrics();
+  drawChart(state);
+  saveHash(state);
+}
+
+// ── Event wiring ───────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHash();
+  syncSliders();
+  render();
+
+  document.getElementById('sl-m1').addEventListener('input', function() {
+    state.m1 = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-m2').addEventListener('input', function() {
+    state.m2 = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-dist').addEventListener('input', function() {
+    state.dist = parseFloat(this.value);
+    render();
+  });
+  document.getElementById('sl-spin').addEventListener('input', function() {
+    state.spin = parseFloat(this.value);
+    render();
+  });
+});
+</script>
+</body>
+</html>
