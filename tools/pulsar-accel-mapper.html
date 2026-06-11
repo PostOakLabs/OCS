@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulsar Acceleration Mapper — Omega Centauri Society</title>
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="data/measurements.js"></script>
+<style>
+:root{
+  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
+  --text-sec:#8890a0;--text-dim:#5a6070;
+  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
+  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
+  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* nav */
+nav{display:flex;align-items:center;gap:1rem;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;background:var(--surface)}
+nav a{color:var(--text-sec)}
+nav a:hover{color:var(--text)}
+.nav-sep{color:var(--text-dim)}
+
+/* header */
+.tool-header{padding:1.5rem 1.5rem .5rem}
+.tool-header h1{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:620px}
+.badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(64,144,208,.25)}
+
+/* layout */
+main{display:grid;grid-template-columns:280px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1100px}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+
+/* controls */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.9rem}
+.ctrl-row{margin-bottom:.85rem}
+.ctrl-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem}
+.ctrl-label span{color:var(--text-sec)}
+.ctrl-val{color:var(--text);font-weight:500}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal);border:none;cursor:pointer}
+
+/* model buttons */
+.model-btns{display:flex;gap:.4rem;margin-top:.3rem}
+.model-btn{flex:1;padding:.35rem 0;border:1px solid var(--border);background:var(--bg);color:var(--text-sec);border-radius:5px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.model-btn:hover{border-color:var(--text-dim);color:var(--text)}
+.model-btn.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue)}
+
+/* rc row (hidden when point model) */
+#rc-row{transition:opacity .2s}
+#rc-row.hidden{opacity:.35;pointer-events:none}
+
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.7rem .85rem}
+.metric-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+.metric-val{font-size:1.05rem;font-weight:600;margin-top:.15rem}
+
+/* chart */
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem}
+.chart-wrap h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
+#chart-svg{width:100%;height:auto;display:block}
+
+/* verdict */
+.verdict-box{margin-top:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.verdict-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim)}
+#verdict-text{font-size:.95rem;font-weight:600}
+.verdict-detail{font-size:.8rem;color:var(--text-sec)}
+
+/* table */
+.table-wrap{overflow-x:auto;margin-top:.75rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead th{padding:.45rem .6rem;text-align:left;color:var(--text-dim);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody td{padding:.45rem .6rem;white-space:nowrap}
+.td-name{font-weight:500;color:var(--text)}
+.td-dim{color:var(--text-sec)}
+.status-chip{font-size:.67rem;font-weight:600;padding:.15rem .45rem;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
+.status-tension{background:var(--red-dim);color:var(--red)}
+.status-ok{background:var(--teal-dim);color:var(--teal)}
+.status-floor{background:rgba(90,96,112,.12);color:var(--text-dim)}
+
+/* about */
+.about-toggle{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+.about-toggle summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select:none;list-style:none}
+.about-toggle summary::before{content:'▶ '}
+details[open] .about-toggle summary::before{content:'▼ '}
+.about-body{margin-top:.7rem;font-size:.82rem;color:var(--text-sec);max-width:740px;line-height:1.7}
+.about-body p{margin-bottom:.6rem}
+.about-body code{font-size:.78rem;background:var(--border);padding:.1rem .3rem;border-radius:3px}
+.ref{font-size:.75rem;color:var(--text-dim);margin-top:.4rem}
+.ref a{color:var(--text-dim)}
+.ref a:hover{color:var(--text-sec)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">Omega Centauri Society</a>
+  <span class="nav-sep">/</span>
+  <a href="index.html">Tools</a>
+  <span class="nav-sep">/</span>
+  <span>Pulsar Acceleration Mapper</span>
+</nav>
+
+<div class="tool-header">
+  <h1>Pulsar Acceleration Mapper</h1>
+  <p>Maps observed line-of-sight accelerations from TRAPUM 2026 spin-period derivatives against the maximum acceleration predicted by a central mass model. Tests whether a given IMBH mass is consistent with all 8 timed OC pulsars simultaneously.</p>
+  <div class="badges">
+    <span class="badge badge-teal">IMBH Evidence</span>
+    <span class="badge badge-blue">Pulsar Timing</span>
+    <span class="badge badge-amber">TRAPUM 2026</span>
+  </div>
+</div>
+
+<main>
+  <!-- Controls -->
+  <div>
+    <div class="panel">
+      <h2>Parameters</h2>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Central Mass</span>
+          <span class="ctrl-val" id="lbl-mass">50,000 M☉</span>
+        </div>
+        <input type="range" id="sl-mass" min="3" max="6" step="0.02" value="4.699">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label"><span>Mass Model</span></div>
+        <div class="model-btns">
+          <button class="model-btn active" data-model="point" id="btn-point">Point IMBH</button>
+          <button class="model-btn" data-model="plummer" id="btn-plummer">Plummer</button>
+          <button class="model-btn" data-model="hybrid" id="btn-hybrid">Hybrid</button>
+        </div>
+        <div style="font-size:.72rem;color:var(--text-dim);margin-top:.4rem" id="model-desc">
+          Max a from point mass: a_max = (2/3√3)·GM/r⊥²
+        </div>
+      </div>
+
+      <div class="ctrl-row" id="rc-row">
+        <div class="ctrl-label">
+          <span>Plummer scale radius r<sub>c</sub></span>
+          <span class="ctrl-val" id="lbl-rc">0.80 pc</span>
+        </div>
+        <input type="range" id="sl-rc" min="0.1" max="3.0" step="0.05" value="0.8">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>OC Distance</span>
+          <span class="ctrl-val" id="lbl-dist">5.43 kpc</span>
+        </div>
+        <input type="range" id="sl-dist" min="4.5" max="6.5" step="0.01" value="5.43">
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
+      <div style="font-size:.75rem;color:var(--text-dim);line-height:1.5">
+        <b style="color:var(--text-sec)">Tension threshold:</b> model over-predicts when
+        a<sub>max</sub> &gt; 2 × a<sub>obs</sub>.<br>
+        <b style="color:var(--text-sec)">TRAPUM 90% CL:</b> &lt;10⁵ M☉ (formal likelihood
+        analysis; more stringent than ratio-2 cutoff here).
+      </div>
+    </div>
+
+    <details style="margin-top:.75rem">
+      <summary class="about-toggle">
+        <div class="about-body" style="display:inline;font-size:.8rem;color:var(--text-sec)">Physics &amp; citations</div>
+      </summary>
+      <div class="about-body" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:.4rem">
+        <p>For a point mass M at the cluster centre, the maximum LOS acceleration at projected
+        distance r⊥ occurs at line-of-sight depth z = r⊥/√2 and equals
+        <code>a_max = (2/3√3) × GM/r⊥²</code> (the coefficient ≈ 0.3849).</p>
+        <p>The <b>Plummer model</b> softens the singularity by replacing r⊥² with (r⊥² + r<sub>c</sub>²),
+        representing an extended dark cluster of scale radius r<sub>c</sub>.</p>
+        <p>The <b>Hybrid model</b> splits M equally between a point IMBH and a Plummer cluster, exploring the transition regime favoured by Bañares-Hernández et al. 2025.</p>
+        <p>Observed acceleration: <code>a_obs = |ṗ / P| × c</code>, where ṗ is the
+        measured spin-period derivative (including intrinsic spin-down, cluster mean field,
+        and IMBH contribution combined). Negative ṗ indicates the cluster is accelerating
+        the pulsar toward the observer.</p>
+        <p><b>Tension flag</b> (a_max / a_obs &gt; 2): the model predicts a maximum
+        acceleration more than twice observed — geometrically improbable unless the IMBH
+        exerts no force along that line of sight, which is unlikely for all pulsars simultaneously.</p>
+        <div class="ref">
+          Data: Colom i Bernadich et al. 2026 (TRAPUM), <a href="https://arxiv.org/abs/2603.21845" target="_blank">arXiv:2603.21845</a><br>
+          Pulsar timing: Chen et al. 2023, MNRAS 520:3847, <a href="https://doi.org/10.1093/mnras/stad029" target="_blank">doi:10.1093/mnras/stad029</a><br>
+          IMBH upper limit: Bañares-Hernández et al. 2025, A&amp;A 693:A104, <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank">doi:10.1051/0004-6361/202451763</a>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <!-- Metrics -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Central mass</div>
+        <div class="metric-val" id="met-mass">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Pulsars in tension</div>
+        <div class="metric-val" id="met-tension">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Constraint</div>
+        <div class="metric-val" style="font-size:.85rem" id="met-constraint">—</div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-wrap">
+      <h2>a<sub>max</sub> model envelope vs. observed accelerations</h2>
+      <svg id="chart-svg" viewBox="0 0 580 270" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g id="chart-content"></g>
+      </svg>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict-box">
+      <div>
+        <div class="verdict-label">Aggregate verdict</div>
+        <div id="verdict-text">—</div>
+      </div>
+      <div class="verdict-detail" id="verdict-detail"></div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pulsar</th>
+            <th>θ (′)</th>
+            <th>P (ms)</th>
+            <th>ṗ (10⁻²⁰ s/s)</th>
+            <th>|a_obs| (nm/s²)</th>
+            <th>a_max (nm/s²)</th>
+            <th>Ratio</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── Physics constants ──────────────────────────────────────────────────────
+const G         = 6.674e-11;   // m³ kg⁻¹ s⁻²
+const M_SUN     = 1.989e30;    // kg
+const PC_M      = 3.086e16;    // m per parsec
+const C_LIGHT   = 2.998e8;     // m/s
+const KPC_M     = 3.086e19;    // m per kpc
+const ARCMIN_RAD = Math.PI / 10800; // radians per arcmin
+const C_COEFF   = 2 / (3 * Math.sqrt(3)); // ≈ 0.3849
+
+// Projected physical distance r⊥ in metres
+function rPerp_m(theta_arcmin, dist_kpc) {
+  return theta_arcmin * ARCMIN_RAD * dist_kpc * KPC_M;
+}
+
+// Max LOS acceleration (m/s²) from point mass
+function aMaxPoint(M_sun, r_m) {
+  return C_COEFF * G * M_sun * M_SUN / (r_m * r_m);
+}
+
+// Max LOS acceleration (m/s²) from Plummer-softened mass
+function aMaxPlummer(M_sun, rc_pc, r_m) {
+  const rc_m = rc_pc * PC_M;
+  return C_COEFF * G * M_sun * M_SUN / (r_m * r_m + rc_m * rc_m);
+}
+
+// Max LOS acceleration for selected model (m/s²)
+function aMax(M_sun, rc_pc, model, r_m) {
+  if (model === 'point')   return aMaxPoint(M_sun, r_m);
+  if (model === 'plummer') return aMaxPlummer(M_sun, rc_pc, r_m);
+  // hybrid: 50/50 split between point IMBH and Plummer dark cluster
+  return 0.5 * aMaxPoint(M_sun, r_m) + 0.5 * aMaxPlummer(M_sun, rc_pc, r_m);
+}
+
+// Observed LOS acceleration from spin-period derivative (m/s²)
+function aObs(pulsar) {
+  return Math.abs(pulsar.pdot_s / (pulsar.period_ms * 1e-3)) * C_LIGHT;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────
+const state = { mass: 50000, model: 'point', rc: 0.8, dist: 5.43 };
+
+// ── Hash ──────────────────────────────────────────────────────────────────
+function getHash()  { return Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map(s=>s.split('='))); }
+function setHash(o) { location.replace('#' + Object.entries(o).map(([k,v])=>k+'='+v).join('&')); }
+function saveHash() { setHash({ mass: state.mass, model: state.model, rc: state.rc, dist: state.dist }); }
+function loadHash() {
+  const h = getHash();
+  if (h.mass)  state.mass  = Math.max(1e3, Math.min(1e6, parseFloat(h.mass)  || 50000));
+  if (h.model && ['point','plummer','hybrid'].includes(h.model)) state.model = h.model;
+  if (h.rc)    state.rc    = Math.max(0.1,  Math.min(3.0,  parseFloat(h.rc)   || 0.8));
+  if (h.dist)  state.dist  = Math.max(4.5,  Math.min(6.5,  parseFloat(h.dist) || 5.43));
+}
+
+// ── SVG chart constants ────────────────────────────────────────────────────
+const CW = 580, CH = 270;
+const PL = 62, PR = 565, PT = 15, PB = 240;
+const PW = PR - PL, PH = PB - PT;
+const X_MAX = 4.5; // arcmin
+const Y_LOG_MIN = -1; // log10(0.1 nm/s²)
+const Y_LOG_MAX =  2; // log10(100 nm/s²)
+const Y_LOG_RNG  = Y_LOG_MAX - Y_LOG_MIN; // 3
+
+function xPx(theta)  { return PL + (theta / X_MAX) * PW; }
+function yPx(a_nm)   {
+  const logA = Math.log10(Math.max(a_nm, 0.04));
+  return PT + (1 - (logA - Y_LOG_MIN) / Y_LOG_RNG) * PH;
+}
+
+// ── Rendering ─────────────────────────────────────────────────────────────
+function render() {
+  const M   = window.OCS_MEASUREMENTS;
+  const pulsars = M.pulsars.filter(p => p.pdot_s !== null);
+
+  // ── Per-pulsar rows ──
+  const rows = pulsars.map(p => {
+    const r_m   = rPerp_m(p.theta_arcmin, state.dist);
+    const aO    = aObs(p) * 1e9;          // nm/s²
+    const aM    = aMax(state.mass, state.rc, state.model, r_m) * 1e9; // nm/s²
+    const ratio = aM / aO;
+    let status, sClass;
+    if      (ratio > 2)   { status = 'TENSION'; sClass = 'status-tension'; }
+    else if (ratio >= 0.5){ status = 'OK';      sClass = 'status-ok'; }
+    else                  { status = 'FLOOR';   sClass = 'status-floor'; }
+    return { p, r_m, aO, aM, ratio, status, sClass };
+  });
+
+  const nTension = rows.filter(r => r.status === 'TENSION').length;
+
+  // ── SVG ──
+  let svg = '';
+
+  // Background
+  svg += `<rect x="${PL}" y="${PT}" width="${PW}" height="${PH}" fill="#13151a" rx="3"/>`;
+
+  // Gridlines (Y: 0.1, 1, 10, 100 nm/s²)
+  [0.1, 1, 10, 100].forEach(a => {
+    const y = yPx(a);
+    svg += `<line x1="${PL}" y1="${y}" x2="${PR}" y2="${y}" stroke="#1e2128" stroke-width="1"/>`;
+    const lbl = a < 1 ? a.toFixed(1) : a;
+    svg += `<text x="${PL-5}" y="${y+4}" text-anchor="end" fill="#5a6070" font-size="10">${lbl}</text>`;
+  });
+  // X gridlines (1, 2, 3, 4 arcmin)
+  [1, 2, 3, 4].forEach(t => {
+    const x = xPx(t);
+    svg += `<line x1="${x}" y1="${PT}" x2="${x}" y2="${PB}" stroke="#1e2128" stroke-width="1"/>`;
+    svg += `<text x="${x}" y="${PB+14}" text-anchor="middle" fill="#5a6070" font-size="10">${t}′</text>`;
+  });
+
+  // Axis labels
+  svg += `<text x="${PL + PW/2}" y="${CH-2}" text-anchor="middle" fill="#8890a0" font-size="10">Angular separation from cluster centre (arcmin)</text>`;
+  svg += `<text transform="translate(10,${PT + PH/2}) rotate(-90)" text-anchor="middle" fill="#8890a0" font-size="10">|a| (nm/s²)</text>`;
+
+  // Axes
+  svg += `<line x1="${PL}" y1="${PT}" x2="${PL}" y2="${PB}" stroke="#2a2d35" stroke-width="1.5"/>`;
+  svg += `<line x1="${PL}" y1="${PB}" x2="${PR}" y2="${PB}" stroke="#2a2d35" stroke-width="1.5"/>`;
+
+  // a_max curve
+  const pts = [];
+  for (let i = 0; i <= 120; i++) {
+    const theta = 0.04 + i * (4.5 - 0.04) / 120;
+    const r_m = rPerp_m(theta, state.dist);
+    const a_nm = aMax(state.mass, state.rc, state.model, r_m) * 1e9;
+    if (a_nm >= 0.04 && a_nm <= 300) {
+      pts.push(`${xPx(theta).toFixed(1)},${yPx(a_nm).toFixed(1)}`);
+    }
+  }
+  if (pts.length > 1) {
+    svg += `<polyline points="${pts.join(' ')}" fill="none" stroke="#4090d0" stroke-width="2" opacity=".85"/>`;
+    // Curve label
+    const midTheta = 2.2;
+    const midY_nm = aMax(state.mass, state.rc, state.model, rPerp_m(midTheta, state.dist)) * 1e9;
+    const midY = yPx(midY_nm);
+    if (midY > PT + 10 && midY < PB - 10) {
+      svg += `<text x="${xPx(midTheta)+6}" y="${midY-5}" fill="#4090d0" font-size="9" opacity=".8">a_max (${state.model})</text>`;
+    }
+  }
+
+  // Tension band (ratio > 2 means dot above curve × 2, or below curve / 2)
+  // Draw 2× curve in muted red as an upper-warning line
+  const warnPts = [];
+  for (let i = 0; i <= 120; i++) {
+    const theta = 0.04 + i * (4.5 - 0.04) / 120;
+    const r_m = rPerp_m(theta, state.dist);
+    const a_nm = aMax(state.mass, state.rc, state.model, r_m) * 1e9 / 2;
+    if (a_nm >= 0.04 && a_nm <= 300) {
+      warnPts.push(`${xPx(theta).toFixed(1)},${yPx(a_nm).toFixed(1)}`);
+    }
+  }
+  if (warnPts.length > 1) {
+    svg += `<polyline points="${warnPts.join(' ')}" fill="none" stroke="#d04040" stroke-width="1" stroke-dasharray="3,3" opacity=".45"/>`;
+    svg += `<text x="${xPx(0.7)+4}" y="${yPx(aMax(state.mass, state.rc, state.model, rPerp_m(0.7, state.dist)) * 1e9 / 2)-4}" fill="#d04040" font-size="8.5" opacity=".55">÷2 tension</text>`;
+  }
+
+  // Pulsar data points
+  const COLORS = { TENSION: '#d04040', OK: '#1dba90', FLOOR: '#5a6070' };
+  const DOT_R  = { TENSION: 6, OK: 5.5, FLOOR: 4.5 };
+  rows.forEach(row => {
+    const p = row.p;
+    const cx = xPx(p.theta_arcmin);
+    const cy = yPx(row.aO);
+    if (cx < PL || cx > PR || cy < PT || cy > PB) return;
+    const col = COLORS[row.status];
+    const r   = DOT_R[row.status];
+    svg += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="1.5"/>`;
+    // Label
+    const letter = p.name.replace('PSR J1326-4728', '');
+    const lx = cx + (p.theta_arcmin < 1 ? 9 : 7);
+    const ly = cy - 5;
+    svg += `<text x="${lx}" y="${ly}" fill="${col}" font-size="9.5" font-weight="600">${letter}</text>`;
+    // Down arrow for negative pdot (spin-up)
+    if (p.pdot_s < 0) {
+      svg += `<line x1="${cx}" y1="${cy-r-1}" x2="${cx}" y2="${cy-r-7}" stroke="${col}" stroke-width="1.5" marker-end="url(#arrow-down)"/>`;
+    }
+  });
+
+  // Legend
+  const lx0 = PL + 8, ly0 = PT + 8;
+  svg += `<rect x="${lx0}" y="${ly0}" width="9" height="9" rx="2" fill="#4090d0" fill-opacity=".2" stroke="#4090d0" stroke-width="1.5"/>`;
+  svg += `<text x="${lx0+13}" y="${ly0+8}" fill="#8890a0" font-size="9">a_max curve</text>`;
+  svg += `<circle cx="${lx0+4.5}" cy="${ly0+22}" r="4.5" fill="#1dba90" fill-opacity=".22" stroke="#1dba90" stroke-width="1.5"/>`;
+  svg += `<text x="${lx0+13}" y="${ly0+26}" fill="#8890a0" font-size="9">Compatible</text>`;
+  svg += `<circle cx="${lx0+4.5}" cy="${ly0+37}" r="5" fill="#d04040" fill-opacity=".22" stroke="#d04040" stroke-width="1.5"/>`;
+  svg += `<text x="${lx0+13}" y="${ly0+41}" fill="#8890a0" font-size="9">Tension (ratio &gt; 2)</text>`;
+  svg += `<circle cx="${lx0+4.5}" cy="${ly0+52}" r="4" fill="#5a6070" fill-opacity=".22" stroke="#5a6070" stroke-width="1.5"/>`;
+  svg += `<text x="${lx0+13}" y="${ly0+56}" fill="#8890a0" font-size="9">Sub-dominant</text>`;
+
+  document.getElementById('chart-content').innerHTML = svg;
+
+  // ── Table ──
+  let html = '';
+  rows.forEach(row => {
+    const p = row.p;
+    const ltr = p.name.replace('PSR J1326-4728', '');
+    const pdotLabel = (p.pdot_s * 1e20).toFixed(2);
+    html += `<tr>
+      <td class="td-name">PSR …${ltr}</td>
+      <td class="td-dim">${p.theta_arcmin.toFixed(2)}</td>
+      <td class="td-dim">${p.period_ms.toFixed(3)}</td>
+      <td class="td-dim">${pdotLabel}</td>
+      <td>${row.aO.toFixed(3)}</td>
+      <td>${row.aM.toFixed(3)}</td>
+      <td>${row.ratio.toFixed(2)}×</td>
+      <td><span class="status-chip ${row.sClass}">${row.status}</span></td>
+    </tr>`;
+  });
+  document.getElementById('tbl-body').innerHTML = html;
+
+  // ── Metrics ──
+  const massLabel = state.mass >= 1e6 ? (state.mass/1e6).toFixed(2)+'M'
+                  : state.mass >= 1e3 ? Math.round(state.mass).toLocaleString()
+                  : state.mass.toFixed(0);
+  document.getElementById('met-mass').textContent = massLabel + ' M☉';
+  document.getElementById('met-tension').textContent = nTension + ' / ' + rows.length;
+
+  let constraintText, constraintColor;
+  if (nTension >= 2) { constraintText = 'LIKELY EXCLUDED'; constraintColor = 'var(--red)'; }
+  else if (nTension === 1) { constraintText = 'MARGINAL'; constraintColor = 'var(--amber)'; }
+  else { constraintText = 'CONSISTENT'; constraintColor = 'var(--teal)'; }
+  const cEl = document.getElementById('met-constraint');
+  cEl.textContent = constraintText;
+  cEl.style.color = constraintColor;
+
+  // ── Verdict ──
+  const vEl  = document.getElementById('verdict-text');
+  const vDet = document.getElementById('verdict-detail');
+  vEl.textContent  = constraintText;
+  vEl.style.color  = constraintColor;
+  if (nTension >= 2) {
+    vDet.textContent = nTension + ' pulsars simultaneously over-predicted — geometrically unlikely for a central point mass.';
+  } else if (nTension === 1) {
+    const tname = rows.find(r => r.status === 'TENSION').p.name.replace('PSR J1326-4728', '');
+    vDet.textContent = `PSR ${tname} over-predicted (ratio > 2). Marginal tension; does not exclude alone.`;
+  } else {
+    const most = rows.reduce((a, b) => b.ratio > a.ratio ? b : a);
+    const ltr = most.p.name.replace('PSR J1326-4728', '');
+    vDet.textContent = `All pulsars consistent. Closest to tension: PSR ${ltr} (ratio ${most.ratio.toFixed(2)}×).`;
+  }
+}
+
+// ── Sync sliders to state ─────────────────────────────────────────────────
+function syncSliders() {
+  const logMass = Math.log10(state.mass);
+  document.getElementById('sl-mass').value = logMass.toFixed(4);
+  document.getElementById('lbl-mass').textContent = Math.round(state.mass).toLocaleString() + ' M☉';
+  document.getElementById('sl-rc').value = state.rc;
+  document.getElementById('lbl-rc').textContent = state.rc.toFixed(2) + ' pc';
+  document.getElementById('sl-dist').value = state.dist;
+  document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
+  // Model buttons
+  document.querySelectorAll('.model-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.model === state.model);
+  });
+  // rc row visibility
+  document.getElementById('rc-row').classList.toggle('hidden', state.model === 'point');
+  // model desc
+  const descs = {
+    point:   'Max a from point mass: a_max = (2/3√3)·GM/r⊥²',
+    plummer: 'Softened: a_max = (2/3√3)·GM/(r⊥²+r_c²)',
+    hybrid:  '50% point IMBH + 50% Plummer dark cluster'
+  };
+  document.getElementById('model-desc').textContent = descs[state.model];
+}
+
+// ── Wire controls ─────────────────────────────────────────────────────────
+function wire() {
+  document.getElementById('sl-mass').addEventListener('input', e => {
+    state.mass = Math.pow(10, parseFloat(e.target.value));
+    document.getElementById('lbl-mass').textContent = Math.round(state.mass).toLocaleString() + ' M☉';
+    saveHash(); render();
+  });
+  document.getElementById('sl-rc').addEventListener('input', e => {
+    state.rc = parseFloat(e.target.value);
+    document.getElementById('lbl-rc').textContent = state.rc.toFixed(2) + ' pc';
+    saveHash(); render();
+  });
+  document.getElementById('sl-dist').addEventListener('input', e => {
+    state.dist = parseFloat(e.target.value);
+    document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
+    saveHash(); render();
+  });
+  document.querySelectorAll('.model-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.model = btn.dataset.model;
+      document.querySelectorAll('.model-btn').forEach(b => b.classList.toggle('active', b.dataset.model === state.model));
+      document.getElementById('rc-row').classList.toggle('hidden', state.model === 'point');
+      const descs = {
+        point:   'Max a from point mass: a_max = (2/3√3)·GM/r⊥²',
+        plummer: 'Softened: a_max = (2/3√3)·GM/(r⊥²+r_c²)',
+        hybrid:  '50% point IMBH + 50% Plummer dark cluster'
+      };
+      document.getElementById('model-desc').textContent = descs[state.model];
+      saveHash(); render();
+    });
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHash();
+  syncSliders();
+  wire();
+  render();
+});
+</script>
+</body>
+</html>
