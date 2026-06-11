@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADAF SED Modeler — Omega Centauri Society</title>
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="data/measurements.js"></script>
+<style>
+:root{
+  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
+  --text-sec:#8890a0;--text-dim:#5a6070;
+  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
+  --green:#30b860;
+  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
+  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+  --purple-dim:rgba(160,128,240,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{display:flex;align-items:center;gap:1rem;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;background:var(--surface)}
+nav a{color:var(--text-sec)}
+nav a:hover{color:var(--text)}
+.nav-sep{color:var(--text-dim)}
+.tool-header{padding:1.5rem 1.5rem .5rem}
+.tool-header h1{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:720px}
+.badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(208,64,64,.25)}
+.badge-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(160,128,240,.25)}
+main{display:grid;grid-template-columns:270px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1180px}
+@media(max-width:780px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.9rem}
+.ctrl-row{margin-bottom:.85rem}
+.ctrl-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem}
+.ctrl-label span{color:var(--text-sec)}
+.ctrl-val{color:var(--text);font-weight:500}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal);border:none;cursor:pointer}
+.tick-row{display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:.75rem}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem}
+.metric-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+.metric-val{font-size:.95rem;font-weight:600;margin-top:.15rem}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem;margin-bottom:.75rem}
+.chart-wrap h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
+.verdict-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem}
+.verdict-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.3rem}
+#verdict-text{font-size:.95rem;font-weight:600}
+.verdict-sub{font-size:.8rem;color:var(--text-sec);margin-top:.3rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:.6rem 0}
+details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select:none}
+.about-body{font-size:.82rem;color:var(--text-sec);line-height:1.75;margin-top:.6rem}
+.about-body p{margin-bottom:.55rem}
+.about-body code{font-size:.78rem;background:var(--border);padding:.1rem .3rem;border-radius:3px}
+.ref{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;line-height:1.6}
+.ref a{color:var(--text-dim)}
+.ref a:hover{color:var(--text-sec)}
+.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+.deeplinks{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.deeplink-btn{font-size:.75rem;padding:.3rem .65rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+.deeplink-btn:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+.regime-pill{display:inline-block;font-size:.7rem;padding:.1rem .4rem;border-radius:3px;font-weight:500;margin-left:.4rem}
+.bondi-bar-wrap{height:6px;background:var(--border);border-radius:3px;margin-top:.3rem;overflow:hidden}
+.bondi-bar{height:100%;background:var(--teal);border-radius:3px;transition:width .2s}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">Omega Centauri Society</a>
+  <span class="nav-sep">/</span>
+  <a href="index.html">Tools</a>
+  <span class="nav-sep">/</span>
+  <span>ADAF SED Modeler</span>
+</nav>
+
+<div class="tool-header">
+  <h1>ADAF SED Modeler — Accretion Spectral Energy Distribution</h1>
+  <p>Full RIAF/ADAF spectral energy distribution for a Bondi-fed IMBH: synchrotron, inverse Compton, and bremsstrahlung components across 10 orders of magnitude in frequency, overlaid against JWST NIRCam/MIRI, radio, and X-ray non-detection limits from the published ωCen IMBH constraint literature.</p>
+  <div class="badges">
+    <span class="badge badge-teal">ADAF / RIAF</span>
+    <span class="badge badge-amber">JWST Non-detection</span>
+    <span class="badge badge-purple">Multi-messenger</span>
+    <span class="badge badge-red">Accretion Physics</span>
+  </div>
+</div>
+
+<main>
+  <!-- Left: controls -->
+  <div>
+    <div class="panel">
+      <h2>Source Parameters</h2>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>IMBH mass M</span>
+          <span class="ctrl-val" id="lbl-mass">8,200 M☉</span>
+        </div>
+        <input type="range" id="sl-mass" min="3" max="5" step="0.02" value="3.9138">
+        <div class="tick-row"><span>1,000</span><span>10,000</span><span>100,000</span></div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Accretion rate ṁ = Ṁ/Ṁ_Edd</span>
+          <span class="ctrl-val" id="lbl-mdot">10⁻⁵</span>
+        </div>
+        <input type="range" id="sl-mdot" min="-8" max="-2" step="0.1" value="-5">
+        <div class="tick-row"><span>10⁻⁸</span><span>10⁻⁵</span><span>10⁻²</span></div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Radiative efficiency ε</span>
+          <span class="ctrl-val" id="lbl-eps">10⁻³</span>
+        </div>
+        <input type="range" id="sl-eps" min="-5" max="-1" step="0.1" value="-3">
+        <div class="tick-row"><span>10⁻⁵</span><span>10⁻³</span><span>0.1</span></div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Ambient density ρ∞</span>
+          <span class="ctrl-val" id="lbl-rho">10⁻²⁴ g/cm³</span>
+        </div>
+        <input type="range" id="sl-rho" min="-26" max="-21" step="0.2" value="-24">
+        <div class="tick-row"><span>10⁻²⁶</span><span>10⁻²³·⁵</span><span>10⁻²¹</span></div>
+      </div>
+
+      <hr class="divider">
+
+      <div style="font-size:.75rem;line-height:1.8">
+        <div style="color:var(--text-dim);margin-bottom:.3rem;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em">SED components</div>
+        <span style="color:var(--teal)">■</span> Synchrotron (radio → IR peak)<br>
+        <span style="color:var(--purple)">■</span> Inverse Compton (UV → X-ray)<br>
+        <span style="color:var(--amber)">■</span> Bremsstrahlung (soft X-ray)
+        <hr class="divider">
+        <div style="color:var(--text-dim);margin-bottom:.3rem;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em">Observational limits (5σ)</div>
+        <span style="color:var(--red)">▼</span> Radio 5 GHz: &lt;50 μJy<br>
+        <span style="color:var(--red)">▼</span> JWST NIRCam: &lt;10–20 μJy<br>
+        <span style="color:var(--red)">▼</span> JWST MIRI: &lt;100 μJy<br>
+        <span style="color:var(--red)">▼</span> Chandra X-ray: &lt;10⁻¹³ erg/s/cm²
+      </div>
+    </div>
+
+    <div class="deeplinks">
+      <a class="deeplink-btn" id="lnk-jwst" href="jwst-accretion.html">→ JWST Accretion Limit</a>
+      <a class="deeplink-btn" id="lnk-cstack" href="constraint-stacker.html">→ Constraint Stacker</a>
+    </div>
+
+    <details style="margin-top:.75rem">
+      <summary>Physics &amp; citations</summary>
+      <div class="about-body" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:.3rem">
+        <p>ADAF/RIAF (Advection-Dominated/Radiatively Inefficient Accretion Flow) applies when <code>ṁ ≪ ṁ_crit ≈ 0.01 α²</code>. Most viscously dissipated energy is advected into the black hole rather than radiated, giving an effective luminosity <code>L_bol = ε × ṁ × L_Edd</code> where <code>ε ≪ 0.1</code>.</p>
+        <p><b>Synchrotron</b> — thermal electrons in the ADAF magnetic field radiate from radio through mid-IR. The peak frequency scales as <code>ν_peak ∝ M^(−1/2) × ṁ^(1/2)</code>, anchored to the SgrA* submm peak (350 GHz at M=4×10⁶ M☉, ṁ~10⁻⁵). For ωCen's ~8,200 M☉ IMBH, the synchrotron peaks in the 10–100 μm range — directly probed by JWST MIRI and Herschel, not by NIRCam. Below the self-absorption turnover (<code>ν_t ≈ ν_peak/100</code>) the spectrum rises as <code>ν^2</code>; above the peak it falls exponentially. The shape is <code>ν^(1/3)</code> in between (standard optically-thin synchrotron).</p>
+        <p><b>Inverse Compton</b> — hot ADAF electrons (T_e ~ 10⁹–10¹⁰ K) Compton-scatter the synchrotron seed photons into the X-ray band. At very low ṁ, the Compton contribution is small (optical depth τ ≪ 1); it grows toward the thin-disk transition. Modelled as a power law L_ν ∝ ν^(1-Γ) with Γ = 1.7, cutting off at ~100 keV.</p>
+        <p><b>Bremsstrahlung</b> — free-free emission from hot plasma. Flat from soft X-ray to the thermal cutoff at <code>kT_e/h ≈ 430 keV</code> (T_e=5×10⁹ K).</p>
+        <p><b>Bondi rate</b> — <code>Ṁ_B = 4π G² M² ρ_∞ / c_s³</code> with <code>c_s = 300 km/s</code> (hot stellar-wind gas). The bar shows <code>log₁₀(ṁ_Bondi / ṁ)</code>: positive means Bondi supply exceeds the input ṁ (plausible); negative means ṁ exceeds Bondi supply (implausible at this density).</p>
+        <div class="note-box">⚠ Both mass bounds preserved: Häberle et al. 2024 (≥ 8,200 M☉, Nature 631:285) and Bañares-Hernández et al. 2025 (≤ 6,000 M☉, A&A 693:A104) are in unresolved tension. The dual dashed bounds appear on the mass slider position — do not collapse to a single value.</div>
+        <div class="ref">
+          Narayan &amp; Yi 1995, ApJ 452:710 (ADAF theory)<br>
+          Mahadevan 1997, ApJ 477:585 (ADAF SED parametrization)<br>
+          Yuan &amp; Narayan 2014, ARA&amp;A 52:529 (RIAF review)<br>
+          Chen et al. 2025, arXiv:2511.20945 (JWST ωCen non-detection)<br>
+          Häberle et al. 2024, Nature 631:285 (≥ 8,200 M☉)<br>
+          Bañares-Hernández et al. 2025, A&A 693:A104 (≤ 6,000 M☉)
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">L_bol</div>
+        <div class="metric-val" id="met-lbol">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">L / L_Edd</div>
+        <div class="metric-val" id="met-lrat">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">ν_peak (syn)</div>
+        <div class="metric-val" id="met-nupeak">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">λ_peak</div>
+        <div class="metric-val" id="met-lam">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Regime</div>
+        <div class="metric-val" id="met-regime">—</div>
+      </div>
+    </div>
+
+    <!-- Bondi context bar -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:.75rem">
+      <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text-sec);margin-bottom:.25rem">
+        <span>Bondi supply at ρ∞</span>
+        <span id="bondi-label">ṁ_Bondi = —</span>
+      </div>
+      <div class="bondi-bar-wrap"><div class="bondi-bar" id="bondi-bar" style="width:50%"></div></div>
+      <div style="font-size:.7rem;color:var(--text-dim);margin-top:.25rem" id="bondi-note">—</div>
+    </div>
+
+    <!-- SED chart -->
+    <div class="chart-wrap">
+      <h2>Full SED: ν L_ν vs frequency</h2>
+      <svg id="sed-svg" viewBox="0 0 660 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;overflow:visible">
+        <defs>
+          <clipPath id="sed-clip">
+            <rect x="64" y="18" width="568" height="248"/>
+          </clipPath>
+        </defs>
+        <g id="sed-g"></g>
+      </svg>
+    </div>
+
+    <!-- NIR/MIR zoom -->
+    <div class="chart-wrap">
+      <h2>NIR–MIR zoom (0.5–100 μm) — JWST window</h2>
+      <svg id="nir-svg" viewBox="0 0 660 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;overflow:visible">
+        <defs>
+          <clipPath id="nir-clip">
+            <rect x="64" y="18" width="568" height="158"/>
+          </clipPath>
+        </defs>
+        <g id="nir-g"></g>
+      </svg>
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">Constraint verdict</div>
+      <div id="verdict-text">—</div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+// ── Physical constants (CGS) ──────────────────────────────────────────────
+const G_C    = 6.674e-8;    // cm³/g/s²
+const C_C    = 2.998e10;    // cm/s
+const K_B_C  = 1.381e-16;   // erg/K
+const H_P_C  = 6.626e-27;   // erg·s
+const M_SUN  = 1.989e33;    // g
+const KPC_CM = 3.086e21;    // cm/kpc
+const PC_CM  = 3.086e18;    // cm/pc
+
+// ── ωCen fixed distance (not a free parameter) ────────────────────────────
+const OC_DIST_PC = 5430;    // pc  (Häberle 2024)
+const OC_DIST_CM = OC_DIST_PC * PC_CM;          // cm
+const FOUR_PI_D2 = 4 * Math.PI * OC_DIST_CM * OC_DIST_CM; // cm²
+
+// ── ADAF anchor: SgrA* (Narayan & Yi 1995; Yuan & Narayan 2014 review) ───
+const SGRA_MASS  = 4e6;     // M_sun (Gravity Collab. 2018)
+const SGRA_MDOT  = 1e-5;    // ṁ at inner boundary (post-wind)
+const SGRA_NU_PK = 3.5e11;  // Hz (350 GHz submm peak; SgrA* flare+quiescent)
+
+// ── SED component fractions (mdot-dependent) ──────────────────────────────
+function sedFrac(mdot) {
+  const fc = Math.min(0.30, 0.05 + 0.25 * mdot / 0.01); // Compton grows with mdot
+  const fb = 0.05;
+  const fs = Math.max(0.10, 1 - fc - fb);
+  return { fs, fc, fb };
+}
+
+// ── Eddington luminosity [erg/s] ──────────────────────────────────────────
+function lEdd(M_sun) { return 1.26e38 * M_sun; }
+
+// ── Bolometric luminosity [erg/s] ─────────────────────────────────────────
+function lBol(M_sun, mdot, eps) { return eps * mdot * lEdd(M_sun); }
+
+// ── Bondi accretion rate as dimensionless ṁ_Bondi ─────────────────────────
+function bondiBondiMdot(M_sun, rho) {
+  const cs = 3e7; // cm/s  (300 km/s — hot GC gas)
+  const Mg = M_sun * M_SUN;
+  const Mdot_B = 4 * Math.PI * G_C * G_C * Mg * Mg * rho / (cs * cs * cs);
+  const Mdot_Edd = lEdd(M_sun) / (0.1 * C_C * C_C);
+  return Mdot_B / Mdot_Edd;
+}
+
+// ── Peak synchrotron frequency [Hz] ──────────────────────────────────────
+// Anchored: SgrA* (4e6 M_sun, ṁ=1e-5) peaks at 350 GHz
+// Scaling: ν_peak ∝ M^(-1/2) × ṁ^(1/2)  (B ∝ M^-1/2 ṁ^1/2; T_e ~ const)
+function nuPeak(M_sun, mdot) {
+  return SGRA_NU_PK * Math.sqrt(mdot / SGRA_MDOT) * Math.sqrt(SGRA_MASS / M_sun);
+}
+
+// ── Synchrotron L_ν [erg/s/Hz] ───────────────────────────────────────────
+// Shape: ν^2 (self-abs) → ν^(1/3) (thin) → exp(-2(ν/ν_p-1)) (cutoff)
+// Normalised so ∫L_ν dν = fs × L_bol  (integral ≈ 1.25 × L_ν_p × ν_p)
+function lnuSyn(M_sun, mdot, eps, nu) {
+  const { fs } = sedFrac(mdot);
+  const Ls = fs * lBol(M_sun, mdot, eps);
+  const np = nuPeak(M_sun, mdot);
+  const Lnp = Ls / (1.25 * np); // peak L_ν
+  const nt  = np * 0.01;        // self-absorption turnover
+
+  if (nu < 1e7 || nu > np * 30) return 0;
+  if (nu < nt) return Lnp * Math.pow(nt/np, 1/3) * Math.pow(nu/nt, 2); // R-J
+  if (nu < np) return Lnp * Math.pow(nu/np, 1/3);                       // thin syn
+  return Lnp * Math.exp(-2.0 * (nu/np - 1));                           // cutoff
+}
+
+// ── Inverse Compton L_ν [erg/s/Hz] ───────────────────────────────────────
+// Power law Γ=1.7 from UV to 100 keV cutoff
+function lnuCompton(M_sun, mdot, eps, nu) {
+  const { fc } = sedFrac(mdot);
+  const Lc = fc * lBol(M_sun, mdot, eps);
+  if (Lc <= 0) return 0;
+  const nu_lo = 1e14, nu_hi = 2.4e19, G = 1.7;
+  if (nu < nu_lo || nu > nu_hi * 5) return 0;
+  const integ = (Math.pow(nu_hi, 2-G) - Math.pow(nu_lo, 2-G)) / (2-G);
+  const A = Lc / integ;
+  return A * Math.pow(nu, 1-G) * Math.exp(-nu/nu_hi);
+}
+
+// ── Bremsstrahlung L_ν [erg/s/Hz] ────────────────────────────────────────
+// Flat from soft X-ray, exponential cutoff at kT_e (T_e=5e9 K → 430 keV)
+function lnuBrems(M_sun, mdot, eps, nu) {
+  const { fb } = sedFrac(mdot);
+  const Lb = fb * lBol(M_sun, mdot, eps);
+  const nu_cut = K_B_C * 5e9 / H_P_C; // ~1.04e20 Hz
+  const nu_lo = 5e16;
+  if (nu < nu_lo || nu > nu_cut * 5) return 0;
+  const A = Lb / (nu_cut * Math.exp(-nu_lo/nu_cut));
+  return A * Math.exp(-nu/nu_cut);
+}
+
+// ── Total L_ν [erg/s/Hz] ─────────────────────────────────────────────────
+function lnuTot(M_sun, mdot, eps, nu) {
+  return lnuSyn(M_sun, mdot, eps, nu)
+       + lnuCompton(M_sun, mdot, eps, nu)
+       + lnuBrems(M_sun, mdot, eps, nu);
+}
+
+// ── Observational upper limits (fixed to ωCen, d=5.43 kpc) ──────────────
+// F_limit [erg/s/cm²/Hz] → L_ν_limit = F × 4πd² [erg/s/Hz]
+// → νL_ν_limit = ν × L_ν_limit [erg/s]
+//
+// Sources:
+//  Radio: MeerKAT/VLA non-detection at ωCen centre (conservative 50 μJy @ 5 GHz)
+//  JWST NIRCam: Chen et al. 2025 (arXiv:2511.20945), crowding-limited
+//  JWST MIRI:   Chen et al. 2025
+//  Chandra 0.5-8 keV: crowding-limited composite, ΔE ≈ 7.5 keV
+const LIMITS = [
+  { id:'radio',  label:'Radio 5 GHz',      nu: 5e9,     Fjy: 50e-3,  color:'#d04040' }, // 50 μJy
+  { id:'jwst2',  label:'JWST NIRCam 2μm',  nu: 1.5e14,  Fjy: 10e-3,  color:'#4090d0' }, // 10 μJy
+  { id:'jwst3',  label:'JWST NIRCam 3μm',  nu: 1e14,    Fjy: 10e-3,  color:'#4090d0' }, // 10 μJy
+  { id:'jwst4',  label:'JWST NIRCam 4μm',  nu: 6.8e13,  Fjy: 20e-3,  color:'#4090d0' }, // 20 μJy
+  { id:'miri7',  label:'JWST MIRI 7.7μm',  nu: 3.9e13,  Fjy: 100e-3, color:'#a080f0' }, // 100 μJy
+  { id:'miri18', label:'JWST MIRI 18μm',   nu: 1.67e13, Fjy: 500e-3, color:'#a080f0' }, // 500 μJy
+  { id:'xray',   label:'Chandra 1 keV',    nu: 2.4e17,  Fjy: null,   color:'#f0a020',
+    FergHz: 1e-13 / 1.8e18 }, // F_x<1e-13 erg/s/cm^2 over 7.5 keV
+];
+
+// Convert to νL_ν limits [erg/s]
+LIMITS.forEach(b => {
+  if (b.Fjy !== null) {
+    const Fnuerg = b.Fjy * 1e-3 * 1e-23; // mJy → Jy → erg/s/cm^2/Hz
+    b.Lnu_lim  = Fnuerg * FOUR_PI_D2;    // erg/s/Hz
+    b.nuLnu_lim= b.nu * b.Lnu_lim;       // erg/s
+  } else {
+    b.Lnu_lim  = b.FergHz * FOUR_PI_D2;
+    b.nuLnu_lim= b.nu * b.Lnu_lim;
+  }
+});
+
+// ── SVG helpers ────────────────────────────────────────────────────────────
+function svgEl(tag, attrs={}, txt='') {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
+  if (txt) el.textContent = txt;
+  return el;
+}
+function pts2d(pts) {
+  if (!pts.length) return '';
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i=1;i<pts.length;i++) d+=` L${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)}`;
+  return d;
+}
+
+// ── FULL SED CHART ────────────────────────────────────────────────────────
+// x: log10(ν) 8..21, y: log10(νL_ν) 28..42
+const S = {
+  PL:64,PR:20,PT:18,PB:42,W:660,H:320,
+  LGNU_MIN:8, LGNU_MAX:21,
+  LGNLNU_MIN:28, LGNLNU_MAX:42
+};
+const sPW = S.W - S.PL - S.PR;
+const sPH = S.H - S.PT - S.PB;
+function sx(lgnu)  { return S.PL + (lgnu-S.LGNU_MIN)/(S.LGNU_MAX-S.LGNU_MIN)*sPW; }
+function sy(lgnl)  { return S.PT + (S.LGNLNU_MAX-lgnl)/(S.LGNLNU_MAX-S.LGNLNU_MIN)*sPH; }
+
+// ── NIR ZOOM CHART ────────────────────────────────────────────────────────
+// x: log10(ν) 12.5..15.5 (100μm to 0.2μm), y: log10(νL_ν) 28..38
+const N = {
+  PL:64,PR:20,PT:18,PB:38,W:660,H:220,
+  LGNU_MIN:12.5, LGNU_MAX:15.5,
+  LGNLNU_MIN:28, LGNLNU_MAX:38
+};
+const nPW = N.W - N.PL - N.PR;
+const nPH = N.H - N.PT - N.PB;
+function nx(lgnu)  { return N.PL + (lgnu-N.LGNU_MIN)/(N.LGNU_MAX-N.LGNU_MIN)*nPW; }
+function ny(lgnl)  { return N.PT + (N.LGNLNU_MAX-lgnl)/(N.LGNLNU_MAX-N.LGNLNU_MIN)*nPH; }
+
+function drawSED(st) {
+  const { mass, mdot, eps, rho } = st;
+  const g = document.getElementById('sed-g');
+  while(g.firstChild) g.removeChild(g.firstChild);
+
+  const clip = {'clip-path':'url(#sed-clip)'};
+  const yTop=S.PT, yBot=S.PT+sPH;
+
+  // BG
+  g.appendChild(svgEl('rect',{x:S.PL,y:S.PT,width:sPW,height:sPH,fill:'#0c0e13'}));
+
+  // Grid
+  for(let lgnu=9; lgnu<=20; lgnu+=3) {
+    const x=sx(lgnu);
+    g.appendChild(svgEl('line',{x1:x,y1:S.PT,x2:x,y2:yBot,stroke:'#1e2128','stroke-width':'1',...clip}));
+  }
+  for(let lgnl=30; lgnl<=40; lgnl+=2) {
+    const y=sy(lgnl);
+    g.appendChild(svgEl('line',{x1:S.PL,y1:y,x2:S.PL+sPW,y2:y,stroke:'#1e2128','stroke-width':'1'}));
+  }
+
+  const NNU=400;
+  function buildCurve(fn) {
+    const pts=[];
+    for(let i=0;i<=NNU;i++){
+      const lgnu=S.LGNU_MIN + i*(S.LGNU_MAX-S.LGNU_MIN)/NNU;
+      const nu=Math.pow(10,lgnu);
+      const Lnu=fn(nu);
+      if(!Lnu||Lnu<=0) continue;
+      const nL=nu*Lnu;
+      if(nL<=0) continue;
+      const lgnl=Math.log10(nL);
+      if(lgnl<S.LGNLNU_MIN-1||lgnl>S.LGNLNU_MAX+1) continue;
+      pts.push({x:sx(lgnu), y:sy(Math.max(S.LGNLNU_MIN, Math.min(S.LGNLNU_MAX,lgnl)))});
+    }
+    return pts;
+  }
+
+  // Synchrotron
+  const synPts = buildCurve(nu => lnuSyn(mass,mdot,eps,nu));
+  if(synPts.length>1) g.appendChild(svgEl('path',{d:pts2d(synPts),fill:'none',
+    stroke:'#1dba90','stroke-width':'1.8',...clip}));
+
+  // Compton
+  const cmpPts = buildCurve(nu => lnuCompton(mass,mdot,eps,nu));
+  if(cmpPts.length>1) g.appendChild(svgEl('path',{d:pts2d(cmpPts),fill:'none',
+    stroke:'#a080f0','stroke-width':'1.8',...clip}));
+
+  // Bremsstrahlung
+  const brPts = buildCurve(nu => lnuBrems(mass,mdot,eps,nu));
+  if(brPts.length>1) g.appendChild(svgEl('path',{d:pts2d(brPts),fill:'none',
+    stroke:'#f0a020','stroke-width':'1.5','stroke-dasharray':'4,2',...clip}));
+
+  // Total
+  const totPts = buildCurve(nu => lnuTot(mass,mdot,eps,nu));
+  if(totPts.length>1) g.appendChild(svgEl('path',{d:pts2d(totPts),fill:'none',
+    stroke:'#e2e4e9','stroke-width':'1','stroke-dasharray':'2,2',...clip}));
+
+  // Observational limits
+  for(const lim of LIMITS) {
+    const xlim = sx(Math.log10(lim.nu));
+    if(xlim<S.PL||xlim>S.PL+sPW) continue;
+    const lgnl = Math.log10(lim.nuLnu_lim);
+    const ylim = sy(Math.max(S.LGNLNU_MIN, Math.min(S.LGNLNU_MAX, lgnl)));
+    // Downward triangle
+    const ts=7;
+    const tri=`M${xlim},${ylim+ts} L${xlim-ts*.7},${ylim} L${xlim+ts*.7},${ylim} Z`;
+    g.appendChild(svgEl('path',{d:tri,fill:lim.color,opacity:'0.85',...clip}));
+    // vertical cap line
+    g.appendChild(svgEl('line',{x1:xlim-ts*.7,y1:ylim,x2:xlim+ts*.7,y2:ylim,
+      stroke:lim.color,'stroke-width':'1.5',...clip}));
+  }
+
+  // Axes box
+  g.appendChild(svgEl('rect',{x:S.PL,y:S.PT,width:sPW,height:sPH,
+    fill:'none',stroke:'#2e3240','stroke-width':'1'}));
+
+  // x-axis ticks & labels
+  const nuLabels = [
+    [8,'10⁸Hz'], [9,'1GHz'], [10,'10GHz'], [11,'100GHz'],
+    [12,'1THz'], [13,'10THz'], [14,'IR'], [15,'Opt'], [17,'keV'], [19,'MeV'],[21,'GeV']
+  ];
+  for(const [lgnu, lbl] of nuLabels) {
+    if(lgnu<S.LGNU_MIN||lgnu>S.LGNU_MAX) continue;
+    const x=sx(lgnu);
+    g.appendChild(svgEl('line',{x1:x,y1:yBot,x2:x,y2:yBot+5,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x,y:yBot+16,'text-anchor':'middle','font-size':'8.5',fill:'#8890a0'},lbl));
+  }
+
+  // Wavelength labels on top
+  const wvLabels = [[9,'30cm'],[11,'3mm'],[12,'0.3mm'],[13,'30μm'],[14,'3μm'],[15,'0.3μm']];
+  for(const [lgnu, lbl] of wvLabels) {
+    if(lgnu<S.LGNU_MIN||lgnu>S.LGNU_MAX) continue;
+    const x=sx(lgnu);
+    g.appendChild(svgEl('text',{x,y:S.PT-4,'text-anchor':'middle','font-size':'7.5',fill:'#5a6070'},lbl));
+  }
+
+  // y-axis
+  for(let lgnl=28;lgnl<=42;lgnl+=2) {
+    const y=sy(lgnl);
+    g.appendChild(svgEl('line',{x1:S.PL-5,y1:y,x2:S.PL,y2:y,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x:S.PL-7,y:y+3.5,'text-anchor':'end','font-size':'8.5',fill:'#8890a0'},
+      '10^'+lgnl));
+  }
+  g.appendChild(svgEl('text',{x:10,y:S.PT+sPH/2,'text-anchor':'middle',
+    'font-size':'9.5',fill:'#8890a0',transform:`rotate(-90,10,${S.PT+sPH/2})`},'νL_ν [erg/s]'));
+
+  // Legend
+  const leg=[['Synchrotron','#1dba90',null],['Compton','#a080f0',null],
+             ['Bremsstrahlung','#f0a020','4,2'],['Total','#e2e4e9','2,2']];
+  leg.forEach(([lbl,col,da],i)=>{
+    const lx=S.PL+8, ly=S.PT+10+i*13;
+    const lineAttrs={x1:String(lx),y1:String(ly),x2:String(lx+18),y2:String(ly),
+      stroke:col,'stroke-width':'1.5'};
+    if(da) lineAttrs['stroke-dasharray']=da;
+    g.appendChild(svgEl('line',lineAttrs));
+    g.appendChild(svgEl('text',{x:String(lx+21),y:String(ly+3.5),'font-size':'8',fill:'#8890a0'},lbl));
+  });
+
+  // Peak freq marker
+  const np = nuPeak(mass, mdot);
+  if(Math.log10(np)>=S.LGNU_MIN && Math.log10(np)<=S.LGNU_MAX) {
+    const xp=sx(Math.log10(np));
+    g.appendChild(svgEl('line',{x1:xp,y1:S.PT,x2:xp,y2:yBot,stroke:'rgba(29,186,144,0.2)',
+      'stroke-width':'1','stroke-dasharray':'2,2',...clip}));
+  }
+
+  // Limit for "excluded" verdict
+  const nuLnu_limit = Math.min(...LIMITS.map(l=>l.nuLnu_lim));
+  const Lbol = lBol(mass,mdot,eps);
+  // check Eddington
+  const lEddV = lEdd(mass);
+  const yEdd = sy(Math.log10(lEddV));
+  if(yEdd>=S.PT && yEdd<=yBot) {
+    g.appendChild(svgEl('line',{x1:S.PL,y1:yEdd,x2:S.PL+sPW,y2:yEdd,
+      stroke:'rgba(208,64,64,0.25)','stroke-width':'1','stroke-dasharray':'3,3'}));
+    g.appendChild(svgEl('text',{x:S.PL+sPW-4,y:yEdd-4,'text-anchor':'end',
+      'font-size':'8',fill:'rgba(208,64,64,0.5)'},'L_Edd'));
+  }
+}
+
+// ── NIR/MIR ZOOM CHART ────────────────────────────────────────────────────
+function drawNIR(st) {
+  const { mass, mdot, eps } = st;
+  const g = document.getElementById('nir-g');
+  while(g.firstChild) g.removeChild(g.firstChild);
+
+  const clip={'clip-path':'url(#nir-clip)'};
+  const yTop=N.PT, yBot=N.PT+nPH;
+
+  g.appendChild(svgEl('rect',{x:N.PL,y:N.PT,width:nPW,height:nPH,fill:'#0c0e13'}));
+
+  // Grid
+  for(let lgnu=13;lgnu<=15;lgnu+=0.5) {
+    const x=nx(lgnu);
+    g.appendChild(svgEl('line',{x1:x,y1:N.PT,x2:x,y2:yBot,stroke:'#1e2128','stroke-width':'1',...clip}));
+  }
+  for(let lgnl=29;lgnl<=38;lgnl+=2) {
+    const y=ny(lgnl);
+    g.appendChild(svgEl('line',{x1:N.PL,y1:y,x2:N.PL+nPW,y2:y,stroke:'#1e2128','stroke-width':'1'}));
+  }
+
+  const NNU=300;
+  function buildCurveN(fn) {
+    const pts=[];
+    for(let i=0;i<=NNU;i++){
+      const lgnu=N.LGNU_MIN+i*(N.LGNU_MAX-N.LGNU_MIN)/NNU;
+      const nu=Math.pow(10,lgnu);
+      const Lnu=fn(nu);
+      if(!Lnu||Lnu<=0) continue;
+      const nL=nu*Lnu;
+      if(nL<=0) continue;
+      const lgnl=Math.log10(nL);
+      if(lgnl<N.LGNLNU_MIN-1||lgnl>N.LGNLNU_MAX+1) continue;
+      pts.push({x:nx(lgnu),y:ny(Math.max(N.LGNLNU_MIN,Math.min(N.LGNLNU_MAX,lgnl)))});
+    }
+    return pts;
+  }
+
+  const synN=buildCurveN(nu=>lnuSyn(mass,mdot,eps,nu));
+  if(synN.length>1) g.appendChild(svgEl('path',{d:pts2d(synN),fill:'none',
+    stroke:'#1dba90','stroke-width':'2',...clip}));
+
+  const cmpN=buildCurveN(nu=>lnuCompton(mass,mdot,eps,nu));
+  if(cmpN.length>1) g.appendChild(svgEl('path',{d:pts2d(cmpN),fill:'none',
+    stroke:'#a080f0','stroke-width':'2',...clip}));
+
+  // Observational limits (NIR/MIR only)
+  for(const lim of LIMITS) {
+    const lgnu=Math.log10(lim.nu);
+    if(lgnu<N.LGNU_MIN||lgnu>N.LGNU_MAX) continue;
+    const xn=nx(lgnu);
+    const lgnl=Math.log10(lim.nuLnu_lim);
+    const yn=ny(Math.max(N.LGNLNU_MIN,Math.min(N.LGNLNU_MAX,lgnl)));
+    const ts=8;
+    g.appendChild(svgEl('path',{d:`M${xn},${yn+ts} L${xn-ts*.7},${yn} L${xn+ts*.7},${yn} Z`,
+      fill:lim.color,opacity:'0.9',...clip}));
+    g.appendChild(svgEl('line',{x1:xn-ts*.7,y1:yn,x2:xn+ts*.7,y2:yn,
+      stroke:lim.color,'stroke-width':'1.5',...clip}));
+    // label
+    if(yn>N.PT+14) {
+      g.appendChild(svgEl('text',{x:xn+3,y:yn-6,'font-size':'7.5',fill:lim.color,
+        'clip-path':'url(#nir-clip)'},lim.label.replace('JWST ','')));
+    }
+  }
+
+  // Peak marker
+  const np=nuPeak(mass,mdot);
+  const lgNp=Math.log10(np);
+  if(lgNp>=N.LGNU_MIN && lgNp<=N.LGNU_MAX) {
+    const xp=nx(lgNp);
+    g.appendChild(svgEl('line',{x1:xp,y1:N.PT,x2:xp,y2:yBot,
+      stroke:'rgba(29,186,144,0.3)','stroke-width':'1.5','stroke-dasharray':'3,2',...clip}));
+    g.appendChild(svgEl('text',{x:xp+3,y:N.PT+10,'font-size':'8',fill:'rgba(29,186,144,0.7)'},
+      'Syn peak'));
+  }
+
+  // Box + axes
+  g.appendChild(svgEl('rect',{x:N.PL,y:N.PT,width:nPW,height:nPH,
+    fill:'none',stroke:'#2e3240','stroke-width':'1'}));
+
+  // x-axis wavelength labels
+  const wvN=[
+    [12.5,'100μm'],[13,'10μm'],[13.4,'4μm'],[13.7,'2μm'],
+    [14,'1μm'],[14.3,'0.5μm'],[15,'0.1μm']
+  ];
+  for(const [lgnu,lbl] of wvN) {
+    if(lgnu<N.LGNU_MIN||lgnu>N.LGNU_MAX) continue;
+    const x=nx(lgnu);
+    g.appendChild(svgEl('line',{x1:x,y1:yBot,x2:x,y2:yBot+5,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x,y:yBot+15,'text-anchor':'middle','font-size':'8.5',fill:'#8890a0'},lbl));
+  }
+  // Band shading for JWST windows
+  const jwstBands=[
+    {lo:13.3,hi:14.15,label:'NIRCam',col:'rgba(64,144,208,0.06)'},
+    {lo:13.0,hi:13.5, label:'MIRI',  col:'rgba(160,128,240,0.06)'}
+  ];
+  for(const b of jwstBands) {
+    const x1=Math.max(N.PL,nx(b.lo)), x2=Math.min(N.PL+nPW,nx(b.hi));
+    if(x2>x1) g.appendChild(svgEl('rect',{x:x1,y:N.PT,width:x2-x1,height:nPH,
+      fill:b.col,...clip}));
+  }
+
+  for(let lgnl=30;lgnl<=38;lgnl+=2) {
+    const y=ny(lgnl);
+    g.appendChild(svgEl('line',{x1:N.PL-5,y1:y,x2:N.PL,y2:y,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x:N.PL-7,y:y+3.5,'text-anchor':'end','font-size':'8',fill:'#8890a0'},
+      '10^'+lgnl));
+  }
+  g.appendChild(svgEl('text',{x:10,y:N.PT+nPH/2,'text-anchor':'middle',
+    'font-size':'9',fill:'#8890a0',transform:`rotate(-90,10,${N.PT+nPH/2})`},'νL_ν [erg/s]'));
+}
+
+// ── Metrics & verdict ──────────────────────────────────────────────────────
+function fmtLum(L_erg) {
+  if(!isFinite(L_erg)||L_erg<=0) return '—';
+  const e=Math.floor(Math.log10(L_erg));
+  const m=(L_erg/Math.pow(10,e)).toFixed(1);
+  return m+'×10^'+e+' erg/s';
+}
+function fmtFreq(nu) {
+  if(nu>=1e12) return (nu/1e12).toFixed(1)+' THz';
+  if(nu>=1e9)  return (nu/1e9).toFixed(0)+' GHz';
+  return nu.toExponential(1)+' Hz';
+}
+function fmtWave(nu) {
+  const lam_m=3e8/nu;
+  if(lam_m>=1e-3)  return (lam_m*1e3).toFixed(0)+' mm';
+  if(lam_m>=1e-6)  return (lam_m*1e6).toFixed(1)+' μm';
+  if(lam_m>=1e-9)  return (lam_m*1e9).toFixed(0)+' nm';
+  return lam_m.toExponential(1)+' m';
+}
+
+function updateMetrics(st) {
+  const {mass, mdot, eps, rho} = st;
+  const Lbol = lBol(mass, mdot, eps);
+  const Ledd = lEdd(mass);
+  const np = nuPeak(mass, mdot);
+  const mdot_B = bondiBondiMdot(mass, rho);
+  const { fs, fc } = sedFrac(mdot);
+
+  document.getElementById('met-lbol').textContent    = fmtLum(Lbol);
+  document.getElementById('met-lrat').textContent    = (Lbol/Ledd).toExponential(1);
+  document.getElementById('met-nupeak').textContent  = fmtFreq(np);
+  document.getElementById('met-lam').textContent     = fmtWave(np);
+
+  // Accretion regime
+  const reg = document.getElementById('met-regime');
+  if(mdot < 0.001) {
+    reg.textContent = 'ADAF';
+    reg.style.color = 'var(--teal)';
+  } else if(mdot < 0.01) {
+    reg.textContent = 'Marginal';
+    reg.style.color = 'var(--amber)';
+  } else {
+    reg.textContent = 'Thin disk?';
+    reg.style.color = 'var(--red)';
+  }
+
+  // Bondi bar
+  const lg_B = Math.log10(mdot_B);
+  const lg_in = Math.log10(mdot);
+  const ratio = lg_B - lg_in; // positive → Bondi > input (OK)
+  const barPct = Math.max(0, Math.min(100, 50 + ratio * 10)); // centre at ratio=0
+  document.getElementById('bondi-bar').style.width = barPct+'%';
+  document.getElementById('bondi-bar').style.background = ratio >= 0 ? 'var(--teal)' : 'var(--amber)';
+  document.getElementById('bondi-label').textContent =
+    'ṁ_Bondi = '+mdot_B.toExponential(1)+' ('+( ratio >= 0 ? '+' : '')+ratio.toFixed(1)+' dex)';
+  document.getElementById('bondi-note').textContent = ratio >= 0
+    ? 'Bondi supply exceeds input ṁ — energetically plausible at this density.'
+    : 'Input ṁ exceeds Bondi supply — requires ρ∞ > '+( rho*Math.pow(10,-ratio)).toExponential(1)+' g/cm³.';
+
+  // Verdict
+  const exceeded = [];
+  for(const lim of LIMITS) {
+    const pred_nuLnu = lim.nu * lnuTot(mass, mdot, eps, lim.nu);
+    if(pred_nuLnu > lim.nuLnu_lim) exceeded.push(lim.label);
+  }
+
+  const vt = document.getElementById('verdict-text');
+  const vs = document.getElementById('verdict-sub');
+
+  if(exceeded.length > 0) {
+    vt.textContent = 'EXCLUDED — exceeds observational limit(s)';
+    vt.style.color = 'var(--red)';
+    vs.textContent = 'Prediction exceeds: '+exceeded.join(', ')+'. Reduce ε or ṁ to move below all limits.';
+  } else {
+    // Check headroom
+    let min_margin = Infinity, min_band = '';
+    for(const lim of LIMITS) {
+      const pred = lim.nu * lnuTot(mass, mdot, eps, lim.nu);
+      const m = Math.log10(lim.nuLnu_lim / Math.max(pred, 1e20));
+      if(m < min_margin) { min_margin=m; min_band=lim.label; }
+    }
+    if(min_margin < 1) {
+      vt.textContent = 'MARGINAL — within 1 dex of '+min_band;
+      vt.style.color = 'var(--amber)';
+    } else {
+      vt.textContent = 'CONSISTENT — below all limits';
+      vt.style.color = 'var(--teal)';
+    }
+    vs.textContent = `Min headroom: ×${Math.pow(10,min_margin).toFixed(0)} below ${min_band}. `
+      + `Syn peak at ${fmtWave(np)} (${(np<3e13)?'far-IR — Herschel/MIRI territory':'mid-IR — MIRI/WISE territory'}).`;
+  }
+
+  // Deeplink to jwst-accretion with matched params
+  document.getElementById('lnk-jwst').href =
+    'jwst-accretion.html#eps='+eps.toExponential(3)
+    +'&rho='+( rho*1e3).toExponential(3) // jwst-accretion uses SI kg/m³
+    +'&cs='+3e4; // 300 km/s in m/s
+}
+
+// ── State & hash ─────────────────────────────────────────────────────────
+const DEF = { mass:8200, mdot:1e-5, eps:1e-3, rho:1e-24 };
+let state = {...DEF};
+
+function saveHash(s) {
+  const p = new URLSearchParams();
+  p.set('mass', s.mass.toFixed(0));
+  p.set('mdot', Math.log10(s.mdot).toFixed(3));   // log10
+  p.set('eps',  Math.log10(s.eps).toFixed(3));    // log10
+  p.set('rho',  Math.log10(s.rho).toFixed(3));    // log10
+  history.replaceState(null,'','#'+p.toString());
+}
+
+function loadHash() {
+  const h=location.hash.slice(1); if(!h) return;
+  const p=new URLSearchParams(h);
+  if(p.has('mass')){ const v=parseFloat(p.get('mass')); if(v>0) state.mass=v; }
+  if(p.has('mdot')){ const v=parseFloat(p.get('mdot')); if(isFinite(v)) state.mdot=Math.pow(10,v); }
+  if(p.has('eps')) { const v=parseFloat(p.get('eps'));  if(isFinite(v)) state.eps=Math.pow(10,v); }
+  if(p.has('rho')) { const v=parseFloat(p.get('rho'));  if(isFinite(v)) state.rho=Math.pow(10,v); }
+}
+
+function syncSliders() {
+  document.getElementById('sl-mass').value = Math.log10(state.mass).toFixed(4);
+  document.getElementById('sl-mdot').value = Math.log10(state.mdot).toFixed(3);
+  document.getElementById('sl-eps').value  = Math.log10(state.eps).toFixed(3);
+  document.getElementById('sl-rho').value  = Math.log10(state.rho).toFixed(3);
+  updateLabels();
+}
+
+function fmtSup(n) {
+  // e.g. -5 → '⁻⁵'
+  const sup = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+  return String(n).split('').map(c=>sup[c]||c).join('');
+}
+function fmtLog(x) {
+  const e=Math.log10(x); const ei=Math.round(e);
+  if(Math.abs(e-ei)<0.05) return '10'+fmtSup(ei);
+  return x.toPrecision(2);
+}
+
+function updateLabels() {
+  const m=state.mass;
+  document.getElementById('lbl-mass').textContent =
+    m>=1000?Math.round(m).toLocaleString()+' M☉':m.toFixed(0)+' M☉';
+  document.getElementById('lbl-mdot').textContent = fmtLog(state.mdot);
+  document.getElementById('lbl-eps').textContent  = fmtLog(state.eps);
+  const rho=state.rho;
+  document.getElementById('lbl-rho').textContent  = fmtLog(rho)+' g/cm³';
+}
+
+function render() {
+  updateLabels();
+  updateMetrics(state);
+  drawSED(state);
+  drawNIR(state);
+  saveHash(state);
+}
+
+// ── Event wiring ───────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHash();
+  syncSliders();
+  render();
+
+  document.getElementById('sl-mass').addEventListener('input', function() {
+    state.mass = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-mdot').addEventListener('input', function() {
+    state.mdot = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-eps').addEventListener('input', function() {
+    state.eps = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-rho').addEventListener('input', function() {
+    state.rho = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+});
+</script>
+</body>
+</html>
