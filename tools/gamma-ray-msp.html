@@ -261,10 +261,10 @@ a:hover{color:var(--teal-glow)}
       <p>Converting to GeV/cm²/s: <code>F_msp [GeV/cm²/s] = N_msp × L_msp [erg/s] / (4π × d_cm²) × (1 GeV / 1.602×10⁻³ erg)</code></p>
 
       <h3>Fermi-LAT sensitivity scaling</h3>
-      <p>Fermi-LAT 10-year sensitivity to a point source at 1 GeV is approximately 5×10⁻¹³ GeV cm⁻² s⁻¹. Sensitivity scales as 1/√T_obs, so at 15 years the reference sensitivity is ~4×10⁻¹³ GeV cm⁻² s⁻¹. The tool scales from this reference: <code>F_sens(T) = 4×10⁻¹³ × √(15/T_obs) GeV/cm²/s</code>.</p>
+      <p>Fermi-LAT 10-year sensitivity to a point source at ~1 GeV is approximately 5×10⁻¹³ erg cm⁻² s⁻¹ (energy flux). Sensitivity scales as 1/√T_obs, so at 15 years the reference sensitivity is ~4×10⁻¹³ erg cm⁻² s⁻¹ ≈ 2.5×10⁻¹⁰ GeV/cm²/s. The tool scales from this reference and compares against signal fluxes in consistent GeV/cm²/s units.</p>
 
       <h3>CTA-South sensitivity</h3>
-      <p>CTA-South 50h sensitivity for a steady source above 100 GeV is approximately 5×10⁻¹⁴ GeV/cm²/s (Cherenkov Telescope Array Observatory 2019). This is the integrated sensitivity above ~100 GeV where MSP spectral cutoffs (~2–3 GeV) leave the field clear — making CTA particularly powerful for technosignature discrimination.</p>
+      <p>CTA-South 50h sensitivity for a steady source above 100 GeV is approximately 5×10⁻¹⁴ erg/cm²/s ≈ 3.1×10⁻¹¹ GeV/cm²/s (Cherenkov Telescope Array Observatory 2019). This is the integrated sensitivity above ~100 GeV where MSP spectral cutoffs (~2–3 GeV) leave the field clear — making CTA particularly powerful for technosignature discrimination.</p>
 
       <h3>Technosignature signal model</h3>
       <p>A civilization operating Bekenstein-limited computation via BZ extraction at power P_BZ would emit waste radiation. A fraction f_leak leaks as gamma-rays. The signal flux is: <code>F_signal = f_leak × P_BZ / (4π × d²)</code> converted to GeV/cm²/s. This represents a power-law continuum rather than the exponential MSP cutoff above ~3 GeV, which is the key spectral discriminant.</p>
@@ -321,12 +321,12 @@ function compute(){
   const F_msp_erg = N * L_msp_erg / (4 * PI * OC_DIST_CM * OC_DIST_CM);
   const F_msp_GeV = F_msp_erg / GEV_ERG;
 
-  // Fermi-LAT sensitivity: reference 4e-13 GeV/cm²/s at 15 yr, scale as 1/√T
-  const F_fermi_ref = 4e-13;  // at 15 yr
+  // Fermi-LAT sensitivity: literature value 4e-13 erg/cm²/s at 15 yr, converted to GeV/cm²/s
+  const F_fermi_ref = 4e-13 / GEV_ERG;  // at 15 yr; was mislabeled as GeV but is erg
   const F_fermi = F_fermi_ref * Math.sqrt(15 / T_obs);
 
-  // CTA-South: fixed 50h sensitivity ~5e-14 GeV/cm²/s (>100 GeV, independent of obs time here)
-  const F_cta = 5e-14;
+  // CTA-South: fixed 50h sensitivity ~5e-14 erg/cm²/s (>100 GeV), converted to GeV/cm²/s
+  const F_cta = 5e-14 / GEV_ERG;  // was mislabeled as GeV but is erg
 
   // Signal flux: P_BZ_W [W] → erg/s (* 1e7), then leakage fraction, at OC distance
   const P_signal_erg = f_leak * P_BZ_W * 1e7;  // erg/s
