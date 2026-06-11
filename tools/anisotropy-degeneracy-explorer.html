@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anisotropy Degeneracy Explorer — Omega Centauri Society</title>
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="data/measurements.js"></script>
+<style>
+:root{
+  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
+  --text-sec:#8890a0;--text-dim:#5a6070;
+  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
+  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
+  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+  --purple-dim:rgba(160,128,240,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{display:flex;align-items:center;gap:1rem;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;background:var(--surface)}
+nav a{color:var(--text-sec)}
+nav a:hover{color:var(--text)}
+.nav-sep{color:var(--text-dim)}
+.tool-header{padding:1.5rem 1.5rem .5rem}
+.tool-header h1{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:680px}
+.badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
+.badge-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(160,128,240,.25)}
+main{display:grid;grid-template-columns:270px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1100px}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.9rem}
+.ctrl-row{margin-bottom:.85rem}
+.ctrl-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem}
+.ctrl-label span{color:var(--text-sec)}
+.ctrl-val{color:var(--text);font-weight:500}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal);border:none;cursor:pointer}
+.beta-track{position:relative;height:4px;background:linear-gradient(to right,var(--purple),#2a2d35,var(--amber));border-radius:2px;margin:.35rem 0}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.75rem}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem}
+.metric-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+.metric-val{font-size:1rem;font-weight:600;margin-top:.15rem}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem}
+.chart-wrap h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
+#chart-svg{width:100%;height:auto;display:block}
+.verdict-box{margin-top:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem}
+.verdict-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.3rem}
+#verdict-text{font-size:.95rem;font-weight:600}
+.verdict-sub{font-size:.8rem;color:var(--text-sec);margin-top:.3rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:.6rem 0}
+details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select:none}
+details summary::marker{color:var(--text-dim)}
+.about-body{font-size:.82rem;color:var(--text-sec);line-height:1.75;margin-top:.6rem}
+.about-body p{margin-bottom:.55rem}
+.about-body code{font-size:.78rem;background:var(--border);padding:.1rem .3rem;border-radius:3px}
+.ref{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;line-height:1.6}
+.ref a{color:var(--text-dim)}
+.ref a:hover{color:var(--text-sec)}
+.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">Omega Centauri Society</a>
+  <span class="nav-sep">/</span>
+  <a href="index.html">Tools</a>
+  <span class="nav-sep">/</span>
+  <span>Anisotropy Degeneracy Explorer</span>
+</nav>
+
+<div class="tool-header">
+  <h1>Anisotropy Degeneracy Explorer</h1>
+  <p>The sharpest objection to kinematic IMBH evidence: radial velocity anisotropy (β&nbsp;&gt;&nbsp;0) and a concentrated remnant cluster can both mimic a central dispersion cusp. Adjust all three and see which combinations reproduce the observed ωCen profile — and when an IMBH becomes genuinely detectable.</p>
+  <div class="badges">
+    <span class="badge badge-teal">IMBH Evidence</span>
+    <span class="badge badge-purple">Kinematic Degeneracy</span>
+    <span class="badge badge-amber">Methodological Critique</span>
+  </div>
+</div>
+
+<main>
+  <!-- Controls -->
+  <div>
+    <div class="panel">
+      <h2>Parameters</h2>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>IMBH mass</span>
+          <span class="ctrl-val" id="lbl-mass">8,200 M☉</span>
+        </div>
+        <input type="range" id="sl-mass" min="3" max="6" step="0.02" value="3.914">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Velocity anisotropy β</span>
+          <span class="ctrl-val" id="lbl-beta">0.00</span>
+        </div>
+        <div class="beta-track"></div>
+        <input type="range" id="sl-beta" min="-0.5" max="0.5" step="0.02" value="0">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>← tangential</span><span>isotropic</span><span>radial →</span>
+        </div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Remnant cluster mass M<sub>rem</sub></span>
+          <span class="ctrl-val" id="lbl-mrem">0 M☉</span>
+        </div>
+        <input type="range" id="sl-mrem" min="0" max="5.5" step="0.05" value="0">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Remnant scale radius r<sub>rem</sub></span>
+          <span class="ctrl-val" id="lbl-rrem">1.0 pc</span>
+        </div>
+        <input type="range" id="sl-rrem" min="0.1" max="4.0" step="0.05" value="1.0">
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>OC Distance</span>
+          <span class="ctrl-val" id="lbl-dist">5.43 kpc</span>
+        </div>
+        <input type="range" id="sl-dist" min="4.5" max="6.5" step="0.01" value="5.43">
+      </div>
+
+      <hr class="divider">
+      <div style="font-size:.75rem;color:var(--text-dim);line-height:1.55">
+        <b style="color:var(--text-sec)">β = 0:</b> isotropic<br>
+        <b style="color:var(--text-sec)">β &gt; 0:</b> radially biased orbits — central cusp amplified, can masquerade as IMBH<br>
+        <b style="color:var(--text-sec)">β &lt; 0:</b> tangentially biased — cusp suppressed
+      </div>
+    </div>
+
+    <details style="margin-top:.75rem">
+      <summary>Physics &amp; citations</summary>
+      <div class="about-body" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:.3rem">
+        <p>Uses the spherical isotropic Jeans equation with constant anisotropy parameter β (Binney &amp; Tremaine §4.8.2). The tracer density follows a Plummer model (M<sub>cl</sub>&nbsp;=&nbsp;4&nbsp;×&nbsp;10⁶&nbsp;M☉, a&nbsp;=&nbsp;7&nbsp;pc). The remnant cluster is an independent Plummer component contributing dynamical mass but no luminous tracers. The IMBH is a point mass at the centre.</p>
+        <p>Jeans solution (constant β): <code>ρσ_r²(r) = r^{−2β} ∫_r^∞ ρ(r′) G M_enc(r′)/r′² · r′^{2β} dr′</code></p>
+        <p>Projected LOS dispersion via Abel integral: <code>σ_los²(R) = ∫₀^∞ (1 − βR²/r²) (ρ_cl/ρ_tot) ρ_tot σ_r² dz / ∫₀^∞ ρ_cl dz</code>, where r = √(R² + z²).</p>
+        <p>Reference profile (grey) is approximate — derived from the published oMEGACat VI data summary (Häberle et al. 2025, proper motions + radial velocities). Uncertainties are illustrative.</p>
+        <div class="note-box">⚠ Both Häberle 2024 (≥&nbsp;8,200&nbsp;M☉ lower limit) and Bañares-Hernández 2025 (≤&nbsp;6,000&nbsp;M☉ 3σ upper limit) remain valid and unreconciled. This tool intentionally shows the degeneracy argument — it does not settle the question.</div>
+        <div class="ref">
+          Häberle et al. 2024, Nature 631:285 — <a href="https://doi.org/10.1038/s41586-024-07511-z" target="_blank">doi:10.1038/s41586-024-07511-z</a><br>
+          Bañares-Hernández et al. 2025, A&amp;A 693:A104 — <a href="https://doi.org/10.1051/0004-6361/202451763" target="_blank">doi:10.1051/0004-6361/202451763</a><br>
+          den Brok et al. 2023 (IMBH wander+anisotropy), A&amp;A — <a href="https://doi.org/10.1051/0004-6361/202246124" target="_blank">doi:10.1051/0004-6361/202246124</a><br>
+          van der Marel &amp; Anderson 2010 (HST kinematics) — <a href="https://doi.org/10.1088/0004-637X/710/2/1063" target="_blank">doi:10.1088/0004-637X/710/2/1063</a>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">σ_los (inner 0.1 pc)</div>
+        <div class="metric-val" id="met-sig0">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">IMBH detectability</div>
+        <div class="metric-val" id="met-detect">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Profile fit χ²/N</div>
+        <div class="metric-val" id="met-chi">—</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <h2>σ<sub>los</sub> profile vs projected radius</h2>
+      <svg id="chart-svg" viewBox="0 0 580 250" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+        <g id="chart-content"></g>
+      </svg>
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">Degeneracy verdict</div>
+      <div id="verdict-text">—</div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── Physics constants ────────────────────────────────────────────────────
+const G     = 6.674e-11;
+const M_SUN = 1.989e30;
+const PC_M  = 3.086e16;
+const KPC_M = 3.086e19;
+
+// ── Cluster parameters (from measurements.js + literature) ───────────────
+const M_CL   = 4.0e6;   // M☉  total luminous+stellar mass (Baumgardt & Hilker 2018)
+const A_CL   = 7.0;     // pc  Plummer scale radius (= projected half-mass radius)
+
+// ── Reference profile (approximate, oMEGACat VI / Häberle 2025) ──────────
+// [R_arcsec, sigma_kms, sigma_err_kms]
+// Converted to pc at runtime using dist slider
+const OBS_REF = [
+  [3,   27.0, 3.0],
+  [12,  23.0, 1.5],
+  [30,  21.0, 1.2],
+  [60,  19.5, 1.0],
+  [120, 18.0, 1.0],
+  [240, 16.0, 1.0],
+  [400, 14.0, 1.0],
+  [600, 12.5, 1.0]
+];
+
+// ── Radial grid ───────────────────────────────────────────────────────────
+const N_R = 90;
+function makeLogGrid(rmin, rmax, n) {
+  const arr = [];
+  const logMin = Math.log(rmin), logMax = Math.log(rmax);
+  for (let i = 0; i < n; i++) arr.push(Math.exp(logMin + i * (logMax - logMin) / (n - 1)));
+  return arr;
+}
+const R_GRID_PC = makeLogGrid(0.004, 28, N_R); // pc
+
+// ── Plummer density (M_sun/pc³ → needs unit conversion) ──────────────────
+// We work in SI throughout the Jeans calculation
+function plummerRho_SI(r_m, M_sun, a_pc) {
+  const a_m = a_pc * PC_M;
+  return (3 * M_sun * M_SUN) / (4 * Math.PI * a_m * a_m * a_m) *
+    Math.pow(1 + r_m * r_m / (a_m * a_m), -2.5);
+}
+function plummerEncM_sun(r_pc, M_sun, a_pc) {
+  const x = r_pc / a_pc;
+  return M_sun * x * x * x / Math.pow(1 + x * x, 1.5);
+}
+
+// ── Linear interpolation on sorted array ─────────────────────────────────
+function interp(xarr, yarr, x) {
+  if (x <= xarr[0]) return yarr[0];
+  if (x >= xarr[xarr.length - 1]) return yarr[yarr.length - 1];
+  let lo = 0, hi = xarr.length - 1;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (xarr[mid] <= x) lo = mid; else hi = mid; }
+  const t = (x - xarr[lo]) / (xarr[hi] - xarr[lo]);
+  return yarr[lo] + t * (yarr[hi] - yarr[lo]);
+}
+
+// ── Core Jeans + projection computation ──────────────────────────────────
+function computeProfile(M_imbh, M_rem, r_rem_pc, beta, dist_kpc) {
+  const N = R_GRID_PC.length;
+  const r_m = R_GRID_PC.map(r => r * PC_M);
+
+  // Densities (SI) at each r
+  const rhoCl  = r_m.map(r => plummerRho_SI(r, M_CL, A_CL));
+  const rhoRem = r_m.map(r => M_rem > 0 ? plummerRho_SI(r, M_rem, r_rem_pc) : 0);
+  const rhoTot = rhoCl.map((rc, i) => rc + rhoRem[i]);
+
+  // Enclosed mass (M☉) at each r
+  const Menc = R_GRID_PC.map(rp => {
+    return M_imbh + plummerEncM_sun(rp, M_CL, A_CL) +
+      (M_rem > 0 ? plummerEncM_sun(rp, M_rem, r_rem_pc) : 0);
+  });
+
+  // Jeans: compute ρ_tot σ_r² (SI) backward from outer boundary
+  // ρ σ_r²(r) = r^{-2β} ∫_r^∞ ρ_tot(r') G M_enc(r')/r'² · r'^{2β} dr'
+  // Using trapezoid rule on log-spaced grid
+  const jIntegrand = R_GRID_PC.map((rp, i) => {
+    const r = r_m[i];
+    const rhs = rhoTot[i] * G * Menc[i] * M_SUN / (r * r);
+    return rhs * Math.pow(r, 2 * beta);
+  });
+  // Integrate right-to-left (backward cumsum)
+  const cumInt = new Float64Array(N); // cumInt[i] = ∫_r[i]^∞ jIntegrand * dr
+  for (let i = N - 2; i >= 0; i--) {
+    const dr = r_m[i + 1] - r_m[i];
+    cumInt[i] = cumInt[i + 1] + 0.5 * (jIntegrand[i] + jIntegrand[i + 1]) * dr;
+  }
+  const rhoSig2 = R_GRID_PC.map((rp, i) => {
+    return Math.pow(r_m[i], -2 * beta) * cumInt[i];
+  }); // rhoTot * sigma_r^2 in SI (kg·m⁻¹·s⁻²)
+
+  // Projection: Abel transform for each projected R
+  // R_proj in pc → arcsec conversion at runtime; we produce in pc
+  const R_proj_pc = [0.05, 0.1, 0.18, 0.32, 0.58, 1.05, 1.9, 3.4, 6.1, 11.0, 18.0];
+
+  const sigma_los_kms = R_proj_pc.map(Rpc => {
+    const R_m = Rpc * PC_M;
+    // z from 0 to sqrt(r_max^2 - R^2)
+    const zmax = Math.sqrt(Math.max(r_m[N-1]*r_m[N-1] - R_m*R_m, 0));
+    if (zmax <= 0) return 0;
+    const N_z = 80;
+    let num = 0, den = 0;
+    for (let j = 0; j <= N_z; j++) {
+      const z = zmax * j / N_z; // linear z grid
+      const r = Math.sqrt(R_m * R_m + z * z);
+      const r_pc = r / PC_M;
+      const rc_interp  = interp(R_GRID_PC, rhoCl, r_pc);
+      const rt_interp  = interp(R_GRID_PC, rhoTot, r_pc);
+      const rs2_interp = interp(R_GRID_PC, rhoSig2, r_pc);
+      const w = (j === 0 || j === N_z) ? 0.5 : 1.0; // trapezoid weight
+      const betaFac = 1 - beta * R_m * R_m / (r * r);
+      const clFrac = rt_interp > 0 ? rc_interp / rt_interp : 1.0;
+      num += w * betaFac * clFrac * rs2_interp;
+      den += w * rc_interp;
+    }
+    if (den <= 0) return 0;
+    const sig2_SI = num / den;
+    return Math.sqrt(Math.max(sig2_SI, 0)) / 1e3; // → km/s
+  });
+
+  return { R_proj_pc, sigma_los_kms };
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+const state = { mass: 8200, mrem: 0, rrem: 1.0, beta: 0.0, dist: 5.43 };
+
+// ── Hash ───────────────────────────────────────────────────────────────────
+function getHash()  { return Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map(s=>s.split('='))); }
+function setHash(o) { location.replace('#' + Object.entries(o).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')); }
+function saveHash() { setHash({ mass: state.mass.toFixed(0), mrem: state.mrem.toFixed(0), rrem: state.rrem.toFixed(2), beta: state.beta.toFixed(2), dist: state.dist.toFixed(2) }); }
+function loadHash() {
+  const h = getHash();
+  if (h.mass) state.mass = Math.max(1e3, Math.min(1e6, parseFloat(h.mass) || 8200));
+  if (h.mrem) state.mrem = Math.max(0,   Math.min(3e5, parseFloat(h.mrem) || 0));
+  if (h.rrem) state.rrem = Math.max(0.1, Math.min(4.0, parseFloat(h.rrem) || 1.0));
+  if (h.beta) state.beta = Math.max(-0.5, Math.min(0.5, parseFloat(h.beta) || 0));
+  if (h.dist) state.dist = Math.max(4.5, Math.min(6.5,  parseFloat(h.dist) || 5.43));
+}
+
+// ── SVG chart ──────────────────────────────────────────────────────────────
+const PL=62,PR=565,PT=15,PB=230,PW=PR-PL,PH=PB-PT;
+const R_LOG_MIN=Math.log10(0.04),R_LOG_MAX=Math.log10(22);
+const SIG_MIN=0,SIG_MAX=34;
+function xPx(R_pc) { return PL + (Math.log10(R_pc)-R_LOG_MIN)/(R_LOG_MAX-R_LOG_MIN)*PW; }
+function yPx(s)    { return PT + (1-(s-SIG_MIN)/(SIG_MAX-SIG_MIN))*PH; }
+
+function render() {
+  const { mass, mrem, rrem, beta, dist } = state;
+
+  // Compute current model
+  const cur = computeProfile(mass, mrem, rrem, beta, dist);
+  // Compute no-IMBH (beta, mrem only) for detectability
+  const noImbh = computeProfile(0, mrem, rrem, beta, dist);
+  // Compute isotropic+no-extras baseline
+  const base = computeProfile(0, 0, rrem, 0, dist);
+
+  // Per-arcsec scale
+  const arcSecPerPc = 206265 / (dist * 1000);
+
+  // Reference profile in pc
+  const refPc = OBS_REF.map(([arcsec, sig, err]) => [arcsec / arcSecPerPc, sig, err]);
+
+  // Build SVG
+  let svg = '';
+
+  // Plot area background
+  svg += `<rect x="${PL}" y="${PT}" width="${PW}" height="${PH}" fill="#13151a" rx="3"/>`;
+
+  // Gridlines
+  [0,5,10,15,20,25,30].forEach(s => {
+    const y = yPx(s);
+    svg += `<line x1="${PL}" y1="${y}" x2="${PR}" y2="${y}" stroke="#1e2128" stroke-width="1"/>`;
+    svg += `<text x="${PL-5}" y="${y+4}" text-anchor="end" fill="#5a6070" font-size="10">${s}</text>`;
+  });
+  [0.1,0.3,1.0,3.0,10.0].forEach(R => {
+    const x = xPx(R);
+    svg += `<line x1="${x}" y1="${PT}" x2="${x}" y2="${PB}" stroke="#1e2128" stroke-width="1"/>`;
+    const lbl = R < 1 ? R.toFixed(1) : R.toFixed(0);
+    svg += `<text x="${x}" y="${PB+13}" text-anchor="middle" fill="#5a6070" font-size="10">${lbl}</text>`;
+  });
+  // Axis labels
+  svg += `<text x="${PL+PW/2}" y="258" text-anchor="middle" fill="#8890a0" font-size="10">Projected radius R (pc, log scale)</text>`;
+  svg += `<text transform="translate(11,${PT+PH/2}) rotate(-90)" text-anchor="middle" fill="#8890a0" font-size="10">σ_los (km/s)</text>`;
+  svg += `<line x1="${PL}" y1="${PT}" x2="${PL}" y2="${PB}" stroke="#2a2d35" stroke-width="1.5"/>`;
+  svg += `<line x1="${PL}" y1="${PB}" x2="${PR}" y2="${PB}" stroke="#2a2d35" stroke-width="1.5"/>`;
+
+  // Secondary x-axis labels in arcsec
+  [10,30,120,400].forEach(arcsec => {
+    const R_pc = arcsec / arcSecPerPc;
+    const x = xPx(R_pc);
+    if (x < PL || x > PR) return;
+    svg += `<line x1="${x}" y1="${PT}" x2="${x}" y2="${PT-4}" stroke="#2a2d35" stroke-width="1"/>`;
+    svg += `<text x="${x}" y="${PT-7}" text-anchor="middle" fill="#5a6070" font-size="9">${arcsec}″</text>`;
+  });
+
+  // No-IMBH model (dashed purple)
+  const noImbhPath = noImbh.R_proj_pc.map((R,i) => {
+    const x = xPx(R), y = yPx(noImbh.sigma_los_kms[i]);
+    return (i===0?'M':'L') + x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  svg += `<path d="${noImbhPath}" fill="none" stroke="#a080f0" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/>`;
+
+  // Current model (blue)
+  const curPath = cur.R_proj_pc.map((R,i) => {
+    const x = xPx(R), y = yPx(cur.sigma_los_kms[i]);
+    return (i===0?'M':'L') + x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  svg += `<path d="${curPath}" fill="none" stroke="#4090d0" stroke-width="2.5"/>`;
+
+  // Reference profile (grey dots + error bars)
+  refPc.forEach(([R_pc, sig, err]) => {
+    if (R_pc < 0.04 || R_pc > 22) return;
+    const x = xPx(R_pc), y = yPx(sig);
+    const y1 = yPx(sig + err), y2 = yPx(sig - err);
+    svg += `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="#5a6070" stroke-width="1.5"/>`;
+    svg += `<line x1="${x-3}" y1="${y1}" x2="${x+3}" y2="${y1}" stroke="#5a6070" stroke-width="1.5"/>`;
+    svg += `<line x1="${x-3}" y1="${y2}" x2="${x+3}" y2="${y2}" stroke="#5a6070" stroke-width="1.5"/>`;
+    svg += `<circle cx="${x}" cy="${y}" r="3.5" fill="#5a6070" fill-opacity=".4" stroke="#8890a0" stroke-width="1"/>`;
+  });
+
+  // Legend
+  const lx=PL+6, ly0=PT+8;
+  svg += `<line x1="${lx}" y1="${ly0+4}" x2="${lx+18}" y2="${ly0+4}" stroke="#4090d0" stroke-width="2.5"/>`;
+  svg += `<text x="${lx+22}" y="${ly0+8}" fill="#8890a0" font-size="9">Current model (IMBH + β + M_rem)</text>`;
+  svg += `<line x1="${lx}" y1="${ly0+19}" x2="${lx+18}" y2="${ly0+19}" stroke="#a080f0" stroke-width="1.5" stroke-dasharray="4,3" opacity=".7"/>`;
+  svg += `<text x="${lx+22}" y="${ly0+23}" fill="#8890a0" font-size="9">No IMBH (β + M_rem only)</text>`;
+  svg += `<circle cx="${lx+9}" cy="${ly0+35}" r="3" fill="#5a6070" fill-opacity=".5" stroke="#8890a0" stroke-width="1"/>`;
+  svg += `<text x="${lx+22}" y="${ly0+39}" fill="#8890a0" font-size="9">~oMEGACat VI (approx.)</text>`;
+
+  // Häberle lower-bound annotation
+  const y_haber = yPx(8200 / 8200 * 2 + 24); // just decorative — skip; better: annotate the central sigma
+  // Mark the Häberle detection zone (inner ~3" = ~0.08 pc)
+  const xHaber = xPx(0.08);
+  if (xHaber > PL && xHaber < PR) {
+    svg += `<rect x="${PL}" y="${PT}" width="${xHaber-PL}" height="${PH}" fill="rgba(240,160,32,0.04)" stroke="rgba(240,160,32,0.2)" stroke-width="1" stroke-dasharray="3,3"/>`;
+    svg += `<text x="${PL+3}" y="${PT+10}" fill="rgba(240,160,32,0.6)" font-size="8.5">Häberle 2024<tspan x="${PL+3}" dy="10">fast-star zone</tspan></text>`;
+  }
+
+  document.getElementById('chart-content').innerHTML = svg;
+
+  // ── Metrics ──
+  const sig0 = cur.sigma_los_kms[0];
+  const sig0_noimbh = noImbh.sigma_los_kms[0];
+  const deltaSig = sig0 - sig0_noimbh;
+  const sigErr = 2.0; // typical inner-arcsec observational uncertainty (km/s)
+  const detectability = deltaSig / sigErr;
+
+  document.getElementById('met-sig0').textContent = sig0.toFixed(1) + ' km/s';
+
+  const dEl = document.getElementById('met-detect');
+  if (detectability >= 3) { dEl.textContent = `${detectability.toFixed(1)}σ ✓`; dEl.style.color='var(--teal)'; }
+  else if (detectability >= 1) { dEl.textContent = `${detectability.toFixed(1)}σ ~`; dEl.style.color='var(--amber)'; }
+  else { dEl.textContent = `<1σ — degenerate`; dEl.style.color='var(--text-dim)'; }
+
+  // Chi² vs reference
+  let chi2 = 0, nRef = 0;
+  refPc.forEach(([R_pc, sig_ref, err_ref]) => {
+    const sig_mod = interp(cur.R_proj_pc, cur.sigma_los_kms, R_pc);
+    chi2 += ((sig_mod - sig_ref) / err_ref) ** 2;
+    nRef++;
+  });
+  const chi2_N = chi2 / nRef;
+  const chiEl = document.getElementById('met-chi');
+  chiEl.textContent = chi2_N.toFixed(2);
+  if (chi2_N < 2) chiEl.style.color = 'var(--teal)';
+  else if (chi2_N < 5) chiEl.style.color = 'var(--amber)';
+  else chiEl.style.color = 'var(--red)';
+
+  // ── Verdict ──
+  const vEl  = document.getElementById('verdict-text');
+  const vSub = document.getElementById('verdict-sub');
+
+  if (detectability < 1) {
+    vEl.textContent = 'DEGENERATE — IMBH undetectable with current parameters';
+    vEl.style.color = 'var(--text-dim)';
+    vSub.textContent = `At β = ${beta.toFixed(2)} and M_rem = ${mrem > 0 ? mrem.toLocaleString()+' M☉' : '0'}, the no-IMBH model (purple dashed) produces the same central σ_los within measurement errors. The IMBH signal is hidden.`;
+  } else if (detectability < 3) {
+    vEl.textContent = 'MARGINAL — IMBH partially distinguishable';
+    vEl.style.color = 'var(--amber)';
+    vSub.textContent = `Δσ_los ≈ ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ). Anisotropy or remnant mass adjustments could plausibly explain the signal without an IMBH.`;
+  } else {
+    vEl.textContent = 'DISTINCT — IMBH signature not easily mimicked';
+    vEl.style.color = 'var(--teal)';
+    vSub.textContent = `The IMBH produces Δσ_los ≈ ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ) above the no-IMBH case at current β and M_rem. Degeneracy is broken here.`;
+  }
+}
+
+// ── Sync sliders to state ─────────────────────────────────────────────────
+function syncSliders() {
+  document.getElementById('sl-mass').value = Math.log10(state.mass).toFixed(4);
+  document.getElementById('lbl-mass').textContent = Math.round(state.mass).toLocaleString() + ' M☉';
+  const mremLog = state.mrem > 0 ? Math.log10(state.mrem).toFixed(4) : '0';
+  document.getElementById('sl-mrem').value = state.mrem > 0 ? Math.log10(state.mrem).toFixed(4) : '0';
+  document.getElementById('lbl-mrem').textContent = state.mrem > 0 ? Math.round(state.mrem).toLocaleString() + ' M☉' : '0 M☉';
+  document.getElementById('sl-beta').value = state.beta;
+  document.getElementById('lbl-beta').textContent = state.beta.toFixed(2);
+  document.getElementById('sl-rrem').value = state.rrem;
+  document.getElementById('lbl-rrem').textContent = state.rrem.toFixed(2) + ' pc';
+  document.getElementById('sl-dist').value = state.dist;
+  document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
+}
+
+// ── Wire controls ─────────────────────────────────────────────────────────
+function wire() {
+  document.getElementById('sl-mass').addEventListener('input', e => {
+    state.mass = Math.pow(10, parseFloat(e.target.value));
+    document.getElementById('lbl-mass').textContent = Math.round(state.mass).toLocaleString() + ' M☉';
+    saveHash(); render();
+  });
+  document.getElementById('sl-mrem').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    state.mrem = v <= 0 ? 0 : Math.pow(10, v);
+    document.getElementById('lbl-mrem').textContent = state.mrem > 0 ? Math.round(state.mrem).toLocaleString() + ' M☉' : '0 M☉';
+    saveHash(); render();
+  });
+  document.getElementById('sl-beta').addEventListener('input', e => {
+    state.beta = parseFloat(e.target.value);
+    document.getElementById('lbl-beta').textContent = state.beta.toFixed(2);
+    saveHash(); render();
+  });
+  document.getElementById('sl-rrem').addEventListener('input', e => {
+    state.rrem = parseFloat(e.target.value);
+    document.getElementById('lbl-rrem').textContent = state.rrem.toFixed(2) + ' pc';
+    saveHash(); render();
+  });
+  document.getElementById('sl-dist').addEventListener('input', e => {
+    state.dist = parseFloat(e.target.value);
+    document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
+    saveHash(); render();
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHash();
+  syncSliders();
+  wire();
+  render();
+});
+</script>
+</body>
+</html>
