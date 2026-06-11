@@ -277,6 +277,7 @@ const KB = 1.381e-23;
 const LN2 = Math.log(2);
 const T_CMB_NOW = 2.725;             // Kelvin
 const H_LAMBDA_PER_YR = 5.7e-11;     // late-era de Sitter expansion rate, 1/yr
+const T_DS = 2.7e-30;                // de Sitter temperature floor (K) — Gibbons-Hawking, H_Λ/2π
 const YR_S = 3.156e7;
 
 const state = {
@@ -327,9 +328,11 @@ function fmtRatio(r){
   return r.toExponential(2) + '×';
 }
 
-// T_CMB at wait time Δt (years) using late-time exponential expansion
+// T_CMB at wait time Δt (years): exponential decay clamped to de Sitter floor T_DS ≈ 2.7×10⁻³⁰ K
+// The CMB cannot cool below the Gibbons-Hawking de Sitter temperature; Sandberg's ~10³⁰ gain
+// figure comes from integrating down exactly to this floor.
 function TCMB_after(yearsAhead) {
-  return T_CMB_NOW * Math.exp(-H_LAMBDA_PER_YR * yearsAhead);
+  return Math.max(T_DS, T_CMB_NOW * Math.exp(-H_LAMBDA_PER_YR * yearsAhead));
 }
 
 function compute() {
@@ -511,6 +514,20 @@ function drawCurve(c) {
     ctx.fillStyle = '#4de8c0';
     ctx.textAlign = 'left';
     ctx.fillText('Bennett T_cold = ' + fmtSci(state.bColdT) + ' K', padL + 6, yB - 4);
+  }
+
+  // de Sitter temperature floor (horizontal asymptote)
+  const lgTds = Math.log10(T_DS); // ≈ -29.6
+  if (lgTds > yMin && lgTds < yMax) {
+    const yDs = padT + plotH - (lgTds - yMin)/(yMax - yMin) * plotH;
+    ctx.strokeStyle = '#ff6b6b';
+    ctx.setLineDash([6, 3]);
+    ctx.beginPath();
+    ctx.moveTo(padL, yDs); ctx.lineTo(padL + plotW, yDs); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ff6b6b';
+    ctx.textAlign = 'left';
+    ctx.fillText('T_dS ≈ 2.7×10⁻³⁰ K (de Sitter floor)', padL + 6, yDs - 4);
   }
 }
 
