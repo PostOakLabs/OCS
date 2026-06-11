@@ -345,15 +345,13 @@ function update() {
 
   // Bayesian update
   // P(null | nat) = 1  (natural ISOs don't transmit)
-  // P(null | art) = P(probe transmits below threshold)
-  // If we assume an artificial probe transmits at some power P_tx:
-  //   P(null | art) = P(P_tx < EIRP_threshold) — depends on model
-  // Simplified: P(null | art) = min(1, (EIRP_threshold / EIRP_typical)^0.5)
-  // where EIRP_typical for a "detectable" probe ≈ 10^6 W (roughly Voyager-level scaled to current surveys)
+  // P(detect | artificial): instrument threshold `eirp` = minimum detectable EIRP.
+  // If a probe transmits at EIRP_typical, it is detectable when eirp ≤ EIRP_typical.
+  // P(detect | artificial) = min(1, EIRP_typical / eirp)
+  //   → small threshold (good sensitivity) → high detection prob
+  //   → large threshold (poor sensitivity) → low detection prob (monotonically correct)
   const EIRP_typical = 1e6; // W  (Voyager ~12 W, but an intentional beacon would be much stronger)
-  // P(null | artificial) = P(probe below sensitivity) ~ 1 - min(1, EIRP/EIRP_typical)
-  // More physically: if probe is detectable with prob p_d = EIRP/EIRP_typical for EIRP < typical:
-  const p_detect_if_art = Math.min(0.999, eirp / EIRP_typical); // prob we'd detect if artificial
+  const p_detect_if_art = Math.min(0.999, EIRP_typical / eirp); // prob we'd detect if artificial
   const p_null_if_art   = 1 - p_detect_if_art;
   const p_null_if_nat   = 1.0;
   // Bayes:
@@ -421,7 +419,7 @@ function drawChart(prior_sel) {
     for (let i = 0; i <= 200; i++) {
       const le  = logEirpMin + (i / 200) * (logEirpMax - logEirpMin);
       const eirp = Math.pow(10, le);
-      const p_d_art = Math.min(0.999, eirp / EIRP_typical);
+      const p_d_art = Math.min(0.999, EIRP_typical / eirp);
       const p_null_art = 1 - p_d_art;
       const p_null = p_null_art * pr + 1.0 * (1 - pr);
       const post  = p_null_art * pr / p_null;
