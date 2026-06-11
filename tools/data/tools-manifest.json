@@ -211,6 +211,160 @@
         "Blandford & Znajek 1977, MNRAS 179",
         "Tchekhovskoy et al. 2010 (efficiency)"
       ]
+    },
+
+    "evidence-ledger": {
+      "title": "Bayesian IMBH Evidence Ledger",
+      "path": "tools/evidence-ledger.html",
+      "category": "imbh-evidence",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Aggregates every published line of evidence for and against an IMBH vs dark-cluster hypothesis using a Bayesian log-odds ledger. Adjust prior percentages and per-evidence weights; the tool computes posterior odds in real time.",
+      "inputs": {
+        "prior_imbh": { "type": "number", "desc": "Prior probability for IMBH hypothesis (%, integer 0–100)" },
+        "prior_dc":   { "type": "number", "desc": "Prior probability for dark-cluster hypothesis (%, integer 0–100)" },
+        "prior_null": { "type": "number", "desc": "Prior probability for no central mass (%, integer 0–100; all three must sum to 100)" }
+      },
+      "citations": [
+        "Häberle et al. 2024, Nature 631, 285 (≥ 8,200 M☉ lower bound)",
+        "Bañares-Hernández et al. 2025, A&A 693 A104 (≤ 6,000 M☉ upper bound)"
+      ]
+    },
+
+    "detection-forecast": {
+      "title": "Detection Forecast",
+      "path": "tools/detection-forecast.html",
+      "category": "imbh-evidence",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Given the current mass tension window, computes the minimum instrument sensitivity and timeline needed to confirm or rule out an IMBH. Covers Gaia DR4, Roman Space Telescope, ELT, and MeerKAT TRAPUM.",
+      "inputs": {
+        "lower": { "type": "number", "desc": "Lower mass bound M☉ (linear, e.g. 8200 for Häberle 2024)" },
+        "upper": { "type": "number", "desc": "Upper mass bound M☉ (linear, e.g. 6000 for Bañares 2025)" },
+        "sigma": { "type": "number", "desc": "Detection threshold in σ (default 3.0)" }
+      },
+      "citations": [
+        "Häberle et al. 2024, Nature 631, 285",
+        "Bañares-Hernández et al. 2025, A&A 693 A104"
+      ]
+    },
+
+    "observing-campaign-planner": {
+      "title": "Observing Campaign Planner",
+      "path": "tools/observing-campaign-planner.html",
+      "category": "imbh-evidence",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Resource ledger for a multi-instrument IMBH observing campaign. Select instrument (Roman, ELT, Gaia, custom), science goal, and available time; outputs required sensitivity and scheduling windows.",
+      "inputs": {
+        "instr":  { "type": "string", "desc": "Instrument: roman | elt | gaia | custom" },
+        "goal":   { "type": "string", "desc": "Science goal: tension | confirm | discovery | rule_out" },
+        "time_h": { "type": "number", "desc": "Available observing time hours (linear)" }
+      },
+      "citations": [
+        "Häberle et al. 2024, Nature 631, 285",
+        "Bañares-Hernández et al. 2025, A&A 693 A104"
+      ]
+    },
+
+    "bh-scale-comparator": {
+      "title": "Black Hole Scale Comparator",
+      "path": "tools/bh-scale-comparator.html",
+      "category": "bh-physics",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Places any black hole mass on a visual scale from stellar to supermassive, showing Schwarzschild radius, ISCO radius, and mass comparisons against Earth, Sun, Solar System, and Omega Centauri.",
+      "inputs": {
+        "mass_solar": { "type": "number", "desc": "Black hole mass M☉ (linear, e.g. 8200)" }
+      },
+      "citations": [
+        "Misner, Thorne & Wheeler 1973, Gravitation",
+        "Häberle et al. 2024, Nature 631, 285"
+      ]
+    },
+
+    "infall-survival": {
+      "title": "Infall Survival Calculator",
+      "path": "tools/infall-survival.html",
+      "category": "bh-physics",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Spaghettification threshold and tidal survival radius for a falling object. Computes whether a human-scale or spacecraft-scale infaller survives crossing the event horizon intact for a given IMBH mass.",
+      "inputs": {
+        "mass_solar": { "type": "number", "desc": "Black hole mass M☉ (linear)" },
+        "height_m":   { "type": "number", "desc": "Object height m (linear, e.g. 1.8 for a human)" }
+      },
+      "citations": [
+        "Misner, Thorne & Wheeler 1973, Gravitation",
+        "Penrose 1965 (singularity theorem)"
+      ]
+    },
+
+    "shadow-imaging": {
+      "title": "Black Hole Shadow Imaging",
+      "path": "tools/shadow-imaging.html",
+      "category": "bh-physics",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Computes the apparent angular diameter of a black hole's photon sphere (shadow) for any mass and distance. Shows whether EHT or ngEHT could resolve the shadow, benchmarked to M87* and Sgr A*.",
+      "inputs": {
+        "mass_solar":   { "type": "number", "desc": "Black hole mass M☉ (linear, e.g. 8200)" },
+        "distance_kpc": { "type": "number", "desc": "Distance kpc (linear, e.g. 5.43 for OC)" }
+      },
+      "citations": [
+        "Event Horizon Telescope Collaboration 2019 (M87*)",
+        "Häberle et al. 2024, Nature 631, 285"
+      ]
+    },
+
+    "kardashev-meter": {
+      "title": "Kardashev Meter",
+      "path": "tools/kardashev-meter.html",
+      "category": "kardashev",
+      "register": "speculative",
+      "widget": true,
+      "description": "Computes a civilisation's Kardashev scale rung from current energy use and growth rate, plus the year each rung is reached. Labelled speculative (extrapolation beyond known technology).",
+      "inputs": {
+        "energy_EJ":  { "type": "number", "desc": "Current energy use exajoules/yr (linear, e.g. 580 for Earth 2024)" },
+        "growth_pct": { "type": "number", "desc": "Annual energy growth rate %/yr (linear, e.g. 1.5)" }
+      },
+      "citations": [
+        "Kardashev 1964, Soviet Astronomy 8",
+        "Zackrisson et al. 2015, ApJ 810 (Kardashev calibration)"
+      ]
+    },
+
+    "energy-translator": {
+      "title": "Energy Unit Translator",
+      "path": "tools/energy-translator.html",
+      "category": "kardashev",
+      "register": "peer-reviewed",
+      "widget": true,
+      "description": "Converts any energy or power quantity between SI units, astrophysical units (solar luminosity, Eddington), and Kardashev benchmarks. Useful for comparing civilisation power to stellar or BZ outputs.",
+      "inputs": {
+        "value": { "type": "number", "desc": "Numeric value to convert (linear)" },
+        "unit":  { "type": "string", "desc": "Source unit key: J | kWh | Lsun | K1 | K2 | K3 | W | EJ | eV" }
+      },
+      "citations": [
+        "NIST CODATA 2018 (physical constants)",
+        "Kardashev 1964, Soviet Astronomy 8"
+      ]
+    },
+
+    "scifi-tech-auditor": {
+      "title": "Sci-Fi Tech Auditor",
+      "path": "tools/scifi-tech-auditor.html",
+      "category": "kardashev",
+      "register": "speculative",
+      "widget": true,
+      "description": "Rates canonical science-fiction technologies against known physics: Dyson spheres, warp drives, teleportation, Matrioshka brains, BZ ergosphere tapping, mind uploading, and MTH transcension. Shows energy requirements and physics barriers.",
+      "inputs": {
+        "tech": { "type": "string", "desc": "Technology slug: dyson | warp | teleport | matrioshka | btz | upload | transcension" }
+      },
+      "citations": [
+        "Alcubierre 1994, Class. Quantum Grav. 11 (warp metric)",
+        "Blandford & Znajek 1977, MNRAS 179 (BZ effect)"
+      ]
     }
 
   },
@@ -696,6 +850,53 @@
         { "tool": "gough-blowtorch",       "handoff": "Three-stage BH production rate." },
         { "tool": "barrow-scale",          "handoff": "Barrow-scale engineering requirement." },
         { "tool": "cosmological-natural-selection","handoff": "Child universe reproduction coefficient." }
+      ]
+    },
+
+    "workflow-settle-imbh-question": {
+      "title": "Settle the IMBH Question",
+      "tier": "workflow",
+      "page": "tools/workflow-settle-imbh-question.html",
+      "register": "peer-reviewed",
+      "steps": [
+        { "tool": "constraint-stacker",        "handoff": "Allowed mass window; establishes the Häberle ≥ 8,200 M☉ vs Bañares ≤ 6,000 M☉ tension." },
+        { "tool": "evidence-ledger",           "handoff": "Bayesian posterior over IMBH vs dark-cluster; posterior odds guide detection priority." },
+        { "tool": "astrometric-microlensing",  "handoff": "Decisive microlensing test — Gaia DR4 or Roman detectability." },
+        { "tool": "detection-forecast",        "handoff": "Minimum instrument sensitivity and timeline to confirm or rule out." },
+        { "tool": "observing-campaign-planner","handoff": "Resource ledger: instrument, time, and schedule for the winning strategy." },
+        { "tool": "falsification-hub",         "handoff": "Observational proposals and falsification roadmap." }
+      ]
+    },
+
+    "workflow-black-hole-101": {
+      "title": "Black Hole 101",
+      "tier": "workflow",
+      "page": "tools/workflow-black-hole-101.html",
+      "register": "peer-reviewed",
+      "steps": [
+        { "tool": "bh-scale-comparator",  "handoff": "Visual size context for the chosen mass; Schwarzschild and ISCO radii." },
+        { "tool": "infall-survival",      "handoff": "Spaghettification threshold — survives crossing the event horizon intact?" },
+        { "tool": "time-dilation",        "handoff": "Gravitational time dilation at ISCO — clock rate deep in the gravity well." },
+        { "tool": "shadow-imaging",       "handoff": "Photon sphere shadow size — would EHT or ngEHT resolve it?" },
+        { "tool": "kerr-geometry",        "handoff": "Full Kerr metric: ISCO, ergosphere, frame dragging at OC mass and spin." },
+        { "tool": "hawking-evaporation",  "handoff": "Hawking temperature and evaporation lifetime." },
+        { "tool": "constraint-stacker",   "handoff": "Return to observational reality — current mass constraint map." }
+      ]
+    },
+
+    "workflow-kardashev-ladder": {
+      "title": "Kardashev Ladder",
+      "tier": "workflow",
+      "page": "tools/workflow-kardashev-ladder.html",
+      "register": "speculative",
+      "steps": [
+        { "tool": "kardashev-meter",       "handoff": "Current Kardashev rung and years to K-II / K-III at given growth rate." },
+        { "tool": "energy-translator",     "handoff": "Translate energy outputs to comparable astrophysical benchmarks." },
+        { "tool": "dyson-swarm",           "handoff": "Dyson swarm stellar power — the canonical K-II path." },
+        { "tool": "bz-kardashev",          "handoff": "BZ ergosphere power at OC IMBH — the MTH K-II alternative." },
+        { "tool": "scifi-tech-auditor",    "handoff": "Physics audit of Dyson, warp, Matrioshka brain, and transcension." },
+        { "tool": "transcension-crossover","handoff": "Crossover point: expansion vs inward transcension strategy." },
+        { "tool": "bekenstein-landauer",   "handoff": "Compute limits at BZ power — the MTH engineering ceiling." }
       ]
     }
 
