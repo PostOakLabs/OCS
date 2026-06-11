@@ -320,8 +320,8 @@ function compute(){
   // ADAF mode predictions
   const Lx_adaf=1e-3*lambda*lambda*Ledd; // Narayan & Yi scaling: L_X ~ 0.001 ṁ^2 L_Edd
   // Radio via simplified fundamental plane (log in W, W/Hz)
-  // log(L_R [W/Hz]) ≈ 0.6 log(L_X [W]) - 0.78 log(M_BH/1e8 M_sun) - 2.3  (rough from Merloni 2003 converted to W)
-  const logLr_adaf=0.6*Math.log10(Math.max(Lx_adaf,1e20))-0.78*Math.log10(Math.max(Mbh/MSUN/1e8,1e-5))-2.3;
+  // log(L_R [W/Hz]) ≈ 0.6 log(L_X [W]) + 0.78 log(M_BH/1e8 M_sun) - 2.3  (Merloni et al. 2003; mass term is +0.78, not -0.78)
+  const logLr_adaf=0.6*Math.log10(Math.max(Lx_adaf,1e20))+0.78*Math.log10(Math.max(Mbh/MSUN/1e8,1e-5))-2.3;
   const Lr_adaf=Math.pow(10,logLr_adaf);
 
   // Jet mode

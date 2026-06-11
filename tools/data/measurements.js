@@ -425,6 +425,18 @@ window.OCS_MEASUREMENTS = {
   ],
 
   /* ================================================================
+     OC physical constants — single source of truth for all tools
+     ================================================================
+     Tools should read these as window.OCS_MEASUREMENTS.clusterParams.X
+     rather than hardcoding values. Prevents the 5,030–5,494 pc drift
+     that accumulated when each tool chose its own distance.
+  */
+  clusterParams: {
+    OC_distance_pc: 5490,   // parsecs; Harris 2010 / oMEGACat consensus value (range in literature: 5,030–5,494)
+    OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (ApJ 641:L37)
+  },
+
+  /* ================================================================
      Metadata
      ================================================================ */
   meta: {

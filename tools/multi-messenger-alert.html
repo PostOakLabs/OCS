@@ -329,7 +329,8 @@ function lisaSNR(logM, m2, tobs, e){
   const f_isco = Math.sqrt(G * M1 * MSUN / r_isco) / (2*Math.PI*r_isco); // Hz
   const f_peak = 2 * f_isco;  // quadrupole
   // Strain amplitude (sky-averaged, circular)
-  const h0 = (4*Math.sqrt(2/5)) * Math.pow(G*Mc_kg/(C*C), 5/3) * Math.pow(Math.PI*f_peak, 2/3) / (C * D_m);
+  // h = 4*(G*Mc/c²)^(5/3) * (π*f)^(2/3) / (c^(2/3) * d)  [correct exponent: c^(2/3) not c^1; ~670× correction]
+  const h0 = (4*Math.sqrt(2/5)) * Math.pow(G*Mc_kg/(C*C), 5/3) * Math.pow(Math.PI*f_peak, 2/3) / (Math.pow(C, 2/3) * D_m);
   // LISA noise PSD approximation (Amaro-Seoane 2017 analytic)
   const f = Math.max(f_peak, 1e-5);
   const Sn = 1.44e-47 * Math.pow(0.001/f,4) + 1.36e-55 + 1.80e-52 * f*f; // Hz⁻¹
