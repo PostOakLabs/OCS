@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IR Excess Checker — Omega Centauri Society</title>
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="data/measurements.js"></script>
+<style>
+:root{
+  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
+  --text-sec:#8890a0;--text-dim:#5a6070;
+  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
+  --green:#30b860;
+  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
+  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+nav{display:flex;align-items:center;gap:1rem;padding:.6rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;background:var(--surface)}
+nav a{color:var(--text-sec)}
+nav a:hover{color:var(--text)}
+.nav-sep{color:var(--text-dim)}
+.tool-header{padding:1.5rem 1.5rem .5rem}
+.tool-header h1{font-size:1.35rem;font-weight:600;letter-spacing:-.02em}
+.tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:700px}
+.badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
+.badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(64,144,208,.25)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(208,64,64,.25)}
+main{display:grid;grid-template-columns:270px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1160px}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.9rem}
+.ctrl-row{margin-bottom:.85rem}
+.ctrl-label{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem}
+.ctrl-label span{color:var(--text-sec)}
+.ctrl-val{color:var(--text);font-weight:500}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--teal);border:none;cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin-bottom:.75rem}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.65rem .85rem}
+.metric-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text-dim)}
+.metric-val{font-size:.95rem;font-weight:600;margin-top:.15rem}
+.charts-row{display:grid;grid-template-columns:3fr 2fr;gap:.75rem}
+@media(max-width:820px){.charts-row{grid-template-columns:1fr}}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem}
+.chart-wrap h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.5rem}
+.verdict-box{margin-top:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem}
+.verdict-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:.3rem}
+#verdict-text{font-size:.95rem;font-weight:600}
+.verdict-sub{font-size:.8rem;color:var(--text-sec);margin-top:.3rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:.6rem 0}
+details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select:none}
+details summary::marker{color:var(--text-dim)}
+.about-body{font-size:.82rem;color:var(--text-sec);line-height:1.75;margin-top:.6rem}
+.about-body p{margin-bottom:.55rem}
+.about-body code{font-size:.78rem;background:var(--border);padding:.1rem .3rem;border-radius:3px}
+.ref{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;line-height:1.6}
+.ref a{color:var(--text-dim)}
+.ref a:hover{color:var(--text-sec)}
+.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+.deeplinks{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.deeplink-btn{font-size:.75rem;padding:.3rem .65rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+.deeplink-btn:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html">Omega Centauri Society</a>
+  <span class="nav-sep">/</span>
+  <a href="index.html">Tools</a>
+  <span class="nav-sep">/</span>
+  <span>IR Excess Checker</span>
+</nav>
+
+<div class="tool-header">
+  <h1>IR Excess Checker — Partial Dyson Swarm Limits</h1>
+  <p>For a given covering fraction f and waste-heat temperature T, computes the IR excess produced by a partial Dyson swarm and compares it against WISE W3/W4 and SPHEREx survey sensitivity. Returns the f–T region current all-sky surveys exclude — the quantitative falsification backbone for the MTH hypothesis.</p>
+  <div class="badges">
+    <span class="badge badge-blue">MTH Falsification</span>
+    <span class="badge badge-teal">SPHEREx / WISE</span>
+    <span class="badge badge-amber">Technosignature</span>
+    <span class="badge badge-red">Dyson Swarm</span>
+  </div>
+</div>
+
+<main>
+  <!-- Controls -->
+  <div>
+    <div class="panel">
+      <h2>Source Parameters</h2>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Covering fraction f</span>
+          <span class="ctrl-val" id="lbl-f">1% (10⁻²)</span>
+        </div>
+        <input type="range" id="sl-f" min="-5" max="0" step="0.05" value="-2">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>10⁻⁵</span><span>10⁻³</span><span>1</span>
+        </div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Waste-heat temperature T</span>
+          <span class="ctrl-val" id="lbl-temp">300 K</span>
+        </div>
+        <input type="range" id="sl-temp" min="100" max="3000" step="10" value="300">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>100 K</span><span>1,500 K</span><span>3,000 K</span>
+        </div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Distance</span>
+          <span class="ctrl-val" id="lbl-dist">5,430 pc</span>
+        </div>
+        <input type="range" id="sl-dist" min="0" max="4.3" step="0.02" value="3.7348">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>1 pc</span><span>1 kpc</span><span>20 kpc</span>
+        </div>
+      </div>
+
+      <div class="ctrl-row">
+        <div class="ctrl-label">
+          <span>Host star luminosity L★</span>
+          <span class="ctrl-val" id="lbl-lstar">1.0 L☉</span>
+        </div>
+        <input type="range" id="sl-lstar" min="-2" max="2" step="0.05" value="0">
+        <div style="display:flex;justify-content:space-between;font-size:.68rem;color:var(--text-dim);margin-top:.15rem">
+          <span>0.01 L☉</span><span>1 L☉</span><span>100 L☉</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div style="font-size:.75rem;color:var(--text-dim);line-height:1.6">
+        <b style="color:var(--text-sec)">Survey depth (5σ point source):</b><br>
+        <span style="color:#4090d0">■</span> SPHEREx 3.5 μm: 40 μJy<br>
+        <span style="color:#1dba90">■</span> SPHEREx 4.5 μm: 80 μJy<br>
+        <span style="color:#f0a020">■</span> WISE W3 (12 μm): 1 mJy<br>
+        <span style="color:#d04040">■</span> WISE W4 (22 μm): 6 mJy
+      </div>
+    </div>
+
+    <div class="deeplinks">
+      <a class="deeplink-btn" id="lnk-dyson" href="dyson-swarm.html" title="Dyson Swarm tool">→ Dyson Swarm</a>
+      <a class="deeplink-btn" href="../falsification-hub.html">→ Falsification Hub</a>
+    </div>
+
+    <details style="margin-top:.75rem">
+      <summary>Physics &amp; citations</summary>
+      <div class="about-body" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-top:.3rem">
+        <p>A partial Dyson swarm with covering fraction f intercepts f·L★ of stellar luminosity and re-radiates it as thermal emission at waste-heat temperature T (energy conservation). The spectral flux density at Earth:</p>
+        <p><code>F_ν = f · L★ · B_ν(T) / (4 σ T⁴ · d²)</code></p>
+        <p>where B_ν(T) is the Planck function, σ is the Stefan-Boltzmann constant, and d is the distance. The orbital radius at which the swarm would thermally equilibrate is <code>R = (L★ / 4π σ T⁴)^{1/2}</code> — determined entirely by T and L★, independent of f.</p>
+        <p>The exclusion curves on the diagram show the minimum covering fraction detectable by each survey at the given distance and stellar luminosity. Above the curve, the excess would have been seen; below, it is currently unconstrained.</p>
+        <p>Sensitivity values are 5σ point-source depths from published all-sky survey catalogs. Real searches subtract the photospheric model; this tool uses the raw excess as a conservative lower bound on detectability.</p>
+        <div class="note-box">⚠ Distance strongly penalizes detectability (f_min ∝ d²). For ωCen at 5.43 kpc, only warm (T = 200–700 K) Dyson swarms with f ≳ 0.1–0.5 are within WISE reach. SPHEREx tightens limits at shorter wavelengths, especially for hotter swarms.</div>
+        <div class="ref">
+          Dyson spheres on the H-R diagram (Suazo et al. 2025) — <a href="https://arxiv.org/abs/2602.23270" target="_blank">arXiv:2602.23270</a><br>
+          SPHEREx Science Overview (Doré et al. 2025) — <a href="https://arxiv.org/abs/2511.02985" target="_blank">arXiv:2511.02985</a><br>
+          Project Hephaistos (Suazo et al. 2024), MNRAS 531 — <a href="https://doi.org/10.1093/mnras/stae1186" target="_blank">doi:10.1093/mnras/stae1186</a><br>
+          Wright et al. 2014 (WISE G-star search) — <a href="https://doi.org/10.1086/678977" target="_blank">doi:10.1086/678977</a><br>
+          WISE All-Sky Catalog — <a href="https://wise2.ipac.caltech.edu/docs/release/allsky/" target="_blank">wise2.ipac.caltech.edu</a>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Right column -->
+  <div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Wien Peak λ</div>
+        <div class="metric-val" id="met-lam">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Orbital Radius</div>
+        <div class="metric-val" id="met-rorb">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Flux @ WISE W3</div>
+        <div class="metric-val" id="met-fw3">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Flux @ WISE W4</div>
+        <div class="metric-val" id="met-fw4">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Min detect. f</div>
+        <div class="metric-val" id="met-fmin">—</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-wrap">
+        <h2>Covering fraction f vs waste-heat temperature (exclusion diagram)</h2>
+        <svg id="excl-svg" viewBox="0 0 540 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;overflow:visible">
+          <defs>
+            <clipPath id="excl-clip">
+              <rect x="62" y="16" width="458" height="234"/>
+            </clipPath>
+          </defs>
+          <g id="excl-content"></g>
+        </svg>
+      </div>
+      <div class="chart-wrap">
+        <h2>Excess SED vs detector bands</h2>
+        <svg id="sed-svg" viewBox="0 0 300 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;overflow:visible">
+          <defs>
+            <clipPath id="sed-clip">
+              <rect x="55" y="16" width="228" height="234"/>
+            </clipPath>
+          </defs>
+          <g id="sed-content"></g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">Detection verdict</div>
+      <div id="verdict-text">—</div>
+      <div class="verdict-sub" id="verdict-sub"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+// ── Physical constants ─────────────────────────────────────────────────────
+const H_P   = 6.626e-34;   // J·s
+const K_B   = 1.381e-23;   // J/K
+const C_LT  = 2.998e8;     // m/s
+const SIG   = 5.670e-8;    // W/(m²K⁴)
+const L_SUN = 3.828e26;    // W
+const PC_M  = 3.086e16;    // m/pc
+const AU_M  = 1.496e11;    // m/AU
+const JY    = 1e-26;       // W/m²/Hz
+
+// ── Planck function B_ν(T, ν) [W/m²/Hz/sr] ────────────────────────────────
+function Bnu(T, nu) {
+  if (T <= 0 || nu <= 0) return 0;
+  const x = H_P * nu / (K_B * T);
+  if (x > 500) return 0;
+  if (x < 1e-6) return 2 * K_B * T * nu * nu / (C_LT * C_LT);  // R-J limit
+  return 2 * H_P * Math.pow(nu, 3) / (C_LT * C_LT) / (Math.exp(x) - 1);
+}
+
+// ── IR excess flux density at Earth [mJy] ─────────────────────────────────
+// F_ν = f · L★ · B_ν(T,ν) / (4 · σ · T^4 · d²)
+function excessFlux_mJy(f, T_K, dist_pc, lstar_lsun, nu_hz) {
+  const L   = lstar_lsun * L_SUN;           // W
+  const d   = dist_pc * PC_M;               // m
+  const bnu = Bnu(T_K, nu_hz);              // W/m²/Hz/sr
+  const sT4 = SIG * Math.pow(T_K, 4);      // W/m²
+  if (sT4 <= 0 || d <= 0) return 0;
+  const Fnu_SI = f * L * bnu / (4 * sT4 * d * d); // W/m²/Hz
+  return Fnu_SI / JY * 1e3;                // → mJy
+}
+
+// ── Orbital equilibrium radius [AU] ───────────────────────────────────────
+function orbitAU(T_K, lstar_lsun) {
+  const L = lstar_lsun * L_SUN;
+  const r = Math.sqrt(L / (4 * Math.PI * SIG * Math.pow(T_K, 4)));
+  return r / AU_M;
+}
+
+// ── Detector bands & sensitivities ────────────────────────────────────────
+// nu [Hz] = c / lambda_m
+const BANDS = [
+  { id:'sph35', label:'SPHEREx 3.5μm', nu: C_LT/3.5e-6, sens_mJy: 0.04,  color:'#4090d0', dash:null  },
+  { id:'sph45', label:'SPHEREx 4.5μm', nu: C_LT/4.5e-6, sens_mJy: 0.08,  color:'#1dba90', dash:null  },
+  { id:'w3',    label:'WISE W3 12μm',  nu: C_LT/12e-6,  sens_mJy: 1.0,   color:'#f0a020', dash:null  },
+  { id:'w4',    label:'WISE W4 22μm',  nu: C_LT/22e-6,  sens_mJy: 6.0,   color:'#d04040', dash:null  },
+];
+
+// ── Exclusion chart layout ─────────────────────────────────────────────────
+// x: T (K), linear 100–3000
+// y: log10(f), linear -5 to 0
+const EPL=62, EPR=20, EPT=16, EPB=40;
+const EVW=540, EVH=290;
+const ePlotW = EVW-EPL-EPR;  // 458
+const ePlotH = EVH-EPT-EPB;  // 234
+
+const T_MIN=100, T_MAX=3000;
+const LGF_MIN=-5, LGF_MAX=0;
+
+function exX(T)   { return EPL + (T-T_MIN)/(T_MAX-T_MIN)*ePlotW; }
+function exY(lgf) { return EPT + (LGF_MAX-lgf)/(LGF_MAX-LGF_MIN)*ePlotH; }
+
+// ── SED chart layout ──────────────────────────────────────────────────────
+// x: log10(wavelength μm), 1–100 μm → log10: 0 to 2
+// y: log10(flux mJy) for f=state.f at given T
+const SPL=55, SPR=17, SPT=16, SPB=40;
+const SVW=300, SVH=290;
+const sPlotW=SVW-SPL-SPR;  // 228
+const sPlotH=SVH-SPT-SPB;  // 234
+
+const LGL_MIN=0.0, LGL_MAX=2.0;  // log10(μm) 1–100 μm
+
+function sedX(lgl)  { return SPL + (lgl-LGL_MIN)/(LGL_MAX-LGL_MIN)*sPlotW; }
+function sedY(lgF)  { return SPT + (2.0-lgF)/(2.0-(-7.0))*sPlotH; }  // y: -7 to +2 log10(mJy)
+const SED_LGYMIN=-7, SED_LGYMAX=2;
+function sedYc(lgF) { return SPT + (SED_LGYMAX-lgF)/(SED_LGYMAX-SED_LGYMIN)*sPlotH; }
+
+// ── SVG helpers ────────────────────────────────────────────────────────────
+function svgEl(tag, attrs={}, txt='') {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
+  if (txt) el.textContent = txt;
+  return el;
+}
+function mkPath(pts, close=false) {
+  if (!pts.length) return '';
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i=1;i<pts.length;i++) d+=` L${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)}`;
+  if (close) d+=' Z';
+  return d;
+}
+
+// ── Draw exclusion chart ───────────────────────────────────────────────────
+function drawExclusion(state) {
+  const g = document.getElementById('excl-content');
+  while(g.firstChild) g.removeChild(g.firstChild);
+
+  const { f, temp, dist, lstar } = state;
+  const lgf = Math.log10(f);
+  const yTop = EPT, yBot = EPT+ePlotH;
+  const clip = {'clip-path':'url(#excl-clip)'};
+
+  // Background
+  g.appendChild(svgEl('rect',{x:EPL,y:EPT,width:ePlotW,height:ePlotH,fill:'#0c0e13'}));
+
+  // Axes grids
+  for (let T=500; T<=3000; T+=500) {
+    const x=exX(T);
+    g.appendChild(svgEl('line',{x1:x,y1:EPT,x2:x,y2:yBot,stroke:'#1e2128','stroke-width':'1',...clip}));
+  }
+  for (let lf=-4; lf<=0; lf++) {
+    const y=exY(lf);
+    g.appendChild(svgEl('line',{x1:EPL,y1:y,x2:EPL+ePlotW,y2:y,stroke:'#1e2128','stroke-width':'1'}));
+  }
+
+  // Temperature step for exclusion curves
+  const NT=200;
+  const Tarr = Array.from({length:NT},(_,i)=>T_MIN+i*(T_MAX-T_MIN)/(NT-1));
+
+  // Draw each detector's exclusion curve and shade the excluded region
+  for (const band of BANDS) {
+    const pts_exc = [];
+    const pts_fill = [];   // polygon for excluded region (above curve, clamp at lgf=0)
+
+    for (const T of Tarr) {
+      // flux at f=1 in this band
+      const F1 = excessFlux_mJy(1, T, dist, lstar, band.nu);
+      const fmin = F1 > 0 ? band.sens_mJy / F1 : Infinity;
+      const lgfmin = fmin > 0 && fmin <= 1 ? Math.log10(fmin) : (fmin < 1e-5 ? LGF_MIN : LGF_MAX+1);
+
+      const x = exX(T);
+      // clamp y for drawing
+      const y = exY(Math.min(LGF_MAX, Math.max(LGF_MIN-0.5, lgfmin)));
+      pts_exc.push({x, y: Math.max(EPT-2, Math.min(yBot+2, y))});
+      pts_fill.push({x, y: Math.min(yBot, Math.max(EPT, y))});
+    }
+
+    // Fill polygon (excluded region above curve = top of chart to curve)
+    const fillPts = [
+      {x:exX(T_MIN), y:EPT},
+      ...pts_fill.map(p=>({x:p.x, y:Math.max(EPT, p.y)})),
+      {x:exX(T_MAX), y:EPT}
+    ];
+    const fillD = mkPath(fillPts, true);
+    g.appendChild(svgEl('path',{d:fillD,
+      fill:band.color.replace(')',',0.10)').replace('rgb','rgba'),
+      opacity:'1',...clip}));
+
+    // Curve line
+    const lineD = mkPath(pts_exc);
+    if(lineD) g.appendChild(svgEl('path',{d:lineD,fill:'none',stroke:band.color,
+      'stroke-width':'1.5',...clip}));
+  }
+
+  // "Total exclusion" composite boundary (minimum f_min across all bands)
+  const compPts = [];
+  for (const T of Tarr) {
+    let bestFmin = Infinity;
+    for (const band of BANDS) {
+      const F1 = excessFlux_mJy(1, T, dist, lstar, band.nu);
+      const fmin = F1 > 0 ? band.sens_mJy / F1 : Infinity;
+      if (fmin < bestFmin) bestFmin = fmin;
+    }
+    const lgfmin = bestFmin > 0 && bestFmin < 1 ? Math.log10(bestFmin) :
+                   (bestFmin < 1e-5 ? LGF_MIN : LGF_MAX+2);
+    const x = exX(T);
+    const y = exY(Math.min(LGF_MAX, Math.max(LGF_MIN-0.5, lgfmin)));
+    compPts.push({x, y: Math.max(EPT-2, Math.min(yBot+2, y))});
+  }
+  if(compPts.length) g.appendChild(svgEl('path',{
+    d:mkPath(compPts), fill:'none', stroke:'#e2e4e9', 'stroke-width':'2',
+    'stroke-dasharray':'6,3', ...clip}));
+
+  // User point
+  const ux = exX(temp);
+  const uy = exY(lgf);
+  if(uy >= EPT-4 && uy <= yBot+4 && ux >= EPL-4 && ux <= EPL+ePlotW+4) {
+    g.appendChild(svgEl('circle',{cx:ux,cy:uy,r:'7',fill:'none',stroke:'#e2e4e9',
+      'stroke-width':'1.5',...clip}));
+    g.appendChild(svgEl('circle',{cx:ux,cy:uy,r:'3',fill:'#e2e4e9',...clip}));
+  }
+
+  // Axes box
+  g.appendChild(svgEl('rect',{x:EPL,y:EPT,width:ePlotW,height:ePlotH,
+    fill:'none',stroke:'#2e3240','stroke-width':'1'}));
+
+  // X-axis: T ticks & labels
+  for (let T=500; T<=3000; T+=500) {
+    const x=exX(T);
+    g.appendChild(svgEl('line',{x1:x,y1:yBot,x2:x,y2:yBot+5,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x,y:yBot+16,'text-anchor':'middle','font-size':'9.5',fill:'#8890a0'},T+' K'));
+  }
+  // x-axis label
+  g.appendChild(svgEl('text',{x:EPL+ePlotW/2,y:EVH-4,'text-anchor':'middle',
+    'font-size':'10.5',fill:'#8890a0'},'Waste-heat temperature T (K)'));
+
+  // Y-axis: f ticks & labels
+  for (let lf=LGF_MIN; lf<=LGF_MAX; lf++) {
+    const y=exY(lf);
+    g.appendChild(svgEl('line',{x1:EPL-5,y1:y,x2:EPL,y2:y,stroke:'#5a6070','stroke-width':'1'}));
+    const lbl = lf===0 ? '1' : lf===-1 ? '0.1' : '10^'+lf;
+    g.appendChild(svgEl('text',{x:EPL-8,y:y+3.5,'text-anchor':'end','font-size':'9',fill:'#8890a0'},lbl));
+  }
+  // y-axis title (rotated)
+  g.appendChild(svgEl('text',{x:10,y:EPT+ePlotH/2,'text-anchor':'middle',
+    'font-size':'10',fill:'#8890a0',transform:`rotate(-90,10,${EPT+ePlotH/2})`},'Covering fraction f'));
+
+  // Legend
+  BANDS.forEach((b,i) => {
+    const lx=EPL+6, ly=EPT+8+i*14;
+    g.appendChild(svgEl('line',{x1:String(lx),y1:String(ly),x2:String(lx+16),y2:String(ly),
+      stroke:b.color,'stroke-width':'1.5'}));
+    g.appendChild(svgEl('text',{x:String(lx+19),y:String(ly+3.5),
+      'font-size':'8.5',fill:'#8890a0'},b.label));
+  });
+  // Composite line
+  const lx=EPL+6, ly=EPT+8+BANDS.length*14;
+  g.appendChild(svgEl('line',{x1:String(lx),y1:String(ly),x2:String(lx+16),y2:String(ly),
+    stroke:'#e2e4e9','stroke-width':'2','stroke-dasharray':'6,3'}));
+  g.appendChild(svgEl('text',{x:String(lx+19),y:String(ly+3.5),'font-size':'8.5',fill:'#8890a0'},'Best limit'));
+
+  // "EXCLUDED" label
+  g.appendChild(svgEl('text',{x:String(EPL+ePlotW-8),y:String(EPT+14),'text-anchor':'end',
+    'font-size':'9',fill:'rgba(226,228,233,0.35)','font-style':'italic'},'← EXCLUDED'));
+  g.appendChild(svgEl('text',{x:String(EPL+ePlotW-8),y:String(yBot-8),'text-anchor':'end',
+    'font-size':'9',fill:'rgba(226,228,233,0.35)','font-style':'italic'},'← ALLOWED'));
+}
+
+// ── Draw SED chart ─────────────────────────────────────────────────────────
+function drawSED(state) {
+  const g = document.getElementById('sed-content');
+  while(g.firstChild) g.removeChild(g.firstChild);
+
+  const { f, temp, dist, lstar } = state;
+  const clip = {'clip-path':'url(#sed-clip)'};
+  const yTop=SPT, yBot=SPT+sPlotH;
+
+  // Background
+  g.appendChild(svgEl('rect',{x:SPL,y:SPT,width:sPlotW,height:sPlotH,fill:'#0c0e13'}));
+
+  // Grid
+  for (let lgl=0.5; lgl<2; lgl+=0.5) {
+    const x=sedX(lgl);
+    g.appendChild(svgEl('line',{x1:x,y1:SPT,x2:x,y2:yBot,stroke:'#1e2128','stroke-width':'1',...clip}));
+  }
+  for (let lgF=-6; lgF<=2; lgF+=2) {
+    const y=sedYc(lgF);
+    g.appendChild(svgEl('line',{x1:SPL,y1:y,x2:SPL+sPlotW,y2:y,stroke:'#1e2128','stroke-width':'1'}));
+  }
+
+  // Blackbody SED: F_ν vs λ for current (f, T)
+  const NL=200;
+  const sedPts=[];
+  for (let i=0; i<NL; i++) {
+    const lgl = LGL_MIN + i*(LGL_MAX-LGL_MIN)/(NL-1);
+    const lam_m = Math.pow(10, lgl) * 1e-6;  // μm → m
+    const nu    = C_LT / lam_m;
+    const F_mJy = excessFlux_mJy(f, temp, dist, lstar, nu);
+    if (F_mJy <= 0) continue;
+    const lgF = Math.log10(F_mJy);
+    if (lgF < SED_LGYMIN-0.5 || lgF > SED_LGYMAX+0.5) continue;
+    sedPts.push({x:sedX(lgl), y:sedYc(Math.max(SED_LGYMIN, Math.min(SED_LGYMAX, lgF)))});
+  }
+  if(sedPts.length>1) g.appendChild(svgEl('path',{d:mkPath(sedPts),fill:'none',
+    stroke:'#d0d8e8','stroke-width':'1.8',...clip}));
+
+  // Wien peak marker
+  const lam_peak_m = (2.898e-3) / temp;  // Wien's law: λ_peak = b/T
+  const lgl_peak = Math.log10(lam_peak_m * 1e6);
+  if(lgl_peak >= LGL_MIN && lgl_peak <= LGL_MAX) {
+    const xp = sedX(lgl_peak);
+    g.appendChild(svgEl('line',{x1:xp,y1:SPT,x2:xp,y2:yBot,stroke:'rgba(208,216,232,0.25)',
+      'stroke-width':'1','stroke-dasharray':'3,2',...clip}));
+  }
+
+  // Detector bands: horizontal sensitivity lines + band markers
+  for (const band of BANDS) {
+    const lam_band_m = C_LT / band.nu;
+    const lam_mu = lam_band_m * 1e6;
+    const lgl_b = Math.log10(lam_mu);
+    if(lgl_b < LGL_MIN || lgl_b > LGL_MAX) continue;
+
+    const xb = sedX(lgl_b);
+    const y_sens = sedYc(Math.log10(band.sens_mJy));
+    const y_flux = sedYc(Math.min(SED_LGYMAX, Math.max(SED_LGYMIN,
+      Math.log10(Math.max(1e-10, excessFlux_mJy(f, temp, dist, lstar, band.nu))))));
+
+    // Band marker (vertical)
+    if(xb >= SPL && xb <= SPL+sPlotW) {
+      g.appendChild(svgEl('line',{x1:xb,y1:SPT,x2:xb,y2:yBot,stroke:band.color,
+        'stroke-width':'1','stroke-dasharray':'2,3',...clip}));
+    }
+    // Sensitivity horizontal line
+    if(y_sens >= SPT && y_sens <= yBot) {
+      g.appendChild(svgEl('line',{x1:String(SPL),y1:String(y_sens),
+        x2:String(SPL+sPlotW),y2:String(y_sens),stroke:band.color,
+        'stroke-width':'1','stroke-dasharray':'4,3',...clip}));
+    }
+    // Detection marker: dot if source is above sensitivity
+    const F_mJy = excessFlux_mJy(f, temp, dist, lstar, band.nu);
+    if(xb >= SPL && xb <= SPL+sPlotW) {
+      g.appendChild(svgEl('circle',{cx:xb,cy:y_flux,r:'4',fill:band.color,
+        opacity: F_mJy > band.sens_mJy ? '1' : '0.35',...clip}));
+    }
+  }
+
+  // Box
+  g.appendChild(svgEl('rect',{x:SPL,y:SPT,width:sPlotW,height:sPlotH,
+    fill:'none',stroke:'#2e3240','stroke-width':'1'}));
+
+  // x-axis ticks
+  const xLbls=[[0,'1μm'],[0.5,'3μm'],[1,'10μm'],[1.5,'30μm'],[2,'100μm']];
+  for(const [lgl,lbl] of xLbls) {
+    if(lgl<LGL_MIN||lgl>LGL_MAX) continue;
+    const x=sedX(lgl);
+    g.appendChild(svgEl('line',{x1:x,y1:yBot,x2:x,y2:yBot+5,stroke:'#5a6070','stroke-width':'1'}));
+    g.appendChild(svgEl('text',{x,y:yBot+15,'text-anchor':'middle','font-size':'8.5',fill:'#8890a0'},lbl));
+  }
+  g.appendChild(svgEl('text',{x:SPL+sPlotW/2,y:SVH-4,'text-anchor':'middle',
+    'font-size':'9.5',fill:'#8890a0'},'Wavelength'));
+
+  // y-axis ticks
+  for(let lgF=SED_LGYMIN; lgF<=SED_LGYMAX; lgF+=2) {
+    const y=sedYc(lgF);
+    g.appendChild(svgEl('line',{x1:SPL-5,y1:y,x2:SPL,y2:y,stroke:'#5a6070','stroke-width':'1'}));
+    const lbl = lgF===0?'1':lgF>0?'10^'+lgF:'10^'+lgF;
+    g.appendChild(svgEl('text',{x:SPL-7,y:y+3.5,'text-anchor':'end','font-size':'8',fill:'#8890a0'},lbl));
+  }
+  // y-axis title
+  g.appendChild(svgEl('text',{x:9,y:SPT+sPlotH/2,'text-anchor':'middle',
+    'font-size':'9',fill:'#8890a0',transform:`rotate(-90,9,${SPT+sPlotH/2})`},'F_ν (mJy)'));
+}
+
+// ── Metrics & verdict ──────────────────────────────────────────────────────
+function updateMetrics(state) {
+  const { f, temp, dist, lstar } = state;
+
+  const lam_peak_um = 2898 / temp;  // μm
+  const r_AU = orbitAU(temp, lstar);
+  const fw3  = excessFlux_mJy(f, temp, dist, lstar, C_LT/12e-6);
+  const fw4  = excessFlux_mJy(f, temp, dist, lstar, C_LT/22e-6);
+
+  // Best (lowest) minimum detectable covering fraction across all bands
+  let fmin_best = Infinity, fmin_band = '';
+  for(const band of BANDS) {
+    const F1 = excessFlux_mJy(1, temp, dist, lstar, band.nu);
+    const fmin = F1 > 0 ? band.sens_mJy / F1 : Infinity;
+    if(fmin < fmin_best) { fmin_best=fmin; fmin_band=band.label; }
+  }
+
+  function fmtFlux(mJy) {
+    if(!isFinite(mJy)||mJy<=0) return '—';
+    if(mJy>=1) return mJy.toFixed(2)+' mJy';
+    if(mJy>=0.001) return (mJy*1e3).toFixed(1)+' μJy';
+    return (mJy*1e6).toFixed(0)+' nJy';
+  }
+
+  document.getElementById('met-lam').textContent   = lam_peak_um.toFixed(1)+' μm';
+  document.getElementById('met-rorb').textContent  = r_AU >= 100 ? r_AU.toFixed(0)+' AU'
+                                                        : r_AU.toFixed(2)+' AU';
+  document.getElementById('met-fw3').textContent   = fmtFlux(fw3);
+  document.getElementById('met-fw4').textContent   = fmtFlux(fw4);
+
+  if(fmin_best <= 1) {
+    document.getElementById('met-fmin').textContent = fmin_best.toExponential(1);
+  } else {
+    document.getElementById('met-fmin').textContent = '>1 (none)';
+  }
+
+  // Which bands detect the current (f, T) point?
+  const detected = BANDS.filter(b => {
+    const F = excessFlux_mJy(f, temp, dist, lstar, b.nu);
+    return F > b.sens_mJy;
+  });
+
+  const vt = document.getElementById('verdict-text');
+  const vs = document.getElementById('verdict-sub');
+
+  if(detected.length > 0) {
+    vt.textContent = 'EXCLUDED — IR EXCESS DETECTABLE';
+    vt.style.color = 'var(--red)';
+    vs.textContent = 'Detected by: '+detected.map(b=>b.label).join(', ')+
+      '. A Dyson swarm with f='+f.toExponential(1)+' at T='+temp+' K would have been seen.';
+  } else if(fmin_best <= 1) {
+    const margin = Math.log10(f) - Math.log10(fmin_best);
+    if(margin < -1) {
+      vt.textContent = 'UNCONSTRAINED — WELL BELOW SURVEY SENSITIVITY';
+      vt.style.color = 'var(--teal)';
+      vs.textContent = `Best limit: f < ${fmin_best.toExponential(1)} (${fmin_band}). `+
+        `Current f is ${Math.pow(10,-margin).toFixed(0)}× below detection threshold.`;
+    } else {
+      vt.textContent = 'MARGINAL — NEAR SURVEY SENSITIVITY';
+      vt.style.color = 'var(--amber)';
+      vs.textContent = `Best limit: f < ${fmin_best.toExponential(1)} (${fmin_band}). `+
+        `Current f is within 1 dex of the detection threshold.`;
+    }
+  } else {
+    vt.textContent = 'UNCONSTRAINED — NO DETECTOR REACHES f = 1';
+    vt.style.color = 'var(--text-sec)';
+    vs.textContent = `At d=${dist.toFixed(0)} pc, L★=${lstar.toFixed(1)} L☉, T=${temp} K: `+
+      `even a full Dyson sphere (f=1) falls below all survey sensitivity limits.`;
+  }
+
+  // Deeplink
+  document.getElementById('lnk-dyson').href =
+    'dyson-swarm.html#f='+Math.log10(f).toFixed(3)+'&temp='+temp+'&dist='+dist.toFixed(0)+'&lstar='+lstar.toFixed(2);
+}
+
+// ── State & hash ───────────────────────────────────────────────────────────
+const DEF = { f:0.01, temp:300, dist:5430, lstar:1 };
+let state = {...DEF};
+
+function saveHash(s) {
+  const p = new URLSearchParams();
+  p.set('f',    Math.log10(s.f).toFixed(4));   // log10
+  p.set('temp', s.temp.toFixed(0));
+  p.set('dist', s.dist.toFixed(0));
+  p.set('lstar',s.lstar.toFixed(4));
+  history.replaceState(null,'','#'+p.toString());
+}
+
+function loadHash() {
+  const h=location.hash.slice(1); if(!h) return;
+  const p=new URLSearchParams(h);
+  if(p.has('f')) {
+    const v=parseFloat(p.get('f'));
+    if(isFinite(v)&&v>=-5&&v<=0) state.f=Math.pow(10,v);
+  }
+  if(p.has('temp')) { const v=parseFloat(p.get('temp')); if(isFinite(v)&&v>0) state.temp=Math.min(3000,Math.max(100,v)); }
+  if(p.has('dist')) { const v=parseFloat(p.get('dist')); if(isFinite(v)&&v>0) state.dist=v; }
+  if(p.has('lstar')){ const v=parseFloat(p.get('lstar')); if(isFinite(v)&&v>0) state.lstar=v; }
+}
+
+// ── Slider sync ────────────────────────────────────────────────────────────
+function syncSliders() {
+  document.getElementById('sl-f').value    = Math.log10(state.f).toFixed(4);
+  document.getElementById('sl-temp').value = state.temp.toFixed(0);
+  // dist slider is log10
+  document.getElementById('sl-dist').value = Math.log10(state.dist).toFixed(4);
+  // lstar slider is log10
+  document.getElementById('sl-lstar').value= Math.log10(state.lstar).toFixed(4);
+  updateLabels();
+}
+
+function fmtF(f) {
+  const pc = (f*100);
+  if(pc >= 1) return pc.toFixed(1)+'%';
+  if(pc >= 0.01) return pc.toFixed(3)+'%';
+  return f.toExponential(1);
+}
+
+function updateLabels() {
+  const f=state.f, lgf=Math.log10(f);
+  document.getElementById('lbl-f').textContent =
+    fmtF(f)+' (10^'+lgf.toFixed(2)+')';
+  document.getElementById('lbl-temp').textContent  = state.temp.toFixed(0)+' K';
+  const d=state.dist;
+  document.getElementById('lbl-dist').textContent  = d>=1000?(d/1000).toFixed(2)+' kpc':d.toFixed(0)+' pc';
+  const ls=state.lstar;
+  document.getElementById('lbl-lstar').textContent = ls>=10?ls.toFixed(0)+' L☉':ls.toFixed(2)+' L☉';
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  updateLabels();
+  updateMetrics(state);
+  drawExclusion(state);
+  drawSED(state);
+  saveHash(state);
+}
+
+// ── Event wiring ───────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadHash();
+  syncSliders();
+  render();
+
+  document.getElementById('sl-f').addEventListener('input', function() {
+    state.f = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-temp').addEventListener('input', function() {
+    state.temp = parseFloat(this.value);
+    render();
+  });
+  document.getElementById('sl-dist').addEventListener('input', function() {
+    state.dist = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+  document.getElementById('sl-lstar').addEventListener('input', function() {
+    state.lstar = Math.pow(10, parseFloat(this.value));
+    render();
+  });
+});
+</script>
+</body>
+</html>
