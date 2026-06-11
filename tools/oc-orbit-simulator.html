@@ -232,7 +232,7 @@ td.peri-m{color:var(--teal-bright)}
     <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
     <div class="about-body" id="about-body">
       <h3>Integrator</h3>
-      <p>The orbit is integrated using the leapfrog (Störmer-Verlet) algorithm with a 100 Myr timestep. The leapfrog is second-order symplectic, conserving a shadow Hamiltonian and showing only bounded energy oscillations over many orbital periods. For the ~150 Myr orbital period of OC this timestep is adequate for tracking pericentre passages; a 5 Myr step is used internally for the pericentre refinement pass.</p>
+      <p>The orbit is integrated using the leapfrog (Störmer-Verlet) algorithm with a 1 Myr timestep (~150 steps per OC orbital period). The leapfrog is second-order symplectic, conserving a shadow Hamiltonian and showing only bounded energy oscillations over many orbital periods. When a pericentre is detected (radial velocity sign change), a 10-substep refinement pass at 0.1 Myr resolution pinpoints the true minimum radius before computing tidal stripping.</p>
 
       <h3>Milky Way potential</h3>
       <p>A spherically-symmetric flat-rotation-curve potential is used: <code>Φ(r) = V_c² ln(r)</code> with V_c = 220 km/s. This reproduces the MW circular velocity at the solar radius (8.18 kpc) and gives an approximately correct orbital period and pericentre for OC. The full Allen-Santillan (1991) three-component potential (bulge + disk + NFW halo) would add ~10-15% corrections to pericentre distance and ~5% to orbital period; for a browser tool the flat-curve approximation is appropriate and clearly labeled as ⚠ model-dependent.</p>
@@ -309,7 +309,8 @@ function runOrbit(){
   const fstrip = state.fstrip;
   const tfwd_s = state.tfwd * GYR_S;
   const tbwd_s = 12 * GYR_S;
-  const dt = 100 * MYR_S; // 100 Myr timestep
+  const dt = 1 * MYR_S; // 1 Myr timestep (~150 steps per OC orbit)
+  const dtRef = dt / 10; // 0.1 Myr refinement substep
 
   // --- BACKWARD integration (past) ---
   let pos = [IC.x, IC.y, IC.z];
@@ -320,16 +321,26 @@ function runOrbit(){
 
   let prevR = radiusKpc(pos[0],pos[1],pos[2]);
   let prevRdot = 0;
+  let prevPos = [...pos], prevVel = [...vel];
 
   for(let i = 0; i < nStepsBwd; i++){
     // Integrate backward: dt → -dt
     const [np, nv] = leapfrogStep(pos, vel, -dt);
+    prevPos = pos; prevVel = vel;
     pos = np; vel = nv;
     const r = radiusKpc(pos[0],pos[1],pos[2]);
     const rdot = r - prevR;
     // Pericentre: rdot changes from negative to positive (minimum r)
     if(prevRdot < 0 && rdot >= 0){
-      perisBwd.push({time_Gyr: -(i+1)*dt/GYR_S, r_kpc: prevR});
+      // Refine with 10 substeps from prevPos
+      let rp = [...prevPos], rv = [...prevVel], minR = prevR;
+      for(let s = 0; s < 10; s++){
+        const [np2, nv2] = leapfrogStep(rp, rv, -dtRef);
+        rp = np2; rv = nv2;
+        const rr = radiusKpc(rp[0], rp[1], rp[2]);
+        if(rr < minR) minR = rr;
+      }
+      perisBwd.push({time_Gyr: -(i+1)*dt/GYR_S, r_kpc: minR});
     }
     prevRdot = rdot; prevR = r;
     pathPast.push({x: pos[0]/KPC_M, y: pos[1]/KPC_M});
@@ -354,18 +365,28 @@ function runOrbit(){
 
   prevR = radiusKpc(pos[0],pos[1],pos[2]);
   prevRdot = 0;
+  prevPos = [...pos]; prevVel = [...vel];
   let massCurrent = M0;
 
   for(let i = 0; i < nStepsFwd; i++){
     const [np, nv] = leapfrogStep(pos, vel, dt);
+    prevPos = pos; prevVel = vel;
     pos = np; vel = nv;
     const r = radiusKpc(pos[0],pos[1],pos[2]);
     const rdot = r - prevR;
     if(prevRdot < 0 && rdot >= 0){
-      const eff = Math.min(0.5, fstrip * Math.pow(8 / prevR, 2));
+      // Refine pericentre with 10 substeps
+      let rp = [...prevPos], rv = [...prevVel], minR = prevR;
+      for(let s = 0; s < 10; s++){
+        const [np2, nv2] = leapfrogStep(rp, rv, dtRef);
+        rp = np2; rv = nv2;
+        const rr = radiusKpc(rp[0], rp[1], rp[2]);
+        if(rr < minR) minR = rr;
+      }
+      const eff = Math.min(0.5, fstrip * Math.pow(8 / minR, 2));
       massCurrent = massCurrent * (1 - eff);
       if(perisFwd.length < 10){
-        perisFwd.push({time_Gyr: (i+1)*dt/GYR_S, r_kpc: prevR, mass_after: massCurrent});
+        perisFwd.push({time_Gyr: (i+1)*dt/GYR_S, r_kpc: minR, mass_after: massCurrent});
       }
     }
     prevRdot = rdot; prevR = r;
