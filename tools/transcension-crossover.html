@@ -430,7 +430,7 @@ function lloydOps(M_kg) {
   return 2 * M_kg * c_SI * c_SI / (Math.PI * hbar);
 }
 function advantageRatio(gamma, fsync, RD_m, rcomp_m) {
-  // compact_ops = lloyd * gamma
+  // compact_ops = lloyd / gamma  (clocks near horizon run slow — fewer ops per external second)
   // distributed_effective = lloyd * (1 - fsync*(1 - rcomp/RD))
   const distFrac = 1 - fsync * (1 - Math.min(rcomp_m / RD_m, 1));
   if (distFrac <= 0) return Infinity;
@@ -612,7 +612,7 @@ function compute() {
 
   // Shared
   document.getElementById('d-lloyd').textContent      = fmtSci(Lloyd,3);
-  document.getElementById('d-compact-ops').textContent = isFinite(gamma) ? fmtSci(Lloyd*gamma,3) : '∞';
+  document.getElementById('d-compact-ops').textContent = isFinite(gamma) ? fmtSci(Lloyd/gamma,3) : '0';
   document.getElementById('d-dist-ops').textContent    = fmtSci(Lloyd*distFrac,3);
 
   // Results

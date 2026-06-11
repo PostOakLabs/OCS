@@ -266,7 +266,7 @@ a:hover{color:var(--teal-glow)}
     <div class="compute-note" id="cc-note">computing…</div>
     <div class="tidal-warn" id="tidal-warn" style="display:none">
       <strong>Tidal forces, Hawking flux, and accretion environment make sustained proximity to r_s untenable in practice.</strong>
-      The dilation factor at r → r_s is finite, but the tidal acceleration scales as M / r³ — for a stellar-mass hole, an observer would be spaghettified well outside the horizon; for an IMBH at 10⁴ M☉, tidal forces near r = 1.5 r_s would still tear apart any object larger than a few cm. Hawking radiation flux is negligible for IMBH masses (T_H ~ 10⁻⁷ K for 8,200 M☉), but an accreting hole emits intense X-ray and UV radiation that would sterilise nearby matter. None of these are reflected in the dilation calculation above.
+      The dilation factor at r → r_s is finite, but the tidal acceleration scales as M / r³ — for a stellar-mass hole, an observer would be spaghettified well outside the horizon; for an IMBH at 10⁴ M☉, tidal forces near r = 1.5 r_s would still tear apart any object larger than a few cm. Hawking radiation flux is negligible for IMBH masses (T_H ~ 7.5×10⁻¹² K for 8,200 M☉), but an accreting hole emits intense X-ray and UV radiation that would sterilise nearby matter. None of these are reflected in the dilation calculation above.
     </div>
   </section>
 
@@ -283,7 +283,7 @@ a:hover{color:var(--teal-glow)}
 
       <h3>The compute chain — what is and isn't free</h3>
       <p>Lloyd's bound on operations per second is <code>f_max = 2 E / (πℏ)</code> using the system's total rest energy E. Crucially, this formula is observer-invariant when energy and time are measured consistently. A near-horizon computer with local rest energy E performs Lloyd-bounded ops at rate f_max per <em>local</em> second. An external observer sees those ops happen at rate f_max × √(1−r_s/r) per <em>external</em> second — slower, not faster, because the local clock is dilated.</p>
-      <p>The "subjective ops per external sec" number in the chain above shows what the near-horizon civilisation can compute, in terms of local subjective time, during the time an external second elapses. It's larger than the external-frame rate by exactly 1/√(1−r_s/r). This is a subjective gain in experience per external time, not a thermodynamic free lunch — the same compute capacity gets repackaged in more local seconds rather than more raw ops.</p>
+      <p>The "subjective ops per external sec" figure equals the external-frame rate: per external second, Clock A's local clock advances by only √(1−r_s/r) seconds, so it completes Lloyd × √(1−r_s/r) ops — the same count an external observer tallies. The near-horizon location is not a thermodynamic free lunch; the local clock runs slow, so each external second buys only √(1−r_s/r) local seconds of computation. The advantage is the reverse: external time passes cheaply from A's perspective, making it easy to wait out slow cosmological processes.</p>
 
       <h3>What it doesn't model</h3>
       <p>This is the Schwarzschild (non-rotating) metric. Real IMBHs spin, and Kerr dilation near the prograde ISCO is somewhat stronger; the ISCO itself moves inward from 6 r_g to r_g as a → 1. The orbital period shown is the Keplerian coordinate period, which differs from a relativistic circular-orbit period by a few percent at large r and more at small r. Tidal forces, accretion-disk radiation, and the practical impossibility of "hovering" at fixed r without enormous propulsion are not addressed — see the red warning under the compute chain when Clock A approaches r_s.</p>
@@ -400,14 +400,15 @@ function render() {
   const ccRatio = (z1 > 0) ? (1/z1) : Infinity;  // external sec per local sec
   document.getElementById('cc-ratio').textContent = (isFinite(ccRatio) && ccRatio < 1e6) ? ccRatio.toFixed(2)+'×' : (isFinite(ccRatio) ? fmtSci(ccRatio,2)+'×' : '∞');
   document.getElementById('cc-lloyd').textContent = fmtSci(lloyd, 2) + ' ops/s';
-  // Subjective ops per external second = lloyd * ccRatio (per external second, ccRatio local seconds elapse,
-  // each containing lloyd ops at local rate)
-  const cc_eff = lloyd * ccRatio;
+  // Subjective ops per external second = lloyd / ccRatio = lloyd * z1
+  // Per external second, z1 = 1/ccRatio local seconds elapse; A completes lloyd * z1 ops.
+  // Clocks near the horizon run SLOW — fewer ops per external second, not more.
+  const cc_eff = lloyd / ccRatio;
   document.getElementById('cc-effective').textContent = (isFinite(cc_eff)) ? fmtSci(cc_eff,2) + ' ops/s' : '∞';
 
   const cn = document.getElementById('cc-note');
   if (state.r1 > 1.0 && z1 > 0) {
-    cn.innerHTML = `From an external observer's viewpoint, a Clock-A civilisation completes <strong>${fmtSci(lloyd * z1, 2)} ops</strong> per external second — slower than its local Lloyd rate of ${fmtSci(lloyd,2)} ops/s, because A's clock is dilated. From Clock A's own perspective, however, ${ccRatio < 1e6 ? ccRatio.toFixed(2) : fmtSci(ccRatio,2)} external seconds pass during each of its local seconds — so per external second, A subjectively experiences ${fmtSci(cc_eff,2)} ops worth of work. This is a subjective gain in experienced time, not a thermodynamic free lunch.`;
+    cn.innerHTML = `From an external observer's viewpoint, a Clock-A civilisation completes <strong>${fmtSci(lloyd * z1, 2)} ops</strong> per external second — slower than its local Lloyd rate of ${fmtSci(lloyd,2)} ops/s, because A's clock is dilated. Per external second, Clock A's local clock advances only z₁ = 1/${ccRatio < 1e6 ? ccRatio.toFixed(2) : fmtSci(ccRatio,2)} seconds, so it completes ${fmtSci(cc_eff,2)} ops — matching the external count. The near-horizon location offers cheap external waiting time, not a thermodynamic speedup.`;
   } else {
     cn.innerHTML = `Clock A is at or inside the horizon. The numerical compute chain is degenerate here — outside an observer sees A's processes freeze entirely. The "infinite subjective time per external second" doesn't represent a physical computation rate.`;
   }
