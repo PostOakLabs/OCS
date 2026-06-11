@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!--
+  Workflow: Kardashev Ladder
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Version: 1.0  ·  Last updated: 2026-06-10
+  Register: speculative (Kardashev framework — all extrapolation labelled)
+  Site section: #science
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kardashev Ladder Workflow — Omega Centauri Society</title>
+<meta name="description" content="From humanity's current K=0.724 through Dyson swarms, black hole engines, and matrioshka brains to the Macro Transcension Hypothesis. A staged speculative workflow.">
+<link rel="canonical" href="https://omegacentauri.me/tools/workflow-kardashev-ladder.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 20%,rgba(240,160,32,.06),transparent 50%),radial-gradient(ellipse at 85% 65%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:300}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.flow-bar{background:rgba(7,5,21,.95);border-bottom:1px solid var(--border-subtle);position:sticky;top:53px;z-index:200;overflow-x:auto;scrollbar-width:none}
+.flow-bar::-webkit-scrollbar{display:none}
+.flow-inner{display:flex;align-items:stretch;min-width:max-content;max-width:1100px;margin:0 auto;padding:0 28px}
+.flow-step{display:flex;align-items:center;padding:10px 14px;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;text-decoration:none}
+.flow-step:hover{color:var(--text-secondary);border-bottom-color:rgba(240,160,32,.3)}
+.flow-step.active{color:var(--amber-glow);border-bottom-color:var(--amber-glow)}
+.flow-num{font-size:9px;background:var(--purple-dark);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-dim)}
+.flow-step.active .flow-num{background:rgba(196,120,0,.2);color:var(--amber-glow)}
+.flow-arrow{color:var(--border-subtle);font-size:12px;user-select:none}
+.hero{max-width:1100px;margin:0 auto;padding:56px 28px 32px;border-bottom:1px dashed var(--border-subtle)}
+.hero-tag{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--amber-bright);margin-bottom:20px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:40px;line-height:1.1;margin-bottom:18px;letter-spacing:-.01em;background:linear-gradient(120deg,var(--amber-glow) 0%,var(--amber-bright) 40%,var(--purple-glow) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-body{max-width:740px;font-size:18px;color:var(--text-secondary);line-height:1.75;margin-bottom:20px}
+.k-mini{display:inline-flex;align-items:center;gap:10px;background:rgba(196,120,0,.08);border:1px solid var(--amber-mid);border-radius:10px;padding:10px 16px;margin-bottom:20px}
+.k-mini-val{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:var(--amber-glow)}
+.k-mini-desc{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);line-height:1.6}
+.spec-banner{border:1px dashed var(--amber-mid);background:rgba(196,120,0,.04);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--amber-bright);line-height:1.65}
+.hero-tags-row{display:flex;gap:8px;flex-wrap:wrap}
+.htag{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-dim)}
+.stages{max-width:1100px;margin:0 auto;padding:0 28px 80px}
+.stage{border:1px solid var(--border-subtle);border-radius:14px;margin-top:28px;overflow:hidden;transition:border-color .2s}
+.stage:target{border-color:var(--amber-mid)}
+.stage-hdr{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;background:rgba(13,10,36,.3);transition:background .15s}
+.stage-hdr:hover{background:rgba(13,10,36,.5)}
+.stage-num{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--amber-bright);width:36px;text-align:center;flex-shrink:0}
+.stage-meta{flex:1}
+.stage-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:3px}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--text-primary)}
+.stage-tool-tag{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--amber-mid);border-radius:8px;color:var(--amber-bright);white-space:nowrap}
+.stage-toggle{font-size:16px;color:var(--text-dim);transition:transform .2s;user-select:none}
+.stage.open .stage-toggle{transform:rotate(180deg)}
+.stage-body{display:none;padding:24px 28px;border-top:1px dashed var(--border-subtle)}
+.stage.open .stage-body{display:block}
+.stage-body p{color:var(--text-secondary);font-size:15px;line-height:1.65;margin-bottom:12px;max-width:720px}
+.stage-body strong{color:var(--text-primary)}
+.finding-box{background:rgba(196,120,0,.04);border:1px dashed var(--amber-mid);border-radius:8px;padding:14px 18px;margin:12px 0;font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);line-height:1.7}
+.finding-box .fb-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.cta-primary{font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,rgba(196,120,0,.15),rgba(7,5,21,.5));border:1px solid var(--amber-mid);color:var(--amber-glow);transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.cta-primary:hover{background:linear-gradient(135deg,rgba(196,120,0,.25),rgba(26,16,64,.3));transform:translateY(-1px);box-shadow:0 4px 20px rgba(196,120,0,.2)}
+.cta-secondary{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:8px 16px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-secondary);transition:all .15s}
+.cta-secondary:hover{border-color:var(--amber-mid);color:var(--text-primary)}
+.next-hint{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-subtle)}
+.conclusion{max-width:1100px;margin:0 auto;padding:0 28px 60px}
+.conclusion-card{border:1px solid var(--amber-mid);border-radius:14px;padding:32px 36px;background:linear-gradient(160deg,rgba(196,120,0,.06),rgba(7,5,21,.5))}
+.conclusion-card h2{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600;color:var(--amber-glow);margin-bottom:16px}
+.conclusion-card p{color:var(--text-secondary);font-size:15px;line-height:1.7;margin-bottom:12px}
+.related-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px dashed var(--amber-mid)}
+.rel-link{font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-secondary);transition:all .15s}
+.rel-link:hover{border-color:var(--amber-mid);color:var(--text-primary)}
+@media(max-width:720px){.hero h1{font-size:26px}.stages,.conclusion{padding-left:16px;padding-right:16px}.stage-hdr{padding:16px}.stage-body{padding:18px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Workflow — Kardashev Ladder</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+
+<div class="flow-bar">
+  <div class="flow-inner">
+    <a class="flow-step active" href="#stage-1"><span class="flow-num">1</span> Now</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-2"><span class="flow-num">2</span> Units</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-3"><span class="flow-num">3</span> K1 — Dyson</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-4"><span class="flow-num">4</span> K2 — BZ</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-5"><span class="flow-num">5</span> Physics audit</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-6"><span class="flow-num">6</span> Transcension</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-7"><span class="flow-num">7</span> MTH chain</a>
+  </div>
+</div>
+
+<div class="hero">
+  <p class="hero-tag">Workflow · Speculative register</p>
+  <h1>The Kardashev Ladder</h1>
+  <div class="k-mini">
+    <span class="k-mini-val">K = 0.724</span>
+    <span class="k-mini-desc">Humanity 2025<br>~1.84 × 10¹³ W total primary energy</span>
+  </div>
+  <p class="hero-body">We are a K0.7 civilisation. K1 — full planetary energy budget — is centuries away. K2 — stellar energy — requires a Dyson structure. K3 — galactic energy — is almost unimaginably remote. But where does a sufficiently advanced civilisation <em>go</em>? This workflow climbs the ladder rung by rung, then follows the Macro Transcension Hypothesis argument that the most advanced civilisations don't expand outward at all — and why that matters for the Fermi Paradox and for ω Centauri.</p>
+  <div class="spec-banner">⚠ Speculative register — The Kardashev framework is extrapolation, not prediction. All projections are order-of-magnitude. The Macro Transcension Hypothesis is a theoretical framework, not empirical fact.</div>
+  <div class="hero-tags-row">
+    <span class="htag">Kardashev 1964</span>
+    <span class="htag">Sagan continuous scale</span>
+    <span class="htag">Fermi Paradox</span>
+    <span class="htag">Macro Transcension Hypothesis</span>
+    <span class="htag">Dyson swarm · BZ process · Matrioshka brain</span>
+  </div>
+</div>
+
+<div class="stages">
+
+  <!-- Stage 1 -->
+  <div class="stage open" id="stage-1">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">1</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 1 — Where we are</div>
+        <div class="stage-title">Humanity's current Kardashev value</div>
+      </div>
+      <span class="stage-tool-tag">kardashev-meter</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>On the continuous Kardashev–Sagan scale, K = (log₁₀P − 6)/10 where P is power in watts. Humanity's 2023 primary energy consumption was ~580 EJ/yr = 1.84 × 10¹³ W, giving K ≈ 0.724.</p>
+      <p>The Kardashev Meter lets you vary the energy dataset and the annual growth rate to see when K1, K2, and K3 are reached. At 2%/yr growth, K1 is ~1,100 years away. The uncertainty in that estimate is enormous — it is an extrapolation, not a forecast.</p>
+      <div class="finding-box">
+        <div class="fb-label">Reference milestones</div>
+        K0.724 = Humanity 2025<br>
+        K1.0   = 1.74 × 10¹⁷ W (Earth insolation)<br>
+        K2.0   = 3.86 × 10²⁶ W (solar luminosity)<br>
+        K3.0   = ~4 × 10³⁷ W (Milky Way luminosity estimate)
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="kardashev-meter.html">Open Kardashev Meter →</a>
+        <a class="cta-secondary" href="kardashev-meter.html#energy=580&growth=2.0">Pre-fill 2025 baseline</a>
+      </div>
+      <p class="next-hint">After the current K-value → proceed to Stage 2 to calibrate your units intuition.</p>
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage" id="stage-2">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">2</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 2 — Unit calibration</div>
+        <div class="stage-title">Translate cosmic and everyday energy units</div>
+      </div>
+      <span class="stage-tool-tag">energy-translator</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The gap between everyday energy scales and Kardashev scales spans thirty orders of magnitude. Without calibration, "10²⁶ W" is just a number. The Energy Translator converts bidirectionally between joules, kWh, tonnes TNT, electronvolts, solar luminosities, and Kardashev level anchors.</p>
+      <p>Useful reference conversions for this workflow: 1 Dyson swarm output ≈ 3.86 × 10²⁶ W ≈ 1 solar luminosity ≈ 2.1 × 10¹³ tonnes TNT per second.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="energy-translator.html">Open Energy Translator →</a>
+        <a class="cta-secondary" href="energy-translator.html#v=1&u=Lsun">Pre-fill 1 solar luminosity</a>
+      </div>
+      <p class="next-hint">After calibrating units → proceed to Stage 3: what does reaching K1 actually require?</p>
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage" id="stage-3">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">3</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 3 — K1 → K2 leap</div>
+        <div class="stage-title">Dyson swarm: capturing the full star</div>
+      </div>
+      <span class="stage-tool-tag">dyson-swarm</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>A Dyson swarm is a dense cloud of independently orbiting solar-energy collectors surrounding the Sun. Unlike a rigid Dyson shell (structurally impossible), a swarm is physically plausible — it requires only that we can manufacture and launch collectors at scale.</p>
+      <p>The Dyson Swarm tool calculates the number of collectors needed for a given coverage fraction, the total area, manufacturing rate requirements, and the total collected power. At full coverage, it delivers exactly K2: ~3.86 × 10²⁶ W.</p>
+      <div class="finding-box">
+        <div class="fb-label">Full Dyson swarm at 1 AU</div>
+        Total collection area: ~2.8 × 10²³ m² (6 × 10⁴ × Earth's surface area)<br>
+        Power at full coverage: 3.86 × 10²⁶ W = K2.0<br>
+        Barrier: not physics — material and manufacturing scale
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="dyson-swarm.html">Open Dyson Swarm →</a>
+      </div>
+      <p class="next-hint">After the Dyson swarm → proceed to Stage 4: black hole energy extraction beyond K2.</p>
+    </div>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="stage" id="stage-4">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">4</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 4 — Beyond K2</div>
+        <div class="stage-title">BZ process: spinning black hole power plant</div>
+      </div>
+      <span class="stage-tool-tag">bz-kardashev</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The Blandford-Znajek (BZ) process extracts rotational energy from a spinning (Kerr) black hole via electromagnetic coupling. This is not speculative physics — it operates in active galactic nuclei and powers the jets observed from quasars. Deliberate engineering of a BZ power plant is speculative engineering, not speculative physics.</p>
+      <p>The ω Cen IMBH candidate at ~7,100 M☉ with maximum spin (a=1) stores ~2.3 × 10⁵³ J of extractable rotational energy — enough to power a K1 civilisation for ~4 × 10³² years. The BZ–Kardashev tool calculates the extractable energy and power output as a function of mass and spin.</p>
+      <div class="finding-box">
+        <div class="fb-label">ω Cen IMBH at 7,100 M☉, max spin</div>
+        Extractable rotational energy: ~2.3 × 10⁵³ J<br>
+        Peak BZ power (strongly B-field dependent): up to ~10³⁸ W (K2+)<br>
+        This is not a prediction — it is the physical upper bound
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="bz-kardashev.html">Open BZ–Kardashev →</a>
+      </div>
+      <p class="next-hint">After the BZ tool → proceed to Stage 5: audit which other sci-fi technologies pass the physics check.</p>
+    </div>
+  </div>
+
+  <!-- Stage 5 -->
+  <div class="stage" id="stage-5">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">5</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 5 — Feasibility audit</div>
+        <div class="stage-title">Physics budget check for sci-fi technologies</div>
+      </div>
+      <span class="stage-tool-tag">scifi-tech-auditor</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>Not all technologies imagined in science fiction are equally forbidden by physics. Warp drives require exotic matter with negative energy density — unknown physics. Dyson swarms require extraordinary engineering — but known physics. Mind uploading is not prohibited by any physical law we know of — it is a data and engineering problem.</p>
+      <p>The Sci-Fi Tech Auditor provides a physics budget card for each technology: energy requirement, Kardashev level needed, primary barrier, and a verdict. It uses the same energy and Kardashev frameworks from the earlier stages of this workflow.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="scifi-tech-auditor.html">Open Sci-Fi Tech Auditor →</a>
+        <a class="cta-secondary" href="scifi-tech-auditor.html#tech=dyson">Audit Dyson sphere</a>
+        <a class="cta-secondary" href="scifi-tech-auditor.html#tech=transcension">Audit Transcension</a>
+      </div>
+      <p class="next-hint">After the audit → proceed to Stage 6: the Transcension Crossover.</p>
+    </div>
+  </div>
+
+  <!-- Stage 6 -->
+  <div class="stage" id="stage-6">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">6</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 6 — Inflection point</div>
+        <div class="stage-title">Transcension crossover: inward not outward</div>
+      </div>
+      <span class="stage-tool-tag">transcension-crossover</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The Transcension Crossover tool models the point at which maximising computation density — concentrating energy in ever-smaller volumes — becomes more efficient than expanding outward across space. This is the core prediction of the Macro Transcension Hypothesis (MTH).</p>
+      <p>The argument: as a civilisation approaches K2, the computational efficiency of a Matrioshka Brain (nested shells around a star, each capturing waste heat) approaches a thermodynamic maximum. Beyond that maximum, the attractor is smaller, hotter, denser computation — ultimately moving toward black hole horizons as the most efficient computation substrate. An advanced civilisation that has made this transition is cosmologically invisible.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="transcension-crossover.html">Open Transcension Crossover →</a>
+        <a class="cta-secondary" href="matrioshka-brain.html">Matrioshka Brain tool</a>
+      </div>
+      <p class="next-hint">After the crossover → proceed to Stage 7: the full MTH chain and ω Cen implications.</p>
+    </div>
+  </div>
+
+  <!-- Stage 7 -->
+  <div class="stage" id="stage-7">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">7</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 7 — MTH chain</div>
+        <div class="stage-title">Why ω Centauri matters for the Fermi Paradox</div>
+      </div>
+      <span class="stage-tool-tag">MTH chain</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>If the MTH is correct, and advanced civilisations transcend inward rather than expand outward, we should look for them not in radio SETI surveys of the sky, but in compact, high-density astrophysical objects. The most natural sites: intermediate-mass black holes at the centres of dense stellar clusters.</p>
+      <p>The ω Centauri cluster is among the oldest and most massive globular clusters in the Milky Way — 12 billion years old, 4 million solar masses, possibly the stripped nucleus of a dwarf galaxy. If a galactic-origin civilisation arose there ~10 Gyr ago and followed the MTH attractor, the IMBH at its centre would be the expected site of transcension.</p>
+      <p><strong>This is speculative.</strong> It is not a scientific prediction — it is a plausibility argument for the ω Cen IMBH as a high-priority target in both astrobiology and IMBH astrophysics simultaneously.</p>
+      <div class="finding-box">
+        <div class="fb-label">The ω Cen MTH argument (speculative)</div>
+        Age: ~12 Gyr — enough time for multiple civilisational cycles<br>
+        Origin: possibly stripped dwarf galaxy nucleus — high metallicity stars<br>
+        Central IMBH: 6,000–8,200 M☉ tension unresolved<br>
+        MTH prediction: civilisation signature = deep infrared excess near central BH<br>
+        Register: speculative hypothesis — clearly labelled throughout
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="transcension-crossover.html">Open Transcension Crossover →</a>
+        <a class="cta-secondary" href="workflow-settle-imbh-question.html">Settle the IMBH Question →</a>
+      </div>
+      <p class="next-hint">Workflow complete. All stages connected. The observational programme that settles the IMBH question may also be the one that tests the MTH.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="conclusion">
+  <div class="conclusion-card">
+    <h2>The ladder ends where the physics gets interesting</h2>
+    <p>The Kardashev scale was conceived as a spectrum from planetary to galactic energy mastery. But if the MTH is correct, the most advanced civilisations never reach K3 — they reach the maximum computational density achievable within a K2 budget, then turn inward. The ladder doesn't end at K3; it bends at some crossover point toward black hole horizons.</p>
+    <p>The ω Cen IMBH sits at the crossover mass range — intermediate between stellar-mass black holes (too small for survivable crossing, too simple as computation substrates) and supermassive black holes (too large to be practically engineered). It is the right size to be interesting in every sense of that word.</p>
+    <p>Whether the IMBH exists, whether the MTH is correct, and whether ω Cen is a transcension site are three separate questions. The first is answerable observationally in the next decade. The other two are not — but they tell us where to look.</p>
+    <p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">Workflow version 1.0 · 2026-06-10 · All tools: Code MIT · Prose CC BY 4.0 · Register: speculative · The Omega Centauri Society</p>
+    <div class="related-links">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);align-self:center">Related →</span>
+      <a class="rel-link" href="workflow-settle-imbh-question.html">Settle the IMBH Question</a>
+      <a class="rel-link" href="workflow-black-hole-101.html">Black Hole 101</a>
+      <a class="rel-link" href="/tools/">All tools</a>
+      <a class="rel-link" href="https://omegacentauri.me/#science">#science</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleStage(hdr){ hdr.closest('.stage').classList.toggle('open'); }
+const flowSteps = document.querySelectorAll('.flow-step');
+const stageEls  = document.querySelectorAll('.stage');
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx=Array.from(stageEls).indexOf(e.target);
+      flowSteps.forEach((s,j)=>s.classList.toggle('active',j===idx));
+    }
+  });
+},{threshold:0.4});
+stageEls.forEach(s=>io.observe(s));
+function openFromHash(){
+  const h=location.hash;
+  if(!h) return;
+  const el=document.querySelector(h);
+  if(el && el.classList.contains('stage')){ el.classList.add('open'); el.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+openFromHash();
+</script>
+</body>
+</html>

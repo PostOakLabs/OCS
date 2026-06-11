@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!--
+  Black Hole Scale Comparator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Version: 1.0  ·  Last updated: 2026-06-10
+  Physics: r_s = 2GM/c²; density ρ ≈ M/(4π/3·r_s³); tidal a = 2GMh/r³
+  Register: peer-reviewed
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Hole Scale Comparator — Omega Centauri Society</title>
+<meta name="description" content="Drag a mass slider from stellar-mass to supermassive black holes. See Schwarzschild radius, mean density, tidal acceleration, and the ω Cen IMBH window at 6,000–8,200 M☉.">
+<link rel="canonical" href="https://omegacentauri.me/tools/bh-scale-comparator.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 20%,rgba(112,85,212,.08),transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(29,186,144,.05),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--purple-glow),var(--amber-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid;color:var(--teal-bright);background:rgba(29,186,144,.06);border-color:var(--teal-mid)}
+.main-slider-card{background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.6));border:1px solid var(--border-subtle);border-radius:14px;padding:28px 32px;margin-bottom:24px}
+.mass-display{text-align:center;margin-bottom:24px}
+.mass-val{font-family:'Orbitron',sans-serif;font-size:48px;font-weight:900;line-height:1;color:var(--purple-glow);transition:color .3s}
+.mass-unit{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-dim);margin-top:4px}
+.mass-name{font-family:'Crimson Pro',serif;font-style:italic;font-size:18px;color:var(--amber-bright);margin-top:6px;min-height:1.4em;transition:opacity .2s}
+.slider-full{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;outline:none;background:linear-gradient(90deg,var(--purple-dark),var(--purple-mid),var(--purple-bright));margin-bottom:18px}
+.slider-full::-webkit-slider-thumb,.slider-full::-moz-range-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--purple-glow);cursor:pointer;border:2px solid var(--void);box-shadow:0 0 12px rgba(160,128,240,.5)}
+.scale-labels{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:8px}
+/* IMBH band */
+.scale-track{position:relative;height:8px;background:rgba(112,85,212,.1);border-radius:4px;margin-bottom:24px}
+.imbh-band{position:absolute;height:100%;background:rgba(240,160,32,.25);border-left:2px solid var(--red-glow);border-right:2px solid var(--teal-glow);border-radius:2px;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.imbh-label{font-family:'Space Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-glow);white-space:nowrap;margin-top:16px}
+.cursor-marker{position:absolute;top:-4px;width:3px;height:16px;background:var(--purple-glow);border-radius:2px;transform:translateX(-50%);pointer-events:none;transition:left .05s}
+
+/* Result grid */
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+@media(max-width:720px){.result-grid{grid-template-columns:1fr;gap:12px}}
+.result-cell{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:12px;padding:18px 20px;text-align:center}
+.rc-label{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px}
+.rc-val{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--purple-glow);margin-bottom:4px}
+.rc-unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)}
+.rc-comp{font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+.comparisons{border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;margin-bottom:20px;background:rgba(7,5,21,.4)}
+.comparisons h3{font-family:'Orbitron',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px}
+.comp-list{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);line-height:2}
+.comp-list .ch{color:var(--amber-bright)}
+
+.imbh-box{border:1px dashed var(--amber-mid);background:rgba(196,120,0,.05);border-radius:10px;padding:16px 20px;margin-bottom:20px}
+.imbh-box h3{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber-bright);margin-bottom:10px}
+.imbh-box p{font-size:14px;color:var(--text-secondary);line-height:1.6}
+.imbh-bounds{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.ib{flex:1;min-width:160px;padding:10px 14px;border-radius:8px;border:1px solid;text-align:center;font-family:'Space Mono',monospace;font-size:10px}
+.ib.low{border-color:var(--red-mid);color:var(--red-glow)}.ib.high{border-color:var(--teal-mid);color:var(--teal-glow)}
+
+.wf-link{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:9px 20px;border-radius:10px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.05);margin-top:8px;margin-right:10px;transition:all .15s}
+.wf-link:hover{background:rgba(29,186,144,.12);color:var(--teal-glow)}
+
+.about{border-top:1px solid var(--border-subtle);padding-top:20px;margin-top:8px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}.about-toggle .arr{transition:transform .2s}
+.about-toggle.open .arr{transform:rotate(90deg)}
+.about-body{display:none;margin-top:14px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:14px 0 7px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:9px;line-height:1.6}
+.about-body code{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-bright)}
+.about-body .meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:14px;border-top:1px dashed var(--border-subtle);padding-top:10px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Black Hole Scale Comparator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Black Hole Scale Comparator</h1>
+      <p class="tool-subtitle">Drag the mass from 3 M☉ to 10¹⁰ M☉ and watch the Schwarzschild radius, mean density, and tidal acceleration transform. The ω Cen IMBH candidate window is shown as a shaded band.</p>
+    </div>
+    <span class="tier-badge">● Peer-reviewed physics</span>
+  </header>
+
+  <div class="main-slider-card">
+    <div class="mass-display">
+      <div class="mass-val" id="mv">7,100</div>
+      <div class="mass-unit">M☉ (solar masses)</div>
+      <div class="mass-name" id="mn">ω Cen IMBH planning value</div>
+    </div>
+
+    <!-- Track with IMBH band -->
+    <div class="scale-labels">
+      <span>3 M☉<br>Stellar</span>
+      <span>10³ M☉<br>IMBH</span>
+      <span>10⁶ M☉<br>SMC nuclei</span>
+      <span>10¹⁰ M☉<br>TON 618</span>
+    </div>
+    <div class="scale-track" id="track">
+      <!-- IMBH band will be injected by JS -->
+    </div>
+    <input type="range" class="slider-full" id="sl-mass"
+      min="0.477" max="10" step="0.001" value="3.851"
+      oninput="calculate(parseFloat(this.value))">
+    <!-- min=log10(3)≈0.477, value=log10(7100)≈3.851, max=10 -->
+    <div class="scale-labels" style="font-size:9px;margin-top:-12px">
+      <span>← stellar</span>
+      <span style="color:var(--amber-glow)">IMBH window</span>
+      <span>supermassive →</span>
+    </div>
+  </div>
+
+  <div class="result-grid">
+    <div class="result-cell">
+      <div class="rc-label">Schwarzschild Radius</div>
+      <div class="rc-val" id="rv-rs">—</div>
+      <div class="rc-unit" id="ru-rs">km</div>
+      <div class="rc-comp" id="rcomp-rs"></div>
+    </div>
+    <div class="result-cell">
+      <div class="rc-label">Mean Density inside r<sub>s</sub></div>
+      <div class="rc-val" id="rv-rho">—</div>
+      <div class="rc-unit" id="ru-rho">kg/m³</div>
+      <div class="rc-comp" id="rcomp-rho"></div>
+    </div>
+    <div class="result-cell">
+      <div class="rc-label">Tidal acceleration (h=1.8m, r=r<sub>s</sub>)</div>
+      <div class="rc-val" id="rv-tid">—</div>
+      <div class="rc-unit" id="ru-tid">m/s²</div>
+      <div class="rc-comp" id="rcomp-tid"></div>
+    </div>
+  </div>
+
+  <div class="comparisons">
+    <h3>Familiar comparisons</h3>
+    <div class="comp-list" id="comp-list"></div>
+  </div>
+
+  <div class="imbh-box">
+    <h3>ω Centauri IMBH Candidate Window</h3>
+    <p>Two published measurements produce irreconcilable bounds. The shaded band on the slider marks both published limits — not a consensus.</p>
+    <div class="imbh-bounds">
+      <div class="ib high">≥ 8,200 M☉<br>Häberle et al. 2024<br>Stellar kinematics</div>
+      <div class="ib low">≤ 6,000 M☉<br>Bañares et al. 2025<br>Pulsar timing</div>
+    </div>
+  </div>
+
+  <a class="wf-link" href="workflow-black-hole-101.html">Black Hole 101 Workflow →</a>
+  <a class="wf-link" href="infall-survival.html">Infall &amp; Survival tool</a>
+
+  <div class="about">
+    <button class="about-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+      <span class="arr">▶</span> Physics &amp; Sources
+    </button>
+    <div class="about-body">
+      <h3>Schwarzschild Radius</h3>
+      <p><code>r_s = 2GM/c²</code> where G = 6.674×10⁻¹¹ m³/(kg·s²), c = 2.998×10⁸ m/s, M_☉ = 1.989×10³⁰ kg. Numerically: r_s ≈ 2953 × (M/M☉) metres.</p>
+      <h3>Mean Density</h3>
+      <p>Uniform sphere at the Schwarzschild radius: <code>ρ = M / (4π/3 · r_s³)</code>. Scales as M⁻². For a 10 M☉ black hole, density exceeds the nuclear density of ~2×10¹⁷ kg/m³; for SMBHs it can be below that of water.</p>
+      <h3>Tidal Acceleration</h3>
+      <p>At radius r from the centre, tidal stretching across height h: <code>a_tidal = 2GMh/r³</code>. Here r = r_s and h = 1.8 m (standing human). Note: at the event horizon itself r = r_s, so the formula gives an order-of-magnitude estimate, not a physically meaningful crossing value.</p>
+      <h3>IMBH bounds</h3>
+      <p>Häberle et al. 2024, Nature 631:285 — stellar kinematic lower bound. Bañares-Hernández et al. 2025, A&amp;A 693:A104 — pulsar timing upper bound.</p>
+      <div class="meta">Tool version 1.0 · 2026-06-10 · Code: MIT · Prose: CC BY 4.0 · Part of the Black Hole 101 workflow.</div>
+    </div>
+  </div>
+</div>
+
+<script src="../data/measurements.js"></script>
+<script>
+const G = 6.674e-11, c = 2.998e8, Msun = 1.989e30;
+
+// Named black holes / reference points [log10(M), label]
+const LANDMARKS = [
+  [Math.log10(3), 'Minimum stellar-mass black hole'],
+  [Math.log10(10), 'Cyg X-1 (~10 M☉)'],
+  [Math.log10(62), 'GW150914 merger remnant'],
+  [Math.log10(6000), 'Bañares 2025 pulsar upper bound'],
+  [Math.log10(8200), 'Häberle 2024 kinematic lower bound'],
+  [Math.log10(40000), 'IRS 13E1 candidate (~40k M☉)'],
+  [Math.log10(4.15e6), 'Sgr A* (Milky Way centre)'],
+  [Math.log10(6.5e9), 'M87* (EHT image)'],
+  [Math.log10(6.6e10), 'TON 618 (~66 billion M☉)'],
+];
+
+// Place IMBH band on track
+function placeBand(){
+  const track = document.getElementById('track');
+  const min=0.477, max=10, range=max-min;
+  const lo = (Math.log10(6000)-min)/range*100;
+  const hi = (Math.log10(8200)-min)/range*100;
+  const band = document.createElement('div');
+  band.className='imbh-band';
+  band.style.left=lo+'%';
+  band.style.width=(hi-lo)+'%';
+  const lbl = document.createElement('div');
+  lbl.className='imbh-label'; lbl.textContent='ω Cen window';
+  band.appendChild(lbl);
+  track.appendChild(band);
+}
+placeBand();
+
+function fmt(x, dp){
+  if(x===0) return '0';
+  if(x>=1e12) return (x/1e12).toFixed(dp??1)+' × 10¹²';
+  if(x>=1e9)  return (x/1e9).toFixed(dp??1)+' × 10⁹';
+  if(x>=1e6)  return (x/1e6).toFixed(dp??1)+' × 10⁶';
+  if(x>=1e3)  return x.toFixed(0);
+  if(x>=1)    return x.toFixed(dp??2);
+  return x.toExponential(2);
+}
+
+function calculate(log10M){
+  const M_sun = Math.pow(10, log10M);
+  const M_kg  = M_sun * Msun;
+
+  // rs in metres
+  const rs_m = 2 * G * M_kg / (c*c);
+  // density inside rs
+  const rho = M_kg / (4*Math.PI/3 * rs_m*rs_m*rs_m);
+  // tidal accel at rs, h=1.8m
+  const h = 1.8;
+  const a_tid = 2*G*M_kg*h / (rs_m*rs_m*rs_m);
+
+  // Format rs
+  let rs_val, rs_unit;
+  if(rs_m < 1){ rs_val = fmt(rs_m*100,2); rs_unit='cm'; }
+  else if(rs_m < 1e3){ rs_val = fmt(rs_m,2); rs_unit='m'; }
+  else if(rs_m < 1.496e11){ rs_val = fmt(rs_m/1e3,2); rs_unit='km'; }
+  else if(rs_m < 9.461e15){ rs_val = fmt(rs_m/1.496e11,2); rs_unit='AU'; }
+  else { rs_val = fmt(rs_m/9.461e15,2); rs_unit='light-years'; }
+
+  // Format rho
+  let rho_val, rho_unit, rho_comp='';
+  if(rho > 1e18){ rho_val=(rho/1e18).toExponential(1); rho_unit='× 10¹⁸ kg/m³'; rho_comp='Far above nuclear density'; }
+  else if(rho > 2e17){ rho_val=fmt(rho/1e17,1)+'× 10¹⁷'; rho_unit='kg/m³'; rho_comp='Near nuclear density'; }
+  else if(rho > 1e3){ rho_val=fmt(rho,1); rho_unit='kg/m³'; rho_comp=rho>1e4?'Denser than osmium':'Denser than iron'; }
+  else if(rho > 1){ rho_val=fmt(rho,2); rho_unit='kg/m³'; rho_comp=rho>1?'Denser than water':'Below water density'; }
+  else { rho_val=rho.toExponential(2); rho_unit='kg/m³'; rho_comp='Below air density'; }
+
+  // Format tidal
+  let tid_val, tid_unit, tid_comp='';
+  if(a_tid > 1e6){ tid_val=(a_tid/9.8).toExponential(2); tid_unit='g'; tid_comp='Instantly lethal'; }
+  else if(a_tid > 1000){ tid_val=fmt(a_tid/9.8,1); tid_unit='g'; tid_comp='Instantly lethal'; }
+  else if(a_tid > 9.8){ tid_val=fmt(a_tid/9.8,2); tid_unit='g'; tid_comp='Spaghettification'; }
+  else if(a_tid > 0.1){ tid_val=fmt(a_tid,3); tid_unit='m/s²'; tid_comp='Noticeable but survivable'; }
+  else { tid_val=a_tid.toExponential(2); tid_unit='m/s²'; tid_comp='Imperceptible'; }
+
+  document.getElementById('rv-rs').textContent = rs_val;
+  document.getElementById('ru-rs').textContent = rs_unit;
+  document.getElementById('rv-rho').textContent = rho_val;
+  document.getElementById('ru-rho').textContent = rho_unit;
+  document.getElementById('rcomp-rho').textContent = rho_comp;
+  document.getElementById('rv-tid').textContent = tid_val;
+  document.getElementById('ru-tid').textContent = tid_unit;
+  document.getElementById('rcomp-tid').textContent = tid_comp;
+
+  // Mass display
+  let ms;
+  if(M_sun >= 1e9) ms = (M_sun/1e9).toFixed(2)+' × 10⁹';
+  else if(M_sun >= 1e6) ms = (M_sun/1e6).toFixed(2)+' × 10⁶';
+  else if(M_sun >= 1000) ms = Math.round(M_sun).toLocaleString();
+  else ms = M_sun.toFixed(1);
+  document.getElementById('mv').textContent = ms;
+
+  // Name
+  let name='';
+  const eps=0.15;
+  for(const [lm,ln] of LANDMARKS){ if(Math.abs(log10M-lm)<eps){ name=ln; break; } }
+  if(!name){
+    if(log10M < 2) name='Stellar-mass black hole';
+    else if(log10M < 3) name='Lower IMBH range';
+    else if(log10M < Math.log10(6000)) name='IMBH';
+    else if(log10M <= Math.log10(8200)) name='ω Cen IMBH candidate window';
+    else if(log10M < 5) name='Upper IMBH range';
+    else if(log10M < 7) name='Low-mass SMBH';
+    else name='Supermassive black hole';
+  }
+  document.getElementById('mn').textContent = name;
+
+  // Familiar comparisons
+  const rs_earth_r = rs_m / 6.371e6;
+  const rs_sun_r   = rs_m / 6.957e8;
+  const rs_au      = rs_m / 1.496e11;
+  const comps = [];
+  comps.push(`<span class="ch">r_s / R⊕</span>  = ${rs_earth_r >= 1 ? rs_earth_r.toFixed(1)+' Earth radii' : (rs_m/1e3).toFixed(1)+' km'}`);
+  comps.push(`<span class="ch">r_s / R☉</span>  = ${rs_sun_r >= 0.001 ? rs_sun_r.toFixed(3)+' solar radii' : (rs_m/1e3).toFixed(1)+' km'}`);
+  if(rs_au >= 0.01) comps.push(`<span class="ch">r_s / 1 AU</span> = ${rs_au.toFixed(3)} AU`);
+  comps.push(`<span class="ch">ρ / ρ_water</span>  = ${(rho/1000).toExponential(2)}`);
+  comps.push(`<span class="ch">ρ / ρ_nuclear</span> = ${(rho/2e17).toExponential(2)}`);
+  document.getElementById('comp-list').innerHTML = comps.join('<br>');
+
+  saveHash(log10M);
+}
+
+function saveHash(lm){ history.replaceState(null,'','#mass='+lm.toFixed(4)); }
+function loadHash(){
+  const h = location.hash.slice(1);
+  if(!h) return;
+  const p = new URLSearchParams(h);
+  if(p.has('mass')){
+    const lm = parseFloat(p.get('mass'));
+    document.getElementById('sl-mass').value = lm;
+    calculate(lm);
+    return;
+  }
+}
+
+window.OCS_APPLY_PREFILL = function(obj){
+  if(obj.mass_solar !== undefined){
+    const lm = Math.log10(Math.max(3, obj.mass_solar));
+    document.getElementById('sl-mass').value = lm;
+    calculate(lm);
+  }
+};
+window.OCS_RUN = () => calculate(parseFloat(document.getElementById('sl-mass').value));
+
+loadHash();
+calculate(parseFloat(document.getElementById('sl-mass').value));
+</script>
+<script src="../data/prefill.js"></script>
+</body>
+</html>

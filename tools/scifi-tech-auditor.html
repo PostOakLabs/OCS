@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!--
+  Sci-Fi Tech Auditor
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Version: 1.0  ·  Last updated: 2026-06-10
+  Register: speculative (physics budget checks — clearly labelled)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sci-Fi Tech Auditor — Physics Budget Check — Omega Centauri Society</title>
+<meta name="description" content="Pick a sci-fi technology and run a physics budget check: energy requirements, Kardashev level needed, timescale, and which OCS tools underpin the verdict.">
+<link rel="canonical" href="https://omegacentauri.me/tools/scifi-tech-auditor.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 40% 10%,rgba(240,160,32,.04),transparent 50%),radial-gradient(ellipse at 80% 75%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--amber-bright),var(--red-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid;color:var(--amber-bright);background:rgba(240,160,32,.06);border-color:var(--amber-mid)}
+
+.spec-banner{border:1px dashed var(--amber-mid);background:rgba(196,120,0,.05);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-family:'Space Mono',monospace;font-size:10px;color:var(--amber-bright);line-height:1.65}
+
+.selector-card{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:12px;padding:20px 24px;margin-bottom:20px}
+.selector-card label{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);display:block;margin-bottom:10px}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.tech-btn{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .18s;text-align:left}
+.tech-btn:hover{border-color:var(--purple-mid);background:rgba(26,16,64,.4)}
+.tech-btn.active{border-color:var(--amber-mid);background:rgba(196,120,0,.08)}
+.tb-name{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-primary);margin-bottom:3px}
+.tb-tag{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:2px 7px;border-radius:5px;display:inline-block;margin-top:3px}
+.tb-tag.hard{color:var(--red-glow);border:1px solid var(--red-mid)}.tb-tag.speculative{color:var(--amber-bright);border:1px solid var(--amber-mid)}.tb-tag.maybe{color:var(--teal-bright);border:1px solid var(--teal-mid)}
+
+/* Audit card */
+.audit-card{border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;margin-bottom:20px;transition:border-color .3s}
+.audit-card.green{border-color:var(--teal-mid)}.audit-card.amber{border-color:var(--amber-mid)}.audit-card.red{border-color:var(--red-mid)}
+.ac-header{padding:20px 24px;background:rgba(13,10,36,.4)}
+.ac-tech{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--text-primary);margin-bottom:4px}
+.ac-desc{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary)}
+.ac-body{padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.ac-body{grid-template-columns:1fr}}
+.ac-metric{background:rgba(7,5,21,.5);border-radius:8px;padding:14px 16px}
+.acm-label{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.acm-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:var(--purple-glow)}
+.acm-note{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);margin-top:4px;line-height:1.5}
+.ac-verdict{padding:16px 24px;border-top:1px dashed var(--border-subtle)}
+.av-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.av-text{font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-secondary);line-height:1.65}
+.ac-tools{padding:12px 24px;border-top:1px dashed var(--border-subtle);background:rgba(7,5,21,.2)}
+.at-label{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px}
+.tool-link{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid var(--border-teal);color:var(--teal-bright);display:inline-flex;margin-right:8px;margin-bottom:6px;transition:all .15s}
+.tool-link:hover{background:rgba(29,186,144,.1);color:var(--teal-glow)}
+
+.wf-link{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:9px 20px;border-radius:10px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.05);margin-top:8px;margin-right:10px;transition:all .15s}
+.wf-link:hover{background:rgba(29,186,144,.12);color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Sci-Fi Tech Auditor</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Sci-Fi Tech Auditor</h1>
+      <p class="tool-subtitle">Select a fictional technology and receive a physics budget check: energy cost, Kardashev level required, known barriers, and which OCS tools model the underlying physics.</p>
+    </div>
+    <span class="tier-badge">⚠ Speculative register</span>
+  </header>
+
+  <div class="spec-banner">
+    ⚠ Speculative register — All assessments are based on best available physics. "Physically impossible" means contradicted by established theory; "unknown physics required" means not impossible but requires capabilities beyond current models. Entertainment and education only.
+  </div>
+
+  <div class="selector-card">
+    <label>Select a technology to audit</label>
+    <div class="tech-grid" id="tech-grid"></div>
+  </div>
+
+  <div class="audit-card" id="audit-card">
+    <div class="ac-header">
+      <div class="ac-tech" id="ac-tech">Select a technology above</div>
+      <div class="ac-desc" id="ac-desc">Click any technology tile to run the physics audit.</div>
+    </div>
+    <div class="ac-body" id="ac-body"></div>
+    <div class="ac-verdict" id="ac-verdict" style="display:none">
+      <div class="av-label">Verdict</div>
+      <div class="av-text" id="av-text"></div>
+    </div>
+    <div class="ac-tools" id="ac-tools" style="display:none">
+      <div class="at-label">Related OCS tools</div>
+      <div id="at-links"></div>
+    </div>
+  </div>
+
+  <a class="wf-link" href="workflow-kardashev-ladder.html">Kardashev Ladder Workflow →</a>
+  <a class="wf-link" href="kardashev-meter.html">Kardashev Meter</a>
+  <a class="wf-link" href="energy-translator.html">Energy Translator</a>
+</div>
+
+<script src="../data/measurements.js"></script>
+<script>
+const TECHS = [
+  {
+    id:'dyson',
+    name:'Dyson Sphere',
+    desc:'Shell or swarm structure enclosing a star to capture most of its energy output.',
+    tag:'speculative',
+    energy_label:'~3.86 × 10²⁶ W',
+    energy_note:'Total solar luminosity',
+    k_label:'K2 exactly',
+    k_note:'Definitionally a K2 technology',
+    barrier_label:'Material limits',
+    barrier_note:'No known material withstands solar radiation pressure at 1 AU scale; swarm variant avoids rigid shell',
+    time_label:'Centuries to millennia',
+    time_note:'Even at 1% growth per year reaching K2 takes ~1,400 years from K1',
+    verdict:'A Dyson swarm — launching independently orbiting collectors rather than a rigid shell — is not prohibited by known physics. The engineering challenge is orders of magnitude beyond current capability. The energy return (K2) makes it the canonical civilisation leap.',
+    color:'amber',
+    tools:[{label:'Dyson Swarm',href:'dyson-swarm.html'},{label:'Kardashev Meter',href:'kardashev-meter.html'},{label:'Energy Translator',href:'energy-translator.html'}]
+  },
+  {
+    id:'warp',
+    name:'Warp Drive (Alcubierre)',
+    desc:'Spacetime metric contraction ahead and expansion behind a vessel, allowing apparent faster-than-light travel.',
+    tag:'speculative',
+    energy_label:'~10⁶⁴ J (original)',
+    energy_note:'~1/10 Jupiter mass converted to negative energy — revised estimates reduced to ~1 GJ with specific geometry, but exotic matter required',
+    k_label:'Far beyond K3',
+    k_note:'Even optimistic estimates require exotic matter with negative energy density',
+    barrier_label:'Exotic matter',
+    barrier_note:'Requires negative energy density material not known to exist in sufficient quantities. Casimir effect provides tiny negative energy regions only',
+    time_label:'Unknown / speculative',
+    time_note:'No physical mechanism identified for production of required exotic matter at scale',
+    verdict:'The Alcubierre metric is a mathematical solution to GR field equations, not physically impossible in principle. However it requires exotic matter with negative energy density far beyond anything producible — this is an unknown physics requirement, not an engineering challenge.',
+    color:'red',
+    tools:[{label:'Energy Translator',href:'energy-translator.html'}]
+  },
+  {
+    id:'teleport',
+    name:'Matter Teleportation',
+    desc:'Disassemble matter at one location and reconstruct it identically at another.',
+    tag:'hard',
+    energy_label:'~9 × 10¹⁶ J (1 kg)',
+    energy_note:'E = mc² for complete matter-energy conversion; practical reconstruction would need full quantum state (Heisenberg-limited)',
+    k_label:'K1–K2 for humans',
+    k_note:'A human (~70 kg) at mc² = 6.3 × 10¹⁸ J; capturing and transmitting full quantum state is the real barrier',
+    barrier_label:'No-clone theorem',
+    barrier_note:'Quantum teleportation transmits quantum state by destroying the original. Classical matter teleportation (disassemble/reconstruct) is not prohibited but requires reading the quantum state of every particle — currently impossible at room temperature',
+    time_label:'Centuries (if ever)',
+    time_note:'Quantum teleportation of individual qubits demonstrated; scaling to macroscopic objects faces exponential complexity',
+    verdict:'Quantum teleportation of quantum state is real and demonstrated for small systems. Classical "Star Trek" matter teleportation requires reading and transmitting the quantum state of ~7 × 10²⁷ atoms in a human body — a classical no-go in practice due to decoherence, though not strictly impossible if the universe is classical at that scale.',
+    color:'red',
+    tools:[{label:'Energy Translator',href:'energy-translator.html'}]
+  },
+  {
+    id:'matrioshka',
+    name:'Matrioshka Brain',
+    desc:'Nested computational shells around a star, each layer capturing waste heat of the inner layer. Maximum computing substrate at K2.',
+    tag:'speculative',
+    energy_label:'~3.86 × 10²⁶ W',
+    energy_note:'Full stellar output used for computation; inner shells run hot (fast), outer shells cold (efficient)',
+    k_label:'K2',
+    k_note:'Thermodynamically constrained by stellar luminosity',
+    barrier_label:'Heat dissipation',
+    barrier_note:'Outer shell must radiate to deep space; computing capacity limited by Landauer principle and stellar entropy budget',
+    time_label:'K2 prerequisite',
+    time_note:'Requires full Dyson swarm as first step',
+    verdict:'A Matrioshka Brain is not prohibited by known physics. The Landauer principle sets the theoretical maximum computation: at ~3K outer shell temperature, ~10⁴² ops/second from solar luminosity. This is finite but astronomical.',
+    color:'amber',
+    tools:[{label:'Matrioshka Brain',href:'matrioshka-brain.html'},{label:'Dyson Swarm',href:'dyson-swarm.html'},{label:'Kardashev Meter',href:'kardashev-meter.html'}]
+  },
+  {
+    id:'btz',
+    name:'Black Hole Engine (BZ Process)',
+    desc:'Extract rotational energy from a spinning black hole via the Blandford-Znajek electromagnetic process.',
+    tag:'speculative',
+    energy_label:'Up to 29% of Mc² (max spin)',
+    energy_note:'Rotational energy extractable from Kerr black hole: E_rot = Mc²(1 - 1/√2) for max spin ≈ 0.29 Mc²',
+    k_label:'K2+ (stellar mass BH)',
+    k_note:'ω Cen IMBH at 7,100 M☉, max extraction: ~2.3 × 10⁵³ J = ~5.7 × 10⁵⁰ kg TNT equivalent',
+    barrier_label:'Capture rate',
+    barrier_note:'BZ power ∝ a² × B² × M² where a = spin and B = magnetic field. Maintaining strong B-field near horizon is technically difficult',
+    time_label:'Requires K2+ infrastructure',
+    time_note:'A black hole power plant requires a structure to contain and harness the outflow — engineering challenge, not physics prohibition',
+    verdict:'The Blandford-Znajek process is real: observed in astrophysical jets from AGN. Deliberate engineering of a BZ power plant around the ω Cen IMBH candidate is speculative but not physically prohibited. At maximum spin the available rotational energy is 2.3 × 10⁵³ J — enough to power a K1 civilisation for ~4 × 10³² years.',
+    color:'amber',
+    tools:[{label:'BZ–Kardashev',href:'bz-kardashev.html'},{label:'Kerr Geometry',href:'kerr-geometry.html'},{label:'Energy Translator',href:'energy-translator.html'}]
+  },
+  {
+    id:'upload',
+    name:'Mind Upload / Substrate Transfer',
+    desc:'Transfer human cognitive function to a digital substrate (computational emulation of the brain).',
+    tag:'speculative',
+    energy_label:'~20 W (brain power)',
+    energy_note:'Human brain runs on ~20 W. Digital emulation energy depends on substrate efficiency; Matrioshka Brain could run ×10⁴² emulated minds on solar luminosity',
+    k_label:'K0–K1 depending on scale',
+    k_note:'Single uploads: sub-K1. Civilisational scale: K1+',
+    barrier_label:'Consciousness',
+    barrier_note:'No physical prohibition against computational emulation. The philosophical problem (whether the upload is conscious) is not a physics question. Practical barriers: we do not yet have a complete connectome map of even a mouse brain',
+    time_label:'Decades to centuries',
+    time_note:'Connectome mapping advancing; full human connectome likely 21st century; emulation at sufficient resolution: uncertain',
+    verdict:'Mind uploading is not prohibited by known physics if functionalism about consciousness is correct. The energy cost of a single upload is trivially small; the barrier is the connectome resolution (~86 billion neurons, ~10¹⁵ synaptic connections). This is an extreme engineering challenge, not a physics impossibility.',
+    color:'maybe',
+    tools:[{label:'Matrioshka Brain',href:'matrioshka-brain.html'},{label:'Kardashev Meter',href:'kardashev-meter.html'}]
+  },
+  {
+    id:'transcension',
+    name:'Transcension (Macro Transcension Hypothesis)',
+    desc:'Civilisations maximise computing density by moving inward — toward black holes and quantum scales — rather than expanding outward. Explains the Fermi Paradox.',
+    tag:'speculative',
+    energy_label:'Concentrated, high-density',
+    energy_note:'MTH posits K-scale energy concentrated in ever-smaller volumes rather than expanded across space',
+    k_label:'Variable — high K inside small volume',
+    k_note:'K-scale per unit volume increases; apparent K from outside decreases as civilisation becomes non-detectable',
+    barrier_label:'Unknown substrate',
+    barrier_note:'Computronium (maximum-density computing matter) is speculative; no physical law forbids it but no known mechanism realises it',
+    time_label:'Speculative developmental stage',
+    time_note:'MTH posits this is the attractor for any sufficiently advanced civilisation, explaining their absence from the observable cosmos',
+    verdict:'The Macro Transcension Hypothesis (Smart 2012) is a speculative but internally consistent framework. It is not falsifiable in the strong sense, but makes testable predictions about where to look for advanced civilisations (not in space, but in high-density astrophysical regions). The ω Cen IMBH is proposed as a potential transcension site in this site\'s MTH content.',
+    color:'amber',
+    tools:[{label:'Transcension Crossover',href:'transcension-crossover.html'},{label:'Matrioshka Brain',href:'matrioshka-brain.html'},{label:'BZ–Kardashev',href:'bz-kardashev.html'}]
+  },
+];
+
+const tagColor={'hard':'red','speculative':'amber','maybe':'maybe'};
+function renderTechGrid(){
+  const g=document.getElementById('tech-grid');
+  g.innerHTML=TECHS.map(t=>`
+    <button class="tech-btn" id="tb-${t.id}" onclick="selectTech('${t.id}')">
+      <div class="tb-name">${t.name}</div>
+      <span class="tb-tag ${tagColor[t.tag]||'speculative'}">${t.tag}</span>
+    </button>`).join('');
+}
+let selected=null;
+function selectTech(id){
+  if(selected) document.getElementById('tb-'+selected)?.classList.remove('active');
+  selected=id;
+  document.getElementById('tb-'+id)?.classList.add('active');
+  const t=TECHS.find(x=>x.id===id);
+  if(!t) return;
+  const card=document.getElementById('audit-card');
+  ['green','amber','red'].forEach(c=>card.classList.remove(c));
+  card.classList.add(t.color);
+  document.getElementById('ac-tech').textContent=t.name;
+  document.getElementById('ac-desc').textContent=t.desc;
+  document.getElementById('ac-body').innerHTML=`
+    <div class="ac-metric"><div class="acm-label">Energy / Power Required</div><div class="acm-val">${t.energy_label}</div><div class="acm-note">${t.energy_note}</div></div>
+    <div class="ac-metric"><div class="acm-label">Kardashev Level</div><div class="acm-val">${t.k_label}</div><div class="acm-note">${t.k_note}</div></div>
+    <div class="ac-metric"><div class="acm-label">Primary Physics Barrier</div><div class="acm-val" style="font-size:13px">${t.barrier_label}</div><div class="acm-note">${t.barrier_note}</div></div>
+    <div class="ac-metric"><div class="acm-label">Development Timescale</div><div class="acm-val" style="font-size:13px">${t.time_label}</div><div class="acm-note">${t.time_note}</div></div>`;
+  const vd=document.getElementById('ac-verdict');
+  vd.style.display='block';
+  document.getElementById('av-text').textContent=t.verdict;
+  const td=document.getElementById('ac-tools');
+  td.style.display='block';
+  document.getElementById('at-links').innerHTML=t.tools.map(l=>`<a class="tool-link" href="${l.href}">${l.label}</a>`).join('');
+  saveHash(id);
+}
+function saveHash(id){ history.replaceState(null,'','#tech='+id); }
+function loadHash(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  if(p.has('tech')) selectTech(p.get('tech'));
+}
+
+window.OCS_APPLY_PREFILL = function(obj){ if(obj.tech) selectTech(obj.tech); };
+window.OCS_RUN = ()=>{ if(selected) selectTech(selected); };
+
+renderTechGrid();
+loadHash();
+</script>
+<script src="../data/prefill.js"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!--
+  Energy Translator — Bidirectional Energy/Power Unit Converter
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Version: 1.0  ·  Last updated: 2026-06-10
+  Register: peer-reviewed physics
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Translator — Cosmic to Everyday Units — Omega Centauri Society</title>
+<meta name="description" content="Bidirectional energy and power unit converter: joules, erg, eV, TNT, kWh, solar luminosity, supernova, Kardashev levels. Convert everyday to cosmic units.">
+<link rel="canonical" href="https://omegacentauri.me/tools/energy-translator.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 80% 20%,rgba(29,186,144,.05),transparent 50%),radial-gradient(ellipse at 15% 70%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid;color:var(--teal-bright);background:rgba(29,186,144,.06);border-color:var(--teal-mid)}
+
+/* Input panel */
+.input-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 26px;margin-bottom:20px}
+.ic-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.num-input{flex:1;min-width:180px;background:rgba(7,5,21,.8);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);font-family:'Orbitron',sans-serif;font-size:16px;padding:10px 14px;outline:none;width:100%}
+.num-input:focus{border-color:var(--purple-mid)}
+.unit-select{flex:1;min-width:200px;background:rgba(7,5,21,.8);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);font-family:'Space Mono',monospace;font-size:12px;padding:10px 14px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%239890c0'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100%-12px) 50%}
+.unit-select:focus{border-color:var(--purple-mid)}
+.mode-toggle{display:flex;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden}
+.mode-btn{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:10px 18px;background:transparent;border:none;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.mode-btn.active{background:var(--purple-dark);color:var(--purple-glow)}
+.mode-btn:hover:not(.active){color:var(--text-secondary)}
+
+/* Output table */
+.output-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.output-table th{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);padding:8px 14px;border-bottom:1px solid var(--border-subtle);text-align:left}
+.output-table td{padding:9px 14px;border-bottom:1px dotted rgba(80,72,112,.15);vertical-align:middle}
+.output-table tr:last-child td{border-bottom:none}
+.output-table tr:hover td{background:rgba(112,85,212,.03)}
+.otd-name{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.otd-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--purple-glow);min-width:180px}
+.otd-desc{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+.section-header{background:rgba(26,16,64,.4)}
+.section-header td{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);padding:8px 14px;border-bottom:1px dashed var(--border-subtle)}
+
+.quick-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.qp-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.qp-btn:hover{border-color:var(--purple-mid);color:var(--text-secondary)}
+
+.wf-link{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:9px 20px;border-radius:10px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.05);margin-right:10px;margin-bottom:8px;transition:all .15s}
+.wf-link:hover{background:rgba(29,186,144,.12);color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Energy Translator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Energy Translator</h1>
+      <p class="tool-subtitle">Convert between everyday and cosmic energy/power units. Enter a value, select units, toggle between energy and power mode.</p>
+    </div>
+    <span class="tier-badge">● Peer-reviewed physics</span>
+  </header>
+
+  <div class="input-card">
+    <div class="ic-row">
+      <input type="number" class="num-input" id="num-in" value="1" oninput="calculate()" placeholder="Enter value…">
+      <select class="unit-select" id="unit-in" onchange="calculate()">
+        <optgroup label="— Energy —">
+          <option value="J">Joule (J)</option>
+          <option value="kJ">Kilojoule (kJ)</option>
+          <option value="MJ">Megajoule (MJ)</option>
+          <option value="GJ">Gigajoule (GJ)</option>
+          <option value="TJ">Terajoule (TJ)</option>
+          <option value="PJ">Petajoule (PJ)</option>
+          <option value="EJ">Exajoule (EJ)</option>
+          <option value="kWh">Kilowatt-hour (kWh)</option>
+          <option value="MWh">Megawatt-hour (MWh)</option>
+          <option value="GWh">Gigawatt-hour (GWh)</option>
+          <option value="TWh">Terawatt-hour (TWh)</option>
+          <option value="erg">Erg</option>
+          <option value="eV">Electronvolt (eV)</option>
+          <option value="keV">Kiloelectronvolt (keV)</option>
+          <option value="MeV">Megaelectronvolt (MeV)</option>
+          <option value="GeV">Gigaelectronvolt (GeV)</option>
+          <option value="TeV">Teraelectronvolt (TeV)</option>
+          <option value="cal">Calorie (cal)</option>
+          <option value="kcal">Kilocalorie (kcal)</option>
+          <option value="BTU">BTU</option>
+          <option value="tTNT">Tonne TNT</option>
+          <option value="ktTNT">Kilotonne TNT</option>
+          <option value="MtTNT">Megatonne TNT</option>
+          <option value="GtTNT">Gigatonne TNT</option>
+        </optgroup>
+        <optgroup label="— Power —">
+          <option value="W">Watt (W)</option>
+          <option value="kW">Kilowatt (kW)</option>
+          <option value="MW">Megawatt (MW)</option>
+          <option value="GW">Gigawatt (GW)</option>
+          <option value="TW">Terawatt (TW)</option>
+          <option value="PW">Petawatt (PW)</option>
+          <option value="Lsun">Solar luminosity (L☉)</option>
+          <option value="Learth">Earth insolation (total)</option>
+          <option value="K1">Kardashev K1 (~1.74×10¹⁷ W)</option>
+          <option value="K2">Kardashev K2 (~3.86×10²⁶ W)</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+
+  <div class="quick-presets">
+    <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);align-self:center">Quick presets →</span>
+    <button class="qp-btn" onclick="setPreset(1,'tTNT')">1 tonne TNT</button>
+    <button class="qp-btn" onclick="setPreset(15,'MtTNT')">Tsar Bomba (15 MT)</button>
+    <button class="qp-btn" onclick="setPreset(1,'Lsun')">1 solar luminosity</button>
+    <button class="qp-btn" onclick="setPreset(1.84e13,'W')">World energy 2025</button>
+    <button class="qp-btn" onclick="setPreset(1,'K1')">Kardashev K1</button>
+    <button class="qp-btn" onclick="setPreset(1e44,'J')">Supernova (~10⁴⁴ J)</button>
+  </div>
+
+  <table class="output-table">
+    <thead><tr><th>Unit</th><th>Value</th><th>Context</th></tr></thead>
+    <tbody id="out-body"></tbody>
+  </table>
+
+  <a class="wf-link" href="workflow-kardashev-ladder.html">Kardashev Ladder Workflow →</a>
+  <a class="wf-link" href="kardashev-meter.html">Kardashev Meter</a>
+</div>
+
+<script src="../data/measurements.js"></script>
+<script>
+// All values in Joules (energy base) or Watts (power base)
+const ENERGY_UNITS = {
+  J:    {to_J: 1,            label:'Joule'},
+  kJ:   {to_J: 1e3,          label:'Kilojoule'},
+  MJ:   {to_J: 1e6,          label:'Megajoule'},
+  GJ:   {to_J: 1e9,          label:'Gigajoule'},
+  TJ:   {to_J: 1e12,         label:'Terajoule'},
+  PJ:   {to_J: 1e15,         label:'Petajoule'},
+  EJ:   {to_J: 1e18,         label:'Exajoule'},
+  kWh:  {to_J: 3.6e6,        label:'Kilowatt-hour'},
+  MWh:  {to_J: 3.6e9,        label:'Megawatt-hour'},
+  GWh:  {to_J: 3.6e12,       label:'Gigawatt-hour'},
+  TWh:  {to_J: 3.6e15,       label:'Terawatt-hour'},
+  erg:  {to_J: 1e-7,         label:'Erg'},
+  eV:   {to_J: 1.602e-19,    label:'Electronvolt'},
+  keV:  {to_J: 1.602e-16,    label:'Kiloelectronvolt'},
+  MeV:  {to_J: 1.602e-13,    label:'Megaelectronvolt'},
+  GeV:  {to_J: 1.602e-10,    label:'Gigaelectronvolt'},
+  TeV:  {to_J: 1.602e-7,     label:'Teraelectronvolt'},
+  cal:  {to_J: 4.184,        label:'Calorie'},
+  kcal: {to_J: 4184,         label:'Kilocalorie'},
+  BTU:  {to_J: 1055.06,      label:'BTU'},
+  tTNT:   {to_J: 4.184e9,   label:'Tonne TNT'},
+  ktTNT:  {to_J: 4.184e12,  label:'Kilotonne TNT'},
+  MtTNT:  {to_J: 4.184e15,  label:'Megatonne TNT'},
+  GtTNT:  {to_J: 4.184e18,  label:'Gigatonne TNT'},
+};
+const POWER_UNITS = {
+  W:       {to_W: 1,         label:'Watt'},
+  kW:      {to_W: 1e3,       label:'Kilowatt'},
+  MW:      {to_W: 1e6,       label:'Megawatt'},
+  GW:      {to_W: 1e9,       label:'Gigawatt'},
+  TW:      {to_W: 1e12,      label:'Terawatt'},
+  PW:      {to_W: 1e15,      label:'Petawatt'},
+  Lsun:    {to_W: 3.828e26,  label:'Solar luminosity (L☉)'},
+  Learth:  {to_W: 1.74e17,   label:'Earth total insolation'},
+  K1:      {to_W: 1.74e17,   label:'Kardashev K1'},
+  K2:      {to_W: 3.86e26,   label:'Kardashev K2'},
+};
+const isPower = k => k in POWER_UNITS;
+const isEnergy = k => k in ENERGY_UNITS;
+
+function fmt(x){
+  if(x===0) return '0';
+  const a=Math.abs(x);
+  if(a>=1e15 || a<1e-6) return x.toExponential(4);
+  if(a>=1000) return x.toLocaleString(undefined,{maximumSignificantDigits:6});
+  return x.toPrecision(5).replace(/\.?0+$/,'');
+}
+
+// Output rows: [unit_key, label, context_note, mode]
+const E_ROWS = [
+  {section:'SI Energy'},
+  {k:'J',     ctx:'SI base unit'},
+  {k:'kJ',    ctx:'Energy of lifting ~100 kg 1 metre'},
+  {k:'MJ',    ctx:'Energy in ~0.28 kWh; ~250 kcal'},
+  {k:'GJ',    ctx:'Energy in ~278 kWh'},
+  {k:'TJ',    ctx:'~240 tonnes TNT equivalent'},
+  {k:'PJ',    ctx:'1 EJ = 1000 PJ; ~238,000 tonnes oil'},
+  {k:'EJ',    ctx:'World primary energy ≈ 580 EJ/yr (2023)'},
+  {section:'Practical'},
+  {k:'kWh',   ctx:'Household electricity: 10–30 kWh/day'},
+  {k:'TWh',   ctx:'Electricity from a large nuclear plant ×year'},
+  {k:'kcal',  ctx:'Food energy: ~2000 kcal/day adult'},
+  {k:'BTU',   ctx:'British thermal unit: 1 BTU = 1055 J'},
+  {section:'Nuclear / explosives'},
+  {k:'tTNT',  ctx:'Conventional bomb reference'},
+  {k:'MtTNT', ctx:'Tsar Bomba: ~50 MT; Hiroshima: ~15 kT'},
+  {section:'Particle physics'},
+  {k:'eV',    ctx:'Energy scale of chemical bonds (~few eV)'},
+  {k:'MeV',   ctx:'Nuclear reactions; proton rest mass ~938 MeV'},
+  {k:'GeV',   ctx:'LHC beam energy: ~6.5 TeV/beam'},
+  {k:'TeV',   ctx:'LHC energy; cosmic rays reach ZeV (10²¹ eV)'},
+  {section:'Cosmic'},
+  {k:'erg',   ctx:'CGS energy unit: 1 erg = 10⁻⁷ J'},
+];
+const P_ROWS = [
+  {section:'SI Power'},
+  {k:'W',    ctx:'1 joule/second; LED ~8 W'},
+  {k:'kW',   ctx:'Household peak draw ~5–15 kW'},
+  {k:'MW',   ctx:'Small power plant; large wind turbine'},
+  {k:'GW',   ctx:'Nuclear plant; city power demand'},
+  {k:'TW',   ctx:'World power 2025: ~18.4 TW'},
+  {k:'PW',   ctx:'10¹⁵ W; total sunlight reaching Earth ×58'},
+  {section:'Astronomical'},
+  {k:'Lsun',   ctx:'Solar luminosity: 3.828 × 10²⁶ W'},
+  {k:'Learth', ctx:'Total solar power intercepted by Earth'},
+  {section:'Kardashev levels'},
+  {k:'K1', ctx:'Planetary civilisation: harnesses all solar input to planet'},
+  {k:'K2', ctx:'Stellar civilisation: entire solar output (Dyson sphere)'},
+];
+
+function getBaseValue(val, unitKey){
+  if(isEnergy(unitKey)) return val * ENERGY_UNITS[unitKey].to_J;
+  if(isPower(unitKey))  return val * POWER_UNITS[unitKey].to_W;
+  return 0;
+}
+function renderRows(baseVal, unitKey){
+  const isP = isPower(unitKey);
+  const rows = isP ? P_ROWS : E_ROWS;
+  const units = isP ? POWER_UNITS : ENERGY_UNITS;
+  const key   = isP ? 'to_W' : 'to_J';
+  let html='';
+  for(const r of rows){
+    if(r.section){
+      html+=`<tr class="section-header"><td colspan="3">${r.section}</td></tr>`;
+      continue;
+    }
+    const converted = baseVal / units[r.k][key];
+    const bold = r.k===unitKey ? 'style="color:var(--amber-glow)"' : '';
+    html+=`<tr><td class="otd-name">${units[r.k].label}</td><td class="otd-val" ${bold}>${fmt(converted)}</td><td class="otd-desc">${r.ctx}</td></tr>`;
+  }
+  return html;
+}
+
+function calculate(){
+  const val = parseFloat(document.getElementById('num-in').value)||0;
+  const unitKey = document.getElementById('unit-in').value;
+  const baseVal = getBaseValue(val, unitKey);
+  document.getElementById('out-body').innerHTML = renderRows(baseVal, unitKey);
+  saveHash(val, unitKey);
+}
+function setPreset(v, u){
+  document.getElementById('num-in').value = v;
+  document.getElementById('unit-in').value = u;
+  calculate();
+}
+function saveHash(v,u){ history.replaceState(null,'','#v='+v+'&u='+encodeURIComponent(u)); }
+function loadHash(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  if(p.has('v')&&p.has('u')){ document.getElementById('num-in').value=p.get('v'); document.getElementById('unit-in').value=p.get('u'); }
+}
+
+window.OCS_APPLY_PREFILL = function(obj){
+  if(obj.value !== undefined) document.getElementById('num-in').value=obj.value;
+  if(obj.unit  !== undefined) document.getElementById('unit-in').value=obj.unit;
+  calculate();
+};
+window.OCS_RUN = calculate;
+
+loadHash();
+calculate();
+</script>
+<script src="../data/prefill.js"></script>
+</body>
+</html>

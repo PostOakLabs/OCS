@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--
+  Workflow: Settle the IMBH Question
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-06-10
+  Site section: #science
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settle the ω Cen IMBH Question — Workflow — Omega Centauri Society</title>
+<meta name="description" content="A staged end-to-end investigation: from mass constraints through Bayesian evidence aggregation to observing campaign design. Follow the chain of tools that makes the case for or against an IMBH at the heart of Omega Centauri.">
+<link rel="canonical" href="https://omegacentauri.me/tools/workflow-settle-imbh-question.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 20% 15%,rgba(29,186,144,.07),transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(112,85,212,.07),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:300}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+
+/* ── Flow bar ── */
+.flow-bar{background:rgba(7,5,21,.95);border-bottom:1px solid var(--border-subtle);position:sticky;top:53px;z-index:200;overflow-x:auto;scrollbar-width:none}
+.flow-bar::-webkit-scrollbar{display:none}
+.flow-inner{display:flex;align-items:stretch;min-width:max-content;max-width:1100px;margin:0 auto;padding:0 28px}
+.flow-step{display:flex;align-items:center;padding:10px 16px;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;text-decoration:none}
+.flow-step:hover{color:var(--text-secondary);border-bottom-color:rgba(112,85,212,.4)}
+.flow-step.active{color:var(--teal-glow);border-bottom-color:var(--teal-glow)}
+.flow-num{font-size:9px;background:var(--purple-dark);border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-dim)}
+.flow-step.active .flow-num{background:var(--teal-dark);color:var(--teal-glow)}
+.flow-arrow{color:var(--border-subtle);font-size:12px;user-select:none}
+
+/* ── Hero ── */
+.hero{max-width:1100px;margin:0 auto;padding:56px 28px 32px;border-bottom:1px dashed var(--border-subtle)}
+.hero-tag{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--teal-bright);margin-bottom:20px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:40px;line-height:1.1;margin-bottom:18px;letter-spacing:-.01em;background:linear-gradient(120deg,var(--teal-glow) 0%,var(--purple-glow) 50%,var(--amber-bright) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-body{max-width:740px;font-size:18px;color:var(--text-secondary);line-height:1.75;margin-bottom:24px}
+.tension-box{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.t-bound{flex:1;min-width:220px;padding:14px 20px;border-radius:10px;border:1px solid;text-align:center}
+.t-bound.low{border-color:var(--red-mid);background:rgba(138,32,32,.08)}.t-bound.high{border-color:var(--teal-mid);background:rgba(13,110,88,.08)}
+.t-bound .t-val{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;margin-bottom:4px}.t-bound.low .t-val{color:var(--red-glow)}.t-bound.high .t-val{color:var(--teal-glow)}
+.t-bound .t-src{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)}
+.hero-tags-row{display:flex;gap:8px;flex-wrap:wrap}
+.htag{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-dim)}
+
+/* ── Stages ── */
+.stages{max-width:1100px;margin:0 auto;padding:0 28px 80px}
+
+.stage{border:1px solid var(--border-subtle);border-radius:14px;margin-top:28px;overflow:hidden;transition:border-color .2s}
+.stage:target,.stage.hl{border-color:var(--purple-mid)}
+.stage-hdr{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;background:rgba(13,10,36,.3);transition:background .15s}
+.stage-hdr:hover{background:rgba(13,10,36,.5)}
+.stage-num{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;color:var(--purple-glow);width:36px;text-align:center;flex-shrink:0}
+.stage-meta{flex:1}
+.stage-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:3px}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--text-primary)}
+.stage-tool-tag{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--border-teal);border-radius:8px;color:var(--teal-bright);white-space:nowrap}
+.stage-toggle{font-size:16px;color:var(--text-dim);transition:transform .2s;user-select:none}
+.stage.open .stage-toggle{transform:rotate(180deg)}
+
+.stage-body{display:none;padding:24px 28px;border-top:1px dashed var(--border-subtle)}
+.stage.open .stage-body{display:block}
+.stage-body p{color:var(--text-secondary);font-size:15px;line-height:1.65;margin-bottom:12px;max-width:720px}
+.stage-body strong{color:var(--text-primary)}
+.finding-box{background:rgba(29,186,144,.04);border:1px dashed var(--border-teal);border-radius:8px;padding:14px 18px;margin:12px 0;font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-bright);line-height:1.7}
+.finding-box .fb-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:6px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.cta-primary{font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,var(--purple-mid),var(--teal-dark));border:1px solid var(--teal-mid);color:var(--teal-glow);transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+.cta-primary:hover{background:linear-gradient(135deg,var(--purple-dark),var(--teal-mid));color:var(--teal-glow);transform:translateY(-1px);box-shadow:0 4px 20px rgba(29,186,144,.2)}
+.cta-secondary{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:8px 16px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-secondary);transition:all .15s}
+.cta-secondary:hover{border-color:var(--purple-mid);color:var(--text-primary)}
+.next-hint{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-subtle)}
+
+/* ── Conclusion ── */
+.conclusion{max-width:1100px;margin:0 auto;padding:0 28px 60px}
+.conclusion-card{border:1px solid var(--border-teal);border-radius:14px;padding:32px 36px;background:linear-gradient(160deg,rgba(4,42,36,.3),rgba(7,5,21,.5))}
+.conclusion-card h2{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:600;color:var(--teal-glow);margin-bottom:16px}
+.conclusion-card p{color:var(--text-secondary);font-size:15px;line-height:1.7;margin-bottom:12px}
+.related-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px dashed var(--border-teal)}
+.rel-link{font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:8px;border:1px solid var(--border-subtle);color:var(--text-secondary);transition:all .15s}
+.rel-link:hover{border-color:var(--purple-mid);color:var(--text-primary)}
+
+@media(max-width:720px){.hero h1{font-size:28px}.container,.stages,.conclusion{padding-left:16px;padding-right:16px}.stage-hdr{padding:16px}.stage-body{padding:18px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Workflow — Settle the IMBH Question</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+
+<div class="flow-bar" id="flow-bar">
+  <div class="flow-inner">
+    <a class="flow-step" href="#stage-1" onclick="activateFlow(0)"><span class="flow-num">1</span> Constraints</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-2" onclick="activateFlow(1)"><span class="flow-num">2</span> Evidence</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-3" onclick="activateFlow(2)"><span class="flow-num">3</span> Microlensing</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-4" onclick="activateFlow(3)"><span class="flow-num">4</span> Timeline</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-5" onclick="activateFlow(4)"><span class="flow-num">5</span> Campaign</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step" href="#stage-6" onclick="activateFlow(5)"><span class="flow-num">6</span> Proposals</a>
+  </div>
+</div>
+
+<div class="hero">
+  <p class="hero-tag">Workflow · Peer-reviewed chain</p>
+  <h1>Settle the ω Cen IMBH Question</h1>
+  <p class="hero-body">Two published measurements flatly contradict each other. Stellar kinematics demand a central mass of at least 8,200 M☉. Pulsar timing allows no more than 6,000 M☉. The gap is not a rounding error — it is a 2,200 M☉ tension with no agreed resolution. This workflow chains six tools to build the case from first principles: what do we know, how confident are we, what measurement would settle it, and what would that observation actually cost?</p>
+  <div class="tension-box">
+    <div class="t-bound high">
+      <div class="t-val">≥ 8,200 M☉</div>
+      <div class="t-src">Häberle et al. 2024 · Nature 631:285<br>Stellar kinematic lower bound</div>
+    </div>
+    <div class="t-bound low">
+      <div class="t-val">≤ 6,000 M☉</div>
+      <div class="t-src">Bañares-Hernández et al. 2025 · A&amp;A 693:A104<br>Pulsar timing upper bound</div>
+    </div>
+  </div>
+  <div class="hero-tags-row">
+    <span class="htag">NGC 5139 · Omega Centauri</span>
+    <span class="htag">d = 5.2 kpc</span>
+    <span class="htag">IMBH candidate</span>
+    <span class="htag">Bayesian three-hypothesis framework</span>
+    <span class="htag">Register: peer-reviewed</span>
+  </div>
+</div>
+
+<div class="stages" id="stages">
+
+  <!-- Stage 1 -->
+  <div class="stage open" id="stage-1">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">1</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 1 — First tool</div>
+        <div class="stage-title">Stack the mass constraints</div>
+      </div>
+      <span class="stage-tool-tag">constraint-stacker</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>Before reasoning about evidence, establish what the mass constraints <em>are</em>. The Constraint Stacker plots the five independent methods — stellar kinematics, pulsar timing, N-body limits, proper-motion dispersion, and accretion limits — on a single axis and marks the overlap region (or the gap, as is the case here).</p>
+      <p><strong>Key output:</strong> the gap between the kinematic lower bound and the pulsar upper bound is not a statistical outlier. It sits at 2,200 M☉ — larger than the individual uncertainties. Something is methodologically inconsistent between the two measurements.</p>
+      <div class="finding-box">
+        <div class="fb-label">What to look for</div>
+        Kinematic lower bound: <strong>8,200 M☉</strong> (Häberle 2024)<br>
+        Pulsar upper bound: <strong>6,000 M☉</strong> (Bañares 2025)<br>
+        Overlap: <strong>none</strong> — the bounds exclude each other at &gt;1σ<br>
+        Best compromise: treat midpoint 7,100 M☉ as planning value; never collapse to one number
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="constraint-stacker.html">Open Constraint Stacker →</a>
+        <a class="cta-secondary" href="detection-forecast.html">Skip to detection timeline</a>
+      </div>
+      <p class="next-hint">After exploring the constraints → proceed to Stage 2 to assign Bayesian weight to each line of evidence.</p>
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage" id="stage-2">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">2</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 2 — Bayesian aggregation</div>
+        <div class="stage-title">Weigh all the evidence</div>
+      </div>
+      <span class="stage-tool-tag">evidence-ledger</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The Evidence Ledger applies the three-hypothesis Bayesian framework: H<sub>IMBH</sub> (single IMBH), H<sub>DC</sub> (dark stellar cluster), H<sub>NULL</sub> (no central mass). For each evidence line you set two log₁₀ Bayes factors — how much does the data favour IMBH over DC, and how much does it favour any central mass over nothing?</p>
+      <p>Six evidence lines are pre-loaded with published defaults: stellar kinematics, pulsar timing, proper-motion dispersion, accretion limits, N-body simulations, and astrometric microlensing. Adjust any slider to explore the sensitivity of the posterior to contested inputs.</p>
+      <div class="finding-box">
+        <div class="fb-label">Default posterior (prior: IMBH 30%, DC 45%, NULL 25%)</div>
+        H<sub>IMBH</sub>: ~45–60% depending on microlensing weight<br>
+        H<sub>DC</sub>: ~25–40%<br>
+        H<sub>NULL</sub>: &lt;10%<br>
+        The posterior is sensitive to the pulsar BF — the most contested input.
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="evidence-ledger.html">Open Evidence Ledger →</a>
+        <a class="cta-secondary" href="evidence-ledger.html#pi=0.30&pd=0.45&pn=0.25">Load default priors</a>
+      </div>
+      <p class="next-hint">After setting your posterior → proceed to Stage 3 to understand the astrometric microlensing line of evidence independently.</p>
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage" id="stage-3">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">3</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 3 — Independent check</div>
+        <div class="stage-title">Simulate astrometric microlensing</div>
+      </div>
+      <span class="stage-tool-tag">astrometric-microlensing</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>Astrometric microlensing is the most direct mass measurement that bypasses both kinematic and timing assumptions. When a background star passes within the Einstein radius of the IMBH, its apparent position deflects by a measurable amount — the deflection amplitude directly encodes the lens mass.</p>
+      <p>This tool calculates the Einstein radius, peak deflection angle, event duration, and astrometric signal amplitude for a lens at the ω Cen distance. It also flags whether the signal is detectable by Gaia, Roman, or ELT-MICADO.</p>
+      <div class="finding-box">
+        <div class="fb-label">Detectability sketch for M = 7,100 M☉ at d = 5.2 kpc</div>
+        Einstein radius θ<sub>E</sub> ≈ 3.2 mas<br>
+        Peak astrometric deflection ≈ 0.6–1.6 mas (impact-parameter dependent)<br>
+        Detectable by: Roman (yes), ELT-MICADO (yes), Gaia (marginal)<br>
+        Event duration: months to years — single-epoch programmes will miss events
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="astrometric-microlensing.html">Open Microlensing Tool →</a>
+      </div>
+      <p class="next-hint">After microlensing → proceed to Stage 4 to see which instrument reaches decision confidence first.</p>
+    </div>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="stage" id="stage-4">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">4</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 4 — Decision timeline</div>
+        <div class="stage-title">Forecast when we settle this</div>
+      </div>
+      <span class="stage-tool-tag">detection-forecast</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The Detection Forecast renders a timeline for four instruments — Gaia DR4, Roman, ELT-MICADO, LISA — and marks when each can reach a target confidence level for a given science goal. It treats the two mass bounds as inputs and computes the required mass resolution gap to close at 3σ or 5σ.</p>
+      <p><strong>Quickest route to 3σ resolution of the tension:</strong> ELT-MICADO first light (2028) with an immediate astrometric programme, or Roman from 2029 with a wider-field proper-motion survey. LISA (2037+) would be decisive but is 11 years away.</p>
+      <div class="finding-box">
+        <div class="fb-label">Key numbers</div>
+        Required mass resolution to close tension at 3σ: ~1,100 M☉<br>
+        Required astrometric precision at 5.2 kpc: ~0.15 μas/yr (ensemble, 500 stars)<br>
+        Gaia DR4 alone: likely insufficient for the inner 0.08 pc (crowding)<br>
+        Roman: feasible; ELT-MICADO: feasible; LISA: decisive but distant
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="detection-forecast.html">Open Detection Forecast →</a>
+        <a class="cta-secondary" href="detection-forecast.html#lower=6000&upper=8200&sigma=3.0&scenario=tension">Pre-fill tension scenario</a>
+      </div>
+      <p class="next-hint">After the timeline → proceed to Stage 5 to convert the decisive experiment into a concrete observing budget.</p>
+    </div>
+  </div>
+
+  <!-- Stage 5 -->
+  <div class="stage" id="stage-5">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">5</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 5 — Resource planning</div>
+        <div class="stage-title">Design the observing campaign</div>
+      </div>
+      <span class="stage-tool-tag">observing-campaign-planner</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>The Observing Campaign Planner takes your instrument choice and science goal from Stage 4 and converts them into a complete resource budget: required astrometric precision per epoch, number of visits, total telescope-hours, cadence, and a traffic-light feasibility assessment.</p>
+      <p>It caps the stellar sample at the instrument's field-of-view limit and flags marginal cases where a longer baseline or additional instrument is needed. The output directly drives the observational proposal templates.</p>
+      <div class="finding-box">
+        <div class="fb-label">Illustrative Roman campaign to resolve tension</div>
+        Precision needed: ~0.15 μas/yr (ensemble 500 stars)<br>
+        Roman single-epoch: 15 μas → 15 epochs needed at 6-month cadence<br>
+        Total time: ~3.75 hours · Campaign: ~7 years<br>
+        Feasibility: <span style="color:var(--amber-glow)">AMBER</span> — requires long baseline; combine with ELT for faster resolution
+      </div>
+      <div class="cta-row">
+        <a class="cta-primary" href="observing-campaign-planner.html">Open Campaign Planner →</a>
+        <a class="cta-secondary" href="observing-campaign-planner.html#instr=roman&goal=tension">Pre-fill Roman / tension</a>
+      </div>
+      <p class="next-hint">After designing the campaign → proceed to Stage 6 to explore the existing proposal templates.</p>
+    </div>
+  </div>
+
+  <!-- Stage 6 -->
+  <div class="stage" id="stage-6">
+    <div class="stage-hdr" onclick="toggleStage(this)">
+      <div class="stage-num">6</div>
+      <div class="stage-meta">
+        <div class="stage-label">Stage 6 — Submit</div>
+        <div class="stage-title">Observational proposals</div>
+      </div>
+      <span class="stage-tool-tag">proposals</span>
+      <span class="stage-toggle">▼</span>
+    </div>
+    <div class="stage-body">
+      <p>Eleven detailed observational proposal templates cover the full instrument portfolio: ELT-MICADO crowded-field astrometry, Roman proper-motion survey, JWST infrared imaging, MeerKAT pulsar timing, LISA gravitational-wave detection, and more. Each proposal includes scientific justification, technical feasibility, requested time, and explicit links to the tension this workflow has quantified.</p>
+      <p>The Campaign Planner output (Stage 5) populates the resource tables in these proposals directly. If you arrived here from Stage 5, the numbers are consistent.</p>
+      <div class="cta-row">
+        <a class="cta-primary" href="../proposals.html">All Proposals Hub →</a>
+        <a class="cta-secondary" href="../proposal_elt_micado.html">ELT-MICADO proposal</a>
+        <a class="cta-secondary" href="../proposal_jwst.html">JWST proposal</a>
+        <a class="cta-secondary" href="../proposal_meerkat_pulsar_expanded.html">MeerKAT proposal</a>
+      </div>
+      <p class="next-hint">Workflow complete. Return to any stage to adjust assumptions, or explore the related workflows below.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="conclusion">
+  <div class="conclusion-card">
+    <h2>What would it take to settle this?</h2>
+    <p>The kinematic–pulsar tension is real and methodologically deep. No single adjustment to either measurement collapses it. Settling the ω Cen IMBH question at 3σ confidence requires an independent astrometric mass measurement with precision below ~1,100 M☉ — achievable with Roman or ELT-MICADO but not Gaia alone. An astrometric microlensing detection would be decisive in a single event.</p>
+    <p>Until that measurement arrives, the Bayesian posterior sits near 50% for H<sub>IMBH</sub> — the least satisfying scientific position. The observational window is 2027–2032: the instruments exist, the science case is funded, and the cluster is bright enough. The question is whether the community prioritises the campaign.</p>
+    <p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">Workflow version 1.0 · 2026-06-10 · All tools: Code MIT · Prose CC BY 4.0 · The Omega Centauri Society</p>
+    <div class="related-links">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);align-self:center">Related →</span>
+      <a class="rel-link" href="workflow-black-hole-101.html">Black Hole 101</a>
+      <a class="rel-link" href="workflow-kardashev-ladder.html">Kardashev Ladder</a>
+      <a class="rel-link" href="../tools/index.html">All tools</a>
+      <a class="rel-link" href="https://omegacentauri.me/#science">#science</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleStage(hdr){
+  const stage = hdr.closest('.stage');
+  stage.classList.toggle('open');
+}
+const flowSteps = document.querySelectorAll('.flow-step');
+function activateFlow(i){
+  flowSteps.forEach((s,j)=>{ s.classList.toggle('active',i===j); });
+}
+// Auto-activate flow step on scroll
+const stageEls = document.querySelectorAll('.stage');
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx = Array.from(stageEls).indexOf(e.target);
+      if(idx>=0) activateFlow(idx);
+    }
+  });
+},{threshold:0.4});
+stageEls.forEach(s=>io.observe(s));
+// Open stage from hash
+function openFromHash(){
+  const h = location.hash;
+  if(!h) return;
+  const el = document.querySelector(h);
+  if(el && el.classList.contains('stage')){
+    el.classList.add('open');
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+openFromHash();
+</script>
+</body>
+</html>
