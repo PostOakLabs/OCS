@@ -365,7 +365,7 @@ function km3NetEvents(logP_W, logDt_s){
   const P_erg = P_W * 1e7;
   const dt = Math.pow(10, logDt_s);
   const E_nu_erg = 1e4 * 1.602e-9;  // 10 TeV in erg
-  // Neutrino fraction of total power (democratic Hawking: ~1/6 per flavour × 3 = 0.4 total; use 0.15 for realistic)
+  // Neutrino fraction of total power (democratic Hawking: ~1/6 per flavour × 3 = 0.5 total; use 0.15 for realistic)
   const nu_frac = 0.15;
   const nu_flux = P_erg * nu_frac / (4 * Math.PI * D_OC * D_OC * E_nu_erg); // nu/cm²/s
   const events = nu_flux * Aeff_cm2 * dt;

@@ -481,10 +481,10 @@ function getHash() { return Object.fromEntries(window.location.hash.replace('#',
 function setHash(p) { const s=Object.entries(p).filter(([,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&'); history.replaceState(null,'','#'+s); }
 function loadHash() {
   const h = getHash();
-  if (h.eta)   { state.eta      = parseFloat(h.eta);   document.getElementById('sl-eta').value   = state.eta; }
-  if (h.pr)    { state.logPrior = parseFloat(h.pr);    document.getElementById('sl-prior').value = state.logPrior; }
-  if (h.eirp)  { state.logEIRP  = parseFloat(h.eirp);  document.getElementById('sl-eirp').value  = state.logEIRP; }
-  if (h.dist)  { state.logDist  = parseFloat(h.dist);  document.getElementById('sl-dist').value  = state.logDist; }
+  if (h.eta  !== undefined) { const v=parseFloat(h.eta);  if(!isNaN(v)) { state.eta      = v; document.getElementById('sl-eta').value   = v; } }
+  if (h.pr   !== undefined) { const v=parseFloat(h.pr);   if(!isNaN(v)) { state.logPrior = v; document.getElementById('sl-prior').value  = v; } }
+  if (h.eirp !== undefined) { const v=parseFloat(h.eirp); if(!isNaN(v)) { state.logEIRP  = v; document.getElementById('sl-eirp').value   = v; } }
+  if (h.dist !== undefined) { const v=parseFloat(h.dist); if(!isNaN(v)) { state.logDist  = v; document.getElementById('sl-dist').value   = v; } }
 }
 function saveHash() { setHash({ eta: state.eta.toFixed(2), pr: state.logPrior.toFixed(2), eirp: state.logEIRP.toFixed(2), dist: state.logDist.toFixed(2) }); }
 

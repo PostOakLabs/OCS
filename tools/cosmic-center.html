@@ -279,8 +279,8 @@ function getHashParams(){
   );
 }
 function setHashParams(params){
-  window.location.hash=Object.entries(params)
-    .map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  const s=Object.entries(params).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+  history.replaceState(null,'','#'+s);
 }
 
 // ─── Constants & setup ────────────────────────────────────────────────────
@@ -288,10 +288,6 @@ const CANVAS_SIZE   = 700;
 const GRID_N        = 13;        // N×N galaxy grid (odd so true centre exists)
 const GRID_SPACING  = 50;        // Mpc between galaxies
 const MPC_TO_PX     = (CANVAS_SIZE - 80) / ((GRID_N - 1) * GRID_SPACING);
-
-// OC is within the Milky Way — not on the cosmological grid
-// We record its Galactic position for the readout only
-const OC_DIST_KPC = 5.4;
 
 let H0      = 67.4;   // km/s/Mpc
 let obsGridX = (GRID_N - 1) / 2;  // observer grid position (float, 0-indexed)

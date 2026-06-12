@@ -257,7 +257,7 @@ canvas{display:block;width:100%;height:auto;border-radius:6px;background:#020108
       <div class="row"><span class="row-label">Peak strain (at f_ISCO)</span><span class="row-value" id="hpeak-val">—</span></div>
       <div class="row"><span class="row-label">Strain at LISA bucket (f = 0.01 Hz)</span><span class="row-value" id="hbucket-val">—</span></div>
       <div class="row"><span class="row-label">LISA noise at bucket</span><span class="row-value" id="nbucket-val">—</span></div>
-      <div class="row"><span class="row-label">Expected event rate per Hubble time (per cluster, rough)</span><span class="row-value" id="rate-val">—</span></div>
+      <div class="row"><span class="row-label">Expected event rate per Hubble time (per cluster) <em style="font-size:0.85em;opacity:0.7">[placeholder — not a quoted rate]</em></span><span class="row-value" id="rate-val">—</span></div>
     </section>
   </div>
 
@@ -458,11 +458,12 @@ function compute() {
   const h_at_isco = hc(fHi, Mc_kg, d_m) * eFactor;
   const n_at_bucket = hn(fBucket);
 
-  // Event rate per Hubble time per cluster (very rough; based on MOCCA-class estimates)
+  // Event rate per Hubble time per cluster — PLACEHOLDER (single-order-of-magnitude estimate only)
+  // Based on rough MOCCA-class scaling; not a published model result
   // ~1 detectable IMRI per 10^5 yr per cluster for OC-class central density
   // For Hubble = 1.4e10 yr → ~1.4e5 events per Hubble time per cluster (formed), of which <10% detectable
   // OC may produce 1-10 over its lifetime
-  const ratePerHubblePerCluster = 5; // single-order placeholder; depends on cluster density profile
+  const ratePerHubblePerCluster = 5; // placeholder; treat as illustrative, not a quoted rate
 
   return { M_kg, m_kg, Mc_kg, Mc_sun, d_m, f_isco, fLow, fHi, snr, N_cyc, h_at_bucket, h_at_isco, n_at_bucket, ratePerHubblePerCluster, T_obs_s, t_atFlow, t_atFhi };
 }

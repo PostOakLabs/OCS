@@ -308,14 +308,9 @@ function compute(){
   setText('out-mdot',fmtSci(mdotB_solar));
   setText('out-rB',rB_pc.toExponential(2));
   setText('out-macc',fmtSci(mdotAcc_solar));
-  setText('out-ledd',fmtSci(Ledd));
-  setText('out-ledd',fmtSci(Ledd));
-  // Eddington fraction display
-  const doc=document.getElementById('out-ledd');
-  const ldoc=document.getElementById('out-Ledd');
-  if(doc) doc.textContent=fmtSci(Ledd);
+  // Eddington fraction and luminosity display
   document.getElementById('out-ledd').textContent=lambda<1e-6?fmtSci(lambda):lambda.toPrecision(3);
-  if(ldoc) ldoc.textContent=fmtSci(Ledd);
+  setText('out-Ledd',fmtSci(Ledd));
 
   // ADAF mode predictions
   const Lx_adaf=1e-3*lambda*lambda*Ledd; // Narayan & Yi scaling: L_X ~ 0.001 ṁ^2 L_Edd

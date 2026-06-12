@@ -462,9 +462,9 @@ function getHash() { return Object.fromEntries(window.location.hash.replace('#',
 function setHash(p) { const s=Object.entries(p).filter(([,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&'); history.replaceState(null,'','#'+s); }
 function loadHash() {
   const h = getHash();
-  if (h.n)  { state.logN = parseFloat(h.n);  document.getElementById('sl-n').value = state.logN; }
-  if (h.d)  { state.logD = parseFloat(h.d);  document.getElementById('sl-delta').value = state.logD; }
-  if (h.r)  { state.logR = parseFloat(h.r);  document.getElementById('sl-r').value = state.logR; }
+  if (h.n !== undefined) { const v=parseFloat(h.n); if(!isNaN(v)) { state.logN = v; document.getElementById('sl-n').value = v; } }
+  if (h.d !== undefined) { const v=parseFloat(h.d); if(!isNaN(v)) { state.logD = v; document.getElementById('sl-delta').value = v; } }
+  if (h.r !== undefined) { const v=parseFloat(h.r); if(!isNaN(v)) { state.logR = v; document.getElementById('sl-r').value = v; } }
 }
 function saveHash() { setHash({ n: state.logN.toFixed(3), d: state.logD.toFixed(3), r: state.logR.toFixed(3) }); }
 

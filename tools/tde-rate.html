@@ -394,7 +394,7 @@ function drawRateCurve(){
 }
 
 function toggleAbout(){const p=document.getElementById('about-panel');const a=document.getElementById('anarrow');p.classList.toggle('visible');a.style.transform=p.classList.contains('visible')?'rotate(90deg)':'';}
-function saveHash(){window.location.hash=`logM=${st.logM.toFixed(3)}&sigma=${st.sigma}&logRho=${st.logRho.toFixed(1)}&mstar=${st.mstar}&Rstar=${st.Rstar}&dist=${st.dist}&fEdd=${st.fEdd.toFixed(3)}`;}
+function saveHash(){history.replaceState(null,'','#logM='+st.logM.toFixed(3)+'&sigma='+st.sigma+'&logRho='+st.logRho.toFixed(1)+'&mstar='+st.mstar+'&Rstar='+st.Rstar+'&dist='+st.dist+'&fEdd='+st.fEdd.toFixed(3));}
 function loadHash(){const h=window.location.hash.replace('#','');if(!h)return;const p=Object.fromEntries(h.split('&').filter(Boolean).map(s=>s.split('=').map(decodeURIComponent)));const m={logM:'sl-M',sigma:'sl-sigma',logRho:'sl-rho',mstar:'sl-mstar',Rstar:'sl-Rstar',dist:'sl-dist',fEdd:'sl-fEdd'};Object.entries(m).forEach(([sk,eid])=>{if(p[sk]!==undefined){st[sk]=parseFloat(p[sk]);document.getElementById(eid).value=st[sk];}});}
 window.addEventListener('load',()=>{loadHash();compute();});
 window.addEventListener('resize',()=>{drawRateCurve();});

@@ -309,7 +309,8 @@ function compute(){
   // Ellipticity upper limit at threshold
   const eps_UL = h_thresh * OC_DIST * Math.pow(C, 4) / (4 * PI * PI * G * I_NS * f_gw * f_gw);
 
-  // Spin-down limit for OC MSP (typical P~3ms → f_spin~333 Hz → f_gw~666 Hz)
+  // Spin-down limit heuristic — order-of-magnitude estimate only, not a rigorous per-pulsar limit
+  // (typical OC MSP: P~3ms → f_spin~333 Hz → f_gw~666 Hz; Ṗ~10⁻²⁰ assumed)
   const eps_SD = 1e-8 * Math.pow(100 / f_gw, 2.5);
 
   // Dark cluster: N such that SNR = 1 (i.e. h0 * sqrt(N) = h_thresh)

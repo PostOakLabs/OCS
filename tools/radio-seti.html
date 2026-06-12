@@ -303,14 +303,14 @@ a:hover{color:var(--teal-glow)}
     <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
     <div class="about-body" id="about-this-tool">
       <h3>The radiometer equation</h3>
-      <p>For a steady signal of bandwidth B_sig observed by a receiver with effective area A_eff, system temperature T_sys, and integration time τ, the minimum detectable flux density (in W/m²/Hz) at signal-to-noise ratio SNR is</p>
-      <p><code>S_min(per Hz) = SNR · k_B · T_sys / A_eff · √(B_obs / (n_pol · τ))</code></p>
+      <p>For a steady signal of bandwidth B_sig observed by a receiver with effective area A_eff, system temperature T_sys, and integration time τ, the minimum detectable total flux (W/m²) at signal-to-noise ratio SNR is</p>
+      <p><code>S_min = SNR · 2 · k_B · T_sys / A_eff · √(B_obs / (n_pol · τ))</code></p>
       <p>where k_B is Boltzmann's constant, n_pol = 2 polarisations, and B_obs is the matched filter bandwidth (≈ B_sig for a narrowband signal). Integrating this across the signal bandwidth and multiplying by the area of a sphere at distance d gives the minimum EIRP:</p>
       <p><code>EIRP_min = S_min(per Hz) · B_sig · 4π d²</code></p>
       <p>The leverage is in the √τ — every quadrupling of integration time gives you 2× sensitivity. Aperture A_eff and T_sys are linear, so the gain from going from MeerKAT to SKA-1 (~50× A_eff) is much larger than the gain from staring for a week instead of an hour.</p>
 
       <h3>The 0.1 W benchmark</h3>
-      <p>In December 2025, Breakthrough Listen used MeerKAT to observe the interstellar object 3I/ATLAS less than 24 hours before its closest approach to Earth. They reported a 0.17 W EIRP detection limit — the most sensitive radio-technosignature search ever performed, capable of detecting a transmitter as weak as a typical mobile phone handset at that distance. The published result is the calibration check for this tool: plug in MeerKAT's effective area (~6,300 m²), T_sys (~20 K), a 1 Hz channel, 1 hour integration, and the actual 3I/ATLAS distance (~0.3 AU at closest approach), and you should recover an EIRP_min in the 0.1–0.2 W range.</p>
+      <p>In December 2025, Breakthrough Listen used MeerKAT to observe 3I/ATLAS before closest approach and reported a 0.17 W EIRP detection limit. This tool's bare-radiometer floor at the same settings (A_eff = 6,300 m², T_sys = 20 K, 1 Hz channel, 1 hour integration, 0.3 AU) is <strong>~0.3 mW</strong> — roughly 600× below the published limit. The gap reflects real-world penalties (RFI rejection, Doppler-search overhead, confirmation requirements) that the radiometer equation does not include. The banner at the top of this page quotes the tool's floor; the 0.17 W published limit is the appropriate benchmark for survey planning.</p>
 
       <h3>The Omega Centauri scaling</h3>
       <p>Now move the distance slider to OC's 17,000 light-year preset. The 4π d² term increases by roughly 18–20 orders of magnitude relative to nearby SETI targets. The minimum detectable EIRP for typical parameters is ~10¹³–10¹⁵ W — meaning a civilisation around OC could only be detected if it were emitting well above Earth's radio leakage levels in narrowband at the right frequency for the right amount of time. Earth's commercial radio leakage (~10⁷ W EIRP at best) is utterly undetectable at OC distance. <em>This is the symmetry argument:</em> our radio silence at OC's distance does not constrain Earth-equivalent civilisations there, only civilisations broadcasting at K-I levels or above.</p>
