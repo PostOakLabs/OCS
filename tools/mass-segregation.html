@@ -152,11 +152,11 @@ a:hover{color:var(--teal-glow)}
       <div class="slider-block">
         <label>Half-light radius r_h  (pc)</label>
         <div class="slider-row">
-          <input type="range" id="rh-slider" min="0.5" max="20" step="0.05" value="4.8">
-          <span class="slider-value" id="rh-val">4.8 pc</span>
+          <input type="range" id="rh-slider" min="0.5" max="20" step="0.05" value="7.0">
+          <span class="slider-value" id="rh-val">7.0 pc</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-rh="4.8">ω Cen (4.8)</button>
+          <button class="preset-btn" data-preset-rh="7.0">ω Cen (7.0)</button>
           <button class="preset-btn" data-preset-rh="1.0">Core-collapsed M15 (1.0)</button>
           <button class="preset-btn" data-preset-rh="3.0">Typical (3)</button>
         </div>
@@ -301,7 +301,7 @@ a:hover{color:var(--teal-glow)}
       <p>It sets every dynamical evolution timescale in a globular cluster. Two-body relaxation drives mass segregation, core collapse, BH-binary hardening, dynamical BH ejection via three-body encounters, and ultimately the runaway-merger channel for IMBH formation. If <code>t &lt;&lt; t_rh</code> the cluster is dynamically young — its present stellar distribution still reflects initial conditions. If <code>t &gt;&gt; t_rh</code> the cluster has forgotten its initial state and is fully dynamically processed.</p>
 
       <h3 style="color:var(--amber-bright)">Why ω Cen is unusual</h3>
-      <p>For ω Cen's default parameters (M ≈ 4×10⁶ M☉, r_h ≈ 4.8 pc, ⟨m⟩ = 0.5 M☉) the half-mass relaxation time comes out around 5.8 Gyr (Spitzer 1987 Eq. 2.62) — somewhat shorter than the cluster's age. ω Cen is therefore only <em>marginally</em> relaxed at its current age. The central dark mass observed today is the integrated result of roughly one t_rh of mass segregation acting on an initially heavy-remnant-rich population (the progenitor dwarf galaxy was metal-poor, so produced relatively more black holes via the low-Z high-mass-cutoff channel).</p>
+      <p>For ω Cen's default parameters (M ≈ 4×10⁶ M☉, r_h ≈ 7.0 pc, ⟨m⟩ = 0.5 M☉) the half-mass relaxation time comes out around 10 Gyr (Spitzer 1987 Eq. 2.62) — somewhat shorter than the cluster's age. ω Cen is therefore only <em>marginally</em> relaxed at its current age. The central dark mass observed today is the integrated result of roughly one t_rh of mass segregation acting on an initially heavy-remnant-rich population (the progenitor dwarf galaxy was metal-poor, so produced relatively more black holes via the low-Z high-mass-cutoff channel).</p>
 
       <h3 style="color:var(--purple-glow)">The runaway-merger IMBH channel</h3>
       <p>Portegies Zwart et al. (Nature 428:724, 2004) showed numerically that in <em>very dense young</em> clusters, stellar-mass BHs can repeatedly merge into a runaway central object, growing an IMBH within ~10⁷ yr — before stellar feedback disrupts the dense core. The channel requires two thresholds simultaneously: high central density (greater than ~10⁶ M☉/pc³) and a large population of heavy seeds (more than ~10³). The verdict panel checks whether your current slider parameters satisfy both.</p>
@@ -341,7 +341,7 @@ function getHash(){return Object.fromEntries(window.location.hash.replace('#',''
 function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
 
 // State
-const state = { Mcl: 4e6, rh: 4.8, mstar: 0.5, mBH: 10, t: 12, fret: 0.3 };
+const state = { Mcl: 4e6, rh: 7.0, mstar: 0.5, mBH: 10, t: 12, fret: 0.3 };
 
 function loadHash(){
   const p = getHash();

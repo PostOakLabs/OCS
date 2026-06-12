@@ -146,11 +146,11 @@ a:hover{color:var(--teal-glow)}
       <div class="slider-block">
         <label>Half-light radius r_h  (pc)</label>
         <div class="slider-row">
-          <input type="range" id="rh-slider" min="0.3" max="20" step="0.05" value="4.8">
-          <span class="slider-value" id="rh-val">4.8 pc</span>
+          <input type="range" id="rh-slider" min="0.3" max="20" step="0.05" value="7.0">
+          <span class="slider-value" id="rh-val">7.0 pc</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-rh="4.8">OC (4.8 pc)</button>
+          <button class="preset-btn" data-preset-rh="7.0">OC (7.0 pc)</button>
           <button class="preset-btn" data-preset-rh="3.0">M15 (compact)</button>
           <button class="preset-btn" data-preset-rh="6.5">47 Tuc</button>
         </div>
@@ -266,7 +266,7 @@ function getHash(){return Object.fromEntries(window.location.hash.replace('#',''
 function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
 
 // State
-const state = { mass: 4e6, rh: 4.8, sigOverride: 0 };
+const state = { mass: 4e6, rh: 7.0, sigOverride: 0 };
 function loadHash(){
   const p = getHash();
   if (p.mass) { const v = parseFloat(p.mass); if (!isNaN(v) && v > 0) state.mass = v; }
