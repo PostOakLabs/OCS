@@ -222,7 +222,7 @@ window.OCS_MEASUREMENTS = {
         value: 1.7e4,
         limitType: "detection",
         reference: "Lützgendorf et al. 2011",
-        doi: "10.1051/0004-6361/201117636",
+        doi: "10.1051/0004-6361/201116618",
         note: "Detection from integral-field kinematics; debated. Cseh et al. 2010 radio non-detection sets upper limit at lower mass under standard accretion assumptions."
       }
     },
@@ -264,7 +264,7 @@ window.OCS_MEASUREMENTS = {
         value: 9400,
         limitType: "detection",
         reference: "Ibata et al. 2009",
-        doi: "10.1088/0004-637X/699/1/L169",
+        doi: "10.1088/0004-637X/699/2/L169",
         note: "Detection from HST stellar kinematics. M54 is the nuclear cluster of the Sagittarius dwarf galaxy, so any IMBH is more naturally interpreted as a former dwarf-galaxy nucleus than a true GC IMBH."
       }
     }
@@ -433,7 +433,7 @@ window.OCS_MEASUREMENTS = {
   */
   clusterParams: {
     OC_distance_pc: 5490,   // parsecs; Harris 2010 / oMEGACat consensus value (range in literature: 5,030–5,494)
-    OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (ApJ 641:L37)
+    OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (A&A 445:513)
   },
 
   /* ================================================================
