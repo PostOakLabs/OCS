@@ -299,7 +299,7 @@ function render(){
   // This is complex; we just show current verdict
   const T_ref = 300;
   const coolingCostFactor = T<T_ref ? (T_ref/T - 1) : 0; // Carnot cooling cost ratio
-  const savingsVsCooling  = T<T_ref ? (E_L(T_ref)/E_L) / (1+coolingCostFactor) : 1;
+  const savingsVsCooling  = T<T_ref ? (landauerPerBit(T_ref)/E_L) / (1+coolingCostFactor) : 1;
 
   document.getElementById('landauer-bit').textContent = fmtSci(E_L,2)+' J';
   document.getElementById('heat-irr').textContent     = fmtSci(heatIrr,2)+' W';
