@@ -499,13 +499,13 @@ function render() {
   // Symmetry — could ET hear us
   // Earth's commercial transmitters: TV broadcaster ~5 MW EIRP, military radar ~10 GW EIRP
   // Assume an OC observer has SKA-2 class telescope (10^6 m²), same T_sys + tau + bw
-  const lgOCdist = Math.log10(17000); // OC distance in ly
-  const dOC = 17000 * LY_M;
+  const lgOCdist = Math.log10(17900); // OC distance in ly (5.49 kpc = 17,900 ly)
+  const dOC = 17900 * LY_M;
   const aeffOC = 1e6; // assume SKA-2
   const tauOC = 3600;
   const bwOC = 1;
   const tsysOC = 20;
-  const sMinOC_perHz = SNR_REQ * K_B * tsysOC / aeffOC * Math.sqrt(bwOC/(2*tauOC));
+  const sMinOC_perHz = SNR_REQ * 2 * K_B * tsysOC / aeffOC * Math.sqrt(bwOC/(2*tauOC)); // factor 2: dual-pol SEFD
   const eirpMinOC = sMinOC_perHz * bwOC * 4*Math.PI*dOC*dOC;
   const earthTV = 5e6;
   const arecibo = 2e13;
@@ -516,7 +516,7 @@ function render() {
   else if (eirpMinOC > arecibo) symLine = `requires more EIRP than Arecibo's most powerful planetary radar pulse (2×10¹³ W); a sustained transmitter would have to be enormous`;
   else if (eirpMinOC > earthTV) symLine = `would need ~${(eirpMinOC/earthTV).toFixed(0)}× more EIRP than Earth's strongest TV broadcasters; Earth's commercial radio leakage at this level is undetectable`;
   else symLine = `Earth's commercial radio leakage <em>would</em> be detectable — but the assumption here is the OC observer has a giant array.`;
-  symBody.innerHTML = `With an SKA-2-class telescope (~10⁶ m² A_eff), T_sys = 20 K, 1 hr integration, narrowband 1 Hz channel, an OC observer 17,000 ly away would need a minimum EIRP of <strong>${fmtPower(eirpMinOC)}</strong> from Earth to register a detection. That ${symLine}. ` +
+  symBody.innerHTML = `With an SKA-2-class telescope (~10⁶ m² A_eff), T_sys = 20 K, 1 hr integration, narrowband 1 Hz channel, an OC observer 17,900 ly away would need a minimum EIRP of <strong>${fmtPower(eirpMinOC)}</strong> from Earth to register a detection. That ${symLine}. ` +
     `For reference: TV broadcaster ≈ 5 MW, military radar ≈ 10 GW, Arecibo planetary radar pulse ≈ 20 TW, hypothetical 1% K-II Dyson at 10²⁵ W. <strong>Earth's most intentional signals are still ${fmtSci(eirpMinOC / arecibo)}× too quiet to be detected from Omega Centauri.</strong>`;
 }
 
