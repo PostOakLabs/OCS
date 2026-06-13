@@ -277,10 +277,10 @@ window.OCS_MEASUREMENTS = {
      Chen et al. 2023 (MNRAS 520:3847).
   */
   pulsars: [
-    /* All 19 OC millisecond pulsars from TRAPUM 2026 (arXiv:2603.21845, Colom i Bernadich et al.)
-       and Dai et al. 2023 (MNRAS 520:3847, DOI 10.1093/mnras/stad029). Periods and angular
-       separations from TRAPUM Table 1. Pulsars A–E are from Dai 2023; F–S from TRAPUM 2026
-       discovery census; S is the new TRAPUM 2026 detection.
+    /* All 19 OC millisecond pulsars. A–E: Dai et al. 2020 (ApJL 888:L18, DOI 10.3847/2041-8213/ab621a; Parkes).
+       F–R: Chen et al. 2023 (MNRAS 520:3847, DOI 10.1093/mnras/stad029; MeerKAT, 13 new MSPs).
+       S: new detection in TRAPUM 2026 (arXiv:2603.21845, Colom i Bernadich et al.). Periods and
+       angular separations from the respective discovery and timing tables.
        pdot_s: spin-period derivative in s/s (null = no timing solution yet).
                Positive = conventional spin-down; negative = apparent spin-up from cluster
                line-of-sight acceleration (cluster potential accelerates pulsar toward observer).
@@ -293,35 +293,35 @@ window.OCS_MEASUREMENTS = {
       id: "j1326_4728a", name: "PSR J1326-4728A",
       period_ms: 4.109, theta_arcmin: 1.93, dist_arcsec: 115.8, timing_us: 2.0,
       pdot_s: 2.73e-20, binary: false,
-      discovery: "Chen et al. 2023", doi: "10.1093/mnras/stad029",
+      discovery: "Dai et al. 2020", doi: "10.3847/2041-8213/ab621a",
       notes: "Isolated MSP; positive ṗ reflects intrinsic spin-down plus cluster acceleration."
     },
     {
       id: "j1326_4728b", name: "PSR J1326-4728B",
       period_ms: 4.792, theta_arcmin: 0.76, dist_arcsec: 45.6, timing_us: 4.0,
       pdot_s: -5.43e-20, binary: true,
-      discovery: "Chen et al. 2023", doi: "10.1093/mnras/stad029",
+      discovery: "Dai et al. 2020", doi: "10.3847/2041-8213/ab621a",
       notes: "Binary MSP; negative ṗ indicates dominant line-of-sight cluster acceleration toward observer."
     },
     {
       id: "j1326_4728c", name: "PSR J1326-4728C",
       period_ms: 6.868, theta_arcmin: 1.98, dist_arcsec: 118.8, timing_us: 3.0,
       pdot_s: 1.01e-20, binary: false,
-      discovery: "Chen et al. 2023", doi: "10.1093/mnras/stad029",
+      discovery: "Dai et al. 2020", doi: "10.3847/2041-8213/ab621a",
       notes: "Isolated MSP; measured spin-down contributes to IMBH acceleration probe."
     },
     {
       id: "j1326_4728d", name: "PSR J1326-4728D",
       period_ms: 4.579, theta_arcmin: 2.50, dist_arcsec: 150.0, timing_us: 5.0,
       pdot_s: -4.12e-20, binary: false,
-      discovery: "Chen et al. 2023", doi: "10.1093/mnras/stad029",
+      discovery: "Dai et al. 2020", doi: "10.3847/2041-8213/ab621a",
       notes: "Isolated MSP; negative ṗ (apparent spin-up from cluster gravitational acceleration)."
     },
     {
       id: "j1326_4728e", name: "PSR J1326-4728E",
       period_ms: 4.208, theta_arcmin: 1.58, dist_arcsec: 94.8, timing_us: 2.5,
       pdot_s: 1.63e-20, binary: false,
-      discovery: "Chen et al. 2023", doi: "10.1093/mnras/stad029",
+      discovery: "Dai et al. 2020", doi: "10.3847/2041-8213/ab621a",
       notes: "Isolated MSP with clean spin-down measurement."
     },
     {
