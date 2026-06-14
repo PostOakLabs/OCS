@@ -2,8 +2,68 @@
   "ocs_version": "1.0.0",
   "updated": "2026-06-13",
   "schema": "ocs-chaingraph",
-  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast.",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast, gaia-dr4-forecaster, anisotropy-degeneracy-explorer.",
   "tools": {
+
+    "gaia-dr4-forecaster": {
+      "mcp_name": "gaia_dr4_forecaster",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["evidence-ledger", "detection-forecast"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "influence_radius_pc":             { "type": "number" },
+        "influence_radius_arcsec":         { "type": "number" },
+        "sigma_keplerian_km_s":            { "type": "number" },
+        "pm_floor_dr4_uas_yr":             { "type": "number" },
+        "pm_floor_dr4_km_s_equiv":         { "type": "number" },
+        "kinematic_sn_dr4":                { "type": "number" },
+        "min_detectable_mass_dr4_M_solar": { "type": "integer" },
+        "min_detectable_mass_dr2_M_solar": { "type": "integer" },
+        "n_stars_in_eval_radius":          { "type": "integer" },
+        "dr4_capable":                     { "type": "boolean" },
+        "verdict":                         { "type": "string" }
+      },
+      "data_sources": [
+        "Häberle et al. 2024, Nature 631:285 — lower bound reference",
+        "Häberle et al. 2025, ApJ — oMEGACat VI (N_REF_STARS baseline)",
+        "ESA Gaia DR4 content pages — DR4_FACTOR = 4.5×"
+      ]
+    },
+
+    "anisotropy-degeneracy-explorer": {
+      "mcp_name": "anisotropy_degeneracy_explorer",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker", "velocity-dispersion"],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "sigma_los_central_km_s": { "type": "number" },
+        "sigma_los_no_imbh_km_s": { "type": "number" },
+        "delta_sigma_km_s":       { "type": "number" },
+        "detectability_sigma":    { "type": "number" },
+        "chi2_per_dof":           { "type": "number" },
+        "degeneracy_broken":      { "type": "boolean" },
+        "verdict":                { "type": "string" }
+      },
+      "data_sources": [
+        "Binney & Tremaine, Galactic Dynamics §4.8.2 — spherical Jeans equation",
+        "Baumgardt & Hilker 2018 — cluster structural parameters",
+        "Häberle et al. 2025 — oMEGACat VI reference profile"
+      ]
+    },
 
     "dark-cluster": {
       "mcp_name": "dark_cluster",
@@ -167,8 +227,7 @@
 
   },
   "pending_upgrade": [
-    "gaia-dr4-forecaster",
-    "anisotropy-degeneracy-explorer", "pulsar-accel-mapper", "ir-excess-checker",
+    "pulsar-accel-mapper", "ir-excess-checker",
     "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
     "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
     "bz-kardashev",

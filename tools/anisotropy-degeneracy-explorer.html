@@ -66,6 +66,22 @@ details summary::marker{color:var(--text-dim)}
 .ref a{color:var(--text-dim)}
 .ref a:hover{color:var(--text-sec)}
 .note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+/* ---------- Artifact export (OCS ChainGraph) ---------- */
+.artifact-section{border-top:1px solid var(--border-teal,#1dba90);padding-top:20px;margin-bottom:24px;width:100%}
+.artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--teal-bright,#4de8c0);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.artifact-toggle:hover{color:var(--teal-glow,#1dba90)}
+.artifact-toggle .arrow{transition:transform .2s}
+.artifact-toggle.open .arrow{transform:rotate(90deg)}
+.artifact-body{display:none;margin-top:14px}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow,#1dba90);background:rgba(29,186,144,.06);border:1px solid var(--border-teal,#1dba90);border-radius:6px;padding:10px 14px;margin-bottom:12px;letter-spacing:.03em;word-break:break-all}
+.artifact-json{background:rgba(7,5,21,.7);border:1px solid var(--border,#2a2d35);border-radius:8px;padding:16px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.55;color:var(--text-sec,#8890a0);overflow-x:auto;margin-bottom:12px;max-height:320px;overflow-y:auto;white-space:pre}
+.artifact-actions{display:flex;gap:10px;flex-wrap:wrap}
+.artifact-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--teal-bright,#4de8c0);color:var(--teal-bright,#4de8c0);padding:8px 16px;border-radius:6px;cursor:pointer;transition:all .15s}
+.artifact-btn:hover:not(:disabled){color:var(--teal-glow,#1dba90);background:rgba(29,186,144,.06)}
+.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.12)}
+.artifact-btn:disabled{border-color:var(--text-dim,#5a6070);color:var(--text-dim,#5a6070);cursor:default;opacity:.45}
+.artifact-btn.copied{border-color:var(--amber,#f0a020);color:var(--amber,#f0a020)}
 </style>
 </head>
 <body>
@@ -193,6 +209,22 @@ details summary::marker{color:var(--text-dim)}
       <div id="verdict-text">—</div>
       <div class="verdict-sub" id="verdict-sub"></div>
     </div>
+
+    <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
+    <section class="artifact-section" id="artifact-section" style="margin-top:1.5rem">
+      <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+        <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+      </button>
+      <div class="artifact-body" id="artifact-body">
+        <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
+        <pre class="artifact-json" id="artifact-json"></pre>
+        <div class="artifact-actions">
+          <button class="artifact-btn" id="artifact-copy">Copy JSON</button>
+          <button class="artifact-btn" id="artifact-download">Download .json</button>
+          <button class="artifact-btn" id="artifact-prompt" disabled title="Coming soon: generate an agent prompt from this artifact">Generate prompt →</button>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
 
@@ -481,6 +513,7 @@ function render() {
     vEl.style.color = 'var(--teal)';
     vSub.textContent = `The IMBH produces Δσ_los ≈ ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ) above the no-IMBH case at current β and M_rem. Degeneracy is broken here.`;
   }
+  invalidateArtifact();
 }
 
 // ── Sync sliders to state ─────────────────────────────────────────────────
@@ -497,6 +530,185 @@ function syncSliders() {
   document.getElementById('sl-dist').value = state.dist;
   document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
 }
+
+/* =================== OCS ChainGraph Artifact Export =================== */
+const OCS_ARTIFACT_VERSION = '1.0.0';
+const OCS_TOOL_ID          = 'anisotropy-degeneracy-explorer';
+const OCS_TOOL_VERSION     = '1.0.0';
+const OCS_MANDATE_TYPE     = 'imbh_constraint';
+
+function sortKeysDeep(obj) {
+  if (Array.isArray(obj)) return obj.map(sortKeysDeep);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.keys(obj).sort().map(k => [k, sortKeysDeep(obj[k])]));
+  }
+  return obj;
+}
+
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'sha256:requires-secure-context';
+  try {
+    const canonical = JSON.stringify(sortKeysDeep({ policy_parameters: policyParams, output_payload: outputPayload }));
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    return 'sha256:' + hex;
+  } catch (e) { return 'sha256:error'; }
+}
+
+function buildVerdictAniso(detectability, deltaSig) {
+  if (detectability < 1)
+    return `DEGENERATE — Δσ_los ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ); no-IMBH model reproduces the central dispersion within measurement errors.`;
+  if (detectability < 3)
+    return `MARGINAL — Δσ_los ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ); anisotropy or remnant mass adjustments could plausibly explain the signal.`;
+  return `DISTINCT — Δσ_los ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ); IMBH signature not easily mimicked by β or M_rem at these parameters.`;
+}
+
+function _artifactStateKey() {
+  return state.mass + '|' + state.mrem + '|' + state.rrem + '|' + state.beta + '|' + state.dist;
+}
+
+async function buildArtifact() {
+  const { mass, mrem, rrem, beta, dist } = state;
+  const cur    = computeProfile(mass, mrem, rrem, beta, dist);
+  const noImbh = computeProfile(0, mrem, rrem, beta, dist);
+  const sig0         = cur.sigma_los_kms[0];
+  const sig0_noimbh  = noImbh.sigma_los_kms[0];
+  const deltaSig     = sig0 - sig0_noimbh;
+  const sigErr       = 2.0;
+  const detectability = deltaSig / sigErr;
+
+  const arcSecPerPc = 206265 / (dist * 1000);
+  const refPc = OBS_REF.map(([as, s, e]) => [as / arcSecPerPc, s, e]);
+  let chi2 = 0, nRef = 0;
+  refPc.forEach(([R_pc, sig_ref, err_ref]) => {
+    const sig_mod = interp(cur.R_proj_pc, cur.sigma_los_kms, R_pc);
+    chi2 += ((sig_mod - sig_ref) / err_ref) ** 2;
+    nRef++;
+  });
+  const chi2_N = chi2 / nRef;
+
+  const policyParameters = {
+    mass_M_solar: mass,
+    mrem_M_solar: mrem,
+    rrem_pc:      rrem,
+    beta:         beta,
+    dist_kpc:     dist
+  };
+
+  const outputPayload = {
+    sigma_los_central_km_s:  parseFloat(sig0.toFixed(2)),
+    sigma_los_no_imbh_km_s:  parseFloat(sig0_noimbh.toFixed(2)),
+    delta_sigma_km_s:        parseFloat(deltaSig.toFixed(2)),
+    detectability_sigma:     parseFloat(detectability.toFixed(2)),
+    chi2_per_dof:            parseFloat(chi2_N.toFixed(3)),
+    degeneracy_broken:       detectability >= 3,
+    verdict:                 buildVerdictAniso(detectability, deltaSig)
+  };
+
+  const hash = await computeExecHash(policyParameters, outputPayload);
+
+  return {
+    ocs_version:    OCS_ARTIFACT_VERSION,
+    mandate_type:   OCS_MANDATE_TYPE,
+    tool_id:        OCS_TOOL_ID,
+    tool_version:   OCS_TOOL_VERSION,
+    generated_at:   new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 1 },
+    policy_parameters: policyParameters,
+    output_payload:    outputPayload,
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified:    true,
+      deterministic_run:    true,
+      register:             'mixed'
+    }
+  };
+}
+
+let _artifactCache    = null;
+let _artifactCacheKey = null;
+
+async function getArtifact() {
+  const key = _artifactStateKey();
+  if (_artifactCache && _artifactCacheKey === key) return _artifactCache;
+  _artifactCache = await buildArtifact();
+  _artifactCacheKey = key;
+  return _artifactCache;
+}
+
+async function renderArtifact() {
+  const hashEl = document.getElementById('artifact-hash-cite');
+  const jsonEl  = document.getElementById('artifact-json');
+  if (!hashEl || !jsonEl) return;
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.startsWith('sha256:')
+    ? artifact.execution_hash.slice(0, 22) + '…'
+    : artifact.execution_hash;
+  hashEl.textContent = `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0, 10)}`;
+  jsonEl.textContent = JSON.stringify(artifact, null, 2);
+}
+
+function invalidateArtifact() {
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+
+function wireArtifact() {
+  const toggle  = document.getElementById('artifact-toggle');
+  const body    = document.getElementById('artifact-body');
+  const copyBtn = document.getElementById('artifact-copy');
+  const dlBtn   = document.getElementById('artifact-download');
+
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const text = JSON.stringify(artifact, null, 2);
+    const flash = () => {
+      copyBtn.textContent = 'Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'Copy JSON'; copyBtn.classList.remove('copied'); }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(flash).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta); flash();
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); flash();
+    }
+  });
+
+  dlBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const shortHash = artifact.execution_hash.slice(7, 15);
+    const filename  = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+    const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+/* ====================================================================== */
 
 // ── Wire controls ─────────────────────────────────────────────────────────
 function wire() {
@@ -533,6 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadHash();
   syncSliders();
   wire();
+  wireArtifact();
   render();
 });
 </script>
