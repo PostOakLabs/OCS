@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<!--
+  Workflow — Null-Result Significance
+  Omega Centauri Society — omegacentauri.me
+  Bayesian null-result significance: P(detection|ETI) → Bayes factor K → posterior P(ETI|null).
+  Implements the Civiletti (2025) geometric probability framework (arXiv:2505.00062).
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  2026-06-14
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Null-Result Significance Workflow — Omega Centauri Society</title>
+<meta name="description" content="Bayesian null-result significance calculator: quantify how much SETI null detections constrain ETI abundance using the Civiletti (2025) geometric framework.">
+<link rel="canonical" href="https://omegacentauri.me/tools/workflow-null-result.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25);
+  --s1:#1dba90;--s2:#f0a020;--s3:#a080f0;--s4:#d04040
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 10% 10%,rgba(29,186,144,.07),transparent 45%),radial-gradient(ellipse at 90% 50%,rgba(160,128,240,.07),transparent 45%),radial-gradient(ellipse at 50% 90%,rgba(208,64,64,.04),transparent 55%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1200px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.flow-bar{background:rgba(13,10,36,.7);border-bottom:1px solid var(--border-subtle);position:sticky;top:48px;z-index:190;overflow-x:auto}
+.flow-inner{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:stretch}
+.flow-step{display:flex;align-items:center;gap:9px;padding:11px 16px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none}
+.flow-step.s1:hover{color:var(--s1)}.flow-step.s2:hover{color:var(--s2)}.flow-step.s3:hover{color:var(--s3)}.flow-step.s4:hover{color:var(--s4)}
+.flow-num{width:20px;height:20px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.flow-step.s1 .flow-num{background:rgba(29,186,144,.12);border-color:var(--s1);color:var(--s1)}
+.flow-step.s2 .flow-num{background:rgba(240,160,32,.12);border-color:var(--s2);color:var(--s2)}
+.flow-step.s3 .flow-num{background:rgba(160,128,240,.12);border-color:var(--s3);color:var(--s3)}
+.flow-step.s4 .flow-num{background:rgba(208,64,64,.12);border-color:var(--s4);color:var(--s4)}
+.flow-arrow{color:var(--text-dim);padding:0 2px;font-size:13px}
+.container{max-width:1200px;margin:0 auto;padding:36px 28px 80px}
+.hero{margin-bottom:36px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:10px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:36px;line-height:1.1;letter-spacing:.01em;margin-bottom:12px;background:linear-gradient(120deg,var(--teal-bright),var(--purple-glow),var(--amber-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:17px;font-style:italic;max-width:820px;margin-bottom:8px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.05em;margin-top:6px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:8px;white-space:nowrap;border:1px solid currentColor;display:inline-block;margin-right:5px;margin-top:4px}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.06)}.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.06)}
+.science-brief{background:linear-gradient(135deg,rgba(112,85,212,.08),rgba(7,5,21,.85));border:1px solid var(--purple-bright);border-radius:12px;padding:20px 24px;margin-bottom:28px;font-size:15px;color:var(--text-secondary);line-height:1.7}
+.science-brief strong{color:var(--text-primary)}
+.science-brief .eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:8px}
+.eq{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);background:rgba(4,42,36,.4);padding:4px 10px;border-radius:4px;display:inline-block;margin:5px 0}
+.preset-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;align-items:center}
+.preset-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim)}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border-subtle);border-radius:20px;color:var(--text-secondary);background:rgba(13,10,36,.5);cursor:pointer;transition:all .15s}
+.preset-btn:hover{border-color:var(--purple-bright);color:var(--purple-glow)}
+.preset-btn.active{border-color:var(--amber-bright);color:var(--amber-bright);background:rgba(240,160,32,.08)}
+.stage{border-radius:12px;border:1px solid var(--border-subtle);background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));margin-bottom:10px;overflow:hidden}
+.stage.s1{border-color:rgba(29,186,144,.25)}.stage.s2{border-color:rgba(240,160,32,.2)}.stage.s3{border-color:rgba(160,128,240,.2)}.stage.s4{border-color:rgba(208,64,64,.2)}
+.stage-header{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;user-select:none}
+.stage-num{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;line-height:1;min-width:30px}
+.stage.s1 .stage-num{color:var(--s1)}.stage.s2 .stage-num{color:var(--s2)}.stage.s3 .stage-num{color:var(--s3)}.stage.s4 .stage-num{color:var(--s4)}
+.stage-header-text{flex:1}
+.stage-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:2px}
+.stage-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary);line-height:1.2}
+.stage-summary{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-secondary);letter-spacing:.02em;margin-top:2px}
+.stage-chevron{font-size:14px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.stage.open .stage-chevron{transform:rotate(90deg)}
+.stage-body{display:none;padding:0 20px 20px}
+.stage.open .stage-body{display:block}
+.stage-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:14px}
+@media(max-width:700px){.stage-cols{grid-template-columns:1fr}}
+.col-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--border-subtle)}
+.stage-prose{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px;max-width:820px}
+.stage-prose strong{color:var(--text-primary)}
+.slider-block{margin-bottom:14px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;color:var(--text-secondary);display:flex;align-items:center;margin-bottom:4px}
+.slider-block label .sv{margin-left:auto;color:var(--teal-glow)}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cursor:pointer;border:none}
+.s1 .slider-row input{background:linear-gradient(90deg,var(--teal-dark),var(--teal-mid))}.s1 input::-webkit-slider-thumb,.s1 input::-moz-range-thumb{background:var(--s1)}
+.s2 .slider-row input{background:linear-gradient(90deg,var(--amber-mid),rgba(240,160,32,.4))}.s2 input::-webkit-slider-thumb,.s2 input::-moz-range-thumb{background:var(--s2)}
+.s3 .slider-row input{background:linear-gradient(90deg,var(--purple-mid),rgba(160,128,240,.4))}.s3 input::-webkit-slider-thumb,.s3 input::-moz-range-thumb{background:var(--s3)}
+.sv-right{font-family:'Space Mono',monospace;font-size:11px;min-width:140px;text-align:right;white-space:nowrap}
+.s1 .sv-right{color:var(--s1)}.s2 .sv-right{color:var(--s2)}.s3 .sv-right{color:var(--s3)}
+.inline-out{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);margin-top:10px;line-height:1.8}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin-bottom:16px}
+.result-cell{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:8px;padding:12px 14px}
+.result-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:5px}
+.result-val{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:600;color:var(--text-primary);line-height:1.1;margin-bottom:2px}
+.result-unit{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim)}
+.result-cell.hl{border-color:var(--border-teal)}.result-cell.hl .result-val{color:var(--teal-glow)}
+.verdict-box{margin-top:14px;padding:14px 18px;border-radius:8px;font-family:'Crimson Pro',serif;font-size:15px;line-height:1.6}
+.v-weak{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);color:var(--text-secondary)}
+.v-mild{background:rgba(240,160,32,.05);border:1px solid rgba(240,160,32,.25);color:var(--amber-glow)}
+.v-good{background:rgba(29,186,144,.05);border:1px solid rgba(29,186,144,.25);color:var(--teal-glow)}
+.v-strong{background:rgba(208,64,64,.06);border:1px solid rgba(208,64,64,.28);color:var(--red-glow)}
+.export-card{background:linear-gradient(180deg,rgba(26,16,64,.5),rgba(7,5,21,.9));border:1px solid var(--purple-mid);border-radius:14px;padding:28px 30px;margin-top:32px}
+.export-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.export-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:16px}
+.export-cell{background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:7px;padding:10px 12px}
+.export-cell-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
+.export-cell-val{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:600;color:var(--text-primary)}
+.export-cell-unit{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:2px}
+.export-narrative{font-family:'Crimson Pro',serif;font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;max-width:760px}
+.tool-links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tool-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;padding:5px 12px;border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);transition:all .15s}
+.tool-link:hover{border-color:var(--teal-bright);color:var(--teal-glow)}
+.act-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 18px;border-radius:7px;cursor:pointer;transition:all .15s}
+.copy-btn{border:1px solid var(--purple-bright);background:rgba(112,85,212,.08);color:var(--purple-glow)}.copy-btn:hover{background:rgba(112,85,212,.18)}
+.copy-btn.copied{border-color:var(--teal-bright);color:var(--teal-glow)}
+.dl-btn{border:1px solid var(--teal-bright);background:rgba(29,186,144,.08);color:var(--teal-glow);margin-left:10px}.dl-btn:hover{background:rgba(29,186,144,.18)}
+.footer{margin-top:60px;padding:24px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:720px){.hero h1{font-size:26px}.container{padding:28px 16px 60px}.results-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-title">Workflow &middot; Null-Result Significance</span>
+    <a href="/" class="nav-link">&larr; Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+    <a href="/cite.html" class="nav-link">Cite</a>
+  </div>
+</nav>
+
+<div class="flow-bar" aria-label="Workflow stages">
+  <div class="flow-inner">
+    <a class="flow-step s1" href="#stage1" onclick="openStage('stage1')"><span class="flow-num">1</span>Survey geometry</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step s2" href="#stage2" onclick="openStage('stage2')"><span class="flow-num">2</span>ETI parameters</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step s3" href="#stage3" onclick="openStage('stage3')"><span class="flow-num">3</span>Prior belief</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step s4" href="#stage4" onclick="openStage('stage4')"><span class="flow-num">4</span>Bayesian result</a>
+    <span class="flow-arrow">›</span>
+    <a class="flow-step s1" href="#export"><span class="flow-num">⬡</span>Export</a>
+  </div>
+</div>
+
+<div class="container">
+
+<header class="hero">
+  <div class="hero-eyebrow">Workflow &middot; Bayesian null-result analysis &middot; Fermi Paradox</div>
+  <h1>Null-Result Significance</h1>
+  <p class="hero-sub">Sixty years of SETI silence is only evidence against ETI when P(detection&nbsp;|&nbsp;ETI) is high enough that detecting nothing is surprising. This workflow computes that probability, the Bayes factor K, and the updated posterior P(ETI&nbsp;|&nbsp;null) from your survey parameters.</p>
+  <div class="hero-meta">
+    <span class="tier-badge tier-e">🔬 Civiletti et al. (2025) geometric model</span>
+    <span class="tier-badge tier-s">✦ Bayesian inference</span>
+    &nbsp;&middot;&nbsp; No backend &middot; hash-addressable state &middot; v1.0 &middot; 2026-06-14
+  </div>
+</header>
+
+<div class="science-brief">
+  <div class="eyebrow">Framework — Civiletti et al. (2025, arXiv:2505.00062)</div>
+  <strong>A null result is informative only when P(detection&nbsp;|&nbsp;ETI) is high.</strong> If our survey would have missed most broadcasts anyway, the great silence constrains nothing. The geometric probability that at least one signal from N civilizations — each broadcasting for δ years — passes through Earth's sky is:<br>
+  <span class="eq">P(≥1 detect) = 1 − (1 − f<sub>sky</sub> · f<sub>freq</sub> · min(1, 0.6δ / R<sub>MW</sub>))^N</span><br>
+  where R<sub>MW</sub>&nbsp;≈&nbsp;52,000 ly (Milky Way radius; factor 0.6 from spherical geometry). The Bayes factor is K&nbsp;=&nbsp;1&nbsp;−&nbsp;P(detect&nbsp;|&nbsp;ETI). Bayes' theorem then gives P(ETI&nbsp;|&nbsp;null)&nbsp;=&nbsp;K·P₀&nbsp;/&nbsp;[K·P₀&nbsp;+&nbsp;(1−P₀)]. For Omega Centauri SETI programs specifically: the VLA/COSMIC survey at 17,900 ly had EIRP floors of 10¹¹–10¹⁶ W, which feeds into your f<sub>freq</sub> and f<sub>sky</sub> estimates below.
+</div>
+
+<div class="preset-bar">
+  <span class="preset-label">Presets:</span>
+  <button class="preset-btn active" id="pb-vla" onclick="setPreset('vla')">VLA/COSMIC 2025</button>
+  <button class="preset-btn" id="pb-ska" onclick="setPreset('ska')">SKA Projection</button>
+  <button class="preset-btn" id="pb-optimistic" onclick="setPreset('optimistic')">Drake Optimistic</button>
+  <button class="preset-btn" id="pb-sandberg" onclick="setPreset('sandberg')">Sandberg Conservative</button>
+</div>
+
+<!-- Stage 1: Survey geometry -->
+<section class="stage s1 open" id="stage1">
+  <div class="stage-header" onclick="toggleStage('stage1')">
+    <div class="stage-num">1</div>
+    <div class="stage-header-text">
+      <div class="stage-kicker">Survey parameters &middot; what fraction of the search space was covered?</div>
+      <div class="stage-title">Survey Geometry</div>
+      <div class="stage-summary" id="s1-summary">f_sky = 75% &middot; f_freq = 10%</div>
+    </div>
+    <div class="stage-chevron">›</div>
+  </div>
+  <div class="stage-body">
+    <div class="stage-cols">
+      <div>
+        <div class="col-title">Science</div>
+        <p class="stage-prose">The <strong>COSMIC/VLA Sky Survey</strong> (2023–2025) covered ~75% of the sky commensally with VLASS, targeting 950,000+ objects across L and S bands. Frequency coverage is partial: L+S bands span a small fraction of the plausible technosignature window (1&nbsp;MHz–100&nbsp;GHz).</p>
+        <p class="stage-prose">Set f<sub>sky</sub> and f<sub>freq</sub> to reflect both angular coverage and EIRP completeness. A survey that covers the whole sky but can only detect Kardashev-II transmitters has an <em>effective</em> f<sub>freq</sub> limited by what fraction of broadcasting civilizations exceed that EIRP floor. The SKA mid-array (projected 2030s) will push both parameters substantially higher.</p>
+        <p class="stage-prose"><strong>Omega Centauri specific:</strong> OC lies at δ&nbsp;=&nbsp;−47°, which puts it in a downgoing direction for IceCube but accessible to MeerKAT. For SETI, the VLA/COSMIC survey covered OC within f<sub>sky</sub>&nbsp;≈&nbsp;0.75 and L+S band frequency coverage.</p>
+      </div>
+      <div>
+        <div class="col-title">Parameters</div>
+        <div class="slider-block">
+          <label>Sky fraction f<sub>sky</sub> <span class="sv" id="disp-fSky">75%</span></label>
+          <div class="slider-row">
+            <input type="range" min="0.01" max="1" step="0.01" value="0.75" id="sl-fSky"
+              oninput="S.fSky=+this.value;compute();saveHash()">
+            <span class="sv-right s1" id="sv-fSky">75%</span>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>Frequency coverage f<sub>freq</sub> <span class="sv" id="disp-fFreq">10%</span></label>
+          <div class="slider-row">
+            <input type="range" min="0.01" max="1" step="0.01" value="0.10" id="sl-fFreq"
+              oninput="S.fFreq=+this.value;compute();saveHash()">
+            <span class="sv-right s1" id="sv-fFreq">10%</span>
+          </div>
+        </div>
+        <div class="inline-out">
+          Geometric factor: <span id="out-geom">—</span><br>
+          P(single civilization detectable): <span id="out-pSingle">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stage 2: ETI parameters -->
+<section class="stage s2 open" id="stage2">
+  <div class="stage-header" onclick="toggleStage('stage2')">
+    <div class="stage-num">2</div>
+    <div class="stage-header-text">
+      <div class="stage-kicker">ETI model &middot; what would broadcasting civilizations look like?</div>
+      <div class="stage-title">ETI Parameters</div>
+      <div class="stage-summary" id="s2-summary">N = 10 &middot; δ = 1,000 yr</div>
+    </div>
+    <div class="stage-chevron">›</div>
+  </div>
+  <div class="stage-body">
+    <div class="stage-cols">
+      <div>
+        <div class="col-title">Science</div>
+        <p class="stage-prose"><strong>N</strong> (communicating civilizations) and <strong>δ</strong> (signal duration) together determine how much of the Galaxy's search space is filled with detectable signals at any given time. The Civiletti (2025) geometric factor min(1,&nbsp;0.6δ/R<sub>MW</sub>) captures the fraction of the Galaxy that an outgoing broadcast sphere has already filled.</p>
+        <p class="stage-prose"><strong>Sandberg, Drexler &amp; Ord (2018)</strong> showed that propagating log-uniform priors across Drake parameters gives a prior with substantial probability mass at N&nbsp;=&nbsp;0. The Drake (1961) point estimate gave N&nbsp;≈&nbsp;20,000. The range from N&nbsp;=&nbsp;1 to N&nbsp;=&nbsp;10⁶ covers the full debate.</p>
+        <p class="stage-prose"><strong>Signal duration δ</strong> matters geometrically: only signals currently in transit toward Earth are detectable. A civilization that broadcast for δ&nbsp;=&nbsp;100&nbsp;yr and stopped may have sent signals that already passed us. The factor 0.6δ/R<sub>MW</sub> captures this — for δ&nbsp;=&nbsp;1,000&nbsp;yr it is only 0.012, reflecting how thin the detectable shell is.</p>
+      </div>
+      <div>
+        <div class="col-title">Parameters</div>
+        <div class="slider-block">
+          <label>log<sub>10</sub>(N) — communicating civilizations <span class="sv" id="disp-logN">1.0</span></label>
+          <div class="slider-row">
+            <input type="range" min="0" max="6" step="0.1" value="1.0" id="sl-logN"
+              oninput="S.logN=+this.value;compute();saveHash()">
+            <span class="sv-right s2" id="sv-N">N = 10</span>
+          </div>
+        </div>
+        <div class="slider-block">
+          <label>log<sub>10</sub>(δ / yr) — signal duration <span class="sv" id="disp-logDelta">3.0</span></label>
+          <div class="slider-row">
+            <input type="range" min="0" max="6" step="0.1" value="3.0" id="sl-logDelta"
+              oninput="S.logDelta=+this.value;compute();saveHash()">
+            <span class="sv-right s2" id="sv-Delta">δ = 1,000 yr</span>
+          </div>
+        </div>
+        <div class="inline-out">
+          P(≥1 detection | ETI): <span id="out-pDetect-s2">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stage 3: Prior belief -->
+<section class="stage s3 open" id="stage3">
+  <div class="stage-header" onclick="toggleStage('stage3')">
+    <div class="stage-num">3</div>
+    <div class="stage-header-text">
+      <div class="stage-kicker">Prior probability &middot; belief before seeing the survey result</div>
+      <div class="stage-title">Prior on ETI</div>
+      <div class="stage-summary" id="s3-summary">P₀ = 50%</div>
+    </div>
+    <div class="stage-chevron">›</div>
+  </div>
+  <div class="stage-body">
+    <div class="stage-cols">
+      <div>
+        <div class="col-title">Science</div>
+        <p class="stage-prose">P<sub>0</sub>&nbsp;=&nbsp;P(ETI exists) is your prior <em>before</em> the survey result. The Bayesian update is:<br>
+        P(ETI&nbsp;|&nbsp;null)&nbsp;=&nbsp;K·P₀&nbsp;/&nbsp;[K·P₀&nbsp;+&nbsp;(1&nbsp;−&nbsp;P₀)]<br>
+        where K&nbsp;=&nbsp;1&nbsp;−&nbsp;P(detect&nbsp;|&nbsp;ETI).</p>
+        <p class="stage-prose">When the survey is weak (K&nbsp;≈&nbsp;1), the prior passes through almost unchanged — the null result is uninformative. When the survey is powerful (K&nbsp;≪&nbsp;1), the null result strongly downweights the probability of ETI.</p>
+        <p class="stage-prose"><strong>Reference priors:</strong> Agnostic: P₀&nbsp;=&nbsp;0.50. Sandberg (2018) range: P₀&nbsp;≈&nbsp;0.05–0.20. Rare Earth (Ward &amp; Brownlee 2000): P₀&nbsp;≪&nbsp;0.01. Copernican ("life is common"): P₀&nbsp;≈&nbsp;0.99.</p>
+      </div>
+      <div>
+        <div class="col-title">Parameter</div>
+        <div class="slider-block">
+          <label>log<sub>10</sub>(P<sub>0</sub>) — prior P(ETI) <span class="sv" id="disp-logP0">−0.30</span></label>
+          <div class="slider-row">
+            <input type="range" min="-3" max="0" step="0.01" value="-0.301" id="sl-logP0"
+              oninput="S.logP0=+this.value;compute();saveHash()">
+            <span class="sv-right s3" id="sv-P0">P₀ = 50%</span>
+          </div>
+        </div>
+        <div class="inline-out" style="margin-top:14px">
+          Prior: <span id="out-P0-s3">—</span> &nbsp;→&nbsp; Posterior: <span id="out-Ppost-s3">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stage 4: Bayesian result -->
+<section class="stage s4 open" id="stage4">
+  <div class="stage-header" onclick="toggleStage('stage4')">
+    <div class="stage-num">4</div>
+    <div class="stage-header-text">
+      <div class="stage-kicker">Bayesian update &middot; live computation</div>
+      <div class="stage-title">Null-Result Output</div>
+      <div class="stage-summary" id="s4-summary">adjust sliders above to update</div>
+    </div>
+    <div class="stage-chevron">›</div>
+  </div>
+  <div class="stage-body">
+    <div class="results-grid">
+      <div class="result-cell">
+        <div class="result-label">P(detect | ETI)</div>
+        <div class="result-val" id="out-pDetect">—</div>
+        <div class="result-unit">detection prob. if ETI exists</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-label">Bayes factor K</div>
+        <div class="result-val" id="out-K">—</div>
+        <div class="result-unit">P(null|ETI) — lower = stronger constraint</div>
+      </div>
+      <div class="result-cell hl">
+        <div class="result-label">Posterior P(ETI | null)</div>
+        <div class="result-val" id="out-Ppost">—</div>
+        <div class="result-unit">updated belief after null result</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-label">Prior P₀</div>
+        <div class="result-val" id="out-P0">—</div>
+        <div class="result-unit">pre-survey belief</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-label">Null significance</div>
+        <div class="result-val" id="out-sigma">—</div>
+        <div class="result-unit">Φ⁻¹(P_detect) against ETI</div>
+      </div>
+      <div class="result-cell">
+        <div class="result-label">Bayes factor (dB)</div>
+        <div class="result-val" id="out-Kdb">—</div>
+        <div class="result-unit">10 · log₁₀(K)</div>
+      </div>
+    </div>
+    <div class="verdict-box v-weak" id="out-verdict">Computing…</div>
+  </div>
+</section>
+
+<!-- Export card -->
+<div class="export-card" id="export">
+  <div class="export-eyebrow">✓ Null-Result Significance — Full Summary</div>
+  <div class="export-grid">
+    <div class="export-cell"><div class="export-cell-label">N (civilizations)</div><div class="export-cell-val" id="exp-N">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">δ (signal duration)</div><div class="export-cell-val" id="exp-delta">—</div><div class="export-cell-unit">yr</div></div>
+    <div class="export-cell"><div class="export-cell-label">f_sky</div><div class="export-cell-val" id="exp-fSky">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">f_freq</div><div class="export-cell-val" id="exp-fFreq">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">P(detect | ETI)</div><div class="export-cell-val" id="exp-pDetect">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">Bayes factor K</div><div class="export-cell-val" id="exp-K">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">Prior P₀</div><div class="export-cell-val" id="exp-P0">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">Posterior P(ETI|null)</div><div class="export-cell-val" id="exp-Ppost">—</div></div>
+    <div class="export-cell"><div class="export-cell-label">Null significance</div><div class="export-cell-val" id="exp-sigma">—</div></div>
+  </div>
+  <p class="export-narrative" id="exp-narrative">—</p>
+  <div class="tool-links">
+    <span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-right:4px">Related:</span>
+    <a class="tool-link" href="radio-seti.html">Radio SETI Sensitivity</a>
+    <a class="tool-link" href="passive-seti.html">Passive SETI Prob.</a>
+    <a class="tool-link" href="drake-monte-carlo.html">Drake Monte Carlo</a>
+    <a class="tool-link" href="great-filter.html">Great Filter</a>
+    <a class="tool-link" href="scenario-null-result-significance.html">Narrative scenario →</a>
+  </div>
+  <button class="act-btn copy-btn" id="copy-btn" onclick="copyReport()">Copy full report</button>
+  <button class="act-btn dl-btn" onclick="downloadWorkflowArtifact()">⬡ Download Artifact JSON</button>
+</div>
+
+<footer class="footer">
+  The Omega Centauri Society &nbsp;&middot;&nbsp;
+  <a href="/">omegacentauri.me</a> &nbsp;&middot;&nbsp;
+  <a href="/tools/">All tools</a> &nbsp;&middot;&nbsp;
+  <a href="/cite.html">Cite</a> &nbsp;&middot;&nbsp;
+  Code: MIT &nbsp;&middot;&nbsp; Prose: CC BY 4.0 &nbsp;&middot;&nbsp; v1.0 &middot; 2026-06-14
+</footer>
+
+</div><!-- /container -->
+
+<script>
+'use strict';
+const R_MW = 52000; // Milky Way radius ly (Civiletti 2025)
+let S = { logN: 1.0, logDelta: 3.0, fSky: 0.75, fFreq: 0.10, logP0: -0.301 };
+
+// Acklam (2010) inverse-normal CDF
+function probit(p) {
+  if (p <= 0) return -5.5;
+  if (p >= 1) return  5.5;
+  const a = [-3.969683028665376e+01, 2.209460984245205e+02,-2.759285104469687e+02,
+              1.383577518672690e+02,-3.066479806614716e+01, 2.506628277459239e+00];
+  const b = [-5.447609879822406e+01, 1.615858368580409e+02,-1.556989798598866e+02,
+              6.680131188771972e+01,-1.328068155288572e+01];
+  const c = [-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+  const d = [ 7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+  const pl = 0.02425, ph = 1 - pl;
+  let q, r;
+  if (p < pl) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  } else if (p <= ph) {
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  } else {
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+}
+
+function setText(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+function fmtPct(x, dp) {
+  if (!isFinite(x)) return '—';
+  const p = x * 100;
+  return p.toFixed(dp !== undefined ? dp : p < 0.001 ? 5 : p < 0.1 ? 3 : 2) + '%';
+}
+function fmtN(n) {
+  if (n >= 1e6) return (n/1e6).toPrecision(3) + '×10⁶';
+  if (n >= 1e4) return (n/1e3).toFixed(0) + 'k';
+  if (n >= 1e3) return n.toLocaleString(undefined, {maximumFractionDigits:0});
+  return Math.round(n).toString();
+}
+function fmtDelta(d) {
+  if (d >= 1e6) return (d/1e6).toPrecision(3) + '×10⁶ yr';
+  if (d >= 1e3) return d.toLocaleString(undefined, {maximumFractionDigits:0}) + ' yr';
+  return Math.round(d) + ' yr';
+}
+
+function compute() {
+  const N     = Math.pow(10, S.logN);
+  const delta = Math.pow(10, S.logDelta);
+  const fSky  = S.fSky;
+  const fFreq = S.fFreq;
+  const P0    = Math.pow(10, S.logP0);
+
+  // Civiletti (2025) geometry
+  const geom     = Math.min(1.0, 0.6 * delta / R_MW);
+  const P_single = fSky * fFreq * geom;
+
+  // P(≥1 detection | N), using log for numerical stability at large N
+  let P_detect;
+  if (P_single <= 0) {
+    P_detect = 0;
+  } else {
+    const log1mPs = Math.log1p(-Math.min(P_single, 1 - 1e-15));
+    const logNoDetect = N * log1mPs;
+    P_detect = logNoDetect < -700 ? 1.0 : 1.0 - Math.exp(logNoDetect);
+  }
+
+  const K      = Math.max(1e-15, 1.0 - P_detect);
+  const num    = K * P0;
+  const P_post = num / (num + (1.0 - P0));
+  const sigma  = probit(Math.max(1e-10, Math.min(1 - 1e-10, P_detect)));
+  const K_db   = 10 * Math.log10(K);
+
+  // --- Slider display labels ---
+  setText('disp-logN',    S.logN.toFixed(1));
+  setText('disp-logDelta',S.logDelta.toFixed(1));
+  setText('disp-fSky',    (fSky  * 100).toFixed(0) + '%');
+  setText('disp-fFreq',   (fFreq * 100).toFixed(0) + '%');
+  setText('disp-logP0',   S.logP0.toFixed(2));
+  setText('sv-N',     'N = ' + fmtN(N));
+  setText('sv-Delta', 'δ = ' + fmtDelta(delta));
+  setText('sv-fSky',  (fSky *100).toFixed(0) + '%');
+  setText('sv-fFreq', (fFreq*100).toFixed(0) + '%');
+  setText('sv-P0',    'P₀ = ' + fmtPct(P0, P0 < 0.01 ? 3 : 1));
+
+  // --- Stage summaries ---
+  setText('s1-summary', 'f_sky = ' + (fSky*100).toFixed(0) + '% · f_freq = ' + (fFreq*100).toFixed(0) + '%');
+  setText('s2-summary', 'N = ' + fmtN(N) + ' · δ = ' + fmtDelta(delta));
+  setText('s3-summary', 'P₀ = ' + fmtPct(P0, P0 < 0.01 ? 3 : 1));
+  setText('s4-summary', 'P_detect = ' + fmtPct(P_detect) + ' · ' + sigma.toFixed(1) + 'σ null');
+
+  // --- Stage 1 inline outputs ---
+  setText('out-geom',    geom < 0.001 ? geom.toExponential(3) : geom.toFixed(4));
+  setText('out-pSingle', P_single < 1e-5 ? P_single.toExponential(3) : fmtPct(P_single, 4));
+
+  // --- Stage 2 inline output ---
+  setText('out-pDetect-s2', fmtPct(P_detect));
+
+  // --- Stage 3 inline output ---
+  setText('out-P0-s3',    fmtPct(P0,    P0    < 0.01 ? 3 : 1));
+  setText('out-Ppost-s3', fmtPct(P_post,P_post < 0.01 ? 3 : 1));
+
+  // --- Stage 4 result cells ---
+  setText('out-pDetect', fmtPct(P_detect));
+  setText('out-K',       K < 1e-4 ? K.toExponential(3) : K.toFixed(5));
+  setText('out-Ppost',   fmtPct(P_post, P_post < 0.01 ? 3 : 1));
+  setText('out-P0',      fmtPct(P0,     P0     < 0.01 ? 3 : 1));
+  setText('out-sigma',   sigma.toFixed(2) + 'σ');
+  setText('out-Kdb',     K_db.toFixed(1) + ' dB');
+
+  // --- Verdict ---
+  let vText, vClass;
+  if (sigma < 0.5) {
+    vText  = '⚪  Survey too weak to constrain ETI. P(detect | ETI) = ' + fmtPct(P_detect) + '. ' +
+             'The null result is consistent with any value of N — the silence is uninformative at these survey parameters.';
+    vClass = 'verdict-box v-weak';
+  } else if (sigma < 1.5) {
+    vText  = '🟡  Mildly informative null (~' + sigma.toFixed(1) + 'σ). The survey had a ' + fmtPct(P_detect) +
+             ' chance of detecting ETI at N = ' + fmtN(N) + ', δ = ' + fmtDelta(delta) + '. ' +
+             'The silence weakly disfavors this abundance. Posterior: ' + fmtPct(P0) + ' → ' + fmtPct(P_post) + '.';
+    vClass = 'verdict-box v-mild';
+  } else if (sigma < 2.5) {
+    vText  = '🟢  Informative null (~' + sigma.toFixed(1) + 'σ). A ' + fmtPct(P_detect) +
+             ' detection probability means finding nothing is statistically notable. ' +
+             'P(ETI | null): ' + fmtPct(P0) + ' → ' + fmtPct(P_post) + '.';
+    vClass = 'verdict-box v-good';
+  } else {
+    vText  = '🔴  Strong null (~' + sigma.toFixed(1) + 'σ). If ' + fmtN(N) +
+             ' civilizations existed at δ = ' + fmtDelta(delta) + ', the survey had a ' + fmtPct(P_detect) +
+             ' chance of detection. The great silence at these parameters is a significant argument against ETI. ' +
+             'P(ETI | null): ' + fmtPct(P0) + ' → ' + fmtPct(P_post) + '.';
+    vClass = 'verdict-box v-strong';
+  }
+  const vEl = document.getElementById('out-verdict');
+  if (vEl) { vEl.textContent = vText; vEl.className = vClass; }
+
+  // --- Export card ---
+  const narrative =
+    'Survey: f_sky = ' + (fSky*100).toFixed(0) + '%, f_freq = ' + (fFreq*100).toFixed(0) + '%. ' +
+    'ETI model: N = ' + fmtN(N) + ', δ = ' + fmtDelta(delta) + '. ' +
+    'Geometric factor = ' + geom.toFixed(4) + '; P(single detectable) = ' + fmtPct(P_single, 4) + '. ' +
+    'P(detect | ETI) = ' + fmtPct(P_detect) + '. ' +
+    'Bayes factor K = ' + K.toExponential(3) + ' (' + K_db.toFixed(1) + ' dB). ' +
+    'Prior P₀ = ' + fmtPct(P0, P0 < 0.01 ? 3 : 1) + ' → Posterior P(ETI | null) = ' + fmtPct(P_post, P_post < 0.01 ? 3 : 1) + '. ' +
+    'Null significance: Φ⁻¹(P_detect) = ' + sigma.toFixed(2) + 'σ. ' +
+    'Civiletti (2025) geometric model, R_MW = 52,000 ly. [Omega Centauri Society — omegacentauri.me]';
+
+  setText('exp-N',       fmtN(N));
+  setText('exp-delta',   Math.round(delta).toLocaleString());
+  setText('exp-fSky',    (fSky *100).toFixed(0) + '%');
+  setText('exp-fFreq',   (fFreq*100).toFixed(0) + '%');
+  setText('exp-pDetect', fmtPct(P_detect));
+  setText('exp-K',       K < 1e-4 ? K.toExponential(3) : K.toFixed(5));
+  setText('exp-P0',      fmtPct(P0, P0 < 0.01 ? 3 : 1));
+  setText('exp-Ppost',   fmtPct(P_post, P_post < 0.01 ? 3 : 1));
+  setText('exp-sigma',   sigma.toFixed(2) + 'σ');
+  setText('exp-narrative', narrative);
+}
+
+// Presets
+const PRESETS = {
+  vla:       { logN: 1.0, logDelta: 3.0, fSky: 0.75, fFreq: 0.10, logP0: -0.301 },
+  ska:       { logN: 2.0, logDelta: 3.0, fSky: 0.95, fFreq: 0.40, logP0: -0.301 },
+  optimistic:{ logN: 4.0, logDelta: 4.0, fSky: 0.75, fFreq: 0.10, logP0: -0.097 },
+  sandberg:  { logN: 1.0, logDelta: 2.0, fSky: 0.50, fFreq: 0.05, logP0: -1.301 }
+};
+function setPreset(id) {
+  const p = PRESETS[id]; if (!p) return;
+  Object.assign(S, p);
+  document.getElementById('sl-logN').value    = S.logN;
+  document.getElementById('sl-logDelta').value= S.logDelta;
+  document.getElementById('sl-fSky').value    = S.fSky;
+  document.getElementById('sl-fFreq').value   = S.fFreq;
+  document.getElementById('sl-logP0').value   = S.logP0;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('pb-' + id);
+  if (btn) btn.classList.add('active');
+  compute(); saveHash();
+}
+
+// Stage toggle / open
+function toggleStage(id) { const s = document.getElementById(id); if (s) s.classList.toggle('open'); }
+function openStage(id)   { const s = document.getElementById(id); if (s) s.classList.add('open'); }
+
+// Hash state (loadHash / saveHash)
+function saveHash() {
+  const p = new URLSearchParams({
+    logN: S.logN.toFixed(2), logDelta: S.logDelta.toFixed(2),
+    fSky: S.fSky.toFixed(2), fFreq: S.fFreq.toFixed(2), logP0: S.logP0.toFixed(3)
+  });
+  history.replaceState(null, '', '#in=' + p.toString());
+}
+function loadHash() {
+  const h = location.hash;
+  if (!h.startsWith('#in=')) return;
+  try {
+    const p = new URLSearchParams(h.slice(4));
+    if (p.has('logN'))    S.logN    = +p.get('logN');
+    if (p.has('logDelta'))S.logDelta= +p.get('logDelta');
+    if (p.has('fSky'))    S.fSky    = +p.get('fSky');
+    if (p.has('fFreq'))   S.fFreq   = +p.get('fFreq');
+    if (p.has('logP0'))   S.logP0   = +p.get('logP0');
+    document.getElementById('sl-logN').value    = S.logN;
+    document.getElementById('sl-logDelta').value= S.logDelta;
+    document.getElementById('sl-fSky').value    = S.fSky;
+    document.getElementById('sl-fFreq').value   = S.fFreq;
+    document.getElementById('sl-logP0').value   = S.logP0;
+  } catch(e) {}
+}
+
+// Copy report
+function copyReport() {
+  const btn = document.getElementById('copy-btn');
+  const txt = document.getElementById('exp-narrative').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy full report'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => { btn.textContent = 'Copy manually'; });
+}
+
+// ChainGraph workflow artifact
+window._workflowArtifactData = function() {
+  function fnv32(s) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h * 0x01000193) >>> 0; }
+    return h.toString(16).padStart(8, '0');
+  }
+  const inp = Object.assign({}, S), ts = new Date().toISOString();
+  return {
+    schema: 'ocs-chaingraph-v1',
+    workflow: true,
+    tool: 'workflow-null-result',
+    title: 'Null-Result Significance Workflow',
+    version: '1.0.0',
+    timestamp: ts,
+    permalink: window.location.href,
+    inputs: inp,
+    workflow_citation_bibtex:
+      '@software{OCS_workflow_null_result_2026,\n  author   = {Swanson, Tim},\n  title    = {{Null-Result Significance Workflow}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/workflow-null-result.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}',
+    audit_signature: {
+      hash_algo: 'FNV1a-32',
+      input_hash: fnv32(JSON.stringify(inp) + ts),
+      generated_at: ts,
+      site: 'omegacentauri.me'
+    }
+  };
+};
+function downloadWorkflowArtifact() {
+  const d = window._workflowArtifactData();
+  const b = new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = d.tool + '-' + d.timestamp.slice(0, 10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Init
+loadHash();
+compute();
+</script>
+</body>
+</html>

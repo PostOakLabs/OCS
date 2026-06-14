@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!--
+  Living Review — Omega Centauri IMBH Evidence
+  Omega Centauri Society — omegacentauri.me
+  Quarterly-updated synthesis of the multi-channel IMBH evidence record.
+  Prose: CC BY 4.0 · Code: MIT
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 · 2026-06-14 (Q2 2026 edition)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Living Review — Omega Centauri IMBH Evidence · OCS</title>
+<meta name="description" content="Quarterly-updated synthesis of the multi-channel evidence record for an intermediate-mass black hole in Omega Centauri (NGC 5139). Measurement ledger, channel synthesis, tensions, and changelog.">
+<link rel="canonical" href="https://omegacentauri.me/live-review.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Living Review — Omega Centauri IMBH Evidence">
+<meta property="og:description" content="Quarterly-updated multi-channel evidence synthesis for an IMBH in NGC 5139.">
+<meta property="og:url" content="https://omegacentauri.me/live-review.html">
+<meta property="og:image" content="https://omegacentauri.me/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;
+  --purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-bright:#d04040;
+  --green-bright:#40b840;--green-glow:#70e870;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.8;min-height:100vh;
+  background-image:radial-gradient(ellipse at 30% 0%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(29,186,144,.05),transparent 50%)
+}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow);text-decoration:underline}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:860px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow);text-decoration:none}
+.nav-cur{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow);text-decoration:none}
+/* Layout */
+.wrap{max-width:860px;margin:0 auto;padding:50px 28px 90px}
+/* Article meta bar */
+.article-meta{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-dim);margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border-subtle);display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.meta-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:9px;letter-spacing:.1em;border:1px solid currentColor}
+.badge-live{color:var(--teal-bright);background:rgba(29,186,144,.07)}
+.badge-ver{color:var(--purple-glow);background:rgba(160,128,240,.07)}
+.badge-cc{color:var(--text-dim);border-color:var(--border-subtle)}
+/* Heading hierarchy */
+h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:34px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,#e8e4ff 0%,var(--purple-glow) 55%,var(--teal-glow) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:760px;margin-bottom:24px;line-height:1.65}
+h2{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:600;letter-spacing:.2em;color:var(--amber-glow);text-transform:uppercase;margin:44px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+h3{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--teal-glow);margin:28px 0 10px}
+p{margin-bottom:1rem;color:var(--text-secondary)}
+p strong{color:var(--text-primary)}
+p em{color:var(--text-primary);font-style:italic}
+/* Executive summary box */
+.exec-summary{background:linear-gradient(135deg,rgba(29,186,144,.06),rgba(7,5,21,.9));border:1px solid var(--border-teal);border-radius:10px;padding:20px 24px;margin-bottom:32px}
+.exec-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:10px}
+.exec-summary p{color:var(--text-primary);margin-bottom:.7rem}
+.exec-summary p:last-child{margin-bottom:0}
+/* Measurement ledger table */
+.ledger-wrap{overflow-x:auto;margin:14px 0 24px;border-radius:8px;border:1px solid var(--border-subtle)}
+table{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:12px}
+thead tr{background:rgba(26,16,64,.5)}
+th{padding:10px 12px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border-subtle);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid rgba(112,85,212,.08);color:var(--text-secondary);vertical-align:top;line-height:1.45}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(112,85,212,.04)}
+.td-meas{color:var(--text-primary);font-weight:700}
+.td-ref{font-size:10px;color:var(--text-dim)}
+.tag{display:inline-block;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:10px;border:1px solid currentColor;white-space:nowrap;margin-right:3px}
+.tag-det{color:var(--teal-bright);background:rgba(29,186,144,.07)}
+.tag-ul{color:var(--amber-bright);background:rgba(240,160,32,.07)}
+.tag-nd{color:var(--text-dim);border-color:var(--border-subtle)}
+.tag-crit{color:var(--red-bright);background:rgba(208,64,64,.07)}
+/* Inline key-value */
+.kv-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.kv{background:rgba(13,10,36,.7);border:1px solid var(--border-subtle);border-radius:7px;padding:8px 14px;font-family:'Space Mono',monospace;font-size:11px}
+.kv-label{color:var(--text-dim);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.kv-val{color:var(--teal-glow);font-size:14px}
+/* Tension box */
+.tension-box{background:rgba(208,64,64,.05);border:1px solid rgba(208,64,64,.2);border-radius:8px;padding:14px 18px;margin:16px 0;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.tension-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--red-bright);margin-bottom:6px}
+/* Open question box */
+.oq-box{background:rgba(160,128,240,.05);border:1px solid rgba(160,128,240,.2);border-radius:8px;padding:14px 18px;margin:16px 0;font-size:15px;color:var(--text-secondary);line-height:1.6}
+.oq-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--purple-glow);margin-bottom:6px}
+/* Changelog */
+.changelog-entry{padding:14px 0;border-bottom:1px dashed var(--border-subtle)}
+.changelog-entry:last-child{border-bottom:none}
+.cl-ver{font-family:'Space Mono',monospace;font-size:11px;color:var(--amber-glow);letter-spacing:.06em}
+.cl-date{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:10px}
+.cl-body{color:var(--text-secondary);font-size:15px;margin-top:6px;line-height:1.6}
+/* Citation */
+.cite-block{background:rgba(4,42,36,.4);border:1px solid var(--border-teal);border-radius:7px;padding:14px 18px;font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);white-space:pre-wrap;margin:12px 0;line-height:1.65;overflow-x:auto}
+.cite-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border:1px solid var(--border-teal);border-radius:6px;background:rgba(29,186,144,.07);color:var(--teal-glow);cursor:pointer;transition:all .15s;margin-top:8px}
+.cite-btn:hover{background:rgba(29,186,144,.16)}
+.cite-btn.copied{border-color:var(--amber-bright);color:var(--amber-glow)}
+/* TOC */
+.toc{background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:8px;padding:16px 20px;margin-bottom:36px;font-size:14px}
+.toc-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.toc ol{list-style:decimal;padding-left:18px;color:var(--text-dim)}
+.toc li{margin-bottom:4px}.toc a{color:var(--text-secondary)}.toc a:hover{color:var(--teal-glow)}
+/* Footer */
+footer{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.06em;text-align:center;line-height:1.9}
+footer a{color:var(--text-secondary)}.footer a:hover{color:var(--teal-glow)}
+@media(max-width:640px){h1{font-size:24px}.wrap{padding:30px 16px 60px}table{font-size:11px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-cur">Living Review &middot; IMBH Evidence</span>
+    <a href="/" class="nav-link">&larr; Main portal</a>
+    <a href="/tools/" class="nav-link">Tools</a>
+    <a href="/proposals.html" class="nav-link">Proposals</a>
+    <a href="/cite.html" class="nav-link">Cite</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="article-meta">
+  <span class="meta-badge badge-live">● Living document</span>
+  <span class="meta-badge badge-ver">v1.0 · Q2 2026</span>
+  <span>Last updated: 2026-06-14</span>
+  <span class="meta-badge badge-cc">CC BY 4.0</span>
+  <span>DOI: <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener" style="color:var(--teal-glow)">10.5281/zenodo.20689279</a></span>
+</div>
+
+<h1>Living Review: IMBH Evidence in Omega Centauri</h1>
+<p class="lede">A quarterly-updated synthesis of the multi-channel observational evidence for an intermediate-mass black hole in NGC 5139 (Omega Centauri). Each channel's constraints, internal tensions, and the combined posterior are reviewed in turn.</p>
+
+<nav class="toc" aria-label="Table of contents">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#exec">Executive summary</a></li>
+    <li><a href="#ledger">Measurement ledger</a></li>
+    <li><a href="#channels">Evidence by channel</a></li>
+    <li><a href="#tensions">Tensions and caveats</a></li>
+    <li><a href="#open">Open questions</a></li>
+    <li><a href="#changelog">Changelog</a></li>
+    <li><a href="#citation">How to cite</a></li>
+  </ol>
+</nav>
+
+<!-- EXECUTIVE SUMMARY -->
+<h2 id="exec">1. Executive Summary</h2>
+
+<div class="exec-summary">
+  <div class="exec-label">Q2 2026 status — current best estimate</div>
+  <p>The most direct mass constraint comes from <strong>stellar kinematics</strong> (Häberle et al. 2024): seven stars within 0.08 pc of the cluster center with velocities implying a compact dark mass of <strong>M<sub>IMBH</sub> = 8,200 M<sub>☉</sub></strong> (±0.3 dex, 1σ). This constitutes the best available positive evidence for an IMBH in Omega Centauri.</p>
+  <p>The strongest <em>upper limit</em> is from millisecond <strong>pulsar timing</strong> (TRAPUM survey, MeerKAT; arXiv:2603.21845): M<sub>IMBH</sub> &lt; 10<sup>5</sup> M<sub>☉</sub> at 90% CL. The Häberle mass estimate sits well below this ceiling — the two are consistent.</p>
+  <p>An earlier N-body analysis (Baumgardt 2017) preferred a much lower mass or no IMBH, placing a 3σ upper limit at ~3,000 M<sub>☉</sub>. This is in tension with the Häberle detection; the discrepancy is the central unresolved issue in the field and may reflect modeling assumptions in the N-body approach rather than a fundamental conflict.</p>
+  <p><strong>Combined picture:</strong> a compact dark mass in the range 8,000–10,000 M<sub>☉</sub> is consistent with the post-Keplerian stellar kinematics and the pulsar timing ceiling, but in tension with some N-body mass models. The IMBH hypothesis is consistent with all current data if one accepts the Häberle kinematic measurement at face value; it is disfavored by some dynamical models if one requires consistency with the Baumgardt 2017 N-body result.</p>
+</div>
+
+<!-- MEASUREMENT LEDGER -->
+<h2 id="ledger">2. Measurement Ledger</h2>
+<p>All constraints listed are on the mass of the central compact object, unless otherwise noted. CL = confidence level. σ values given are 1σ unless stated.</p>
+
+<div class="ledger-wrap">
+<table>
+<thead>
+<tr>
+  <th>Channel</th>
+  <th>Measurement</th>
+  <th>CL / σ</th>
+  <th>Method</th>
+  <th>Reference</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Stellar kinematics</td>
+  <td class="td-meas">8,200 M<sub>☉</sub></td>
+  <td>±0.3 dex (1σ)</td>
+  <td>7 fast-moving stars within 0.08 pc; HST + Gaia proper motions</td>
+  <td class="td-ref">Häberle et al. 2024 (ApJ)</td>
+  <td><span class="tag tag-det">Detection</span></td>
+</tr>
+<tr>
+  <td>N-body dynamics</td>
+  <td class="td-meas">&lt; 3,000 M<sub>☉</sub></td>
+  <td>3σ upper limit</td>
+  <td>N-body modeling of velocity dispersion profile</td>
+  <td class="td-ref">Baumgardt (2017, MNRAS 474)</td>
+  <td><span class="tag tag-ul">Upper limit</span> <span class="tag tag-crit">Tension</span></td>
+</tr>
+<tr>
+  <td>Velocity dispersion</td>
+  <td class="td-meas">σ<sub>0</sub> = 16.8 km/s</td>
+  <td>—</td>
+  <td>HST proper motion catalog; mass–σ extrapolation</td>
+  <td class="td-ref">Baumgardt &amp; Hilker 2018 (MNRAS 478)</td>
+  <td><span class="tag tag-det">Measurement</span></td>
+</tr>
+<tr>
+  <td>Pulsar timing</td>
+  <td class="td-meas">&lt; 10<sup>5</sup> M<sub>☉</sub></td>
+  <td>90% CL</td>
+  <td>MeerKAT timing of millisecond pulsars; gravitational potential curvature</td>
+  <td class="td-ref">TRAPUM 2026 (arXiv:2603.21845)</td>
+  <td><span class="tag tag-ul">Upper limit</span></td>
+</tr>
+<tr>
+  <td>IR accretion</td>
+  <td class="td-meas">L<sub>acc</sub> ≪ L<sub>Edd</sub></td>
+  <td>95% CL</td>
+  <td>JWST NIRCam/MIRI photometry at the Häberle position; no point source detected</td>
+  <td class="td-ref">Chen et al. 2025 (ApJ)</td>
+  <td><span class="tag tag-nd">Non-detection</span></td>
+</tr>
+<tr>
+  <td>Radio technosignature</td>
+  <td class="td-meas">EIRP &lt; 10<sup>11</sup>–10<sup>16</sup> W</td>
+  <td>95% CL</td>
+  <td>VLA/COSMIC survey; L+S band commensal; distance 17,900 ly</td>
+  <td class="td-ref">COSMIC/VLA Sky Survey 2025</td>
+  <td><span class="tag tag-nd">Non-detection</span></td>
+</tr>
+<tr>
+  <td>Gravitational waves</td>
+  <td class="td-meas">No CW signal</td>
+  <td>O3/O4</td>
+  <td>LIGO/Virgo O3–O4 continuous GW search; no inspiral signal at OC position</td>
+  <td class="td-ref">LIGO Collaboration (2023)</td>
+  <td><span class="tag tag-nd">Non-detection</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="kv-row">
+  <div class="kv"><div class="kv-label">Best mass estimate</div><div class="kv-val">8,200 M<sub>☉</sub></div></div>
+  <div class="kv"><div class="kv-label">Uncertainty (1σ)</div><div class="kv-val">±0.3 dex</div></div>
+  <div class="kv"><div class="kv-label">Upper limit (90% CL)</div><div class="kv-val">&lt; 10<sup>5</sup> M<sub>☉</sub></div></div>
+  <div class="kv"><div class="kv-label">Distance to OC</div><div class="kv-val">5.47 kpc (17,900 ly)</div></div>
+  <div class="kv"><div class="kv-label">OC stellar mass</div><div class="kv-val">~4 × 10<sup>6</sup> M<sub>☉</sub></div></div>
+</div>
+
+<!-- EVIDENCE BY CHANNEL -->
+<h2 id="channels">3. Evidence by Channel</h2>
+
+<h3>3.1 Stellar kinematics</h3>
+<p>The primary positive evidence for an IMBH comes from Häberle et al. (2024), who identified seven stars within 0.08 pc of the cluster center with proper motions implying velocities up to ~50 km/s — far exceeding what is possible from the stellar mass distribution alone. Keplerian orbit fitting to these "fast movers" requires a compact dark mass of <strong>M = 8,200 M<sub>☉</sub></strong>. The stars follow post-Keplerian trajectories consistent with a point-mass gravitational source at the Häberle position.</p>
+<p>The critical assumption is that the fast-moving stars are genuinely bound to the cluster center and not unrelated interlopers or binary-ejection remnants. Häberle et al. argue the probability of chance alignment is low given the coherent Keplerian structure in phase space, but this is an unverified claim pending multi-epoch follow-up astrometry (proposed with ELT/MICADO and continued HST/Gaia monitoring).</p>
+<p><strong>Epistemic tier:</strong> Established observational detection; interpretation requires additional epoch coverage for full orbit verification. The stellar kinematics result is the single most compelling positive evidence for an IMBH in OC.</p>
+
+<h3>3.2 N-body and velocity dispersion modeling</h3>
+<p>Baumgardt (2017) ran detailed N-body simulations of OC's velocity dispersion profile and found that the profile is better fit by a model without a central IMBH, or with a mass &lt; 3,000 M<sub>☉</sub> at 3σ. This pre-dates the Häberle fast-mover discovery and was based on the global velocity dispersion profile rather than the high-resolution kinematics of the innermost stars.</p>
+<p>Baumgardt &amp; Hilker (2018) measured σ<sub>0</sub> = 16.8 km/s from HST proper motions, which implies — via the M–σ relation — a central mass consistent with either a small IMBH or a population of stellar remnants. The M–σ relation is calibrated on nucleated galaxies and may not apply to globular clusters.</p>
+<p><strong>Key caveat:</strong> N-body models are sensitive to the assumed stellar mass function, retention fraction of stellar-mass black holes, and binary fraction near the center. Updated N-body models incorporating the Häberle fast-mover data and modern black-hole retention fractions are needed before the Baumgardt 2017 constraint can be definitively weighed against the kinematic detection.</p>
+
+<h3>3.3 Pulsar timing</h3>
+<p>The TRAPUM survey (Transferring Astronomical Precision to Radio Astrometry and Pulsars with MeerKAT) published results in 2026 (arXiv:2603.21845) placing a 90% CL upper limit of M<sub>IMBH</sub> &lt; 10<sup>5</sup> M<sub>☉</sub> from the timing of millisecond pulsars in the cluster. This limit comes from the absence of large timing residuals that would indicate a massive perturber near the cluster center.</p>
+<p>The Häberle mass estimate (8,200 M<sub>☉</sub>) is well below this limit — the two measurements are entirely consistent. However, the pulsar timing limit is not yet constraining at the Häberle mass scale. Future observations with the SKA (projected 2030s) and the discovery of additional inner pulsars could push this limit down by one to two orders of magnitude.</p>
+<p><strong>Epistemic tier:</strong> Established observational upper limit. Does not constrain the Häberle detection directly, but rules out a very massive (&gt;10<sup>5</sup> M<sub>☉</sub>) IMBH.</p>
+
+<h3>3.4 Infrared accretion limits</h3>
+<p>Chen et al. (2025) searched for an IR point source at the Häberle position using JWST NIRCam and MIRI and found no detection. This places an upper limit on the accretion luminosity L<sub>acc</sub> ≪ L<sub>Edd</sub> — consistent with Bondi accretion in a gas-poor environment, which is expected given OC's depleted interstellar medium. The non-detection does not rule out an IMBH; it merely confirms that any IMBH is accreting well below the Eddington rate, which is the norm for quiescent IMBHs.</p>
+
+<h3>3.5 Radio and GW non-detections</h3>
+<p>The VLA/COSMIC sky survey set EIRP upper limits of 10<sup>11</sup>–10<sup>16</sup> W (depending on frequency and bandwidth assumption) at OC's distance of 17,900 ly. No narrowband technosignature candidates were confirmed. The LIGO/Virgo O3–O4 searches found no continuous gravitational wave signal at the OC position. Both non-detections are consistent with a quiescent IMBH and provide no positive or negative evidence for the IMBH hypothesis.</p>
+
+<!-- TENSIONS -->
+<h2 id="tensions">4. Tensions and Caveats</h2>
+
+<div class="tension-box">
+  <div class="tension-label">Primary tension</div>
+  <strong>Häberle (2024) detection vs. Baumgardt (2017) N-body upper limit.</strong> The kinematic detection of 8,200 M<sub>☉</sub> is in tension with the N-body upper limit of &lt;3,000 M<sub>☉</sub> (3σ). Resolution requires: (a) updated N-body models incorporating the fast-mover data; (b) multi-epoch astrometry to confirm full Keplerian orbits; (c) independent mass estimation from a second technique at comparable spatial resolution.
+</div>
+
+<div class="tension-box">
+  <div class="tension-label">Modeling caveat</div>
+  <strong>Binary stellar ejections.</strong> A single unresolved hard binary near the cluster center could scatter a star to high velocity and mimic an IMBH orbit. Häberle et al. argue this is unlikely given the coherence of seven independent fast movers, but it cannot be excluded for any single object. Long-baseline proper motion monitoring (≥3 epochs over ≥5 yr) is required to distinguish a bound Keplerian orbit from a scatter event.
+</div>
+
+<div class="tension-box">
+  <div class="tension-label">Systematic caveat</div>
+  <strong>Stellar remnant population.</strong> A centrally-concentrated population of stellar-mass black holes (10–50 M<sub>☉</sub> each) could partially mimic the kinematic signature of a single massive object. Distinguishing a ~100 M<sub>☉</sub> IMBH from 10 × 10 M<sub>☉</sub> stellar-mass BHs requires spatial resolution finer than the stellar-mass BH distribution scale radius (~0.01–0.1 pc), achievable with ELT/MICADO.
+</div>
+
+<!-- OPEN QUESTIONS -->
+<h2 id="open">5. Open Questions</h2>
+
+<div class="oq-box">
+  <div class="oq-label">Open question 1</div>
+  <strong>Do the fast-moving stars follow closed Keplerian orbits?</strong> Confirmation requires at least two additional HST/Gaia epochs (5–10 yr baseline) or ELT/MICADO proper motions (achievable in ~3 yr from first light). Without full orbit coverage, the kinematic detection is suggestive but not definitive.
+</div>
+
+<div class="oq-box">
+  <div class="oq-label">Open question 2</div>
+  <strong>What is the IMBH mass to within ±0.1 dex?</strong> The Häberle uncertainty of ±0.3 dex spans roughly 3,000–20,000 M<sub>☉</sub> at 1σ. Tightening this requires a larger sample of fast-moving stars or long-baseline timing of pulsars within 0.1 pc of the center — both demanding new observations.
+</div>
+
+<div class="oq-box">
+  <div class="oq-label">Open question 3</div>
+  <strong>Is there a stellar-mass BH population complicating the mass model?</strong> The expected N-body outcome for OC — given its age, metallicity, and mass — includes a retained population of 50–500 stellar-mass BHs near the center. Quantifying this population is essential to separate the IMBH signal from the stellar-remnant background.
+</div>
+
+<div class="oq-box">
+  <div class="oq-label">Open question 4</div>
+  <strong>Can pulsar timing reach the Häberle mass scale?</strong> The TRAPUM 2026 limit of &lt;10<sup>5</sup> M<sub>☉</sub> is two orders of magnitude above the Häberle mass. SKA timing of inner pulsars (within 0.1 pc) could — in principle — reach &lt;10<sup>4</sup> M<sub>☉</sub> and directly test the Häberle detection. This requires the discovery of new pulsars within the cluster core.
+</div>
+
+<!-- CHANGELOG -->
+<h2 id="changelog">6. Changelog</h2>
+
+<div class="changelog-entry">
+  <div><span class="cl-ver">v1.0</span><span class="cl-date">2026-06-14 (Q2 2026)</span></div>
+  <div class="cl-body">Initial publication. Measurement ledger compiled from Häberle et al. (2024), Baumgardt (2017), Baumgardt &amp; Hilker (2018), TRAPUM 2026, Chen et al. (2025), VLA/COSMIC 2025, and LIGO O3–O4. Tensions section identifies primary Häberle–Baumgardt conflict. Open questions established for future editions. Living-review status registered at Zenodo (DOI: 10.5281/zenodo.20689279).</div>
+</div>
+
+<p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:12px">Future editions will be published quarterly (Q3 2026, Q4 2026, …). Significant new measurements trigger an out-of-cycle patch release (vX.Y). Additions to the measurement ledger require a peer-reviewed or arXiv-posted primary source.</p>
+
+<!-- CITATION -->
+<h2 id="citation">7. How to Cite This Review</h2>
+<p>If you use this review in academic work, please cite the Zenodo archive of the OCS toolkit (DOI: <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a>) and note the review version and date accessed.</p>
+
+<p><strong>BibTeX:</strong></p>
+<div class="cite-block" id="bibtex-block">@misc{OCS_IMBH_LivingReview_2026,
+  author    = {Swanson, Tim},
+  title     = {{Living Review: IMBH Evidence in Omega Centauri (NGC 5139)}},
+  year      = {2026},
+  month     = {jun},
+  edition   = {v1.0 (Q2 2026)},
+  url       = {https://omegacentauri.me/live-review.html},
+  doi       = {10.5281/zenodo.20689279},
+  note      = {The Omega Centauri Society --- omegacentauri.me.
+               Living document; cite the version accessed.}
+}</div>
+<button class="cite-btn" id="cite-copy-btn" onclick="copyCite()">Copy BibTeX</button>
+
+<p style="margin-top:20px"><strong>Plain text (APA-style):</strong></p>
+<p>Swanson, T. (2026). <em>Living Review: IMBH Evidence in Omega Centauri (NGC 5139)</em> (v1.0, Q2 2026). The Omega Centauri Society. <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">https://doi.org/10.5281/zenodo.20689279</a></p>
+
+<p style="margin-top:20px">For citing individual interactive tools, use the tool-level BibTeX available on the <a href="/cite.html">Cite page</a>.</p>
+
+</div><!-- /wrap -->
+
+<footer>
+  ◉ THE OMEGA CENTAURI SOCIETY &nbsp;&middot;&nbsp;
+  <a href="/">omegacentauri.me</a> &nbsp;&middot;&nbsp;
+  <a href="/faq.html">FAQ</a> &nbsp;&middot;&nbsp;
+  <a href="/proposals.html">Proposals</a> &nbsp;&middot;&nbsp;
+  <a href="/tools/">Tools</a> &nbsp;&middot;&nbsp;
+  <a href="/cite.html">Cite</a>
+  <br>
+  Prose: CC BY 4.0 &nbsp;&middot;&nbsp; Code: MIT &nbsp;&middot;&nbsp; v1.0 &middot; Q2 2026
+</footer>
+
+<script>
+function copyCite() {
+  const btn = document.getElementById('cite-copy-btn');
+  const txt = document.getElementById('bibtex-block').textContent;
+  navigator.clipboard.writeText(txt).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy BibTeX'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => { btn.textContent = 'Copy manually'; });
+}
+</script>
+</body>
+</html>

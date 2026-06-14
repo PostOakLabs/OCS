@@ -184,6 +184,26 @@ footer{
 footer a{color:var(--teal-glow); text-decoration:none}
 footer a:hover{text-decoration:underline}
 .sep{margin:0 .6rem; opacity:.4}
+
+/* ── Client tabs ── */
+.client-tabs{display:flex;gap:0;margin-bottom:0;flex-wrap:wrap;border-bottom:1px solid var(--border-subtle)}
+.client-tab{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:.4rem 1rem;background:transparent;border:1px solid transparent;border-bottom:none;color:var(--text-dim);cursor:pointer;transition:all .15s;margin-bottom:-1px}
+.client-tab.active{background:rgba(29,186,144,.07);border-color:var(--border-subtle);border-bottom:2px solid var(--nebula);color:var(--teal-bright)}
+.client-tab:hover:not(.active){color:var(--text-secondary)}
+.client-panel{display:none;padding:1.3rem 0 0}
+.client-panel.active{display:block}
+
+/* ── Code / prompt blocks ── */
+.code-block{background:rgba(4,42,36,.45);border:1px solid var(--border-teal);border-radius:5px;padding:.85rem 1.1rem;font-family:'Space Mono',monospace;font-size:.75rem;color:var(--teal-glow);white-space:pre;overflow-x:auto;margin:.8rem 0;line-height:1.55}
+.prompt-block{background:rgba(26,16,64,.35);border:1px solid rgba(112,85,212,.3);border-radius:5px;padding:1rem 1.2rem;font-family:'Crimson Pro',serif;font-size:.97rem;color:var(--text-secondary);white-space:pre-wrap;margin:.8rem 0;line-height:1.65}
+
+/* ── Workflow recipe cards ── */
+.recipe-card{background:rgba(13,10,36,.5);border:1px solid var(--border-subtle);border-radius:8px;padding:1.3rem 1.5rem;margin-bottom:1.2rem;transition:border-color .2s}
+.recipe-card:hover{border-color:var(--purple-bright)}
+.recipe-title{font-family:'Orbitron',sans-serif;font-size:.88rem;font-weight:600;color:var(--text-primary);margin-bottom:.2rem}
+.recipe-meta{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--text-dim);letter-spacing:.06em;margin-bottom:.7rem}
+.recipe-body{color:var(--text-secondary);font-size:.95rem;margin-bottom:.9rem;max-width:640px}
+.chain-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:.68rem;padding:.2rem .55rem;border-radius:4px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.06);margin-right:.5rem}
 </style>
 </head>
 <body>
@@ -210,28 +230,247 @@ footer a:hover{text-decoration:underline}
 </div>
 <p>The server is a stateless Cloudflare Worker running on the <a href="https://spec.modelcontextprotocol.io/" target="_blank" rel="noopener" style="color:var(--teal-glow)">Streamable HTTP MCP transport (2025-11-25)</a>. All tool logic runs client-side in your browser — the MCP server only returns deep-links and metadata; zero data leaves your machine.</p>
 
-<h2>Connecting to Claude</h2>
-<ol class="steps">
-  <li>
-    <div class="step-num">1</div>
-    <div class="step-body">Open the <strong>Claude desktop app</strong> and go to <strong>Settings → Connectors</strong>.</div>
-  </li>
-  <li>
-    <div class="step-num">2</div>
-    <div class="step-body">Click <strong>Add connector</strong> and select <strong>Custom MCP server</strong>.</div>
-  </li>
-  <li>
-    <div class="step-num">3</div>
-    <div class="step-body">Paste the endpoint URL: <code>https://mcp.omegacentauri.me/mcp</code></div>
-  </li>
-  <li>
-    <div class="step-num">4</div>
-    <div class="step-body">Name it <strong>Omega Centauri Society</strong> and save. Both tools will appear under Read-only tools.</div>
-  </li>
-</ol>
+<h2>Connecting your AI assistant</h2>
+<p style="color:var(--text-secondary);margin-bottom:1.2rem">The OCS endpoint uses the <strong>Streamable HTTP MCP transport</strong> (spec 2025-11-25) and works with any compliant client. Select your client below.</p>
 
-<div class="note">
-  <strong>Health check:</strong> <a href="https://mcp.omegacentauri.me/health" target="_blank" rel="noopener" style="color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:.85rem">mcp.omegacentauri.me/health</a> returns <code>{"status":"ok"}</code>. Use this to confirm the server is up before connecting.
+<div class="client-tabs" role="tablist">
+  <button class="client-tab active" role="tab" onclick="showClient('desktop',this)" aria-selected="true">Claude Desktop</button>
+  <button class="client-tab" role="tab" onclick="showClient('cursor',this)" aria-selected="false">Cursor</button>
+  <button class="client-tab" role="tab" onclick="showClient('vscode',this)" aria-selected="false">VS Code</button>
+  <button class="client-tab" role="tab" onclick="showClient('generic',this)" aria-selected="false">Generic HTTP</button>
+</div>
+
+<div class="client-panel active" id="panel-desktop" role="tabpanel">
+  <ol class="steps">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-body">Open the <strong>Claude desktop app</strong> and go to <strong>Settings → Connectors</strong>.</div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-body">Click <strong>Add connector</strong> and select <strong>Custom MCP server</strong>.</div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-body">Paste the endpoint URL: <code>https://mcp.omegacentauri.me/mcp</code></div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-body">Name it <strong>Omega Centauri Society</strong> and save. Tools appear under Read-only connectors.</div>
+    </li>
+  </ol>
+  <div class="note" style="margin-top:1rem">
+    <strong>Health check:</strong> <a href="https://mcp.omegacentauri.me/health" target="_blank" rel="noopener" style="color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:.85rem">mcp.omegacentauri.me/health</a> returns <code>{"status":"ok"}</code>. Verify the server is up before connecting.
+  </div>
+</div>
+
+<div class="client-panel" id="panel-cursor" role="tabpanel">
+  <p style="color:var(--text-secondary);margin-bottom:.8rem">Add to <code>~/.cursor/mcp.json</code> (create it if absent). Cursor picks up changes on the next project reload.</p>
+  <div style="position:relative">
+<div class="code-block" id="cursor-cfg">{
+  "mcpServers": {
+    "omega-centauri-society": {
+      "type": "http",
+      "url": "https://mcp.omegacentauri.me/mcp"
+    }
+  }
+}</div>
+    <button class="copy-btn" onclick="copyCode('cursor-cfg',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
+  </div>
+  <div class="note" style="margin-top:.9rem"><strong>Tip:</strong> <code>~/.cursor/mcp.json</code> applies globally; a per-project override lives at <code>.cursor/mcp.json</code> in the workspace root.</div>
+</div>
+
+<div class="client-panel" id="panel-vscode" role="tabpanel">
+  <p style="color:var(--text-secondary);margin-bottom:.6rem"><strong>VS Code 1.99+ native MCP</strong> — add to <code>.vscode/mcp.json</code> in your workspace:</p>
+  <div style="position:relative">
+<div class="code-block" id="vscode-native-cfg">{
+  "servers": {
+    "omega-centauri-society": {
+      "type": "http",
+      "url": "https://mcp.omegacentauri.me/mcp"
+    }
+  }
+}</div>
+    <button class="copy-btn" onclick="copyCode('vscode-native-cfg',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
+  </div>
+  <p style="color:var(--text-secondary);margin:1rem 0 .6rem"><strong>Cline extension</strong> — open Cline settings → MCP Servers → Edit config and add:</p>
+  <div style="position:relative">
+<div class="code-block" id="vscode-cline-cfg">{
+  "omega-centauri-society": {
+    "type": "http",
+    "url": "https://mcp.omegacentauri.me/mcp",
+    "disabled": false
+  }
+}</div>
+    <button class="copy-btn" onclick="copyCode('vscode-cline-cfg',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
+  </div>
+</div>
+
+<div class="client-panel" id="panel-generic" role="tabpanel">
+  <p style="color:var(--text-secondary);margin-bottom:.8rem">Any HTTP client can call the endpoint directly. The <code>tools/list</code> method confirms connectivity:</p>
+  <div style="position:relative">
+<div class="code-block" id="generic-curl">curl -X POST https://mcp.omegacentauri.me/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'</div>
+    <button class="copy-btn" onclick="copyCode('generic-curl',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
+  </div>
+  <div class="note" style="margin-top:.9rem"><strong>Transport:</strong> The server uses <a href="https://spec.modelcontextprotocol.io/" target="_blank" rel="noopener" style="color:var(--teal-glow)">Streamable HTTP (MCP spec 2025-11-25)</a>. Long-running responses may stream as <code>text/event-stream</code>.</div>
+</div>
+
+<h2>W5 — Agentic literature loop</h2>
+<p style="color:var(--text-secondary);margin-bottom:1rem">W5 combines the OCS MCP with NASA ADS and an arXiv MCP in a single agent session. The agent fetches recent mass-constraint papers, propagates any new measurements through the OCS constraint chain, and outputs an updated evidence ledger with deeplinks.</p>
+
+<p style="color:var(--text-secondary);margin-bottom:.7rem"><strong>Required MCP servers:</strong></p>
+<ul style="list-style:none;padding:0;margin-bottom:1.1rem">
+  <li style="margin-bottom:.55rem;color:var(--text-secondary)"><span class="chain-badge">1 · OCS</span> <code>https://mcp.omegacentauri.me/mcp</code> — no setup beyond connection</li>
+  <li style="margin-bottom:.55rem;color:var(--text-secondary)"><span class="chain-badge">2 · NASA ADS</span> <a href="https://github.com/prtc/nasa-ads-mcp" target="_blank" rel="noopener" style="color:var(--teal-glow)">github.com/prtc/nasa-ads-mcp</a> — requires a free <a href="https://ui.adsabs.harvard.edu/user/settings/token" target="_blank" rel="noopener" style="color:var(--teal-glow)">NASA ADS API key</a></li>
+  <li style="color:var(--text-secondary)"><span class="chain-badge">3 · arXiv</span> Any arXiv MCP — search the <a href="https://mcp.so" target="_blank" rel="noopener" style="color:var(--teal-glow)">MCP registry</a> for <code>arxiv</code> and follow that project's README</li>
+</ul>
+
+<p style="color:var(--text-secondary);margin-bottom:.5rem"><strong>Three-server config skeleton</strong> (Cursor / VS Code — fill in the ADS and arXiv entries from each project's README):</p>
+<div style="position:relative">
+<div class="code-block" id="w5-three-server">{
+  "mcpServers": {
+    "omega-centauri-society": {
+      "type": "http",
+      "url": "https://mcp.omegacentauri.me/mcp"
+    },
+    "nasa-ads": {
+      "command": "...",
+      "args": ["..."],
+      "env": { "ADS_API_KEY": "YOUR_KEY" }
+    },
+    "arxiv": {
+      "command": "...",
+      "args": ["..."]
+    }
+  }
+}</div>
+  <button class="copy-btn" onclick="copyCode('w5-three-server',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
+</div>
+
+<p style="color:var(--text-secondary);margin:1.2rem 0 .5rem"><strong>W5 master prompt</strong> — paste into your AI assistant with all three servers connected:</p>
+<div>
+<div class="prompt-block" id="w5-master-prompt">You have access to three MCP servers: the Omega Centauri Society tools (OCS), NASA ADS, and arXiv. Run the following agentic literature loop:
+
+STEP 1 — BASELINE CONSTRAINT CHAIN
+Call OCS constraint_stacker with the canonical measurements:
+  • Stellar kinematics (Häberle et al. 2024): M_IMBH = 8,200 M☉, σ = 0.3 dex
+  • Pulsar timing upper limit (TRAPUM 2026): M_IMBH < 1×10⁵ M☉ at 90% CL
+  • Velocity dispersion (Baumgardt & Hilker 2018): σ₀ = 16.8 km/s
+Record the output as your baseline posterior.
+
+STEP 2 — LITERATURE SCAN (NASA ADS)
+Search for papers published in the last 12 months:
+  query: "NGC 5139 OR Omega Centauri AND (IMBH OR black hole OR mass)"
+  sort: date descending, limit: 20
+For each result extract: title, authors, date, bibcode, and any IMBH mass measurement or limit.
+
+STEP 3 — PREPRINT SCAN (arXiv)
+Search the last 6 months for:
+  "Omega Centauri IMBH" OR "NGC 5139 black hole mass"
+Extract new mass measurements or constraints from abstracts.
+
+STEP 4 — UPDATE CONSTRAINT CHAIN
+If any new measurements differ from baseline by >0.15 dex, re-run constraint_stacker with updated values. Note which measurements changed.
+
+STEP 5 — WORKFLOW DEEPLINKS
+Call OCS build_ocs_workflow_links for the mass-tension workflow, pre-loaded with the best current values.
+
+RETURN a structured report:
+  1. New papers found (title, date, key measurement)
+  2. Constraint update: baseline vs. updated posterior
+  3. Mass-tension workflow permalink
+  4. Recommended next observation to most tighten the remaining uncertainty</div>
+  <button class="copy-btn" onclick="copyEl('w5-master-prompt',this)" style="margin-top:.5rem">Copy prompt</button>
+</div>
+
+<p style="color:var(--text-secondary);margin:1.2rem 0 .5rem"><strong>OCS-only variant</strong> (no external MCPs needed):</p>
+<div>
+<div class="prompt-block" id="w5-ocs-only">Using the Omega Centauri Society MCP tools, run a constraint chain analysis:
+
+1. Call list_ocs_tools with category="imbh-evidence" to survey available tools.
+2. Call constraint_stacker with the current best-fit measurements: Häberle (2024) M_IMBH = 8,200 M☉; TRAPUM (2026) upper limit M_IMBH < 10⁵ M☉ at 90% CL.
+3. Call build_ocs_workflow_links to get the mass-tension workflow permalink at those values.
+4. Summarize the constraint chain: which measurement currently dominates the posterior, which channel would most tighten it, and what would constitute a 95% CL null result.</div>
+  <button class="copy-btn" onclick="copyEl('w5-ocs-only',this)" style="margin-top:.5rem">Copy prompt</button>
+</div>
+
+<h2>Workflow recipes</h2>
+<p style="color:var(--text-secondary);margin-bottom:1.4rem">Copy-paste agent prompts for common OCS research tasks. Each uses the OCS MCP to navigate the tool suite and generate shareable deeplinks.</p>
+
+<div class="recipe-card">
+  <div class="recipe-title">Mass–tension constraint chain</div>
+  <div class="recipe-meta"><span class="chain-badge">constraint_stacker</span><span class="chain-badge">build_ocs_workflow_links</span>IMBH evidence · pulsar timing · tidal disruption</div>
+  <div class="recipe-body">Propagates pulsar timing and stellar kinematics measurements through the tidal disruption rate tension; outputs a shareable workflow permalink.</div>
+<div class="prompt-block" id="recipe-prompt-1">Using OCS tools, compute the mass–tidal disruption rate tension for Omega Centauri:
+1. Call constraint_stacker with the TRAPUM 2026 upper limit (M_IMBH < 10⁵ M☉ at 90% CL) and the Häberle 2024 best fit (8,200 M☉, σ=0.3 dex).
+2. Call build_ocs_workflow_links to get the mass-tension workflow permalink pre-loaded with those values.
+3. Report: current tension in sigma, which measurement most constrains the posterior, and the permalink.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-1',this)" style="margin-top:.4rem">Copy prompt</button>
+</div>
+
+<div class="recipe-card">
+  <div class="recipe-title">Multi-channel evidence ledger</div>
+  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">constraint_stacker</span>IMBH evidence · multi-channel synthesis</div>
+  <div class="recipe-body">Builds a structured table of all observational evidence for the OC IMBH, one row per channel, with detection status and constraint strength.</div>
+<div class="prompt-block" id="recipe-prompt-2">Using OCS tools, build a multi-channel IMBH evidence ledger for Omega Centauri:
+1. Call list_ocs_tools with category="imbh-evidence" to get all IMBH-relevant tools.
+2. For each tool, extract: channel, instrument, key reference, current constraint, detection status (detection / upper limit / non-detection).
+3. Return a markdown table: Channel | Instrument | Reference | Constraint | Status.
+4. Below the table, give the combined mass posterior range at 68% and 90% CL implied by the listed constraints.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-2',this)" style="margin-top:.4rem">Copy prompt</button>
+</div>
+
+<div class="recipe-card">
+  <div class="recipe-title">Multi-messenger campaign brief</div>
+  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>multi-messenger · campaign planning</div>
+  <div class="recipe-body">Identifies the three highest-impact observational channels and generates tool deeplinks for each, formatted as a campaign brief.</div>
+<div class="prompt-block" id="recipe-prompt-3">Using OCS tools, design an observational campaign to test the Omega Centauri IMBH hypothesis:
+1. Call list_ocs_tools to survey all available channels.
+2. Rank the top three channels by constraint leverage: which channel's null detection would most shrink the 90% CL mass range?
+3. For each of the top three, call build_ocs_workflow_links with conservative detection-threshold parameters.
+4. Return a campaign brief: Objective, Top 3 channels with deeplinks, estimated constraint improvement per channel, and what would constitute a 95% CL falsification.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-3',this)" style="margin-top:.4rem">Copy prompt</button>
+</div>
+
+<div class="recipe-card">
+  <div class="recipe-title">Null-result Bayesian update</div>
+  <div class="recipe-meta"><span class="chain-badge">constraint_stacker</span><span class="chain-badge">build_ocs_workflow_links</span>Bayesian updating · null result · falsification</div>
+  <div class="recipe-body">Given a null detection in a specified channel, computes the Bayesian posterior update to the IMBH mass constraint and evaluates falsification significance.</div>
+<div class="prompt-block" id="recipe-prompt-4">Using OCS tools, compute a Bayesian null-result update for Omega Centauri.
+Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluster center, setting a timing upper limit of M_IMBH < 5,000 M☉ at 90% CL — in tension with the Häberle (2024) best fit of 8,200 M☉.
+
+1. Call constraint_stacker with the Häberle prior (8,200 M☉, σ=0.3 dex) updated by the MeerKAT upper limit as a hard constraint.
+2. Report: posterior mean, 68% CL, 90% CL, and the Bayes factor against the IMBH hypothesis.
+3. Call build_ocs_workflow_links with the updated parameters and return the permalink.
+4. State whether this constitutes a falsification at 95% CL under the OCS framework.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-4',this)" style="margin-top:.4rem">Copy prompt</button>
+</div>
+
+<div class="recipe-card">
+  <div class="recipe-title">Fermi / MTH crossover timeline</div>
+  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>Fermi Paradox · Macro Transcension · crossover</div>
+  <div class="recipe-body">Evaluates where Omega Centauri falls on the Fermi–MTH crossover curve given its age, metallicity, and candidate IMBH mass; returns the workflow permalink at current best-fit values.</div>
+<div class="prompt-block" id="recipe-prompt-5">Using OCS tools, evaluate the Fermi / MTH crossover for Omega Centauri:
+1. Call list_ocs_tools with category="fermi-paradox" to find crossover and Grabby Aliens tools.
+2. Call build_ocs_workflow_links for the Fermi–MTH crossover workflow. Use: OC age = 12.5 Gyr, [Fe/H] = −1.53, IMBH mass = 8,200 M☉, stellar population N = 10⁷.
+3. Report: crossover timescale τ_cross, probability OC has already crossed the MTH threshold, and how the IMBH mass anchor shifts τ_cross relative to a no-IMBH baseline.
+4. Return the full deeplink to the crossover workflow.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-5',this)" style="margin-top:.4rem">Copy prompt</button>
+</div>
+
+<div class="recipe-card">
+  <div class="recipe-title">MTH compute budget</div>
+  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>Macro Transcension · compute budget · Landauer limit</div>
+  <div class="recipe-body">Estimates the total compute budget available to a Macro Transcension civilization in OC, anchored on the IMBH mass as the energy reservoir, from Landauer limit to Bekenstein bound.</div>
+<div class="prompt-block" id="recipe-prompt-6">Using OCS tools, estimate the MTH compute budget for Omega Centauri:
+1. Call list_ocs_tools with category="mth" to find the MTH compute budget and related tools.
+2. Call build_ocs_workflow_links for the MTH compute budget workflow. Use: IMBH mass = 8,200 M☉, spin a* = 0.9, background T = 2.725 K (CMB), time horizon = 10¹¹ yr.
+3. Report: available energy (joules), Landauer-limit compute operations (bits flipped), Bekenstein-bound information capacity (bits), and the parameter that most sensitively affects the total budget.
+4. Return the workflow deeplink.</div>
+  <button class="copy-btn" onclick="copyEl('recipe-prompt-6',this)" style="margin-top:.4rem">Copy prompt</button>
 </div>
 
 <h2>Available tools</h2>
@@ -358,6 +597,28 @@ function copyEndpoint() {
   }).catch(() => {
     btn.textContent = 'Copy manually';
   });
+}
+function showClient(id, btn) {
+  document.querySelectorAll('.client-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  document.querySelectorAll('.client-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected','true');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+function copyCode(id, btn) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  }).catch(() => { btn.textContent = 'Error'; setTimeout(() => { btn.textContent = 'Copy'; }, 1500); });
+}
+function copyEl(id, btn) {
+  const el = document.getElementById(id);
+  const orig = btn.textContent;
+  navigator.clipboard.writeText(el.textContent.trim()).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }).catch(() => { btn.textContent = 'Error'; setTimeout(() => { btn.textContent = orig; }, 1500); });
 }
 </script>
 
