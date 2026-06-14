@@ -1583,10 +1583,11 @@ function wireReset() {
 }
 
 // ---------- OCS ChainGraph Artifact Export ----------
-const OCS_ARTIFACT_VERSION = '1.0.0';
-const OCS_TOOL_ID          = 'constraint-stacker';
-const OCS_TOOL_VERSION     = '1.0.0';
-const OCS_MANDATE_TYPE     = 'imbh_constraint';
+const OCS_ARTIFACT_VERSION   = '1.0.0';
+const OCS_CHAINGRAPH_VERSION = '0.1.0';                          // ChainGraph Standard version
+const OCS_TOOL_ID            = 'constraint-stacker';
+const OCS_TOOL_VERSION       = '1.1.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/imbh_constraint'; // namespaced per ChainGraph Standard §7.3
 
 function sortKeysDeep(obj) {
   if (Array.isArray(obj)) return obj.map(sortKeysDeep);
@@ -1664,6 +1665,7 @@ async function buildArtifact() {
   const hash = await computeExecHash(policyParams, outputPayload);
 
   return {
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
     ocs_version: OCS_ARTIFACT_VERSION,
     mandate_type: OCS_MANDATE_TYPE,
     tool_id: OCS_TOOL_ID,
@@ -1673,6 +1675,10 @@ async function buildArtifact() {
     chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
     policy_parameters: policyParams,
     output_payload: outputPayload,
+    compliance_flags: [
+      'register:peer-reviewed',
+      outputPayload.tension_detected ? 'tension:lower_bound_exceeds_upper_limit' : 'window:consistent'
+    ],
     audit_signature: {
       client_side_executed: true,
       zero_pii_verified: true,
