@@ -1,0 +1,190 @@
+{
+  "registry_version": "1.0.0",
+  "updated": "2026-06-13",
+  "schema": "ocs",
+  "notes": "One entry per OCS mandate_type. Used by the OCS ChainGraph artifact export system to annotate each artifact with context for downstream consumers (agents, prompts, Zenodo deposits). See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md §2 for taxonomy rationale.",
+  "templates": {
+
+    "imbh_constraint": {
+      "description": "A mass constraint or model-consistency determination for the Omega Centauri IMBH. Output is a verdict on the allowed mass window given a set of active observational constraints.",
+      "primary_tasks": ["constraint_summary", "tension_narrative", "proposal_science_case", "preregistration"],
+      "audiences": ["astronomer", "science_communicator", "proposal_reviewer", "general_public"],
+      "regulatory_citations": [
+        "Häberle et al. 2024, Nature 631:285 — lower bound 8,200 M☉ (proper motion of fast stars, HST)",
+        "Bañares-Hernández et al. 2025, A&A 693:A104 — 3σ upper limit 6,000 M☉ (kinematics + pulsar timing)",
+        "Chen et al. 2025, arXiv:2511.20945 — JWST accretion non-detection; constrains mass ≳ 20,000 M☉",
+        "Malave et al. 2025/2026, arXiv:2512.09649 — ATCA 170h radio non-detection; 1.1 μJy rms at 7.25 GHz",
+        "Colom i Bernadich et al. 2026, arXiv:2603.21845 — TRAPUM MeerKAT/Parkes pulsar timing; < 10⁵ M☉ at 90%"
+      ],
+      "stochastic_framing_rules": [
+        "Report mass constraints as 'the allowed window is X–Y M☉ at N-sigma'",
+        "Never present a kinematic constraint as a mass detection — it is a consistency test",
+        "Always distinguish lower bounds (kinematic, Häberle) from upper limits (pulsar, Bañares)",
+        "When tension_detected is true, frame as 'at least one analysis has unaccounted-for systematics'"
+      ],
+      "escalation_conditions": ["tension_detected = true", "allowed_window_M_solar.lower > allowed_window_M_solar.upper"],
+      "output_field_glossary": {
+        "allowed_window_M_solar": "Mass range in solar masses simultaneously allowed by all active constraints. null if no bound in that direction.",
+        "tension_detected": "True if the tightest lower bound exceeds the tightest upper limit.",
+        "tension_direction": "lower_bound_exceeds_upper_limit when tension is present.",
+        "n_constraints_active": "Count of individual measurements whose method family is toggled on.",
+        "constraint_lanes_active": "Which method families are active: kinematics, propermotion, timing, accretion, nbody.",
+        "lower_bound_source": "Author + year string for the tightest active lower bound.",
+        "upper_limit_source": "Author + year string for the tightest active upper limit.",
+        "epsilon_adaf": "ADAF radiative efficiency used for JWST mass limit calculation.",
+        "rho_inf_kg_m3": "Ambient gas density used for Bondi accretion rate estimate.",
+        "verdict": "Human-readable one-sentence summary of the constraint outcome."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the IMBH Constraint Stacker tool. Execution hash: {{execution_hash}} (anchors this computation — cite this hash when referencing the result). The constraint verdict is: {{output_payload.verdict}}. Allowed mass window: {{output_payload.allowed_window_M_solar.lower}} – {{output_payload.allowed_window_M_solar.upper}} M☉. Tension detected: {{output_payload.tension_detected}}. {{n_constraints_active}} constraints from {{constraint_lanes_active}} method families are active. For a [TASK] addressed to [AUDIENCE]: frame the result as [FRAMING INSTRUCTION]."
+    },
+
+    "detection_verdict": {
+      "description": "A yes/no detectability determination for a specific instrument and observational configuration. Output is a structured verdict on whether the target signal exceeds a specified instrument sensitivity threshold.",
+      "primary_tasks": ["instrument_comparison", "timeline_narrative", "proposal_science_case", "observing_campaign"],
+      "audiences": ["astronomer", "proposal_reviewer", "science_communicator"],
+      "regulatory_citations": [
+        "ESA Gaia DR4 — expected December 2026; 4.5× proper-motion precision improvement over DR2",
+        "Nancy Grace Roman Space Telescope — projected launch 2027; 10 μas/yr astrometry in OC core",
+        "LISA — projected launch 2034–2035; millihertz gravitational-wave sensitivity",
+        "ngEHT — sub-1 μas angular resolution; relevant for shadow imaging at OC distance",
+        "SKA-Mid — first light ~2028; 10× pulsar timing improvement over MeerKAT"
+      ],
+      "stochastic_framing_rules": [
+        "Report detection significance as 'detectable at N-sigma with [instrument]'",
+        "Distinguish 'detectable' (SNR > threshold in calculation) from 'detected' (observation completed)",
+        "When detectable is false, frame as 'current instruments insufficient; [recommended_followup] required'"
+      ],
+      "escalation_conditions": ["detectable = false for all instruments", "sigma_margin < 1.0"],
+      "output_field_glossary": {
+        "detectable": "Boolean — does the predicted signal exceed the instrument's 5-sigma sensitivity floor?",
+        "snr": "Signal-to-noise ratio at current parameter values.",
+        "sigma_margin": "Detection significance in units of sigma.",
+        "limiting_instrument": "The instrument with the tightest sensitivity relevant to this configuration.",
+        "recommended_followup": "Next-generation instrument or observation that would achieve detection.",
+        "verdict": "Human-readable one-sentence summary of the detectability outcome."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. Detection verdict: {{output_payload.verdict}}. Detectable with current instruments: {{output_payload.detectable}}. For a [TASK] addressed to [AUDIENCE]: ..."
+    },
+
+    "bayesian_posterior": {
+      "description": "A probability or posterior odds distribution over competing hypotheses (IMBH vs dark cluster vs null, or Fermi Paradox hypotheses). Output is a dominant hypothesis and credible interval.",
+      "primary_tasks": ["hypothesis_comparison", "fermi_paradox_narrative", "bayesian_update"],
+      "audiences": ["astronomer", "science_communicator", "general_public"],
+      "regulatory_citations": [
+        "Häberle et al. 2024, Nature 631:285 — IMBH lower bound used as evidence input",
+        "Sandberg, Drexler & Ord 2018, arXiv:1806.02404 — Fermi Paradox dissolving paper",
+        "Drake 1961 — original Fermi equation parameterization"
+      ],
+      "stochastic_framing_rules": [
+        "Always report credible intervals, not just posterior mode: 'IMBH favored at 58% [45%–71% 90% CI]'",
+        "When using stochastic sampling (seed-parameterized), cite the seed to make the artifact reproducible",
+        "For Fermi Paradox outputs, frame P(N>1) as 'probability at least one other civilization exists today'"
+      ],
+      "escalation_conditions": ["dominant_hypothesis posterior < 50%", "posterior_odds < 1.5"],
+      "output_field_glossary": {
+        "p_imbh": "Posterior probability that OC harbors an IMBH.",
+        "p_dark_cluster": "Posterior probability of extended dark mass without point IMBH.",
+        "dominant_hypothesis": "Hypothesis with highest posterior probability.",
+        "posterior_odds": "Ratio of top-two hypothesis probabilities.",
+        "verdict": "Human-readable one-sentence summary of the posterior."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. Posterior verdict: {{output_payload.verdict}}. Dominant hypothesis: {{output_payload.dominant_hypothesis}}. For a [TASK] addressed to [AUDIENCE]: ..."
+    },
+
+    "seti_exclusion": {
+      "description": "An exclusion zone determination from technosignature observational limits. Output is whether a specific ETI signal configuration is excluded by current survey sensitivities.",
+      "primary_tasks": ["exclusion_map", "fermi_implication", "seti_survey_comparison"],
+      "audiences": ["astronomer", "science_communicator", "general_public"],
+      "regulatory_citations": [
+        "WISE W4 5σ sensitivity — 6.0 mJy at 22 μm; relevant for Dyson sphere waste heat",
+        "Breakthrough Listen (BL) EIRP benchmark — 10¹³ W (Earth's total leaked RF power)",
+        "Chen et al. 2025, arXiv:2511.20945 — OC distance: 5.43 kpc"
+      ],
+      "stochastic_framing_rules": [
+        "Distinguish 'excluded' (signal would have been detected if present) from 'not detected' (null result, no exclusion claim)",
+        "Report exclusion as fraction of parameter space: 'excludes f > 0.18 at T = 300 K'"
+      ],
+      "escalation_conditions": ["excluded = false for all survey channels", "exclusion_covering_fraction < 0.01"],
+      "output_field_glossary": {
+        "excluded": "Boolean — does the current survey sensitivity exclude this signal at 5σ?",
+        "exclusion_covering_fraction": "Fraction of Dyson sphere covering that would be excluded at the current temperature.",
+        "survey_floor": "The binding sensitivity constraint (instrument + threshold).",
+        "verdict": "Human-readable one-sentence exclusion summary."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. Exclusion verdict: {{output_payload.verdict}}. Excluded: {{output_payload.excluded}}. For a [TASK] addressed to [AUDIENCE]: ..."
+    },
+
+    "mth_computation": {
+      "description": "A Macro Transcension Hypothesis engineering computation. Output quantifies a Kardashev-scale energy advantage achievable via the BZ mechanism or ergosphere computation at the OC IMBH.",
+      "primary_tasks": ["kardashev_context", "engineering_motivation", "mth_narrative"],
+      "audiences": ["science_communicator", "general_public", "futurist"],
+      "regulatory_citations": [
+        "Blandford & Znajek 1977, MNRAS 179:433 — BZ mechanism for energy extraction from rotating BH",
+        "Kardashev 1964 — original K-scale energy classification",
+        "Bekenstein 1973, Phys Rev D — Bekenstein bound on information density",
+        "Landauer 1961, IBM J Res Dev — Landauer limit on energy cost per bit operation"
+      ],
+      "stochastic_framing_rules": [
+        "Always qualify Kardashev rung as 'achievable at current IMBH parameters' not as an empirical claim",
+        "Frame compute_ops_per_second as a theoretical ceiling, not an engineering specification",
+        "The MTH is a hypothesis; flag outputs with register: 'speculative'"
+      ],
+      "escalation_conditions": ["kardashev_rung_achievable < 2.0", "advantage_ratio_vs_earth < 1.0"],
+      "output_field_glossary": {
+        "bz_power_W": "Blandford-Znajek jet power in watts at the specified BH mass and spin.",
+        "kardashev_rung": "Kardashev scale value implied by the BZ power.",
+        "advantage_ratio_vs_earth": "Ratio of BZ power to Earth's current total energy consumption.",
+        "compute_ops_per_second_estimate": "Theoretical Bekenstein-limited operations per second at Landauer energy cost.",
+        "verdict": "Human-readable summary of the MTH engineering computation."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. MTH computation verdict: {{output_payload.verdict}}. Kardashev rung achievable: {{output_payload.kardashev_rung}}. For a [TASK] addressed to [AUDIENCE]: ..."
+    },
+
+    "observational_plan": {
+      "description": "A resource allocation and scheduling decision for an observing campaign. Output is a recommended instrument, required hours, feasibility verdict, and optional pre-registration anchor.",
+      "primary_tasks": ["proposal_narrative", "timeline", "preregistration", "instrument_comparison"],
+      "audiences": ["astronomer", "proposal_reviewer", "science_communicator"],
+      "regulatory_citations": [
+        "ESA Gaia DR4 — expected December 2026",
+        "Roman Space Telescope — projected launch 2027",
+        "SKA-Mid — first light ~2028",
+        "ELT — first light projected 2029"
+      ],
+      "stochastic_framing_rules": [
+        "Report feasibility as one of: feasible | feasible-with-conditions | infeasible",
+        "When recommended_action is 'pre-register', provide the execution hash as the pre-registration anchor"
+      ],
+      "escalation_conditions": ["feasibility = infeasible", "required_hours > 500"],
+      "output_field_glossary": {
+        "instrument": "Recommended observing instrument or facility.",
+        "required_hours": "Estimated telescope time in hours. 0 if existing data is sufficient.",
+        "feasibility": "Feasibility verdict string.",
+        "recommended_action": "Specific next action for the observer.",
+        "verdict": "Human-readable summary of the observational plan."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. Observational plan verdict: {{output_payload.verdict}}. Recommended instrument: {{output_payload.instrument}}. Feasibility: {{output_payload.feasibility}}. For a [TASK] addressed to [AUDIENCE]: ..."
+    },
+
+    "cosmological_measure": {
+      "description": "A cosmological distance or lookback time measurement. Primarily used as a chain input provider for MTH tools rather than as a terminal decision node. Verdict is always 'reference'.",
+      "primary_tasks": ["context_setting", "chain_input"],
+      "audiences": ["astronomer", "science_communicator"],
+      "regulatory_citations": [
+        "Planck 2018 cosmological parameters: H0 = 67.4 km/s/Mpc, Ωm = 0.315, ΩΛ = 0.685"
+      ],
+      "stochastic_framing_rules": [
+        "Output verdict is always 'reference — no action decision produced'",
+        "Do not promote as a decision node; use as chain input only"
+      ],
+      "escalation_conditions": [],
+      "output_field_glossary": {
+        "z": "Redshift input.",
+        "comoving_distance_Mpc": "Comoving distance in megaparsecs.",
+        "lookback_time_Gyr": "Lookback time in gigayears.",
+        "verdict": "Always 'reference — no action decision produced'."
+      },
+      "template_body": "You are analyzing an OCS ChainGraph artifact from the {{tool_id}} tool. Execution hash: {{execution_hash}}. Cosmological measure: z={{output_payload.z}}, d={{output_payload.comoving_distance_Mpc}} Mpc, lookback {{output_payload.lookback_time_Gyr}} Gyr. Use as context or chain input."
+    }
+
+  }
+}

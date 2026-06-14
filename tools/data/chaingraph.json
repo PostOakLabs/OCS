@@ -1,0 +1,62 @@
+{
+  "ocs_version": "1.0.0",
+  "updated": "2026-06-13",
+  "schema": "ocs-chaingraph",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan.",
+  "tools": {
+
+    "constraint-stacker": {
+      "mcp_name": "constraint_stacker",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": [
+          "evidence-ledger",
+          "detection-forecast",
+          "velocity-dispersion",
+          "dark-cluster",
+          "anisotropy-degeneracy-explorer",
+          "adaf-sed-modeler",
+          "gw-horizon-plotter",
+          "astrometric-microlensing",
+          "gaia-dr4-forecaster"
+        ],
+        "chain_depth": 0
+      },
+      "register": "peer-reviewed",
+      "output_payload_schema": {
+        "allowed_window_M_solar": { "type": "object", "properties": { "lower": "number|null", "upper": "number|null" } },
+        "tension_detected": { "type": "boolean" },
+        "tension_direction": { "type": "string|null" },
+        "n_constraints_active": { "type": "integer" },
+        "constraint_lanes_active": { "type": "array", "items": "string" },
+        "lower_bound_source": { "type": "string|null" },
+        "upper_limit_source": { "type": "string|null" },
+        "epsilon_adaf": { "type": "number" },
+        "rho_inf_kg_m3": { "type": "number" },
+        "verdict": { "type": "string" }
+      },
+      "data_sources": [
+        "Häberle et al. 2024, Nature 631:285",
+        "Bañares-Hernández et al. 2025, A&A 693:A104",
+        "Chen et al. 2025, arXiv:2511.20945",
+        "Malave et al. 2025/2026, arXiv:2512.09649",
+        "Colom i Bernadich et al. 2026, arXiv:2603.21845"
+      ]
+    }
+
+  },
+  "pending_upgrade": [
+    "velocity-dispersion", "dark-cluster", "gaia-dr4-forecaster",
+    "anisotropy-degeneracy-explorer", "pulsar-accel-mapper", "ir-excess-checker",
+    "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
+    "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
+    "bz-kardashev", "evidence-ledger", "detection-forecast",
+    "observing-campaign-planner", "shadow-imaging", "bekenstein-landauer",
+    "kardashev-meter", "cosmology-calculator", "infall-survival"
+  ],
+  "out_of_scope": ["bh-scale-comparator", "energy-translator", "scifi-tech-auditor"]
+}
