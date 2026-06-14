@@ -1114,7 +1114,7 @@ function fmtMass(M) {
   if (M === null || M === undefined || isNaN(M)) return '—';
   if (M >= 1e6) return (M / 1e6).toFixed(2) + '×10⁶';
   if (M >= 1e4) return (M / 1e3).toFixed(1) + '×10³';
-  if (M >= 1000) return Math.round(M).toLocaleString();
+  if (M >= 1000) return Math.round(M).toLocaleString('en-US');  // pinned locale → reproducible hash (ChainGraph Standard §6)
   return Math.round(M).toString();
 }
 function fmtSigma(s) {
@@ -1641,8 +1641,9 @@ async function buildArtifact() {
     input_parameters: {
       epsilon: state.epsilon,
       rho: state.rhoInf,
-      show: activeLanes.join(','),
-      sel: state.selectedId || ''
+      show: activeLanes.join(',')
+      // 'sel' (UI selection) intentionally excluded — it does not affect the
+      // computed window, so it must not change the execution_hash (Standard §6).
     }
   };
 
