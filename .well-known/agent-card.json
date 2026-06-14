@@ -1,29 +1,85 @@
 {
-  "schema_version": "0.1",
-  "name": "Omega Centauri Society Science Agent",
-  "description": "MCP-accessible science agent for NGC 5139 (Omega Centauri) research: IMBH constraints, Fermi Paradox analysis, SETI signal characterisation, Macro Transcension Hypothesis computation, and Kardashev-scale energy extraction. All 23 tools are client-side, zero-egress, single-file HTML calculators; artifacts carry SHA-256 execution hashes verifiable via verify_execution_hash.",
-  "url": "https://omegacentauri.me",
-  "mcp_endpoint": "https://mcp.omegacentauri.me/mcp",
-  "extensions": {
-    "x-chaingraph": {
-      "chaingraph_version": "0.1.0",
-      "namespace": "me.omegacentauri",
-      "graph_index": "https://omegacentauri.me/chaingraph.json",
-      "internal_registry": "https://omegacentauri.me/tools/data/chaingraph.json",
-      "verify_tool": "verify_execution_hash",
-      "tool_count": 23,
-      "chain_count": 39,
-      "mandate_families": ["bh-physics", "fermi", "seti", "mth", "kardashev"],
-      "compliance_registers": ["peer-reviewed", "speculative"]
-    }
+  "protocolVersion": "1.0",
+  "name": "Omega Centauri Society Science Suite",
+  "description": "MCP-accessible science suite for NGC 5139 (Omega Centauri): IMBH constraints, black-hole physics, Fermi Paradox analysis, SETI signal characterisation, Macro Transcension Hypothesis computation, and Kardashev-scale energy extraction. 23 client-side, zero-egress, single-file HTML calculators; each emits a ChainGraph-conformant artifact carrying a verifiable SHA-256 execution_hash (ChainGraph Standard v0.1).",
+  "url": "https://mcp.omegacentauri.me/mcp",
+  "preferredTransport": "JSONRPC",
+  "version": "0.2.0",
+  "provider": {
+    "organization": "The Omega Centauri Society",
+    "url": "https://omegacentauri.me"
   },
+  "documentationUrl": "https://omegacentauri.me",
   "capabilities": {
-    "tools": true,
-    "chains": true,
-    "artifact_export": true,
-    "execution_hash_verification": true
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "extensions": [
+      {
+        "uri": "https://postoaklabs.github.io/chaingraph/ext/x-chaingraph/v0.1",
+        "description": "Emits ChainGraph verifiable decision artifacts (hash-anchored). See the ChainGraph Standard v0.1.",
+        "required": false,
+        "params": {
+          "conformance_level": "L3",
+          "graph_index": "https://omegacentauri.me/chaingraph.json",
+          "internal_registry": "https://omegacentauri.me/tools/data/chaingraph.json",
+          "verify_endpoint": "verify_execution_hash",
+          "hash_alg": "sha256",
+          "mandate_namespace": "me.omegacentauri",
+          "tool_count": 23,
+          "mandate_families": ["bh-physics", "fermi", "seti", "mth", "kardashev"],
+          "compliance_registers": ["peer-reviewed", "speculative"],
+          "l2_runtime_chaining": false,
+          "conformance_note": "Tools emit L1-verifiable artifacts and are MCP-callable (L3); the L4 graph index is published. Declared chain topology (consumes/feeds) is not yet wired for runtime parent-hash capture — artifacts currently emit as roots. Completing runtime L2 chaining elevates this to L4."
+        }
+      }
+    ]
   },
-  "contact": "contact@omegacentauri.me",
+  "defaultInputModes": ["application/json", "text/plain"],
+  "defaultOutputModes": ["application/json", "text/plain"],
+  "skills": [
+    {
+      "id": "bh-physics",
+      "name": "IMBH & Black-Hole Physics",
+      "description": "Constrain and characterise a candidate intermediate-mass black hole in NGC 5139: stacked observational mass-window constraints, ADAF/SED accretion modelling, QPO mass-spin, shadow imaging, kinematics, dark-cluster alternatives, and astrometric forecasts. The Häberle 2024 lower bound (>=8,200 M-sun) and the competing upper limits are kept as distinct, irreconcilable bounds and are never collapsed to one number.",
+      "tags": ["IMBH", "NGC 5139", "accretion", "kinematics", "pulsar-timing", "JWST"],
+      "examples": [
+        "Compute the currently allowed IMBH mass window from the active constraints",
+        "Model the ADAF accretion SED upper limit for a given efficiency and gas density"
+      ]
+    },
+    {
+      "id": "fermi",
+      "name": "Fermi Paradox & Cosmology",
+      "description": "Drake-equation Monte Carlo (deterministically seeded for reproducible hashes), Great Filter analysis, and cosmological context. Speculative-register tools are flagged as such in compliance_flags.",
+      "tags": ["Drake equation", "Great Filter", "Fermi paradox", "cosmology"],
+      "examples": [
+        "Run a seeded Drake-equation Monte Carlo and report P(N<1)",
+        "Analyse Great Filter placement scenarios"
+      ]
+    },
+    {
+      "id": "seti",
+      "name": "SETI Signal Characterisation",
+      "description": "Radio-SETI detection sensitivity and infrared-excess (Dyson-sphere) checks over Omega Centauri targets.",
+      "tags": ["SETI", "radio", "IR excess", "technosignature"],
+      "examples": ["Compute radio-SETI detection SNR for an EIRP and distance"]
+    },
+    {
+      "id": "mth",
+      "name": "Macro Transcension Hypothesis",
+      "description": "Bekenstein-Landauer-Lloyd computation limits and infall-survival modelling — speculative-register engineering extrapolations, flagged accordingly.",
+      "tags": ["MTH", "Bekenstein bound", "Landauer", "compute limits"],
+      "examples": ["Estimate the Bekenstein-Landauer compute ceiling for a given mass-energy budget"]
+    },
+    {
+      "id": "kardashev",
+      "name": "Kardashev-Scale Energy",
+      "description": "Kardashev-scale energy-extraction metrics and Blandford-Znajek power for the candidate black hole — speculative register.",
+      "tags": ["Kardashev", "Blandford-Znajek", "energy extraction"],
+      "examples": ["Compute Blandford-Znajek power for a spin and field strength"]
+    }
+  ],
   "license": {
     "code": "MIT",
     "prose": "CC BY 4.0",

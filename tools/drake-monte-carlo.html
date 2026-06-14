@@ -408,17 +408,26 @@ function saveHash(){
 // ─────────────────────────────────────────────────────────────
 // Monte Carlo
 // ─────────────────────────────────────────────────────────────
+// Deterministic seeded PRNG (mulberry32). ChainGraph Standard §6 requires the
+// execution_hash to reproduce, so sampling is seeded from the inputs (plus a
+// user-bumpable seed driving the Re-run button) rather than Math.random().
+// Same {nSamples, preset, priors, seed} -> same draws -> same outputs -> same hash.
+function xfnv1a(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),16777619);}return h>>>0;}
+function mulberry32(seed){let a=seed>>>0;return function(){a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return ((t^(t>>>14))>>>0)/4294967296;};}
+function mcSeed(){const ranges=STRINGS.factors.map(f=>state.priors[f.key]);return xfnv1a(JSON.stringify({n:state.nSamples,preset:state.preset,ranges,seed:(state.seed||1)}));}
+
 function runMC(){
   const K = state.nSamples;
   const samples = new Float64Array(K);
   const factors = STRINGS.factors;
   // Pre-extract ranges
   const ranges = factors.map(f => state.priors[f.key]);
+  const rng = mulberry32(mcSeed());   // deterministic — reproducible execution_hash (ChainGraph §6)
   for (let k = 0; k < K; k++) {
     let logN = 0;
     for (let i = 0; i < ranges.length; i++) {
       const [a, b] = ranges[i];
-      logN += a + Math.random() * (b - a);
+      logN += a + rng() * (b - a);
     }
     samples[k] = logN;
   }
@@ -691,7 +700,7 @@ function schedule() {
     runMC();
     renderStats();
     renderHist();
-    window._toolArtifactData = { policy: { nSamples: state.nSamples, preset: state.preset }, output: { p_alone: state.meta?.pAlone || null, p_less1: state.meta?.pLess1 || null, median_log10N: state.meta?.median || null } };
+    window._toolArtifactData = { policy: { nSamples: state.nSamples, preset: state.preset, priors: state.priors, seed: (state.seed || 1) }, output: { p_alone: state.meta?.pAlone || null, p_less1: state.meta?.pLess1 || null, median_log10N: state.meta?.median || null } };
     if (window.invalidateArtifact) invalidateArtifact();
   }, 60);
 }
@@ -713,7 +722,9 @@ function wire() {
     });
   });
 
-  document.getElementById('rerun-btn').addEventListener('click', schedule);
+  // Re-run bumps a deterministic seed: a new but reproducible draw (the seed is
+  // recorded in policy_parameters, so the execution_hash still reproduces).
+  document.getElementById('rerun-btn').addEventListener('click', () => { state.seed = (state.seed || 1) + 1; schedule(); });
   document.getElementById('n-samples').addEventListener('change', (e) => {
     state.nSamples = parseInt(e.target.value);
     saveHash();
