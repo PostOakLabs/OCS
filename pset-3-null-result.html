@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--
+  Grad Seminar Problem Set 3 — Bayesian Null-Result Analysis
+  Graduate Seminar: Compact Objects in Dense Stellar Systems
+  The Omega Centauri Society — omegacentauri.me
+  CC BY 4.0
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS 3: Bayesian Null-Result Analysis · OCS Grad Seminar</title>
+<meta name="description" content="Grad-seminar problem set on Bayesian null-result inference, the Civiletti (2025) geometric detection model, and Bayes factors applied to SETI non-detections at Omega Centauri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--nebula:#0d0a24;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-glow:#ffc840;--purple-glow:#a080f0;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.8;min-height:100vh;background-image:radial-gradient(ellipse at 60% 100%,rgba(208,64,64,.03),transparent 50%)}
+a{color:var(--teal-glow)}a:hover{color:var(--amber-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:860px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;color:var(--text-primary)}.nav-brand:hover{color:var(--amber-glow);text-decoration:none}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-left:4px}.nav-link:hover{color:var(--teal-glow);text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:44px 24px 90px}
+.course-header{background:rgba(13,10,36,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-bottom:32px}
+.course-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.course-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:.02em;color:var(--text-primary);margin-bottom:4px}
+.ps-number{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--teal-glow);margin-bottom:12px}
+.course-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:16px}
+.objectives{background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:8px;padding:16px 20px;margin-bottom:28px}
+.obj-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:8px}
+.objectives ol{padding-left:18px;color:var(--text-secondary);font-size:15px}
+.objectives li{margin-bottom:4px}
+h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--amber-glow);text-transform:uppercase;margin:36px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+p{margin-bottom:1rem;color:var(--text-secondary)}
+p strong{color:var(--text-primary)}
+.eq{font-family:'Space Mono',monospace;font-size:13px;background:rgba(13,10,36,.8);border:1px solid var(--border-subtle);border-left:3px solid var(--purple-glow);border-radius:0 6px 6px 0;padding:10px 16px;margin:12px 0;color:var(--purple-glow);white-space:pre-wrap}
+.problem{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.problem-header{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.problem-num{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--amber-glow);letter-spacing:.1em;white-space:nowrap}
+.problem-title{font-family:'Crimson Pro',serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.problem-body{color:var(--text-secondary);font-size:16px}
+.problem-body ol{padding-left:20px;margin:10px 0}
+.problem-body li{margin-bottom:8px}
+.marks{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.06em}
+.tool-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 14px;border:1px solid var(--border-teal);border-radius:20px;font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);background:rgba(29,186,144,.05);text-decoration:none;transition:all .15s}
+.tool-link:hover{background:rgba(29,186,144,.15);border-color:var(--teal-glow);color:var(--teal-glow);text-decoration:none}
+details.solution{margin-top:14px;border-radius:7px;overflow:hidden}
+details.solution summary{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:8px 14px;background:rgba(29,186,144,.07);border:1px solid var(--border-teal);border-radius:7px;color:var(--teal-bright);list-style:none;display:flex;align-items:center;gap:8px}
+details.solution summary::before{content:"▶";font-size:8px;transition:transform .15s}
+details.solution[open] summary::before{transform:rotate(90deg)}
+details.solution summary:hover{background:rgba(29,186,144,.14)}
+.solution-body{padding:14px 16px;background:rgba(4,42,36,.3);border:1px solid var(--border-teal);border-top:none;border-radius:0 0 7px 7px;color:var(--text-secondary);font-size:15px;line-height:1.75}
+.solution-body strong{color:var(--teal-glow)}
+.solution-body .eq-inner{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);background:rgba(4,42,36,.5);padding:6px 12px;border-radius:4px;margin:6px 0;display:block;white-space:pre-wrap}
+.refs{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;margin-top:8px}
+.refs li{margin-bottom:4px}
+footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;text-align:center}
+@media print{
+  body{background:#fff;color:#111;font-size:12pt}.nav{display:none}
+  .course-header{background:#f5f5f5;border:1px solid #ccc}
+  .course-title,.ps-number{color:#111}.course-label,.course-meta,.obj-label{color:#555}
+  .objectives{background:#f0f8f5;border-color:#aaccbb}.objectives ol,.problem-body{color:#222}
+  h2{color:#333;border-bottom-color:#ccc}p{color:#222}
+  .problem{background:#fafafa;border:1px solid #ccc;break-inside:avoid}
+  .problem-num{color:#333}.problem-title{color:#111}
+  .eq{background:#f5f0ff;border-left-color:#7055d4;color:#3d2d8a}
+  .tool-link{border:1px solid #aaa;color:#333;background:#eee}
+  details.solution{break-inside:avoid}
+  details.solution summary{background:#e8f5f0;border-color:#aaccbb;color:#1d7a60}
+  .solution-body{background:#f0f8f5;border-color:#aaccbb;color:#222}
+  .solution-body .eq-inner{background:#e0f0e8;color:#1d7a60}
+  .refs{color:#555}footer{color:#999}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">Grad Seminar Problem Sets</span>
+    <a href="psets.html" class="nav-link">All PSets</a>
+    <a href="live-review.html" class="nav-link">IMBH Review</a>
+    <a href="/tools/" class="nav-link">Tools</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="course-header">
+  <div class="course-label">Graduate Seminar: Compact Objects in Dense Stellar Systems</div>
+  <div class="course-title">Omega Centauri Society Problem Sets</div>
+  <div class="ps-number">Problem Set 3 — Bayesian Null-Result Analysis</div>
+  <div class="course-meta">
+    <span>Estimated time: 3–4 hours</span>
+    <span>Total marks: 40</span>
+    <span>Tools: workflow-null-result</span>
+    <span>omegacentauri.me/pset-3-null-result.html</span>
+  </div>
+</div>
+
+<div class="objectives">
+  <div class="obj-label">Learning objectives</div>
+  <ol>
+    <li>Derive single-transmitter detection probability from the Civiletti (2025) geometric sky fraction model</li>
+    <li>Compute the Bayes factor K and posterior update from a null SETI result</li>
+    <li>Convert a detection probability to a null-result significance in Gaussian σ units using the probit function</li>
+    <li>Compare the inferential strength of different survey architectures (VLA/COSMIC vs. SKA projection)</li>
+  </ol>
+</div>
+
+<h2>Background</h2>
+
+<p>A null result in a SETI survey is not "no result" — it is evidence. The strength of that evidence depends on how likely we would have been to detect a signal <em>if</em> one existed. Civiletti (2025) provides a geometric model for the single-transmitter detection probability P<sub>detect</sub> that accounts for the fraction of sky covered, the fraction of frequency space searched, and the maximum geometric depth of the survey.</p>
+
+<div class="eq">Single-transmitter detection probability (Civiletti 2025):
+
+P_single = f_sky · f_freq · min(1, 0.6 · δ / R_MW)
+
+where:
+  f_sky  = fraction of sky covered by the survey beam
+  f_freq = fraction of monitored frequency space
+  δ      = survey depth (maximum distance at which a signal
+             at the assumed EIRP would be detectable), ly
+  R_MW   = 52,000 ly  (Milky Way half-light radius)
+
+For N independent transmitters, the probability of ≥ 1 detection:
+  P_detect = 1 − (1 − P_single)^N
+
+Bayesian update from a non-detection:
+  K = 1 − P_detect          (Bayes factor for H₀: no signal)
+  P_post = K · P₀ / (K · P₀ + (1 − P₀))
+
+where P₀ is the prior probability that a transmitter exists.
+
+Null-result significance in Gaussian σ:
+  σ_null = Φ⁻¹(P_detect)    (probit of P_detect)</div>
+
+<h2>Problems</h2>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">1.</span>
+    <span class="problem-title">VLA/COSMIC null result: detection probability</span>
+  </div>
+  <div class="problem-body">
+    <p>The VLA/COSMIC 2025 survey (VLA Sky Survey with the Commensal Open-Source Multimode Interferometer Cluster) monitored Omega Centauri with the following parameters:</p>
+    <ul style="padding-left:20px;color:var(--text-secondary);font-size:16px;margin:8px 0 12px">
+      <li>f<sub>sky</sub> = 0.75 (fraction of OC's angular area within primary beams)</li>
+      <li>f<sub>freq</sub> = 0.10 (L and S band combined, relative to full radio spectrum)</li>
+      <li>δ = 1,000 ly (sensitivity limit for EIRP = 10<sup>14</sup> W at 17,900 ly distance)</li>
+      <li>N = 10 (number of assumed transmitters in OC)</li>
+    </ul>
+    <ol type="a">
+      <li>Compute P<sub>single</sub>, P<sub>detect</sub>, and σ<sub>null</sub> by hand for these parameters. Show your work. <span class="marks">[8 marks]</span></li>
+      <li>Now use the OCS Null-Result workflow (VLA/COSMIC preset) to verify your answer. Do the numbers agree? If they differ by more than 5%, explain why. <span class="marks">[3 marks]</span></li>
+      <li>Is a σ<sub>null</sub> &lt; 1 result strong evidence against the existence of an EIRP = 10<sup>14</sup> W transmitter in OC? Why or why not? <span class="marks">[4 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#logN=1&logDelta=3&fSky=0.75&fFreq=0.10&logP0=-0.301" target="_blank" rel="noopener">
+      ↗ Null-Result Workflow — VLA/COSMIC preset (N=10, δ=1000 ly, f_sky=0.75, f_freq=0.10)
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+P_single = f_sky · f_freq · min(1, 0.6 · δ / R_MW)
+         = 0.75 × 0.10 × min(1, 0.6 × 1000 / 52000)
+         = 0.075 × min(1, 0.01154)
+         = 0.075 × 0.01154
+         = 8.65 × 10⁻⁴
+
+P_detect = 1 − (1 − 8.65×10⁻⁴)¹⁰
+         ≈ 1 − (0.999135)¹⁰
+         ≈ 1 − 0.99135  (using (1−x)^n ≈ 1−nx for small x)
+         = 0.00865  or ~0.87%
+
+σ_null = Φ⁻¹(0.00865) ≈ −2.38σ
+
+Wait — the convention in the OCS tool is σ_null = Φ⁻¹(P_detect) measuring
+the significance of the expected detection as a positive number.
+For P_detect = 0.87%, Φ⁻¹(0.0087) ≈ −2.38, meaning the survey is
+~2.4σ below the threshold where we'd expect to see a signal.
+This is a <em>weak</em> null result — if there's a transmitter, we'd
+have a &lt;1% chance of seeing it anyway.</span>
+        <br>
+        <strong>Part (b):</strong> The workflow should agree to within rounding. Any discrepancy &gt;5% likely reflects a different convention for the probit function or a rounding of logN = log₁₀(10) = 1.0 exactly.
+        <br><br>
+        <strong>Part (c):</strong> No. A P_detect of &lt;1% means that even if a 10¹⁴ W transmitter exists in OC, the VLA/COSMIC survey had only a 0.87% chance of detecting it. Not detecting it therefore provides very little Bayesian evidence against the transmitter hypothesis. The posterior probability barely changes from the prior. Only surveys that would have high P_detect (say &gt;50%) if a transmitter existed can strongly constrain the hypothesis.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">2.</span>
+    <span class="problem-title">SKA projection and observational design</span>
+  </div>
+  <div class="problem-body">
+    <p>The Square Kilometre Array (SKA1-Mid) is projected to reach EIRP = 10<sup>13</sup> W sensitivity at 17,900 ly with the following parameters:</p>
+    <ul style="padding-left:20px;color:var(--text-secondary);font-size:16px;margin:8px 0 12px">
+      <li>f<sub>sky</sub> = 0.95 (near-complete sky coverage with commensal mode)</li>
+      <li>f<sub>freq</sub> = 0.40 (broad 350 MHz – 14 GHz coverage)</li>
+      <li>δ = 10,000 ly (improved EIRP sensitivity)</li>
+      <li>N = 100 (log₁₀ N = 2; optimistic Drake estimate)</li>
+    </ul>
+    <ol type="a">
+      <li>Compute P<sub>detect</sub> for the SKA projection. How many σ does this correspond to? <span class="marks">[6 marks]</span></li>
+      <li>Compare the Bayes factor K for the SKA projection vs. VLA/COSMIC. By what factor does the SKA non-detection more strongly update the prior? <span class="marks">[4 marks]</span></li>
+      <li>What survey f<sub>freq</sub> would be needed to achieve σ<sub>null</sub> ≥ 2.0, holding all other SKA parameters fixed? Solve analytically. <span class="marks">[5 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#logN=2&logDelta=4&fSky=0.95&fFreq=0.40&logP0=-0.301" target="_blank" rel="noopener">
+      ↗ Null-Result Workflow — SKA projection preset (N=100, δ=10,000 ly)
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+P_single = 0.95 × 0.40 × min(1, 0.6 × 10000 / 52000)
+         = 0.38 × min(1, 0.1154)
+         = 0.38 × 0.1154 = 0.04385
+
+P_detect = 1 − (1 − 0.04385)¹⁰⁰
+         = 1 − (0.95615)¹⁰⁰
+
+(0.95615)¹⁰⁰ = exp(100 × ln(0.95615))
+             = exp(100 × (−0.04482))
+             = exp(−4.482) = 0.01127
+
+P_detect = 1 − 0.01127 = 0.9887
+
+σ_null = Φ⁻¹(0.9887) ≈ 2.28σ</span>
+        The SKA null result would correspond to ~2.3σ significance.
+        <br><br>
+        <strong>Part (b):</strong> K_SKA = 1 − 0.9887 = 0.0113; K_VLA ≈ 1 − 0.0087 ≈ 0.9913. The Bayes factor ratio is K_SKA/K_VLA = 0.0113/0.9913 ≈ 0.0114. The SKA non-detection is ~88× more powerful evidence against the transmitter hypothesis (posterior updates 88× more strongly per unit prior).
+        <br><br>
+        <strong>Part (c):</strong> We want P_detect = Φ(2.0) = 0.9772, so (1 − P_single)¹⁰⁰ = 0.0228. Taking ln: 100 × ln(1 − P_single) = ln(0.0228) = −3.78. So ln(1 − P_single) = −0.0378, giving 1 − P_single = 0.9629, P_single = 0.0371. Then f_freq = P_single / (f_sky × min(1, 0.6 δ/R_MW)) = 0.0371 / (0.95 × 0.1154) = 0.0371 / 0.1096 ≈ 0.338 — so f_freq ≥ 0.34 (34% frequency coverage) is needed.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">3.</span>
+    <span class="problem-title">Bayesian prior sensitivity</span>
+  </div>
+  <div class="problem-body">
+    <p>The posterior update depends critically on the prior P₀. Use the SKA projection (P_detect ≈ 0.989) and compute the posterior P<sub>post</sub> for three priors, by hand and then verify with the tool.</p>
+    <ol type="a">
+      <li>Compute P<sub>post</sub> for P₀ = 0.5 (agnostic), P₀ = 0.1 (skeptical), and P₀ = 0.01 (very skeptical). Show how dramatically the posterior changes with the prior. <span class="marks">[5 marks]</span></li>
+      <li>For P₀ = 0.01, a skeptic notes: "Even after the SKA null result, the posterior is still close to the prior — it barely changes." Explain mathematically why this happens when P₀ is very small. <span class="marks">[5 marks]</span></li>
+    </ol>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong> K = 1 − P_detect = 0.0113.
+        <span class="eq-inner">
+P_post = K · P₀ / (K · P₀ + (1 − P₀))
+
+P₀ = 0.5:
+  P_post = 0.0113 × 0.5 / (0.0113 × 0.5 + 0.5)
+         = 0.00565 / (0.00565 + 0.5)
+         = 0.00565 / 0.5057 ≈ 0.0112  → dropped from 50% to 1.1%
+
+P₀ = 0.1:
+  P_post = 0.0113 × 0.1 / (0.0113 × 0.1 + 0.9)
+         = 0.00113 / (0.00113 + 0.9)
+         = 0.00113 / 0.9011 ≈ 0.00125  → dropped from 10% to 0.125%
+
+P₀ = 0.01:
+  P_post = 0.0113 × 0.01 / (0.0113 × 0.01 + 0.99)
+         = 1.13×10⁻⁴ / (1.13×10⁻⁴ + 0.99)
+         = 1.13×10⁻⁴ / 0.99011 ≈ 1.14×10⁻⁴  → barely changed from 1%</span>
+        <br>
+        <strong>Part (b):</strong> When P₀ ≪ 1, the denominator is dominated by (1 − P₀) ≈ 1. So P_post ≈ K · P₀ / 1 = K · P₀. This means the posterior is simply K times the prior. With K = 0.011 and P₀ = 0.01, P_post ≈ 0.011 × 0.01 = 1.1 × 10⁻⁴ — a factor of ~90 reduction. But since the <em>absolute</em> value is so small (0.01% → 0.01%), a skeptic measuring percentage change would say "it went from 1% to 0.01%, which is a tiny absolute change." The real lesson is that the ratio P_post/P₀ = K does not depend on P₀; what changes is the absolute posterior, which is tiny when the prior is tiny. A Bayesian analysis cannot make a hypothesis plausible if the prior is very small — it can only confirm or refute existing probability.
+      </div>
+    </details>
+  </div>
+</div>
+
+<h2>References</h2>
+<ul class="refs">
+  <li>Civiletti, M.J. (2025). A geometric model for technosignature survey completeness. arXiv:2505.00062</li>
+  <li>Acklam, P.J. (2010). An algorithm for computing the inverse normal cumulative distribution function. <em>Statistics and Probability Letters</em>.</li>
+  <li>Lebofsky, M. et al. (2019). The Breakthrough Listen search for intelligent life: public data, formats, reduction, and archiving. <em>PASP</em> 131, 124505.</li>
+  <li>Price, D.C. et al. (COSMIC/VLA, 2024). The VLA COSMIC survey. <em>ApJ</em>.</li>
+</ul>
+
+</div>
+<footer>◉ The Omega Centauri Society · omegacentauri.me/pset-3-null-result.html · CC BY 4.0 · Print or save as PDF for offline use</footer>
+<script>
+if(new URLSearchParams(window.location.search).get('solutions')==='1'){
+  document.querySelectorAll('details.solution').forEach(d=>{d.open=true});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!--
+  Grad Seminar Problem Set 4 — EMRI/GW Detectability
+  Graduate Seminar: Compact Objects in Dense Stellar Systems
+  The Omega Centauri Society — omegacentauri.me
+  CC BY 4.0
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS 4: EMRI/GW Detectability · OCS Grad Seminar</title>
+<meta name="description" content="Grad-seminar problem set on EMRI gravitational wave signals, characteristic strain, LISA sensitivity, and the Omega Centauri IMBH as a potential LISA source.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--nebula:#0d0a24;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-glow:#ffc840;--purple-glow:#a080f0;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.8;min-height:100vh;background-image:radial-gradient(ellipse at 50% 0%,rgba(112,85,212,.07),transparent 50%)}
+a{color:var(--teal-glow)}a:hover{color:var(--amber-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:860px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;color:var(--text-primary)}.nav-brand:hover{color:var(--amber-glow);text-decoration:none}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-left:4px}.nav-link:hover{color:var(--teal-glow);text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:44px 24px 90px}
+.course-header{background:rgba(13,10,36,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-bottom:32px}
+.course-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.course-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:.02em;color:var(--text-primary);margin-bottom:4px}
+.ps-number{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--teal-glow);margin-bottom:12px}
+.course-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:16px}
+.objectives{background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:8px;padding:16px 20px;margin-bottom:28px}
+.obj-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:8px}
+.objectives ol{padding-left:18px;color:var(--text-secondary);font-size:15px}
+.objectives li{margin-bottom:4px}
+h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--amber-glow);text-transform:uppercase;margin:36px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+p{margin-bottom:1rem;color:var(--text-secondary)}
+p strong{color:var(--text-primary)}
+.eq{font-family:'Space Mono',monospace;font-size:13px;background:rgba(13,10,36,.8);border:1px solid var(--border-subtle);border-left:3px solid var(--purple-glow);border-radius:0 6px 6px 0;padding:10px 16px;margin:12px 0;color:var(--purple-glow);white-space:pre-wrap}
+.problem{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.problem-header{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.problem-num{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--amber-glow);letter-spacing:.1em;white-space:nowrap}
+.problem-title{font-family:'Crimson Pro',serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.problem-body{color:var(--text-secondary);font-size:16px}
+.problem-body ol{padding-left:20px;margin:10px 0}
+.problem-body li{margin-bottom:8px}
+.marks{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.06em}
+.tool-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 14px;border:1px solid var(--border-teal);border-radius:20px;font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);background:rgba(29,186,144,.05);text-decoration:none;transition:all .15s}
+.tool-link:hover{background:rgba(29,186,144,.15);border-color:var(--teal-glow);color:var(--teal-glow);text-decoration:none}
+details.solution{margin-top:14px;border-radius:7px;overflow:hidden}
+details.solution summary{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:8px 14px;background:rgba(29,186,144,.07);border:1px solid var(--border-teal);border-radius:7px;color:var(--teal-bright);list-style:none;display:flex;align-items:center;gap:8px}
+details.solution summary::before{content:"▶";font-size:8px;transition:transform .15s}
+details.solution[open] summary::before{transform:rotate(90deg)}
+details.solution summary:hover{background:rgba(29,186,144,.14)}
+.solution-body{padding:14px 16px;background:rgba(4,42,36,.3);border:1px solid var(--border-teal);border-top:none;border-radius:0 0 7px 7px;color:var(--text-secondary);font-size:15px;line-height:1.75}
+.solution-body strong{color:var(--teal-glow)}
+.solution-body .eq-inner{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);background:rgba(4,42,36,.5);padding:6px 12px;border-radius:4px;margin:6px 0;display:block;white-space:pre-wrap}
+.refs{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;margin-top:8px}
+.refs li{margin-bottom:4px}
+footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;text-align:center}
+@media print{
+  body{background:#fff;color:#111;font-size:12pt}.nav{display:none}
+  .course-header{background:#f5f5f5;border:1px solid #ccc}
+  .course-title,.ps-number{color:#111}.course-label,.course-meta,.obj-label{color:#555}
+  .objectives{background:#f0f8f5;border-color:#aaccbb}.objectives ol,.problem-body{color:#222}
+  h2{color:#333;border-bottom-color:#ccc}p{color:#222}
+  .problem{background:#fafafa;border:1px solid #ccc;break-inside:avoid}
+  .problem-num{color:#333}.problem-title{color:#111}
+  .eq{background:#f5f0ff;border-left-color:#7055d4;color:#3d2d8a}
+  .tool-link{border:1px solid #aaa;color:#333;background:#eee}
+  details.solution{break-inside:avoid}
+  details.solution summary{background:#e8f5f0;border-color:#aaccbb;color:#1d7a60}
+  .solution-body{background:#f0f8f5;border-color:#aaccbb;color:#222}
+  .solution-body .eq-inner{background:#e0f0e8;color:#1d7a60}
+  .refs{color:#555}footer{color:#999}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">Grad Seminar Problem Sets</span>
+    <a href="psets.html" class="nav-link">All PSets</a>
+    <a href="live-review.html" class="nav-link">IMBH Review</a>
+    <a href="/tools/" class="nav-link">Tools</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="course-header">
+  <div class="course-label">Graduate Seminar: Compact Objects in Dense Stellar Systems</div>
+  <div class="course-title">Omega Centauri Society Problem Sets</div>
+  <div class="ps-number">Problem Set 4 — EMRI Gravitational Wave Detectability</div>
+  <div class="course-meta">
+    <span>Estimated time: 3–4 hours</span>
+    <span>Total marks: 40</span>
+    <span>Tools: gw-horizon-plotter</span>
+    <span>omegacentauri.me/pset-4-emri.html</span>
+  </div>
+</div>
+
+<div class="objectives">
+  <div class="obj-label">Learning objectives</div>
+  <ol>
+    <li>Compute the ISCO orbital frequency and gravitational wave frequency for an EMRI in the Omega Centauri IMBH</li>
+    <li>Derive the characteristic strain h<sub>c</sub> and assess LISA detectability</li>
+    <li>Understand how IMBH mass and spin (Kerr parameter a) shift the GW frequency into or out of the LISA band</li>
+    <li>Estimate the EMRI rate in OC and the expected number of LISA-detectable events during mission lifetime</li>
+  </ol>
+</div>
+
+<h2>Background</h2>
+
+<p>An <strong>extreme mass-ratio inspiral</strong> (EMRI) occurs when a stellar-mass compact object (neutron star or black hole, m₂ ~ 1–30 M<sub>☉</sub>) slowly spirals into a massive black hole (M₁ ≫ m₂) due to gravitational wave emission. EMRIs are a primary science target for LISA (Laser Interferometer Space Antenna), sensitive in the mHz frequency band.</p>
+
+<p>For a circular Schwarzschild orbit at the ISCO, the orbital frequency and GW frequency are:</p>
+
+<div class="eq">ISCO radius (Schwarzschild, a=0):
+  r_ISCO = 6 G M / c²  =  6 r_s / 2  =  3 r_s
+
+ISCO orbital frequency:
+  f_orb = c³ / (6^(3/2) · 2π · G M)
+        ≈ 2.20 × 10⁻² Hz × (M☉ / M)
+
+GW frequency (l=m=2 dominant mode):
+  f_GW = 2 × f_orb
+
+For Kerr (spin a), the prograde ISCO shrinks:
+  r_ISCO(a) → r_s = 2 G M / c²  as  a → 1  (maximally spinning)
+  f_GW increases by up to a factor ~6 at a = 0.998 vs a = 0
+
+Characteristic strain (Cutler & Flanagan 1994):
+  h_c = h_0 × sqrt(N_cycles)
+
+  h_0 ≈ (4/√5) × (G μ / c²) × (G M / c²)^(1/3) × (π f_GW)^(2/3) / D_L
+
+  μ = m₁ m₂ / (m₁ + m₂)  (reduced mass, ≈ m₂ for EMRI)
+  D_L = luminosity distance
+  N_cycles ≈ f_GW × T_obs  (number of GW cycles in T_obs)
+
+LISA sensitivity band:  ~0.1 mHz  to  ~0.1 Hz (peak ~3 mHz)
+OC distance: D = 5.43 kpc = 1.675 × 10²² m</div>
+
+<h2>Problems</h2>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">1.</span>
+    <span class="problem-title">ISCO frequency and LISA band placement</span>
+  </div>
+  <div class="problem-body">
+    <p>Consider an EMRI with primary M = 8,200 M<sub>☉</sub> (Häberle 2024), secondary m₂ = 10 M<sub>☉</sub>, at OC distance D = 5.43 kpc.</p>
+    <ol type="a">
+      <li>Compute f<sub>GW</sub> at the Schwarzschild ISCO (a = 0). Is this frequency within the LISA sensitivity band (0.1 mHz – 100 mHz)? <span class="marks">[6 marks]</span></li>
+      <li>For a rapidly spinning IMBH with a = 0.9 (as assumed in the OCS GW Horizon Plotter), the prograde ISCO radius shrinks to approximately 2.3 r<sub>s</sub>. By what factor does f<sub>GW</sub> increase relative to the Schwarzschild case? Is the new frequency still within the LISA band? <span class="marks">[5 marks]</span></li>
+      <li>Use the GW Horizon Plotter (pre-filled link below) to verify your f<sub>GW</sub> estimate. Does the tool's LISA sensitivity curve overlap the computed peak frequency? <span class="marks">[4 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=8200&m2=10&dist=5.43&spin=0.9" target="_blank" rel="noopener">
+      ↗ GW Horizon Plotter — M = 8,200 M☉ · m₂ = 10 M☉ · d = 5.43 kpc · a = 0.9
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+f_GW(Schw) = 2 × f_orb = 2 × c³ / (6^(3/2) · 2π · G M)
+
+Constants: G = 6.674×10⁻¹¹, c = 2.998×10⁸ m/s, M☉ = 1.989×10³⁰ kg
+M = 8200 × 1.989×10³⁰ = 1.631×10³⁴ kg
+
+f_orb = (2.998×10⁸)³ / (6^1.5 × 2π × 6.674×10⁻¹¹ × 1.631×10³⁴)
+      = 2.694×10²⁵ / (14.697 × 2π × 1.088×10²⁴)
+      = 2.694×10²⁵ / (9.997×10²⁵)
+      = 0.02695 Hz
+
+f_GW = 2 × 0.02695 = 0.0539 Hz ≈ 54 mHz</span>
+        54 mHz is at the high-frequency end of the LISA band (0.1–100 mHz). LISA's peak sensitivity is at ~3 mHz; at 54 mHz LISA's noise floor rises steeply. The signal is <em>technically</em> within the nominal band but near its upper edge.
+        <br><br>
+        <strong>Part (b):</strong> At a = 0.9, r_ISCO ≈ 2.3 r_s (the tool uses the exact Kerr formula). Since f_orb ∝ 1/r_ISCO^(3/2) and r_ISCO shrinks from 6 r_s to 2.3 r_s:
+        <span class="eq-inner">
+f_GW(a=0.9) / f_GW(a=0) = (r_ISCO,0 / r_ISCO,a)^(3/2)
+                         = (6/2.3)^1.5 = (2.609)^1.5 = 4.21</span>
+        So f_GW ≈ 54 × 4.21 ≈ 227 mHz. This is outside the LISA band. A non-spinning 8,200 M☉ IMBH produces EMRI signals near LISA's upper edge; a rapidly spinning one pushes the peak frequency above the band.
+        <br><br>
+        <strong>Part (c):</strong> The tool should show the characteristic strain curve peaking near ~50–200 mHz for these parameters, straddling the LISA noise floor. Students should note whether the peak exceeds the LISA sensitivity curve at 1 yr integration.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">2.</span>
+    <span class="problem-title">Characteristic strain and SNR</span>
+  </div>
+  <div class="problem-body">
+    <p>Use the parameters M = 8,200 M<sub>☉</sub>, m₂ = 10 M<sub>☉</sub>, D = 5.43 kpc, a = 0, and T<sub>obs</sub> = 4 yr (LISA nominal mission lifetime).</p>
+    <ol type="a">
+      <li>Estimate N<sub>cycles</sub> of GW radiation during the last year of inspiral (when the orbit is roughly at the ISCO). Note: at 54 mHz, N_cycles ≈ f_GW × T_obs_1yr. <span class="marks">[4 marks]</span></li>
+      <li>A rough SNR estimate for LISA detection is SNR ~ h<sub>c</sub> / S<sub>n</sub>(f)^{1/2}, where S<sub>n</sub> at 54 mHz is approximately 10<sup>−20.5</sup> Hz<sup>−1/2</sup>. Using the characteristic strain formula, estimate whether the OC EMRI is detectable with SNR &gt; 8 (standard LISA threshold). Assume h₀ ≈ 10<sup>−22</sup> as an approximation and compute h<sub>c</sub>. <span class="marks">[6 marks]</span></li>
+      <li>How does the detectability change if M = 3,000 M<sub>☉</sub> (Baumgardt limit)? Compute the ISCO frequency and comment on detectability qualitatively. <span class="marks">[5 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=3000&m2=10&dist=5.43&spin=0" target="_blank" rel="noopener">
+      ↗ GW Horizon Plotter — M = 3,000 M☉ · a = 0 (Baumgardt limit comparison)
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+N_cycles = f_GW × T_1yr = 0.054 Hz × 3.156×10⁷ s = 1.70×10⁶ cycles</span>
+        ~1.7 million GW cycles accumulated in 1 year at the ISCO. This is a monochromatic signal in LISA terms — the frequency evolution (chirp) is slow because the mass ratio is extreme (m₂/M = 10/8200 ≈ 1.2×10⁻³).
+        <br><br>
+        <strong>Part (b):</strong>
+        <span class="eq-inner">
+h_c = h_0 × sqrt(N_cycles) ≈ 10⁻²² × sqrt(1.7×10⁶)
+    = 10⁻²² × 1304
+    ≈ 1.3×10⁻¹⁹
+
+S_n^(1/2) at 54 mHz ≈ 10⁻²⁰·⁵ = 3.16×10⁻²¹ Hz^(−1/2)
+
+For matched-filter SNR we need h_c and the noise spectral density.
+A rough SNR: SNR ≈ h_c / (S_n^(1/2) × f^(1/2))
+           ≈ 1.3×10⁻¹⁹ / (3.16×10⁻²¹ × sqrt(0.054))
+           ≈ 1.3×10⁻¹⁹ / (3.16×10⁻²¹ × 0.232)
+           ≈ 1.3×10⁻¹⁹ / 7.34×10⁻²² ≈ 177</span>
+        SNR ≈ 177 ≫ 8. Under this rough estimate, the OC EMRI is highly detectable by LISA. However, h₀ ~ 10⁻²² is a generous approximation; students should flag that the actual h₀ depends on the orbital parameters and inclination. The GW Horizon Plotter gives a more precise estimate.
+        <br><br>
+        <strong>Part (c):</strong> For M = 3,000 M☉:
+        <span class="eq-inner">
+f_GW(3000 M☉) = 0.0539 × (8200/3000) = 0.147 Hz</span>
+        147 mHz is above the nominal LISA band. At this frequency, the LISA noise floor rises rapidly (dominated by laser phase noise). A 3,000 M☉ IMBH would produce an EMRI signal that is marginally above the LISA band, making detection significantly harder. This is an important discriminator: if the IMBH mass is &lt;4,000 M☉, LISA will not detect an EMRI unless spin is modest (a &lt; 0.5). The Häberle mass (8,200 M☉) is actually more favorable for LISA than the Baumgardt upper limit.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">3.</span>
+    <span class="problem-title">EMRI rate in Omega Centauri</span>
+  </div>
+  <div class="problem-body">
+    <p>The EMRI rate in a globular cluster scales roughly as:</p>
+    <div class="eq">Γ_EMRI ≈ A × (M_IMBH / 10⁴ M☉) × (n_* / 10⁵ pc⁻³)
+
+where:
+  A ≈ 0.1 events/yr  (normalization; uncertain to ~1 dex)
+  n_* = stellar density in the loss cone ≈ 10⁵ pc⁻³ for OC's core
+  (Hopman & Alexander 2005; Amaro-Seoane 2018)</div>
+    <ol type="a">
+      <li>Estimate Γ<sub>EMRI</sub> for OC using M = 8,200 M<sub>☉</sub>. Over LISA's 4-year mission lifetime, how many EMRIs from OC would you expect? <span class="marks">[5 marks]</span></li>
+      <li>The order-of-magnitude uncertainty on A means the true rate could be 10× higher or lower. What range of expected EMRIs does this imply? Is OC a reliable LISA source or a long shot? <span class="marks">[5 marks]</span></li>
+      <li>OC is at D = 5.43 kpc, while typical LISA EMRI science targets are galaxies at D ~ 1 Gpc. By what factor does OC's proximity increase the characteristic strain h₀ relative to a Gpc source? <span class="marks">[5 marks]</span></li>
+    </ol>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+Γ_EMRI ≈ 0.1 × (8200 / 10000) × (10⁵ / 10⁵)
+        = 0.1 × 0.82 × 1.0
+        ≈ 0.082 events/yr
+
+Over 4 yr: N_expected = 0.082 × 4 ≈ 0.33 events</span>
+        So we expect roughly 1 event per 3 missions. In a single 4-year LISA mission, there is about a 33% chance of detecting one OC EMRI.
+        <br><br>
+        <strong>Part (b):</strong> With ±1 dex uncertainty: N_expected ranges from ~0.033 to ~3.3 events over 4 yr. In the optimistic case (&gt;3 events), OC is a strong guaranteed LISA source. In the pessimistic case, it's a ~3% probability per mission. The expected value (~0.3 events/mission) puts OC in the "long shot but not negligible" category — comparable to the detection probability of M31-type IMBH sources at ~700 kpc. However, if an EMRI is detected, OC's distance means the SNR would be enormous (see Problem 2c).
+        <br><br>
+        <strong>Part (c):</strong> Characteristic strain h₀ ∝ 1/D_L. Ratio:
+        <span class="eq-inner">
+D_Gpc / D_OC = 1,000 Mpc / (5.43 kpc)
+             = 1,000 × 10³ kpc / 5.43 kpc
+             = 1.84 × 10⁵
+
+h₀(OC) / h₀(Gpc) = D_Gpc / D_OC ≈ 1.84 × 10⁵</span>
+        OC's proximity makes any EMRI ~2 × 10⁵ times stronger in strain than a typical cosmological EMRI source. An OC EMRI that would be marginally detectable at 1 Gpc would have SNR ~ 10⁵ × 8 ~ 10⁶ at OC's distance — far exceeding LISA's dynamic range. This would require special signal-processing techniques but would be the most precisely measured IMBH mass in history.
+      </div>
+    </details>
+  </div>
+</div>
+
+<h2>References</h2>
+<ul class="refs">
+  <li>Robson, T., Cornish, N.J., &amp; Liu, C. (2019). The construction and use of LISA sensitivity curves. <em>Class. Quantum Grav.</em> 36, 105011.</li>
+  <li>Cutler, C. &amp; Flanagan, É.É. (1994). Gravitational waves from merging compact binaries. <em>PRD</em> 49, 2658.</li>
+  <li>Amaro-Seoane, P. (2018). Relativistic dynamics and extreme mass ratio inspirals. <em>Living Rev. Rel.</em> 21, 4.</li>
+  <li>Hopman, C. &amp; Alexander, T. (2005). The orbital statistics of stellar inspiral and relaxation near a massive black hole. <em>ApJ</em> 629, 362.</li>
+  <li>Häberle, M. et al. (2024). Fast-moving stars around an intermediate-mass black hole in Omega Centauri. <em>Nature</em> 631, 285–288.</li>
+  <li>Bardeen, J.M., Press, W.H. &amp; Teukolsky, S.A. (1972). Rotating black holes: locally non-rotating frames, energy extraction, and scalar synchrotron radiation. <em>ApJ</em> 178, 347.</li>
+</ul>
+
+</div>
+<footer>◉ The Omega Centauri Society · omegacentauri.me/pset-4-emri.html · CC BY 4.0 · Print or save as PDF for offline use</footer>
+<script>
+if(new URLSearchParams(window.location.search).get('solutions')==='1'){
+  document.querySelectorAll('details.solution').forEach(d=>{d.open=true});
+}
+</script>
+</body>
+</html>

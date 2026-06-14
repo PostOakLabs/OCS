@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--
+  Grad Seminar Problem Set 1 — Stellar Kinematics & Mass Estimation
+  Graduate Seminar: Compact Objects in Dense Stellar Systems
+  The Omega Centauri Society — omegacentauri.me
+  CC BY 4.0
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS 1: Stellar Kinematics & Mass Estimation · OCS Grad Seminar</title>
+<meta name="description" content="Grad-seminar problem set on stellar kinematics, M-σ relation, and anisotropy degeneracy applied to the Omega Centauri IMBH mass debate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--nebula:#0d0a24;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-glow:#ffc840;--purple-glow:#a080f0;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.8;min-height:100vh;background-image:radial-gradient(ellipse at 25% 0%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--teal-glow)}a:hover{color:var(--amber-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:860px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:.12em;color:var(--text-primary)}.nav-brand:hover{color:var(--amber-glow);text-decoration:none}
+.nav-sep{color:var(--text-dim)}
+.nav-title{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-left:4px}.nav-link:hover{color:var(--teal-glow);text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:44px 24px 90px}
+/* Course header */
+.course-header{background:rgba(13,10,36,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 24px;margin-bottom:32px}
+.course-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+.course-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:.02em;color:var(--text-primary);margin-bottom:4px}
+.ps-number{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--teal-glow);margin-bottom:12px}
+.course-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:16px}
+/* Learning objectives */
+.objectives{background:rgba(29,186,144,.05);border:1px solid var(--border-teal);border-radius:8px;padding:16px 20px;margin-bottom:28px}
+.obj-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:8px}
+.objectives ol{padding-left:18px;color:var(--text-secondary);font-size:15px}
+.objectives li{margin-bottom:4px}
+/* Background */
+h2{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--amber-glow);text-transform:uppercase;margin:36px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle)}
+p{margin-bottom:1rem;color:var(--text-secondary)}
+p strong{color:var(--text-primary)}
+.eq{font-family:'Space Mono',monospace;font-size:13px;background:rgba(13,10,36,.8);border:1px solid var(--border-subtle);border-left:3px solid var(--purple-glow);border-radius:0 6px 6px 0;padding:10px 16px;margin:12px 0;color:var(--purple-glow);white-space:pre-wrap}
+/* Problem cards */
+.problem{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.problem-header{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.problem-num{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:600;color:var(--amber-glow);letter-spacing:.1em;white-space:nowrap}
+.problem-title{font-family:'Crimson Pro',serif;font-size:17px;font-weight:600;color:var(--text-primary)}
+.problem-body{color:var(--text-secondary);font-size:16px}
+.problem-body ol{padding-left:20px;margin:10px 0}
+.problem-body li{margin-bottom:8px}
+.marks{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.06em}
+/* Tool link */
+.tool-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:7px 14px;border:1px solid var(--border-teal);border-radius:20px;font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);background:rgba(29,186,144,.05);text-decoration:none;transition:all .15s}
+.tool-link:hover{background:rgba(29,186,144,.15);border-color:var(--teal-glow);color:var(--teal-glow);text-decoration:none}
+/* Solution reveal */
+details.solution{margin-top:14px;border-radius:7px;overflow:hidden}
+details.solution summary{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:8px 14px;background:rgba(29,186,144,.07);border:1px solid var(--border-teal);border-radius:7px;color:var(--teal-bright);list-style:none;display:flex;align-items:center;gap:8px}
+details.solution summary::before{content:"▶";font-size:8px;transition:transform .15s}
+details.solution[open] summary::before{transform:rotate(90deg)}
+details.solution summary:hover{background:rgba(29,186,144,.14)}
+.solution-body{padding:14px 16px;background:rgba(4,42,36,.3);border:1px solid var(--border-teal);border-top:none;border-radius:0 0 7px 7px;color:var(--text-secondary);font-size:15px;line-height:1.75}
+.solution-body strong{color:var(--teal-glow)}
+.solution-body .eq-inner{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow);background:rgba(4,42,36,.5);padding:6px 12px;border-radius:4px;margin:6px 0;display:block;white-space:pre-wrap}
+/* References */
+.refs{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;margin-top:8px}
+.refs li{margin-bottom:4px}
+/* Footer */
+footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;text-align:center}
+/* Print */
+@media print{
+  body{background:#fff;color:#111;font-size:12pt}
+  .nav{display:none}
+  .course-header{background:#f5f5f5;border:1px solid #ccc;color:#111}
+  .course-title,.ps-number{color:#111}
+  .course-label,.course-meta,.obj-label{color:#555}
+  .objectives{background:#f0f8f5;border-color:#aaccbb}
+  .objectives ol,.problem-body{color:#222}
+  h2{color:#333;border-bottom-color:#ccc}
+  p{color:#222}
+  .problem{background:#fafafa;border:1px solid #ccc;break-inside:avoid}
+  .problem-num{color:#333}.problem-title{color:#111}
+  .eq{background:#f5f0ff;border-left-color:#7055d4;color:#3d2d8a}
+  .tool-link{border:1px solid #aaa;color:#333;background:#eee}
+  details.solution{break-inside:avoid}
+  details.solution summary{background:#e8f5f0;border-color:#aaccbb;color:#1d7a60}
+  .solution-body{background:#f0f8f5;border-color:#aaccbb;color:#222}
+  .solution-body .eq-inner{background:#e0f0e8;color:#1d7a60}
+  .refs{color:#555}
+  footer{color:#999}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">◉ OCS</a>
+    <span class="nav-sep">·</span>
+    <span class="nav-title">Grad Seminar Problem Sets</span>
+    <a href="psets.html" class="nav-link">All PSets</a>
+    <a href="live-review.html" class="nav-link">IMBH Review</a>
+    <a href="/tools/" class="nav-link">Tools</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="course-header">
+  <div class="course-label">Graduate Seminar: Compact Objects in Dense Stellar Systems</div>
+  <div class="course-title">Omega Centauri Society Problem Sets</div>
+  <div class="ps-number">Problem Set 1 — Stellar Kinematics &amp; Mass Estimation</div>
+  <div class="course-meta">
+    <span>Estimated time: 3–4 hours</span>
+    <span>Total marks: 40</span>
+    <span>Tools: velocity-dispersion · anisotropy-degeneracy-explorer</span>
+    <span>omegacentauri.me/pset-1-kinematics.html</span>
+  </div>
+</div>
+
+<div class="objectives">
+  <div class="obj-label">Learning objectives</div>
+  <ol>
+    <li>Apply the M–σ relation to predict a cluster's central velocity dispersion from an assumed IMBH mass</li>
+    <li>Assess how velocity anisotropy (β) can mimic the kinematic signature of a central point mass</li>
+    <li>Quantify the mass resolution needed to distinguish the Häberle (2024) and Baumgardt (2017) models</li>
+    <li>Evaluate what follow-up observations would resolve the current kinematic tension</li>
+  </ol>
+</div>
+
+<h2>Background</h2>
+
+<p>Omega Centauri (NGC 5139) hosts the strongest current evidence for an intermediate-mass black hole (IMBH) in any globular cluster. Häberle et al. (2024) identified seven stars within 0.08 pc of the cluster center with velocities implying a central dark mass of <strong>M = 8,200 M<sub>☉</sub></strong>, while Baumgardt (2017) placed a 3σ upper limit of <strong>M &lt; 3,000 M<sub>☉</sub></strong> from N-body modeling of the velocity dispersion profile. This tension is the central unresolved issue in the field.</p>
+
+<p>The M–σ relation for globular clusters relates IMBH mass M to the cluster's global velocity dispersion σ. In OC, Baumgardt &amp; Hilker (2018) measured σ<sub>0</sub> = 16.8 km/s from HST proper motions.</p>
+
+<p>The Keplerian velocity at projected radius R from a point mass M is:</p>
+<div class="eq">v_K(R) = sqrt(G M / R)
+
+G = 6.674 × 10⁻¹¹ m³ kg⁻¹ s⁻²
+1 M☉ = 1.989 × 10³⁰ kg
+1 pc = 3.086 × 10¹⁶ m</div>
+
+<p>The spherical Jeans equation (isotropic, power-law density profile) gives the projected velocity dispersion as a function of anisotropy parameter β (0 = isotropic, β > 0 = radially anisotropic, β &lt; 0 = tangentially anisotropic). The OCS Anisotropy Degeneracy Explorer computes this numerically.</p>
+
+<h2>Problems</h2>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">1.</span>
+    <span class="problem-title">M–σ prediction at two mass hypotheses</span>
+  </div>
+  <div class="problem-body">
+    <p>The M–σ relation for intermediate-mass black holes in globular clusters is calibrated at:</p>
+    <div class="eq">σ_pred ≈ σ_ref × (M / M_ref)^(1/4)
+
+σ_ref = 16.8 km/s at M_ref = 8,200 M☉  [Baumgardt & Hilker 2018]</div>
+    <ol type="a">
+      <li>Using the OCS Velocity Dispersion tool (pre-filled link below), record σ_pred for M = 8,200 M<sub>☉</sub>. Does the tool's prediction agree with the Baumgardt &amp; Hilker (2018) measurement of 16.8 km/s? <span class="marks">[5 marks]</span></li>
+      <li>Repeat for M = 3,000 M<sub>☉</sub> (Baumgardt 2017 N-body upper limit). What predicted σ do you get? By how many km/s does this differ from the M = 8,200 M<sub>☉</sub> prediction? <span class="marks">[5 marks]</span></li>
+      <li>Given that HST proper-motion surveys achieve σ measurement precision of roughly ±0.5 km/s, is the σ difference between the two mass hypotheses observationally distinguishable at present? Explain. <span class="marks">[5 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/velocity-dispersion.html#mass=8200&rh=4.8&sig=0" target="_blank" rel="noopener">
+      ↗ Velocity Dispersion tool — pre-filled M = 8,200 M☉, r<sub>h</sub> = 4.8 pc
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong> The tool should return σ_pred ≈ 16.8 km/s for M = 8,200 M☉, consistent with the Baumgardt &amp; Hilker (2018) value of 16.8 km/s. This is essentially exact because the tool is calibrated to that reference point.
+        <br><br>
+        <strong>Part (b):</strong> For M = 3,000 M☉, the (M/M_ref)<sup>1/4</sup> factor is (3000/8200)<sup>0.25</sup> ≈ 0.757. So σ_pred ≈ 16.8 × 0.757 ≈ 12.7 km/s. The difference is ~4.1 km/s.
+        <br><br>
+        <strong>Part (c):</strong> A 4.1 km/s difference far exceeds the ±0.5 km/s precision of HST proper-motion surveys. In principle the two mass hypotheses are distinguishable from the global σ profile. However, the Baumgardt (2017) N-body analysis <em>did</em> use this measurement and still preferred low mass — the discrepancy arises because the N-body fit uses the full radial profile, not just the central σ value. The global σ predicted by M–σ is not directly falsifying either model without higher-resolution central measurements.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">2.</span>
+    <span class="problem-title">Keplerian velocities of the fast-moving stars</span>
+  </div>
+  <div class="problem-body">
+    <p>Häberle et al. (2024) report the seven fast-moving stars lie within a projected radius R ≈ 0.04–0.08 pc of the cluster center. Use the Keplerian velocity formula above (assuming circular orbits and M = 8,200 M<sub>☉</sub>).</p>
+    <ol type="a">
+      <li>Compute v_K at R = 0.04 pc and at R = 0.08 pc. Express your answers in km/s. <span class="marks">[5 marks]</span></li>
+      <li>Häberle et al. report peak 3D velocities of ~50 km/s. Is this consistent with your Keplerian estimate for a bound orbit at these radii? <span class="marks">[5 marks]</span></li>
+      <li>If instead M = 3,000 M<sub>☉</sub>, what Keplerian velocity would you predict at R = 0.04 pc? Can this explain the observed ~50 km/s stars? <span class="marks">[5 marks]</span></li>
+    </ol>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+M = 8200 × 1.989×10³⁰ = 1.631×10³⁴ kg
+R₁ = 0.04 × 3.086×10¹⁶ = 1.234×10¹⁵ m
+R₂ = 0.08 × 3.086×10¹⁶ = 2.469×10¹⁵ m
+
+v_K(R₁) = sqrt(6.674e-11 × 1.631e34 / 1.234e15)
+         = sqrt(8.823e8) ≈ 29,700 m/s ≈ 29.7 km/s
+
+v_K(R₂) = sqrt(6.674e-11 × 1.631e34 / 2.469e15)
+         = sqrt(4.411e8) ≈ 21,000 m/s ≈ 21.0 km/s</span>
+        So: ~30 km/s at 0.04 pc, ~21 km/s at 0.08 pc.
+        <br><br>
+        <strong>Part (b):</strong> The Keplerian circular-orbit speed at 0.04 pc is ~30 km/s. The reported ~50 km/s is for the <em>3D</em> space velocity; for a circular orbit seen at some inclination angle, the projected velocity can differ. A 50 km/s 3D speed at 0.04 pc requires M ~ (50/v_K)² × 8200 ≈ 2.8 × 8200 ≈ 23,000 M☉ for a purely circular orbit — more than the Häberle point estimate. However, for eccentric orbits, stars can reach higher velocities near periapsis than a circular orbit of the same semi-major axis, so 50 km/s 3D velocities are consistent with M ≈ 8,200 M☉ on eccentric orbits at small periapsis.
+        <br><br>
+        <strong>Part (c):</strong> For M = 3,000 M☉:
+        <span class="eq-inner">v_K(0.04 pc) = 29.7 × sqrt(3000/8200) ≈ 29.7 × 0.605 ≈ 18.0 km/s</span>
+        This is far below 50 km/s. A 3,000 M☉ central mass cannot produce bound stars at 0.04 pc with 3D velocities of ~50 km/s; such stars would need to be unbound (escaping the cluster), which is dynamically implausible in large numbers.
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="problem">
+  <div class="problem-header">
+    <span class="problem-num">3.</span>
+    <span class="problem-title">The anisotropy degeneracy</span>
+  </div>
+  <div class="problem-body">
+    <p>A centrally-concentrated population of stellar-mass black holes, or radial velocity anisotropy (β > 0), can produce a central σ cusp that mimics an IMBH. Use the OCS Anisotropy Degeneracy Explorer.</p>
+    <ol type="a">
+      <li>Set M<sub>IMBH</sub> = 0 and M<sub>rem</sub> = 0. Increase β from 0 to 0.4 in steps of 0.1. At what β does the predicted central σ approach the value produced by M<sub>IMBH</sub> = 8,200 M<sub>☉</sub> with β = 0? <span class="marks">[5 marks]</span></li>
+      <li>The IMBH hypothesis predicts a Keplerian σ ∝ R<sup>−1/2</sup> cusp inside the IMBH sphere of influence (r<sub>h</sub> = G M / σ<sub>0</sub>²). Anisotropy produces a much shallower or flat central profile. What observational signature would most cleanly distinguish the two cases? <span class="marks">[5 marks]</span></li>
+    </ol>
+    <a class="tool-link" href="https://omegacentauri.me/tools/anisotropy-degeneracy-explorer.html#mass=0&mrem=0&rrem=1.0&beta=0&dist=5.43" target="_blank" rel="noopener">
+      ↗ Anisotropy Degeneracy Explorer — pre-filled M = 0, β = 0
+    </a>
+    <details class="solution">
+      <summary>Show solution</summary>
+      <div class="solution-body">
+        <strong>Part (a):</strong> The exact answer depends on the model implementation, but typically β ≈ 0.3–0.4 is needed to reproduce the central σ enhancement that an 8,200 M☉ IMBH produces at isotropic β = 0. Students should report the value they read from the tool and note that this β value is physically plausible (many globular clusters show mild radial anisotropy).
+        <br><br>
+        <strong>Part (b):</strong> The clearest distinguishing signature is the <em>radial profile of σ</em> in the innermost 0.05 pc. An IMBH produces a σ ∝ R<sup>−1/2</sup> cusp (Keplerian rise) only within its sphere of influence r<sub>h</sub> = G M / σ<sub>0</sub>² ≈ G × 8200 M☉ / (16.8 km/s)² ≈ 1.8 pc. Anisotropy flattens the profile outside the innermost ~0.01 pc. Individual star proper motions at R &lt; 0.05 pc (achievable with ELT/MICADO) would show a tangential-to-radial velocity ratio consistent with isotropic Keplerian motion for the IMBH case, but radially-biased anisotropy for the no-IMBH case.
+      </div>
+    </details>
+  </div>
+</div>
+
+<h2>References</h2>
+<ul class="refs">
+  <li>Häberle, M. et al. (2024). Fast-moving stars around an intermediate-mass black hole in Omega Centauri. <em>Nature</em> 631, 285–288. doi:10.1038/s41586-024-07511-z</li>
+  <li>Baumgardt, H. (2017). N-body modelling of globular clusters: masses, mass-to-light ratios and intermediate-mass black holes. <em>MNRAS</em> 474, 1695–1718.</li>
+  <li>Baumgardt, H. &amp; Hilker, M. (2018). A catalogue of masses, structural parameters, and velocity dispersion profiles of 112 Milky Way globular clusters. <em>MNRAS</em> 478, 1520–1557.</li>
+  <li>Bañares-Hernández, A. et al. (2025). Ruling out an IMBH in ωCen using a dark cluster of stellar remnants. <em>A&amp;A</em> 693, A104. doi:10.1051/0004-6361/202451357</li>
+</ul>
+
+</div><!-- /wrap -->
+<footer>◉ The Omega Centauri Society · omegacentauri.me/pset-1-kinematics.html · CC BY 4.0 · Print or save as PDF for offline use</footer>
+<script>
+// ?solutions=1 URL flag opens all details elements
+if(new URLSearchParams(window.location.search).get('solutions')==='1'){
+  document.querySelectorAll('details.solution').forEach(d=>{d.open=true});
+}
+</script>
+</body>
+</html>
