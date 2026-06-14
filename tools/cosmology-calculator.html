@@ -672,8 +672,7 @@ function applyArtifact(art){document.getElementById('artifact-hash').textContent
 function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
 function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-cosmology-calculator-'+Date.now()+'.json';a.click();}
 function wireArtifact(){}
-function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{ocs_version:'1.0.0',mandate_type:'cosmological_measure',tool_id:'cosmology-calculator',tool_version:'1.0.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,audit_signature:'ocs-cowork-agent-2026-06-13'};}
-
+function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{ocs_version:'1.0.0',mandate_type:'cosmological_measure',tool_id:'cosmology-calculator',tool_version:'1.0.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,audit_signature:'ocs-cowork-agent-2026-06-13',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_cosmology_calculator_2026,\n  author   = {Swanson, Tim},\n  title    = {{Cosmology Calculator}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/cosmology-calculator.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'};}
 let state = { z:0.01, H0:67.4, Om:0.315, OL:0.685, w:-1.0 };
 
 function syncSliders() {

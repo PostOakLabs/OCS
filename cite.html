@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Cite — The Omega Centauri Society</title>
+<meta name="description" content="Citation instructions and BibTeX entries for all Omega Centauri Society interactive tools. Supports reproducible research using the OCS calculator suite.">
+<meta name="author" content="The Omega Centauri Society">
+<link rel="canonical" href="https://omegacentauri.me/cite.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Omega Centauri Society">
+<meta property="og:title" content="How to Cite OCS Tools">
+<meta property="og:description" content="BibTeX entries and citation instructions for all OCS interactive calculators.">
+<meta property="og:url" content="https://omegacentauri.me/cite.html">
+<meta property="og:image" content="https://omegacentauri.me/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --void:#03020a; --deep:#070515; --nebula:#0d0a24;
+  --purple-bright:#7055d4; --purple-glow:#a080f0;
+  --teal-bright:#1dba90; --teal-glow:#4de8c0;
+  --amber-glow:#ffc840;
+  --text-primary:#e8e4ff; --text-secondary:#9890c0; --text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2); --border-teal:rgba(29,186,144,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body {
+  background:radial-gradient(ellipse at 50% 0%, var(--nebula), var(--void) 70%);
+  color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;
+  font-size:16px; line-height:1.65;
+  min-height:100vh;
+  padding:3rem 1.5rem 6rem;
+}
+.wrap{max-width:920px;margin:0 auto}
+nav.crumb {
+  font-family:'Space Mono',monospace; font-size:0.72rem; letter-spacing:0.08em;
+  color:var(--text-dim); margin-bottom:2.5rem; padding-bottom:1rem;
+  border-bottom:1px solid var(--border-subtle);
+}
+nav.crumb a{color:var(--teal-glow);text-decoration:none}
+nav.crumb a:hover{text-decoration:underline}
+h1 {
+  font-family:'Orbitron',sans-serif;
+  font-size:2.2rem; font-weight:900; letter-spacing:0.02em;
+  margin-bottom:0.6rem; line-height:1.15;
+  background:linear-gradient(90deg,#e8e4ff 0%,#a080f0 55%,#4de8c0 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.lede {
+  font-size:1.05rem; color:var(--text-secondary); font-style:italic;
+  margin-bottom:1rem; max-width:700px;
+}
+.meta {
+  font-family:'Space Mono',monospace; font-size:0.7rem;
+  color:var(--text-dim); letter-spacing:0.1em;
+  margin-bottom:3rem;
+}
+section { margin-bottom:3rem }
+h2 {
+  font-family:'Orbitron',sans-serif;
+  font-size:1rem; font-weight:600; letter-spacing:0.18em;
+  color:var(--amber-glow); text-transform:uppercase;
+  margin-bottom:1rem; padding-bottom:0.4rem;
+  border-bottom:1px solid var(--border-subtle);
+}
+h3 {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.82rem; font-weight:600; letter-spacing:0.1em;
+  color:var(--text-primary); text-transform:uppercase;
+  margin-bottom:0.7rem;
+}
+p { margin-bottom:0.9rem; }
+a.ext { color:var(--teal-glow); text-decoration:none }
+a.ext:hover { text-decoration:underline }
+
+/* Status badges */
+.badge {
+  display:inline-block;
+  font-family:'Space Mono',monospace; font-size:0.6rem;
+  letter-spacing:0.12em; text-transform:uppercase;
+  padding:0.18em 0.55em; border-radius:3px;
+  margin-left:0.5rem; vertical-align:middle;
+}
+.badge-pending { background:rgba(80,72,112,0.3); color:var(--text-dim); border:1px solid rgba(80,72,112,0.4); }
+.badge-live    { background:rgba(29,186,144,0.12); color:var(--teal-bright); border:1px solid rgba(29,186,144,0.3); }
+
+/* Info boxes */
+.info-box {
+  background:rgba(112,85,212,0.07);
+  border:1px solid var(--border-subtle);
+  border-left:3px solid var(--purple-bright);
+  border-radius:6px; padding:1rem 1.2rem;
+  font-size:0.95rem; margin-bottom:1.2rem;
+}
+.info-box.teal {
+  background:rgba(29,186,144,0.05);
+  border-left-color:var(--teal-bright);
+}
+.info-box code {
+  font-family:'Space Mono',monospace; font-size:0.82em;
+  color:var(--teal-glow); background:rgba(29,186,144,0.08);
+  padding:0.1em 0.35em; border-radius:3px;
+}
+
+/* BibTeX blocks */
+.bibtex-block {
+  background:rgba(3,2,10,0.7);
+  border:1px solid var(--border-subtle);
+  border-radius:7px; padding:1rem 1.1rem;
+  margin-bottom:0.75rem;
+}
+.bibtex-block pre {
+  font-family:'Space Mono',monospace; font-size:0.72rem;
+  line-height:1.65; color:var(--text-secondary);
+  white-space:pre; overflow-x:auto;
+  margin:0;
+}
+.bibtex-actions {
+  display:flex; align-items:center; gap:0.6rem;
+  margin-top:0.65rem;
+}
+.copy-btn {
+  font-family:'Space Mono',monospace; font-size:0.68rem;
+  padding:0.28em 0.8em; border-radius:4px;
+  border:1px solid var(--border-teal);
+  color:var(--teal-bright); background:transparent;
+  cursor:pointer; transition:all 0.15s; letter-spacing:0.06em;
+}
+.copy-btn:hover { border-color:var(--teal-glow); color:var(--teal-glow); background:rgba(29,186,144,0.05); }
+.copy-btn.copied { border-color:var(--amber-glow); color:var(--amber-glow); }
+.bibtex-label {
+  font-family:'Space Mono',monospace; font-size:0.62rem;
+  color:var(--text-dim); letter-spacing:0.08em;
+}
+
+/* Tool citation cards */
+.cat-section { margin-bottom:2.5rem }
+.cat-toggle {
+  width:100%; text-align:left;
+  background:rgba(7,5,21,0.6); border:1px solid var(--border-subtle);
+  border-radius:7px; padding:0.65rem 1rem;
+  color:var(--text-primary); font-family:'Orbitron',sans-serif;
+  font-size:0.78rem; font-weight:600; letter-spacing:0.12em;
+  cursor:pointer; display:flex; align-items:center; gap:0.5rem;
+  transition:border-color 0.2s, background 0.2s;
+  text-transform:uppercase;
+}
+.cat-toggle:hover { border-color:var(--purple-bright); background:rgba(112,85,212,0.07); }
+.cat-toggle .arrow { font-size:0.65rem; transition:transform 0.2s; color:var(--purple-glow) }
+.cat-toggle.open .arrow { transform:rotate(90deg) }
+.cat-count { margin-left:auto; font-size:0.65rem; color:var(--text-dim); font-weight:400 }
+.cat-body { display:none; margin-top:0.75rem }
+.cat-body.open { display:block }
+
+.tool-card {
+  border:1px solid var(--border-subtle);
+  border-left:2px solid var(--border-teal);
+  border-radius:6px; padding:1rem 1.2rem;
+  margin-bottom:0.85rem;
+  background:rgba(13,10,36,0.3);
+}
+.tool-card .tool-name {
+  font-family:'Orbitron',sans-serif; font-size:0.82rem; font-weight:600;
+  color:var(--teal-glow); text-decoration:none; letter-spacing:0.04em;
+}
+.tool-card .tool-name:hover { text-decoration:underline }
+.tool-card .tool-desc {
+  font-size:0.9rem; color:var(--text-secondary);
+  margin:0.25rem 0 0.7rem;
+}
+
+/* Quick-cite line */
+.quick-cite {
+  font-family:'Space Mono',monospace; font-size:0.68rem;
+  color:var(--text-dim); margin-bottom:0.4rem;
+}
+
+/* Horizontal rule */
+hr {
+  border:none; border-top:1px solid var(--border-subtle);
+  margin:2rem 0;
+}
+
+footer {
+  margin-top:4rem; padding-top:1.5rem;
+  border-top:1px solid var(--border-subtle);
+  font-family:'Space Mono',monospace; font-size:0.68rem;
+  color:var(--text-dim); letter-spacing:0.06em;
+  text-align:center; line-height:2;
+}
+footer a { color:var(--teal-glow); text-decoration:none }
+footer a:hover { text-decoration:underline }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="crumb" aria-label="Breadcrumb">
+  <a href="/">◉ The Omega Centauri Society</a> &nbsp;·&nbsp; How to Cite
+</nav>
+
+<main>
+  <h1>How to Cite OCS Tools</h1>
+  <p class="lede">Every tool on this site is individually citable. Use the BibTeX entries below to give precise credit in papers and methods sections.</p>
+  <p class="meta">OCS v1.0 · Updated 2026-06-14 · Code: MIT · Data: CC0 · Prose: CC BY 4.0</p>
+
+  <!-- =================== SITE-LEVEL CITATION =================== -->
+  <section id="site-citation">
+    <h2>Site-level citation</h2>
+    <p>Cite the site as a whole if you used multiple tools or are referencing the project generally. Cite individual tools (below) when you used a specific calculator in your analysis — this is preferred for reproducibility.</p>
+
+    <div class="bibtex-block" id="site-bib-block">
+      <pre id="site-bib">@software{OCS_2026,
+  author   = {Swanson, Tim},
+  title    = {{The Omega Centauri Society — Interactive Calculators
+               for the NGC 5139 IMBH Question}},
+  year     = {2026},
+  url      = {https://omegacentauri.me},
+  version  = {1.0},
+  note     = {Open-source browser-based tool suite for the Omega Centauri
+               IMBH debate, Fermi Paradox, and Macro Transcension Hypothesis.
+               Code: MIT. Curated data: CC0. Prose: CC BY 4.0.}
+}</pre>
+      <div class="bibtex-actions">
+        <button class="copy-btn" onclick="copyBlock('site-bib', this)">Copy BibTeX</button>
+        <span class="bibtex-label">@software entry · no DOI yet — see Zenodo below</span>
+      </div>
+    </div>
+
+    <div class="info-box teal">
+      <strong>Run-record export.</strong> Every ChainGraph-enabled tool (marked ⬡ below) emits a signed JSON artifact containing the exact input parameters, output payload, execution hash, and a permalink. Expand the <em>⬡ OCS ChainGraph Artifact</em> panel in any tool and click <em>Copy JSON</em> to get a citable run record. Paste it into your supplementary material for exact reproducibility.
+    </div>
+  </section>
+
+  <!-- =================== ZENODO =================== -->
+  <section id="zenodo">
+    <h2>Zenodo DOI <span class="badge badge-pending">Pending</span></h2>
+    <p>A versioned Zenodo deposit is in preparation. Once live, each release will carry a concept DOI (always resolves to latest) and a version DOI (frozen snapshot). The BibTeX entries below will be updated to include <code>doi</code> fields. A <code>.zenodo.json</code> metadata file is already present in the repository.</p>
+    <p>To be notified: watch the GitHub repository at <a class="ext" href="https://github.com/PostOakLabs/ocs-mcp-worker" target="_blank" rel="noopener">PostOakLabs/ocs-mcp-worker</a>.</p>
+  </section>
+
+  <!-- =================== ASCL =================== -->
+  <section id="ascl">
+    <h2>ASCL registration <span class="badge badge-pending">Pending</span></h2>
+    <p>OCS is being registered with the <a class="ext" href="https://ascl.net" target="_blank" rel="noopener">Astrophysics Source Code Library</a>. Once assigned an ASCL ID, the site-level BibTeX above will include an <code>eprint</code> field pointing to the ASCL record, enabling citation via standard astrophysics reference managers.</p>
+  </section>
+
+  <!-- =================== CITATION.CFF =================== -->
+  <section id="cff">
+    <h2>CITATION.cff</h2>
+    <p>The repository includes a <code>CITATION.cff</code> file in the root. GitHub surfaces this as a "Cite this repository" button, and the <a class="ext" href="https://github.com/citation-file-format/cffconvert" target="_blank" rel="noopener">cffconvert</a> tool can convert it to BibTeX, RIS, or APA automatically.</p>
+  </section>
+
+  <hr>
+
+  <!-- =================== PER-TOOL CITATIONS =================== -->
+  <section id="per-tool">
+    <h2>Per-tool citations</h2>
+    <p>Prefer per-tool citations over the site-level entry when your paper used a specific calculator. The <code>url</code> field already includes the canonical tool path; if you used a particular parameter state, append the hash fragment from your browser address bar.</p>
+    <div id="tool-categories"></div>
+  </section>
+
+</main>
+
+<footer>
+  <a href="/">omegacentauri.me</a> &nbsp;·&nbsp;
+  <a href="/tools/index.html">Tools</a> &nbsp;·&nbsp;
+  <a href="/mcp.html">MCP</a> &nbsp;·&nbsp;
+  <a href="/proposals.html">Proposals</a> &nbsp;·&nbsp;
+  Code: MIT &nbsp;·&nbsp; Curated data: CC0 &nbsp;·&nbsp; Prose: CC BY 4.0
+</footer>
+
+</div><!-- .wrap -->
+
+<script>
+// ============================================================
+// Tool data — id, title, category, description, chaingraph
+// ============================================================
+const CATEGORIES = [
+  { id: 'imbh-evidence',  label: 'IMBH Evidence',          color: '#4de8c0' },
+  { id: 'fermi-paradox',  label: 'Fermi Paradox',          color: '#a080f0' },
+  { id: 'fermi-seti',     label: 'SETI & Technosignatures', color: '#a080f0' },
+  { id: 'mth',            label: 'Macro Transcension Hypothesis', color: '#ffc840' },
+  { id: 'kardashev',      label: 'Kardashev & Cosmology',  color: '#ffc840' },
+  { id: 'bh-physics',     label: 'Black Hole Physics',     color: '#9890c0' },
+];
+
+const TOOLS = [
+  // IMBH Evidence
+  { id:'constraint-stacker',            title:'IMBH Constraint Stacker',
+    cat:'imbh-evidence', cg:true,
+    desc:'Interactive overlay of every published mass constraint for ωCen on a single log-mass axis.' },
+  { id:'velocity-dispersion',           title:'Velocity Dispersion / M-σ Estimator',
+    cat:'imbh-evidence', cg:true,
+    desc:'M-σ scaling relation applied to ωCen; compares prediction to published velocity dispersion estimates.' },
+  { id:'dark-cluster',                  title:'Dark Cluster Alternative Explorer',
+    cat:'imbh-evidence', cg:true,
+    desc:'Models the Bañares 2025 concentrated stellar-remnant alternative to a central IMBH.' },
+  { id:'gaia-dr4-forecaster',           title:'Gaia DR4 IMBH Constraint Forecaster',
+    cat:'imbh-evidence', cg:true,
+    desc:'Propagates Gaia DR4\'s 4.5× proper-motion precision improvement to forecast new IMBH constraints (Dec 2026).' },
+  { id:'anisotropy-degeneracy-explorer',title:'Anisotropy Degeneracy Explorer',
+    cat:'imbh-evidence', cg:true,
+    desc:'Shows how velocity anisotropy and remnant clusters mimic a central IMBH in kinematics.' },
+  { id:'pulsar-accel-mapper',           title:'Pulsar Acceleration Mapper',
+    cat:'imbh-evidence', cg:true,
+    desc:'Maps TRAPUM 2026 spin-period derivatives against central-mass model predictions.' },
+  { id:'adaf-sed-modeler',              title:'ADAF SED Modeler',
+    cat:'imbh-evidence', cg:true,
+    desc:'Full ADAF/RIAF spectral energy distribution for a Bondi-fed IMBH, overlaid with JWST and radio non-detection limits.' },
+  { id:'gw-horizon-plotter',            title:'GW Horizon Plotter',
+    cat:'imbh-evidence', cg:true,
+    desc:'Characteristic strain for IMRI/EMRI sources at ωCen distance overlaid on LISA, ET, CE, and PTA sensitivity curves.' },
+  { id:'astrometric-microlensing',      title:'Astrometric Microlensing Predictor',
+    cat:'imbh-evidence', cg:true,
+    desc:'Predicts whether Gaia DR4 or Roman would detect the astrometric microlensing signature of a central IMBH.' },
+  { id:'qpo-mass-spin',                 title:'QPO Mass-Spin Estimator',
+    cat:'imbh-evidence', cg:true,
+    desc:'Constrains IMBH mass and spin from quasi-periodic oscillation frequencies via the epicyclic resonance model.' },
+  { id:'evidence-ledger',               title:'Bayesian IMBH Evidence Ledger',
+    cat:'imbh-evidence', cg:true,
+    desc:'Aggregates every published line of evidence into a Bayesian log-odds ledger with adjustable priors.' },
+  { id:'detection-forecast',            title:'Detection Forecast',
+    cat:'imbh-evidence', cg:true,
+    desc:'Computes minimum instrument sensitivity and timeline to confirm or rule out the ωCen IMBH.' },
+  { id:'observing-campaign-planner',    title:'Observing Campaign Planner',
+    cat:'imbh-evidence', cg:true,
+    desc:'Resource ledger for a multi-instrument IMBH observing campaign (Roman, ELT, Gaia, custom).' },
+  // Fermi Paradox
+  { id:'drake-monte-carlo',             title:'Drake Equation Monte Carlo',
+    cat:'fermi-paradox', cg:true,
+    desc:'Drake equation with Bayesian Monte Carlo uncertainty propagation; shows why point estimates mislead.' },
+  { id:'great-filter',                  title:'Great Filter Localizer',
+    cat:'fermi-paradox', cg:true,
+    desc:'Robin Hanson\'s Great Filter as an interactive calculator showing filter placement and the Mars implication.' },
+  // SETI
+  { id:'radio-seti',                    title:'Radio SETI Sensitivity',
+    cat:'fermi-seti', cg:true,
+    desc:'Radiometer equation made interactive; returns SNR, minimum detectable EIRP, and Breakthrough Listen benchmarks.' },
+  { id:'ir-excess-checker',             title:'IR Excess Checker',
+    cat:'fermi-seti', cg:true,
+    desc:'Computes Dyson-swarm IR excess vs WISE/SPHEREx sensitivity; returns the f–T region current surveys exclude.' },
+  // MTH
+  { id:'bz-kardashev',                  title:'BZ / Kardashev Power Calculator',
+    cat:'mth', cg:true,
+    desc:'Blandford-Znajek power output of a spinning IMBH; converts to Kardashev scale rung.' },
+  { id:'bekenstein-landauer',           title:'Bekenstein-Landauer-Lloyd Limit Explorer',
+    cat:'mth', cg:true,
+    desc:'Three fundamental limits on physical computation applied to a black hole ergosphere.' },
+  // Kardashev & Cosmology
+  { id:'cosmology-calculator',          title:'Cosmology Calculator',
+    cat:'kardashev', cg:true,
+    desc:'Flat-ΛCDM/wCDM FLRW calculator (z → comoving/luminosity/angular distances, lookback time). Planck 2018 defaults.' },
+  { id:'kardashev-meter',               title:'Kardashev Meter',
+    cat:'kardashev', cg:true,
+    desc:'Computes a civilisation\'s Kardashev rung and years to each milestone from current energy use.' },
+  { id:'energy-translator',             title:'Energy Unit Translator',
+    cat:'kardashev', cg:false,
+    desc:'Converts energy/power quantities between SI, astrophysical units, and Kardashev benchmarks.' },
+  { id:'scifi-tech-auditor',            title:'Sci-Fi Tech Auditor',
+    cat:'kardashev', cg:false,
+    desc:'Rates canonical science-fiction technologies against known physics (Dyson spheres, warp drives, etc.).' },
+  // BH Physics
+  { id:'shadow-imaging',                title:'Black Hole Shadow Imaging',
+    cat:'bh-physics', cg:true,
+    desc:'Apparent angular diameter of the photon sphere for any mass and distance; EHT/ngEHT detectability.' },
+  { id:'bh-scale-comparator',           title:'Black Hole Scale Comparator',
+    cat:'bh-physics', cg:false,
+    desc:'Places any IMBH mass on a visual scale from stellar to supermassive, with Schwarzschild and ISCO radii.' },
+  { id:'infall-survival',               title:'Infall Survival Calculator',
+    cat:'bh-physics', cg:true,
+    desc:'Spaghettification threshold and tidal survival radius for a falling object at any IMBH mass.' },
+];
+
+// ============================================================
+// BibTeX generator
+// ============================================================
+function bibtexKey(id) {
+  return 'OCS_' + id.replace(/-/g, '_') + '_2026';
+}
+
+function bibtexEntry(tool) {
+  const url = `https://omegacentauri.me/tools/${tool.id}.html`;
+  const key = bibtexKey(tool.id);
+  return `@software{${key},
+  author   = {Swanson, Tim},
+  title    = {{${tool.title}}},
+  year     = {2026},
+  url      = {${url}},
+  version  = {1.0.0},
+  note     = {The Omega Centauri Society — omegacentauri.me}
+}`;
+}
+
+// ============================================================
+// Copy helper
+// ============================================================
+function copyBlock(preId, btn) {
+  const text = document.getElementById(preId).textContent;
+  const reset = () => {
+    btn.textContent = btn.dataset.label || 'Copy BibTeX';
+    btn.classList.remove('copied');
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.dataset.label = btn.dataset.label || btn.textContent;
+      btn.textContent = 'Copied!'; btn.classList.add('copied');
+      setTimeout(reset, 1800);
+    });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.dataset.label = btn.dataset.label || btn.textContent;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(reset, 1800);
+  }
+}
+
+// ============================================================
+// Render categories + tool cards
+// ============================================================
+function render() {
+  const container = document.getElementById('tool-categories');
+
+  CATEGORIES.forEach((cat, ci) => {
+    const catTools = TOOLS.filter(t => t.cat === cat.id);
+    if (!catTools.length) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+
+    const toggleId = 'cat-toggle-' + ci;
+    const bodyId   = 'cat-body-' + ci;
+
+    const btn = document.createElement('button');
+    btn.className = 'cat-toggle' + (ci === 0 ? ' open' : '');
+    btn.id = toggleId;
+    btn.setAttribute('aria-expanded', ci === 0 ? 'true' : 'false');
+    btn.innerHTML =
+      `<span class="arrow">▶</span>` +
+      `<span style="color:${cat.color}">${cat.label}</span>` +
+      `<span class="cat-count">${catTools.length} tool${catTools.length > 1 ? 's' : ''}</span>`;
+    btn.addEventListener('click', () => {
+      const body = document.getElementById(bodyId);
+      const open = !body.classList.contains('open');
+      body.classList.toggle('open', open);
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    const body = document.createElement('div');
+    body.className = 'cat-body' + (ci === 0 ? ' open' : '');
+    body.id = bodyId;
+
+    catTools.forEach((tool, ti) => {
+      const preId = 'bib-' + tool.id;
+      const bib   = bibtexEntry(tool);
+
+      const card = document.createElement('div');
+      card.className = 'tool-card';
+      card.innerHTML =
+        `<div>` +
+        `<a class="tool-name" href="/tools/${tool.id}.html">${tool.title}</a>` +
+        (tool.cg ? `<span title="ChainGraph-enabled: emits signed run record" style="color:var(--teal-glow);margin-left:.5rem;font-size:.8em">⬡</span>` : '') +
+        `</div>` +
+        `<p class="tool-desc">${tool.desc}</p>` +
+        `<div class="bibtex-block">` +
+        `<pre id="${preId}">${bib}</pre>` +
+        `<div class="bibtex-actions">` +
+        `<button class="copy-btn" onclick="copyBlock('${preId}',this)">Copy BibTeX</button>` +
+        `<span class="bibtex-label">${bibtexKey(tool.id)}</span>` +
+        `</div></div>`;
+      body.appendChild(card);
+    });
+
+    sec.appendChild(btn);
+    sec.appendChild(body);
+    container.appendChild(sec);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', render);
+</script>
+
+</body>
+</html>
