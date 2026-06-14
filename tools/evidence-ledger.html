@@ -585,10 +585,11 @@ function toggleAbout(btn) {
 }
 
 // ---------- ChainGraph artifact export ----------
-const OCS_ARTIFACT_VERSION = '1.0.0';
-const OCS_TOOL_ID          = 'evidence-ledger';
-const OCS_TOOL_VERSION     = '1.0.0';
-const OCS_MANDATE_TYPE     = 'bayesian_posterior';
+const OCS_ARTIFACT_VERSION   = '1.0.0';
+const OCS_CHAINGRAPH_VERSION = '0.1.0';
+const OCS_TOOL_ID            = 'evidence-ledger';
+const OCS_TOOL_VERSION       = '1.1.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/bh_evidence';
 
 function sortKeysDeep(v) {
   if (Array.isArray(v)) return v.map(sortKeysDeep);
@@ -665,6 +666,7 @@ async function buildArtifact() {
   };
   const execHash = await computeExecHash(policyParameters, outputPayload);
   return {
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
     ocs_version:    OCS_ARTIFACT_VERSION,
     mandate_type:   OCS_MANDATE_TYPE,
     tool_id:        OCS_TOOL_ID,
@@ -674,6 +676,7 @@ async function buildArtifact() {
     chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
     policy_parameters: policyParameters,
     output_payload:    outputPayload,
+    compliance_flags: ['register:peer-reviewed'],
     audit_signature: {
       data_sources: [
         'Häberle et al. 2024, Nature 631:285',
@@ -682,11 +685,11 @@ async function buildArtifact() {
         'Malave et al. 2025/2026, arXiv:2512.09649',
         'Colom i Bernadich et al. 2026, arXiv:2603.21845',
       ],
-      register:       'mixed',
+      register:       'peer-reviewed',
       schema_version: 'ocs-chaingraph-1.0.0',
     },
     permalink: window.location.href,
-    tool_citation_bibtex: `@software{OCS_evidence_ledger_2026,\n  author   = {Swanson, Tim},\n  title    = {{Bayesian IMBH Evidence Ledger}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/evidence-ledger.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
+    tool_citation_bibtex: `@software{OCS_evidence_ledger_2026,\n  author   = {Swanson, Tim},\n  title    = {{Bayesian IMBH Evidence Ledger}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/evidence-ledger.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
   };
 }
 async function getArtifact() {

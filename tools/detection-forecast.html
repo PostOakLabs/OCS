@@ -451,10 +451,11 @@ window.OCS_RUN = calculate;
 function toggleAbout(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
 
 /* =================== OCS ChainGraph Artifact Export =================== */
-const OCS_ARTIFACT_VERSION = '1.0.0';
-const OCS_TOOL_ID          = 'detection-forecast';
-const OCS_TOOL_VERSION     = '1.0.0';
-const OCS_MANDATE_TYPE     = 'detection_verdict';
+const OCS_ARTIFACT_VERSION   = '1.0.0';
+const OCS_CHAINGRAPH_VERSION = '0.1.0';
+const OCS_TOOL_ID            = 'detection-forecast';
+const OCS_TOOL_VERSION       = '1.1.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/bh_detection_forecast';
 
 function sortKeysDeep(obj) {
   if (Array.isArray(obj)) return obj.map(sortKeysDeep);
@@ -514,6 +515,7 @@ async function buildArtifact() {
   const hash = await computeExecHash(policyParameters, outputPayload);
 
   return {
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
     ocs_version:    OCS_ARTIFACT_VERSION,
     mandate_type:   OCS_MANDATE_TYPE,
     tool_id:        OCS_TOOL_ID,
@@ -523,14 +525,15 @@ async function buildArtifact() {
     chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 1 },
     policy_parameters: policyParameters,
     output_payload:    outputPayload,
+    compliance_flags: ['register:peer-reviewed'],
     audit_signature: {
       client_side_executed: true,
       zero_pii_verified:    true,
       deterministic_run:    true,
-      register:             'mixed'
+      register:             'peer-reviewed'
     },
     permalink: window.location.href,
-    tool_citation_bibtex: `@software{OCS_detection_forecast_2026,\n  author   = {Swanson, Tim},\n  title    = {{Detection Forecast}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/detection-forecast.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
+    tool_citation_bibtex: `@software{OCS_detection_forecast_2026,\n  author   = {Swanson, Tim},\n  title    = {{Detection Forecast}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/detection-forecast.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
   };
 }
 
