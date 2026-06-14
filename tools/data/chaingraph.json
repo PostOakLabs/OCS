@@ -2,8 +2,340 @@
   "ocs_version": "1.0.0",
   "updated": "2026-06-13",
   "schema": "ocs-chaingraph",
-  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast, gaia-dr4-forecaster, anisotropy-degeneracy-explorer, pulsar-accel-mapper, ir-excess-checker.",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. All 23 artifact-export tools qualified as of 2026-06-13.",
   "tools": {
+
+    "adaf-sed-modeler": {
+      "mcp_name": "adaf_sed_modeler",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "verdict": { "type": "string" }
+      },
+      "data_sources": [
+        "Narayan & Yi 1994 — ADAF model",
+        "Yuan & Narayan 2014, ARA&A 52:529 — ADAF review"
+      ]
+    },
+
+    "gw-horizon-plotter": {
+      "mcp_name": "gw_horizon_plotter",
+      "mandate_type": "detection_verdict",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["detection-forecast"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "chirp_mass_M_solar": { "type": "number" },
+        "verdict":            { "type": "string" }
+      },
+      "data_sources": [
+        "Flanagan & Hughes 1998 — matched-filter SNR",
+        "LISA Science Study Team 2017 — LISA sensitivity"
+      ]
+    },
+
+    "astrometric-microlensing": {
+      "mcp_name": "astrometric_microlensing",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "gaia_detectable":       { "type": "boolean" },
+        "roman_detectable":      { "type": "boolean" },
+        "theta_max_uas":         { "type": "number" },
+        "tE_yr":                 { "type": "number" },
+        "expected_events_5yr":   { "type": "number" }
+      },
+      "data_sources": [
+        "Paczynski 1986, ApJ 304:1 — microlensing basics",
+        "Gaia Collaboration 2023 — DR3 astrometric precision"
+      ]
+    },
+
+    "qpo-mass-spin": {
+      "mcp_name": "qpo_mass_spin",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "mass_M_solar":   { "type": "number" },
+        "isco_radius_rg": { "type": "number" },
+        "isco_nu_mHz":    { "type": "number" },
+        "in_OC_window":   { "type": "boolean" },
+        "a_for_8200":     { "type": "number" }
+      },
+      "data_sources": [
+        "Stella & Vietri 1998 — relativistic precession model",
+        "Ingram & Motta 2019, New Astron. Rev. 85 — QPO review"
+      ]
+    },
+
+    "drake-monte-carlo": {
+      "mcp_name": "drake_monte_carlo",
+      "mandate_type": "cosmological_measure",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": [],
+        "chain_depth": 0
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "p_alone":       { "type": "number|null" },
+        "p_less1":       { "type": "number|null" },
+        "median_log10N": { "type": "number|null" }
+      },
+      "data_sources": [
+        "Drake 1961 — original equation",
+        "Sandberg et al. 2018 — dissolving the Fermi paradox (log-uniform priors)"
+      ]
+    },
+
+    "great-filter": {
+      "mcp_name": "great_filter",
+      "mandate_type": "cosmological_measure",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": [],
+        "chain_depth": 0
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "log_behind":             { "type": "number" },
+        "log_ahead":              { "type": "number" },
+        "log_N":                  { "type": "number" },
+        "abio_current":           { "type": "number" },
+        "new_log_N_if_mars_life": { "type": "number" }
+      },
+      "data_sources": [
+        "Hanson 1998 — The Great Filter",
+        "Bostrom 2008 — Where Are They? (Mars-life implication)"
+      ]
+    },
+
+    "radio-seti": {
+      "mcp_name": "radio_seti",
+      "mandate_type": "seti_exclusion",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "snr":        { "type": "number" },
+        "detected":   { "type": "boolean" },
+        "eirp_min_W": { "type": "number" }
+      },
+      "data_sources": [
+        "Seager et al. 2013 — radio SETI figure of merit",
+        "Drake 1961 — radiometer equation"
+      ]
+    },
+
+    "bz-kardashev": {
+      "mcp_name": "bz_kardashev",
+      "mandate_type": "mth_computation",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["bekenstein-landauer"],
+        "chain_depth": 1
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "bz_power_W":        { "type": "number" },
+        "kardashev_context": { "type": "string" }
+      },
+      "data_sources": [
+        "Blandford & Znajek 1977 — BZ power extraction",
+        "Kardashev 1964 — civilisation scale classification"
+      ]
+    },
+
+    "observing-campaign-planner": {
+      "mcp_name": "observing_campaign_planner",
+      "mandate_type": "observational_plan",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["detection-forecast"],
+        "feeds": [],
+        "chain_depth": 2
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "feasibility_verdict":      { "type": "string" },
+        "required_precision_uas":   { "type": "number" },
+        "effective_stars":          { "type": "number" },
+        "min_epochs":               { "type": "number" }
+      },
+      "data_sources": [
+        "Häberle et al. 2024, Nature 631:285 — reference observation",
+        "Davies et al. 2021, The Messenger 182:17 — ELT-MICADO specs"
+      ]
+    },
+
+    "shadow-imaging": {
+      "mcp_name": "shadow_imaging",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "theta_uas":      { "type": "number" },
+        "eht_resolvable": { "type": "boolean" },
+        "eht_ratio":      { "type": "number" }
+      },
+      "data_sources": [
+        "Event Horizon Telescope Collaboration 2019 — M87 shadow",
+        "Falcke et al. 2000 — shadow angular size formula"
+      ]
+    },
+
+    "bekenstein-landauer": {
+      "mcp_name": "bekenstein_landauer",
+      "mandate_type": "mth_computation",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["bz-kardashev"],
+        "feeds": [],
+        "chain_depth": 2
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "bekenstein_bits":  { "type": "number" },
+        "bh_pbz_W":        { "type": "number" },
+        "landauer_ops_s":  { "type": "number" },
+        "lloyd_ops_s":     { "type": "number" },
+        "log10_ops_gap":   { "type": "number" }
+      },
+      "data_sources": [
+        "Bekenstein 1973 — entropy bound",
+        "Landauer 1961 — minimum energy per bit operation",
+        "Lloyd 2000, Nature 406 — ultimate physical limits to computation"
+      ]
+    },
+
+    "kardashev-meter": {
+      "mcp_name": "kardashev_meter",
+      "mandate_type": "mth_computation",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["bekenstein-landauer"],
+        "chain_depth": 0
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "kardashev_K": { "type": "number" },
+        "power_W":     { "type": "number" },
+        "milestones":  { "type": "array", "items": { "k": "number", "label": "string", "years_from_now": "integer|null" } }
+      },
+      "data_sources": [
+        "Kardashev 1964 — civilisation scale classification",
+        "Zackrisson et al. 2015 — Kardashev K formula"
+      ]
+    },
+
+    "cosmology-calculator": {
+      "mcp_name": "cosmology_calculator",
+      "mandate_type": "cosmological_measure",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["drake-monte-carlo"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "d_comoving":   { "type": "string" },
+        "d_luminosity": { "type": "string" },
+        "lookback_time": { "type": "string" }
+      },
+      "data_sources": [
+        "Planck Collaboration 2020 — cosmological parameters (H0=67.4, Om=0.315)",
+        "Hogg 1999 — Distance measures in cosmology"
+      ]
+    },
+
+    "infall-survival": {
+      "mcp_name": "infall_survival",
+      "mandate_type": "mth_computation",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker"],
+        "feeds": [],
+        "chain_depth": 1
+      },
+      "register": "theory",
+      "output_payload_schema": {
+        "a_tidal_g":          { "type": "number" },
+        "M_crit_M_solar":     { "type": "number" },
+        "ratio_vs_tolerance": { "type": "number" },
+        "rs_m":               { "type": "number" },
+        "tau_s":              { "type": "number" },
+        "t_ext_s":            { "type": "number" },
+        "verdict":            { "type": "string" }
+      },
+      "data_sources": [
+        "Misner, Thorne & Wheeler 1973 — Gravitation §31.2 (tidal tensor)",
+        "Penrose 1965 — singularity theorem"
+      ]
+    },
 
     "ir-excess-checker": {
       "mcp_name": "ir_excess_checker",
@@ -286,12 +618,6 @@
     }
 
   },
-  "pending_upgrade": [
-    "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
-    "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
-    "bz-kardashev",
-    "observing-campaign-planner", "shadow-imaging", "bekenstein-landauer",
-    "kardashev-meter", "cosmology-calculator", "infall-survival"
-  ],
+  "pending_upgrade": [],
   "out_of_scope": ["bh-scale-comparator", "energy-translator", "scifi-tech-auditor"]
 }

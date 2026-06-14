@@ -119,6 +119,22 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
 .about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
 .about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
 @media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}.headline-val{font-size:32px}}
+/* ---------- Artifact export (OCS ChainGraph) ---------- */
+.artifact-section{margin-top:1.5rem;border-top:1px solid var(--border-subtle);padding-top:1.25rem}
+.artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border-subtle);border-radius:7px;padding:.55rem .85rem;color:var(--teal-bright);font-family:'Space Mono',monospace;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
+.artifact-toggle:hover{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
+.artifact-toggle .arrow{font-size:.65rem;transition:transform .2s}
+.artifact-toggle[aria-expanded="true"] .arrow{transform:rotate(90deg)}
+.artifact-body{display:none;margin-top:.5rem;border:1px solid var(--border-subtle);border-radius:7px;padding:.75rem;background:rgba(7,5,21,.7)}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-size:.7rem;color:var(--teal-bright);background:rgba(29,186,144,.05);border:1px solid rgba(29,186,144,.2);border-radius:5px;padding:.5rem .7rem;margin-bottom:.6rem;word-break:break-all;font-family:'Space Mono',monospace}
+.artifact-json{background:var(--void);border:1px solid var(--border-subtle);border-radius:6px;padding:.75rem;font-size:.7rem;line-height:1.5;color:var(--text-secondary);overflow-x:auto;margin-bottom:.6rem;max-height:320px;overflow-y:auto;white-space:pre;font-family:'Space Mono',monospace}
+.artifact-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.artifact-btn{font-family:'Space Mono',monospace;font-size:.72rem;padding:.3rem .75rem;border-radius:5px;border:1px solid var(--border-subtle);color:var(--text-secondary);background:transparent;cursor:pointer;transition:all .15s}
+.artifact-btn:hover:not(:disabled){border-color:var(--teal-mid);color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.1)}
+.artifact-btn:disabled{opacity:.4;cursor:default}
+.artifact-btn.copied{border-color:var(--amber-bright);color:var(--amber-bright)}
 </style>
 </head>
 <body>
@@ -226,6 +242,20 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
     <div class="mc-meta" id="mc-meta">—</div>
   </section>
 
+  <div class="artifact-section" id="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false" onclick="toggleArtifact()">
+      <span class="arrow">▶</span> Export OCS Artifact JSON
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash"></div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-dl" onclick="downloadArtifact()">Download .json</button>
+      </div>
+    </div>
+  </div>
+
   <section class="about">
     <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
     <div class="about-body" id="about-this-tool">
@@ -267,6 +297,19 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
 // ─────────────────────────────────────────────────────────────
 // STRINGS (i18n-ready)
 // ─────────────────────────────────────────────────────────────
+// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+let _artifactCache = null;
+function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
+async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}
+function invalidateArtifact(){_artifactCache=null;const b=document.getElementById('artifact-body');if(b&&b.classList.contains('open'))renderArtifact();}
+function toggleArtifact(){const btn=document.getElementById('artifact-toggle');const body=document.getElementById('artifact-body');const open=!body.classList.contains('open');body.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));if(open)renderArtifact();}
+async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache);return;}const art=buildArtifact();art.execution_hash=await computeExecHash(art.policy_parameters,art.output_payload);_artifactCache=art;applyArtifact(art);}
+function applyArtifact(art){document.getElementById('artifact-hash').textContent='execution_hash: '+art.execution_hash;document.getElementById('artifact-json').textContent=JSON.stringify(art,null,2);}
+function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
+function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-drake-monte-carlo-'+Date.now()+'.json';a.click();}
+function wireArtifact(){}
+function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{ocs_version:'1.0.0',mandate_type:'cosmological_measure',tool_id:'drake-monte-carlo',tool_version:'1.0.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,audit_signature:'ocs-cowork-agent-2026-06-13'};}
+
 const STRINGS = {
   factors: [
     {key:"Rstar", name:"R★",  desc:"star formation rate / yr"},
@@ -649,6 +692,8 @@ function schedule() {
     runMC();
     renderStats();
     renderHist();
+    window._toolArtifactData = { policy: { nSamples: state.nSamples, preset: state.preset }, output: { p_alone: state.meta?.pAlone || null, p_less1: state.meta?.pLess1 || null, median_log10N: state.meta?.median || null } };
+    if (window.invalidateArtifact) invalidateArtifact();
   }, 60);
 }
 
@@ -696,6 +741,7 @@ function init() {
   loadHash();
   wire();
   schedule();
+  wireArtifact();
 }
 window.OCS_APPLY_PREFILL = function(obj) {
   if (obj.preset && PRESETS[obj.preset]) { state.preset = obj.preset; state.priors = deepCopy(PRESETS[obj.preset]); }

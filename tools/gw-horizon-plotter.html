@@ -71,6 +71,22 @@ details summary::marker{color:var(--text-dim)}
 .ref a{color:var(--text-dim)}
 .ref a:hover{color:var(--text-sec)}
 .note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+/* ---------- Artifact export (OCS ChainGraph) ---------- */
+.artifact-section{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.25rem}
+.artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border);border-radius:7px;padding:.55rem .85rem;color:var(--teal);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
+.artifact-toggle:hover{border-color:var(--teal);background:rgba(29,186,144,.05)}
+.artifact-toggle .arrow{font-size:.65rem;transition:transform .2s}
+.artifact-toggle[aria-expanded="true"] .arrow{transform:rotate(90deg)}
+.artifact-body{display:none;margin-top:.5rem;border:1px solid var(--border);border-radius:7px;padding:.75rem;background:var(--surface)}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-size:.7rem;color:var(--teal);background:rgba(29,186,144,.05);border:1px solid rgba(29,186,144,.2);border-radius:5px;padding:.5rem .7rem;margin-bottom:.6rem;word-break:break-all;font-family:monospace}
+.artifact-json{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;font-size:.7rem;line-height:1.5;color:var(--text-sec);overflow-x:auto;margin-bottom:.6rem;max-height:320px;overflow-y:auto;white-space:pre;font-family:monospace}
+.artifact-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.artifact-btn{font-size:.72rem;padding:.3rem .75rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;transition:all .15s}
+.artifact-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgba(29,186,144,.05)}
+.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.1)}
+.artifact-btn:disabled{opacity:.4;cursor:default}
+.artifact-btn.copied{border-color:var(--amber);color:var(--amber)}
 </style>
 </head>
 <body>
@@ -216,6 +232,20 @@ details summary::marker{color:var(--text-dim)}
       <div id="verdict-text">—</div>
       <div class="verdict-sub" id="verdict-sub"></div>
     </div>
+
+  <div class="artifact-section" id="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false" onclick="toggleArtifact()">
+      <span class="arrow">▶</span> Export OCS Artifact JSON
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash"></div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-dl" onclick="downloadArtifact()">Download .json</button>
+      </div>
+    </div>
+  </div>
   </div>
 </main>
 
@@ -511,6 +541,19 @@ function drawChart(state) {
     'font-size':'8.5', fill:'#8890a0'}, '● ISCO'));
 }
 
+// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+let _artifactCache = null;
+function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
+async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}
+function invalidateArtifact(){_artifactCache=null;const b=document.getElementById('artifact-body');if(b&&b.classList.contains('open'))renderArtifact();}
+function toggleArtifact(){const btn=document.getElementById('artifact-toggle');const body=document.getElementById('artifact-body');const open=!body.classList.contains('open');body.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));if(open)renderArtifact();}
+async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache);return;}const art=buildArtifact();art.execution_hash=await computeExecHash(art.policy_parameters,art.output_payload);_artifactCache=art;applyArtifact(art);}
+function applyArtifact(art){document.getElementById('artifact-hash').textContent='execution_hash: '+art.execution_hash;document.getElementById('artifact-json').textContent=JSON.stringify(art,null,2);}
+function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
+function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-gw-horizon-plotter-'+Date.now()+'.json';a.click();}
+function wireArtifact(){}
+function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{ocs_version:'1.0.0',mandate_type:'detection_verdict',tool_id:'gw-horizon-plotter',tool_version:'1.0.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,audit_signature:'ocs-cowork-agent-2026-06-13'};}
+
 // ── State & hash ───────────────────────────────────────────────────────────
 const DEF = { m1:8200, m2:10, dist:5.43, spin:0 };
 let state = {...DEF};
@@ -641,6 +684,8 @@ function render() {
   updateMetrics();
   drawChart(state);
   saveHash(state);
+  window._toolArtifactData = { policy: { dist_kpc: state.dist, m1_M_solar: state.m1, m2_M_solar: state.m2, spin: state.spin }, output: { chirp_mass_M_solar: Math.pow(Math.pow(state.m1 * state.m2, 3) / (state.m1 + state.m2), 0.2), verdict: document.getElementById('verdict-text')?.textContent || '' } };
+  if (window.invalidateArtifact) invalidateArtifact();
 }
 
 // ── Event wiring ───────────────────────────────────────────────────────────
@@ -648,6 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadHash();
   syncSliders();
   render();
+  wireArtifact();
 
   document.getElementById('sl-m1').addEventListener('input', function() {
     state.m1 = Math.pow(10, parseFloat(this.value));
