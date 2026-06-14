@@ -2,8 +2,67 @@
   "ocs_version": "1.0.0",
   "updated": "2026-06-13",
   "schema": "ocs-chaingraph",
-  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger.",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast.",
   "tools": {
+
+    "dark-cluster": {
+      "mcp_name": "dark_cluster",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker", "velocity-dispersion"],
+        "feeds": ["evidence-ledger", "detection-forecast"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "menc_dark_at_1arcsec_M_solar":    { "type": "number" },
+        "menc_imbh_at_1arcsec_M_solar":    { "type": "integer" },
+        "central_density_M_solar_per_pc3": { "type": "number" },
+        "n_remnants":              { "type": "integer" },
+        "delta_sigma_pct":         { "type": "number" },
+        "delta_menc_pct_10arcsec": { "type": "number" },
+        "elt_distinguishable":     { "type": "boolean" },
+        "psr_distinguishable":     { "type": "boolean" },
+        "verdict":                 { "type": "string" }
+      },
+      "data_sources": [
+        "Häberle et al. 2024, Nature 631:285 — MBH reference lower bound",
+        "Bañares-Hernández et al. 2025, A&A 693:A104 — Plummer dark-mass scenario",
+        "Plummer 1911 — mass distribution model"
+      ]
+    },
+
+    "detection-forecast": {
+      "mcp_name": "detection_forecast",
+      "mandate_type": "detection_verdict",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker", "evidence-ledger"],
+        "feeds": ["observing-campaign-planner"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "mass_gap_M_solar":         { "type": "integer" },
+        "irreconcilable_tension":   { "type": "boolean" },
+        "n_capable_instruments":    { "type": "integer" },
+        "earliest_resolution_year": { "type": "integer|null" },
+        "earliest_instrument_id":   { "type": "string|null" },
+        "instruments_forecast":     { "type": "array", "items": { "id": "string", "year": "integer", "capable": "boolean" } },
+        "verdict":                  { "type": "string" }
+      },
+      "data_sources": [
+        "Gaia Collaboration / ESA 2024 — DR4 forecast",
+        "Sanderson et al. 2019, ApJS 240:19 — Roman precision",
+        "Davies et al. 2021, The Messenger 182:17 — ELT-MICADO",
+        "Babak et al. 2017, Phys. Rev. D 95:103012 — LISA EMRI"
+      ]
+    },
 
     "velocity-dispersion": {
       "mcp_name": "velocity_dispersion",
@@ -108,11 +167,11 @@
 
   },
   "pending_upgrade": [
-    "dark-cluster", "gaia-dr4-forecaster",
+    "gaia-dr4-forecaster",
     "anisotropy-degeneracy-explorer", "pulsar-accel-mapper", "ir-excess-checker",
     "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
     "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
-    "bz-kardashev", "detection-forecast",
+    "bz-kardashev",
     "observing-campaign-planner", "shadow-imaging", "bekenstein-landauer",
     "kardashev-meter", "cosmology-calculator", "infall-survival"
   ],

@@ -106,6 +106,22 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .about-toggle.open .arr{transform:rotate(90deg)}
 .about-body{display:none;margin-top:14px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
 .about-body.open{display:block}
+/* ---------- Artifact export (OCS ChainGraph) ---------- */
+.artifact-section{border-top:1px solid var(--border-teal);padding-top:20px;margin-bottom:24px}
+.artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--teal-bright);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.artifact-toggle:hover{color:var(--teal-glow)}
+.artifact-toggle .arrow{transition:transform .2s}
+.artifact-toggle.open .arrow{transform:rotate(90deg)}
+.artifact-body{display:none;margin-top:14px}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);background:rgba(29,186,144,.06);border:1px solid var(--border-teal);border-radius:6px;padding:10px 14px;margin-bottom:12px;letter-spacing:.03em;word-break:break-all}
+.artifact-json{background:rgba(7,5,21,.7);border:1px solid var(--border-subtle);border-radius:8px;padding:16px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.55;color:var(--text-secondary);overflow-x:auto;margin-bottom:12px;max-height:320px;overflow-y:auto;white-space:pre}
+.artifact-actions{display:flex;gap:10px;flex-wrap:wrap}
+.artifact-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--teal-mid);color:var(--teal-bright);padding:8px 16px;border-radius:6px;cursor:pointer;transition:all .15s}
+.artifact-btn:hover:not(:disabled){border-color:var(--teal-glow);color:var(--teal-glow);background:rgba(29,186,144,.06)}
+.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.12)}
+.artifact-btn:disabled{border-color:var(--text-dim);color:var(--text-dim);cursor:default;opacity:.45}
+.artifact-btn.copied{border-color:var(--amber-bright);color:var(--amber-bright)}
 .about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:14px 0 7px}
 .about-body h3:first-child{margin-top:0}
 .about-body p{margin-bottom:9px;line-height:1.6}
@@ -203,6 +219,22 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
       </div>
     </div>
   </div>
+
+  <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
+  <section class="artifact-section" id="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download">Download .json</button>
+        <button class="artifact-btn" id="artifact-prompt" disabled title="Coming soon: generate an agent prompt from this artifact">Generate prompt →</button>
+      </div>
+    </div>
+  </section>
 
   <div class="about">
     <button class="about-toggle" onclick="toggleAbout(this)">
@@ -343,6 +375,7 @@ function calculate() {
   renderTimeline(results);
   renderSummary(results);
   saveHash();
+  invalidateArtifact();
 }
 
 function renderTimeline(results) {
@@ -417,8 +450,175 @@ window.OCS_RUN = calculate;
 
 function toggleAbout(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
 
+/* =================== OCS ChainGraph Artifact Export =================== */
+const OCS_ARTIFACT_VERSION = '1.0.0';
+const OCS_TOOL_ID          = 'detection-forecast';
+const OCS_TOOL_VERSION     = '1.0.0';
+const OCS_MANDATE_TYPE     = 'detection_verdict';
+
+function sortKeysDeep(obj) {
+  if (Array.isArray(obj)) return obj.map(sortKeysDeep);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.keys(obj).sort().map(k => [k, sortKeysDeep(obj[k])]));
+  }
+  return obj;
+}
+
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'sha256:requires-secure-context';
+  try {
+    const canonical = JSON.stringify(sortKeysDeep({ policy_parameters: policyParams, output_payload: outputPayload }));
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    return 'sha256:' + hex;
+  } catch (e) { return 'sha256:error'; }
+}
+
+function buildVerdictDF(first, gap, sigma) {
+  if (!first) return `No planned instrument can resolve the ${gap.toLocaleString()} M☉ mass gap at ${sigma.toFixed(1)}σ — next-generation facilities required.`;
+  const urgency = first.year <= 2030 ? 'Near-term' : first.year <= 2035 ? 'Medium-term' : 'Long-term';
+  return `${urgency} resolution: ${first.instr.name} (~${first.year}) can close the ${gap.toLocaleString()} M☉ gap at ${sigma.toFixed(1)}σ via ${first.instr.method.toLowerCase()}.`;
+}
+
+function _artifactStateKey() {
+  return state.lower + '|' + state.upper + '|' + state.sigma + '|' + state.scenario;
+}
+
+async function buildArtifact() {
+  const results = INSTRUMENTS.map(i => ({ instr: i, ...estimateDetection(i) }));
+  const capable = results.filter(r => r.capable).sort((a, b) => a.year - b.year);
+  const first   = capable[0];
+  const gap     = Math.abs(state.lower - state.upper);
+
+  const policyParameters = {
+    lower_bound_M_solar: state.lower,
+    upper_limit_M_solar: state.upper,
+    sigma_target:        state.sigma,
+    scenario:            state.scenario
+  };
+
+  const outputPayload = {
+    mass_gap_M_solar:          gap,
+    irreconcilable_tension:    state.lower > state.upper,
+    n_capable_instruments:     capable.length,
+    earliest_resolution_year:  first ? first.year : null,
+    earliest_instrument_id:    first ? first.instr.id : null,
+    instruments_forecast: results.map(r => ({
+      id:      r.instr.id,
+      year:    r.year,
+      capable: r.capable
+    })),
+    verdict: buildVerdictDF(first, gap, state.sigma)
+  };
+
+  const hash = await computeExecHash(policyParameters, outputPayload);
+
+  return {
+    ocs_version:    OCS_ARTIFACT_VERSION,
+    mandate_type:   OCS_MANDATE_TYPE,
+    tool_id:        OCS_TOOL_ID,
+    tool_version:   OCS_TOOL_VERSION,
+    generated_at:   new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 1 },
+    policy_parameters: policyParameters,
+    output_payload:    outputPayload,
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified:    true,
+      deterministic_run:    true,
+      register:             'mixed'
+    }
+  };
+}
+
+let _artifactCache    = null;
+let _artifactCacheKey = null;
+
+async function getArtifact() {
+  const key = _artifactStateKey();
+  if (_artifactCache && _artifactCacheKey === key) return _artifactCache;
+  _artifactCache = await buildArtifact();
+  _artifactCacheKey = key;
+  return _artifactCache;
+}
+
+async function renderArtifact() {
+  const hashEl = document.getElementById('artifact-hash-cite');
+  const jsonEl  = document.getElementById('artifact-json');
+  if (!hashEl || !jsonEl) return;
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.startsWith('sha256:')
+    ? artifact.execution_hash.slice(0, 22) + '…'
+    : artifact.execution_hash;
+  hashEl.textContent = `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0, 10)}`;
+  jsonEl.textContent = JSON.stringify(artifact, null, 2);
+}
+
+function invalidateArtifact() {
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+
+function wireArtifact() {
+  const toggle  = document.getElementById('artifact-toggle');
+  const body    = document.getElementById('artifact-body');
+  const copyBtn = document.getElementById('artifact-copy');
+  const dlBtn   = document.getElementById('artifact-download');
+
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const text = JSON.stringify(artifact, null, 2);
+    const flash = () => {
+      copyBtn.textContent = 'Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'Copy JSON'; copyBtn.classList.remove('copied'); }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(flash).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta); flash();
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); flash();
+    }
+  });
+
+  dlBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const shortHash = artifact.execution_hash.slice(7, 15);
+    const filename  = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+    const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+/* ====================================================================== */
+
 loadHash();
 calculate();
+wireArtifact();
 </script>
 <script src="../data/prefill.js"></script>
 </body>
