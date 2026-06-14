@@ -120,6 +120,20 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .about-toggle.open .arr{transform:rotate(90deg)}
 .about-body{display:none;margin-top:14px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
 .about-body.open{display:block}
+/* ---------- ChainGraph artifact section ---------- */
+.artifact-section{border-top:1px solid var(--border-subtle);padding-top:24px;margin-top:8px}
+.artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.artifact-toggle:hover{color:var(--teal-glow)}
+.artifact-toggle .arrow{transition:transform .2s}
+.artifact-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);margin-bottom:12px;word-break:break-all}
+.artifact-json{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);white-space:pre-wrap;word-break:break-all;max-height:320px;overflow-y:auto;background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:6px;padding:14px;margin-bottom:12px}
+.artifact-actions{display:flex;gap:10px;flex-wrap:wrap}
+.artifact-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;padding:7px 14px;border-radius:6px;border:1px solid var(--purple-mid);background:rgba(112,85,212,.12);color:var(--purple-glow);cursor:pointer;transition:all .15s}
+.artifact-btn:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.artifact-btn:disabled{opacity:.4;cursor:default}
+.artifact-btn.copied{border-color:var(--teal-mid);color:var(--teal-glow)}
 .about-body h3{font-family:'Orbitron',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:14px 0 7px}
 .about-body h3:first-child{margin-top:0}
 .about-body p{margin-bottom:9px;line-height:1.6}
@@ -238,6 +252,22 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
       </div>
     </div>
   </div>
+
+  <!-- CHAINGRAPH ARTIFACT -->
+  <section class="artifact-section" id="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download">Download .json</button>
+        <button class="artifact-btn" id="artifact-prompt" disabled title="Coming soon…">Generate prompt →</button>
+      </div>
+    </div>
+  </section>
 
   <div class="about">
     <button class="about-toggle" onclick="toggleAbout(this)">
@@ -497,6 +527,7 @@ function calculate() {
   document.getElementById('verdict-text').innerHTML = verdict;
 
   saveHash();
+  invalidateArtifact();
 }
 
 // ─── Hash state ───────────────────────────────────────────────────────────────
@@ -553,10 +584,167 @@ function toggleAbout(btn) {
   btn.nextElementSibling.classList.toggle('open');
 }
 
+// ---------- ChainGraph artifact export ----------
+const OCS_ARTIFACT_VERSION = '1.0.0';
+const OCS_TOOL_ID          = 'evidence-ledger';
+const OCS_TOOL_VERSION     = '1.0.0';
+const OCS_MANDATE_TYPE     = 'bayesian_posterior';
+
+function sortKeysDeep(v) {
+  if (Array.isArray(v)) return v.map(sortKeysDeep);
+  if (v && typeof v === 'object') {
+    const out = {};
+    for (const k of Object.keys(v).sort()) out[k] = sortKeysDeep(v[k]);
+    return out;
+  }
+  return v;
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext) return 'sha256:requires-secure-context';
+  const canonical = JSON.stringify(sortKeysDeep({ policyParams, outputPayload }));
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+  return 'sha256:' + [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function buildVerdictEL(pIMBH, pDC, pNULL) {
+  const max = Math.max(pIMBH, pDC, pNULL);
+  if (max < 50) return 'genuinely ambiguous — no hypothesis commands a majority; mass tension unresolved with current data';
+  if (pIMBH === max) {
+    const conf = pIMBH > 80 ? 'strongly' : pIMBH > 60 ? 'moderately' : 'weakly';
+    return `${conf} favors IMBH (${pIMBH.toFixed(0)}% posterior)`;
+  }
+  if (pDC === max) {
+    const conf = pDC > 80 ? 'strongly' : pDC > 60 ? 'moderately' : 'weakly';
+    return `${conf} favors dark stellar cluster (${pDC.toFixed(0)}% posterior)`;
+  }
+  return `tentatively disfavors any central mass concentration (null: ${pNULL.toFixed(0)}%)`;
+}
+
+let _artifactCache = null, _artifactCacheKey = null;
+function _artifactStateKey() {
+  const ev = EVIDENCE.map(e => `${e.id}:${state.ev[e.id].r},${state.ev[e.id].s}`).join(';');
+  return `${state.prior.imbh}|${state.prior.dc}|${state.prior.null}|${ev}`;
+}
+
+async function buildArtifact() {
+  const p = state.prior;
+  const total_prior = p.imbh + p.dc + p.null;
+  let sumR = 0, sumS = 0;
+  EVIDENCE.forEach(e => { sumR += state.ev[e.id].r; sumS += state.ev[e.id].s; });
+  const logW_IMBH = Math.log10(p.imbh / total_prior) + sumR + sumS;
+  const logW_DC   = Math.log10(p.dc   / total_prior) + sumS;
+  const logW_NULL = Math.log10(p.null  / total_prior);
+  const maxLog = Math.max(logW_IMBH, logW_DC, logW_NULL);
+  const wI = Math.pow(10, logW_IMBH - maxLog);
+  const wD = Math.pow(10, logW_DC   - maxLog);
+  const wN = Math.pow(10, logW_NULL - maxLog);
+  const wT = wI + wD + wN;
+  const pIMBH = wI / wT * 100;
+  const pDC   = wD / wT * 100;
+  const pNULL = wN / wT * 100;
+  const logBF_ID = logW_IMBH - logW_DC;
+  const max = Math.max(pIMBH, pDC, pNULL);
+  const dominant_hypothesis = pIMBH === max ? 'imbh' : pDC === max ? 'dark_cluster' : 'null';
+
+  const evidenceParams = {};
+  EVIDENCE.forEach(e => { evidenceParams[e.id] = { r: state.ev[e.id].r, s: state.ev[e.id].s }; });
+  const policyParameters = {
+    prior_imbh_pct: p.imbh,
+    prior_dc_pct:   p.dc,
+    prior_null_pct: p.null,
+    evidence:       evidenceParams,
+  };
+  const outputPayload = {
+    p_imbh:                   parseFloat(pIMBH.toFixed(2)),
+    p_dark_cluster:           parseFloat(pDC.toFixed(2)),
+    p_null:                   parseFloat(pNULL.toFixed(2)),
+    dominant_hypothesis,
+    posterior_odds_imbh_vs_dc: parseFloat((pIMBH / pDC).toFixed(3)),
+    log10_bf_imbh_vs_dc:       parseFloat(logBF_ID.toFixed(3)),
+    log10_bf_mass_vs_null:     parseFloat(sumS.toFixed(3)),
+    verdict:                   buildVerdictEL(pIMBH, pDC, pNULL),
+  };
+  const execHash = await computeExecHash(policyParameters, outputPayload);
+  return {
+    ocs_version:    OCS_ARTIFACT_VERSION,
+    mandate_type:   OCS_MANDATE_TYPE,
+    tool_id:        OCS_TOOL_ID,
+    tool_version:   OCS_TOOL_VERSION,
+    generated_at:   new Date().toISOString(),
+    execution_hash: execHash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParameters,
+    output_payload:    outputPayload,
+    audit_signature: {
+      data_sources: [
+        'Häberle et al. 2024, Nature 631:285',
+        'Bañares-Hernández et al. 2025, A&A 693:A104',
+        'Chen et al. 2025, arXiv:2511.20945',
+        'Malave et al. 2025/2026, arXiv:2512.09649',
+        'Colom i Bernadich et al. 2026, arXiv:2603.21845',
+      ],
+      register:       'mixed',
+      schema_version: 'ocs-chaingraph-1.0.0',
+    },
+  };
+}
+async function getArtifact() {
+  const key = _artifactStateKey();
+  if (_artifactCache && _artifactCacheKey === key) return _artifactCache;
+  const a = await buildArtifact(); _artifactCache = a; _artifactCacheKey = key; return a;
+}
+async function renderArtifact() {
+  const a    = await getArtifact();
+  const cite = document.getElementById('artifact-hash-cite');
+  const pre  = document.getElementById('artifact-json');
+  if (!cite || !pre) return;
+  cite.textContent = a.execution_hash + '  ·  ' + OCS_TOOL_ID + ' v' + OCS_TOOL_VERSION + '  ·  ' + a.generated_at.slice(0, 10);
+  pre.textContent  = JSON.stringify(a, null, 2);
+}
+function invalidateArtifact() {
+  _artifactCache = null; _artifactCacheKey = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+function wireArtifact() {
+  const toggle  = document.getElementById('artifact-toggle');
+  const body    = document.getElementById('artifact-body');
+  const copyBtn = document.getElementById('artifact-copy');
+  const dlBtn   = document.getElementById('artifact-download');
+  toggle.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.querySelector('.arrow').style.transform = open ? 'rotate(90deg)' : '';
+    toggle.setAttribute('aria-expanded', open);
+    if (open) renderArtifact();
+  });
+  copyBtn.addEventListener('click', async () => {
+    const text = JSON.stringify(await getArtifact(), null, 2);
+    try { await navigator.clipboard.writeText(text); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    copyBtn.textContent = 'Copied!'; copyBtn.classList.add('copied');
+    setTimeout(() => { copyBtn.textContent = 'Copy JSON'; copyBtn.classList.remove('copied'); }, 1800);
+  });
+  dlBtn.addEventListener('click', async () => {
+    const a    = await getArtifact();
+    const hash = a.execution_hash.replace('sha256:', '').slice(0, 8);
+    const blob = new Blob([JSON.stringify(a, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = `ocs-${OCS_TOOL_ID}-${hash}.json`;
+    document.body.appendChild(link); link.click();
+    document.body.removeChild(link); URL.revokeObjectURL(url);
+  });
+  document.getElementById('artifact-prompt').addEventListener('click', () => {});
+}
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 buildGrid();
 loadHash();
 calculate();
+wireArtifact();
 </script>
 <script src="../data/prefill.js"></script>
 </body>

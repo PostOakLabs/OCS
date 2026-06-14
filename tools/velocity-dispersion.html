@@ -90,6 +90,20 @@ a:hover{color:var(--teal-glow)}
 .about-toggle.open .arrow{transform:rotate(90deg)}
 .about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
 .about-body.open{display:block}
+/* ---------- ChainGraph artifact section ---------- */
+.artifact-section{border-top:1px solid var(--border-subtle);padding-top:24px;margin-top:8px}
+.artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.artifact-toggle:hover{color:var(--teal-glow)}
+.artifact-toggle .arrow{transition:transform .2s}
+.artifact-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);margin-bottom:12px;word-break:break-all}
+.artifact-json{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);white-space:pre-wrap;word-break:break-all;max-height:320px;overflow-y:auto;background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:6px;padding:14px;margin-bottom:12px}
+.artifact-actions{display:flex;gap:10px;flex-wrap:wrap}
+.artifact-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;padding:7px 14px;border-radius:6px;border:1px solid var(--purple-mid);background:rgba(112,85,212,.12);color:var(--purple-glow);cursor:pointer;transition:all .15s}
+.artifact-btn:hover{background:rgba(112,85,212,.25);color:var(--text-primary)}
+.artifact-btn:disabled{opacity:.4;cursor:default}
+.artifact-btn.copied{border-color:var(--teal-mid);color:var(--teal-glow)}
 .about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
 .about-body h3:first-child{margin-top:0}
 .about-body p{margin-bottom:10px}
@@ -212,6 +226,22 @@ a:hover{color:var(--teal-glow)}
       </div>
     </div>
     <a class="cross-link" href="constraint-stacker.html">→ See this prediction overlaid on every constraint</a>
+  </section>
+
+  <!-- CHAINGRAPH ARTIFACT -->
+  <section class="artifact-section" id="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download">Download .json</button>
+        <button class="artifact-btn" id="artifact-prompt" disabled title="Coming soon…">Generate prompt →</button>
+      </div>
+    </div>
   </section>
 
   <!-- ABOUT -->
@@ -348,6 +378,134 @@ function render() {
   }
 }
 
+// ---------- ChainGraph artifact export ----------
+const OCS_ARTIFACT_VERSION = '1.0.0';
+const OCS_TOOL_ID          = 'velocity-dispersion';
+const OCS_TOOL_VERSION     = '1.0.0';
+const OCS_MANDATE_TYPE     = 'imbh_constraint';
+
+function sortKeysDeep(v) {
+  if (Array.isArray(v)) return v.map(sortKeysDeep);
+  if (v && typeof v === 'object') {
+    const out = {};
+    for (const k of Object.keys(v).sort()) out[k] = sortKeysDeep(v[k]);
+    return out;
+  }
+  return v;
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext) return 'sha256:requires-secure-context';
+  const canonical = JSON.stringify(sortKeysDeep({ policyParams, outputPayload }));
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+  return 'sha256:' + [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function buildVerdictVD(m_msigma, sigUsed) {
+  const HABERLE = 8200, NOYOLA = 4e4;
+  const mFmt = Math.round(m_msigma).toLocaleString();
+  if (m_msigma < HABERLE * 0.5)
+    return `M-σ predicts ${mFmt} M☉ — well below Häberle lower bound; M-σ likely breaks down at GC scales`;
+  if (m_msigma > NOYOLA * 5)
+    return `M-σ predicts ${mFmt} M☉ — above all observations; would imply hidden massive IMBH`;
+  if (m_msigma > HABERLE && m_msigma < NOYOLA * 2)
+    return `M-σ predicts ${mFmt} M☉ — within the observed range (plausible but extrapolation territory)`;
+  return `M-σ predicts ${mFmt} M☉ — near the Häberle lower bound at σ = ${sigUsed.toFixed(1)} km/s`;
+}
+
+let _artifactCache = null, _artifactCacheKey = null;
+function _artifactStateKey() { return `${state.mass}|${state.rh}|${state.sigOverride}`; }
+
+async function buildArtifact() {
+  const sigVirial = virialSigmaKms(state.mass, state.rh);
+  const sigUsed   = state.sigOverride > 0 ? state.sigOverride : sigVirial;
+  const m_msigma  = mSigmaPrediction(sigUsed);
+  const policyParameters = {
+    cluster_mass_M_solar: state.mass,
+    half_light_radius_pc: state.rh,
+    sigma_override_km_s:  state.sigOverride,
+  };
+  const outputPayload = {
+    sigma_virial_km_s:             parseFloat(sigVirial.toFixed(3)),
+    sigma_used_km_s:               parseFloat(sigUsed.toFixed(3)),
+    sigma_is_override:             state.sigOverride > 0,
+    msigma_predicted_mass_M_solar: Math.round(m_msigma),
+    ratio_vs_haberle_2024:         parseFloat((m_msigma / 8200).toFixed(4)),
+    verdict:                       buildVerdictVD(m_msigma, sigUsed),
+  };
+  const execHash = await computeExecHash(policyParameters, outputPayload);
+  return {
+    ocs_version:    OCS_ARTIFACT_VERSION,
+    mandate_type:   OCS_MANDATE_TYPE,
+    tool_id:        OCS_TOOL_ID,
+    tool_version:   OCS_TOOL_VERSION,
+    generated_at:   new Date().toISOString(),
+    execution_hash: execHash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParameters,
+    output_payload:    outputPayload,
+    audit_signature: {
+      data_sources: [
+        'Gültekin et al. 2009, ApJ 698:198 — M-σ relation (Table 3 E sample)',
+        'Baumgardt & Hilker 2018 — cluster structural parameters',
+        'Häberle et al. 2024, Nature 631:285 — 8,200 M☉ lower bound (comparison reference)',
+      ],
+      register:       'mixed',
+      schema_version: 'ocs-chaingraph-1.0.0',
+    },
+  };
+}
+async function getArtifact() {
+  const key = _artifactStateKey();
+  if (_artifactCache && _artifactCacheKey === key) return _artifactCache;
+  const a = await buildArtifact(); _artifactCache = a; _artifactCacheKey = key; return a;
+}
+async function renderArtifact() {
+  const a    = await getArtifact();
+  const cite = document.getElementById('artifact-hash-cite');
+  const pre  = document.getElementById('artifact-json');
+  if (!cite || !pre) return;
+  cite.textContent = a.execution_hash + '  ·  ' + OCS_TOOL_ID + ' v' + OCS_TOOL_VERSION + '  ·  ' + a.generated_at.slice(0, 10);
+  pre.textContent  = JSON.stringify(a, null, 2);
+}
+function invalidateArtifact() {
+  _artifactCache = null; _artifactCacheKey = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+function wireArtifact() {
+  const toggle   = document.getElementById('artifact-toggle');
+  const body     = document.getElementById('artifact-body');
+  const copyBtn  = document.getElementById('artifact-copy');
+  const dlBtn    = document.getElementById('artifact-download');
+  toggle.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.querySelector('.arrow').style.transform = open ? 'rotate(90deg)' : '';
+    toggle.setAttribute('aria-expanded', open);
+    if (open) renderArtifact();
+  });
+  copyBtn.addEventListener('click', async () => {
+    const text = JSON.stringify(await getArtifact(), null, 2);
+    try { await navigator.clipboard.writeText(text); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    copyBtn.textContent = 'Copied!'; copyBtn.classList.add('copied');
+    setTimeout(() => { copyBtn.textContent = 'Copy JSON'; copyBtn.classList.remove('copied'); }, 1800);
+  });
+  dlBtn.addEventListener('click', async () => {
+    const a    = await getArtifact();
+    const hash = a.execution_hash.replace('sha256:', '').slice(0, 8);
+    const blob = new Blob([JSON.stringify(a, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url; link.download = `ocs-${OCS_TOOL_ID}-${hash}.json`;
+    document.body.appendChild(link); link.click();
+    document.body.removeChild(link); URL.revokeObjectURL(url);
+  });
+  document.getElementById('artifact-prompt').addEventListener('click', () => {});
+}
+
 function wire() {
   const ms = document.getElementById('m-slider');
   const rs = document.getElementById('rh-slider');
@@ -356,18 +514,18 @@ function wire() {
   rs.value = state.rh.toFixed(2);
   ss.value = state.sigOverride.toFixed(1);
 
-  ms.addEventListener('input', () => { state.mass = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); });
-  rs.addEventListener('input', () => { state.rh = parseFloat(rs.value); saveHash(); render(); });
-  ss.addEventListener('input', () => { state.sigOverride = parseFloat(ss.value); saveHash(); render(); });
+  ms.addEventListener('input', () => { state.mass = Math.pow(10, parseFloat(ms.value)); saveHash(); render(); invalidateArtifact(); });
+  rs.addEventListener('input', () => { state.rh = parseFloat(rs.value); saveHash(); render(); invalidateArtifact(); });
+  ss.addEventListener('input', () => { state.sigOverride = parseFloat(ss.value); saveHash(); render(); invalidateArtifact(); });
 
   document.querySelectorAll('[data-preset-m]').forEach(b => b.addEventListener('click', () => {
-    state.mass = parseFloat(b.dataset.presetM); ms.value = Math.log10(state.mass).toFixed(2); saveHash(); render();
+    state.mass = parseFloat(b.dataset.presetM); ms.value = Math.log10(state.mass).toFixed(2); saveHash(); render(); invalidateArtifact();
   }));
   document.querySelectorAll('[data-preset-rh]').forEach(b => b.addEventListener('click', () => {
-    state.rh = parseFloat(b.dataset.presetRh); rs.value = state.rh.toFixed(2); saveHash(); render();
+    state.rh = parseFloat(b.dataset.presetRh); rs.value = state.rh.toFixed(2); saveHash(); render(); invalidateArtifact();
   }));
   document.querySelectorAll('[data-preset-sig]').forEach(b => b.addEventListener('click', () => {
-    state.sigOverride = parseFloat(b.dataset.presetSig); ss.value = state.sigOverride.toFixed(1); saveHash(); render();
+    state.sigOverride = parseFloat(b.dataset.presetSig); ss.value = state.sigOverride.toFixed(1); saveHash(); render(); invalidateArtifact();
   }));
 
   const at = document.getElementById('about-toggle');
@@ -386,6 +544,7 @@ function init() {
   }
   loadHash();
   wire();
+  wireArtifact();
   render();
 }
 window.OCS_APPLY_PREFILL = function(obj) {

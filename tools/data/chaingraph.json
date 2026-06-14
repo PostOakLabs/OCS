@@ -2,8 +2,66 @@
   "ocs_version": "1.0.0",
   "updated": "2026-06-13",
   "schema": "ocs-chaingraph",
-  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan.",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger.",
   "tools": {
+
+    "velocity-dispersion": {
+      "mcp_name": "velocity_dispersion",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["dark-cluster", "evidence-ledger"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "sigma_virial_km_s":             { "type": "number" },
+        "sigma_used_km_s":               { "type": "number" },
+        "sigma_is_override":             { "type": "boolean" },
+        "msigma_predicted_mass_M_solar": { "type": "integer" },
+        "ratio_vs_haberle_2024":         { "type": "number" },
+        "verdict":                       { "type": "string" }
+      },
+      "data_sources": [
+        "Gültekin et al. 2009, ApJ 698:198 — M-σ relation (Table 3 E sample)",
+        "Baumgardt & Hilker 2018 — cluster structural parameters",
+        "Häberle et al. 2024, Nature 631:285 — comparison reference"
+      ]
+    },
+
+    "evidence-ledger": {
+      "mcp_name": "evidence_ledger",
+      "mandate_type": "bayesian_posterior",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": ["constraint-stacker", "velocity-dispersion"],
+        "feeds": ["detection-forecast"],
+        "chain_depth": 1
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "p_imbh":                    { "type": "number" },
+        "p_dark_cluster":            { "type": "number" },
+        "p_null":                    { "type": "number" },
+        "dominant_hypothesis":       { "type": "string", "enum": ["imbh", "dark_cluster", "null"] },
+        "posterior_odds_imbh_vs_dc": { "type": "number" },
+        "log10_bf_imbh_vs_dc":       { "type": "number" },
+        "log10_bf_mass_vs_null":     { "type": "number" },
+        "verdict":                   { "type": "string" }
+      },
+      "data_sources": [
+        "Häberle et al. 2024, Nature 631:285",
+        "Bañares-Hernández et al. 2025, A&A 693:A104",
+        "Chen et al. 2025, arXiv:2511.20945",
+        "Malave et al. 2025/2026, arXiv:2512.09649",
+        "Colom i Bernadich et al. 2026, arXiv:2603.21845"
+      ]
+    },
 
     "constraint-stacker": {
       "mcp_name": "constraint_stacker",
@@ -50,11 +108,11 @@
 
   },
   "pending_upgrade": [
-    "velocity-dispersion", "dark-cluster", "gaia-dr4-forecaster",
+    "dark-cluster", "gaia-dr4-forecaster",
     "anisotropy-degeneracy-explorer", "pulsar-accel-mapper", "ir-excess-checker",
     "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
     "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
-    "bz-kardashev", "evidence-ledger", "detection-forecast",
+    "bz-kardashev", "detection-forecast",
     "observing-campaign-planner", "shadow-imaging", "bekenstein-landauer",
     "kardashev-meter", "cosmology-calculator", "infall-survival"
   ],
