@@ -107,6 +107,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .artifact-btn:active:not(:disabled){background:rgba(29,186,144,.1)}
 .artifact-btn:disabled{opacity:.4;cursor:default}
 .artifact-btn.copied{border-color:var(--amber-bright);color:var(--amber-bright)}
+.cg-parent-wrap{margin:0 0 10px;padding:8px 12px;border:1px solid rgba(29,186,144,.2);border-radius:7px}.cg-parent-label{display:block;font-size:.71rem;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:#1dba90;margin-bottom:5px}.cg-parent-label span{color:#9890c0;text-transform:none;letter-spacing:0;font-style:italic}.cg-parent-ta{width:100%;font-size:.68rem;font-family:monospace;border:1px solid rgba(29,186,144,.2);border-radius:4px;padding:.4rem .55rem;resize:vertical;min-height:52px;background:#070515;color:#9890c0;line-height:1.4}.cg-parent-ta:focus{outline:none;border-color:rgba(29,186,144,.5)}.cg-parent-status{font-size:.67rem;font-family:monospace;margin-top:3px;min-height:.9em}.cg-parent-status.ok{color:#4de8c0}.cg-parent-status.warn{color:#f0a020}
 </style>
 </head>
 <body>
@@ -183,6 +184,11 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
   <a class="wf-link" href="workflow-black-hole-101.html">Black Hole 101 Workflow →</a>
   <a class="wf-link" href="bh-scale-comparator.html">Scale Comparator</a>
 
+  <div class="cg-parent-wrap" id="cg-parent-wrap">
+    <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+    <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker (or &cg=… deep-link auto-fills)"></textarea>
+    <div id="cg-parent-status" class="cg-parent-status"></div>
+  </div>
   <div class="artifact-section" id="artifact-section">
     <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false" onclick="toggleArtifact()">
       <span class="arrow">▶</span> Export OCS Artifact JSON
@@ -225,8 +231,15 @@ async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache)
 function applyArtifact(art){document.getElementById('artifact-hash').textContent='execution_hash: '+art.execution_hash;document.getElementById('artifact-json').textContent=JSON.stringify(art,null,2);}
 function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
 function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-shadow-imaging-'+Date.now()+'.json';a.click();}
+// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+const CG_DECLARED_CONSUMES=['constraint-stacker'];
+let _cgParents=[];
+function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}
+function _buildChainBlock(ps){if(!ps||!ps.length)return{parent_hashes:[],parent_tool_ids:[],chain_depth:0};return{parent_hashes:ps.map(p=>p.execution_hash),parent_tool_ids:ps.map(p=>p.tool_id),chain_depth:Math.max(...ps.map(p=>p.chain_depth))+1};}
+function _updateCgStatus(ps){const el=document.getElementById('cg-parent-status');if(!el)return;if(!ps.length){el.textContent='';el.className='cg-parent-status';return;}const bad=ps.filter(p=>!CG_DECLARED_CONSUMES.includes(p.tool_id));if(bad.length){el.textContent='⚠ unexpected tool_id: '+bad.map(p=>p.tool_id).join(', ')+' — recorded anyway';el.className='cg-parent-status warn';}else{el.textContent='✓ '+ps.length+' parent'+(ps.length>1?'s':'')+' accepted · chain_depth → '+(Math.max(...ps.map(p=>p.chain_depth))+1);el.className='cg-parent-status ok';}}
+function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h);if(sp.has('cg')){try{const b=sp.get('cg').replace(/-/g,'+').replace(/_/g,'/');const pad=b+'==='.slice((b.length%4)||4);const ta=document.getElementById('cg-parent-ta');if(ta)ta.value=atob(pad);}catch(e){}}const ta=document.getElementById('cg-parent-ta');if(!ta)return;const go=()=>{_cgParents=_parseCgParents(ta.value);_updateCgStatus(_cgParents);if(typeof invalidateArtifact==='function')invalidateArtifact();};ta.addEventListener('input',go);if(ta.value)go();}
 function wireArtifact(){}
-function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{chaingraph_version:'0.1.0',ocs_version:'1.0.0',mandate_type:'me.omegacentauri/bh_shadow',tool_id:'shadow-imaging',tool_version:'1.1.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{client_side_executed:true,zero_pii_verified:true,deterministic_run:true,register:'peer-reviewed'},permalink:window.location.href,tool_citation_bibtex:'@software{OCS_shadow_imaging_2026,\n  author   = {Swanson, Tim},\n  title    = {{Black Hole Shadow Imaging}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/shadow-imaging.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'};}
+function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{chaingraph_version:'0.1.0',ocs_version:'1.0.0',mandate_type:'me.omegacentauri/bh_shadow',tool_id:'shadow-imaging',tool_version:'1.1.0',generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{client_side_executed:true,zero_pii_verified:true,deterministic_run:true,register:'peer-reviewed'},permalink:window.location.href,tool_citation_bibtex:'@software{OCS_shadow_imaging_2026,\n  author   = {Swanson, Tim},\n  title    = {{Black Hole Shadow Imaging}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/shadow-imaging.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'};}
 const G=6.674e-11, c=2.998e8, Msun=1.989e30, kpc=3.086e19;
 let state={lm:3.851, d_kpc:5.2};
 
@@ -308,6 +321,7 @@ window.OCS_RUN = calculate;
 loadHash();
 calculate();
 wireArtifact();
+_wireCgParent();
 </script>
 <script src="../data/prefill.js"></script>
 </body>

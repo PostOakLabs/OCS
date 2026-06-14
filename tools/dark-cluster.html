@@ -110,6 +110,7 @@ a:hover{color:var(--teal-glow)}
 .artifact-btn:active:not(:disabled){background:rgba(29,186,144,.12)}
 .artifact-btn:disabled{border-color:var(--text-dim);color:var(--text-dim);cursor:default;opacity:.45}
 .artifact-btn.copied{border-color:var(--amber-bright);color:var(--amber-bright)}
+.cg-parent-wrap{margin:0 0 10px;padding:8px 12px;border:1px solid rgba(29,186,144,.2);border-radius:7px}.cg-parent-label{display:block;font-size:.71rem;font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:#1dba90;margin-bottom:5px}.cg-parent-label span{color:#9890c0;text-transform:none;letter-spacing:0;font-style:italic}.cg-parent-ta{width:100%;font-size:.68rem;font-family:monospace;border:1px solid rgba(29,186,144,.2);border-radius:4px;padding:.4rem .55rem;resize:vertical;min-height:52px;background:#070515;color:#9890c0;line-height:1.4}.cg-parent-ta:focus{outline:none;border-color:rgba(29,186,144,.5)}.cg-parent-status{font-size:.67rem;font-family:monospace;margin-top:3px;min-height:.9em}.cg-parent-status.ok{color:#4de8c0}.cg-parent-status.warn{color:#f0a020}
 .about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
 .about-body h3:first-child{margin-top:0}
 .about-body p{margin-bottom:10px}
@@ -281,6 +282,12 @@ a:hover{color:var(--teal-glow)}
     <a class="cross-link" href="orbital-dynamics.html">&rarr; Orbital dynamics</a>
   </section>
 
+  <!-- ChainGraph L2 parent intake -->
+  <div class="cg-parent-wrap" id="cg-parent-wrap">
+    <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+    <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker, velocity-dispersion (or array; &cg=… deep-link auto-fills)"></textarea>
+    <div id="cg-parent-status" class="cg-parent-status"></div>
+  </div>
   <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
   <section class="artifact-section" id="artifact-section">
     <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
@@ -636,8 +643,15 @@ function buildVerdictDC(eltDist, psrDist, dSigPct, dMencPct) {
   return 'Cleanly distinguishable — kinematic ' + dSigPct.toFixed(0) + '% Δσ at 1″ and/or ' + dMencPct.toFixed(0) + '% ΔM at 10″ far enough apart to favour one scenario.';
 }
 
+// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+const CG_DECLARED_CONSUMES=['constraint-stacker','velocity-dispersion'];
+let _cgParents=[];
+function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}
+function _buildChainBlock(ps){if(!ps||!ps.length)return{parent_hashes:[],parent_tool_ids:[],chain_depth:0};return{parent_hashes:ps.map(p=>p.execution_hash),parent_tool_ids:ps.map(p=>p.tool_id),chain_depth:Math.max(...ps.map(p=>p.chain_depth))+1};}
+function _updateCgStatus(ps){const el=document.getElementById('cg-parent-status');if(!el)return;if(!ps.length){el.textContent='';el.className='cg-parent-status';return;}const bad=ps.filter(p=>!CG_DECLARED_CONSUMES.includes(p.tool_id));if(bad.length){el.textContent='⚠ unexpected tool_id: '+bad.map(p=>p.tool_id).join(', ')+' — recorded anyway';el.className='cg-parent-status warn';}else{el.textContent='✓ '+ps.length+' parent'+(ps.length>1?'s':'')+' accepted · chain_depth → '+(Math.max(...ps.map(p=>p.chain_depth))+1);el.className='cg-parent-status ok';}}
+function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h);if(sp.has('cg')){try{const b=sp.get('cg').replace(/-/g,'+').replace(/_/g,'/');const pad=b+'==='.slice((b.length%4)||4);const ta=document.getElementById('cg-parent-ta');if(ta)ta.value=atob(pad);}catch(e){}}const ta=document.getElementById('cg-parent-ta');if(!ta)return;const go=()=>{_cgParents=_parseCgParents(ta.value);_updateCgStatus(_cgParents);if(typeof invalidateArtifact==='function')invalidateArtifact();};ta.addEventListener('input',go);if(ta.value)go();}
 function _artifactStateKey() {
-  return state.Mdark + '|' + state.Mmean + '|' + state.aPlum + '|' + state.beta + '|' + state.MBH;
+  return state.Mdark + '|' + state.Mmean + '|' + state.aPlum + '|' + state.beta + '|' + state.MBH + '|cg:' + _cgParents.map(p=>p.execution_hash).join(',');
 }
 
 async function buildArtifact() {
@@ -688,7 +702,7 @@ async function buildArtifact() {
     tool_version:   OCS_TOOL_VERSION,
     generated_at:   new Date().toISOString(),
     execution_hash: hash,
-    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    chain: _buildChainBlock(_cgParents),
     policy_parameters: policyParameters,
     output_payload:    outputPayload,
     compliance_flags: ['register:peer-reviewed'],
@@ -839,6 +853,7 @@ function init() {
   loadHash();
   wire();
   wireArtifact();
+  _wireCgParent();
   render();
 }
 window.OCS_APPLY_PREFILL = function(obj) {
