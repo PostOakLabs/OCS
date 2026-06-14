@@ -503,6 +503,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
       <a class="tool-link" href="time-dilation.html">Time Dilation</a>
       <a class="tool-link" href="scenario-kardashev-three.html">Scenario — Full MTH chain</a>
     </div>
+    <button onclick="downloadWorkflowArtifact()" style="margin-top:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--teal-bright);border-radius:7px;background:rgba(29,186,144,.08);color:var(--teal-glow);cursor:pointer">⬡ Download Artifact JSON</button>
   </div>
 
   <footer class="footer">
@@ -701,6 +702,8 @@ function saveHash(){setHash({m:S.M.toFixed(0),a:S.a.toFixed(3),b:S.logB.toFixed(
 
 loadHash();
 compute();
+// ChainGraph workflow artifact
+window._workflowArtifactData=function(){function fnv32(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}return h.toString(16).padStart(8,'0');}const inp=Object.assign({},S),ts=new Date().toISOString();return{schema:'ocs-chaingraph-v1',workflow:true,tool:'workflow-mth-compute-budget',title:'MTH Compute Budget Workflow',version:'1.0.0',timestamp:ts,permalink:window.location.href,inputs:inp,workflow_citation_bibtex:'@software{OCS_workflow_mth_compute_budget_2026,\n  author   = {Swanson, Tim},\n  title    = {{MTH Compute Budget Workflow}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/workflow-mth-compute-budget.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}',audit_signature:{hash_algo:'FNV1a-32',input_hash:fnv32(JSON.stringify(inp)+ts),generated_at:ts,site:'omegacentauri.me'}};};function downloadWorkflowArtifact(){const d=window._workflowArtifactData();const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=d.tool+'-'+d.timestamp.slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);}
 </script>
 </body>
 </html>

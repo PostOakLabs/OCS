@@ -281,6 +281,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <a class="tool-link" href="accretion-state.html">Accretion State</a>
       <a class="tool-link" href="workflow-survivability.html">Survivability Workflow</a>
     </div>
+    <button onclick="downloadWorkflowArtifact()" style="margin-top:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--teal-bright);border-radius:7px;background:rgba(29,186,144,.08);color:var(--teal-glow);cursor:pointer">⬡ Download Artifact JSON</button>
   </div>
   <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-03</footer>
 </div>
@@ -348,6 +349,8 @@ function compute(){
 function toggleStage(n){document.getElementById('stage-'+n).classList.toggle('open');activateStep(n);}
 function activateStep(n){document.querySelectorAll('.flow-step').forEach((s,i)=>s.classList.toggle('active',i===n-1));}
 compute();
+// ChainGraph workflow artifact
+window._workflowArtifactData=function(){function fnv32(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=(h*0x01000193)>>>0;}return h.toString(16).padStart(8,'0');}const inp=Object.assign({},S),ts=new Date().toISOString();return{schema:'ocs-chaingraph-v1',workflow:true,tool:'workflow-naked-imbh',title:'The Naked IMBH Workflow',version:'1.0.0',timestamp:ts,permalink:window.location.href,inputs:inp,workflow_citation_bibtex:'@software{OCS_workflow_naked_imbh_2026,\n  author   = {Swanson, Tim},\n  title    = {{The Naked IMBH Workflow}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/workflow-naked-imbh.html},\n  version  = {1.0.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}',audit_signature:{hash_algo:'FNV1a-32',input_hash:fnv32(JSON.stringify(inp)+ts),generated_at:ts,site:'omegacentauri.me'}};};function downloadWorkflowArtifact(){const d=window._workflowArtifactData();const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=d.tool+'-'+d.timestamp.slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);}
 </script>
 </body>
 </html>
