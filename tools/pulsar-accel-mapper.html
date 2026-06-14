@@ -104,6 +104,23 @@ details[open] .about-toggle summary::before{content:'▼ '}
 .ref{font-size:.75rem;color:var(--text-dim);margin-top:.4rem}
 .ref a{color:var(--text-dim)}
 .ref a:hover{color:var(--text-sec)}
+
+/* ---------- Artifact export (OCS ChainGraph) ---------- */
+.artifact-section{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.25rem}
+.artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border);border-radius:7px;padding:.55rem .85rem;color:var(--teal);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
+.artifact-toggle:hover{border-color:var(--teal);background:rgba(29,186,144,.05)}
+.artifact-toggle .arrow{font-size:.65rem;transition:transform .2s}
+.artifact-toggle[aria-expanded="true"] .arrow{transform:rotate(90deg)}
+.artifact-body{display:none;margin-top:.5rem;border:1px solid var(--border);border-radius:7px;padding:.75rem;background:var(--surface)}
+.artifact-body.open{display:block}
+.artifact-hash-cite{font-size:.7rem;color:var(--teal);background:rgba(29,186,144,.05);border:1px solid rgba(29,186,144,.2);border-radius:5px;padding:.5rem .7rem;margin-bottom:.6rem;word-break:break-all;font-family:monospace}
+.artifact-json{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;font-size:.7rem;line-height:1.5;color:var(--text-sec);overflow-x:auto;margin-bottom:.6rem;max-height:320px;overflow-y:auto;white-space:pre;font-family:monospace}
+.artifact-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.artifact-btn{font-size:.72rem;padding:.3rem .75rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;transition:all .15s}
+.artifact-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgba(29,186,144,.05)}
+.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.1)}
+.artifact-btn:disabled{opacity:.4;cursor:default}
+.artifact-btn.copied{border-color:var(--amber);color:var(--amber)}
 </style>
 </head>
 <body>
@@ -257,6 +274,22 @@ details[open] .about-toggle summary::before{content:'▼ '}
         <tbody id="tbl-body"></tbody>
       </table>
     </div>
+
+    <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
+    <section class="artifact-section" id="artifact-section">
+      <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+        <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+      </button>
+      <div class="artifact-body" id="artifact-body">
+        <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
+        <pre class="artifact-json" id="artifact-json"></pre>
+        <div class="artifact-actions">
+          <button class="artifact-btn" id="artifact-copy">Copy JSON</button>
+          <button class="artifact-btn" id="artifact-download">Download .json</button>
+          <button class="artifact-btn" id="artifact-prompt" disabled title="Coming soon: generate an agent prompt from this artifact">Generate prompt →</button>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
 
@@ -498,6 +531,7 @@ function render() {
     const ltr = most.p.name.replace('PSR J1326-4728', '');
     vDet.textContent = `All pulsars consistent. Closest to tension: PSR ${ltr} (ratio ${most.ratio.toFixed(2)}×).`;
   }
+  invalidateArtifact();
 }
 
 // ── Sync sliders to state ─────────────────────────────────────────────────
@@ -557,11 +591,181 @@ function wire() {
   });
 }
 
+/* =================== OCS ChainGraph Artifact Export =================== */
+const OCS_ARTIFACT_VERSION = '1.0.0';
+const OCS_TOOL_ID          = 'pulsar-accel-mapper';
+const OCS_TOOL_VERSION     = '1.0.0';
+const OCS_MANDATE_TYPE     = 'imbh_constraint';
+
+function sortKeysDeep(obj) {
+  if (Array.isArray(obj)) return obj.map(sortKeysDeep);
+  if (obj !== null && typeof obj === 'object') {
+    return Object.fromEntries(Object.keys(obj).sort().map(k => [k, sortKeysDeep(obj[k])]));
+  }
+  return obj;
+}
+
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'sha256:requires-secure-context';
+  try {
+    const canonical = JSON.stringify(sortKeysDeep({ policy_parameters: policyParams, output_payload: outputPayload }));
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
+    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    return 'sha256:' + hex;
+  } catch (e) { return 'sha256:error'; }
+}
+
+function _artifactStateKey() {
+  return state.mass + '|' + state.model + '|' + state.rc + '|' + state.dist;
+}
+
+async function buildArtifact() {
+  const pulsars = window.OCS_MEASUREMENTS.pulsars.filter(p => p.pdot_s !== null);
+  const rows = pulsars.map(p => {
+    const r_m   = rPerp_m(p.theta_arcmin, state.dist);
+    const aO    = aObs(p) * 1e9;
+    const aM    = aMax(state.mass, state.rc, state.model, r_m) * 1e9;
+    const ratio = aM / aO;
+    const status = ratio > 2 ? 'TENSION' : ratio >= 0.5 ? 'OK' : 'FLOOR';
+    return { name: p.name, aO_nm_s2: +aO.toFixed(4), aM_nm_s2: +aM.toFixed(4), ratio: +ratio.toFixed(4), status };
+  });
+  const nTension = rows.filter(r => r.status === 'TENSION').length;
+  const nOk     = rows.filter(r => r.status === 'OK').length;
+  const nFloor  = rows.filter(r => r.status === 'FLOOR').length;
+  const maxRow  = rows.reduce((a, b) => b.ratio > a.ratio ? b : a);
+
+  let verdict;
+  if (nTension >= 2) verdict = 'LIKELY EXCLUDED — ' + nTension + ' pulsars simultaneously over-predicted';
+  else if (nTension === 1) verdict = 'MARGINAL — 1 pulsar over-predicted (ratio > 2)';
+  else verdict = 'CONSISTENT — all pulsars within acceleration envelope';
+
+  const policyParameters = {
+    dist_kpc:     state.dist,
+    mass_M_solar: state.mass,
+    model:        state.model,
+    rc_pc:        state.rc
+  };
+  const outputPayload = {
+    max_ratio:        maxRow.ratio,
+    max_ratio_pulsar: maxRow.name,
+    n_floor:          nFloor,
+    n_ok:             nOk,
+    n_pulsars:        rows.length,
+    n_tension:        nTension,
+    pulsar_rows:      rows,
+    verdict
+  };
+
+  const hash = await computeExecHash(policyParameters, outputPayload);
+  return {
+    ocs_version:    OCS_ARTIFACT_VERSION,
+    mandate_type:   OCS_MANDATE_TYPE,
+    tool_id:        OCS_TOOL_ID,
+    tool_version:   OCS_TOOL_VERSION,
+    generated_at:   new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParameters,
+    output_payload:    outputPayload,
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified:    true,
+      deterministic_run:    true,
+      register:             'mixed'
+    }
+  };
+}
+
+let _artifactCache    = null;
+let _artifactCacheKey = null;
+
+async function getArtifact() {
+  const key = _artifactStateKey();
+  if (_artifactCache && _artifactCacheKey === key) return _artifactCache;
+  _artifactCache = await buildArtifact();
+  _artifactCacheKey = key;
+  return _artifactCache;
+}
+
+async function renderArtifact() {
+  const hashEl = document.getElementById('artifact-hash-cite');
+  const jsonEl  = document.getElementById('artifact-json');
+  if (!hashEl || !jsonEl) return;
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.startsWith('sha256:')
+    ? artifact.execution_hash.slice(0, 22) + '…'
+    : artifact.execution_hash;
+  hashEl.textContent = `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0, 10)}`;
+  jsonEl.textContent = JSON.stringify(artifact, null, 2);
+}
+
+function invalidateArtifact() {
+  _artifactCache = null;
+  _artifactCacheKey = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+
+function wireArtifact() {
+  const toggle  = document.getElementById('artifact-toggle');
+  const body    = document.getElementById('artifact-body');
+  const copyBtn = document.getElementById('artifact-copy');
+  const dlBtn   = document.getElementById('artifact-download');
+
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const text = JSON.stringify(artifact, null, 2);
+    const flash = () => {
+      copyBtn.textContent = 'Copied!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'Copy JSON'; copyBtn.classList.remove('copied'); }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(flash).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta); flash();
+      });
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); flash();
+    }
+  });
+
+  dlBtn.addEventListener('click', async () => {
+    const artifact = await getArtifact();
+    const shortHash = artifact.execution_hash.slice(7, 15);
+    const filename  = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+    const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+/* ====================================================================== */
+
 // ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadHash();
   syncSliders();
   wire();
+  wireArtifact();
   render();
 });
 </script>

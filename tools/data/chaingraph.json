@@ -2,8 +2,68 @@
   "ocs_version": "1.0.0",
   "updated": "2026-06-13",
   "schema": "ocs-chaingraph",
-  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast, gaia-dr4-forecaster, anisotropy-degeneracy-explorer.",
+  "notes": "Machine-readable graph index for OCS ChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. Updated as tools are upgraded. See CHAINGRAPH-OCS-CONFIG-V1_2026-06-13.md for full plan. Qualified: constraint-stacker, velocity-dispersion, evidence-ledger, dark-cluster, detection-forecast, gaia-dr4-forecaster, anisotropy-degeneracy-explorer, pulsar-accel-mapper, ir-excess-checker.",
   "tools": {
+
+    "ir-excess-checker": {
+      "mcp_name": "ir_excess_checker",
+      "mandate_type": "seti_exclusion",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "bands_detecting":             { "type": "array", "items": "string" },
+        "fmin_best_band":              { "type": "string|null" },
+        "fmin_best_covering_fraction": { "type": "number|null" },
+        "flux_wise_w3_mJy":           { "type": "number|null" },
+        "flux_wise_w4_mJy":           { "type": "number|null" },
+        "lam_peak_um":                 { "type": "number" },
+        "n_bands_detecting":           { "type": "integer" },
+        "orbit_radius_AU":             { "type": "number" },
+        "verdict":                     { "type": "string" }
+      },
+      "data_sources": [
+        "Suazo et al. 2025 (Project Hephaistos) — arXiv:2602.23270",
+        "Doré et al. 2025 (SPHEREx Science Overview) — arXiv:2511.02985",
+        "Suazo et al. 2024, MNRAS 531 — doi:10.1093/mnras/stae1186",
+        "Wright et al. 2014 (WISE G-star search) — doi:10.1086/678977"
+      ]
+    },
+
+    "pulsar-accel-mapper": {
+      "mcp_name": "pulsar_accel_mapper",
+      "mandate_type": "imbh_constraint",
+      "tool_version": "1.0.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-06-13",
+      "chain": {
+        "consumes": [],
+        "feeds": ["evidence-ledger"],
+        "chain_depth": 0
+      },
+      "register": "mixed",
+      "output_payload_schema": {
+        "max_ratio":        { "type": "number" },
+        "max_ratio_pulsar": { "type": "string" },
+        "n_floor":          { "type": "integer" },
+        "n_ok":             { "type": "integer" },
+        "n_pulsars":        { "type": "integer" },
+        "n_tension":        { "type": "integer" },
+        "pulsar_rows":      { "type": "array", "items": { "name": "string", "aO_nm_s2": "number", "aM_nm_s2": "number", "ratio": "number", "status": "string" } },
+        "verdict":          { "type": "string" }
+      },
+      "data_sources": [
+        "Colom i Bernadich et al. 2026 (TRAPUM) — arXiv:2603.21845",
+        "Chen et al. 2023, MNRAS 520:3847 — doi:10.1093/mnras/stad029",
+        "Bañares-Hernández et al. 2025, A&A 693:A104 — doi:10.1051/0004-6361/202451763"
+      ]
+    },
 
     "gaia-dr4-forecaster": {
       "mcp_name": "gaia_dr4_forecaster",
@@ -227,7 +287,6 @@
 
   },
   "pending_upgrade": [
-    "pulsar-accel-mapper", "ir-excess-checker",
     "adaf-sed-modeler", "gw-horizon-plotter", "astrometric-microlensing",
     "qpo-mass-spin", "drake-monte-carlo", "great-filter", "radio-seti",
     "bz-kardashev",
