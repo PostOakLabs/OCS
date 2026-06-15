@@ -118,7 +118,7 @@ a:hover{color:var(--teal-glow)}
 .about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
 .about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
 @media (max-width:560px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border-subtle);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border-subtle);border-radius:7px;padding:.55rem .85rem;color:var(--teal-bright);font-family:'Space Mono',monospace;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
@@ -377,7 +377,7 @@ const K_B = 1.381e-23;
 const C = 2.998e8;
 const LY_M = 9.461e15;
 const AU_M = 1.496e11;
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}

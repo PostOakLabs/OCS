@@ -119,7 +119,7 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
 .about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
 .about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
 @media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tier-stack{align-items:flex-start}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}.headline-val{font-size:32px}}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border-subtle);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border-subtle);border-radius:7px;padding:.55rem .85rem;color:var(--teal-bright);font-family:'Space Mono',monospace;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
@@ -297,7 +297,7 @@ canvas{display:block;width:100%;height:auto;border-radius:6px}
 // ─────────────────────────────────────────────────────────────
 // STRINGS (i18n-ready)
 // ─────────────────────────────────────────────────────────────
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}
@@ -408,7 +408,7 @@ function saveHash(){
 // ─────────────────────────────────────────────────────────────
 // Monte Carlo
 // ─────────────────────────────────────────────────────────────
-// Deterministic seeded PRNG (mulberry32). ChainGraph Standard §6 requires the
+// Deterministic seeded PRNG (mulberry32). OpenChainGraph Standard §6 requires the
 // execution_hash to reproduce, so sampling is seeded from the inputs (plus a
 // user-bumpable seed driving the Re-run button) rather than Math.random().
 // Same {nSamples, preset, priors, seed} -> same draws -> same outputs -> same hash.
@@ -422,7 +422,7 @@ function runMC(){
   const factors = STRINGS.factors;
   // Pre-extract ranges
   const ranges = factors.map(f => state.priors[f.key]);
-  const rng = mulberry32(mcSeed());   // deterministic — reproducible execution_hash (ChainGraph §6)
+  const rng = mulberry32(mcSeed());   // deterministic — reproducible execution_hash (OpenChainGraph §6)
   for (let k = 0; k < K; k++) {
     let logN = 0;
     for (let i = 0; i < ranges.length; i++) {

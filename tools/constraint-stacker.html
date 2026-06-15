@@ -584,7 +584,7 @@ a:hover { color: var(--teal-glow); }
 }
 .about-body.open { display: block; }
 
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section {
   border-top: 1px solid var(--border-teal);
   padding-top: 20px;
@@ -868,10 +868,10 @@ body.is-mobile .detail-card { display: none; }
     Click any marker on the chart to see the measurement details and citation.
   </section>
 
-  <!-- =================== ARTIFACT EXPORT (OCS ChainGraph) =================== -->
+  <!-- =================== ARTIFACT EXPORT (OCS OpenChainGraph) =================== -->
   <section class="artifact-section" id="artifact-section">
     <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
-      <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+      <span class="arrow">▶</span> ⬡ OCS OpenChainGraph Artifact
     </button>
     <div class="artifact-body" id="artifact-body">
       <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
@@ -1114,7 +1114,7 @@ function fmtMass(M) {
   if (M === null || M === undefined || isNaN(M)) return '—';
   if (M >= 1e6) return (M / 1e6).toFixed(2) + '×10⁶';
   if (M >= 1e4) return (M / 1e3).toFixed(1) + '×10³';
-  if (M >= 1000) return Math.round(M).toLocaleString('en-US');  // pinned locale → reproducible hash (ChainGraph Standard §6)
+  if (M >= 1000) return Math.round(M).toLocaleString('en-US');  // pinned locale → reproducible hash (OpenChainGraph Standard §6)
   return Math.round(M).toString();
 }
 function fmtSigma(s) {
@@ -1582,12 +1582,12 @@ function wireReset() {
   });
 }
 
-// ---------- OCS ChainGraph Artifact Export ----------
+// ---------- OCS OpenChainGraph Artifact Export ----------
 const OCS_ARTIFACT_VERSION   = '1.0.0';
-const OCS_CHAINGRAPH_VERSION = '0.1.0';                          // ChainGraph Standard version
+const OCS_CHAINGRAPH_VERSION = '0.1.0';                          // OpenChainGraph Standard version
 const OCS_TOOL_ID            = 'constraint-stacker';
 const OCS_TOOL_VERSION       = '1.1.0';
-const OCS_MANDATE_TYPE       = 'me.omegacentauri/imbh_constraint'; // namespaced per ChainGraph Standard §7.3
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/imbh_constraint'; // namespaced per OpenChainGraph Standard §7.3
 
 function sortKeysDeep(obj) {
   if (Array.isArray(obj)) return obj.map(sortKeysDeep);

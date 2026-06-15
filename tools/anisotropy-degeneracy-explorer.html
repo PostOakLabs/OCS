@@ -66,7 +66,7 @@ details summary::marker{color:var(--text-dim)}
 .ref a{color:var(--text-dim)}
 .ref a:hover{color:var(--text-sec)}
 .note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{border-top:1px solid var(--border-teal,#1dba90);padding-top:20px;margin-bottom:24px;width:100%}
 .artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--teal-bright,#4de8c0);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
 .artifact-toggle:hover{color:var(--teal-glow,#1dba90)}
@@ -211,16 +211,16 @@ details summary::marker{color:var(--text-dim)}
       <div class="verdict-sub" id="verdict-sub"></div>
     </div>
 
-    <!-- ChainGraph L2 parent intake -->
+    <!-- OpenChainGraph L2 parent intake -->
     <div class="cg-parent-wrap" id="cg-parent-wrap" style="margin-top:1.5rem">
-      <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+      <label class="cg-parent-label" for="cg-parent-ta">Parent OpenChainGraph artifact <span>(optional — anchors the chain)</span></label>
       <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker, velocity-dispersion (or array; &cg=… deep-link auto-fills)"></textarea>
       <div id="cg-parent-status" class="cg-parent-status"></div>
     </div>
-    <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
+    <!-- ARTIFACT EXPORT (OCS OpenChainGraph) -->
     <section class="artifact-section" id="artifact-section" style="margin-top:1.5rem">
       <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
-        <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+        <span class="arrow">▶</span> ⬡ OCS OpenChainGraph Artifact
       </button>
       <div class="artifact-body" id="artifact-body">
         <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
@@ -538,7 +538,7 @@ function syncSliders() {
   document.getElementById('lbl-dist').textContent = state.dist.toFixed(2) + ' kpc';
 }
 
-/* =================== OCS ChainGraph Artifact Export =================== */
+/* =================== OCS OpenChainGraph Artifact Export =================== */
 const OCS_ARTIFACT_VERSION   = '1.0.0';
 const OCS_CHAINGRAPH_VERSION = '0.1.0';
 const OCS_TOOL_ID            = 'anisotropy-degeneracy-explorer';
@@ -571,7 +571,7 @@ function buildVerdictAniso(detectability, deltaSig) {
   return `DISTINCT — Δσ_los ${deltaSig.toFixed(1)} km/s (${detectability.toFixed(1)}σ); IMBH signature not easily mimicked by β or M_rem at these parameters.`;
 }
 
-// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+// ── OpenChainGraph L2 parent intake ───────────────────────────────────────────
 const CG_DECLARED_CONSUMES=['constraint-stacker','velocity-dispersion'];
 let _cgParents=[];
 function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}

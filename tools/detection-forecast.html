@@ -106,7 +106,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .about-toggle.open .arr{transform:rotate(90deg)}
 .about-body{display:none;margin-top:14px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
 .about-body.open{display:block}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{border-top:1px solid var(--border-teal);padding-top:20px;margin-bottom:24px}
 .artifact-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--teal-bright);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
 .artifact-toggle:hover{color:var(--teal-glow)}
@@ -222,15 +222,15 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
   </div>
 
   <div class="cg-parent-wrap" id="cg-parent-wrap">
-    <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+    <label class="cg-parent-label" for="cg-parent-ta">Parent OpenChainGraph artifact <span>(optional — anchors the chain)</span></label>
     <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker or evidence-ledger (or &cg=… deep-link auto-fills)"></textarea>
     <div id="cg-parent-status" class="cg-parent-status"></div>
   </div>
 
-  <!-- ARTIFACT EXPORT (OCS ChainGraph) -->
+  <!-- ARTIFACT EXPORT (OCS OpenChainGraph) -->
   <section class="artifact-section" id="artifact-section">
     <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
-      <span class="arrow">▶</span> ⬡ OCS ChainGraph Artifact
+      <span class="arrow">▶</span> ⬡ OCS OpenChainGraph Artifact
     </button>
     <div class="artifact-body" id="artifact-body">
       <div class="artifact-hash-cite" id="artifact-hash-cite">Computing execution hash…</div>
@@ -457,7 +457,7 @@ window.OCS_RUN = calculate;
 
 function toggleAbout(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
 
-/* =================== OCS ChainGraph Artifact Export =================== */
+/* =================== OCS OpenChainGraph Artifact Export =================== */
 const OCS_ARTIFACT_VERSION   = '1.0.0';
 const OCS_CHAINGRAPH_VERSION = '0.1.0';
 const OCS_TOOL_ID            = 'detection-forecast';
@@ -488,7 +488,7 @@ function buildVerdictDF(first, gap, sigma) {
   return `${urgency} resolution: ${first.instr.name} (~${first.year}) can close the ${gap.toLocaleString()} M☉ gap at ${sigma.toFixed(1)}σ via ${first.instr.method.toLowerCase()}.`;
 }
 
-// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+// ── OpenChainGraph L2 parent intake ───────────────────────────────────────────
 const CG_DECLARED_CONSUMES=['constraint-stacker','evidence-ledger'];
 let _cgParents=[];
 function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}

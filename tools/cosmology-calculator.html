@@ -70,7 +70,7 @@ details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select
 .deeplink-btn:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
 hr.divider{border:none;border-top:1px solid var(--border);margin:.7rem 0}
 .oc-anchor{background:var(--teal-dim);border:1px solid rgba(29,186,144,.2);border-radius:6px;padding:.55rem .75rem;font-size:.78rem;color:var(--teal);margin-top:.6rem;line-height:1.55}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border);border-radius:7px;padding:.55rem .85rem;color:var(--teal);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal);background:rgba(29,186,144,.05)}
@@ -661,7 +661,7 @@ function loadHash() {
 }
 
 // ── State ─────────────────────────────────────────────────────────────────
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}

@@ -95,7 +95,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .about-body p{margin-bottom:9px;line-height:1.6}
 .about-body code{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-bright)}
 .about-body .meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:14px;border-top:1px dashed var(--border-subtle);padding-top:10px}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border-subtle);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border-subtle);border-radius:7px;padding:.55rem .85rem;color:var(--teal-bright);font-family:'Space Mono',monospace;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
@@ -234,7 +234,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 
 <script src="../data/measurements.js"></script>
 <script>
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}

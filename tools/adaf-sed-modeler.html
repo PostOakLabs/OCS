@@ -73,7 +73,7 @@ details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select
 .regime-pill{display:inline-block;font-size:.7rem;padding:.1rem .4rem;border-radius:3px;font-weight:500;margin-left:.4rem}
 .bondi-bar-wrap{height:6px;background:var(--border);border-radius:3px;margin-top:.3rem;overflow:hidden}
 .bondi-bar{height:100%;background:var(--teal);border-radius:3px;transition:width .2s}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border);border-radius:7px;padding:.55rem .85rem;color:var(--teal);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal);background:rgba(29,186,144,.05)}
@@ -265,7 +265,7 @@ details summary{font-size:.8rem;color:var(--text-sec);cursor:pointer;user-select
     </div>
 
   <div class="cg-parent-wrap" id="cg-parent-wrap">
-    <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+    <label class="cg-parent-label" for="cg-parent-ta">Parent OpenChainGraph artifact <span>(optional — anchors the chain)</span></label>
     <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker (or &cg=… deep-link auto-fills)"></textarea>
     <div id="cg-parent-status" class="cg-parent-status"></div>
   </div>
@@ -807,14 +807,14 @@ function updateMetrics(st) {
     +'&cs='+3e4; // 300 km/s in m/s
 }
 
-// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+// ── OpenChainGraph L2 parent intake ───────────────────────────────────────────
 const CG_DECLARED_CONSUMES=['constraint-stacker'];
 let _cgParents=[];
 function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}
 function _buildChainBlock(ps){if(!ps||!ps.length)return{parent_hashes:[],parent_tool_ids:[],chain_depth:0};return{parent_hashes:ps.map(p=>p.execution_hash),parent_tool_ids:ps.map(p=>p.tool_id),chain_depth:Math.max(...ps.map(p=>p.chain_depth))+1};}
 function _updateCgStatus(ps){const el=document.getElementById('cg-parent-status');if(!el)return;if(!ps.length){el.textContent='';el.className='cg-parent-status';return;}const bad=ps.filter(p=>!CG_DECLARED_CONSUMES.includes(p.tool_id));if(bad.length){el.textContent='⚠ unexpected tool_id: '+bad.map(p=>p.tool_id).join(', ')+' — recorded anyway';el.className='cg-parent-status warn';}else{el.textContent='✓ '+ps.length+' parent'+(ps.length>1?'s':'')+' accepted · chain_depth → '+(Math.max(...ps.map(p=>p.chain_depth))+1);el.className='cg-parent-status ok';}}
 function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h);if(sp.has('cg')){try{const b=sp.get('cg').replace(/-/g,'+').replace(/_/g,'/');const pad=b+'==='.slice((b.length%4)||4);const ta=document.getElementById('cg-parent-ta');if(ta)ta.value=atob(pad);}catch(e){}}const ta=document.getElementById('cg-parent-ta');if(!ta)return;const go=()=>{_cgParents=_parseCgParents(ta.value);_updateCgStatus(_cgParents);if(typeof invalidateArtifact==='function')invalidateArtifact();};ta.addEventListener('input',go);if(ta.value)go();}
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}

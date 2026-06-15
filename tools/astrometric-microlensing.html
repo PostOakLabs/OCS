@@ -98,7 +98,7 @@ a:hover{color:var(--teal-glow)}
 .about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
 .about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
 @media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:22px}.container{padding:24px 18px 60px}}
-/* ---------- Artifact export (OCS ChainGraph) ---------- */
+/* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border-subtle);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border-subtle);border-radius:7px;padding:.55rem .85rem;color:var(--teal-bright);font-family:'Space Mono',monospace;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .artifact-toggle:hover{border-color:var(--teal-mid);background:rgba(29,186,144,.05)}
@@ -299,7 +299,7 @@ a:hover{color:var(--teal-glow)}
   </section>
 
   <div class="cg-parent-wrap" id="cg-parent-wrap">
-    <label class="cg-parent-label" for="cg-parent-ta">Parent ChainGraph artifact <span>(optional — anchors the chain)</span></label>
+    <label class="cg-parent-label" for="cg-parent-ta">Parent OpenChainGraph artifact <span>(optional — anchors the chain)</span></label>
     <textarea id="cg-parent-ta" class="cg-parent-ta" rows="3" placeholder="Paste artifact JSON from: constraint-stacker (or &cg=… deep-link auto-fills)"></textarea>
     <div id="cg-parent-status" class="cg-parent-status"></div>
   </div>
@@ -368,7 +368,7 @@ function fmtMass(M){if(M===null||!isFinite(M)||M<=0)return'—';if(M>=1e6)return
 function fmtNum(x, dp=2){if(!isFinite(x))return'—';if(Math.abs(x)>=1e4||Math.abs(x)<1e-3&&x!==0)return fmtSci(x,dp);return x.toFixed(dp)}
 
 // State
-// ── OCS Artifact Export (ChainGraph) ────────────────────────────────────────
+// ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
 let _artifactCache = null;
 function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
 async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}
@@ -378,7 +378,7 @@ async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache)
 function applyArtifact(art){document.getElementById('artifact-hash').textContent='execution_hash: '+art.execution_hash;document.getElementById('artifact-json').textContent=JSON.stringify(art,null,2);}
 function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
 function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-astrometric-microlensing-'+Date.now()+'.json';a.click();}
-// ── ChainGraph L2 parent intake ───────────────────────────────────────────
+// ── OpenChainGraph L2 parent intake ───────────────────────────────────────────
 const CG_DECLARED_CONSUMES=['constraint-stacker'];
 let _cgParents=[];
 function _parseCgParents(t){const s=(t||'').trim();if(!s)return[];try{const r=JSON.parse(s);const a=Array.isArray(r)?r:[r];return a.filter(p=>p&&typeof p.execution_hash==='string'&&typeof p.tool_id==='string').map(p=>({execution_hash:p.execution_hash,tool_id:p.tool_id,chain_depth:(p.chain&&typeof p.chain.chain_depth==='number')?p.chain.chain_depth:0}));}catch(e){return[];}}
