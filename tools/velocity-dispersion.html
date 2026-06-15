@@ -380,7 +380,7 @@ function render() {
 
 // ---------- OpenChainGraph artifact export ----------
 const OCS_ARTIFACT_VERSION   = '1.0.0';
-const OCS_CHAINGRAPH_VERSION = '0.1.0';
+const OCS_CHAINGRAPH_VERSION = '0.2.0';
 const OCS_TOOL_ID            = 'velocity-dispersion';
 const OCS_TOOL_VERSION       = '1.1.0';
 const OCS_MANDATE_TYPE       = 'me.omegacentauri/bh_kinematics';
@@ -434,7 +434,9 @@ async function buildArtifact() {
   };
   const execHash = await computeExecHash(policyParameters, outputPayload);
   return {
+    '@context': 'https://openchain.graph/spec/v0.2/context.jsonld',
     chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
     ocs_version:    OCS_ARTIFACT_VERSION,
     mandate_type:   OCS_MANDATE_TYPE,
     tool_id:        OCS_TOOL_ID,
@@ -446,14 +448,10 @@ async function buildArtifact() {
     output_payload:    outputPayload,
     compliance_flags: ['register:peer-reviewed'],
     audit_signature: {
-      data_sources: [
-        'Gültekin et al. 2009, ApJ 698:198 — M-σ relation (Table 3 E sample)',
-        'Baumgardt & Hilker 2018 — cluster structural parameters',
-        'Häberle et al. 2024, Nature 631:285 — 8,200 M☉ lower bound (comparison reference)',
-      ],
-      register:       'peer-reviewed',
-      schema_version: 'ocs-chaingraph-1.0.0',
-    },
+      payloadType: 'application/vnd.openchain.graph+json;version=0.2',
+      payload: '',
+      signatures: []
+    }
     permalink: window.location.href,
     tool_citation_bibtex: `@software{OCS_velocity_dispersion_2026,\n  author   = {Swanson, Tim},\n  title    = {{Velocity Dispersion / M-σ Estimator}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/velocity-dispersion.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
   };

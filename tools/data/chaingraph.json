@@ -1,11 +1,10 @@
 {
-  "chaingraph_version": "0.1.0",
+  "chaingraph_version": "0.2.0",
   "ocs_version": "1.0.0",
   "updated": "2026-06-14",
   "schema": "ocs-chaingraph",
   "notes": "Machine-readable graph index for OCS OpenChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. All 23 artifact-export tools at v1.1.0 with namespaced mandate_types (me.omegacentauri/*) as of 2026-06-14.",
   "tools": {
-
     "adaf-sed-modeler": {
       "mcp_name": "adaf_sed_modeler",
       "mandate_type": "me.omegacentauri/bh_accretion",
@@ -13,20 +12,25 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["evidence-ledger"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "verdict": { "type": "string" }
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Narayan & Yi 1994 — ADAF model",
         "Yuan & Narayan 2014, ARA&A 52:529 — ADAF review"
       ]
     },
-
     "gw-horizon-plotter": {
       "mcp_name": "gw_horizon_plotter",
       "mandate_type": "me.omegacentauri/bh_gw_horizon",
@@ -34,21 +38,28 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["detection-forecast"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "detection-forecast"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "chirp_mass_M_solar": { "type": "number" },
-        "verdict":            { "type": "string" }
+        "chirp_mass_M_solar": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Flanagan & Hughes 1998 — matched-filter SNR",
         "LISA Science Study Team 2017 — LISA sensitivity"
       ]
     },
-
     "astrometric-microlensing": {
       "mcp_name": "astrometric_microlensing",
       "mandate_type": "me.omegacentauri/bh_microlensing",
@@ -56,24 +67,37 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["evidence-ledger"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "gaia_detectable":       { "type": "boolean" },
-        "roman_detectable":      { "type": "boolean" },
-        "theta_max_uas":         { "type": "number" },
-        "tE_yr":                 { "type": "number" },
-        "expected_events_5yr":   { "type": "number" }
+        "gaia_detectable": {
+          "type": "boolean"
+        },
+        "roman_detectable": {
+          "type": "boolean"
+        },
+        "theta_max_uas": {
+          "type": "number"
+        },
+        "tE_yr": {
+          "type": "number"
+        },
+        "expected_events_5yr": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Paczynski 1986, ApJ 304:1 — microlensing basics",
         "Gaia Collaboration 2023 — DR3 astrometric precision"
       ]
     },
-
     "qpo-mass-spin": {
       "mcp_name": "qpo_mass_spin",
       "mandate_type": "me.omegacentauri/bh_qpo",
@@ -81,24 +105,37 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["evidence-ledger"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "mass_M_solar":   { "type": "number" },
-        "isco_radius_rg": { "type": "number" },
-        "isco_nu_mHz":    { "type": "number" },
-        "in_OC_window":   { "type": "boolean" },
-        "a_for_8200":     { "type": "number" }
+        "mass_M_solar": {
+          "type": "number"
+        },
+        "isco_radius_rg": {
+          "type": "number"
+        },
+        "isco_nu_mHz": {
+          "type": "number"
+        },
+        "in_OC_window": {
+          "type": "boolean"
+        },
+        "a_for_8200": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Stella & Vietri 1998 — relativistic precession model",
         "Ingram & Motta 2019, New Astron. Rev. 85 — QPO review"
       ]
     },
-
     "drake-monte-carlo": {
       "mcp_name": "drake_monte_carlo",
       "mandate_type": "me.omegacentauri/fermi_drake",
@@ -112,16 +149,21 @@
       },
       "register": "speculative",
       "output_payload_schema": {
-        "p_alone":       { "type": "number|null" },
-        "p_less1":       { "type": "number|null" },
-        "median_log10N": { "type": "number|null" }
+        "p_alone": {
+          "type": "number|null"
+        },
+        "p_less1": {
+          "type": "number|null"
+        },
+        "median_log10N": {
+          "type": "number|null"
+        }
       },
       "data_sources": [
         "Drake 1961 — original equation",
         "Sandberg et al. 2018 — dissolving the Fermi paradox (log-uniform priors)"
       ]
     },
-
     "great-filter": {
       "mcp_name": "great_filter",
       "mandate_type": "me.omegacentauri/fermi_filter",
@@ -135,18 +177,27 @@
       },
       "register": "speculative",
       "output_payload_schema": {
-        "log_behind":             { "type": "number" },
-        "log_ahead":              { "type": "number" },
-        "log_N":                  { "type": "number" },
-        "abio_current":           { "type": "number" },
-        "new_log_N_if_mars_life": { "type": "number" }
+        "log_behind": {
+          "type": "number"
+        },
+        "log_ahead": {
+          "type": "number"
+        },
+        "log_N": {
+          "type": "number"
+        },
+        "abio_current": {
+          "type": "number"
+        },
+        "new_log_N_if_mars_life": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Hanson 1998 — The Great Filter",
         "Bostrom 2008 — Where Are They? (Mars-life implication)"
       ]
     },
-
     "radio-seti": {
       "mcp_name": "radio_seti",
       "mandate_type": "me.omegacentauri/seti_detection",
@@ -155,21 +206,28 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["evidence-ledger"],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "snr":        { "type": "number" },
-        "detected":   { "type": "boolean" },
-        "eirp_min_W": { "type": "number" }
+        "snr": {
+          "type": "number"
+        },
+        "detected": {
+          "type": "boolean"
+        },
+        "eirp_min_W": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Seager et al. 2013 — radio SETI figure of merit",
         "Drake 1961 — radiometer equation"
       ]
     },
-
     "bz-kardashev": {
       "mcp_name": "bz_kardashev",
       "mandate_type": "me.omegacentauri/kardashev_power",
@@ -177,21 +235,28 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["bekenstein-landauer"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "bekenstein-landauer"
+        ],
         "chain_depth": 1
       },
       "register": "speculative",
       "output_payload_schema": {
-        "bz_power_W":        { "type": "number" },
-        "kardashev_context": { "type": "string" }
+        "bz_power_W": {
+          "type": "number"
+        },
+        "kardashev_context": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Blandford & Znajek 1977 — BZ power extraction",
         "Kardashev 1964 — civilisation scale classification"
       ]
     },
-
     "observing-campaign-planner": {
       "mcp_name": "observing_campaign_planner",
       "mandate_type": "me.omegacentauri/bh_campaign",
@@ -199,23 +264,32 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["detection-forecast"],
+        "consumes": [
+          "detection-forecast"
+        ],
         "feeds": [],
         "chain_depth": 2
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "feasibility_verdict":      { "type": "string" },
-        "required_precision_uas":   { "type": "number" },
-        "effective_stars":          { "type": "number" },
-        "min_epochs":               { "type": "number" }
+        "feasibility_verdict": {
+          "type": "string"
+        },
+        "required_precision_uas": {
+          "type": "number"
+        },
+        "effective_stars": {
+          "type": "number"
+        },
+        "min_epochs": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Häberle et al. 2024, Nature 631:285 — reference observation",
         "Davies et al. 2021, The Messenger 182:17 — ELT-MICADO specs"
       ]
     },
-
     "shadow-imaging": {
       "mcp_name": "shadow_imaging",
       "mandate_type": "me.omegacentauri/bh_shadow",
@@ -223,22 +297,31 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
-        "feeds": ["evidence-ledger"],
+        "consumes": [
+          "constraint-stacker"
+        ],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "theta_uas":      { "type": "number" },
-        "eht_resolvable": { "type": "boolean" },
-        "eht_ratio":      { "type": "number" }
+        "theta_uas": {
+          "type": "number"
+        },
+        "eht_resolvable": {
+          "type": "boolean"
+        },
+        "eht_ratio": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Event Horizon Telescope Collaboration 2019 — M87 shadow",
         "Falcke et al. 2000 — shadow angular size formula"
       ]
     },
-
     "bekenstein-landauer": {
       "mcp_name": "bekenstein_landauer",
       "mandate_type": "me.omegacentauri/mth_computation",
@@ -246,17 +329,29 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["bz-kardashev"],
+        "consumes": [
+          "bz-kardashev"
+        ],
         "feeds": [],
         "chain_depth": 2
       },
       "register": "speculative",
       "output_payload_schema": {
-        "bekenstein_bits":  { "type": "number" },
-        "bh_pbz_W":        { "type": "number" },
-        "landauer_ops_s":  { "type": "number" },
-        "lloyd_ops_s":     { "type": "number" },
-        "log10_ops_gap":   { "type": "number" }
+        "bekenstein_bits": {
+          "type": "number"
+        },
+        "bh_pbz_W": {
+          "type": "number"
+        },
+        "landauer_ops_s": {
+          "type": "number"
+        },
+        "lloyd_ops_s": {
+          "type": "number"
+        },
+        "log10_ops_gap": {
+          "type": "number"
+        }
       },
       "data_sources": [
         "Bekenstein 1973 — entropy bound",
@@ -264,7 +359,6 @@
         "Lloyd 2000, Nature 406 — ultimate physical limits to computation"
       ]
     },
-
     "kardashev-meter": {
       "mcp_name": "kardashev_meter",
       "mandate_type": "me.omegacentauri/kardashev_meter",
@@ -273,21 +367,33 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["bekenstein-landauer"],
+        "feeds": [
+          "bekenstein-landauer"
+        ],
         "chain_depth": 0
       },
       "register": "speculative",
       "output_payload_schema": {
-        "kardashev_K": { "type": "number" },
-        "power_W":     { "type": "number" },
-        "milestones":  { "type": "array", "items": { "k": "number", "label": "string", "years_from_now": "integer|null" } }
+        "kardashev_K": {
+          "type": "number"
+        },
+        "power_W": {
+          "type": "number"
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "k": "number",
+            "label": "string",
+            "years_from_now": "integer|null"
+          }
+        }
       },
       "data_sources": [
         "Kardashev 1964 — civilisation scale classification",
         "Zackrisson et al. 2015 — Kardashev K formula"
       ]
     },
-
     "cosmology-calculator": {
       "mcp_name": "cosmology_calculator",
       "mandate_type": "me.omegacentauri/fermi_cosmology",
@@ -296,21 +402,28 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["drake-monte-carlo"],
+        "feeds": [
+          "drake-monte-carlo"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "d_comoving":   { "type": "string" },
-        "d_luminosity": { "type": "string" },
-        "lookback_time": { "type": "string" }
+        "d_comoving": {
+          "type": "string"
+        },
+        "d_luminosity": {
+          "type": "string"
+        },
+        "lookback_time": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Planck Collaboration 2020 — cosmological parameters (H0=67.4, Om=0.315)",
         "Hogg 1999 — Distance measures in cosmology"
       ]
     },
-
     "infall-survival": {
       "mcp_name": "infall_survival",
       "mandate_type": "me.omegacentauri/mth_infall",
@@ -318,26 +431,41 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker"],
+        "consumes": [
+          "constraint-stacker"
+        ],
         "feeds": [],
         "chain_depth": 1
       },
       "register": "speculative",
       "output_payload_schema": {
-        "a_tidal_g":          { "type": "number" },
-        "M_crit_M_solar":     { "type": "number" },
-        "ratio_vs_tolerance": { "type": "number" },
-        "rs_m":               { "type": "number" },
-        "tau_s":              { "type": "number" },
-        "t_ext_s":            { "type": "number" },
-        "verdict":            { "type": "string" }
+        "a_tidal_g": {
+          "type": "number"
+        },
+        "M_crit_M_solar": {
+          "type": "number"
+        },
+        "ratio_vs_tolerance": {
+          "type": "number"
+        },
+        "rs_m": {
+          "type": "number"
+        },
+        "tau_s": {
+          "type": "number"
+        },
+        "t_ext_s": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Misner, Thorne & Wheeler 1973 — Gravitation §31.2 (tidal tensor)",
         "Penrose 1965 — singularity theorem"
       ]
     },
-
     "ir-excess-checker": {
       "mcp_name": "ir_excess_checker",
       "mandate_type": "me.omegacentauri/seti_ir_excess",
@@ -346,20 +474,41 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["evidence-ledger"],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "bands_detecting":             { "type": "array", "items": "string" },
-        "fmin_best_band":              { "type": "string|null" },
-        "fmin_best_covering_fraction": { "type": "number|null" },
-        "flux_wise_w3_mJy":           { "type": "number|null" },
-        "flux_wise_w4_mJy":           { "type": "number|null" },
-        "lam_peak_um":                 { "type": "number" },
-        "n_bands_detecting":           { "type": "integer" },
-        "orbit_radius_AU":             { "type": "number" },
-        "verdict":                     { "type": "string" }
+        "bands_detecting": {
+          "type": "array",
+          "items": "string"
+        },
+        "fmin_best_band": {
+          "type": "string|null"
+        },
+        "fmin_best_covering_fraction": {
+          "type": "number|null"
+        },
+        "flux_wise_w3_mJy": {
+          "type": "number|null"
+        },
+        "flux_wise_w4_mJy": {
+          "type": "number|null"
+        },
+        "lam_peak_um": {
+          "type": "number"
+        },
+        "n_bands_detecting": {
+          "type": "integer"
+        },
+        "orbit_radius_AU": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Suazo et al. 2025 (Project Hephaistos) — arXiv:2602.23270",
@@ -368,7 +517,6 @@
         "Wright et al. 2014 (WISE G-star search) — doi:10.1086/678977"
       ]
     },
-
     "pulsar-accel-mapper": {
       "mcp_name": "pulsar_accel_mapper",
       "mandate_type": "me.omegacentauri/bh_pulsar",
@@ -377,19 +525,44 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["evidence-ledger"],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "max_ratio":        { "type": "number" },
-        "max_ratio_pulsar": { "type": "string" },
-        "n_floor":          { "type": "integer" },
-        "n_ok":             { "type": "integer" },
-        "n_pulsars":        { "type": "integer" },
-        "n_tension":        { "type": "integer" },
-        "pulsar_rows":      { "type": "array", "items": { "name": "string", "aO_nm_s2": "number", "aM_nm_s2": "number", "ratio": "number", "status": "string" } },
-        "verdict":          { "type": "string" }
+        "max_ratio": {
+          "type": "number"
+        },
+        "max_ratio_pulsar": {
+          "type": "string"
+        },
+        "n_floor": {
+          "type": "integer"
+        },
+        "n_ok": {
+          "type": "integer"
+        },
+        "n_pulsars": {
+          "type": "integer"
+        },
+        "n_tension": {
+          "type": "integer"
+        },
+        "pulsar_rows": {
+          "type": "array",
+          "items": {
+            "name": "string",
+            "aO_nm_s2": "number",
+            "aM_nm_s2": "number",
+            "ratio": "number",
+            "status": "string"
+          }
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Colom i Bernadich et al. 2026 (TRAPUM) — arXiv:2603.21845",
@@ -397,7 +570,6 @@
         "Bañares-Hernández et al. 2025, A&A 693:A104 — doi:10.1051/0004-6361/202451763"
       ]
     },
-
     "gaia-dr4-forecaster": {
       "mcp_name": "gaia_dr4_forecaster",
       "mandate_type": "me.omegacentauri/bh_astrometry",
@@ -406,22 +578,47 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["evidence-ledger", "detection-forecast"],
+        "feeds": [
+          "evidence-ledger",
+          "detection-forecast"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "influence_radius_pc":             { "type": "number" },
-        "influence_radius_arcsec":         { "type": "number" },
-        "sigma_keplerian_km_s":            { "type": "number" },
-        "pm_floor_dr4_uas_yr":             { "type": "number" },
-        "pm_floor_dr4_km_s_equiv":         { "type": "number" },
-        "kinematic_sn_dr4":                { "type": "number" },
-        "min_detectable_mass_dr4_M_solar": { "type": "integer" },
-        "min_detectable_mass_dr2_M_solar": { "type": "integer" },
-        "n_stars_in_eval_radius":          { "type": "integer" },
-        "dr4_capable":                     { "type": "boolean" },
-        "verdict":                         { "type": "string" }
+        "influence_radius_pc": {
+          "type": "number"
+        },
+        "influence_radius_arcsec": {
+          "type": "number"
+        },
+        "sigma_keplerian_km_s": {
+          "type": "number"
+        },
+        "pm_floor_dr4_uas_yr": {
+          "type": "number"
+        },
+        "pm_floor_dr4_km_s_equiv": {
+          "type": "number"
+        },
+        "kinematic_sn_dr4": {
+          "type": "number"
+        },
+        "min_detectable_mass_dr4_M_solar": {
+          "type": "integer"
+        },
+        "min_detectable_mass_dr2_M_solar": {
+          "type": "integer"
+        },
+        "n_stars_in_eval_radius": {
+          "type": "integer"
+        },
+        "dr4_capable": {
+          "type": "boolean"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Häberle et al. 2024, Nature 631:285 — lower bound reference",
@@ -429,7 +626,6 @@
         "ESA Gaia DR4 content pages — DR4_FACTOR = 4.5×"
       ]
     },
-
     "anisotropy-degeneracy-explorer": {
       "mcp_name": "anisotropy_degeneracy_explorer",
       "mandate_type": "me.omegacentauri/bh_kinematics",
@@ -437,19 +633,38 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker", "velocity-dispersion"],
-        "feeds": ["evidence-ledger"],
+        "consumes": [
+          "constraint-stacker",
+          "velocity-dispersion"
+        ],
+        "feeds": [
+          "evidence-ledger"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "sigma_los_central_km_s": { "type": "number" },
-        "sigma_los_no_imbh_km_s": { "type": "number" },
-        "delta_sigma_km_s":       { "type": "number" },
-        "detectability_sigma":    { "type": "number" },
-        "chi2_per_dof":           { "type": "number" },
-        "degeneracy_broken":      { "type": "boolean" },
-        "verdict":                { "type": "string" }
+        "sigma_los_central_km_s": {
+          "type": "number"
+        },
+        "sigma_los_no_imbh_km_s": {
+          "type": "number"
+        },
+        "delta_sigma_km_s": {
+          "type": "number"
+        },
+        "detectability_sigma": {
+          "type": "number"
+        },
+        "chi2_per_dof": {
+          "type": "number"
+        },
+        "degeneracy_broken": {
+          "type": "boolean"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Binney & Tremaine, Galactic Dynamics §4.8.2 — spherical Jeans equation",
@@ -457,7 +672,6 @@
         "Häberle et al. 2025 — oMEGACat VI reference profile"
       ]
     },
-
     "dark-cluster": {
       "mcp_name": "dark_cluster",
       "mandate_type": "me.omegacentauri/bh_dark_cluster",
@@ -465,21 +679,45 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker", "velocity-dispersion"],
-        "feeds": ["evidence-ledger", "detection-forecast"],
+        "consumes": [
+          "constraint-stacker",
+          "velocity-dispersion"
+        ],
+        "feeds": [
+          "evidence-ledger",
+          "detection-forecast"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "menc_dark_at_1arcsec_M_solar":    { "type": "number" },
-        "menc_imbh_at_1arcsec_M_solar":    { "type": "integer" },
-        "central_density_M_solar_per_pc3": { "type": "number" },
-        "n_remnants":              { "type": "integer" },
-        "delta_sigma_pct":         { "type": "number" },
-        "delta_menc_pct_10arcsec": { "type": "number" },
-        "elt_distinguishable":     { "type": "boolean" },
-        "psr_distinguishable":     { "type": "boolean" },
-        "verdict":                 { "type": "string" }
+        "menc_dark_at_1arcsec_M_solar": {
+          "type": "number"
+        },
+        "menc_imbh_at_1arcsec_M_solar": {
+          "type": "integer"
+        },
+        "central_density_M_solar_per_pc3": {
+          "type": "number"
+        },
+        "n_remnants": {
+          "type": "integer"
+        },
+        "delta_sigma_pct": {
+          "type": "number"
+        },
+        "delta_menc_pct_10arcsec": {
+          "type": "number"
+        },
+        "elt_distinguishable": {
+          "type": "boolean"
+        },
+        "psr_distinguishable": {
+          "type": "boolean"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Häberle et al. 2024, Nature 631:285 — MBH reference lower bound",
@@ -487,7 +725,6 @@
         "Plummer 1911 — mass distribution model"
       ]
     },
-
     "detection-forecast": {
       "mcp_name": "detection_forecast",
       "mandate_type": "me.omegacentauri/bh_detection_forecast",
@@ -495,19 +732,43 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker", "evidence-ledger"],
-        "feeds": ["observing-campaign-planner"],
+        "consumes": [
+          "constraint-stacker",
+          "evidence-ledger"
+        ],
+        "feeds": [
+          "observing-campaign-planner"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "mass_gap_M_solar":         { "type": "integer" },
-        "irreconcilable_tension":   { "type": "boolean" },
-        "n_capable_instruments":    { "type": "integer" },
-        "earliest_resolution_year": { "type": "integer|null" },
-        "earliest_instrument_id":   { "type": "string|null" },
-        "instruments_forecast":     { "type": "array", "items": { "id": "string", "year": "integer", "capable": "boolean" } },
-        "verdict":                  { "type": "string" }
+        "mass_gap_M_solar": {
+          "type": "integer"
+        },
+        "irreconcilable_tension": {
+          "type": "boolean"
+        },
+        "n_capable_instruments": {
+          "type": "integer"
+        },
+        "earliest_resolution_year": {
+          "type": "integer|null"
+        },
+        "earliest_instrument_id": {
+          "type": "string|null"
+        },
+        "instruments_forecast": {
+          "type": "array",
+          "items": {
+            "id": "string",
+            "year": "integer",
+            "capable": "boolean"
+          }
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Gaia Collaboration / ESA 2024 — DR4 forecast",
@@ -516,7 +777,6 @@
         "Babak et al. 2017, Phys. Rev. D 95:103012 — LISA EMRI"
       ]
     },
-
     "velocity-dispersion": {
       "mcp_name": "velocity_dispersion",
       "mandate_type": "me.omegacentauri/bh_kinematics",
@@ -525,17 +785,32 @@
       "artifact_since": "2026-06-13",
       "chain": {
         "consumes": [],
-        "feeds": ["dark-cluster", "evidence-ledger"],
+        "feeds": [
+          "dark-cluster",
+          "evidence-ledger"
+        ],
         "chain_depth": 0
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "sigma_virial_km_s":             { "type": "number" },
-        "sigma_used_km_s":               { "type": "number" },
-        "sigma_is_override":             { "type": "boolean" },
-        "msigma_predicted_mass_M_solar": { "type": "integer" },
-        "ratio_vs_haberle_2024":         { "type": "number" },
-        "verdict":                       { "type": "string" }
+        "sigma_virial_km_s": {
+          "type": "number"
+        },
+        "sigma_used_km_s": {
+          "type": "number"
+        },
+        "sigma_is_override": {
+          "type": "boolean"
+        },
+        "msigma_predicted_mass_M_solar": {
+          "type": "integer"
+        },
+        "ratio_vs_haberle_2024": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Gültekin et al. 2009, ApJ 698:198 — M-σ relation (Table 3 E sample)",
@@ -543,7 +818,6 @@
         "Häberle et al. 2024, Nature 631:285 — comparison reference"
       ]
     },
-
     "evidence-ledger": {
       "mcp_name": "evidence_ledger",
       "mandate_type": "me.omegacentauri/bh_evidence",
@@ -551,20 +825,46 @@
       "artifact_qualified": true,
       "artifact_since": "2026-06-13",
       "chain": {
-        "consumes": ["constraint-stacker", "velocity-dispersion"],
-        "feeds": ["detection-forecast"],
+        "consumes": [
+          "constraint-stacker",
+          "velocity-dispersion"
+        ],
+        "feeds": [
+          "detection-forecast"
+        ],
         "chain_depth": 1
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "p_imbh":                    { "type": "number" },
-        "p_dark_cluster":            { "type": "number" },
-        "p_null":                    { "type": "number" },
-        "dominant_hypothesis":       { "type": "string", "enum": ["imbh", "dark_cluster", "null"] },
-        "posterior_odds_imbh_vs_dc": { "type": "number" },
-        "log10_bf_imbh_vs_dc":       { "type": "number" },
-        "log10_bf_mass_vs_null":     { "type": "number" },
-        "verdict":                   { "type": "string" }
+        "p_imbh": {
+          "type": "number"
+        },
+        "p_dark_cluster": {
+          "type": "number"
+        },
+        "p_null": {
+          "type": "number"
+        },
+        "dominant_hypothesis": {
+          "type": "string",
+          "enum": [
+            "imbh",
+            "dark_cluster",
+            "null"
+          ]
+        },
+        "posterior_odds_imbh_vs_dc": {
+          "type": "number"
+        },
+        "log10_bf_imbh_vs_dc": {
+          "type": "number"
+        },
+        "log10_bf_mass_vs_null": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Häberle et al. 2024, Nature 631:285",
@@ -574,7 +874,6 @@
         "Colom i Bernadich et al. 2026, arXiv:2603.21845"
       ]
     },
-
     "constraint-stacker": {
       "mcp_name": "constraint_stacker",
       "mandate_type": "me.omegacentauri/imbh_constraint",
@@ -598,16 +897,41 @@
       },
       "register": "peer-reviewed",
       "output_payload_schema": {
-        "allowed_window_M_solar": { "type": "object", "properties": { "lower": "number|null", "upper": "number|null" } },
-        "tension_detected": { "type": "boolean" },
-        "tension_direction": { "type": "string|null" },
-        "n_constraints_active": { "type": "integer" },
-        "constraint_lanes_active": { "type": "array", "items": "string" },
-        "lower_bound_source": { "type": "string|null" },
-        "upper_limit_source": { "type": "string|null" },
-        "epsilon_adaf": { "type": "number" },
-        "rho_inf_kg_m3": { "type": "number" },
-        "verdict": { "type": "string" }
+        "allowed_window_M_solar": {
+          "type": "object",
+          "properties": {
+            "lower": "number|null",
+            "upper": "number|null"
+          }
+        },
+        "tension_detected": {
+          "type": "boolean"
+        },
+        "tension_direction": {
+          "type": "string|null"
+        },
+        "n_constraints_active": {
+          "type": "integer"
+        },
+        "constraint_lanes_active": {
+          "type": "array",
+          "items": "string"
+        },
+        "lower_bound_source": {
+          "type": "string|null"
+        },
+        "upper_limit_source": {
+          "type": "string|null"
+        },
+        "epsilon_adaf": {
+          "type": "number"
+        },
+        "rho_inf_kg_m3": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        }
       },
       "data_sources": [
         "Häberle et al. 2024, Nature 631:285",
@@ -617,8 +941,545 @@
         "Colom i Bernadich et al. 2026, arXiv:2603.21845"
       ]
     }
-
   },
   "pending_upgrade": [],
-  "out_of_scope": ["bh-scale-comparator", "energy-translator", "scifi-tech-auditor"]
+  "out_of_scope": [
+    "bh-scale-comparator",
+    "energy-translator",
+    "scifi-tech-auditor"
+  ],
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "ocg": "https://openchain.graph/spec/v0.2#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "dct": "http://purl.org/dc/terms/",
+    "ocs": "https://omegacentauri.me/"
+  },
+  "@type": "dcat:Catalog",
+  "@id": "https://omegacentauri.me/tools/data/chaingraph.json",
+  "dct:title": "OCS Tool Registry — OpenChainGraph v0.2",
+  "dct:description": "Machine-readable graph index for OCS OpenChainGraph-qualified tools. One entry per tool that emits a valid OCS artifact JSON with execution_hash. All 23 artifact-export tools at v1.1.0 with namespaced mandate_types (me.omegacentauri/*) as of 2026-06-14.",
+  "dct:publisher": {
+    "@id": "https://postoaklabs.com",
+    "dct:title": "Post Oak Labs"
+  },
+  "ocg:conformance_level": "L4",
+  "ocg:mcp_endpoint": "https://mcp.omegacentauri.me/mcp",
+  "ocg:spec_version": "0.2.0",
+  "dcat:dataset": [
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:adaf-sed-modeler",
+      "dct:title": "Adaf Sed Modeler",
+      "ocg:mandate_type": "me.omegacentauri/bh_accretion",
+      "ocg:mcp_tool_name": "adaf_sed_modeler",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:gw-horizon-plotter",
+      "dct:title": "Gw Horizon Plotter",
+      "ocg:mandate_type": "me.omegacentauri/bh_gw_horizon",
+      "ocg:mcp_tool_name": "gw_horizon_plotter",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "detection-forecast"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:astrometric-microlensing",
+      "dct:title": "Astrometric Microlensing",
+      "ocg:mandate_type": "me.omegacentauri/bh_microlensing",
+      "ocg:mcp_tool_name": "astrometric_microlensing",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:qpo-mass-spin",
+      "dct:title": "Qpo Mass Spin",
+      "ocg:mandate_type": "me.omegacentauri/bh_qpo",
+      "ocg:mcp_tool_name": "qpo_mass_spin",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:drake-monte-carlo",
+      "dct:title": "Drake Monte Carlo",
+      "ocg:mandate_type": "me.omegacentauri/fermi_drake",
+      "ocg:mcp_tool_name": "drake_monte_carlo",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:great-filter",
+      "dct:title": "Great Filter",
+      "ocg:mandate_type": "me.omegacentauri/fermi_filter",
+      "ocg:mcp_tool_name": "great_filter",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:radio-seti",
+      "dct:title": "Radio Seti",
+      "ocg:mandate_type": "me.omegacentauri/seti_detection",
+      "ocg:mcp_tool_name": "radio_seti",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:bz-kardashev",
+      "dct:title": "Bz Kardashev",
+      "ocg:mandate_type": "me.omegacentauri/kardashev_power",
+      "ocg:mcp_tool_name": "bz_kardashev",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "bekenstein-landauer"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:observing-campaign-planner",
+      "dct:title": "Observing Campaign Planner",
+      "ocg:mandate_type": "me.omegacentauri/bh_campaign",
+      "ocg:mcp_tool_name": "observing_campaign_planner",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "detection-forecast"
+      ],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:shadow-imaging",
+      "dct:title": "Shadow Imaging",
+      "ocg:mandate_type": "me.omegacentauri/bh_shadow",
+      "ocg:mcp_tool_name": "shadow_imaging",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:bekenstein-landauer",
+      "dct:title": "Bekenstein Landauer",
+      "ocg:mandate_type": "me.omegacentauri/mth_computation",
+      "ocg:mcp_tool_name": "bekenstein_landauer",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "bz-kardashev"
+      ],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:kardashev-meter",
+      "dct:title": "Kardashev Meter",
+      "ocg:mandate_type": "me.omegacentauri/kardashev_meter",
+      "ocg:mcp_tool_name": "kardashev_meter",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "bekenstein-landauer"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:cosmology-calculator",
+      "dct:title": "Cosmology Calculator",
+      "ocg:mandate_type": "me.omegacentauri/fermi_cosmology",
+      "ocg:mcp_tool_name": "cosmology_calculator",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "drake-monte-carlo"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:infall-survival",
+      "dct:title": "Infall Survival",
+      "ocg:mandate_type": "me.omegacentauri/mth_infall",
+      "ocg:mcp_tool_name": "infall_survival",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker"
+      ],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:ir-excess-checker",
+      "dct:title": "Ir Excess Checker",
+      "ocg:mandate_type": "me.omegacentauri/seti_ir_excess",
+      "ocg:mcp_tool_name": "ir_excess_checker",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:pulsar-accel-mapper",
+      "dct:title": "Pulsar Accel Mapper",
+      "ocg:mandate_type": "me.omegacentauri/bh_pulsar",
+      "ocg:mcp_tool_name": "pulsar_accel_mapper",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:gaia-dr4-forecaster",
+      "dct:title": "Gaia Dr4 Forecaster",
+      "ocg:mandate_type": "me.omegacentauri/bh_astrometry",
+      "ocg:mcp_tool_name": "gaia_dr4_forecaster",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "evidence-ledger",
+        "detection-forecast"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:anisotropy-degeneracy-explorer",
+      "dct:title": "Anisotropy Degeneracy Explorer",
+      "ocg:mandate_type": "me.omegacentauri/bh_kinematics",
+      "ocg:mcp_tool_name": "anisotropy_degeneracy_explorer",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker",
+        "velocity-dispersion"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:dark-cluster",
+      "dct:title": "Dark Cluster",
+      "ocg:mandate_type": "me.omegacentauri/bh_dark_cluster",
+      "ocg:mcp_tool_name": "dark_cluster",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker",
+        "velocity-dispersion"
+      ],
+      "ocg:feeds": [
+        "evidence-ledger",
+        "detection-forecast"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:detection-forecast",
+      "dct:title": "Detection Forecast",
+      "ocg:mandate_type": "me.omegacentauri/bh_detection_forecast",
+      "ocg:mcp_tool_name": "detection_forecast",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker",
+        "evidence-ledger"
+      ],
+      "ocg:feeds": [
+        "observing-campaign-planner"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:velocity-dispersion",
+      "dct:title": "Velocity Dispersion",
+      "ocg:mandate_type": "me.omegacentauri/bh_kinematics",
+      "ocg:mcp_tool_name": "velocity_dispersion",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "dark-cluster",
+        "evidence-ledger"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:evidence-ledger",
+      "dct:title": "Evidence Ledger",
+      "ocg:mandate_type": "me.omegacentauri/bh_evidence",
+      "ocg:mcp_tool_name": "evidence_ledger",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [
+        "constraint-stacker",
+        "velocity-dispersion"
+      ],
+      "ocg:feeds": [
+        "detection-forecast"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:constraint-stacker",
+      "dct:title": "Constraint Stacker",
+      "ocg:mandate_type": "me.omegacentauri/imbh_constraint",
+      "ocg:mcp_tool_name": "constraint_stacker",
+      "ocg:tool_version": "1.1.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [
+        "evidence-ledger",
+        "detection-forecast",
+        "velocity-dispersion",
+        "dark-cluster",
+        "anisotropy-degeneracy-explorer",
+        "adaf-sed-modeler",
+        "gw-horizon-plotter",
+        "astrometric-microlensing",
+        "gaia-dr4-forecaster"
+      ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    }
+  ]
 }
