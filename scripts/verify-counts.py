@@ -19,10 +19,10 @@ Usage (from repo root):
 
 Zero dependencies (stdlib only). Runs on the ubuntu-latest python3 in CI.
 
-KNOWN GAP (Phase 2): the per-category section-counts in tools/index.html
-(e.g. '34 tools', '11 tools', ...) are NOT yet gated — they need per-section
-tool-card counting, not a global derive. They are intentionally left unmarked.
-Do not silently treat this gate as full coverage of every on-site number.
+Coverage: global counts (calculators/workflows/scenarios/hubs/proposals/mcp_tools/
+mcp_chains) via JSON/HTML/llms sentinels, AND per-section card-count consistency in
+tools/index.html (each section's displayed count == tool-cards rendered in it;
+scenarios/workflows card counts must also equal the filesystem file count).
 """
 import json, re, sys, glob, os
 
@@ -150,6 +150,43 @@ def run(fix=False):
         src = rx.sub(repl, src)
     if fix and changed:
         open(fp, "w", encoding="utf-8").write(src)
+
+    # Phase 2 — per-section card-count consistency in tools/index.html.
+    # Rule: the displayed section-count number must equal the number of tool-cards
+    # rendered in that section. For tool-category/fiction sections (unit 'tools'/'pages')
+    # the card count IS the SSOT, so --fix sets the displayed number to it. For
+    # scenarios/workflows sections the card count must equal the filesystem file count
+    # (report-only: a mismatch means a card is missing/extra and must be authored/removed
+    # by hand — a number edit would just hide the gap).
+    idx = os.path.join(REPO, "tools/index.html")
+    src = open(idx, encoding="utf-8").read()
+    SECT_SPAN = re.compile(r'<span class="section-count"[^>]*>(\d+)\s+(tools|pages|scenarios|workflows)</span>')
+    GLOBAL_UNIT = {"scenarios": "scenarios", "workflows": "workflows"}
+    parts = re.split(r'(<section\b)', src)
+    out, changed, i = parts[0], False, 1
+    while i < len(parts):
+        block = parts[i] + parts[i + 1]
+        m = SECT_SPAN.search(block)
+        if m:
+            disp, unit = int(m.group(1)), m.group(2)
+            cards = len(re.findall(r'class="tool-card"', block))
+            label = f"tools/index.html [{unit} section]"
+            if unit in GLOBAL_UNIT:
+                exp = counts[GLOBAL_UNIT[unit]]
+                if cards != exp:
+                    drift.append((label, "card_count", exp, cards))
+            elif disp != cards:
+                if fix:
+                    s, e = m.span(1)
+                    block = block[:s] + str(cards) + block[e:]
+                    changed = True
+                    fixed.append((label, "section_count", cards))
+                else:
+                    drift.append((label, "section_count", cards, disp))
+        out += block
+        i += 2
+    if fix and changed:
+        open(idx, "w", encoding="utf-8").write(out)
 
     # ── Report ──
     print("Derived counts (SSOT):")
