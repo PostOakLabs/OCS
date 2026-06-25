@@ -265,6 +265,9 @@ const M_SUN   = 1.989e30;    // kg
 const KPC_M   = 3.086e19;    // m per kpc
 const L_LISA  = 2.5e9;       // LISA arm (m)
 const FSTAR   = C / (2*Math.PI*L_LISA);  // ~0.01909 Hz
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 
 // ── Physics helpers ────────────────────────────────────────────────────────
 function chirpMass(m1, m2) {
@@ -471,8 +474,8 @@ function drawChart(state) {
   }
 
   // Canonical dashed tracks (always shown)
-  drawTrack(8200, state.m2, state.dist, state.spin, '#1dba90', 1.2, '5,4');  // Häberle
-  drawTrack(6000, state.m2, state.dist, state.spin, '#f0a020', 1.2, '5,4');  // Bañares
+  drawTrack(OCS_HABERLE, state.m2, state.dist, state.spin, '#1dba90', 1.2, '5,4');  // Häberle
+  drawTrack(OCS_BANARES, state.m2, state.dist, state.spin, '#f0a020', 1.2, '5,4');  // Bañares
 
   // User track (solid, white-ish)
   drawTrack(state.m1, state.m2, state.dist, state.spin, '#d0d8e8', 2, null);
@@ -567,7 +570,7 @@ function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h
 function wireArtifact(){}
 function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{'@context':'https://openchain.graph/spec/v0.2/context.jsonld',chaingraph_version:'0.2.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',ocs_version:'1.0.0',mandate_type:'me.omegacentauri/bh_gw_horizon',tool_id:'gw-horizon-plotter',tool_version:'1.1.0',generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[]},permalink:window.location.href,tool_citation_bibtex:'@software{OCS_gw_horizon_plotter_2026,\n  author   = {Swanson, Tim},\n  title    = {{GW Horizon Plotter}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/gw-horizon-plotter.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'};}
 // ── State & hash ───────────────────────────────────────────────────────────
-const DEF = { m1:8200, m2:10, dist:5.43, spin:0 };
+const DEF = { m1:OCS_HABERLE, m2:10, dist:5.43, spin:0 };
 let state = {...DEF};
 
 function saveHash(s) {

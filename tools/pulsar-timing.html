@@ -253,14 +253,17 @@ const G_SI = 6.674e-11;
 const C_SI = 2.998e8;
 const MSUN_KG = 1.989e30;
 const PC_M = 3.086e16;
-const OC_DIST_PC = 5490;           // Häberle et al. 2025 (oMEGACat VI); clusterParams.OC_distance_pc
+// Canonical values — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
+const OC_DIST_PC = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc) || 5490;           // Häberle et al. 2025 (oMEGACat VI); clusterParams.OC_distance_pc
 const M_PER_ARCSEC = OC_DIST_PC / 206265 * PC_M;  // ~8.13e14 m
 const YR_S = 3.156e7;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 // Published combined upper limits
 const PUBLISHED = [
-  { name: 'Bañares 2025 (3σ)', value: 6000, color: 'var(--amber-bright)' },
+  { name: 'Bañares 2025 (3σ)', value: OCS_BANARES, color: 'var(--amber-bright)' },
   { name: 'TRAPUM 2026 (90% CL)', value: 1e5, color: 'var(--amber-mid)' }
 ];
 
@@ -391,8 +394,8 @@ function renderOutputs() {
   document.getElementById('a-val').innerHTML = fmtSci(a_req, 2) + ' <span class="unit">m/s²</span>';
   document.getElementById('mmin-card').textContent = fmtMass(m_min) + ' M☉';
 
-  const vBan = m_min / 6000;
-  const vHab = m_min / 8200;
+  const vBan = m_min / OCS_BANARES;
+  const vHab = m_min / OCS_HABERLE;
   const fmtRatio = (r) => isFinite(r) ? (r >= 1 ? r.toFixed(2)+'× larger' : (1/r).toFixed(1)+'× tighter') : '—';
   document.getElementById('vs-banares').textContent = fmtRatio(vBan);
   document.getElementById('vs-haberle').textContent = fmtRatio(vHab);

@@ -285,6 +285,9 @@ a:hover{color:var(--teal-glow)}
 const G_SI = 6.674e-11;
 const MSUN_KG = 1.989e30;
 const PC_M = 3.086e16;
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_NOYOLA  = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='noyola2008')||{}).value) || 4e4;
 
 function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
 function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
@@ -331,7 +334,7 @@ function render() {
   document.getElementById('msigma-val').textContent = fmtMass(m_msigma);
 
   // Ratios
-  const HABERLE = 8200, NOYOLA = 4e4;
+  const HABERLE = OCS_HABERLE, NOYOLA = OCS_NOYOLA;
   const rH = m_msigma / HABERLE;
   const rN = m_msigma / NOYOLA;
   const fmtRatio = (r) => isFinite(r) ? (r >= 1 ? r.toFixed(2)+'×' : '1/'+(1/r).toFixed(1)) : '—';
@@ -401,7 +404,7 @@ async function computeExecHash(policyParams, outputPayload) {
   return 'sha256:' + [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
 function buildVerdictVD(m_msigma, sigUsed) {
-  const HABERLE = 8200, NOYOLA = 4e4;
+  const HABERLE = OCS_HABERLE, NOYOLA = OCS_NOYOLA;
   const mFmt = Math.round(m_msigma).toLocaleString();
   if (m_msigma < HABERLE * 0.5)
     return `M-σ predicts ${mFmt} M☉ — well below Häberle lower bound; M-σ likely breaks down at GC scales`;
@@ -429,7 +432,7 @@ async function buildArtifact() {
     sigma_used_km_s:               parseFloat(sigUsed.toFixed(3)),
     sigma_is_override:             state.sigOverride > 0,
     msigma_predicted_mass_M_solar: Math.round(m_msigma),
-    ratio_vs_haberle_2024:         parseFloat((m_msigma / 8200).toFixed(4)),
+    ratio_vs_haberle_2024:         parseFloat((m_msigma / OCS_HABERLE).toFixed(4)),
     verdict:                       buildVerdictVD(m_msigma, sigUsed),
   };
   const execHash = await computeExecHash(policyParameters, outputPayload);

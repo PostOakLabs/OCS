@@ -378,8 +378,8 @@ const R_REF_ARCSEC = 3.0;
 
 // ─── Known constraint bounds (from measurements.js via window.OCS_MEASUREMENTS)
 // Fallback hard-coded only if measurements.js fails — never used for science output
-const HABERLE_LOWER = 8200;      // M☉, Häberle et al. 2024
-const BANARES_UPPER = 6000;      // M☉, Bañares-Hernández et al. 2025 (3σ)
+const HABERLE_LOWER = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;      // M☉, Häberle et al. 2024
+const BANARES_UPPER = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;      // M☉, Bañares-Hernández et al. 2025 (3σ)
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const state = { mass: 8200, dist: 5.43, crowding: 3.0, sigma0: 20.0 };
