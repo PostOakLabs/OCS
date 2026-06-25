@@ -99,6 +99,11 @@ jobs:
       - name: Count-drift gate
         run: python3 scripts/verify-counts.py
 
+      # Broken-asset gate (strict-zero): fails if any href/src points at a missing
+      # local file/dir. Catches the ../data/ 404 class of bug before it deploys.
+      - name: Broken-link gate
+        run: python3 scripts/check-links.py
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):
