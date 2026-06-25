@@ -345,7 +345,11 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
   All calculations are estimates based on published best-fit parameters. See linked tools for full parameter sweeps and citations.
 </footer>
 
+<script src="data/measurements.js"></script>
 <script>
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 // ── Physical constants ──────────────────────────────────────────────
 const G       = 6.674e-11;
 const c       = 2.998e8;
@@ -357,8 +361,8 @@ const D_PC    = 5494;          // canonical OC distance (Häberle 2025)
 const OC_AGE  = 12e9;          // OC age in years (approx)
 
 // Canonical published bounds (not slider-controlled)
-const MASS_LO = 8200;          // Häberle 2024 kinematics lower bound
-const MASS_HI = 6000;          // Bañares 2025 3σ upper limit
+const MASS_LO = OCS_HABERLE;          // Häberle 2024 kinematics lower bound
+const MASS_HI = OCS_BANARES;          // Bañares 2025 3σ upper limit
 
 // ── Core formulae ───────────────────────────────────────────────────
 function rg(M_msun){ return G*M_msun*M_SUN/(c*c); }

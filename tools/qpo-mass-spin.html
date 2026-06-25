@@ -275,8 +275,12 @@ canvas{display:block;width:100%}
 </div>
 </div>
 
+<script src="data/measurements.js"></script>
 <script>
 const G=6.674e-11, c=3e8, M_sun=1.989e30;
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 // ISCO frequency constant for Schwarzschild: nu_isco_schw = c^3/(2pi*G*M*6^1.5) per solar mass
 // = (3e8)^3 / (2pi * 6.674e-11 * 1.989e30 * 14.697) = 2.7e25 / (1.225e21) ≈ 2203 Hz/M_sun
 const NU_SCHW = 2203; // Hz per M_sun, for ISCO (a=0)
@@ -418,16 +422,16 @@ function compute() {
 
   // In OC window?
   const lo = Math.min(M_a0, M_amax), hi = Math.max(M_a0, M_amax);
-  const inWindow = (hi >= 6000 && lo <= 8200);
+  const inWindow = (hi >= OCS_BANARES && lo <= OCS_HABERLE);
   const el = document.getElementById('out-inwindow');
   el.textContent = inWindow ? 'Yes ✓' : 'No ✗';
   el.style.color = inWindow ? 'var(--teal-glow)' : 'var(--red-bright)';
 
   // Required a for M=8200
   let a_for_8200 = null;
-  if(M_a0<=8200 && M_amax>=8200 || M_a0>=8200 && M_amax<=8200) {
+  if(M_a0<=OCS_HABERLE && M_amax>=OCS_HABERLE || M_a0>=OCS_HABERLE && M_amax<=OCS_HABERLE) {
     let alo=0, ahi=0.998;
-    for(let i=0;i<60;i++){const am=(alo+ahi)/2; const mm=massFromNu(nu_Hz,am,st.model); if(mm<8200) alo=am; else ahi=am;}
+    for(let i=0;i<60;i++){const am=(alo+ahi)/2; const mm=massFromNu(nu_Hz,am,st.model); if(mm<OCS_HABERLE) alo=am; else ahi=am;}
     a_for_8200=(alo+ahi)/2;
   }
   document.getElementById('out-a-for-M').textContent = a_for_8200!==null ? a_for_8200.toFixed(3) : '—';
@@ -472,8 +476,8 @@ function drawContour(nu_Hz) {
   ctx.save(); ctx.translate(11,pad.t+ch/2); ctx.rotate(-Math.PI/2); ctx.fillText('M (M☉)',0,0); ctx.restore();
 
   // OC constraint lines
-  const banares_y = lmToY(Math.log10(6000));
-  const haberle_y = lmToY(Math.log10(8200));
+  const banares_y = lmToY(Math.log10(OCS_BANARES));
+  const haberle_y = lmToY(Math.log10(OCS_HABERLE));
   ctx.strokeStyle='rgba(208,64,64,0.7)'; ctx.setLineDash([5,4]); ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(pad.l,banares_y); ctx.lineTo(pad.l+cw,banares_y); ctx.stroke();
   ctx.strokeStyle='rgba(240,160,32,0.7)';

@@ -290,8 +290,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
   <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-03</footer>
 </div>
 
+<script src="data/measurements.js"></script>
 <script>
 'use strict';
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 function fmtMsun(m){if(m>=1e4)return(m/1e3).toFixed(1)+'×10³ M☉';return m.toLocaleString(undefined,{maximumFractionDigits:0})+' M☉';}
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));}
 function saveHash(s){history.replaceState(null,'','#'+Object.entries(s).map(([k,v])=>`${k}=${v}`).join('&'));}
@@ -362,8 +366,8 @@ function render(){
   applyVerdict('row-roman','o-roman',mu,romanVerdict);
   applyVerdict('row-vlbi','o-vlbi',mu,vlbiVerdict);
 
-  // Tension comparison — fixed at 8200 and 6000
-  const MH=8200,MB=6000;
+  // Tension comparison — Häberle lower vs Bañares upper (from measurements.js SSOT)
+  const MH=OCS_HABERLE,MB=OCS_BANARES;
   const muH=mu_uas_yr(MH,sig,ms,D);
   const muB=mu_uas_yr(MB,sig,ms,D);
   const v1H=sig*Math.sqrt(ms/MH),v1B=sig*Math.sqrt(ms/MB);

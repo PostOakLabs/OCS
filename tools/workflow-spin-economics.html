@@ -462,8 +462,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
   <footer class="footer">The Omega Centauri Society · <a href="/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-02</footer>
 </div>
 
+<script src="data/measurements.js"></script>
 <script>
 'use strict';
+// Canonical IMBH bound — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
 const G=6.674e-11,C=2.998e8,MSUN=1.989e30,MU0=4*Math.PI*1e-7,KAPPA=0.044;
 const KB=1.381e-23,HBAR=1.055e-34,LN2=Math.log(2),LSUN=3.828e26,YR_S=3.156e7,PI=Math.PI;
 // auto sentinel value for override
@@ -525,7 +528,7 @@ function compute(){
 
   // ---- Stage 1: Tidal capture rate ----
   // Mdot ≈ 2.5e-4 × (M/8200)^(2/3) × (ρ/1000)^1.0 × (22/σ)^3 M☉/yr
-  const mdot_s1=2.5e-4*Math.pow(Mimbh/8200,2/3)*(rho/1000)*Math.pow(22/sigma,3);
+  const mdot_s1=2.5e-4*Math.pow(Mimbh/OCS_HABERLE,2/3)*(rho/1000)*Math.pow(22/sigma,3);
   const tdouble_yr=Mimbh/mdot_s1;
   // spin-up mass needed for af=0.95 from a0=0: dM = M*(1 - sqrt(r_ISCO(af)/r_ISCO(a0)))
   const risc_af=riscUnitless(af);

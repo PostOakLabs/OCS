@@ -234,7 +234,11 @@ canvas{width:100%;display:block}
   </div>
 </div>
 
+<script src="data/measurements.js"></script>
 <script>
+// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
+const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
+const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 const MSUN = 1.989e30;
 const GYR_MYR = 1000;
 const T_CLUSTER_GYR = 12;   // cluster age in Gyr
@@ -313,13 +317,13 @@ function render(){
 
   document.getElementById('final-mass').textContent = fmtMass(finalMass);
   // Constraint check
-  const inHaberle = finalMass >= 8200;
-  const inBanares = finalMass <= 6000;
+  const inHaberle = finalMass >= OCS_HABERLE;
+  const inBanares = finalMass <= OCS_BANARES;
   const inTension = inHaberle && inBanares; // can't be both
   let matchText, matchSub, matchColor;
-  if(finalMass >= 8200 && finalMass <= 20000){
+  if(finalMass >= OCS_HABERLE && finalMass <= 20000){
     matchText='✓ Consistent'; matchSub='Exceeds Häberle lower limit (8,200 M☉)'; matchColor='var(--teal-glow)';
-  } else if(finalMass < 6000){
+  } else if(finalMass < OCS_BANARES){
     matchText='✓ Consistent'; matchSub='Below Bañares-Hernández upper limit (6,000 M☉)'; matchColor='var(--teal-glow)';
   } else if(finalMass > 20000){
     matchText='⚠ Too high'; matchSub='Exceeds plausible IMBH range for ωCen'; matchColor='var(--amber-glow)';
