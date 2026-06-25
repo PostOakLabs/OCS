@@ -15,13 +15,26 @@ javascript URLs, pure #anchors, and JS template-literal URLs (containing ${ }).
 Directory links (ending / or resolving to a dir) pass if the directory exists.
 Stdlib only.
 """
-import os, re, sys, glob
+import os, re, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ATTR = re.compile(r'(?:href|src)\s*=\s*"([^"]+)"')
-SKIP_PREFIX = re.compile(r'^(https?:|mailto:|tel:|data:|javascript:|//|#)')
+# Both quote styles: href="..." and href='...'
+ATTR = re.compile(r'(?:href|src)\s*=\s*(?:"([^"]*)"|\'([^\']*)\')', re.I)
+SKIP_PREFIX = re.compile(r'^(https?:|mailto:|tel:|data:|javascript:|//|#)', re.I)
 # Only verify refs that name a concrete asset type (or a directory link).
 ASSET_EXT = re.compile(r'\.(html?|js|css|json|png|jpe?g|svg|ico|webp|gif|txt|xml|pdf|woff2?|ttf|map|webmanifest)$', re.I)
+# Strip executable/comment regions so runtime-JS-built hrefs and commented-out
+# links aren't mistaken for real links (mirrors AINumbers dead-link-check.mjs).
+STRIP = re.compile(r'<script\b[^>]*>.*?</script>|<style\b[^>]*>.*?</style>|<!--.*?-->', re.I | re.S)
+SKIP_DIRS = {'.git', '.github', 'node_modules'}
+
+
+def walk_html():
+    for root, dirs, files in os.walk(REPO):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        for f in files:
+            if f.lower().endswith(('.html', '.htm')):
+                yield os.path.join(root, f)
 
 
 def resolve(ref, html_path):
@@ -42,16 +55,18 @@ def resolve(ref, html_path):
 
 
 def main():
-    html_files = glob.glob(os.path.join(REPO, '*.html')) + glob.glob(os.path.join(REPO, 'tools', '*.html'))
+    html_files = sorted(walk_html())
     dead = []      # (html_relpath, ref, resolved)
     checked = 0
-    for fp in sorted(html_files):
+    for fp in html_files:
         try:
             src = open(fp, encoding='utf-8').read()
         except Exception:
             continue
+        src = STRIP.sub(' ', src)          # drop <script>/<style>/comments first
         rel = os.path.relpath(fp, REPO)
-        for ref in ATTR.findall(src):
+        for dq, sq in ATTR.findall(src):
+            ref = dq if dq else sq
             r = resolve(ref, fp)
             if r is None:
                 continue
