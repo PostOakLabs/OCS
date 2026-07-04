@@ -378,17 +378,62 @@ const C = 2.998e8;
 const LY_M = 9.461e15;
 const AU_M = 1.496e11;
 // ── OCS Artifact Export (OpenChainGraph) ────────────────────────────────────────
+const OCS_ARTIFACT_VERSION   = '1.0.0';
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
+const OCS_TOOL_ID            = 'radio-seti';
+const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/seti_detection';
+
+// Vendored from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4 JCS). Namespace me.omegacentauri.
+function assertIJson(v){if(typeof v==='number'){if(!Number.isFinite(v))throw new Error('Non-finite number ('+v+') not valid I-JSON (RFC 8785 §3.2.2.3).');if(Number.isInteger(v)&&!Number.isSafeInteger(v))throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');}else if(Array.isArray(v)){v.forEach(assertIJson);}else if(v&&typeof v==='object'){for(const k of Object.keys(v))assertIJson(v[k]);}}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){const obj={policy_parameters,output_payload};assertIJson(obj);return JSON.stringify(cgCanon(obj));}
+async function executionHash(policy_parameters,output_payload){const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+
 let _artifactCache = null;
-function sortKeysDeep(o){if(Array.isArray(o))return o.map(sortKeysDeep);if(o&&typeof o==='object')return Object.fromEntries(Object.keys(o).sort().map(k=>[k,sortKeysDeep(o[k])]));return o;}
-async function computeExecHash(pol,out){try{const raw=JSON.stringify(sortKeysDeep({policy_parameters:pol,output_payload:out}));const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(raw));return 'sha256:'+Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){return 'sha256:requires-secure-context';}}
+async function computeExecHash(pol,out){
+  if (!window.isSecureContext || !crypto || !crypto.subtle) {
+    return 'requires-secure-context';
+  }
+  try {
+    return await executionHash(pol,out);
+  } catch (e) {
+    return 'error';
+  }
+}
 function invalidateArtifact(){_artifactCache=null;const b=document.getElementById('artifact-body');if(b&&b.classList.contains('open'))renderArtifact();}
 function toggleArtifact(){const btn=document.getElementById('artifact-toggle');const body=document.getElementById('artifact-body');const open=!body.classList.contains('open');body.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));if(open)renderArtifact();}
-async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache);return;}const art=buildArtifact();art.execution_hash=await computeExecHash(art.policy_parameters,art.output_payload);_artifactCache=art;applyArtifact(art);}
+async function renderArtifact(){if(_artifactCache){applyArtifact(_artifactCache);return;}const art=await buildArtifact();_artifactCache=art;applyArtifact(art);}
 function applyArtifact(art){document.getElementById('artifact-hash').textContent='execution_hash: '+art.execution_hash;document.getElementById('artifact-json').textContent=JSON.stringify(art,null,2);}
 function copyArtifact(){const btn=document.getElementById('artifact-copy');navigator.clipboard.writeText(document.getElementById('artifact-json').textContent).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},1500);});}
 function downloadArtifact(){const j=document.getElementById('artifact-json').textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download='ocs-artifact-radio-seti-'+Date.now()+'.json';a.click();}
 function wireArtifact(){}
-function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{'@context':'https://openchain.graph/spec/v0.2/context.jsonld',chaingraph_version:'0.2.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',ocs_version:'1.0.0',mandate_type:'me.omegacentauri/seti_detection',tool_id:'radio-seti',tool_version:'1.1.0',generated_at:new Date().toISOString(),execution_hash:'',chain:{parent_hashes:[],parent_tool_ids:[],chain_depth:0},policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[]},permalink:window.location.href,tool_citation_bibtex:'@software{OCS_radio_seti_2026,\n  author   = {Swanson, Tim},\n  title    = {{Radio SETI Sensitivity}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/radio-seti.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'};}
+async function buildArtifact(){
+  const d=window._toolArtifactData||{policy:{},output:{}};
+  const hash = await computeExecHash(d.policy, d.output);
+  return {
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
+    mandate_type: OCS_MANDATE_TYPE,
+    tool_id: OCS_TOOL_ID,
+    tool_version: OCS_TOOL_VERSION,
+    generated_at: new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: d.policy,
+    output_payload: d.output,
+    compliance_flags: ['register:peer-reviewed'],
+    audit_signature: {
+      payloadType: 'application/vnd.openchain.graph+json;version=0.2',
+      payload: '',
+      signatures: [],
+      ocs_artifact_version: OCS_ARTIFACT_VERSION,
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_radio_seti_2026,\n  author   = {Swanson, Tim},\n  title    = {{Radio SETI Sensitivity}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/radio-seti.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}`
+    }
+  };
+}
 const SNR_REQ = 10;
 const N_POL = 2;
 

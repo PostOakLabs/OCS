@@ -459,27 +459,22 @@ function toggleAbout(btn) { btn.classList.toggle('open'); btn.nextElementSibling
 
 /* =================== OCS OpenChainGraph Artifact Export =================== */
 const OCS_ARTIFACT_VERSION   = '1.0.0';
-const OCS_CHAINGRAPH_VERSION = '0.2.0';
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
 const OCS_TOOL_ID            = 'detection-forecast';
-const OCS_TOOL_VERSION       = '1.1.0';
+const OCS_TOOL_VERSION       = '1.2.0';
 const OCS_MANDATE_TYPE       = 'me.omegacentauri/bh_detection_forecast';
 
-function sortKeysDeep(obj) {
-  if (Array.isArray(obj)) return obj.map(sortKeysDeep);
-  if (obj !== null && typeof obj === 'object') {
-    return Object.fromEntries(Object.keys(obj).sort().map(k => [k, sortKeysDeep(obj[k])]));
-  }
-  return obj;
-}
+// Vendored from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4 JCS). Namespace me.omegacentauri.
+function assertIJson(v){if(typeof v==='number'){if(!Number.isFinite(v))throw new Error('Non-finite number ('+v+') not valid I-JSON (RFC 8785 §3.2.2.3).');if(Number.isInteger(v)&&!Number.isSafeInteger(v))throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');}else if(Array.isArray(v)){v.forEach(assertIJson);}else if(v&&typeof v==='object'){for(const k of Object.keys(v))assertIJson(v[k]);}}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){const obj={policy_parameters,output_payload};assertIJson(obj);return JSON.stringify(cgCanon(obj));}
+async function executionHash(policy_parameters,output_payload){const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');}
 
 async function computeExecHash(policyParams, outputPayload) {
-  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'sha256:requires-secure-context';
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'requires-secure-context';
   try {
-    const canonical = JSON.stringify(sortKeysDeep({ policy_parameters: policyParams, output_payload: outputPayload }));
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonical));
-    const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-    return 'sha256:' + hex;
-  } catch (e) { return 'sha256:error'; }
+    return await executionHash(policyParams, outputPayload);
+  } catch (e) { return 'error'; }
 }
 
 function buildVerdictDF(first, gap, sigma) {
@@ -529,10 +524,9 @@ async function buildArtifact() {
   const hash = await computeExecHash(policyParameters, outputPayload);
 
   return {
-    '@context': 'https://openchain.graph/spec/v0.2/context.jsonld',
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
     chaingraph_version: OCS_CHAINGRAPH_VERSION,
     buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
-    ocs_version:    OCS_ARTIFACT_VERSION,
     mandate_type:   OCS_MANDATE_TYPE,
     tool_id:        OCS_TOOL_ID,
     tool_version:   OCS_TOOL_VERSION,
@@ -545,10 +539,11 @@ async function buildArtifact() {
     audit_signature: {
       payloadType: 'application/vnd.openchain.graph+json;version=0.2',
       payload: '',
-      signatures: []
+      signatures: [],
+      ocs_artifact_version: OCS_ARTIFACT_VERSION,
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_detection_forecast_2026,\n  author   = {Swanson, Tim},\n  title    = {{Detection Forecast}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/detection-forecast.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
     }
-    permalink: window.location.href,
-    tool_citation_bibtex: `@software{OCS_detection_forecast_2026,\n  author   = {Swanson, Tim},\n  title    = {{Detection Forecast}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/detection-forecast.html},\n  version  = {1.1.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}`
   };
 }
 
@@ -570,8 +565,8 @@ async function renderArtifact() {
   _artifactCache = null;
   _artifactCacheKey = null;
   const artifact = await getArtifact();
-  const shortHash = artifact.execution_hash.startsWith('sha256:')
-    ? artifact.execution_hash.slice(0, 22) + '…'
+  const shortHash = /^[0-9a-f]{64}$/.test(artifact.execution_hash)
+    ? artifact.execution_hash.slice(0, 15) + '…'
     : artifact.execution_hash;
   hashEl.textContent = `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0, 10)}`;
   jsonEl.textContent = JSON.stringify(artifact, null, 2);
@@ -623,7 +618,7 @@ function wireArtifact() {
 
   dlBtn.addEventListener('click', async () => {
     const artifact = await getArtifact();
-    const shortHash = artifact.execution_hash.slice(7, 15);
+    const shortHash = artifact.execution_hash.slice(0, 8);
     const filename  = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
     const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
     const url  = URL.createObjectURL(blob);
