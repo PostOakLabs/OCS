@@ -47,9 +47,9 @@ Each proposal targets a specific instrument and a specific *falsifiable* observa
 - [ELT/MICADO Proper-Motion Astrometry](https://omegacentauri.me/proposal_elt_micado.html): Direct orbital constraints on the seven Häberle fast-moving stars from the next-generation 39 m European Extremely Large Telescope.
 - [HST / Gaia Continued Monitoring](https://omegacentauri.me/proposal_hst_gaia_monitoring.html): Multi-epoch astrometric monitoring of the seven Häberle stars to refine the IMBH mass and test for non-Keplerian motion.
 
-## Interactive tools (101 calculators + 19 workflow chains + 30 scenario chains + 5 hubs/dashboards)
+## Interactive tools (102 calculators + 19 workflow chains + 30 scenario chains + 5 hubs/dashboards)
 
-The site includes a tool catalogue at [/tools/](https://omegacentauri.me/tools/) — 101 browser-based interactive calculators, 19 multi-stage workflow chains, and 30 scenario chains (renamed from "demo" on 2026-06-09) that operationalise the science discussed elsewhere on the site. Every tool is a single self-contained HTML file with inline JS, no network calls at runtime, no PII collected; works on `file://` with no internet. Code is MIT, prose is CC BY 4.0, curated data tables are CC0. The shared `tools/data/measurements.js` is the single source of truth for IMBH mass measurements and cluster property tables. Note: Mahida et al. 2025 (radio ATCA non-detection) is an accretion efficiency constraint, not an IMBH mass measurement; it appears in the accretion-state tool but not in the measurements.js IMBH mass table.
+The site includes a tool catalogue at [/tools/](https://omegacentauri.me/tools/) — 102 browser-based interactive calculators, 19 multi-stage workflow chains, and 30 scenario chains (renamed from "demo" on 2026-06-09) that operationalise the science discussed elsewhere on the site. Every tool is a single self-contained HTML file with inline JS, no network calls at runtime, no PII collected; works on `file://` with no internet. Code is MIT, prose is CC BY 4.0, curated data tables are CC0. The shared `tools/data/measurements.js` is the single source of truth for IMBH mass measurements and cluster property tables. Note: Mahida et al. 2025 (radio ATCA non-detection) is an accretion efficiency constraint, not an IMBH mass measurement; it appears in the accretion-state tool but not in the measurements.js IMBH mass table.
 
 ### Hubs (entry points)
 
@@ -114,7 +114,7 @@ The IMBH-mass literature is currently *in unresolved tension* between the Häber
 
 Artifacts emitted by any OCS tool carry a SHA-256 execution hash (preimage: `{policy_parameters, output_payload}`) verifiable server-side via the `verify_execution_hash` MCP tool at `mcp.omegacentauri.me/mcp`. The artifact envelope itself is frozen at `chaingraph_version` 0.4.0 for stability; the catalog/spec version (registry, graph index, agent card) is 0.8.0.
 
-Three new tools were added in the OCG v0.8 upgrade (2026-07-04): the Bayes Factor Evidence Router (`bayes-factor-router`, `me.omegacentauri/bayes_factor`, peer-reviewed register), the JWST Accretion Ledger (`jwst-accretion-ledger`, `me.omegacentauri/imbh_accretion`, model-dependent register), and the GWTC Remnant Classifier (`gwtc-remnant-classifier`, `me.omegacentauri/gw_remnant`, peer-reviewed register). The model-dependent register is new in v0.8 and signals tools where the output depends on choices not fully determined by the data (e.g., ADAF radiative efficiency epsilon).
+Four tools were added in the OCG v0.8 upgrade (2026-07-04): the Bayes Factor Evidence Router (`bayes-factor-router`, `me.omegacentauri/bayes_factor`, peer-reviewed register), the JWST Accretion Ledger (`jwst-accretion-ledger`, `me.omegacentauri/imbh_accretion`, model-dependent register), the GWTC Remnant Classifier (`gwtc-remnant-classifier`, `me.omegacentauri/gw_remnant`, peer-reviewed register), and the Roman Microlensing Calculator (`roman-microlensing`, `me.omegacentauri/roman_microlensing`, peer-reviewed register). The model-dependent register is new in v0.8 and signals tools where the output depends on choices not fully determined by the data (e.g., ADAF radiative efficiency epsilon). The Roman Microlensing tool uses the Gould 2000 formalism (kappa=8.144 mas/M-sun) and Penny et al. 2019 yield; all outputs are pre-launch forecasts until the Nancy Grace Roman Space Telescope launches (target 2026-08-30).
 
 The MCP worker supports `run_chain` for end-to-end multi-tool evidence chains and decision-gate evaluation. Conformance level is L4 with L2 runtime chaining (`&cg=` deep-link + paste textarea).
 
@@ -123,4 +123,4 @@ The constraint-stacker evaluation (hash `533362070f30bf62f874fcf9b589446c8ec745c
 ## Contact
 
 - Email: contact@omegacentauri.me
-- Last reviewed: 2026-06-14
+- Last reviewed: 2026-07-04

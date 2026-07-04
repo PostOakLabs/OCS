@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!--
+  Roman Microlensing
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.2.0
+  Last updated: 2026-07-04
+
+  REGISTER: peer-reviewed
+  Gould 2000 (ApJ 542, 785) microlensing formalism; Penny et al. 2019 yield.
+  Roman Space Telescope launches 2026-08-30. All outputs are pre-launch forecasts
+  until released=true. Never imply live Roman data.
+
+  Data sources:
+    - Gould 2000, ApJ 542, 785 (DOI 10.1086/308744)
+    - Penny et al. 2019, ApJS 241, 3 (arXiv:1808.02490)
+    - Johnson et al. 2024, arXiv:2512.05182
+    - NASA Roman Space Telescope: launch target 2026-08-30
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roman Microlensing — Omega Centauri Society</title>
+<meta name="description" content="Compute Einstein radius and crossing timescale for Nancy Grace Roman Space Telescope microlensing events. Pre-launch forecasts; Gould 2000 formalism; peer-reviewed register.">
+<link rel="canonical" href="https://omegacentauri.me/tools/roman-microlensing.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --green-mid: #1a6b30; --green-bright: #28a846; --green-glow: #50d870;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --border-green: rgba(40, 168, 70, 0.25); --border-amber: rgba(240, 160, 32, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.04em; line-height: 1.15; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--green-mid); color: var(--green-bright); background: rgba(40,168,70,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65; }
+
+.forecast-notice {
+  background: rgba(112,85,212,0.05); border: 1px solid var(--border-subtle); border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px; font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--purple-glow); letter-spacing: 0.03em; line-height: 1.6;
+}
+.forecast-notice strong { color: var(--purple-glow); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.regime-badge {
+  display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle;
+}
+.regime-forecast { border: 1px solid var(--border-subtle); color: var(--text-dim); background: rgba(80,72,112,0.12); }
+.regime-live { border: 1px solid var(--border-green); color: var(--green-bright); background: rgba(40,168,70,0.06); }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.input-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.input-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 120px; letter-spacing: 0.03em; }
+.input-row input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-mid));
+  height: 4px; border-radius: 2px; outline: none;
+}
+.input-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--purple-glow); cursor: pointer;
+  box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-row input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--purple-glow);
+  cursor: pointer; border: none; box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-val { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--teal-glow); min-width: 120px; text-align: right; white-space: nowrap; }
+.input-help { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-style: italic; padding-left: 134px; }
+.toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.toggle-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 120px; }
+.toggle-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 14px; border-radius: 4px; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-dim); cursor: pointer; transition: all 0.15s; }
+.toggle-btn.active { border-color: var(--green-mid); color: var(--green-bright); background: rgba(40,168,70,0.06); }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; }
+.result-item { }
+.result-val { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal-glow); letter-spacing: 0.04em; }
+.result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
+.result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
+.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.result-table td:first-child { color: var(--text-dim); width: 170px; }
+.result-table tr:last-child td { border-bottom: none; }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-size: 14px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+
+.artifact-section { border-top: 1px solid var(--border-teal); padding-top: 20px; margin-bottom: 24px; }
+.artifact-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--teal-bright); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.artifact-toggle:hover { color: var(--teal-glow); }
+.artifact-toggle .arrow { transition: transform 0.2s; }
+.artifact-toggle.open .arrow { transform: rotate(90deg); }
+.artifact-body { display: none; margin-top: 14px; }
+.artifact-body.open { display: block; }
+.artifact-hash-cite { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--teal-glow); background: rgba(29,186,144,0.06); border: 1px solid var(--border-teal); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; letter-spacing: 0.03em; word-break: break-all; }
+.artifact-json { background: rgba(7,5,21,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.55; color: var(--text-secondary); overflow-x: auto; margin-bottom: 12px; max-height: 320px; overflow-y: auto; white-space: pre; }
+.artifact-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.artifact-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; background: transparent; border: 1px solid var(--teal-mid); color: var(--teal-bright); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+.artifact-btn:hover { border-color: var(--teal-glow); color: var(--teal-glow); background: rgba(29,186,144,0.06); }
+.artifact-btn.copied { border-color: var(--amber-bright); color: var(--amber-bright); }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+      <a href="/tools/imbh-evidence-dashboard.html">IMBH Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Roman<br>Microlensing</h1>
+    <span class="register-badge">Peer-reviewed</span>
+  </div>
+
+  <p class="intro">Computes the Einstein radius and crossing timescale for a gravitational microlensing event observable by the Nancy Grace Roman Space Telescope. Uses the Gould 2000 formalism (kappa = 8.144 mas/M-sun). Also scales the Penny et al. 2019 stellar event yield by a survey fraction.</p>
+
+  <div class="forecast-notice">
+    <strong>Pre-launch forecast</strong>
+    Roman Space Telescope launches 2026-08-30. All outputs are forecasts until that date. The "released" toggle below switches the regime label only — it does not imply actual Roman data. Roman astrometric microlensing uniquely detects the lens mass directly via proper motion, enabling IMBH searches (t_E ~ years for an IMBH lens).
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Lens and geometry parameters</div>
+
+    <div class="input-row">
+      <label>lens mass</label>
+      <input type="range" id="mass-slider" min="-1" max="4.5" step="0.05" value="0" oninput="onMassSlider(this.value)">
+      <span class="input-val" id="mass-display">1.0 M-sun</span>
+    </div>
+    <div class="input-help">Lens mass in solar masses. Log scale. Try 8200 for the Haberle 2024 IMBH lower bound.</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>D_L (lens)</label>
+      <input type="range" id="dl-slider" min="0.5" max="10" step="0.1" value="4.0" oninput="onDlSlider(this.value)">
+      <span class="input-val" id="dl-display">4.0 kpc</span>
+    </div>
+    <div class="input-help">Lens distance. Omega Centauri: ~5.3 kpc. Must be less than D_S.</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>D_S (source)</label>
+      <input type="range" id="ds-slider" min="1" max="15" step="0.1" value="8.0" oninput="onDsSlider(this.value)">
+      <span class="input-val" id="ds-display">8.0 kpc</span>
+    </div>
+    <div class="input-help">Source distance. Galactic bulge: ~8 kpc. Must exceed D_L.</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>mu (proper motion)</label>
+      <input type="range" id="mu-slider" min="0.5" max="15" step="0.1" value="5.0" oninput="onMuSlider(this.value)">
+      <span class="input-val" id="mu-display">5.0 mas/yr</span>
+    </div>
+    <div class="input-help">Relative proper motion of lens and source. Typical bulge survey: 3-8 mas/yr.</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>survey fraction</label>
+      <input type="range" id="frac-slider" min="0" max="1" step="0.01" value="1.0" oninput="onFracSlider(this.value)">
+      <span class="input-val" id="frac-display">100%</span>
+    </div>
+    <div class="input-help">Scales the Penny et al. 2019 yield estimate proportionally.</div>
+
+    <div class="toggle-row" style="margin-top:16px">
+      <label>released</label>
+      <button id="released-btn" class="toggle-btn" onclick="onReleasedToggle()">Forecast (not yet launched)</button>
+    </div>
+    <div class="input-help" style="padding-left:134px; font-style:italic; color:var(--text-dim)">Toggle to "live" after Roman launches (2026-08-30). Changes regime label only.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Results <span id="regime-tag" class="regime-badge regime-forecast">FORECAST</span></div>
+    <div class="result-block">
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-val" id="result-theta">--</div>
+          <div class="result-label">theta_E (Einstein radius, mas)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-te">--</div>
+          <div class="result-label">t_E (Einstein crossing, days)</div>
+        </div>
+      </div>
+      <table class="result-table" id="result-table"></table>
+    </div>
+  </div>
+
+  <div class="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> Export verifiable artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Building artifact...</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download" onclick="downloadArtifact()">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool computes</h3>
+      <p>Einstein radius and crossing time using Gould 2000 (ApJ 542, 785):</p>
+      <p><em>pi_rel = 1/D_L_kpc - 1/D_S_kpc (mas)</em></p>
+      <p><em>theta_E = sqrt(kappa * M * pi_rel) (mas),  kappa = 8.144 mas/M-sun</em></p>
+      <p><em>t_E = theta_E / mu * 365.25 (days)</em></p>
+      <p>For an IMBH lens at Omega Centauri distance (5.3 kpc) with galactic-bulge sources (8.2 kpc) and mass 8,200 M-sun (Haberle 2024 lower bound): theta_E ~ 67 mas, t_E ~ 22 years. Roman's astrometric precision can directly resolve the lens mass from the lens-source separation trajectory.</p>
+      <h3>Yield estimate</h3>
+      <p>Penny et al. 2019 (arXiv:1808.02490) estimates ~27,000 stellar microlensing events for the Roman 6-field 2-season Galactic Bulge Time Domain Survey. The yield_scaled_events field scales this by survey_fraction. This is for stellar-mass lenses; IMBH-induced events would be a small, model-dependent subset. Updated estimates: Johnson et al. 2024 (arXiv:2512.05182).</p>
+      <h3>Pre-launch status</h3>
+      <p>Roman launches 2026-08-30 (NASA target). Until launch, all outputs are pre-launch forecasts. The "released" toggle changes the regime label only and does not imply any actual data.</p>
+      <h3>IMBH context</h3>
+      <ul>
+        <li>Kinematics (peer-reviewed): Haberle et al. 2024 — IMBH ≥ 8,200 M-sun</li>
+        <li>Pulsar timing (peer-reviewed): Banares-Hernandez et al. 2025 — IMBH ≤ 6,000 M-sun</li>
+        <li>These bounds are in tension. Roman microlensing offers an independent astrometric probe.</li>
+      </ul>
+      <h3>Citations</h3>
+      <ul>
+        <li>Gould 2000, ApJ 542, 785 (DOI 10.1086/308744) — microlensing formalism</li>
+        <li>Penny et al. 2019, ApJS 241, 3 (arXiv:1808.02490) — Roman yield</li>
+        <li>Johnson et al. 2024, arXiv:2512.05182 — updated yield estimates</li>
+        <li>Haberle et al. 2024, Nature 631, 285 (DOI 10.1038/s41586-024-07511-z)</li>
+        <li>Banares-Hernandez et al. 2025, A&amp;A 693 A104 (DOI 10.1051/0004-6361/202450240)</li>
+      </ul>
+      <div class="meta-line">Tool v1.2.0 · mandate me.omegacentauri/roman_microlensing · register: peer-reviewed · OCG artifact v0.4.0</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Roman Microlensing · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- OCS OpenChainGraph Artifact Export ----------
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
+const OCS_TOOL_ID            = 'roman-microlensing';
+const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/roman_microlensing';
+
+// Vendored JCS hash block — from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4).
+// Byte-identical to constraint-stacker.html. Namespace: me.omegacentauri.
+function assertIJson(v){
+  if(typeof v==='number'){
+    if(!Number.isFinite(v)) throw new Error('Non-finite number ('+v+') is not valid I-JSON (RFC 8785 §3.2.2.3).');
+    if(Number.isInteger(v)&&!Number.isSafeInteger(v)) throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');
+  } else if(Array.isArray(v)){ v.forEach(assertIJson); }
+  else if(v&&typeof v==='object'){ for(const k of Object.keys(v)) assertIJson(v[k]); }
+}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){
+  const obj={policy_parameters,output_payload};
+  assertIJson(obj);
+  return JSON.stringify(cgCanon(obj));
+}
+async function executionHash(policy_parameters,output_payload){
+  const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));
+  const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'requires-secure-context';
+  try { return await executionHash(policyParams, outputPayload); } catch(e) { return 'error'; }
+}
+
+// ---------- Kernel compute — vendored verbatim from roman-microlensing.kernel.mjs ----------
+const KAPPA = 8.144;
+const DAYS_PER_YEAR = 365.25;
+const PENNY_2019_SURVEY_YIELD = 27000;
+
+function finiteOr(v, fallback) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function compute(policy_parameters) {
+  const pp = policy_parameters ?? {};
+  const ip = pp.input_parameters ?? {};
+
+  const M    = finiteOr(ip.lens_mass_Msun,  1.0);
+  const D_L  = finiteOr(ip.D_L_kpc,         4.0);
+  const D_S  = finiteOr(ip.D_S_kpc,         8.0);
+  const mu   = finiteOr(ip.mu_mas_yr,        5.0);
+  const frac = finiteOr(ip.survey_fraction,  1.0);
+  const rel  = !!(ip.released);
+
+  const pi_rel = (D_L > 0 && D_S > 0 && D_S > D_L)
+    ? (1 / D_L - 1 / D_S)
+    : 0;
+
+  const theta_E_sq = KAPPA * (M > 0 ? M : 0) * pi_rel;
+  const theta_E    = theta_E_sq > 0 ? Math.sqrt(theta_E_sq) : 0;
+  const t_E        = (mu > 0 && theta_E > 0) ? theta_E / mu * DAYS_PER_YEAR : 0;
+
+  const regime = rel ? 'live' : 'forecast';
+
+  const frac_c = Math.max(0, Math.min(1, frac));
+  const yield_scaled = Math.round(frac_c * PENNY_2019_SURVEY_YIELD);
+
+  const theta_E_r  = Math.round(theta_E  * 10000) / 10000;
+  const t_E_r      = Math.round(t_E      * 100)   / 100;
+  const pi_rel_r   = Math.round(pi_rel   * 1000000) / 1000000;
+
+  const output_payload = {
+    theta_E_mas:                theta_E_r,
+    t_E_days:                   t_E_r,
+    pi_rel_mas:                 pi_rel_r,
+    kappa_mas_Msun:             KAPPA,
+    regime,
+    lens_mass_Msun:             M,
+    D_L_kpc:                    D_L,
+    D_S_kpc:                    D_S,
+    mu_mas_yr:                  mu,
+    survey_fraction:            frac_c,
+    yield_scaled_events:        yield_scaled,
+    yield_base_events:          PENNY_2019_SURVEY_YIELD,
+    yield_note:                 'Scaled from Penny et al. 2019 (arXiv:1808.02490) 6-field 2-season fiducial yield of ~27,000 stellar events by survey_fraction=' + frac_c + '. Stellar events only; IMBH-induced events would be a small, uncertain subset.',
+    survey:                     'Nancy Grace Roman Space Telescope (launch target 2026-08-30)',
+    regime_note:                rel
+      ? 'Roman data available (released=true).'
+      : 'Roman has not yet launched; all outputs are pre-launch forecasts (launch target 2026-08-30).',
+    register:                   'peer-reviewed',
+    citations: [
+      'Gould 2000, ApJ 542, 785 (microlensing Einstein radius formalism)',
+      'Penny et al. 2019, ApJS 241, 3 (arXiv:1808.02490) — Roman Galactic Bulge microlensing yield',
+      'Johnson et al. 2024, arXiv:2512.05182 — updated Roman microlensing yield estimates',
+      'Roman launch target: 2026-08-30 (NASA/GSFC)',
+    ],
+  };
+  return { output_payload };
+}
+// ---------- End kernel ----------
+
+// ---------- State ----------
+let state = {
+  massLog: 0,    // log10(lens_mass_Msun), slider -1 to 4.5
+  D_L: 4.0,
+  D_S: 8.0,
+  mu: 5.0,
+  frac: 1.0,
+  released: false,
+};
+
+function massValue() { return Math.pow(10, state.massLog); }
+
+function buildPolicyParams() {
+  return {
+    execution_backend: 'js',
+    input_parameters: {
+      lens_mass_Msun: massValue(),
+      D_L_kpc: state.D_L,
+      D_S_kpc: state.D_S,
+      mu_mas_yr: state.mu,
+      survey_fraction: state.frac,
+      released: state.released,
+    }
+  };
+}
+
+// ---------- URL hash state ----------
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('masslog', String(Math.round(state.massLog * 100) / 100));
+  p.set('dl', String(state.D_L));
+  p.set('ds', String(state.D_S));
+  p.set('mu', String(state.mu));
+  p.set('frac', String(state.frac));
+  if (state.released) p.set('released', '1');
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const ml = parseFloat(p.get('masslog'));
+  if (Number.isFinite(ml)) state.massLog = Math.max(-1, Math.min(4.5, ml));
+  const dl = parseFloat(p.get('dl'));
+  if (Number.isFinite(dl) && dl > 0) state.D_L = Math.max(0.5, Math.min(10, dl));
+  const ds = parseFloat(p.get('ds'));
+  if (Number.isFinite(ds) && ds > 0) state.D_S = Math.max(1, Math.min(15, ds));
+  const mu = parseFloat(p.get('mu'));
+  if (Number.isFinite(mu) && mu > 0) state.mu = Math.max(0.5, Math.min(15, mu));
+  const frac = parseFloat(p.get('frac'));
+  if (Number.isFinite(frac)) state.frac = Math.max(0, Math.min(1, frac));
+  state.released = p.get('released') === '1';
+}
+
+// ---------- UI helpers ----------
+function fmtMass(m) {
+  if (m >= 1000) return Math.round(m).toLocaleString('en-US') + ' M-sun';
+  if (m >= 10)   return m.toFixed(1) + ' M-sun';
+  return m.toPrecision(3) + ' M-sun';
+}
+function fmtAngle(v) {
+  if (v >= 100) return v.toFixed(1) + ' mas';
+  if (v >= 1)   return v.toFixed(3) + ' mas';
+  return v.toFixed(4) + ' mas';
+}
+function fmtTime(days) {
+  if (days > 3650) return (days / 365.25).toFixed(1) + ' yr (' + Math.round(days).toLocaleString('en-US') + ' d)';
+  if (days > 365)  return (days / 365.25).toFixed(2) + ' yr (' + Math.round(days) + ' d)';
+  return days.toFixed(1) + ' d';
+}
+
+function onMassSlider(v) {
+  state.massLog = parseFloat(v);
+  document.getElementById('mass-slider').value = v;
+  saveHash(); render();
+}
+function onDlSlider(v) {
+  state.D_L = parseFloat(v);
+  document.getElementById('dl-slider').value = v;
+  saveHash(); render();
+}
+function onDsSlider(v) {
+  state.D_S = parseFloat(v);
+  document.getElementById('ds-slider').value = v;
+  saveHash(); render();
+}
+function onMuSlider(v) {
+  state.mu = parseFloat(v);
+  document.getElementById('mu-slider').value = v;
+  saveHash(); render();
+}
+function onFracSlider(v) {
+  state.frac = parseFloat(v);
+  document.getElementById('frac-slider').value = v;
+  saveHash(); render();
+}
+function onReleasedToggle() {
+  state.released = !state.released;
+  saveHash(); render();
+}
+
+function render() {
+  const pp = buildPolicyParams();
+  const { output_payload: op } = compute(pp);
+
+  document.getElementById('mass-display').textContent = fmtMass(op.lens_mass_Msun);
+  document.getElementById('dl-display').textContent = op.D_L_kpc.toFixed(1) + ' kpc';
+  document.getElementById('ds-display').textContent = op.D_S_kpc.toFixed(1) + ' kpc';
+  document.getElementById('mu-display').textContent = op.mu_mas_yr.toFixed(1) + ' mas/yr';
+  document.getElementById('frac-display').textContent = Math.round(op.survey_fraction * 100) + '%';
+
+  const btn = document.getElementById('released-btn');
+  btn.textContent = state.released ? 'Live (released=true)' : 'Forecast (not yet launched)';
+  btn.classList.toggle('active', state.released);
+
+  const tag = document.getElementById('regime-tag');
+  tag.textContent = op.regime.toUpperCase();
+  tag.className = 'regime-badge regime-' + op.regime;
+
+  if (op.theta_E_mas > 0) {
+    document.getElementById('result-theta').textContent = fmtAngle(op.theta_E_mas);
+    document.getElementById('result-te').textContent = fmtTime(op.t_E_days);
+  } else {
+    document.getElementById('result-theta').textContent = '--';
+    document.getElementById('result-te').textContent = 'D_L must be < D_S';
+  }
+
+  document.getElementById('result-table').innerHTML = `
+    <tr><td>pi_rel_mas</td><td>${op.pi_rel_mas} mas</td></tr>
+    <tr><td>kappa</td><td>${op.kappa_mas_Msun} mas/M-sun</td></tr>
+    <tr><td>regime</td><td>${op.regime}</td></tr>
+    <tr><td>yield_scaled</td><td>${op.yield_scaled_events.toLocaleString('en-US')} events (stellar)</td></tr>
+    <tr><td>yield_base</td><td>${op.yield_base_events.toLocaleString('en-US')} (Penny 2019 fiducial)</td></tr>
+  `;
+  invalidateArtifact();
+}
+
+// ---------- Artifact ----------
+let _artifactCache = null;
+function invalidateArtifact() {
+  _artifactCache = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+async function buildArtifact() {
+  const policyParams = buildPolicyParams();
+  const { output_payload: outputPayload } = compute(policyParams);
+  const hash = await computeExecHash(policyParams, outputPayload);
+  return {
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
+    mandate_type: OCS_MANDATE_TYPE,
+    tool_id: OCS_TOOL_ID,
+    tool_version: OCS_TOOL_VERSION,
+    generated_at: new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParams,
+    output_payload: outputPayload,
+    compliance_flags: ['register:peer-reviewed'],
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified: true,
+      deterministic_run: true,
+      ocs_artifact_version: '1.0.0',
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_roman_microlensing_2026,\n  author   = {Swanson, Tim},\n  title    = {{Roman Microlensing}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/roman-microlensing.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society -- omegacentauri.me. Register: peer-reviewed (Gould 2000 formalism; Penny et al. 2019 yield; launch target 2026-08-30).}\n}`,
+    }
+  };
+}
+async function getArtifact() {
+  if (!_artifactCache) _artifactCache = await buildArtifact();
+  return _artifactCache;
+}
+async function renderArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.length > 16 ? artifact.execution_hash.slice(0,16)+'...' : artifact.execution_hash;
+  document.getElementById('artifact-hash-cite').textContent =
+    `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0,10)}`;
+  document.getElementById('artifact-json').textContent = JSON.stringify(artifact, null, 2);
+}
+function wireArtifact() {
+  const toggle = document.getElementById('artifact-toggle');
+  const body   = document.getElementById('artifact-body');
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+}
+async function copyArtifact() {
+  const artifact = await getArtifact();
+  const text = JSON.stringify(artifact, null, 2);
+  const btn = document.getElementById('artifact-copy');
+  const flash = () => { btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy JSON'; btn.classList.remove('copied'); }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(flash).catch(()=>{ fallbackCopy(text); flash(); }); }
+  else { fallbackCopy(text); flash(); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+}
+async function downloadArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.slice(0,8);
+  const filename = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+  const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ---------- About ----------
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---------- Init ----------
+function init() {
+  loadHash();
+  document.getElementById('mass-slider').value = state.massLog;
+  document.getElementById('dl-slider').value = state.D_L;
+  document.getElementById('ds-slider').value = state.D_S;
+  document.getElementById('mu-slider').value = state.mu;
+  document.getElementById('frac-slider').value = state.frac;
+  wireArtifact();
+  wireAbout();
+  render();
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
