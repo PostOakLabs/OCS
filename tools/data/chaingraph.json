@@ -941,6 +941,93 @@
         "Malave et al. 2025/2026, arXiv:2512.09649",
         "Colom i Bernadich et al. 2026, arXiv:2603.21845"
       ]
+    },
+    "bayes-factor-router": {
+      "mcp_name": "bayes_factor_router",
+      "mandate_type": "me.omegacentauri/bayes_factor",
+      "tool_version": "1.2.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-07-04",
+      "chain": {
+        "consumes": [],
+        "feeds": [],
+        "chain_depth": 0
+      },
+      "register": "peer-reviewed",
+      "output_payload_schema": {
+        "scale": { "type": "string" },
+        "input_value": { "type": "number" },
+        "evidence_category": { "type": "string" },
+        "gate_token": { "type": "string" },
+        "thresholds": { "type": "object|null" },
+        "reference": { "type": "string" }
+      },
+      "data_sources": [
+        "Jeffreys, H. 1961, Theory of Probability, 3rd ed. (Oxford University Press)",
+        "Kass, R.E. & Raftery, A.E. 1995, JASA 90:773",
+        "NANOGrav 2023, arXiv:2306.16213"
+      ]
+    },
+    "jwst-accretion-ledger": {
+      "mcp_name": "jwst_accretion_ledger",
+      "mandate_type": "me.omegacentauri/imbh_accretion",
+      "tool_version": "1.2.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-07-04",
+      "chain": {
+        "consumes": [],
+        "feeds": ["constraint-stacker"],
+        "chain_depth": 0
+      },
+      "register": "model-dependent",
+      "output_payload_schema": {
+        "constraint_axis": { "type": "string" },
+        "jwst_upper_limit_Msun": { "type": "integer|null" },
+        "excluded_above_Msun": { "type": "integer|null" },
+        "epsilon_adaf": { "type": "number" },
+        "rho_inf_kg_m3": { "type": "number" },
+        "l_limit_w": { "type": "string" },
+        "register": { "type": "string" },
+        "model_dependence": { "type": "string" },
+        "reference": { "type": "string" },
+        "verdict": { "type": "string" }
+      },
+      "data_sources": [
+        "Chen et al. 2025, arXiv:2511.20945 (accepted ApJ, v2 2026-03-20)",
+        "Pesce et al. 2021, ApJ 923, 260 (DOI 10.3847/1538-4357/ac2eb3)"
+      ]
+    },
+    "gwtc-remnant-classifier": {
+      "mcp_name": "gwtc_remnant_classifier",
+      "mandate_type": "me.omegacentauri/gw_remnant",
+      "tool_version": "1.2.0",
+      "artifact_qualified": true,
+      "artifact_since": "2026-07-04",
+      "chain": {
+        "consumes": [],
+        "feeds": [],
+        "chain_depth": 0
+      },
+      "register": "peer-reviewed",
+      "output_payload_schema": {
+        "chirp_mass_Msun": { "type": "number" },
+        "total_mass_Msun": { "type": "number" },
+        "mass_ratio": { "type": "number" },
+        "remnant_mass_Msun": { "type": "number" },
+        "final_spin": { "type": "number" },
+        "in_pi_gap": { "type": "boolean" },
+        "pi_gap_note": { "type": "string" },
+        "imbh_class": { "type": "boolean" },
+        "gate_token": { "type": "string" },
+        "register": { "type": "string" },
+        "caveat": { "type": "string" },
+        "reference": { "type": "string" }
+      },
+      "data_sources": [
+        "Jimenez-Forteza et al. 2017, PRD 95, 064024 (arXiv:1611.00332)",
+        "Farmer et al. 2019, ApJ 887, 53",
+        "Chatterjee et al. 2025, arXiv:2509.09161"
+      ]
     }
   },
   "pending_upgrade": [],
@@ -1475,6 +1562,63 @@
         "astrometric-microlensing",
         "gaia-dr4-forecaster"
       ],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:bayes-factor-router",
+      "dct:title": "Bayes Factor Evidence Router",
+      "ocg:mandate_type": "me.omegacentauri/bayes_factor",
+      "ocg:mcp_tool_name": "bayes_factor_router",
+      "ocg:tool_version": "1.2.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:jwst-accretion-ledger",
+      "dct:title": "JWST Accretion Ledger",
+      "ocg:mandate_type": "me.omegacentauri/imbh_accretion",
+      "ocg:mcp_tool_name": "jwst_accretion_ledger",
+      "ocg:tool_version": "1.2.0",
+      "ocg:consumes": [],
+      "ocg:feeds": ["constraint-stacker"],
+      "ocg:signing_keys": [],
+      "dcat:accessService": {
+        "@type": "dcat:DataService",
+        "dcat:endpointURL": "https://mcp.omegacentauri.me/mcp",
+        "dct:conformsTo": "https://modelcontextprotocol.io/spec/2025-11-05"
+      }
+    },
+    {
+      "@type": [
+        "dcat:Dataset",
+        "ocg:ArtifactTool"
+      ],
+      "@id": "ocs:gwtc-remnant-classifier",
+      "dct:title": "GWTC Remnant Classifier",
+      "ocg:mandate_type": "me.omegacentauri/gw_remnant",
+      "ocg:mcp_tool_name": "gwtc_remnant_classifier",
+      "ocg:tool_version": "1.2.0",
+      "ocg:consumes": [],
+      "ocg:feeds": [],
       "ocg:signing_keys": [],
       "dcat:accessService": {
         "@type": "dcat:DataService",

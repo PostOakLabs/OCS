@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<!--
+  Bayes Factor Evidence Router
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.2.0
+  Last updated: 2026-07-04
+
+  Data sources:
+    - Jeffreys, H. 1961, Theory of Probability, 3rd ed. (Oxford University Press)
+    - Kass, R.E. & Raftery, A.E. 1995, JASA 90:773 (DOI 10.2307/2291091)
+    - NANOGrav 2023, arXiv:2306.16213 (GWB Bayes factor > 1e14)
+
+  Site section: #science
+  Epistemic tier(s): Peer-reviewed statistical framework
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayes Factor Evidence Router — Omega Centauri Society</title>
+<meta name="description" content="Map a Bayes factor (or 2·ln BF) to an evidence-strength category (Jeffreys/Kass-Raftery scale). Gate primitive for ChainGraph evidence chains.">
+<link rel="canonical" href="https://omegacentauri.me/tools/bayes-factor-router.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 30px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.04em; line-height: 1.15; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--teal-mid); color: var(--teal-bright); background: rgba(29,186,144,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; line-height: 1.65; }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.mode-row { display: flex; gap: 0; margin-bottom: 20px; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; }
+.mode-btn { flex: 1; background: transparent; border: none; color: var(--text-secondary); font-family: 'Space Mono', monospace; font-size: 12px; padding: 9px 14px; cursor: pointer; transition: all 0.15s; }
+.mode-btn.active { background: var(--purple-dark); color: var(--purple-glow); }
+.mode-btn:hover:not(.active) { background: rgba(112,85,212,0.1); }
+
+.input-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.input-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 80px; letter-spacing: 0.03em; }
+.input-row input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-mid));
+  height: 4px; border-radius: 2px; outline: none;
+}
+.input-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--purple-glow); cursor: pointer;
+  box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-row input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--purple-glow);
+  cursor: pointer; border: none; box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-val { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--teal-glow); min-width: 120px; text-align: right; white-space: nowrap; }
+.input-help { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-style: italic; padding-left: 94px; }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-category {
+  font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 600;
+  letter-spacing: 0.06em; margin-bottom: 8px; text-transform: uppercase;
+}
+.result-category.decisive { color: var(--teal-glow); }
+.result-category.strong   { color: var(--purple-glow); }
+.result-category.substantial { color: var(--amber-bright); }
+.result-category.weak     { color: var(--text-secondary); }
+.result-category.null_h   { color: var(--red-bright); }
+.gate-token { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-dim); letter-spacing: 0.06em; margin-bottom: 16px; }
+.thresh-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
+.thresh-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.thresh-table td:first-child { color: var(--text-dim); width: 110px; }
+.thresh-table tr.active-row td { color: var(--teal-glow); background: rgba(29,186,144,0.05); }
+.thresh-table tr:last-child td { border-bottom: none; }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-family: 'Space Mono', monospace; font-size: 13px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+
+.artifact-section { border-top: 1px solid var(--border-teal); padding-top: 20px; margin-bottom: 24px; }
+.artifact-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--teal-bright); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.artifact-toggle:hover { color: var(--teal-glow); }
+.artifact-toggle .arrow { transition: transform 0.2s; }
+.artifact-toggle.open .arrow { transform: rotate(90deg); }
+.artifact-body { display: none; margin-top: 14px; }
+.artifact-body.open { display: block; }
+.artifact-hash-cite { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--teal-glow); background: rgba(29,186,144,0.06); border: 1px solid var(--border-teal); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; letter-spacing: 0.03em; word-break: break-all; }
+.artifact-json { background: rgba(7,5,21,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.55; color: var(--text-secondary); overflow-x: auto; margin-bottom: 12px; max-height: 320px; overflow-y: auto; white-space: pre; }
+.artifact-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.artifact-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; background: transparent; border: 1px solid var(--teal-mid); color: var(--teal-bright); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+.artifact-btn:hover { border-color: var(--teal-glow); color: var(--teal-glow); background: rgba(29,186,144,0.06); }
+.artifact-btn.copied { border-color: var(--amber-bright); color: var(--amber-bright); }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Bayes Factor<br>Evidence Router</h1>
+    <span class="register-badge">Peer-reviewed</span>
+  </div>
+
+  <p class="intro">Maps a Bayes factor BF (or its log-scale equivalent 2·ln BF) to a categorical evidence-strength token on the Jeffreys/Kass-Raftery scale. This is the gate primitive used in ChainGraph evidence chains.</p>
+
+  <div class="panel">
+    <div class="panel-title">Input</div>
+
+    <div class="mode-row">
+      <button class="mode-btn active" id="mode-bf" onclick="setMode('bf')">BF direct</button>
+      <button class="mode-btn" id="mode-k" onclick="setMode('k')">2 · ln BF</button>
+    </div>
+
+    <div id="bf-section">
+      <div class="input-row">
+        <label>log₁₀ BF</label>
+        <input type="range" id="log10bf-slider" min="0" max="20" step="0.1" value="14" oninput="onLog10BFSlider(this.value)">
+        <span class="input-val" id="bf-display">10¹⁴</span>
+      </div>
+      <div class="input-help">NANOGrav 15-yr GWB: BF &gt; 10¹⁴ (arXiv:2306.16213)</div>
+    </div>
+
+    <div id="k-section" style="display:none">
+      <div class="input-row">
+        <label>2 · ln BF</label>
+        <input type="range" id="k-slider" min="-2" max="20" step="0.1" value="8" oninput="onKSlider(this.value)">
+        <span class="input-val" id="k-display">8.0</span>
+      </div>
+      <div class="input-help">Thresholds: 0 / 2.33 / 4.61 / 9.21 (weak / substantial / strong / decisive)</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Evidence classification</div>
+    <div class="result-block">
+      <div class="result-category" id="result-category">Decisive</div>
+      <div class="gate-token" id="gate-token">gate_token: decisive</div>
+      <table class="thresh-table" id="thresh-table"></table>
+    </div>
+  </div>
+
+  <div class="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> Export verifiable artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Building artifact…</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download" onclick="downloadArtifact()">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool does</h3>
+      <p>Given a Bayes factor BF comparing two hypotheses (e.g., H1: gravitational wave background vs. H0: noise), or its log-scale 2·ln BF, this tool classifies the evidence strength using the Jeffreys (1961) / Kass &amp; Raftery (1995) thresholds and returns a routing token for use in ChainGraph evidence chains.</p>
+      <h3>Scales</h3>
+      <ul>
+        <li><code>BF &lt; 1</code> — supports null hypothesis</li>
+        <li><code>1 ≤ BF &lt; 3.2</code> — weak (barely worth mentioning)</li>
+        <li><code>3.2 ≤ BF &lt; 10</code> — substantial</li>
+        <li><code>10 ≤ BF &lt; 100</code> — strong</li>
+        <li><code>BF ≥ 100</code> — decisive</li>
+      </ul>
+      <h3>Worked example</h3>
+      <p>NANOGrav 15-year data set (arXiv:2306.16213) reports BF &gt; 10¹⁴ for the gravitational wave background, classifying as <em>decisive</em> evidence.</p>
+      <h3>Citations</h3>
+      <ul>
+        <li>Jeffreys, H. 1961, <em>Theory of Probability</em>, 3rd ed., Oxford University Press</li>
+        <li>Kass, R.E. &amp; Raftery, A.E. 1995, JASA 90:773 (DOI 10.2307/2291091)</li>
+        <li>NANOGrav 2023, arXiv:2306.16213</li>
+      </ul>
+      <div class="meta-line">Tool v1.2.0 · mandate me.omegacentauri/bayes_factor · register: peer-reviewed · OCG artifact v0.4.0</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Bayes Factor Evidence Router · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- OCS OpenChainGraph Artifact Export ----------
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
+const OCS_TOOL_ID            = 'bayes-factor-router';
+const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/bayes_factor';
+
+// Vendored JCS hash block — from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4).
+// Byte-identical to constraint-stacker.html. Namespace: me.omegacentauri.
+function assertIJson(v){
+  if(typeof v==='number'){
+    if(!Number.isFinite(v)) throw new Error('Non-finite number ('+v+') is not valid I-JSON (RFC 8785 §3.2.2.3).');
+    if(Number.isInteger(v)&&!Number.isSafeInteger(v)) throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');
+  } else if(Array.isArray(v)){ v.forEach(assertIJson); }
+  else if(v&&typeof v==='object'){ for(const k of Object.keys(v)) assertIJson(v[k]); }
+}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){
+  const obj={policy_parameters,output_payload};
+  assertIJson(obj);
+  return JSON.stringify(cgCanon(obj));
+}
+async function executionHash(policy_parameters,output_payload){
+  const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));
+  const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'requires-secure-context';
+  try { return await executionHash(policyParams, outputPayload); } catch(e) { return 'error'; }
+}
+
+// ---------- Kernel compute — vendored verbatim from bayes-factor-router.kernel.mjs ----------
+const REFERENCE = 'Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)';
+const K_SUBSTANTIAL = 2.3263;
+const K_STRONG      = 4.6052;
+const K_DECISIVE    = 9.2103;
+
+function classifyBF(bf) {
+  if (bf < 1)     return { evidence_category: 'supports null hypothesis',      gate_token: 'supports_null' };
+  if (bf < 3.2)   return { evidence_category: 'weak (barely worth mentioning)', gate_token: 'weak' };
+  if (bf < 10)    return { evidence_category: 'substantial',                    gate_token: 'substantial' };
+  if (bf < 100)   return { evidence_category: 'strong',                         gate_token: 'strong' };
+  return            { evidence_category: 'decisive',                       gate_token: 'decisive' };
+}
+
+function classifyK(k) {
+  if (k < 0)             return { evidence_category: 'supports null hypothesis',      gate_token: 'supports_null' };
+  if (k < K_SUBSTANTIAL) return { evidence_category: 'weak (barely worth mentioning)', gate_token: 'weak' };
+  if (k < K_STRONG)      return { evidence_category: 'substantial',                    gate_token: 'substantial' };
+  if (k < K_DECISIVE)    return { evidence_category: 'strong',                         gate_token: 'strong' };
+  return                   { evidence_category: 'decisive',                       gate_token: 'decisive' };
+}
+
+function compute(policy_parameters) {
+  const pp = policy_parameters ?? {};
+  const ip = pp.input_parameters ?? {};
+
+  const bfRaw = Number(ip.bf);
+  const kRaw  = Number(ip.two_ln_bf);
+  const hasBF = ip.bf !== undefined && ip.bf !== null && Number.isFinite(bfRaw);
+  const hasK  = ip.two_ln_bf !== undefined && ip.two_ln_bf !== null && Number.isFinite(kRaw);
+
+  let scale, input_value, cls, thresholds;
+  if (hasBF) {
+    scale = 'bayes_factor';
+    input_value = bfRaw;
+    cls = classifyBF(bfRaw);
+    thresholds = { substantial: 3.2, strong: 10, decisive: 100 };
+  } else if (hasK) {
+    scale = 'two_ln_bayes_factor';
+    input_value = kRaw;
+    cls = classifyK(kRaw);
+    thresholds = { substantial: K_SUBSTANTIAL, strong: K_STRONG, decisive: K_DECISIVE };
+  } else {
+    scale = 'none';
+    input_value = null;
+    cls = { evidence_category: 'no evidence input provided', gate_token: 'undefined' };
+    thresholds = null;
+  }
+
+  const output_payload = {
+    scale,
+    input_value,
+    evidence_category: cls.evidence_category,
+    gate_token: cls.gate_token,
+    thresholds,
+    reference: REFERENCE,
+  };
+  return { output_payload };
+}
+// ---------- End kernel ----------
+
+// ---------- State ----------
+const DEFAULT_MODE    = 'bf';
+const DEFAULT_LOG10BF = 14;
+const DEFAULT_K       = 8;
+
+let state = { mode: DEFAULT_MODE, log10bf: DEFAULT_LOG10BF, kval: DEFAULT_K };
+
+function bfValue()   { return Math.pow(10, state.log10bf); }
+function buildPolicyParams() {
+  if (state.mode === 'bf') return { execution_backend: 'js', input_parameters: { bf: bfValue() } };
+  return { execution_backend: 'js', input_parameters: { two_ln_bf: state.kval } };
+}
+
+// ---------- URL hash state ----------
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('mode', state.mode);
+  if (state.mode === 'bf') p.set('log10bf', String(state.log10bf));
+  else p.set('k', String(state.kval));
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const m = p.get('mode');
+  if (m === 'bf' || m === 'k') state.mode = m;
+  const l = parseFloat(p.get('log10bf'));
+  if (Number.isFinite(l)) state.log10bf = Math.max(0, Math.min(20, l));
+  const k = parseFloat(p.get('k'));
+  if (Number.isFinite(k)) state.kval = Math.max(-2, Math.min(20, k));
+}
+
+// ---------- UI ----------
+function setMode(m) {
+  state.mode = m;
+  document.getElementById('mode-bf').classList.toggle('active', m === 'bf');
+  document.getElementById('mode-k').classList.toggle('active', m === 'k');
+  document.getElementById('bf-section').style.display = m === 'bf' ? '' : 'none';
+  document.getElementById('k-section').style.display  = m === 'k'  ? '' : 'none';
+  saveHash(); render();
+}
+function onLog10BFSlider(v) {
+  state.log10bf = parseFloat(v);
+  document.getElementById('log10bf-slider').value = v;
+  saveHash(); render();
+}
+function onKSlider(v) {
+  state.kval = parseFloat(v);
+  document.getElementById('k-slider').value = v;
+  saveHash(); render();
+}
+
+function fmtBF(bf) {
+  if (bf >= 1e6) { const e = Math.round(Math.log10(bf)); return '10¹' + superscript(e); }
+  return bf.toLocaleString('en-US');
+}
+function superscript(n) {
+  return String(n).split('').map(c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[parseInt(c)] || c).join('');
+}
+
+const CAT_CLASS = { decisive:'decisive', strong:'strong', substantial:'substantial', weak:'weak', supports_null:'null_h' };
+const THRESH_BF = [
+  { label: 'decisive',    val: '≥ 100' },
+  { label: 'strong',      val: '10–100' },
+  { label: 'substantial', val: '3.2–10' },
+  { label: 'weak',        val: '1–3.2' },
+  { label: 'supports null', val: '< 1' },
+];
+const THRESH_K = [
+  { label: 'decisive',    val: '≥ 9.21' },
+  { label: 'strong',      val: '4.61–9.21' },
+  { label: 'substantial', val: '2.33–4.61' },
+  { label: 'weak',        val: '0–2.33' },
+  { label: 'supports null', val: '< 0' },
+];
+const TOKEN_TO_LABEL = { decisive:'decisive', strong:'strong', substantial:'substantial', weak:'weak', supports_null:'supports null', undefined:'undefined' };
+
+function render() {
+  const pp = buildPolicyParams();
+  const { output_payload } = compute(pp);
+  const cat = output_payload.gate_token;
+  const catEl = document.getElementById('result-category');
+  catEl.textContent = output_payload.evidence_category.charAt(0).toUpperCase() + output_payload.evidence_category.slice(1);
+  catEl.className = 'result-category ' + (CAT_CLASS[cat] || '');
+  document.getElementById('gate-token').textContent = 'gate_token: ' + cat;
+
+  const rows = state.mode === 'bf' ? THRESH_BF : THRESH_K;
+  const activeLbl = TOKEN_TO_LABEL[cat] || '';
+  document.getElementById('thresh-table').innerHTML = rows.map(r =>
+    `<tr class="${r.label.startsWith(activeLbl) && activeLbl ? 'active-row':''}" ><td>${r.label}</td><td>${r.val}</td></tr>`
+  ).join('');
+
+  if (state.mode === 'bf') {
+    document.getElementById('bf-display').textContent = 'BF = ' + bfValue().toExponential(0).replace('e+','e+').replace(/e\+?(\d+)/,(m,e)=>'10'+superscript(parseInt(e)));
+  } else {
+    document.getElementById('k-display').textContent = state.kval.toFixed(1);
+  }
+  invalidateArtifact();
+}
+
+// ---------- Artifact ----------
+let _artifactCache = null;
+function invalidateArtifact() {
+  _artifactCache = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+async function buildArtifact() {
+  const policyParams = buildPolicyParams();
+  const { output_payload: outputPayload } = compute(policyParams);
+  const hash = await computeExecHash(policyParams, outputPayload);
+  return {
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
+    mandate_type: OCS_MANDATE_TYPE,
+    tool_id: OCS_TOOL_ID,
+    tool_version: OCS_TOOL_VERSION,
+    generated_at: new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParams,
+    output_payload: outputPayload,
+    compliance_flags: ['register:peer-reviewed'],
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified: true,
+      deterministic_run: true,
+      ocs_artifact_version: '1.0.0',
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_bayes_factor_router_2026,\n  author   = {Swanson, Tim},\n  title    = {{Bayes Factor Evidence Router}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/bayes-factor-router.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}`
+    }
+  };
+}
+async function getArtifact() {
+  if (!_artifactCache) _artifactCache = await buildArtifact();
+  return _artifactCache;
+}
+async function renderArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.length > 16 ? artifact.execution_hash.slice(0,16)+'…' : artifact.execution_hash;
+  document.getElementById('artifact-hash-cite').textContent =
+    `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0,10)}`;
+  document.getElementById('artifact-json').textContent = JSON.stringify(artifact, null, 2);
+}
+function wireArtifact() {
+  const toggle = document.getElementById('artifact-toggle');
+  const body   = document.getElementById('artifact-body');
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+}
+async function copyArtifact() {
+  const artifact = await getArtifact();
+  const text = JSON.stringify(artifact, null, 2);
+  const btn = document.getElementById('artifact-copy');
+  const flash = () => { btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy JSON'; btn.classList.remove('copied'); }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(flash).catch(()=>{ fallbackCopy(text); flash(); }); }
+  else { fallbackCopy(text); flash(); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+}
+async function downloadArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.slice(0,8);
+  const filename = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+  const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ---------- About ----------
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---------- Init ----------
+function init() {
+  loadHash();
+  document.getElementById('log10bf-slider').value = state.log10bf;
+  document.getElementById('k-slider').value = state.kval;
+  setMode(state.mode);
+  wireArtifact();
+  wireAbout();
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>

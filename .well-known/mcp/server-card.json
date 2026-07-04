@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "name": "Omega Centauri Society Science Suite",
+  "description": "MCP-accessible science suite for NGC 5139 (Omega Centauri): IMBH constraints, black-hole physics, Fermi Paradox analysis, SETI signal characterisation, Macro Transcension Hypothesis computation, and Kardashev-scale energy extraction. 26 artifact-emitting tools across three compliance registers (peer-reviewed, speculative, model-dependent); each emits a verifiable SHA-256 execution_hash (OpenChainGraph Standard v0.8).",
+  "endpoint": "https://mcp.omegacentauri.me/mcp",
+  "transport": "jsonrpc",
+  "spec_version": "0.8.0",
+  "conformance_level": "L4",
+  "provider": {
+    "organization": "The Omega Centauri Society",
+    "url": "https://omegacentauri.me",
+    "contact": "contact@omegacentauri.me"
+  },
+  "tools": {
+    "callable_count": 4,
+    "catalog_count": 29,
+    "callable": [
+      "list_ocs_tools",
+      "constraint_stacker",
+      "build_ocs_workflow_links",
+      "verify_execution_hash"
+    ]
+  },
+  "chains": {
+    "count": 41,
+    "run_chain_supported": true,
+    "l2_runtime_chaining": true
+  },
+  "compliance_registers": ["peer-reviewed", "speculative", "model-dependent"],
+  "mandate_namespace": "me.omegacentauri",
+  "mandate_families": ["bh-physics", "fermi", "seti", "mth", "kardashev"],
+  "artifact": {
+    "envelope_version": "0.4.0",
+    "hash_alg": "sha256",
+    "canonicalization": "JCS (RFC 8785 subset)",
+    "verify_tool": "verify_execution_hash",
+    "zk_proven": {
+      "scheme": "groth16-bn254",
+      "vm": "RISC0",
+      "guest_image_id": "a1a0bc89",
+      "spec_section": "§18"
+    },
+    "timestamped": {
+      "rfc3161_tsa": "freetsa",
+      "ots_chain": "Bitcoin",
+      "spec_section": "§20"
+    }
+  },
+  "graph_index": "https://omegacentauri.me/chaingraph.json",
+  "internal_registry": "https://omegacentauri.me/tools/data/chaingraph.json",
+  "agent_card": "https://omegacentauri.me/.well-known/agent-card.json",
+  "updated": "2026-07-04"
+}

@@ -340,6 +340,58 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
   </div>
 </div>
 
+<style>
+.artifact-wrap{max-width:1200px;margin:0 auto;padding:0 28px 48px}
+.artifact-panel{background:linear-gradient(135deg,rgba(4,42,36,.6),rgba(7,5,21,.85));border:1px solid rgba(29,186,144,.3);border-radius:14px;padding:28px 32px}
+.artifact-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--teal-bright);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.artifact-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--teal-bright)}
+.artifact-heading{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:18px}
+.artifact-hash{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal-glow);word-break:break-all;background:rgba(29,186,144,.06);border:1px solid rgba(29,186,144,.18);border-radius:6px;padding:10px 14px;margin-bottom:16px;line-height:1.6}
+.artifact-hash .hash-label{font-size:9px;letter-spacing:.14em;color:var(--teal-mid);text-transform:uppercase;display:block;margin-bottom:4px}
+.artifact-claims{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+@media(max-width:760px){.artifact-claims{grid-template-columns:1fr}}
+.claim-cell{background:rgba(13,10,36,.5);border:1px solid rgba(112,85,212,.18);border-radius:8px;padding:12px 14px}
+.claim-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px}
+.claim-val{font-family:'Space Mono',monospace;font-size:10px;color:var(--teal-glow);line-height:1.5}
+.claim-val.amber{color:var(--amber-glow)}
+.artifact-stmt{font-family:'Crimson Pro',serif;font-size:15px;color:var(--text-secondary);line-height:1.6;padding:12px 16px;border-left:2px solid var(--teal-mid);margin-bottom:16px;font-style:italic}
+.artifact-links{display:flex;gap:18px;flex-wrap:wrap}
+.artifact-links a{font-family:'Space Mono',monospace;font-size:10px;color:var(--amber-glow);letter-spacing:.06em}
+.artifact-links a:hover{text-decoration:underline}
+</style>
+
+<div class="artifact-wrap">
+  <div class="artifact-panel">
+    <div class="artifact-eyebrow">Verifiable evidence artifact</div>
+    <div class="artifact-heading">Constraint-stacker evaluation -- hash-anchored, zk-proven, timestamped</div>
+    <div class="artifact-hash">
+      <span class="hash-label">execution_hash (SHA-256, JCS §4 canonical preimage)</span>
+      533362070f30bf62f874fcf9b589446c8ec745c1023b575d515a7f77d68ae59f
+    </div>
+    <div class="artifact-claims">
+      <div class="claim-cell">
+        <div class="claim-label">Hash anchor</div>
+        <div class="claim-val">§4 JCS canonicalization<br>SHA-256 over {policy_parameters, output_payload}</div>
+      </div>
+      <div class="claim-cell">
+        <div class="claim-label">Zero-knowledge proof</div>
+        <div class="claim-val">groth16-bn254 · RISC0<br>guest ImageID a1a0bc89<br><span class="amber">(§18)</span></div>
+      </div>
+      <div class="claim-cell">
+        <div class="claim-label">Timestamps</div>
+        <div class="claim-val">RFC3161 gen_time<br>2026-07-04T20:15:58Z<br>OpenTimestamps / Bitcoin<br><span class="amber">(§20)</span></div>
+      </div>
+    </div>
+    <div class="artifact-stmt">
+      This constraint evaluation -- Haberle 2024 lower bound (8,200 M-sun) and Banares-Hernandez 2025 upper limit (6,000 M-sun) stacked -- was recorded and hash-anchored before the TRAPUM 2026 pulsar results (arXiv:2603.21845) were available.
+    </div>
+    <div class="artifact-links">
+      <a href="https://mcp.omegacentauri.me/mcp" target="_blank" rel="noopener">Verify hash via verify_execution_hash (OCS MCP) →</a>
+      <a href="https://anchor.ainumbers.co/mcp" target="_blank" rel="noopener">Anchor verification (anchor.ainumbers.co/mcp) →</a>
+    </div>
+  </div>
+</div>
+
 <footer>
   IMBH Evidence Dashboard · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me<br>
   All calculations are estimates based on published best-fit parameters. See linked tools for full parameter sweeps and citations.
