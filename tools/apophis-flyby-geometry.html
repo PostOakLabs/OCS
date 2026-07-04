@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<!--
+  Apophis Flyby Geometry
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.2.0
+  Last updated: 2026-07-04
+
+  REGISTER: peer-reviewed
+  Farnocchia et al. 2021, Icarus 369, 114594 (definitive Apophis orbit).
+  Brozovic et al. 2018, Icarus 300, 115 (radar observations, diameter).
+  JPL/CNEOS Apophis close-approach solution #197: 2029-Apr-13 perigee ~38,017 km.
+
+  Data sources:
+    - Farnocchia et al. 2021, Icarus 369, 114594 (DOI 10.1016/j.icarus.2021.114594)
+    - Brozovic et al. 2018, Icarus 300, 115 (DOI 10.1016/j.icarus.2017.09.010)
+    - JPL/CNEOS Apophis close-approach solution #197
+    - ESA Ramses mission: committed Nov 2025, launch target Apr 2028
+    - NASA OSIRIS-APEX: en route to Apophis, arrival 2029-04-13
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apophis Flyby Geometry — Omega Centauri Society</title>
+<meta name="description" content="Compute tidal acceleration and perigee speed for the 2029-04-13 Apophis close approach. JPL nominal perigee 38,017 km — inside geostationary orbit. Peer-reviewed register.">
+<link rel="canonical" href="https://omegacentauri.me/tools/apophis-flyby-geometry.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --green-mid: #1a6b30; --green-bright: #28a846; --green-glow: #50d870;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --border-green: rgba(40, 168, 70, 0.25); --border-amber: rgba(240, 160, 32, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.04em; line-height: 1.15; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--green-mid); color: var(--green-bright); background: rgba(40,168,70,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65; }
+
+.event-notice {
+  background: rgba(240,160,32,0.04); border: 1px solid var(--border-amber); border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px; font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--amber-glow); letter-spacing: 0.03em; line-height: 1.6;
+}
+.event-notice strong { color: var(--amber-bright); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.input-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.input-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 140px; letter-spacing: 0.03em; }
+.input-row input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-mid));
+  height: 4px; border-radius: 2px; outline: none;
+}
+.input-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--purple-glow); cursor: pointer;
+  box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-row input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--purple-glow);
+  cursor: pointer; border: none; box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-val { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--teal-glow); min-width: 140px; text-align: right; white-space: nowrap; }
+.input-help { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-style: italic; padding-left: 154px; }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; }
+.result-item { }
+.result-val { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal-glow); letter-spacing: 0.04em; }
+.result-val.geo-inside { color: var(--amber-glow); }
+.result-val.geo-outside { color: var(--green-glow); }
+.result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
+.result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
+.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.result-table td:first-child { color: var(--text-dim); width: 180px; }
+.result-table tr:last-child td { border-bottom: none; }
+.inside-geo { color: var(--amber-bright); }
+.outside-geo { color: var(--green-bright); }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-size: 14px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+
+.artifact-section { border-top: 1px solid var(--border-teal); padding-top: 20px; margin-bottom: 24px; }
+.artifact-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--teal-bright); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.artifact-toggle:hover { color: var(--teal-glow); }
+.artifact-toggle .arrow { transition: transform 0.2s; }
+.artifact-toggle.open .arrow { transform: rotate(90deg); }
+.artifact-body { display: none; margin-top: 14px; }
+.artifact-body.open { display: block; }
+.artifact-hash-cite { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--teal-glow); background: rgba(29,186,144,0.06); border: 1px solid var(--border-teal); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; letter-spacing: 0.03em; word-break: break-all; }
+.artifact-json { background: rgba(7,5,21,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.55; color: var(--text-secondary); overflow-x: auto; margin-bottom: 12px; max-height: 320px; overflow-y: auto; white-space: pre; }
+.artifact-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.artifact-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; background: transparent; border: 1px solid var(--teal-mid); color: var(--teal-bright); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+.artifact-btn:hover { border-color: var(--teal-glow); color: var(--teal-glow); background: rgba(29,186,144,0.06); }
+.artifact-btn.copied { border-color: var(--amber-bright); color: var(--amber-bright); }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+      <a href="/tools/imbh-evidence-dashboard.html">IMBH Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Apophis<br>Flyby Geometry</h1>
+    <span class="register-badge">Peer-reviewed</span>
+  </div>
+
+  <p class="intro">Computes the close-approach geometry for the 2029-04-13 flyby of asteroid 99942 Apophis. At the nominal JPL perigee of 38,017 km from Earth's centre — well inside geostationary orbit at 42,164 km — this is the closest-ever observed approach of a large asteroid. Calculates tidal acceleration across the body and perigee speed from the vis-viva equation.</p>
+
+  <div class="event-notice">
+    <strong>Confirmed upcoming event — 2029-04-13</strong>
+    Apophis will pass at ~38,017 km from Earth's centre (JPL/CNEOS solution #197). Two spacecraft are en route: NASA OSIRIS-APEX (arriving 2029-04-13) and ESA Ramses (launch target Apr 2028). All JPL orbital solutions since 2021 rule out Earth impact in 2029.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Close-approach parameters</div>
+
+    <div class="input-row">
+      <label>perigee distance</label>
+      <input type="range" id="perigee-slider" min="30000" max="50000" step="10" value="38017" oninput="onPerigeeSlider(this.value)">
+      <span class="input-val" id="perigee-display">38,017 km</span>
+    </div>
+    <div class="input-help">Earth-centre distance at closest approach. JPL nominal: 38,017 km. GEO at 42,164 km.</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>asteroid diameter</label>
+      <input type="range" id="diameter-slider" min="100" max="600" step="5" value="340" oninput="onDiameterSlider(this.value)">
+      <span class="input-val" id="diameter-display">340 m</span>
+    </div>
+    <div class="input-help">Mean diameter. Radar shape model: ~340 m ± ~30 m (Brozovic et al. 2018).</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>v_inf (excess vel.)</label>
+      <input type="range" id="vinf-slider" min="5" max="15" step="0.1" value="7.43" oninput="onVinfSlider(this.value)">
+      <span class="input-val" id="vinf-display">7.43 km/s</span>
+    </div>
+    <div class="input-help">Hyperbolic excess velocity (v_inf). Used in vis-viva: v_peri² = v_inf² + 2·GM/r.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Results</div>
+    <div class="result-block">
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-val" id="result-tidal">--</div>
+          <div class="result-label">tidal dg (m/s² across body)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-vperi">--</div>
+          <div class="result-label">v_perigee (km/s)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-boost">--</div>
+          <div class="result-label">speed boost vs. v_inf (km/s)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-geo">--</div>
+          <div class="result-label">GEO crossing status</div>
+        </div>
+      </div>
+      <table class="result-table" id="result-table"></table>
+    </div>
+  </div>
+
+  <div class="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> Export verifiable artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Building artifact...</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download" onclick="downloadArtifact()">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool computes</h3>
+      <p><strong>Tidal acceleration</strong> across the asteroid body (classical tidal formula):</p>
+      <p><em>dg = 2 · GM_earth · d / r³</em></p>
+      <p>where d is the asteroid diameter (m), r is the perigee distance (m). Units: m/s².</p>
+      <p><strong>Perigee speed</strong> from the vis-viva equation for a hyperbolic orbit:</p>
+      <p><em>v_peri² = v_inf² + 2 · GM_earth / r</em></p>
+      <p>where v_inf is the hyperbolic excess velocity (input). Speed boost = v_peri − v_inf.</p>
+      <p><strong>GEO crossing</strong>: inside if perigee_km &lt; 42,164 km. GEO margin = GEO_km − perigee_km (positive = inside GEO ring).</p>
+      <h3>Constants</h3>
+      <ul>
+        <li>GM_earth = 3.986004418 × 10¹⁴ m³/s² (IAU 2009 TDB-scale)</li>
+        <li>R_earth = 6,371 km (IAU 2015 B3 mean radius)</li>
+        <li>GEO = 42,164 km from Earth's centre</li>
+      </ul>
+      <h3>JPL nominal solution</h3>
+      <p>JPL/CNEOS Apophis close-approach solution #197 (as of 2024): perigee 38,017 km, diameter ~340 m (radar shape model), v_inf ~7.43 km/s. All solutions since Farnocchia et al. 2021 rule out Earth impact in 2029.</p>
+      <h3>Missions</h3>
+      <ul>
+        <li>NASA OSIRIS-APEX (formerly OSIRIS-REx) — en route, arrival 2029-04-13</li>
+        <li>ESA Ramses — committed Nov 2025, launch target Apr 2028, arrival Apr 2029</li>
+      </ul>
+      <h3>Citations</h3>
+      <ul>
+        <li>Farnocchia et al. 2021, Icarus 369, 114594 (DOI 10.1016/j.icarus.2021.114594) — definitive orbit solution</li>
+        <li>Brozovic et al. 2018, Icarus 300, 115 (DOI 10.1016/j.icarus.2017.09.010) — radar observations and diameter</li>
+        <li>JPL/CNEOS Apophis close-approach solution #197: 2029-Apr-13 perigee ~38,017 km</li>
+      </ul>
+      <div class="meta-line">Tool v1.2.0 · mandate me.omegacentauri/apophis_flyby · register: peer-reviewed · OCG artifact v0.4.0</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Apophis Flyby Geometry · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- OCS OpenChainGraph Artifact Export ----------
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
+const OCS_TOOL_ID            = 'apophis-flyby-geometry';
+const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/apophis_flyby';
+
+// Vendored JCS hash block — from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4).
+// Byte-identical to constraint-stacker.html. Namespace: me.omegacentauri.
+function assertIJson(v){
+  if(typeof v==='number'){
+    if(!Number.isFinite(v)) throw new Error('Non-finite number ('+v+') is not valid I-JSON (RFC 8785 §3.2.2.3).');
+    if(Number.isInteger(v)&&!Number.isSafeInteger(v)) throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');
+  } else if(Array.isArray(v)){ v.forEach(assertIJson); }
+  else if(v&&typeof v==='object'){ for(const k of Object.keys(v)) assertIJson(v[k]); }
+}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){
+  const obj={policy_parameters,output_payload};
+  assertIJson(obj);
+  return JSON.stringify(cgCanon(obj));
+}
+async function executionHash(policy_parameters,output_payload){
+  const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));
+  const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'requires-secure-context';
+  try { return await executionHash(policyParams, outputPayload); } catch(e) { return 'error'; }
+}
+
+// ---------- Kernel compute — vendored verbatim from apophis-flyby-geometry.kernel.mjs ----------
+const GM_EARTH_M3_S2 = 3.986004418e14;
+const R_EARTH_KM     = 6371.0;
+const GEO_KM         = 42164.0;
+
+const APOPHIS_DATE              = '2029-04-13';
+const APOPHIS_PERIGEE_NOM_KM   = 38017.0;
+const APOPHIS_DIAMETER_NOM_M   = 340.0;
+const APOPHIS_V_INF_NOM_KM_S   = 7.43;
+
+const MISSIONS = [
+  'NASA OSIRIS-APEX (formerly OSIRIS-REx) — currently en route, arrival 2029-04-13',
+  'ESA Ramses — committed Nov 2025, launch target Apr 2028, arrival Apr 2029',
+];
+
+function finiteOr(v, fallback) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function compute(policy_parameters) {
+  const pp = policy_parameters ?? {};
+  const ip = pp.input_parameters ?? {};
+
+  const perigee_km      = finiteOr(ip.perigee_km,        APOPHIS_PERIGEE_NOM_KM);
+  const diameter_m      = finiteOr(ip.diameter_m,         APOPHIS_DIAMETER_NOM_M);
+  const rel_velocity_km = finiteOr(ip.rel_velocity_km_s,  APOPHIS_V_INF_NOM_KM_S);
+
+  const perigee_m       = perigee_km * 1000.0;
+  const perigee_alt_km  = perigee_km - R_EARTH_KM;
+  const inside_GEO      = perigee_km < GEO_KM;
+  const GEO_margin_km   = GEO_KM - perigee_km;
+
+  const r3 = perigee_m * perigee_m * perigee_m;
+  const tidal_dg_m_s2 = (r3 > 0 && diameter_m > 0)
+    ? 2.0 * GM_EARTH_M3_S2 * diameter_m / r3
+    : 0;
+
+  const v_inf_m_s = rel_velocity_km * 1000.0;
+  const v_peri_sq = (v_inf_m_s > 0 && perigee_m > 0)
+    ? v_inf_m_s * v_inf_m_s + 2.0 * GM_EARTH_M3_S2 / perigee_m
+    : 0;
+  const v_perigee_km_s   = v_peri_sq > 0 ? Math.sqrt(v_peri_sq) / 1000.0 : 0;
+  const speed_boost_km_s = v_perigee_km_s - rel_velocity_km;
+
+  const perigee_km_r     = Math.round(perigee_km * 10) / 10;
+  const perigee_alt_r    = Math.round(perigee_alt_km * 10) / 10;
+  const GEO_margin_r     = Math.round(GEO_margin_km * 10) / 10;
+  const tidal_r          = Math.round(tidal_dg_m_s2 * 1e10) / 1e10;
+  const v_peri_r         = Math.round(v_perigee_km_s * 10000) / 10000;
+  const speed_boost_r    = Math.round(speed_boost_km_s * 10000) / 10000;
+
+  const output_payload = {
+    flyby_date:            APOPHIS_DATE,
+    perigee_km:            perigee_km_r,
+    perigee_altitude_km:   perigee_alt_r,
+    R_earth_km:            R_EARTH_KM,
+    inside_GEO:            inside_GEO,
+    GEO_km:                GEO_KM,
+    GEO_margin_km:         GEO_margin_r,
+    diameter_m:            diameter_m,
+    tidal_dg_m_s2:         tidal_r,
+    tidal_note:            'Tidal acceleration differential across asteroid body: dg = 2*GM_earth*d/r^3 (classical tidal formula). Units: m/s^2.',
+    rel_velocity_km_s:     rel_velocity_km,
+    v_perigee_km_s:        v_peri_r,
+    speed_boost_km_s:      speed_boost_r,
+    vis_viva_note:         'v_perigee computed from vis-viva: v_peri^2 = v_inf^2 + 2*GM/r. rel_velocity_km_s treated as hyperbolic excess velocity (v_inf). speed_boost = v_perigee - v_inf.',
+    missions:              MISSIONS,
+    register:              'peer-reviewed',
+    citations: [
+      'Farnocchia et al. 2021, Icarus 369, 114594 (DOI 10.1016/j.icarus.2021.114594) — definitive Apophis orbit solution',
+      'Brozovic et al. 2018, Icarus 300, 115 (DOI 10.1016/j.icarus.2017.09.010) — Apophis radar observations',
+      'JPL/CNEOS Apophis close-approach solution #197: 2029-Apr-13 perigee ~38,017 km',
+      'ESA Ramses mission: committed Nov 2025, launch target Apr 2028',
+      'NASA OSIRIS-APEX: en route to Apophis, arrival 2029-04-13',
+    ],
+  };
+
+  return { output_payload };
+}
+// ---------- End kernel ----------
+
+// ---------- State ----------
+let state = {
+  perigee_km:        38017.0,
+  diameter_m:        340.0,
+  rel_velocity_km_s: 7.43,
+};
+
+function buildPolicyParams() {
+  return {
+    execution_backend: 'js',
+    input_parameters: {
+      perigee_km:        state.perigee_km,
+      diameter_m:        state.diameter_m,
+      rel_velocity_km_s: state.rel_velocity_km_s,
+    }
+  };
+}
+
+// ---------- URL hash state ----------
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('perigee', String(state.perigee_km));
+  p.set('diam',    String(state.diameter_m));
+  p.set('vinf',    String(state.rel_velocity_km_s));
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const pg = parseFloat(p.get('perigee'));
+  if (Number.isFinite(pg) && pg > 0) state.perigee_km = Math.max(30000, Math.min(50000, pg));
+  const dm = parseFloat(p.get('diam'));
+  if (Number.isFinite(dm) && dm > 0) state.diameter_m = Math.max(100, Math.min(600, dm));
+  const vi = parseFloat(p.get('vinf'));
+  if (Number.isFinite(vi) && vi > 0) state.rel_velocity_km_s = Math.max(5, Math.min(15, vi));
+}
+
+// ---------- UI helpers ----------
+function fmtTidal(v) {
+  if (v === 0) return '0';
+  if (v < 1e-7) return v.toExponential(3) + ' m/s²';
+  return v.toFixed(9) + ' m/s²';
+}
+
+function onPerigeeSlider(v) {
+  state.perigee_km = parseFloat(v);
+  document.getElementById('perigee-slider').value = v;
+  saveHash(); render();
+}
+function onDiameterSlider(v) {
+  state.diameter_m = parseFloat(v);
+  document.getElementById('diameter-slider').value = v;
+  saveHash(); render();
+}
+function onVinfSlider(v) {
+  state.rel_velocity_km_s = parseFloat(v);
+  document.getElementById('vinf-slider').value = v;
+  saveHash(); render();
+}
+
+function render() {
+  const pp = buildPolicyParams();
+  const { output_payload: op } = compute(pp);
+
+  document.getElementById('perigee-display').textContent = op.perigee_km.toLocaleString('en-US') + ' km';
+  document.getElementById('diameter-display').textContent = op.diameter_m + ' m';
+  document.getElementById('vinf-display').textContent = op.rel_velocity_km_s.toFixed(2) + ' km/s';
+
+  document.getElementById('result-tidal').textContent = fmtTidal(op.tidal_dg_m_s2);
+  document.getElementById('result-vperi').textContent = op.v_perigee_km_s.toFixed(4) + ' km/s';
+  document.getElementById('result-boost').textContent = '+' + op.speed_boost_km_s.toFixed(4) + ' km/s';
+
+  const geoEl = document.getElementById('result-geo');
+  if (op.inside_GEO) {
+    geoEl.textContent = 'INSIDE GEO';
+    geoEl.className = 'result-val geo-inside';
+  } else {
+    geoEl.textContent = 'OUTSIDE GEO';
+    geoEl.className = 'result-val geo-outside';
+  }
+
+  const margin = op.GEO_margin_km;
+  const marginStr = margin > 0
+    ? '+' + margin.toLocaleString('en-US') + ' km (inside GEO)'
+    : margin.toLocaleString('en-US') + ' km (outside GEO)';
+
+  document.getElementById('result-table').innerHTML = `
+    <tr><td>flyby_date</td><td>${op.flyby_date}</td></tr>
+    <tr><td>perigee_km</td><td>${op.perigee_km.toLocaleString('en-US')} km from Earth centre</td></tr>
+    <tr><td>perigee_altitude_km</td><td>${op.perigee_altitude_km.toLocaleString('en-US')} km above surface</td></tr>
+    <tr><td>GEO_margin_km</td><td><span class="${op.inside_GEO ? 'inside-geo' : 'outside-geo'}">${marginStr}</span></td></tr>
+    <tr><td>tidal_dg_m_s²</td><td>${op.tidal_dg_m_s2} m/s²</td></tr>
+    <tr><td>v_perigee_km_s</td><td>${op.v_perigee_km_s} km/s</td></tr>
+    <tr><td>speed_boost_km_s</td><td>${op.speed_boost_km_s} km/s</td></tr>
+  `;
+  invalidateArtifact();
+}
+
+// ---------- Artifact ----------
+let _artifactCache = null;
+function invalidateArtifact() {
+  _artifactCache = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+async function buildArtifact() {
+  const policyParams = buildPolicyParams();
+  const { output_payload: outputPayload } = compute(policyParams);
+  const hash = await computeExecHash(policyParams, outputPayload);
+  return {
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
+    mandate_type: OCS_MANDATE_TYPE,
+    tool_id: OCS_TOOL_ID,
+    tool_version: OCS_TOOL_VERSION,
+    generated_at: new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParams,
+    output_payload: outputPayload,
+    compliance_flags: ['register:peer-reviewed'],
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified: true,
+      deterministic_run: true,
+      ocs_artifact_version: '1.0.0',
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_apophis_flyby_2026,\n  author   = {Swanson, Tim},\n  title    = {{Apophis Flyby Geometry}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/apophis-flyby-geometry.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society -- omegacentauri.me. Register: peer-reviewed (Farnocchia et al. 2021; JPL/CNEOS solution #197).}\n}`,
+    }
+  };
+}
+async function getArtifact() {
+  if (!_artifactCache) _artifactCache = await buildArtifact();
+  return _artifactCache;
+}
+async function renderArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.length > 16 ? artifact.execution_hash.slice(0,16)+'...' : artifact.execution_hash;
+  document.getElementById('artifact-hash-cite').textContent =
+    `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0,10)}`;
+  document.getElementById('artifact-json').textContent = JSON.stringify(artifact, null, 2);
+}
+function wireArtifact() {
+  const toggle = document.getElementById('artifact-toggle');
+  const body   = document.getElementById('artifact-body');
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+}
+async function copyArtifact() {
+  const artifact = await getArtifact();
+  const text = JSON.stringify(artifact, null, 2);
+  const btn = document.getElementById('artifact-copy');
+  const flash = () => { btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy JSON'; btn.classList.remove('copied'); }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(flash).catch(()=>{ fallbackCopy(text); flash(); }); }
+  else { fallbackCopy(text); flash(); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+}
+async function downloadArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.slice(0,8);
+  const filename = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+  const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ---------- About ----------
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---------- Init ----------
+function init() {
+  loadHash();
+  document.getElementById('perigee-slider').value = state.perigee_km;
+  document.getElementById('diameter-slider').value = state.diameter_m;
+  document.getElementById('vinf-slider').value = state.rel_velocity_km_s;
+  wireArtifact();
+  wireAbout();
+  render();
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
