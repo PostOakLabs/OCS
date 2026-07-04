@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<!--
+  Rubin Alert Throughput
+  Omega Centauri Society — omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.2.0
+  Last updated: 2026-07-04
+
+  REGISTER: speculative
+  Rubin LSST is in commissioning as of 2026-07-04; alert throughput figures are
+  pre-survey design estimates. Full science operations not yet begun.
+
+  Data sources:
+    - Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview
+    - Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design
+    - LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubin Alert Throughput — Omega Centauri Society</title>
+<meta name="description" content="Estimate Rubin/LSST nightly transient-alert count and data-rate budget from survey design parameters. ~10M alerts/night at 820 GB/night (Bellm 2019 design). Speculative register.">
+<link rel="canonical" href="https://omegacentauri.me/tools/rubin-alert-throughput.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --green-mid: #1a6b30; --green-bright: #28a846; --green-glow: #50d870;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --border-green: rgba(40, 168, 70, 0.25); --border-amber: rgba(240, 160, 32, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.04em; line-height: 1.15; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--amber-mid); color: var(--amber-bright); background: rgba(240,160,32,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65; }
+
+.speculative-notice {
+  background: rgba(112,85,212,0.04); border: 1px solid var(--border-subtle); border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px; font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--purple-glow); letter-spacing: 0.03em; line-height: 1.6;
+}
+.speculative-notice strong { color: var(--purple-bright); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.input-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.input-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 140px; letter-spacing: 0.03em; }
+.input-row input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-mid));
+  height: 4px; border-radius: 2px; outline: none;
+}
+.input-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--purple-glow); cursor: pointer;
+  box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-row input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--purple-glow);
+  cursor: pointer; border: none; box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-val { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--teal-glow); min-width: 160px; text-align: right; white-space: nowrap; }
+.input-help { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-style: italic; padding-left: 154px; }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 16px; }
+.result-item { }
+.result-val { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 600; color: var(--teal-glow); letter-spacing: 0.04em; }
+.result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
+.result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
+.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.result-table td:first-child { color: var(--text-dim); width: 180px; }
+.result-table tr:last-child td { border-bottom: none; }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-size: 14px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+
+.artifact-section { border-top: 1px solid var(--border-teal); padding-top: 20px; margin-bottom: 24px; }
+.artifact-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--teal-bright); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.artifact-toggle:hover { color: var(--teal-glow); }
+.artifact-toggle .arrow { transition: transform 0.2s; }
+.artifact-toggle.open .arrow { transform: rotate(90deg); }
+.artifact-body { display: none; margin-top: 14px; }
+.artifact-body.open { display: block; }
+.artifact-hash-cite { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--teal-glow); background: rgba(29,186,144,0.06); border: 1px solid var(--border-teal); border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; letter-spacing: 0.03em; word-break: break-all; }
+.artifact-json { background: rgba(7,5,21,0.7); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.55; color: var(--text-secondary); overflow-x: auto; margin-bottom: 12px; max-height: 320px; overflow-y: auto; white-space: pre; }
+.artifact-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.artifact-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; background: transparent; border: 1px solid var(--teal-mid); color: var(--teal-bright); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+.artifact-btn:hover { border-color: var(--teal-glow); color: var(--teal-glow); background: rgba(29,186,144,0.06); }
+.artifact-btn.copied { border-color: var(--amber-bright); color: var(--amber-bright); }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/tools/constraint-stacker.html">Constraint Stacker</a>
+      <a href="/tools/imbh-evidence-dashboard.html">IMBH Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Rubin Alert<br>Throughput</h1>
+    <span class="register-badge">Speculative</span>
+  </div>
+
+  <p class="intro">Estimates the nightly transient-alert count and data-rate budget for the Vera C. Rubin Observatory Legacy Survey of Space and Time (LSST). Pure arithmetic from Rubin system design parameters: visits per night × alerts per visit × bytes per alert. Default values from Ivezic et al. 2019 and Bellm et al. 2019.</p>
+
+  <div class="speculative-notice">
+    <strong>Speculative — commissioning as of 2026</strong>
+    Rubin LSST is not yet in full science operations. All figures are pre-survey design estimates (Ivezic et al. 2019; Bellm et al. 2019). Measured alert rates and packet sizes may differ substantially from design values.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Survey parameters</div>
+
+    <div class="input-row">
+      <label>visits / night</label>
+      <input type="range" id="vpn-slider" min="100" max="2000" step="50" value="1000" oninput="onVpnSlider(this.value)">
+      <span class="input-val" id="vpn-display">1,000 visits</span>
+    </div>
+    <div class="input-help">Telescope visits (15-s exposures) per night. Rubin design: ~1,000/night (Ivezic et al. 2019).</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>alerts / visit</label>
+      <input type="range" id="apv-slider" min="1000" max="50000" step="500" value="10000" oninput="onApvSlider(this.value)">
+      <span class="input-val" id="apv-display">10,000 alerts</span>
+    </div>
+    <div class="input-help">Transient alerts per visit. Rubin alert design: ~10,000/visit (Bellm et al. 2019).</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>nights / year</label>
+      <input type="range" id="npy-slider" min="50" max="365" step="1" value="182" oninput="onNpySlider(this.value)">
+      <span class="input-val" id="npy-display">182 nights</span>
+    </div>
+    <div class="input-help">Clear science nights per year at Cerro Pachón. Design estimate: ~182 nights (Ivezic et al. 2019).</div>
+
+    <div class="input-row" style="margin-top:14px">
+      <label>avg alert size</label>
+      <input type="range" id="abytes-slider" min="10000" max="200000" step="1000" value="82000" oninput="onAbytesSlider(this.value)">
+      <span class="input-val" id="abytes-display">82.0 KB</span>
+    </div>
+    <div class="input-help">Mean bytes per alert packet. Design value: ~82 KB (Bellm et al. 2019, PASP 131, 995004).</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Results</div>
+    <div class="result-block">
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-val" id="result-nightly">--</div>
+          <div class="result-label">alerts / night</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-nrate">--</div>
+          <div class="result-label">nightly data rate (GB)</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-yearly">--</div>
+          <div class="result-label">alerts / year</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="result-yrate">--</div>
+          <div class="result-label">annual data rate (TB)</div>
+        </div>
+      </div>
+      <table class="result-table" id="result-table"></table>
+    </div>
+  </div>
+
+  <div class="artifact-section">
+    <button class="artifact-toggle" id="artifact-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> Export verifiable artifact
+    </button>
+    <div class="artifact-body" id="artifact-body">
+      <div class="artifact-hash-cite" id="artifact-hash-cite">Building artifact...</div>
+      <pre class="artifact-json" id="artifact-json"></pre>
+      <div class="artifact-actions">
+        <button class="artifact-btn" id="artifact-copy" onclick="copyArtifact()">Copy JSON</button>
+        <button class="artifact-btn" id="artifact-download" onclick="downloadArtifact()">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool computes</h3>
+      <p>Pure arithmetic from survey design parameters:</p>
+      <p><em>alerts_per_night = visits_per_night × alerts_per_visit</em></p>
+      <p><em>alerts_per_year = alerts_per_night × nights_per_year</em></p>
+      <p><em>nightly_data_rate_GB = alerts_per_night × avg_alert_bytes / 10⁹</em></p>
+      <p><em>yearly_data_rate_TB = nightly_data_rate_GB × nights_per_year / 10³</em></p>
+      <h3>Design parameters (Rubin LSST)</h3>
+      <ul>
+        <li>Visits/night ~1,000 (15-second WFD exposures, Ivezic et al. 2019)</li>
+        <li>Alerts/visit ~10,000 (Rubin alert design, Bellm et al. 2019)</li>
+        <li>Clear nights/year ~182 (Cerro Pachón site characterisation, Ivezic et al. 2019)</li>
+        <li>Alert packet size ~82 KB (Bellm et al. 2019, PASP 131, 995004)</li>
+      </ul>
+      <h3>Register note</h3>
+      <p>Rubin LSST is in commissioning as of 2026-07-04. Alert throughput figures are pre-survey design estimates, not measured science-quality statistics. Treat as order-of-magnitude forecast. Measured values will be published once full science operations begin.</p>
+      <h3>Citations</h3>
+      <ul>
+        <li>Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview</li>
+        <li>Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design (~10⁴ alerts/visit, ~82 KB/alert)</li>
+        <li>LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters</li>
+      </ul>
+      <div class="meta-line">Tool v1.2.0 · mandate me.omegacentauri/rubin_alert_throughput · register: speculative · OCG artifact v0.4.0</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Rubin Alert Throughput · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- OCS OpenChainGraph Artifact Export ----------
+const OCS_CHAINGRAPH_VERSION = '0.4.0';
+const OCS_TOOL_ID            = 'rubin-alert-throughput';
+const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_MANDATE_TYPE       = 'me.omegacentauri/rubin_alert_throughput';
+
+// Vendored JCS hash block — from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4).
+// Byte-identical to constraint-stacker.html. Namespace: me.omegacentauri.
+function assertIJson(v){
+  if(typeof v==='number'){
+    if(!Number.isFinite(v)) throw new Error('Non-finite number ('+v+') is not valid I-JSON (RFC 8785 §3.2.2.3).');
+    if(Number.isInteger(v)&&!Number.isSafeInteger(v)) throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');
+  } else if(Array.isArray(v)){ v.forEach(assertIJson); }
+  else if(v&&typeof v==='object'){ for(const k of Object.keys(v)) assertIJson(v[k]); }
+}
+const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
+function canonicalPreimage(policy_parameters,output_payload){
+  const obj={policy_parameters,output_payload};
+  assertIJson(obj);
+  return JSON.stringify(cgCanon(obj));
+}
+async function executionHash(policy_parameters,output_payload){
+  const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));
+  const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function computeExecHash(policyParams, outputPayload) {
+  if (!window.isSecureContext || !crypto || !crypto.subtle) return 'requires-secure-context';
+  try { return await executionHash(policyParams, outputPayload); } catch(e) { return 'error'; }
+}
+
+// ---------- Kernel compute — vendored verbatim from rubin-alert-throughput.kernel.mjs ----------
+const RUBIN_VISITS_NOM        = 1000;
+const RUBIN_ALERTS_PER_VISIT  = 10000;
+const RUBIN_NIGHTS_NOM        = 182;
+const RUBIN_BYTES_PER_ALERT   = 82000;
+const RUBIN_STATUS            = 'commissioning-2026';
+
+function finiteOr(v, fallback) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function compute(policy_parameters) {
+  const pp = policy_parameters ?? {};
+  const ip = pp.input_parameters ?? {};
+
+  const visits_per_night  = finiteOr(ip.visits_per_night,   RUBIN_VISITS_NOM);
+  const alerts_per_visit  = finiteOr(ip.alerts_per_visit,   RUBIN_ALERTS_PER_VISIT);
+  const nights_per_year   = finiteOr(ip.nights_per_year,    RUBIN_NIGHTS_NOM);
+  const avg_alert_bytes   = finiteOr(ip.avg_alert_bytes,    RUBIN_BYTES_PER_ALERT);
+
+  const alerts_per_night  = visits_per_night * alerts_per_visit;
+  const alerts_per_year   = alerts_per_night * nights_per_year;
+  const nightly_data_rate_GB = alerts_per_night * avg_alert_bytes / 1000000000;
+  const yearly_data_rate_TB  = nightly_data_rate_GB * nights_per_year / 1000;
+
+  const alerts_per_night_r    = Math.round(alerts_per_night);
+  const alerts_per_year_r     = Math.round(alerts_per_year);
+  const nightly_rate_r        = Math.round(nightly_data_rate_GB * 10) / 10;
+  const yearly_rate_r         = Math.round(yearly_data_rate_TB * 100) / 100;
+
+  const output_payload = {
+    survey:                 'Vera C. Rubin Observatory — LSST (Legacy Survey of Space and Time)',
+    status:                 RUBIN_STATUS,
+    visits_per_night:       visits_per_night,
+    alerts_per_visit:       alerts_per_visit,
+    nights_per_year:        nights_per_year,
+    avg_alert_bytes:        avg_alert_bytes,
+    alerts_per_night:       alerts_per_night_r,
+    alerts_per_year:        alerts_per_year_r,
+    nightly_data_rate_GB:   nightly_rate_r,
+    yearly_data_rate_TB:    yearly_rate_r,
+    throughput_note:        'alerts_per_night = visits_per_night * alerts_per_visit. nightly_data_rate_GB = alerts_per_night * avg_alert_bytes / 1e9. Design parameters from Rubin LSST system design; measured values will differ once full science operations begin.',
+    register:               'speculative',
+    register_note:          'Rubin LSST is in commissioning as of 2026-07-04. Alert throughput figures are design estimates, not measured science-quality statistics. Treat as order-of-magnitude forecast.',
+    citations: [
+      'Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview',
+      'Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design (~10^4 alerts/visit, ~82 KB/alert)',
+      'LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters',
+    ],
+  };
+
+  return { output_payload };
+}
+// ---------- End kernel ----------
+
+// ---------- State ----------
+let state = {
+  visits_per_night: 1000,
+  alerts_per_visit: 10000,
+  nights_per_year:  182,
+  avg_alert_bytes:  82000,
+};
+
+function buildPolicyParams() {
+  return {
+    execution_backend: 'js',
+    input_parameters: {
+      visits_per_night: state.visits_per_night,
+      alerts_per_visit: state.alerts_per_visit,
+      nights_per_year:  state.nights_per_year,
+      avg_alert_bytes:  state.avg_alert_bytes,
+    }
+  };
+}
+
+// ---------- URL hash state ----------
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('vpn',    String(state.visits_per_night));
+  p.set('apv',    String(state.alerts_per_visit));
+  p.set('npy',    String(state.nights_per_year));
+  p.set('abytes', String(state.avg_alert_bytes));
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const vpn = parseFloat(p.get('vpn'));
+  if (Number.isFinite(vpn) && vpn > 0) state.visits_per_night = Math.max(100, Math.min(2000, vpn));
+  const apv = parseFloat(p.get('apv'));
+  if (Number.isFinite(apv) && apv > 0) state.alerts_per_visit = Math.max(1000, Math.min(50000, apv));
+  const npy = parseFloat(p.get('npy'));
+  if (Number.isFinite(npy) && npy > 0) state.nights_per_year = Math.max(50, Math.min(365, npy));
+  const ab = parseFloat(p.get('abytes'));
+  if (Number.isFinite(ab) && ab > 0) state.avg_alert_bytes = Math.max(10000, Math.min(200000, ab));
+}
+
+// ---------- Slider handlers ----------
+function onVpnSlider(v) {
+  state.visits_per_night = parseFloat(v);
+  document.getElementById('vpn-slider').value = v;
+  saveHash(); render();
+}
+function onApvSlider(v) {
+  state.alerts_per_visit = parseFloat(v);
+  document.getElementById('apv-slider').value = v;
+  saveHash(); render();
+}
+function onNpySlider(v) {
+  state.nights_per_year = parseFloat(v);
+  document.getElementById('npy-slider').value = v;
+  saveHash(); render();
+}
+function onAbytesSlider(v) {
+  state.avg_alert_bytes = parseFloat(v);
+  document.getElementById('abytes-slider').value = v;
+  saveHash(); render();
+}
+
+// ---------- Format helpers ----------
+function fmtBig(n) {
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  return n.toLocaleString('en-US');
+}
+
+function render() {
+  const pp = buildPolicyParams();
+  const { output_payload: op } = compute(pp);
+
+  document.getElementById('vpn-display').textContent    = op.visits_per_night.toLocaleString('en-US') + ' visits';
+  document.getElementById('apv-display').textContent    = op.alerts_per_visit.toLocaleString('en-US') + ' alerts';
+  document.getElementById('npy-display').textContent    = op.nights_per_year + ' nights';
+  document.getElementById('abytes-display').textContent = (op.avg_alert_bytes / 1000).toFixed(1) + ' KB';
+
+  document.getElementById('result-nightly').textContent = fmtBig(op.alerts_per_night);
+  document.getElementById('result-nrate').textContent   = op.nightly_data_rate_GB.toFixed(1) + ' GB';
+  document.getElementById('result-yearly').textContent  = fmtBig(op.alerts_per_year);
+  document.getElementById('result-yrate').textContent   = op.yearly_data_rate_TB.toFixed(2) + ' TB';
+
+  document.getElementById('result-table').innerHTML = `
+    <tr><td>survey</td><td>Vera C. Rubin Observatory — LSST</td></tr>
+    <tr><td>status</td><td>${op.status}</td></tr>
+    <tr><td>alerts_per_night</td><td>${op.alerts_per_night.toLocaleString('en-US')}</td></tr>
+    <tr><td>alerts_per_year</td><td>${op.alerts_per_year.toLocaleString('en-US')}</td></tr>
+    <tr><td>nightly_data_rate_GB</td><td>${op.nightly_data_rate_GB} GB/night</td></tr>
+    <tr><td>yearly_data_rate_TB</td><td>${op.yearly_data_rate_TB} TB/year</td></tr>
+  `;
+  invalidateArtifact();
+}
+
+// ---------- Artifact ----------
+let _artifactCache = null;
+function invalidateArtifact() {
+  _artifactCache = null;
+  const body = document.getElementById('artifact-body');
+  if (body && body.classList.contains('open')) renderArtifact();
+}
+async function buildArtifact() {
+  const policyParams = buildPolicyParams();
+  const { output_payload: outputPayload } = compute(policyParams);
+  const hash = await computeExecHash(policyParams, outputPayload);
+  return {
+    '@context': 'https://openchain.graph/spec/v0.3/context.jsonld',
+    chaingraph_version: OCS_CHAINGRAPH_VERSION,
+    buildType: 'https://openchain.graph/spec/v0.2#WebCryptoSHA256',
+    mandate_type: OCS_MANDATE_TYPE,
+    tool_id: OCS_TOOL_ID,
+    tool_version: OCS_TOOL_VERSION,
+    generated_at: new Date().toISOString(),
+    execution_hash: hash,
+    chain: { parent_hashes: [], parent_tool_ids: [], chain_depth: 0 },
+    policy_parameters: policyParams,
+    output_payload: outputPayload,
+    compliance_flags: ['register:speculative'],
+    audit_signature: {
+      client_side_executed: true,
+      zero_pii_verified: true,
+      deterministic_run: true,
+      ocs_artifact_version: '1.0.0',
+      permalink: window.location.href,
+      tool_citation_bibtex: `@software{OCS_rubin_alert_throughput_2026,\n  author   = {Swanson, Tim},\n  title    = {{Rubin Alert Throughput}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/rubin-alert-throughput.html},\n  version  = {${OCS_TOOL_VERSION}},\n  note     = {The Omega Centauri Society -- omegacentauri.me. Register: speculative (Rubin LSST commissioning 2026; Ivezic et al. 2019; Bellm et al. 2019).}\n}`,
+    }
+  };
+}
+async function getArtifact() {
+  if (!_artifactCache) _artifactCache = await buildArtifact();
+  return _artifactCache;
+}
+async function renderArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.length > 16 ? artifact.execution_hash.slice(0,16)+'...' : artifact.execution_hash;
+  document.getElementById('artifact-hash-cite').textContent =
+    `OCS ${OCS_TOOL_ID} v${OCS_TOOL_VERSION} · ${shortHash} · ${artifact.generated_at.slice(0,10)}`;
+  document.getElementById('artifact-json').textContent = JSON.stringify(artifact, null, 2);
+}
+function wireArtifact() {
+  const toggle = document.getElementById('artifact-toggle');
+  const body   = document.getElementById('artifact-body');
+  toggle.addEventListener('click', async () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) await renderArtifact();
+  });
+}
+async function copyArtifact() {
+  const artifact = await getArtifact();
+  const text = JSON.stringify(artifact, null, 2);
+  const btn = document.getElementById('artifact-copy');
+  const flash = () => { btn.textContent='Copied!'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy JSON'; btn.classList.remove('copied'); }, 1800); };
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(flash).catch(()=>{ fallbackCopy(text); flash(); }); }
+  else { fallbackCopy(text); flash(); }
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+}
+async function downloadArtifact() {
+  const artifact = await getArtifact();
+  const shortHash = artifact.execution_hash.slice(0,8);
+  const filename = `ocs-${OCS_TOOL_ID}-${shortHash}.json`;
+  const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ---------- About ----------
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---------- Init ----------
+function init() {
+  loadHash();
+  document.getElementById('vpn-slider').value    = state.visits_per_night;
+  document.getElementById('apv-slider').value    = state.alerts_per_visit;
+  document.getElementById('npy-slider').value    = state.nights_per_year;
+  document.getElementById('abytes-slider').value = state.avg_alert_bytes;
+  wireArtifact();
+  wireAbout();
+  render();
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
