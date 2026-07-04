@@ -389,16 +389,15 @@ const OCS_TOOL_VERSION       = '1.2.0';
 const OCS_MANDATE_TYPE       = 'me.omegacentauri/bh_kinematics';
 
 // Vendored from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4 JCS). Namespace me.omegacentauri.
-// NOTE: this tool's original preimage used the shorthand keys {policyParams, outputPayload}
-// (not the schema field names policy_parameters/output_payload) — preserved verbatim below
-// so the SHA-256 digest does not change.
+// Preimage wrapper uses the §4-canonical snake_case keys {policy_parameters, output_payload},
+// matching every other OCS artifact tool and the worker's verify_execution_hash recomputation.
 function assertIJson(v){if(typeof v==='number'){if(!Number.isFinite(v))throw new Error('Non-finite number ('+v+') not valid I-JSON (RFC 8785 §3.2.2.3).');if(Number.isInteger(v)&&!Number.isSafeInteger(v))throw new Error('Integer '+v+' exceeds 2^53 (RFC 7493).');}else if(Array.isArray(v)){v.forEach(assertIJson);}else if(v&&typeof v==='object'){for(const k of Object.keys(v))assertIJson(v[k]);}}
 const cgCanon=(v)=>Array.isArray(v)?v.map(cgCanon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>(o[k]=cgCanon(v[k]),o),{}):v;
-function canonicalPreimage(policyParams,outputPayload){const obj={policyParams,outputPayload};assertIJson(obj);return JSON.stringify(cgCanon(obj));}
-async function executionHash(policyParams,outputPayload){const bytes=new TextEncoder().encode(canonicalPreimage(policyParams,outputPayload));const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');}
-async function computeExecHash(policyParams, outputPayload) {
+function canonicalPreimage(policy_parameters,output_payload){const obj={policy_parameters,output_payload};assertIJson(obj);return JSON.stringify(cgCanon(obj));}
+async function executionHash(policy_parameters,output_payload){const bytes=new TextEncoder().encode(canonicalPreimage(policy_parameters,output_payload));const digest=await (globalThis.crypto||crypto).subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+async function computeExecHash(policy_parameters, output_payload) {
   if (!window.isSecureContext) return 'requires-secure-context';
-  return await executionHash(policyParams, outputPayload);
+  return await executionHash(policy_parameters, output_payload);
 }
 function buildVerdictVD(m_msigma, sigUsed) {
   const HABERLE = OCS_HABERLE, NOYOLA = OCS_NOYOLA;
