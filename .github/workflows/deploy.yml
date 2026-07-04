@@ -57,6 +57,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Verify key HTML files are present
         run: |
           REQUIRED=(
@@ -103,6 +108,15 @@ jobs:
       # local file/dir. Catches the ../data/ 404 class of bug before it deploys.
       - name: Broken-link gate
         run: python3 scripts/check-links.py
+
+      # OpenChainGraph gates (OCG 0.2→0.8 Phase B): inline-script syntax check,
+      # forbidden-hash-scheme lint on all artifact-qualified tools, and a
+      # frozen-envelope schema validation against a captured live fixture.
+      - name: OpenChainGraph hash + schema gates
+        run: |
+          node scripts/syntax-check.mjs
+          node scripts/lint-forbidden-hash.mjs
+          node scripts/schema-validate.mjs
 
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
