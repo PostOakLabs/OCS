@@ -1,0 +1,29 @@
+{
+  "tool_id": "kardashev-meter",
+  "cases": [
+    {
+      "name": "type1_threshold",
+      "fn": "kFromW",
+      "args": [1e16],
+      "expected": 1,
+      "tolerance": 1e-9,
+      "source": "Sagan 1973 Kardashev rung formula K=(log10(P_W)-6)/10; 1e16 W is the canonical Type I (planetary) threshold, giving exactly K=1.0"
+    },
+    {
+      "name": "type2_threshold",
+      "fn": "kFromW",
+      "args": [1e26],
+      "expected": 2,
+      "tolerance": 1e-9,
+      "source": "Sagan 1973 formula; 1e26 W approximates solar luminosity scale (Lsun=3.828e26 W), giving K=2.0 at the Type II boundary"
+    },
+    {
+      "name": "earth_2024_energy_use",
+      "fn": "kFromW",
+      "args": [18379440377729.188],
+      "expected": 0.7264332283733215,
+      "tolerance": 1e-6,
+      "source": "580 EJ/yr (Earth 2024 primary energy use, per tool default) converted to average watts = 580e18 J / 3.1557e7 s/yr, then Sagan formula independently applied"
+    }
+  ]
+}

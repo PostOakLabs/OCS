@@ -1,0 +1,29 @@
+{
+  "tool_id": "energy-translator",
+  "cases": [
+    {
+      "name": "kWh_is_3.6MJ",
+      "fn": "getBaseValue",
+      "args": [1, "kWh"],
+      "expected": 3600000,
+      "tolerance": 1e-9,
+      "source": "SI definition: 1 kWh = 3.6e6 J exactly"
+    },
+    {
+      "name": "eV_to_joules",
+      "fn": "getBaseValue",
+      "args": [1, "eV"],
+      "expected": 1.602e-19,
+      "tolerance": 1e-9,
+      "source": "CODATA electronvolt (rounded to the tool's own declared precision, 1.602e-19 J)"
+    },
+    {
+      "name": "MtTNT_to_joules",
+      "fn": "getBaseValue",
+      "args": [1, "MtTNT"],
+      "expected": 4.184e15,
+      "tolerance": 1e-9,
+      "source": "Standard TNT-equivalent conversion: 1 megatonne TNT = 4.184e15 J"
+    }
+  ]
+}

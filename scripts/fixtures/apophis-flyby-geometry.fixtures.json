@@ -1,0 +1,79 @@
+{
+  "tool_id": "apophis-flyby-geometry",
+  "cases": [
+    {
+      "name": "nominal_apophis",
+      "input": {
+        "perigee_km": 38017,
+        "diameter_m": 340,
+        "rel_velocity_km_s": 7.43
+      },
+      "expected": {
+        "flyby_date": "2029-04-13",
+        "perigee_km": 38017,
+        "perigee_altitude_km": 31646,
+        "R_earth_km": 6371,
+        "inside_GEO": true,
+        "GEO_km": 42164,
+        "GEO_margin_km": 4147,
+        "diameter_m": 340,
+        "tidal_dg_m_s2": 0.000004933,
+        "tidal_note": "Tidal acceleration differential across asteroid body: dg = 2*GM_earth*d/r^3 (classical tidal formula). Units: m/s^2.",
+        "rel_velocity_km_s": 7.43,
+        "v_perigee_km_s": 8.7278,
+        "speed_boost_km_s": 1.2978,
+        "vis_viva_note": "v_perigee computed from vis-viva: v_peri^2 = v_inf^2 + 2*GM/r. rel_velocity_km_s treated as hyperbolic excess velocity (v_inf). speed_boost = v_perigee - v_inf.",
+        "missions": [
+          "NASA OSIRIS-APEX (formerly OSIRIS-REx) — currently en route, arrival 2029-04-13",
+          "ESA Ramses — committed Nov 2025, launch target Apr 2028, arrival Apr 2029"
+        ],
+        "register": "peer-reviewed",
+        "citations": [
+          "Farnocchia et al. 2021, Icarus 369, 114594 (DOI 10.1016/j.icarus.2021.114594) — definitive Apophis orbit solution",
+          "Brozovic et al. 2018, Icarus 300, 115 (DOI 10.1016/j.icarus.2017.09.010) — Apophis radar observations",
+          "JPL/CNEOS Apophis close-approach solution #197: 2029-Apr-13 perigee ~38,017 km",
+          "ESA Ramses mission: committed Nov 2025, launch target Apr 2028",
+          "NASA OSIRIS-APEX: en route to Apophis, arrival 2029-04-13"
+        ]
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/apophis-flyby-geometry.fixtures.json (vector: nominal_apophis) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "outside_GEO",
+      "input": {
+        "perigee_km": 50000,
+        "diameter_m": 340,
+        "rel_velocity_km_s": 7.43
+      },
+      "expected": {
+        "flyby_date": "2029-04-13",
+        "perigee_km": 50000,
+        "perigee_altitude_km": 43629,
+        "R_earth_km": 6371,
+        "inside_GEO": false,
+        "GEO_km": 42164,
+        "GEO_margin_km": -7836,
+        "diameter_m": 340,
+        "tidal_dg_m_s2": 0.0000021684,
+        "tidal_note": "Tidal acceleration differential across asteroid body: dg = 2*GM_earth*d/r^3 (classical tidal formula). Units: m/s^2.",
+        "rel_velocity_km_s": 7.43,
+        "v_perigee_km_s": 8.435,
+        "speed_boost_km_s": 1.005,
+        "vis_viva_note": "v_perigee computed from vis-viva: v_peri^2 = v_inf^2 + 2*GM/r. rel_velocity_km_s treated as hyperbolic excess velocity (v_inf). speed_boost = v_perigee - v_inf.",
+        "missions": [
+          "NASA OSIRIS-APEX (formerly OSIRIS-REx) — currently en route, arrival 2029-04-13",
+          "ESA Ramses — committed Nov 2025, launch target Apr 2028, arrival Apr 2029"
+        ],
+        "register": "peer-reviewed",
+        "citations": [
+          "Farnocchia et al. 2021, Icarus 369, 114594 (DOI 10.1016/j.icarus.2021.114594) — definitive Apophis orbit solution",
+          "Brozovic et al. 2018, Icarus 300, 115 (DOI 10.1016/j.icarus.2017.09.010) — Apophis radar observations",
+          "JPL/CNEOS Apophis close-approach solution #197: 2029-Apr-13 perigee ~38,017 km",
+          "ESA Ramses mission: committed Nov 2025, launch target Apr 2028",
+          "NASA OSIRIS-APEX: en route to Apophis, arrival 2029-04-13"
+        ]
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/apophis-flyby-geometry.fixtures.json (vector: outside_GEO) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    }
+  ]
+}

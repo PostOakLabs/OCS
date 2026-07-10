@@ -1,0 +1,90 @@
+{
+  "tool_id": "gwtc-remnant-classifier",
+  "cases": [
+    {
+      "name": "gw231123_imbh_remnant",
+      "input": {
+        "m1": 137,
+        "m2": 103
+      },
+      "expected": {
+        "chirp_mass_Msun": 103.2,
+        "total_mass_Msun": 240,
+        "mass_ratio": 0.75,
+        "remnant_mass_Msun": 228.83,
+        "final_spin": 0.68,
+        "in_pi_gap": true,
+        "pi_gap_note": "PI mass-gap edges (~60-130 Msun) are model-dependent (nuclear reaction rates, rotation, metallicity -- e.g. Farmer et al. 2019, Woosley 2019), not sharp thresholds.",
+        "imbh_class": true,
+        "gate_token": "imbh_remnant",
+        "register": "peer-reviewed fit (JF17), applied here in its nonspinning limit; PI-gap edges and waveform-systematics for GW231123-class remnants are model-dependent -- see caveat",
+        "caveat": "Nonspinning-limit JF17 fit (chi1=chi2=0 assumed absent input spins); aligned-spin 2D/3D correction terms not implemented. PI-gap edges and GW231123-class remnant masses carry model/waveform-systematics uncertainty (see arXiv:2509.09161 for ML-based validation of these fits against NR).",
+        "reference": "Jimenez-Forteza et al. 2017, PRD 95, 064024 (arXiv:1611.00332), nonspinning-limit fits (Eqs. 7 and 21); PI-gap edges model-dependent (e.g. Farmer et al. 2019); GW231123 waveform-systematics ML validation: Chatterjee et al. 2025 (arXiv:2509.09161)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/gwtc-remnant-classifier.fixtures.json (vector: gw231123_imbh_remnant) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "stellar_bbh",
+      "input": {
+        "m1": 35,
+        "m2": 30
+      },
+      "expected": {
+        "chirp_mass_Msun": 28.19,
+        "total_mass_Msun": 65,
+        "mass_ratio": 0.86,
+        "remnant_mass_Msun": 61.89,
+        "final_spin": 0.68,
+        "in_pi_gap": false,
+        "pi_gap_note": "PI mass-gap edges (~60-130 Msun) are model-dependent (nuclear reaction rates, rotation, metallicity -- e.g. Farmer et al. 2019, Woosley 2019), not sharp thresholds.",
+        "imbh_class": false,
+        "gate_token": "stellar",
+        "register": "peer-reviewed fit (JF17), applied here in its nonspinning limit; PI-gap edges and waveform-systematics for GW231123-class remnants are model-dependent -- see caveat",
+        "caveat": "Nonspinning-limit JF17 fit (chi1=chi2=0 assumed absent input spins); aligned-spin 2D/3D correction terms not implemented. PI-gap edges and GW231123-class remnant masses carry model/waveform-systematics uncertainty (see arXiv:2509.09161 for ML-based validation of these fits against NR).",
+        "reference": "Jimenez-Forteza et al. 2017, PRD 95, 064024 (arXiv:1611.00332), nonspinning-limit fits (Eqs. 7 and 21); PI-gap edges model-dependent (e.g. Farmer et al. 2019); GW231123 waveform-systematics ML validation: Chatterjee et al. 2025 (arXiv:2509.09161)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/gwtc-remnant-classifier.fixtures.json (vector: stellar_bbh) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "pi_gap_component",
+      "input": {
+        "m1": 85,
+        "m2": 66
+      },
+      "expected": {
+        "chirp_mass_Msun": 65.1,
+        "total_mass_Msun": 151,
+        "mass_ratio": 0.78,
+        "remnant_mass_Msun": 143.91,
+        "final_spin": 0.68,
+        "in_pi_gap": true,
+        "pi_gap_note": "PI mass-gap edges (~60-130 Msun) are model-dependent (nuclear reaction rates, rotation, metallicity -- e.g. Farmer et al. 2019, Woosley 2019), not sharp thresholds.",
+        "imbh_class": true,
+        "gate_token": "imbh_remnant",
+        "register": "peer-reviewed fit (JF17), applied here in its nonspinning limit; PI-gap edges and waveform-systematics for GW231123-class remnants are model-dependent -- see caveat",
+        "caveat": "Nonspinning-limit JF17 fit (chi1=chi2=0 assumed absent input spins); aligned-spin 2D/3D correction terms not implemented. PI-gap edges and GW231123-class remnant masses carry model/waveform-systematics uncertainty (see arXiv:2509.09161 for ML-based validation of these fits against NR).",
+        "reference": "Jimenez-Forteza et al. 2017, PRD 95, 064024 (arXiv:1611.00332), nonspinning-limit fits (Eqs. 7 and 21); PI-gap edges model-dependent (e.g. Farmer et al. 2019); GW231123 waveform-systematics ML validation: Chatterjee et al. 2025 (arXiv:2509.09161)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/gwtc-remnant-classifier.fixtures.json (vector: pi_gap_component) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "empty_input_default",
+      "input": {},
+      "expected": {
+        "chirp_mass_Msun": 23.82,
+        "total_mass_Msun": 55,
+        "mass_ratio": 0.83,
+        "remnant_mass_Msun": 52.38,
+        "final_spin": 0.68,
+        "in_pi_gap": false,
+        "pi_gap_note": "PI mass-gap edges (~60-130 Msun) are model-dependent (nuclear reaction rates, rotation, metallicity -- e.g. Farmer et al. 2019, Woosley 2019), not sharp thresholds.",
+        "imbh_class": false,
+        "gate_token": "stellar",
+        "register": "peer-reviewed fit (JF17), applied here in its nonspinning limit; PI-gap edges and waveform-systematics for GW231123-class remnants are model-dependent -- see caveat",
+        "caveat": "Nonspinning-limit JF17 fit (chi1=chi2=0 assumed absent input spins); aligned-spin 2D/3D correction terms not implemented. PI-gap edges and GW231123-class remnant masses carry model/waveform-systematics uncertainty (see arXiv:2509.09161 for ML-based validation of these fits against NR).",
+        "reference": "Jimenez-Forteza et al. 2017, PRD 95, 064024 (arXiv:1611.00332), nonspinning-limit fits (Eqs. 7 and 21); PI-gap edges model-dependent (e.g. Farmer et al. 2019); GW231123 waveform-systematics ML validation: Chatterjee et al. 2025 (arXiv:2509.09161)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/gwtc-remnant-classifier.fixtures.json (vector: empty_input_default) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    }
+  ]
+}
