@@ -1,8 +1,12 @@
 # The Omega Centauri Society
 
 [![Deploy to DreamHost](https://github.com/PostOakLabs/OCS/actions/workflows/deploy.yml/badge.svg)](https://github.com/PostOakLabs/OCS/actions/workflows/deploy.yml)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20689279-blue)](https://doi.org/10.5281/zenodo.20689279)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-code.md)
 
-Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific society dedicated to the study of Omega Centauri, the largest and most massive globular cluster in the Milky Way.
+Browser-based science portal on NGC 5139 (Omega Centauri) — interactive calculators, observational proposals, and MCP-exposed tools for the IMBH evidence debate. Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific society dedicated to the study of Omega Centauri, the largest and most massive globular cluster in the Milky Way.
+
+Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [omegacentauri.me/cite.html](https://omegacentauri.me/cite.html) (DOI: [10.5281/zenodo.20689279](https://doi.org/10.5281/zenodo.20689279)).
 
 `🔭 Observational Proposals` &nbsp;`🛠️ Interactive Tools` &nbsp;`🌌 Globular Cluster Science` &nbsp;`📡 Multi-Messenger Astronomy` &nbsp;`💻 Static HTML`
 
