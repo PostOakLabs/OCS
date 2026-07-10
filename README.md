@@ -6,7 +6,9 @@
 
 Cite this software using [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [omegacentauri.me/cite.html](https://omegacentauri.me/cite.html).
 
-Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific society dedicated to the study of Omega Centauri, the largest and most massive globular cluster in the Milky Way.
+Browser-based science portal on NGC 5139 (Omega Centauri) — interactive calculators, observational proposals, and MCP-exposed tools for the IMBH evidence debate. Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific society dedicated to the study of Omega Centauri, the largest and most massive globular cluster in the Milky Way.
+
+Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [omegacentauri.me/cite.html](https://omegacentauri.me/cite.html) (DOI: [10.5281/zenodo.20689279](https://doi.org/10.5281/zenodo.20689279)).
 
 `🔭 Observational Proposals` &nbsp;`🛠️ Interactive Tools` &nbsp;`🌌 Globular Cluster Science` &nbsp;`📡 Multi-Messenger Astronomy` &nbsp;`💻 Static HTML`
 
