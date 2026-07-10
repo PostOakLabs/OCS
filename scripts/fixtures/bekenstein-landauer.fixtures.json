@@ -1,0 +1,29 @@
+{
+  "tool_id": "bekenstein-landauer",
+  "cases": [
+    {
+      "name": "bekensteinBits",
+      "fn": "bekensteinBits",
+      "args": [10000, 1000000000],
+      "expected": 2.865961283400431e+39,
+      "tolerance": 1e-9,
+      "source": "Bekenstein 1973 bound: N = 2*pi*R*E/(hbar*c*ln2), computed independently with the tool's own declared constants (HBAR=1.055e-34, C=2.998e8) for R=1e4 m, E=1e9 J"
+    },
+    {
+      "name": "landauerOps",
+      "fn": "landauerOps",
+      "args": [1000000000, 2.7],
+      "expected": 3.8691636250944387e+31,
+      "tolerance": 1e-9,
+      "source": "Landauer 1961 erasure bound: ops/s = P/(kB*T*ln2), computed independently with KB=1.381e-23 for P=1e9 W, T=2.7 K"
+    },
+    {
+      "name": "lloydOps",
+      "fn": "lloydOps",
+      "args": [1000000000],
+      "expected": 6.034310638555274e+42,
+      "tolerance": 1e-9,
+      "source": "Lloyd 2000, Nature 406: ops/s from energy = 2*E/(pi*hbar), computed independently with HBAR=1.055e-34 for E=1e9 J"
+    }
+  ]
+}

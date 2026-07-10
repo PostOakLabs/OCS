@@ -118,6 +118,13 @@ jobs:
           node scripts/lint-forbidden-hash.mjs
           node scripts/schema-validate.mjs
 
+      # OCS-TEST-COVERAGE-SPEC.md v1 §5 — hash round-trip + known-value
+      # regression gate. The first behavioral gate: everything above this
+      # checks shape/count/digest, this checks a given input produces the
+      # documented correct output.
+      - name: Test — hash-param round-trip + known-value regression
+        run: node --test scripts/tests/tier-c-*.test.mjs
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):

@@ -1,0 +1,119 @@
+{
+  "tool_id": "bayes-factor-router",
+  "cases": [
+    {
+      "name": "decisive_nanograv",
+      "input": {
+        "bf": 100000000000000
+      },
+      "expected": {
+        "scale": "bayes_factor",
+        "input_value": 100000000000000,
+        "evidence_category": "decisive",
+        "gate_token": "decisive",
+        "thresholds": {
+          "substantial": 3.2,
+          "strong": 10,
+          "decisive": 100
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: decisive_nanograv) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "strong",
+      "input": {
+        "bf": 50
+      },
+      "expected": {
+        "scale": "bayes_factor",
+        "input_value": 50,
+        "evidence_category": "strong",
+        "gate_token": "strong",
+        "thresholds": {
+          "substantial": 3.2,
+          "strong": 10,
+          "decisive": 100
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: strong) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "substantial",
+      "input": {
+        "bf": 5
+      },
+      "expected": {
+        "scale": "bayes_factor",
+        "input_value": 5,
+        "evidence_category": "substantial",
+        "gate_token": "substantial",
+        "thresholds": {
+          "substantial": 3.2,
+          "strong": 10,
+          "decisive": 100
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: substantial) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "weak",
+      "input": {
+        "bf": 2
+      },
+      "expected": {
+        "scale": "bayes_factor",
+        "input_value": 2,
+        "evidence_category": "weak (barely worth mentioning)",
+        "gate_token": "weak",
+        "thresholds": {
+          "substantial": 3.2,
+          "strong": 10,
+          "decisive": 100
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: weak) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "supports_null",
+      "input": {
+        "bf": 0.5
+      },
+      "expected": {
+        "scale": "bayes_factor",
+        "input_value": 0.5,
+        "evidence_category": "supports null hypothesis",
+        "gate_token": "supports_null",
+        "thresholds": {
+          "substantial": 3.2,
+          "strong": 10,
+          "decisive": 100
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: supports_null) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    },
+    {
+      "name": "two_ln_bf_strong",
+      "input": {
+        "two_ln_bf": 8
+      },
+      "expected": {
+        "scale": "two_ln_bayes_factor",
+        "input_value": 8,
+        "evidence_category": "strong",
+        "gate_token": "strong",
+        "thresholds": {
+          "substantial": 2.3263,
+          "strong": 4.6052,
+          "decisive": 9.2103
+        },
+        "reference": "Jeffreys 1961; Kass & Raftery 1995 (JASA 90:773)"
+      },
+      "source": "ocs-mcp-worker/kernels/fixtures/bayes-factor-router.fixtures.json (vector: two_ln_bf_strong) — proven via §18 groth16 compute-proof receipt; site tool.compute() is vendored verbatim from the kernel, this fixture asserts they have not drifted apart"
+    }
+  ]
+}
