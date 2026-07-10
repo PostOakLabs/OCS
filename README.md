@@ -1,6 +1,10 @@
 # The Omega Centauri Society
 
 [![Deploy to DreamHost](https://github.com/PostOakLabs/OCS/actions/workflows/deploy.yml/badge.svg)](https://github.com/PostOakLabs/OCS/actions/workflows/deploy.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20689279.svg)](https://doi.org/10.5281/zenodo.20689279)
+[![License: MIT (code)](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE-code.md)
+
+Cite this software using [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [omegacentauri.me/cite.html](https://omegacentauri.me/cite.html).
 
 Source for **[omegacentauri.me](https://omegacentauri.me)** — a scientific society dedicated to the study of Omega Centauri, the largest and most massive globular cluster in the Milky Way.
 
