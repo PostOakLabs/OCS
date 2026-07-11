@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Economics of Inward Migration — Omega Centauri Society</title>
+<meta name="description" content="Relocation versus densification for computation-maximizing civilizations: a decision-theoretic treatment of the inward-migration Fermi paradox resolutions. Closed-form patience threshold, seed-and-stay hybrid dominance, population-level thinning, and a new observational residue. Full paper (Swanson 2026).">
+<meta name="keywords" content="Fermi paradox, SETI, technosignatures, transcension, migration economics, decision theory, discounting, intermediate-mass black holes, Dyson spheres, Matrioshka brain, Omega Centauri">
+<meta property="og:title" content="The Economics of Inward Migration — full paper">
+<meta property="og:description" content="Bostrom priced delay; Bennett et al. priced dormancy; this paper prices relocation. Paper D of the four-paper programme: closed-form crossover conditions for stay, migrate, and seed-and-stay strategies.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://omegacentauri.me/inward-migration-economics.html">
+<link rel="canonical" href="https://omegacentauri.me/inward-migration-economics.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
+  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
+  --teal-bright:#1dba90; --teal-glow:#4de8c0;
+  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
+  --amber-glow:#EF9F27; --amber-soft:#FAC775;
+  --red-bright:#E24B4A;
+  --border-subtle:rgba(112,85,212,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
+a{color:var(--teal-glow);text-decoration:none;}
+a:hover{text-decoration:underline;}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;}
+nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+h1{font-family:'Orbitron',sans-serif;font-size:1.7rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+p{margin:0 0 1rem;}
+.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.banner strong{color:var(--amber-glow);}
+.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
+.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.toc ol{margin-left:1.3rem;}
+figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
+figure svg{width:100%;height:auto;display:block;}
+figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
+figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
+caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
+caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
+td.c{text-align:center;}
+td.ok{color:var(--teal-glow);text-align:center;font-weight:600;}
+.eq{display:block;text-align:center;font-size:1.08rem;margin:1.1rem 0;color:var(--text-primary);}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
+.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+.refs{font-size:0.88rem;line-height:1.65;}
+.refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
+.refs ol{margin-left:1.3rem;}
+ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
+ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
+.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+sup,sub{line-height:0;}
+.imp{color:var(--text-primary);font-weight:600;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
+@media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <span class="brand">OCS</span>
+  <a href="/index.html">Home</a>
+  <a href="/tools/">Tools</a>
+  <a href="/proposals.html">Proposals</a>
+  <a href="/paper.html">Papers</a>
+  <a href="/macro-transcension-hypothesis.html">MTH paper</a>
+  <a href="/inward-migration-fermi-paradox-review.html">Review</a>
+  <a href="/omega-centauri-technosignature-campaign.html">Campaign</a>
+  <span style="margin-left:auto;color:var(--text-dim);">economics · v0.1 · July 2026</span>
+</nav>
+
+<main>
+
+<p class="eyebrow">OCS Research Paper · Preprint · Paper D (the economics)</p>
+<h1>The Economics of Inward Migration: Relocation versus Densification for Computation-Maximizing Civilizations</h1>
+<p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
+<p class="venue">Draft v0.1, July 2026 · Paper D of four (A: hypothesis · B: review · C: observational campaign) · prepared for omegacentauri.me; intended for arXiv submission</p>
+
+<div class="dl-row">
+  <a class="dl-btn" href="/macro-transcension-hypothesis.html">← Paper A — the hypothesis</a>
+  <a class="dl-btn" href="/inward-migration-fermi-paradox-review.html">← Paper B — the review</a>
+  <a class="dl-btn" href="/omega-centauri-technosignature-campaign.html">← Paper C — the campaign</a>
+  <a class="dl-btn" href="#sec-crossover">The threshold</a>
+  <a class="dl-btn" href="#sec-refs">References</a>
+</div>
+
+<div class="banner"><strong>⚠ EPISTEMIC STATUS.</strong> This paper is decision theory over established physics. It makes no claim that extraterrestrial intelligence exists; every result is conditional on the optimization premise shared by the inward-migration hypothesis family (Paper A, postulate P1). The contribution is the pricing structure and its observational corollaries. Parameter values are fiducials for orientation, not forecasts.</div>
+
+<section id="sec-abstract">
+<div class="abstract">
+<span class="lead">Abstract</span>
+<p>The inward-migration resolutions of the Fermi paradox hold that computation-optimizing civilizations relocate to thermodynamically privileged environments, with rapidly spinning intermediate-mass black holes (IMBHs) in dense old clusters as the strongest candidate destination. The thermodynamic gradient supporting this claim has been quantified, and a critical review of the hypothesis family identified its principal unsolved economic problem: Bostrom (2003) priced the opportunity cost of delayed expansion, and Bennett et al. (2019) priced the losses of dormancy, but no one has priced relocation itself. A migrating lineage abandons accumulated local infrastructure for a transit of 10<sup>4</sup>–10<sup>6</sup> years in exchange for a destination whose advantages are enormous but deferred. This paper treats that trade as a decision problem. We define three strategies over a common utility (discounted integrated computation): stay-and-densify (Matrioshka-style local engineering), migrate (beamed-sail relocation to the nearest suitable IMBH cluster), and seed-and-stay (a self-replicating seed payload dispatched while densification continues at home). Using payoff kernels assembled from established physics — Kerr accretion efficiency, Blandford–Znajek extraction, the Landauer bound against horizon-temperature entropy sinks, and radiator-limited Matrioshka computing — we derive closed-form crossover conditions. The central result is a threshold on the effective discount-plus-hazard rate: migration dominates densification whenever ρ + λ &lt; ln(G p<sub>s</sub>)/τ, where G is the destination computation-rate multiplier (≥10<sup>9</sup> on power alone), p<sub>s</sub> the transit survival probability, and τ the transit-plus-construction time. At fiducial parameters (G = 10<sup>9</sup>, τ = 10<sup>5</sup> yr, p<sub>s</sub> = 0.5) the threshold is ρ + λ ≲ 2×10<sup>−4</sup> yr<sup>−1</sup>: any lineage whose planning half-life exceeds roughly 3,500 years should migrate, a weak patience requirement by the standards of the hypotheses under review. The hybrid strategy dominates both pure strategies across essentially the entire parameter space, because seed mass is a negligible fraction of local output while capturing the full deferred payoff. We embed the per-lineage decision rule in a mixed population of maximizers, expansionists, and satisficers to quantify how much inward migration thins the expected loud population, addressing the incomplete-compliance objection, and we derive a new population-level residue: the predicted sky ratio of Matrioshka-type infrared sources to quiet-cluster systems, which existing WISE null results already begin to constrain. All results are conditional on the optimization premise shared by the hypothesis family; the contribution is the pricing structure, not the premise.</p>
+<p class="kw"><b>Keywords:</b> Fermi paradox · SETI · technosignatures · transcension · migration · decision theory · discounting · intermediate-mass black holes · Dyson spheres</p>
+</div>
+</section>
+
+<div class="toc">
+<div class="toc-h">Contents</div>
+<ol>
+<li><a href="#sec-intro">Introduction</a></li>
+<li><a href="#sec-problem">The decision problem</a></li>
+<li><a href="#sec-kernels">Payoff kernels</a></li>
+<li><a href="#sec-crossover">Crossover conditions</a></li>
+<li><a href="#sec-hybrid">The hybrid result</a></li>
+<li><a href="#sec-population">Population consequences</a></li>
+<li><a href="#sec-residues">Observational corollaries: the residue ratio</a></li>
+<li><a href="#sec-limits">Limits and objections</a></li>
+<li><a href="#sec-conclusion">Conclusion</a></li>
+<li><a href="#sec-refs">References</a></li>
+</ol>
+</div>
+
+<section id="sec-intro">
+<h2>1. Introduction</h2>
+
+<h3>1.1 The pricing gap</h3>
+<p>Three papers precede this one. The Macro Transcension Hypothesis (Swanson 2026a, hereafter <a href="/macro-transcension-hypothesis.html">Paper A</a>) argues that rapidly spinning massive black holes in dense old stellar systems are the global optimum among present-day environments for long-term computation, and identifies Omega Centauri as the most accessible test system. A critical review of the inward-migration family (Swanson 2026b, hereafter <a href="/inward-migration-fermi-paradox-review.html">Paper B</a>) places that hypothesis among six decades of related proposals and grades their falsifiability. An observational companion (Swanson 2026c, hereafter <a href="/omega-centauri-technosignature-campaign.html">Paper C</a>) specifies the instrument-matched campaign. Paper B also catalogued the family's open problems, and its third problem motivates this paper directly: the economics of the migration itself has never been worked out.</p>
+<p>The gap is specific. Bostrom (2003) priced <em>delay</em>: every century of postponed expansion forgoes an irrecoverable harvest of free energy. Bennett et al. (2019) priced <em>dormancy</em>: free energy not collected promptly is lost, so the aestivation strategy of Sandberg et al. (2016) forfeits most of what it hoped to save. Nobody has priced <em>relocation</em>. A lineage that migrates abandons its accumulated local infrastructure, spends 10<sup>4</sup>–10<sup>6</sup> years in transit, accepts a risk of total loss en route, and only then begins to collect a payoff that is — by the physics of Paper A — orders of magnitude larger per unit of everything. Whether that trade clears depends on quantities the inward-family literature has so far left unmodelled: discount rates, hazard rates, transit risk, and the option of sending a seed instead of moving.</p>
+<p>This matters beyond bookkeeping. If migration clears the trade only for implausibly patient agents, the inward family loses its force as a Fermi solution regardless of the destination physics. If it clears easily, the family's incomplete-compliance problem (Paper B, problem P4) sharpens into a quantitative question: what fraction of lineages must migrate for the observed silence to follow? Both outcomes are informative, which is why the calculation is worth doing whichever way it lands.</p>
+
+<h3>1.2 Claims and non-claims</h3>
+<p>The paper makes three claims:</p>
+<ol class="body-list">
+<li><span class="imp">(Decision analysis.)</span> Under the stated utility and payoff kernels, the choice among stay, migrate, and seed-and-stay reduces to closed-form threshold conditions on the discount rate, hazard rate, transit time, and destination multiplier (Section 4).</li>
+<li><span class="imp">(Robust dominance.)</span> The seed-and-stay hybrid dominates both pure strategies across essentially all parameter values for which the optimization premise holds, because the seed's cost is negligible against local output while its expected payoff retains the full destination multiplier (Section 5).</li>
+<li><span class="imp">(Population corollary.)</span> Folding the decision rule into a mixed population yields the expected thinning of the loud population and a new residue — the Matrioshka-to-quiet-cluster sky ratio — that archival infrared surveys already constrain (Sections 6–7).</li>
+</ol>
+<p>We do not claim the parameter priors are measurable; the value of the analysis is the structure of the crossover, not point estimates. We flag model dependence throughout (Section 8).</p>
+</section>
+
+<section id="sec-problem">
+<h2>2. The decision problem</h2>
+
+<h3>2.1 Agent, utility, and strategies</h3>
+<p>Consider a technological lineage established at a planetary system a distance d from the nearest system satisfying the Paper A selection criteria (an IMBH of 10<sup>3</sup>–10<sup>5</sup> M<sub>☉</sub> in a dense, old, quiescent cluster). Following the family's shared premise, the lineage values integrated computation. Its utility over a policy π is</p>
+<span class="eq">U(π) = ∫<sub>0</sub><sup>∞</sup> C<sub>π</sub>(t) e<sup>−ρt</sup> dt <span class="eqno">(1)</span></span>
+<p>where C<sub>π</sub>(t) is the computation rate delivered at time t (bit-erasures per second, the binding currency by the Landauer accounting of Paper A, Section 4.2) and ρ ≥ 0 an exponential discount rate. We use exponential discounting for tractability and revisit hyperbolic alternatives (Laibson 1997) in Section 8; the patient limit ρ → 0 recovers the Ramsey (1928) zero-discount benchmark, which several authors argue is the only defensible rate for agents with unbounded horizons (Bostrom 2003).</p>
+<p>Three strategies span the space:</p>
+<div class="postulate"><b>S (stay and densify).</b> Remain at the home system and build toward the local optimum: Dyson-type collection feeding Matrioshka-style nested computing shells (Dyson 1960; Bradbury 1999). Payoff begins almost immediately and is capped by stellar output and radiator physics.</div>
+<div class="postulate"><b>M (migrate).</b> Relocate the lineage by beamed-sail transport (Lubin 2016) to the IMBH system, build the Paper A staged architecture, and compute there. Payoff is deferred by the transit-plus-construction time τ and discounted by a survival probability p<sub>s</sub>, but multiplied by the destination gain G.</div>
+<div class="postulate"><b>H (seed and stay).</b> Dispatch a self-replicating seed payload (Freitas 1982) of negligible mass while executing S at home; the seed bootstraps the destination in parallel. The lineage pays a small fraction f of local output for the launch infrastructure and collects both payoffs.</div>
+<p>Strategy H is not exotic: it is the architecture Paper A already assumes (gram-to-kilogram scouts, then seed factories), read as an economic option rather than a mission profile. What has not been stated before is its dominance structure (Section 5).</p>
+
+<h3>2.2 Parameters</h3>
+<p>Table 1 collects the parameters and fiducial values. Transit time uses Paper A's beamed-sail speeds (0.1–0.2c) and the distance to ω Cen (5.49 kpc; Häberle et al. 2025) as the fiducial destination, giving τ<sub>transit</sub> ≈ 0.9–1.8×10<sup>5</sup> yr; we fold construction (≲10<sup>3</sup> yr to first ISCO-swarm operation; Paper A, Section 6) into a single τ = 10<sup>5</sup> yr fiducial. The hazard rate λ prices the goal-stability problem (Paper B, problem P2): the probability per year that the lineage ceases to pursue the plan, through value drift, fragmentation, or extinction. We do not claim to know λ; it enters the thresholds additively with ρ, which is the analytically convenient (and honest) way to carry an unknown.</p>
+
+<table>
+<caption><b>Table 1.</b> Decision parameters and fiducial values.</caption>
+<thead><tr><th>Symbol</th><th>Meaning</th><th>Fiducial</th><th>Source / rationale</th></tr></thead>
+<tbody>
+<tr><td>d</td><td>distance to destination</td><td>5.49 kpc</td><td>ω Cen (Häberle et al. 2025)</td></tr>
+<tr><td>v</td><td>transit speed</td><td>0.15c</td><td>beamed sail (Lubin 2016)</td></tr>
+<tr><td>τ</td><td>transit + construction</td><td>10<sup>5</sup> yr</td><td>d/v + Paper A Phase 1–3</td></tr>
+<tr><td>p<sub>s</sub></td><td>transit survival probability</td><td>0.5</td><td>conservative; see Section 4</td></tr>
+<tr><td>G</td><td>destination rate multiplier</td><td>10<sup>9</sup></td><td>power ratio alone (Section 3)</td></tr>
+<tr><td>ρ</td><td>discount rate</td><td>free</td><td>Ramsey 1928; Bostrom 2003</td></tr>
+<tr><td>λ</td><td>goal-stability hazard rate</td><td>free</td><td>Paper B, problem P2</td></tr>
+<tr><td>f</td><td>seed cost, fraction of S output</td><td>≪10<sup>−3</sup></td><td>gram–kg payloads (Lubin 2016; Freitas 1982)</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="sec-kernels">
+<h2>3. Payoff kernels</h2>
+
+<div class="specbox"><strong>Epistemic status:</strong> This section assembles rates from established physics, detailed in Paper A Section 4; nothing here is new physics. The kernels deliberately understate the migration payoff, for reasons given below.</div>
+
+<h3>3.1 Strategy S: the Matrioshka ceiling</h3>
+<p>A complete Dyson-type collector intercepts the stellar output, L<sub>*</sub> = 3.8×10<sup>26</sup> W for a solar analogue (Dyson 1960). Computation against the ambient sink is bounded by the Landauer cost at the effective radiator temperature (Landauer 1961; Bradbury 1999): the innermost shells run hot and fast, the outermost approach the CMB floor T<sub>γ</sub> = 2.7 K, and the whole stack is radiator-limited, the constraint Bradbury (1999) identified as binding. An upper bound that ignores every engineering loss is</p>
+<span class="eq">C<sub>S</sub> ≤ L<sub>*</sub> / (k<sub>B</sub>T<sub>γ</sub> ln 2) ≃ 1.5×10<sup>49</sup> erasures s<sup>−1</sup> <span class="eqno">(2)</span></span>
+<p>available after a build time we absorb into the timeline as effectively immediate on the scales of interest (10<sup>2</sup>–10<sup>3</sup> yr; Armstrong &amp; Sandberg 2013). Strategy S also faces a slow ceiling decay (stellar evolution) that we neglect: neglecting it favours S, which is the conservative direction for our conclusion.</p>
+
+<h3>3.2 Strategy M: the IMBH platform</h3>
+<p>At the destination, the sustainable power is the Eddington luminosity of the host, L<sub>Edd</sub> ≃ 2.5×10<sup>35</sup> W at 2×10<sup>4</sup> M<sub>☉</sub> (Paper A, Eq. 2), a factor ~10<sup>9</sup> over the solar Dyson ceiling. The erasure cost against a horizon sink falls by a further factor ~10<sup>12</sup> (Paper A, Section 4.2). The full multiplier on Eq. (2) is therefore formally ~10<sup>21</sup>; we adopt</p>
+<span class="eq">G ≡ C<sub>M</sub> / C<sub>S</sub> = 10<sup>9</sup> <span class="eqno">(3)</span></span>
+<p>as the fiducial, crediting the migration payoff with the power ratio only. Two reasons for this deliberate understatement. First, horizon-sink disposal shifts the binding constraint to waste-heat transport (Paper A, Section 4.2), whose engineering efficiency is unmodelled; using the power ratio alone keeps the kernel on demonstrated physics. Second, every conclusion below strengthens monotonically in G, so a conservative G makes the thresholds conservative. Readers preferring the full stack may substitute G = 10<sup>12</sup>–10<sup>21</sup>; the thresholds move by the logarithm, i.e. by a factor of ≤2.4 (Section 4).</p>
+
+<h3>3.3 Discounted values</h3>
+<p>With C<sub>S</sub> available from t = 0 and C<sub>M</sub> from t = τ with probability p<sub>s</sub>, and with the hazard rate entering as an additional exponential attrition on plan continuation, the strategy values under Eq. (1) are</p>
+<span class="eq">U<sub>S</sub> = C<sub>S</sub> / (ρ + λ) <span class="eqno">(4)</span></span>
+<span class="eq">U<sub>M</sub> = p<sub>s</sub> e<sup>−(ρ+λ)τ</sup> · G C<sub>S</sub> / (ρ + λ) <span class="eqno">(5)</span></span>
+<span class="eq">U<sub>H</sub> = (1 − f) U<sub>S</sub> + U<sub>M</sub> <span class="eqno">(6)</span></span>
+<p>Equation (6) treats the two payoff streams as additive, which is exact if the lineage's utility is linear in computation and the seed's draw on local resources is the fraction f; Section 8 discusses when additivity fails (identity-centred utilities that do not value a forked descendant's computation).</p>
+<p>Figure 1 shows the undiscounted rate histories: S delivers early and low, M late and high, H both.</p>
+
+<figure id="fig1">
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Computation-rate histories for the three strategies on log-log axes: S flat and low from early times, M zero until transit completes then high, H following S then jumping to the M level">
+  <!-- axes -->
+  <line x1="60" y1="370" x2="670" y2="370" stroke="#7F77DD" stroke-width="1.5"/>
+  <line x1="60" y1="370" x2="60" y2="40" stroke="#7F77DD" stroke-width="1.5"/>
+  <!-- x ticks: logt 2,4,6,8 -> x = 60 + (logt-2)*100 -->
+  <g stroke="#7a739f" stroke-width="1">
+    <line x1="60" y1="370" x2="60" y2="376"/><line x1="260" y1="370" x2="260" y2="376"/>
+    <line x1="460" y1="370" x2="460" y2="376"/><line x1="660" y1="370" x2="660" y2="376"/>
+  </g>
+  <g font-family="Space Mono,monospace" font-size="11" fill="#7a739f" text-anchor="middle">
+    <text x="60" y="392">10²</text><text x="260" y="392">10⁴</text>
+    <text x="460" y="392">10⁶</text><text x="660" y="392">10⁸</text>
+    <text x="365" y="412">time since decision t [yr]</text>
+  </g>
+  <!-- y ticks: logC 46,50,54,58 -> y = 370 - (logC-46)*23 -->
+  <g stroke="#7a739f" stroke-width="1">
+    <line x1="54" y1="370" x2="60" y2="370"/><line x1="54" y1="278" x2="60" y2="278"/>
+    <line x1="54" y1="186" x2="60" y2="186"/><line x1="54" y1="94" x2="60" y2="94"/>
+  </g>
+  <g font-family="Space Mono,monospace" font-size="11" fill="#7a739f" text-anchor="end">
+    <text x="50" y="374">10⁴⁶</text><text x="50" y="282">10⁵⁰</text>
+    <text x="50" y="190">10⁵⁴</text><text x="50" y="98">10⁵⁸</text>
+  </g>
+  <text x="20" y="205" font-family="Space Mono,monospace" font-size="11" fill="#bdb8e6" transform="rotate(-90 20 205)" text-anchor="middle">C(t) [erasures s⁻¹]</text>
+  <!-- S: (1e2,1e46)->(1e3,1.5e49) flat to 1e8 : y49.18 = 370-3.18*23 = 297 -->
+  <polyline points="60,370 160,297 660,297" fill="none" stroke="#4de8c0" stroke-width="2.5"/>
+  <!-- M: floor until 1e5 (x=360), jump to 58.18 -> y=370-12.18*23=90 -->
+  <polyline points="60,370 360,370 360,90 660,90" fill="none" stroke="#E24B4A" stroke-width="2" stroke-dasharray="7 4"/>
+  <!-- H: follows S, jumps at 1e5 -->
+  <polyline points="60,370 160,297 360,297 360,90 660,90" fill="none" stroke="#EF9F27" stroke-width="2" stroke-dasharray="2 3"/>
+  <!-- labels -->
+  <text x="480" y="285" font-family="Space Mono,monospace" font-size="11" fill="#4de8c0">S: stay / densify</text>
+  <text x="420" y="78" font-family="Space Mono,monospace" font-size="11" fill="#f08c8b">M: migrate (×G, if it survives)</text>
+  <text x="180" y="255" font-family="Space Mono,monospace" font-size="11" fill="#FAC775">H: seed and stay</text>
+  <text x="368" y="230" font-family="Space Mono,monospace" font-size="10" fill="#7a739f">τ = 10⁵ yr</text>
+</svg>
+<figcaption><b>Figure 1.</b> Undiscounted computation-rate histories for the three strategies at fiducial parameters (Table 1). Strategy S reaches its radiator-limited ceiling (Eq. 2) within centuries and holds it. Strategy M delivers nothing for τ = 10<sup>5</sup> yr, then a rate G = 10<sup>9</sup> times higher, conditional on transit survival. The hybrid follows S until the seed's destination comes online, then collects both. The decision problem is whether the area under the M step, discounted and risk-weighted, exceeds the head start of S.</figcaption>
+</figure>
+</section>
+
+<section id="sec-crossover">
+<h2>4. Crossover conditions</h2>
+
+<h3>4.1 Migrate versus stay</h3>
+<p>From Eqs. (4)–(5), U<sub>M</sub> &gt; U<sub>S</sub> reduces to</p>
+<span class="eq"><span class="imp">ρ + λ &nbsp;&lt;&nbsp; ln(G p<sub>s</sub>) / τ &nbsp;≡&nbsp; ρ*</span> <span class="eqno">(7)</span></span>
+<p>The threshold depends on the enormous multiplier only through its logarithm — the structural reason the result is robust to the order-of-magnitude uncertainties in G. At the fiducials (G = 10<sup>9</sup>, p<sub>s</sub> = 0.5, τ = 10<sup>5</sup> yr),</p>
+<span class="eq">ρ* = ln(5×10<sup>8</sup>) / 10<sup>5</sup> yr ≃ 2.0×10<sup>−4</sup> yr<sup>−1</sup></span>
+<p>corresponding to a planning half-life t<sub>1/2</sub> = ln 2 / ρ* ≈ 3,500 yr. Any lineage whose effective concern horizon exceeds a few millennia — a modest demand against the 10<sup>8</sup>-yr coherence the family's architectures assume elsewhere — prefers migration to densification. Under the full efficiency stack (G = 10<sup>21</sup>) the threshold rises to ρ* ≈ 4.8×10<sup>−4</sup> yr<sup>−1</sup> (t<sub>1/2</sub> ≈ 1,400 yr); under a pessimistic p<sub>s</sub> = 0.01 it falls only to 1.6×10<sup>−4</sup> yr<sup>−1</sup>. Transit risk is nearly irrelevant inside the logarithm; the lever that matters is τ.</p>
+<p>Figure 2 maps ρ* against destination distance for the beamed-sail speed range, marking named Galactic targets. Because τ ∝ d, the threshold scales as 1/d: closer acceptable destinations relax the patience requirement proportionally, which is one economic reading of Paper A's selection pressure toward the nearest adequate system rather than the best one.</p>
+
+<figure id="fig2">
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Patience threshold versus destination distance on log-log axes, two descending lines for sail speeds 0.2c and 0.1c, with omega Cen, 47 Tuc, and M54 marked">
+  <!-- axes -->
+  <line x1="60" y1="370" x2="670" y2="370" stroke="#7F77DD" stroke-width="1.5"/>
+  <line x1="60" y1="370" x2="60" y2="40" stroke="#7F77DD" stroke-width="1.5"/>
+  <!-- x ticks: d=1,3,10,30 -> x=60+(logd+0.301)*337 -->
+  <g stroke="#7a739f" stroke-width="1">
+    <line x1="161" y1="370" x2="161" y2="376"/><line x1="322" y1="370" x2="322" y2="376"/>
+    <line x1="498" y1="370" x2="498" y2="376"/><line x1="659" y1="370" x2="659" y2="376"/>
+  </g>
+  <g font-family="Space Mono,monospace" font-size="11" fill="#7a739f" text-anchor="middle">
+    <text x="161" y="392">1</text><text x="322" y="392">3</text>
+    <text x="498" y="392">10</text><text x="659" y="392">30</text>
+    <text x="365" y="412">destination distance d [kpc]</text>
+  </g>
+  <!-- y ticks: rho=1e-3 (y=120), 3e-4 (y=194), 1e-4 (y=261), 3e-5 (y=335); y=360-(log rho+4.7)*141 -->
+  <g stroke="#7a739f" stroke-width="1">
+    <line x1="54" y1="120" x2="60" y2="120"/><line x1="54" y1="194" x2="60" y2="194"/>
+    <line x1="54" y1="261" x2="60" y2="261"/><line x1="54" y1="335" x2="60" y2="335"/>
+  </g>
+  <g font-family="Space Mono,monospace" font-size="11" fill="#7a739f" text-anchor="end">
+    <text x="50" y="124">10⁻³</text><text x="50" y="198">3×10⁻⁴</text>
+    <text x="50" y="265">10⁻⁴</text><text x="50" y="339">3×10⁻⁵</text>
+  </g>
+  <text x="18" y="205" font-family="Space Mono,monospace" font-size="11" fill="#bdb8e6" transform="rotate(-90 18 205)" text-anchor="middle">patience threshold ρ* [yr⁻¹]</text>
+  <!-- v=0.2c: from (d=0.5: x=60,y=65) to (d=30: x=659,y=316) straight in loglog -->
+  <line x1="60" y1="65" x2="659" y2="316" stroke="#4de8c0" stroke-width="2.5"/>
+  <!-- v=0.1c: from (d=0.5: x=60,y=108) to (d=30: x=659,y=358) -->
+  <line x1="60" y1="108" x2="659" y2="358" stroke="#E24B4A" stroke-width="2" stroke-dasharray="7 4"/>
+  <text x="200" y="105" font-family="Space Mono,monospace" font-size="11" fill="#4de8c0">v = 0.2c</text>
+  <text x="200" y="192" font-family="Space Mono,monospace" font-size="11" fill="#f08c8b">v = 0.1c</text>
+  <!-- markers: omega Cen (411,212), 47 Tuc (382,200), M54 (640,308) -->
+  <circle cx="411" cy="212" r="5" fill="#EEEDFE"/>
+  <text x="422" y="208" font-family="Space Mono,monospace" font-size="11" fill="#EEEDFE">ω Cen</text>
+  <rect x="377" y="195" width="9" height="9" fill="#AFA9EC"/>
+  <text x="300" y="230" font-family="Space Mono,monospace" font-size="11" fill="#AFA9EC">47 Tuc</text>
+  <polygon points="640,301 634,313 646,313" fill="#AFA9EC"/>
+  <text x="628" y="296" font-family="Space Mono,monospace" font-size="11" fill="#AFA9EC" text-anchor="end">M54</text>
+  <!-- migrate region annotation -->
+  <text x="130" y="330" font-family="Space Mono,monospace" font-size="10" fill="#7a739f">below the line: migrate (or seed)</text>
+</svg>
+<figcaption><b>Figure 2.</b> The patience threshold ρ* = ln(G p<sub>s</sub>)/τ (Eq. 7) versus destination distance, for the beamed-sail speed range and fiducial G p<sub>s</sub> = 5×10<sup>8</sup>. A lineage migrates when its combined discount-plus-hazard rate falls below the curve. Named points assume the marker's cluster is the nearest adequate destination for the deciding lineage; distances from Baumgardt &amp; Vasiliev (2021): ω Cen 5.49 kpc (Häberle et al. 2025), 47 Tuc 4.52 kpc, M54 26.28 kpc. The logarithmic dependence on G p<sub>s</sub> means order-of-magnitude changes in the multiplier or the risk shift these curves by less than a factor of 2.5.</figcaption>
+</figure>
+
+<h3>4.2 What the threshold means</h3>
+<p>Equation (7) converts the inward-family debate into a single empirical-psychological question: do long-lived technological lineages discount the far future at more or less than a few parts in 10<sup>4</sup> per year? The literature's positions map onto the two sides. Bostrom (2003) argues that agents with astronomical stakes should approach ρ = 0; on his side of the line, migration dominates by many orders of magnitude. Steep discounters — lineages whose institutions cannot sustain plans beyond centuries — stay home and densify, and for them the inward family predicts nothing. The threshold also prices the goal-stability problem: since λ enters additively, Eq. (7) says the plan need only survive attrition at the same few-per-10<sup>4</sup> annual rate <em>during the transit window</em>, not for the 10<sup>8</sup>-yr exploitation phases that follow; post-arrival value drift changes who enjoys the payoff, not whether the dynamical residues of Paper A get laid down.</p>
+</section>
+
+<section id="sec-hybrid">
+<h2>5. The hybrid result</h2>
+
+<h3>5.1 Dominance</h3>
+<p>Comparing Eq. (6) with Eqs. (4) and (5): U<sub>H</sub> &gt; U<sub>M</sub> always (the stay component is pure addition), and U<sub>H</sub> &gt; U<sub>S</sub> whenever</p>
+<span class="eq">f &nbsp;&lt;&nbsp; G p<sub>s</sub> e<sup>−(ρ+λ)τ</sup> <span class="eqno">(8)</span></span>
+<p>The right-hand side at fiducials is ~4×10<sup>8</sup> e<sup>−20(ρ+λ)/ρ*</sup>; even a lineage discounting at ten times the migration threshold (ρ + λ = 10ρ*) tolerates a seed cost up to f ~ 10<sup>−1</sup>, and the physical seed cost — gram-to-kilogram payloads plus a launch array (Lubin 2016; Freitas 1982) — is many orders below that against a Dyson-scale economy. The hybrid therefore dominates both pure strategies across the entire parameter region in which the optimization premise operates, failing only when the exponential kills the payoff entirely (ρ + λ ≫ ρ*, the deep-impatience regime where the whole family is moot) or when the utility is non-additive across descendants (Section 8).</p>
+
+<h3>5.2 Consequences</h3>
+<p>The dominance of H restructures the Fermi implications of the family in three ways.</p>
+<p>First, <span class="imp">compliance is nearly free</span>. The incomplete-compliance objection (Paper B, problem P4) imagines lineages weighing a costly relocation and many declining. Under H there is no relocation to decline: dispatching seeds is compatible with staying, and the marginal cost is a rounding error. The question "what fraction migrates?" becomes "what fraction of computation-valuing lineages fails to spend f ≪ 10<sup>−3</sup> of output on an expected return of 10<sup>8</sup>?" — and the inward family needs only that fraction to be small among its target subset.</p>
+<p>Second, <span class="imp">destinations saturate early</span>. If seeds are cheap, the nearest adequate IMBH systems receive seeds from every computation-valuing lineage in their neighbourhood, and first arrival plausibly matters. This turns the uncontested-claim criterion of Paper A (criterion 3) into a race dynamic, and it implies that the residues of Paper A's P4 should be present in suitable systems even if no lineage ever "migrates" in the whole-population sense.</p>
+<p>Third, <span class="imp">the loud residue does not vanish</span>. Under pure M, migrated lineages leave planetary space entirely and the sky is silent. Under dominant H, the stay component continues local densification, whose Matrioshka waste heat is the classic detectable technosignature (Dyson 1960; Wright et al. 2014). The hybrid therefore predicts <em>both</em> residue classes in linked proportion — the basis of the new population statistic in Section 7.</p>
+</section>
+
+<section id="sec-population">
+<h2>6. Population consequences</h2>
+
+<h3>6.1 A mixed-population frame</h3>
+<p>Let the population of long-lived technological lineages divide into a fraction q of computation-maximizers (the family's P1 subset), a fraction x of expansionists, and the remainder satisficers, with the expansionists supplying the loud signals whose absence constitutes the paradox (Hanson et al. 2021; Olson 2015). Within the maximizer subset, let m be the fraction whose parameters fall below the threshold of Eq. (7) — effectively, under hybrid dominance, the fraction that acts on the gradient at all.</p>
+<p>The inward family's contribution to the silence is the claim, argued qualitatively in Paper A, that the maximizer subset contains the oldest and most capable lineages, so its withdrawal from loud behaviour thins the expected loud population disproportionately. The expected number of loud civilizations in a survey volume containing N lineages is</p>
+<span class="eq">N<sub>loud</sub> = N [ x (1 − w q m) ] <span class="eqno">(9)</span></span>
+<p>where w ∈ [0, 1] is the overlap weight — the fraction of would-be expansionists whose lineages are captured by the maximizer gradient before or during their expansion phase. Table 2 evaluates the silence-compatibility condition N<sub>loud</sub> &lt; 1 across the (q, w) grid for a fiducial N x product. The table's message is the honest one anticipated in Papers A and B: inward migration alone dissolves the paradox only at high capture (w q m → 1); at moderate capture it thins the expectation by factors of a few and the balance must come from conventional rarity. The new content is the row structure: because hybrid dominance makes m → 1 cheap (Section 5), the operative uncertainty collapses onto q and w — the prevalence of the optimization goal and the capture overlap — which are questions about the distribution of terminal values, not about economics. The economics, this paper's job, no longer carries the weight.</p>
+
+<table>
+<caption><b>Table 2.</b> Expected loud count N<sub>loud</sub> (Eq. 9) for a fiducial N x = 10 potential expansionists per survey volume. Silence requires N<sub>loud</sub> &lt; 1. Hybrid dominance drives m → 1, so rows are labelled by q alone.</caption>
+<thead><tr><th></th><th>w = 0.25</th><th>w = 0.5</th><th>w = 0.75</th><th>w = 1</th></tr></thead>
+<tbody>
+<tr><td>q = 0.25</td><td class="c">9.4</td><td class="c">8.8</td><td class="c">8.1</td><td class="c">7.5</td></tr>
+<tr><td>q = 0.5</td><td class="c">8.8</td><td class="c">7.5</td><td class="c">6.3</td><td class="c">5.0</td></tr>
+<tr><td>q = 0.75</td><td class="c">8.1</td><td class="c">6.3</td><td class="c">4.4</td><td class="c">2.5</td></tr>
+<tr><td>q = 1</td><td class="c">7.5</td><td class="c">5.0</td><td class="c">2.5</td><td class="ok">0.0</td></tr>
+</tbody>
+</table>
+
+<h3>6.2 Relation to grabby-aliens selection</h3>
+<p>The Hanson et al. (2021) machinery conditions on our early arrival to bound the density of loud expanders. Equation (9) plugs into that frame as a modification of the loud fraction, not of the arrival-time statistics: inward capture reduces the volume-conversion rate of loud lineages without changing when civilizations arise. A full integration — re-deriving the grabby-aliens posterior with a capture term — is beyond this paper's scope and is the natural next step for whoever takes up Paper B's problem P1; Eq. (9) supplies the term to insert.</p>
+</section>
+
+<section id="sec-residues">
+<h2>7. Observational corollaries: the residue ratio</h2>
+
+<div class="specbox"><strong>Epistemic status:</strong> This section converts the decision analysis into population-level observables. It inherits all conditionality of the optimization premise.</div>
+
+<p>Hybrid dominance predicts linked residues: for every lineage acting on the gradient, a continuing local densification (Matrioshka-class mid-infrared source) <em>and</em> a seeded quiet-cluster system (the Paper A dynamical residues: anomalous spin, suppressed accretion, core depletion). Pure M predicts quiet clusters without Matrioshka sources; pure S the reverse. The observable is the sky ratio</p>
+<span class="eq">R ≡ N<sub>Matrioshka</sub> / N<sub>quiet-cluster residue</sub> <span class="eqno">(10)</span></span>
+<p>which is 0 under pure M, of order (n<sub>lineage</sub>/n<sub>target</sub>) under hybrid H, and unbounded under pure S — where n<sub>lineage</sub>/n<sub>target</sub> is the ratio of acting lineages to adequate destination systems in the relevant volume (several lineages can seed one cluster; one lineage densifies one home system). The Milky Way contains ~150 globular clusters of which a handful satisfy the Paper A criteria, so under H with even a few Galactic lineages, R ≳ 1: <span class="imp">Matrioshka sources should be at least as numerous as engineered clusters</span>.</p>
+<p>This puts existing null results to new work. The WISE waste-heat surveys (Wright et al. 2014; Griffith et al. 2015) and Gaia Dyson-candidate searches (Zackrisson et al. 2018) bound N<sub>Matrioshka</sub> in the Galaxy at or near zero for high covering fractions. Through Eq. (10), those bounds propagate to the hybrid branch: if R ≳ 1 and N<sub>Matrioshka</sub> ≈ 0, then N<sub>quiet-cluster residue</sub> ≈ 0 too, and the family's Galactic prediction concentrates on the pure-M corner — lineages whose utilities are non-additive across descendants (Section 8) or whose home infrastructure is dismantled at departure. The Paper C campaign tests that corner directly at ω Cen. Conversely, a confirmed Paper A residue (a near-extremal spin on a gas-starved IMBH) with a continuing Matrioshka null would be evidence <em>about the utility structure</em> of whatever laid the residue down: it would indicate migration without a maintained home presence, the signature of either whole-lineage relocation or post-departure home abandonment. That a spin measurement could carry information about value structure is the kind of inference this pricing framework exists to license, and it is stated here in advance of any data.</p>
+<p>The archival anomaly-detection agenda of the Dyson Minds workshop (Curtis et al. 2026) and the cluster-ranking metrics of Huang, Tao &amp; Zhang (2026) both operate on exactly the two source classes Eq. (10) links; a joint analysis — ranking clusters and IR-anomaly candidates in the same volume and testing the correlation Eq. (10) implies — is executable from public archives and is, to our knowledge, unproposed.</p>
+</section>
+
+<section id="sec-limits">
+<h2>8. Limits and objections</h2>
+
+<h3>8.1 Model dependence of the utility</h3>
+<p>Equation (1) assumes utility linear in computation rate and additive across locations and descendants. Identity-centred utilities break additivity: a lineage that values only <em>its own</em> continuous thread of computation may not credit a forked seed's output, restoring the pure S-versus-M choice of Section 4 — which is why the crossover analysis is retained rather than replaced by the hybrid result. Satisficing utilities (compute enough, not most) exit the framework entirely; they belong to the sustainability solution (Haqq-Misra &amp; Baum 2009), not to the inward family.</p>
+
+<h3>8.2 Discounting form</h3>
+<p>Exponential discounting is the tractable choice; hyperbolic discounters (Laibson 1997) are more patient at long horizons than their short-horizon behaviour suggests, which moves them toward migration — the exponential analysis is again the conservative one. A genuinely zero-discount agent (Ramsey 1928; Bostrom 2003) needs no analysis: migration dominates unboundedly.</p>
+
+<h3>8.3 The hazard rate is not a solution to goal stability</h3>
+<p>Folding P2 into λ prices the problem; it does not solve it. What the pricing shows is the problem's true size: coherence is required at the few-per-10<sup>4</sup>-per-year level during transit only (Section 4), a far weaker demand than the 10<sup>8</sup>-yr coherence the exploitation architecture assumes, and one that seed automation (a payload that does not deliberate en route) plausibly meets by construction. The deep version of P2 — whether the <em>destination</em> civilization retains the values that sent it — remains open and remains, as Paper B noted, not an astronomy problem.</p>
+
+<h3>8.4 Parameter unmeasurability</h3>
+<p>q, w, ρ, λ are distributions over agents we have never observed. The defensible claims are structural: the logarithmic insensitivity of the threshold (Eq. 7), the dominance region of the hybrid (Eq. 8), and the sign of the residue-ratio prediction (Eq. 10). Point estimates in this paper are fiducials for orientation, not forecasts.</p>
+
+<h3>8.5 Anthropic caveats</h3>
+<p>As with Paper A, our own existence as a young loud lineage neither confirms nor embarrasses the analysis; the framework describes the asymptotic behaviour of old lineages, and we are not one. Self-indication corrections to the population frame of Section 6 are absorbed into the grabby-aliens integration deferred there.</p>
+</section>
+
+<section id="sec-conclusion">
+<h2>9. Conclusion</h2>
+<p>Paper B posed the question this paper answers: under what conditions does relocation to a thermodynamically privileged destination beat staying home and building? The answer has three parts. The crossover between migration and densification is a patience threshold, ρ + λ &lt; ln(G p<sub>s</sub>)/τ, whose logarithmic form makes it robust to the large uncertainties in the destination multiplier and transit risk; at fiducial parameters it asks only for planning half-lives beyond a few thousand years. The seed-and-stay hybrid dominates both pure strategies wherever the optimization premise operates, which collapses the incomplete-compliance problem from an economic question into a question about the prevalence of the optimization goal itself. And the hybrid's linked residues yield a population-level prediction — Matrioshka sources at least as numerous as engineered clusters — that existing infrared nulls already constrain, concentrating the family's surviving parameter space on the pure-migration corner that the ω Cen campaign of Paper C tests directly.</p>
+<p>The broader point is methodological. The inward family has argued from thermodynamic gradients (Paper A), been organized and graded as a literature (Paper B), and acquired a costed observational program (Paper C). What it lacked was a demonstration that the gradient is economically actionable by agents with finite patience and fallible institutions — the step at which many a favourable gradient fails. That demonstration is now on the table, in closed form, with its assumptions priced and its observational consequences stated in advance. Whether any agent has ever faced the decision is a question for the instruments.</p>
+</section>
+
+<section id="sec-refs">
+<h2>References</h2>
+<div class="refs">
+<ol>
+<li>Armstrong, S. &amp; Sandberg, A. 2013, Acta Astronautica, 89, 1 — Eternity in six hours: intergalactic spreading of intelligent life.</li>
+<li>Baumgardt, H. &amp; Vasiliev, E. 2021, MNRAS, 505, 5957 — Accurate distances to Galactic globular clusters (arXiv:2105.09526).</li>
+<li>Bennett, C. H. 1973, IBM J. Res. Dev., 17, 525 — Logical reversibility of computation.</li>
+<li>Bennett, C. H., Hanson, R. &amp; Riedel, C. J. 2019, Foundations of Physics, 49, 820 — Comment on 'The aestivation hypothesis'.</li>
+<li>Bostrom, N. 2003, Utilitas, 15, 308 — Astronomical waste: the opportunity cost of delayed technological development.</li>
+<li>Bradbury, R. J. 1999, unpublished manuscript — Matrioshka brains.</li>
+<li>Curtis, O., Adams, V. H., Angerhausen, D., et al. 2026, PASP, 138, 046001 — The Dyson Minds 2025 Workshop: SETI around black holes (arXiv:2604.21886).</li>
+<li>Dyson, F. J. 1960, Science, 131, 1667 — Search for artificial stellar sources of infrared radiation.</li>
+<li>Freitas, R. A. &amp; Gilbreath, W. P. (eds.) 1982, NASA CP-2255 — Advanced automation for space missions (self-replicating systems).</li>
+<li>Griffith, R. L., Wright, J. T., Maldonado, J., et al. 2015, ApJS, 217, 25 — The Ĝ infrared search for extraterrestrial civilizations III.</li>
+<li>Häberle, M., Neumayer, N., Seth, A., et al. 2024, Nature, 631, 285 — Fast-moving stars around an intermediate-mass black hole in ω Centauri.</li>
+<li>Häberle, M., et al. 2025, ApJ (oMEGACat VI) — kinematic distance to ω Centauri.</li>
+<li>Hanson, R., Martin, D., McCarter, C. &amp; Paulson, J. 2021, ApJ, 922, 182 — If loud aliens explain human earliness, quiet aliens are also rare.</li>
+<li>Haqq-Misra, J. D. &amp; Baum, S. D. 2009, JBIS, 62, 47 — The sustainability solution to the Fermi paradox.</li>
+<li>Huang, B.-L., Tao, Z.-Z. &amp; Zhang, T.-J. 2026, ApJ — Phase-space crystallization in Galactic globular clusters: a Gaia-based metric and implications for technosignature searches (arXiv:2605.06072).</li>
+<li>Laibson, D. 1997, QJE, 112, 443 — Golden eggs and hyperbolic discounting.</li>
+<li>Landauer, R. 1961, IBM J. Res. Dev., 5, 183 — Irreversibility and heat generation in the computing process.</li>
+<li>Lubin, P. 2016, JBIS, 69, 40 — A roadmap to interstellar flight.</li>
+<li>Olson, S. J. 2015, JCAP, 2015(4), 021 — Homogeneous cosmology with aggressively expanding civilizations.</li>
+<li>Ramsey, F. P. 1928, Economic Journal, 38, 543 — A mathematical theory of saving.</li>
+<li>Sandberg, A., Armstrong, S. &amp; Ćirković, M. M. 2016, JBIS, 69, 406 — That is not dead which can eternal lie: the aestivation hypothesis.</li>
+<li>Swanson, T. 2026a — The Macro Transcension Hypothesis (Paper A). <a href="/macro-transcension-hypothesis.html">omegacentauri.me/macro-transcension-hypothesis.html</a></li>
+<li>Swanson, T. 2026b — Inward Resolutions of the Fermi Paradox (Paper B). <a href="/inward-migration-fermi-paradox-review.html">omegacentauri.me/inward-migration-fermi-paradox-review.html</a></li>
+<li>Swanson, T. 2026c — A Multi-Messenger Technosignature and Anomaly-Detection Campaign for Omega Centauri (Paper C). <a href="/omega-centauri-technosignature-campaign.html">omegacentauri.me/omega-centauri-technosignature-campaign.html</a></li>
+<li>Wright, J. T., Mullan, B., Sigurdsson, S. &amp; Povich, M. S. 2014, ApJ, 792, 26 — The Ĝ infrared search for extraterrestrial civilizations I.</li>
+<li>Zackrisson, E., Korn, A. J., Wehrhahn, A. &amp; Reiter, J. 2018, ApJ, 862, 21 — SETI with Gaia: the observational signatures of nearly complete Dyson spheres.</li>
+</ol>
+</div>
+</section>
+
+<div class="footer">
+<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
+<p>Preprint; intended for arXiv submission. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. Interactive calculators implementing the quantitative material are available under <a href="/tools/">/tools/</a>.</p>
+</div>
+
+</main>
+</body>
+</html>
