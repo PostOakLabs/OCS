@@ -951,6 +951,7 @@ body.is-mobile .detail-card { display: none; }
 
 <!-- =================== DATA =================== -->
 <script src="data/measurements.js"></script>
+<script src="lib/imbh-constraints.core.js"></script>
 
 <!-- =================== LOGIC =================== -->
 <script>
@@ -976,38 +977,15 @@ const STRINGS = {
   axisTitle: "IMBH mass M  (M☉, log scale)"
 };
 
-// ---------- Physical constants (SI) ----------
-const G_SI    = 6.674e-11;
-const C_SI    = 2.998e8;
-const HBAR_SI = 1.055e-34;
-const KB_SI   = 1.381e-23;
-const MSUN_KG = 1.989e30;
-const PC_M    = 3.086e16;
-
-// ---------- JWST upper-limit calculation (placeholder calibration) ----------
-// L_predicted = ε · Ṁ_Bondi · c²
-// Ṁ_Bondi = 4π G² M² ρ∞ / c_s³  (v ≈ 0)
-// Solve L_predicted = L_limit for M:
-// M = sqrt( L_limit · c_s³ / (ε · 4π G² ρ∞ · c²) )
-const JWST_DEFAULTS = {
-  L_limit: 1e35 * 1e-7, // 10^35 erg/s → 10^28 W  (matched to jwst-accretion.html; Chen et al. 2025)
-  c_s:     1.0e4        // m/s, ~10 km/s
-};
-function jwstUpperLimitMsun(epsilon, rho_inf, opts = JWST_DEFAULTS) {
-  const num = opts.L_limit * Math.pow(opts.c_s, 3);
-  const den = epsilon * 4 * Math.PI * G_SI * G_SI * rho_inf * C_SI * C_SI;
-  const M_kg = Math.sqrt(num / den);
-  return M_kg / MSUN_KG;
-}
-
-// ---------- M-σ prediction for Omega Centauri ----------
-// Using observed central σ ≈ 20 km/s (NOT the naive virial estimate).
-// Gültekin et al. 2009 (ApJ 698:198) Table 3 (E sample, all galaxies):
-// log(M_BH/M☉) = 8.12 + 4.24 · log(σ/200)  ⟹  M_BH = 10^8.12 · (σ/200)^4.24
-const OC_SIGMA_KMS = 20.0;
-function mSigmaPrediction(sigma_kms = OC_SIGMA_KMS) {
-  return Math.pow(10, 8.12) * Math.pow(sigma_kms / 200, 4.24);
-}
+// ---------- Core engine ----------
+// The constraint schema, the JWST parameter-dependent limit, the M-σ
+// prediction, the window/tension aggregation and the hashed output payload
+// all live in lib/imbh-constraints.core.js — the same authored source the
+// node:test suite and the ocs-mcp-worker parity gate run against. This page
+// is a front-end over it and must not re-implement any of that math.
+const IMBH = globalThis.IMBHConstraints;
+const { jwstUpperLimitMsun, mSigmaPrediction, fmtEnUS, fmtMass, buildVerdictString } = IMBH;
+const OC_SIGMA_KMS = IMBH.CONSTANTS.OC_SIGMA_KMS;
 
 // ---------- URL hash state ----------
 function getHashParams() {
@@ -1083,60 +1061,20 @@ function currentJwstLimit() {
 }
 
 // ---------- Window computation ----------
-// Returns { lo, hi, tension, lowSrc, hiSrc } where lo and hi are M☉ values
-// describing the currently allowed range, given which methods are visible.
+// Delegates to the library. Returns { lo, hi, tension, lowSrc, hiSrc } in M☉.
+// A window in tension keeps BOTH bounds and both sources — the incompatibility
+// is the result, and this page renders it rather than resolving it.
 function computeWindow() {
-  const M = window.OCS_MEASUREMENTS.imbh;
-  let lo = -Infinity, hi = Infinity;
-  let lowSrc = null, hiSrc = null;
-
-  for (const m of M) {
-    if (!state.show[m.method]) continue;
-    if (m.limitType === 'lower' && m.value !== null) {
-      if (m.value > lo) { lo = m.value; lowSrc = m; }
-    } else if (m.limitType === 'upper' && m.value !== null) {
-      if (m.value < hi) { hi = m.value; hiSrc = m; }
-    } else if (m.limitType === 'parameterDependent' && m.method === 'accretion') {
-      const v = currentJwstLimit();
-      if (v < hi) { hi = v; hiSrc = { ...m, value: v }; }
-    }
-    // 'detection' values do not bound the window in either direction
-    // (they are themselves consistent with extended uncertainty)
-  }
-  if (lo === -Infinity) lo = null;
-  if (hi === Infinity) hi = null;
-  const tension = (lo !== null && hi !== null && lo > hi);
-  return { lo, hi, tension, lowSrc, hiSrc };
+  return IMBH.computeWindow(IMBH.constraintsFromMeasurements(window), {
+    show: state.show,
+    epsilon: state.epsilon,
+    rho: state.rhoInf
+  });
 }
 
 // ---------- Number formatting ----------
-// Deterministic en-US thousands grouping (no Intl; kernel-rule compliant). Vendored pattern from AINumbers art-107.
-function fmtEnUS(n){
-  n=Number(n);
-  if(Number.isNaN(n)) return 'NaN';
-  if(!Number.isFinite(n)) return n>0?'∞':'-∞';
-  const sign=(n<0)?'-':'';
-  let s=Math.abs(n).toString();
-  if(s.includes('e')||s.includes('E')) return sign+s;
-  let [intPart,fracPart='']=s.split('.');
-  if(fracPart.length>3){
-    const keep=fracPart.slice(0,3);
-    const nextDigit=fracPart.charCodeAt(3)-48;
-    const digits=(intPart+keep).split('').map(c=>c.charCodeAt(0)-48);
-    if(nextDigit>=5){ let i=digits.length-1; for(;i>=0;i--){ if(digits[i]===9){digits[i]=0;} else {digits[i]++;break;} } if(i<0) digits.unshift(1); }
-    const all=digits.join(''); intPart=all.slice(0,all.length-keep.length)||'0'; fracPart=all.slice(all.length-keep.length);
-  }
-  fracPart=fracPart.replace(/0+$/,''); intPart=intPart.replace(/^0+(?=\d)/,'');
-  const grouped=intPart.replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  return sign+grouped+(fracPart?'.'+fracPart:'');
-}
-function fmtMass(M) {
-  if (M === null || M === undefined || isNaN(M)) return '—';
-  if (M >= 1e6) return (M / 1e6).toFixed(2) + '×10⁶';
-  if (M >= 1e4) return (M / 1e3).toFixed(1) + '×10³';
-  if (M >= 1000) return fmtEnUS(Math.round(M));  // no Intl → reproducible hash (OCG Standard §4)
-  return Math.round(M).toString();
-}
+// fmtEnUS / fmtMass come from the library (destructured above): they feed the
+// execution_hash, so there must be exactly one copy of them.
 function fmtSigma(s) {
   if (s === null || s === undefined) return '';
   if (s === 3) return '3σ';
@@ -1644,24 +1582,13 @@ async function computeExecHash(policyParams, outputPayload) {
   }
 }
 
-function buildVerdictString(win) {
-  if (win.tension) {
-    const lo = win.lowSrc ? win.lowSrc.authors + ' ' + win.lowSrc.year : 'lower bound';
-    const hi = win.hiSrc  ? win.hiSrc.authors  + ' ' + win.hiSrc.year  : 'upper limit';
-    return `tension — ${lo} (${fmtMass(win.lo)} M☉) exceeds ${hi} (${fmtMass(win.hi)} M☉)`;
-  }
-  if (win.lo !== null && win.hi !== null) return `allowed window: ${fmtMass(win.lo)}–${fmtMass(win.hi)} M☉`;
-  if (win.lo !== null) return `lower bound only: > ${fmtMass(win.lo)} M☉`;
-  if (win.hi !== null) return `upper limit only: < ${fmtMass(win.hi)} M☉`;
-  return 'no constraints active';
-}
-
 async function buildArtifact() {
-  const win = computeWindow();
-  const activeLanes = Object.entries(state.show)
-    .filter(([k, v]) => v && k !== 'msigma').map(([k]) => k);
-  const activeConstraints = (window.OCS_MEASUREMENTS.imbh || [])
-    .filter(m => state.show[m.method]).length;
+  // 'msigma' is a display-only overlay and 'sel' (UI selection) does not
+  // affect the computed window, so neither may enter the execution_hash
+  // (OCG Standard §6).
+  const activeLanes = IMBH.activeLanes(
+    Object.fromEntries(Object.entries(state.show).filter(([k]) => k !== 'msigma'))
+  );
 
   const policyParams = {
     execution_backend: 'js',
@@ -1669,26 +1596,13 @@ async function buildArtifact() {
       epsilon: state.epsilon,
       rho: state.rhoInf,
       show: activeLanes.join(',')
-      // 'sel' (UI selection) intentionally excluded — it does not affect the
-      // computed window, so it must not change the execution_hash (Standard §6).
     }
   };
 
-  const outputPayload = {
-    allowed_window_M_solar: {
-      lower: win.lo !== null ? Math.round(win.lo) : null,
-      upper: win.hi !== null ? Math.round(win.hi) : null
-    },
-    tension_detected: !!win.tension,
-    tension_direction: win.tension ? 'lower_bound_exceeds_upper_limit' : null,
-    n_constraints_active: activeConstraints,
-    constraint_lanes_active: activeLanes,
-    lower_bound_source: win.lowSrc ? win.lowSrc.authors + ' ' + win.lowSrc.year : null,
-    upper_limit_source: win.hiSrc  ? win.hiSrc.authors  + ' ' + win.hiSrc.year  : null,
-    epsilon_adaf: state.epsilon,
-    rho_inf_kg_m3: state.rhoInf,
-    verdict: buildVerdictString(win)
-  };
+  // The payload is built by the library, so this page, the MCP worker kernel
+  // and the node:test suite cannot disagree about what gets hashed.
+  const { output_payload: outputPayload } =
+    IMBH.computeStackerPayload(policyParams, IMBH.constraintsFromMeasurements(window));
 
   const hash = await computeExecHash(policyParams, outputPayload);
 
