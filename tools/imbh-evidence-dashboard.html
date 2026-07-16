@@ -420,10 +420,22 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
 </footer>
 
 <script src="data/measurements.js"></script>
+<script src="lib/imbh-constraints.core.js"></script>
 <script>
-// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
-const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
-const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
+// Canonical IMBH bounds. Data source is data/measurements.js; the bounds are
+// aggregated by lib/imbh-constraints.core.js — the same engine the constraint
+// stacker and the MCP worker use, so this page cannot drift from them.
+//
+// The window is taken over the proper-motion and pulsar-timing lanes: those
+// are the two channels that produce the headline conflict this dashboard is
+// about (Häberle 2024 vs Bañares 2025). Restricting the lanes is a framing
+// choice for this page, not a claim that the other constraints are invalid —
+// constraint-stacker.html shows the full stack.
+const IMBH_LIB = globalThis.IMBHConstraints;
+const IMBH_WINDOW = IMBH_LIB.computeWindow(
+  IMBH_LIB.constraintsFromMeasurements(window),
+  { show: 'propermotion,timing' }
+);
 // ── Physical constants ──────────────────────────────────────────────
 const G       = 6.674e-11;
 const c       = 2.998e8;
@@ -434,9 +446,10 @@ const PC_M    = 3.086e16;      // metres per parsec
 const D_PC    = 5494;          // canonical OC distance (Häberle 2025)
 const OC_AGE  = 12e9;          // OC age in years (approx)
 
-// Canonical published bounds (not slider-controlled)
-const MASS_LO = OCS_HABERLE;          // Häberle 2024 kinematics lower bound
-const MASS_HI = OCS_BANARES;          // Bañares 2025 3σ upper limit
+// Canonical published bounds (not slider-controlled). Both survive as
+// themselves: the library never reconciles a tension into one number.
+const MASS_LO = IMBH_WINDOW.lo;       // Häberle 2024 kinematics lower bound
+const MASS_HI = IMBH_WINDOW.hi;       // Bañares 2025 3σ upper limit
 
 // ── Core formulae ───────────────────────────────────────────────────
 function rg(M_msun){ return G*M_msun*M_SUN/(c*c); }
@@ -540,7 +553,7 @@ function update(){
   setText('lbl-B', B>=1e6? (B/1e6).toPrecision(3)+'×10⁶ T' : B>=1e3? fmtComma(B)+' T' : B.toPrecision(3)+' T');
 
   // ── 1. Mass Constraint Window ────────────────────────────────────
-  const tension = MASS_LO > MASS_HI;
+  const tension = IMBH_WINDOW.tension;
   setText('mass-window-lo', fmtComma(MASS_LO));
   setText('mass-window-hi', fmtComma(MASS_HI));
   if(tension){

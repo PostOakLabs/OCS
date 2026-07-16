@@ -29,6 +29,29 @@ const REPO = resolve(HERE, '..', '..');
 const manifest = JSON.parse(readFileSync(resolve(REPO, 'tools/data/tools-manifest.json'), 'utf8'));
 const MEASUREMENTS_SRC = readFileSync(resolve(REPO, 'tools/data/measurements.js'), 'utf8');
 
+// A page's own <script src="..."> tags are its declared dependencies (e.g.
+// lib/imbh-constraints.core.js). The browser loads them before the inline
+// code runs; the sandbox has no loader, so resolve and prepend them here in
+// document order. Local paths only — nothing is fetched, matching the site's
+// no-network rule. Kept identical to the copy in tier-c-known-value.test.mjs.
+function externalScriptSources(html, baseDir) {
+  const out = [];
+  const re = /<script\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>/gi;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const src = m[1];
+    if (/^(https?:)?\/\//i.test(src)) continue;
+    if (/measurements\.js$/.test(src)) continue;
+    if (/prefill\.js$/.test(src)) continue;
+    try {
+      out.push(readFileSync(resolve(REPO, baseDir, src), 'utf8'));
+    } catch {
+      // Missing local dep surfaces at runtime in the inline code, not here.
+    }
+  }
+  return out;
+}
+
 function inlineScripts(html) {
   const scripts = [];
   const re = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
@@ -173,7 +196,10 @@ function loadTool(toolId, entry) {
   const html = readFileSync(abs, 'utf8');
   const sandbox = makeSandbox(html);
   const usesMeasurements = /measurements\.js/.test(html);
-  const code = (usesMeasurements ? MEASUREMENTS_SRC + '\n' : '') + inlineScripts(html).join('\n;\n');
+  const deps = externalScriptSources(html, dirname(entry.path));
+  const code = (usesMeasurements ? MEASUREMENTS_SRC + '\n' : '')
+    + (deps.length ? deps.join('\n;\n') + '\n;\n' : '')
+    + inlineScripts(html).join('\n;\n');
   new vm.Script(code, { filename: entry.path }).runInContext(sandbox, { timeout: 5000 });
   const saveName = typeof sandbox.saveHash === 'function' ? 'saveHash'
     : typeof sandbox.saveStateToHash === 'function' ? 'saveStateToHash' : null;

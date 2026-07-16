@@ -125,6 +125,15 @@ jobs:
       - name: Test — hash-param round-trip + known-value regression
         run: node --test scripts/tests/tier-c-*.test.mjs
 
+      # imbh-constraints core library (OCS-JOSS-LIB-SPEC.md). Covers the
+      # constraint schema, the window/tension aggregation and the hashed
+      # output payload, and replays the RFC3161 + OTS anchored golden
+      # (tools/data/anchored-evidence.json) so a refactor can never silently
+      # move published output. The ocs-mcp-worker preflight runs the matching
+      # parity gate against its §18-proven kernel.
+      - name: Test — imbh-constraints library
+        run: node --test scripts/tests/lib-imbh-constraints.test.mjs
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):
