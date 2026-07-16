@@ -235,10 +235,15 @@ canvas{width:100%;display:block}
 </div>
 
 <script src="data/measurements.js"></script>
+<script src="lib/imbh-constraints.core.js"></script>
 <script>
-// Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
-const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
-const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
+// Canonical IMBH bounds via the shared imbh-constraints engine (lib/imbh-constraints.core.js —
+// the same authored source the node:test suite and worker parity gate run against).
+// Lane-restricted windows name the tightest published bound per channel; tension preserved.
+const _IMBH = globalThis.IMBHConstraints;
+const _CSET = _IMBH.constraintsFromMeasurements();
+const OCS_HABERLE = _IMBH.computeWindow(_CSET, { show: 'propermotion' }).lo || 8200;
+const OCS_BANARES = _IMBH.computeWindow(_CSET, { show: 'timing' }).hi || 6000;
 const MSUN = 1.989e30;
 const GYR_MYR = 1000;
 const T_CLUSTER_GYR = 12;   // cluster age in Gyr
