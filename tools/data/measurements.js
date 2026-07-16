@@ -169,6 +169,37 @@ window.OCS_MEASUREMENTS = {
   ],
 
   /* ================================================================
+     Stellar-mass black holes in Omega Centauri
+     ================================================================
+     Distinct from the imbh[] array: these are individual stellar-mass
+     BH detections, relevant to the extended-central-mass (BH cluster)
+     alternative to a single IMBH. Models predict ~10^4 stellar-mass
+     BHs in OC; entries here are the directly confirmed members.
+     Schema: as imbh[] plus companion/orbit fields where applicable.
+  */
+  stellarBH: [
+    {
+      id: "whitaker2026bh2",
+      year: 2026,
+      authors: "Whitaker et al. (oMEGACat BH-2)",
+      value: 4.46,
+      uncertaintyLo: 1.01,
+      uncertaintyHi: 1.22,
+      limitType: "detection",
+      method: "propermotion",
+      methodLabel: "Astrometry (HST 2002–2023 + JWST)",
+      journal: "ApJL (2026)",
+      doi: "10.3847/2041-8213/ae7a5c",
+      url: "https://arxiv.org/abs/2606.18350",
+      companionMass: 0.78,        // M_sun, main-sequence turnoff star
+      orbitalPeriodYr: 94,        // +63/-42 yr
+      eccentricity: 0.72,         // +0.08/-0.13
+      semiMajorAxisAU: 31,        // +15/-12 AU
+      notes: "First stellar-mass black hole detected in Omega Centauri, and the first astrometric stellar-mass BH discovery in any globular cluster. 4.46 M☉ BH in a 94-yr binary with a 0.78 M☉ main-sequence star — the longest-period BH binary known. First confirmed member of the ~10⁴ stellar-mass BHs that cluster models predict; its low mass at very low metallicity also challenges BH-formation models."
+    }
+  ],
+
+  /* ================================================================
      Globular cluster properties (Tool 5 — Cluster Comparator)
      ================================================================
      Source: Baumgardt & Hilker (2018) for most cluster properties (masses, radii)
@@ -194,7 +225,7 @@ window.OCS_MEASUREMENTS = {
         limitType: "lower",
         reference: "Häberle et al. 2024",
         doi: "10.1038/s41586-024-07511-z",
-        note: "Disputed by Bañares 2025 (3σ <6,000 M☉) and Chen 2025 (JWST accretion). Active tension in the literature."
+        note: "Disputed by Bañares 2025 (3σ <6,000 M☉) and Chen 2025 (JWST accretion). Active tension in the literature. Whitaker 2026 (oMEGACat BH-2, see stellarBH[]) confirms the first member of the predicted ~10⁴ stellar-mass BH population — direct support for the extended-central-mass alternative."
       }
     },
     {
@@ -440,9 +471,10 @@ window.OCS_MEASUREMENTS = {
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-06-11",
+    lastUpdated: "2026-07-16",
     schemaVersion: "1.0",
     sources: [
+      "10.3847/2041-8213/ae7a5c",
       "10.1086/529002",
       "10.1088/0004-637X/710/2/1063",
       "10.1093/mnras/stw2488",
