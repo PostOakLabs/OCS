@@ -1,0 +1,70 @@
+# omegacentauri.me — Apache configuration
+#
+# Vendored from AINumbers/repo/.htaccess (shared-infra doctrine: one lineage,
+# never fork). Same DreamHost shared-hosting setup, same slug-rename-301 pattern.
+#
+# WHY THIS FILE IS TRACKED, NOT HAND-EDITED ON THE HOST:
+# the deploy rsync is moving to --delete. Anything in the web root that is not
+# in this repo gets removed on the next deploy. A host-side .htaccess would be
+# destroyed by the very first --delete run, taking every redirect below with it.
+# Edit here, commit, deploy.
+#
+# See OCS-PROD-ORPHAN-ASSETS-ISSUE.md for the full background.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Slug-rename 301s
+#
+# Generated from `git log --diff-filter=R -M --name-status main` — one line per
+# path that has ever been renamed on main. Because the deploy has run without
+# --delete since inception, every one of these old paths is still sitting on the
+# host serving a stale copy of the page, self-canonicalizing as a distinct
+# document. These redirects fold each one into its successor.
+#
+# Two waves are represented:
+#   - 2026-06-09  demo-* → scenario-*  (30 pages)
+#   - earlier     review.html, campaign.html → spelled-out slugs
+#
+# The demo-bh-tap → scenario-bh-tap rename went through an intermediate
+# empty-basename commit (tools/.html); the redirect below collapses that chain
+# to its endpoint. tools/.html itself is not redirected — it was never a real
+# published URL.
+#
+# To regenerate after a future rename wave, re-run the diff-filter=R command and
+# append the new pairs. Do not remove old lines: inbound links and search-engine
+# records outlive the file.
+# ─────────────────────────────────────────────────────────────────────────────
+
+Redirect 301 /campaign.html /omega-centauri-technosignature-campaign.html
+Redirect 301 /review.html /inward-migration-fermi-paradox-review.html
+
+# demo-* → scenario-* (2026-06-09)
+Redirect 301 /tools/demo-bh-physics.html /tools/scenario-bh-physics.html
+Redirect 301 /tools/demo-bh-tap.html /tools/scenario-bh-tap.html
+Redirect 301 /tools/demo-breaking-degeneracy.html /tools/scenario-breaking-degeneracy.html
+Redirect 301 /tools/demo-cosmology-browser.html /tools/scenario-cosmology-browser.html
+Redirect 301 /tools/demo-dark-cluster-alt.html /tools/scenario-dark-cluster-alt.html
+Redirect 301 /tools/demo-dark-side.html /tools/scenario-dark-side.html
+Redirect 301 /tools/demo-decision-tree.html /tools/scenario-decision-tree.html
+Redirect 301 /tools/demo-dvali-signal.html /tools/scenario-dvali-signal.html
+Redirect 301 /tools/demo-dwarf-inheritance.html /tools/scenario-dwarf-inheritance.html
+Redirect 301 /tools/demo-every-way-it-eats.html /tools/scenario-every-way-it-eats.html
+Redirect 301 /tools/demo-fermi-five-ways.html /tools/scenario-fermi-five-ways.html
+Redirect 301 /tools/demo-fermi-honest.html /tools/scenario-fermi-honest.html
+Redirect 301 /tools/demo-fermi-mth-crossover.html /tools/scenario-fermi-mth-crossover.html
+Redirect 301 /tools/demo-imbh-evidence.html /tools/scenario-imbh-evidence.html
+Redirect 301 /tools/demo-imbh-formation.html /tools/scenario-imbh-formation.html
+Redirect 301 /tools/demo-imbh-origin.html /tools/scenario-imbh-origin.html
+Redirect 301 /tools/demo-interstellar-messenger.html /tools/scenario-interstellar-messenger.html
+Redirect 301 /tools/demo-kardashev-three.html /tools/scenario-kardashev-three.html
+Redirect 301 /tools/demo-kardashev-two.html /tools/scenario-kardashev-two.html
+Redirect 301 /tools/demo-lisas-shot.html /tools/scenario-lisas-shot.html
+Redirect 301 /tools/demo-matrioshka-option.html /tools/scenario-matrioshka-option.html
+Redirect 301 /tools/demo-null-result-significance.html /tools/scenario-null-result-significance.html
+Redirect 301 /tools/demo-oc-vs-gc.html /tools/scenario-oc-vs-gc.html
+Redirect 301 /tools/demo-proposal-bridge.html /tools/scenario-proposal-bridge.html
+Redirect 301 /tools/demo-reconnection-bz.html /tools/scenario-reconnection-bz.html
+Redirect 301 /tools/demo-send-a-message.html /tools/scenario-send-a-message.html
+Redirect 301 /tools/demo-spin-up-economics.html /tools/scenario-spin-up-economics.html
+Redirect 301 /tools/demo-spin-up-tap.html /tools/scenario-spin-up-tap.html
+Redirect 301 /tools/demo-star-falls-in.html /tools/scenario-star-falls-in.html
+Redirect 301 /tools/demo-wait-compute.html /tools/scenario-wait-compute.html
