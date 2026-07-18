@@ -17,23 +17,70 @@ cd "$(git rev-parse --show-toplevel)"
 
 echo "=== OCS pre-push validate ==="
 
-echo "[1/6] Count-drift gate..."
+# ── [1/7] Required files ─────────────────────────────────────────────────────
+# Job 1's first step checks a hardcoded list of files that must exist. PR #20
+# removed advisors.html while deploy.yml still listed it as required: the six
+# gates below all passed locally, the push went out, and main went red.
+#
+# The list is PARSED FROM deploy.yml rather than duplicated here. A second copy
+# would drift, and a drifted copy of a drift-detector is worse than none — it
+# would pass locally for exactly the files CI is about to fail on.
+echo "[1/7] Required-files gate (list read from deploy.yml)..."
+WORKFLOW=".github/workflows/deploy.yml"
+if [ ! -f "$WORKFLOW" ]; then
+  echo "::error::$WORKFLOW not found — cannot verify the required-files list."
+  exit 1
+fi
+# Pull the lines between `REQUIRED=(` and the closing `)`, strip whitespace/CR.
+REQUIRED_LIST=$(sed -n '/REQUIRED=(/,/^ *)/p' "$WORKFLOW" \
+  | sed '1d;$d' \
+  | tr -d '\r' \
+  | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' \
+  | grep -v '^$' || true)
+if [ -z "$REQUIRED_LIST" ]; then
+  echo "::error::Could not parse the REQUIRED=( ... ) block out of $WORKFLOW."
+  echo "  If that step was renamed or restructured, update this parser to match."
+  exit 1
+fi
+MISSING=0
+while IFS= read -r f; do
+  if [ ! -f "$f" ]; then
+    echo "  MISSING: $f"
+    MISSING=$((MISSING + 1))
+  fi
+done <<< "$REQUIRED_LIST"
+COUNT=$(printf '%s\n' "$REQUIRED_LIST" | wc -l | tr -d ' ')
+if [ "$MISSING" -gt 0 ]; then
+  echo ""
+  echo "$MISSING of $COUNT required file(s) missing."
+  echo "Either restore the file, or drop it from the REQUIRED list in $WORKFLOW"
+  echo "in the SAME commit that removes it — otherwise Job 1 fails and main goes red."
+  exit 1
+fi
+echo "  all $COUNT required files present."
+
+echo "[2/7] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[2/6] Broken-link gate..."
+echo "[3/7] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[3/6] Stranded-page gate..."
+echo "[4/7] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[4/6] JS syntax check..."
+echo "[5/7] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[5/6] Forbidden-hash lint..."
+echo "[6/7] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[6/6] Schema validation..."
+echo "[7/7] Schema validation..."
 node scripts/schema-validate.mjs
 
 echo ""
 echo "✅ All gates passed — pushing."
+echo ""
+echo "NOTE: this hook is a SUBSET of Job 1, not a mirror. Still CI-only:"
+echo "  - the >=20 tool-file floor"
+echo "  - node --test scripts/tests/tier-c-*.test.mjs"
+echo "  - node --test scripts/tests/lib-imbh-constraints.test.mjs"
