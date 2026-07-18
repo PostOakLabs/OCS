@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# pre-push — mirrors Job 1 (Validate) in deploy.yml so CI failures are caught locally.
+# Both #137 (stale llms.txt count) and #129 (dead links in hardened check) would have
+# been caught here before reaching GitHub Actions.
+#
+# This file is the tracked master copy. Git does not install hooks from the repo,
+# so every clone has to do it once:
+#   cp scripts/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+#
+# Edit this file, not .git/hooks/pre-push, then re-run the copy.
+#
+# Skip for emergencies (use sparingly):
+#   git push --no-verify
+
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+echo "=== OCS pre-push validate ==="
+
+echo "[1/6] Count-drift gate..."
+python3 scripts/verify-counts.py
+
+echo "[2/6] Broken-link gate..."
+python3 scripts/check-links.py
+
+echo "[3/6] Stranded-page gate..."
+python3 scripts/check-orphans.py
+
+echo "[4/6] JS syntax check..."
+node scripts/syntax-check.mjs
+
+echo "[5/6] Forbidden-hash lint..."
+node scripts/lint-forbidden-hash.mjs
+
+echo "[6/6] Schema validation..."
+node scripts/schema-validate.mjs
+
+echo ""
+echo "✅ All gates passed — pushing."
