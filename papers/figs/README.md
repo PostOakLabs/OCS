@@ -11,8 +11,8 @@ byte-identical reruns are expected on any NumPy ≥1.26.
 |---|---|
 | `common.py` | Shared constants (fiducial 2×10⁴ M☉ Kerr hole, ω Cen core parameters). Change here, re-run all figs. |
 | `fig1_envelope.py` | **The flyby Monte Carlo** (see below). Outputs `fig1_envelope.pdf` + `fig1_results.json`. |
-| `fig2_constraint_plane.py` | (P_comp, 1−f_sink) constraint plane: JWST waste-heat wedge, transport floor, Bondi fuel ceiling. |
-| `fig3_lnk.py` | Worked-example ln K computation (2×10⁶ prior draws; Appendix B model). Prints the §5 numbers. |
+| `fig2_constraint_plane.py` | (P_comp, 1−f_sink) constraint plane: JWST waste-heat wedge, transport floor, Bondi fuel ceiling. The floor renders as a labelled adopted-parameter line over hatching, not as a hard boundary of the allowed region (§6.1). |
+| `fig3_lnk.py` | Worked-example ln K computation (2×10⁶ prior draws; Appendix B model). Prints the §5 numbers. Takes `--leak-floor-dex` (default `-4`, the fiducial transport floor 1−f_sink ≥ 10⁻⁴); the figure is written only at the default, other values print numbers for the §6.1 sensitivity statement. Measured: `-4` → ln K = −0.400, band [−0.901, −0.068]; `-6` → ln K = −0.281, band [−0.582, −0.050]. |
 | `fig4_r_statistic.py` | Schematic PSD defining the MAD-regulation statistic R (illustrative, no data). |
 | `fig1_results.json` | Machine-readable MC output: per-radius median/16–84% survival times, encounter rates, kick variances. |
 
@@ -60,4 +60,4 @@ Appendix A gets its parameter-variation production pass.
 
 ## Provenance
 
-Draft v0.3, last revised 2026-07-17. License follows the repo: code MIT, prose CC BY 4.0.
+Draft v0.3, last revised 2026-07-18. License follows the repo: code MIT, prose CC BY 4.0.

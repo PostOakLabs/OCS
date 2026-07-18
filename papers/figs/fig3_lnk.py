@@ -24,12 +24,23 @@ a soft threshold changes ln K by < 0.1). Data = no detection.
 ln K_MIR = ln P(no det | H_eng)  (negative: H_eng pays for its detectable prior mass)
 
 Outputs fig3_lnk.pdf + prints the numbers quoted in section 5.
+
+Sensitivity: the transport floor (Appendix A.3) is an engineering estimate, so the
+leak prior's lower bound is a parameter. Pass --leak-floor-dex (default -4, the
+fiducial 1 - f_sink >= 1e-4); -6 is the pessimistic-for-the-bound alternative
+quoted in section 5 and section 6.1. Figure output is written only for the default.
 """
+import argparse
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from common import LSUN, C, mdot_bondi, STYLE
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--leak-floor-dex", type=float, default=-4.0)
+args = ap.parse_args()
+LEAK_FLOOR_DEX = args.leak_floor_dex
 
 plt.rcParams.update(STYLE)
 rng = np.random.default_rng(20260717)
@@ -40,7 +51,7 @@ N = 2_000_000
 
 def lnK_mir(f_dormant):
     logP = rng.uniform(np.log10(1.0), np.log10(P_FUEL), N)
-    logleak = rng.uniform(-4, 0, N)
+    logleak = rng.uniform(LEAK_FLOOR_DEX, 0, N)
     p_quiet_active = np.mean(10 ** (logP + logleak) < L_LIM)
     return np.log(f_dormant + (1 - f_dormant) * p_quiet_active), p_quiet_active
 
@@ -72,6 +83,7 @@ ax.text(0.55, -0.7,
         f"$P_{{\\rm comp}}(1-f_{{\\rm sink}}) < L_{{\\rm lim}}$",
         fontsize=8, va="top", ha="right",
         bbox=dict(fc="#eef0f6", ec="#3b4d8f", lw=0.6))
-fig.savefig("fig3_lnk.pdf"); fig.savefig("fig3_lnk.png", dpi=110)
-print(f"lnK_MIR central {lnK_c:+.3f}  band [{lo:+.3f}, {hi:+.3f}]  "
+if LEAK_FLOOR_DEX == -4.0:
+    fig.savefig("fig3_lnk.pdf"); fig.savefig("fig3_lnk.png", dpi=110)
+print(f"floor 1e{LEAK_FLOOR_DEX:.0f}  lnK_MIR central {lnK_c:+.3f}  band [{lo:+.3f}, {hi:+.3f}]  "
       f"P(quiet|active) {p_qa:.3f}  P_fuel {P_FUEL:.2e} Lsun")

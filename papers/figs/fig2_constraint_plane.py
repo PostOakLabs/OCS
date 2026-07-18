@@ -30,11 +30,15 @@ ax.plot(P, np.clip((L_LIM / LSUN) / P, 1e-6, 1), color="#c65b5b", lw=1.5)
 ax.text(3e7, 1.5e-2, "excluded by JWST waste heat\n($L_{\\rm waste} > L_{\\rm lim}$)",
         fontsize=8, color="#8a3030", ha="center")
 
-# transport floor
-ax.axhspan(1e-6, LEAK_FLOOR, color="0.75", alpha=0.5)
-ax.axhline(LEAK_FLOOR, color="0.35", lw=1.2, ls="-")
-ax.text(3e0, 3e-5, "below transport floor ($1-f_{\\rm sink} < 10^{-4}$): unreachable",
+# transport floor: an adopted parameter (Appendix A.3 engineering estimate), drawn as
+# a labelled line over light hatching rather than a hard boundary of the allowed region
+ax.axhspan(1e-6, LEAK_FLOOR, facecolor="none", edgecolor="0.75", hatch="//", lw=0.0, alpha=0.7)
+ax.axhline(LEAK_FLOOR, color="0.35", lw=1.2, ls="--")
+ax.text(3e0, 1.35e-4, "adopted transport floor $1-f_{\\rm sink}=10^{-4}$ (see \\S6.1)",
         fontsize=8, color="0.3")
+ax.text(3e0, 2.2e-5, "below the adopted floor: disfavoured by the A.3 accounting,\n"
+                     "not excluded by data",
+        fontsize=7.5, color="0.45")
 
 # fuel ceiling and Eddington
 ax.axvline(P_FUEL, color="#3b4d8f", lw=1.5, ls="--")
