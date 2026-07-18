@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineered Intermediate-Mass Black Hole Systems — Omega Centauri Society</title>
+<meta name="description" content="Feasibility envelope, forward-modeled observable residue (waste heat, MAD-regulation, relic spin), and a multi-messenger Bayesian adjudication framework for engineered IMBH systems, worked end-to-end on Omega Centauri (NGC 5139). Paper E of five (Swanson 2026).">
+<meta name="keywords" content="Fermi paradox, SETI, technosignatures, intermediate-mass black holes, Omega Centauri, megastructures, magnetically arrested disks, Bayesian model selection, multi-messenger astronomy, Monte Carlo">
+<meta property="og:title" content="Engineered Intermediate-Mass Black Hole Systems — full paper">
+<meta property="og:description" content="Paper E of the five-paper programme: can engineered infrastructure survive at a cluster-core IMBH, what would it look like, and how would we adjudicate a candidate detection?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://omegacentauri.me/engineered-imbh-systems.html">
+<link rel="canonical" href="https://omegacentauri.me/engineered-imbh-systems.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
+  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
+  --teal-bright:#1dba90; --teal-glow:#4de8c0;
+  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
+  --amber-glow:#EF9F27; --amber-soft:#FAC775;
+  --red-bright:#E24B4A;
+  --border-subtle:rgba(112,85,212,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
+a{color:var(--teal-glow);text-decoration:none;}
+a:hover{text-decoration:underline;}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;flex-wrap:wrap;}
+nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+h1{font-family:'Orbitron',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+p{margin:0 0 1rem;}
+.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.banner strong{color:var(--amber-glow);}
+.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
+.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.toc ol{margin-left:1.3rem;}
+figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
+figure svg{width:100%;height:auto;display:block;}
+figure img{width:100%;height:auto;display:block;border-radius:4px;background:#0a0820;}
+figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
+figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
+caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
+caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
+td.c{text-align:center;}
+td.ok{color:var(--teal-glow);text-align:center;font-weight:600;}
+.eq{display:block;text-align:center;font-size:1.06rem;margin:1.1rem 0;color:var(--text-primary);}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
+.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+.refs{font-size:0.88rem;line-height:1.65;}
+.refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
+.refs ol{margin-left:1.3rem;}
+ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
+ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
+.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+sup,sub{line-height:0;}
+.imp{color:var(--text-primary);font-weight:600;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
+@media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <span class="brand">OCS</span>
+  <a href="/index.html">Home</a>
+  <a href="/tools/">Tools</a>
+  <a href="/proposals.html">Proposals</a>
+  <a href="/paper.html">Papers</a>
+  <a href="/macro-transcension-hypothesis.html">MTH paper</a>
+  <a href="/inward-migration-fermi-paradox-review.html">Review</a>
+  <a href="/omega-centauri-technosignature-campaign.html">Campaign</a>
+  <a href="/inward-migration-economics.html">Economics</a>
+  <span style="margin-left:auto;color:var(--text-dim);">engineering &amp; adjudication · v0.3 · July 2026</span>
+</nav>
+
+<main>
+
+<p class="eyebrow">OCS Research Paper · Preprint · Paper E (the engineering and the adjudication)</p>
+<h1>Engineered Intermediate-Mass Black Hole Systems: Infrastructure Constraints, Observable Residue, and a Multi-Messenger Adjudication Framework</h1>
+<p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
+<p class="venue">Draft v0.3, last revised 2026-07-17 · Paper E of five (A: hypothesis · B: review · C: observational campaign · D: economics)</p>
+
+<div class="dl-row">
+  <a class="dl-btn" href="/macro-transcension-hypothesis.html">← Paper A — the hypothesis</a>
+  <a class="dl-btn" href="/inward-migration-fermi-paradox-review.html">← Paper B — the review</a>
+  <a class="dl-btn" href="/omega-centauri-technosignature-campaign.html">← Paper C — the campaign</a>
+  <a class="dl-btn" href="/inward-migration-economics.html">← Paper D — the economics</a>
+  <a class="dl-btn" href="/papers/engineered-imbh-systems.pdf">⬇ PDF</a>
+  <a class="dl-btn" href="#sec-envelope">The envelope</a>
+  <a class="dl-btn" href="#sec-adjudication">The adjudication</a>
+  <a class="dl-btn" href="#sec-refs">References</a>
+</div>
+
+<div class="banner"><strong>⚠ EPISTEMIC STATUS.</strong> Everything downstream of Section 2 is conditional on the optimization premise examined critically in Papers A and B: that some long-lived technological lineages maximize discounted computation and act on the thermodynamic gradients described there. This paper does not defend that premise; it asks what follows from it observationally, and how a null or a detection would be established. The adjudication framework of Section 4 is independent of the premise and applicable to any technosignature search.</div>
+
+<section id="sec-abstract">
+<div class="abstract">
+<span class="lead">Abstract</span>
+<p>The inward-migration resolutions of the Fermi paradox identify rapidly spinning intermediate-mass black holes (IMBHs) in dense, old stellar clusters as thermodynamically privileged destinations for computation-optimizing civilizations. Previous work in this series argued the thermodynamic case (Paper A), surveyed the hypothesis family (Paper B), designed a multi-messenger observational campaign for the nearest candidate system, Omega Centauri (Paper C), and priced the migration decision (Paper D). Two questions remain open, and this paper addresses both. First, <span class="imp">feasibility</span>: no published analysis asks whether large-scale computational infrastructure can persist in the actual environment such a destination provides, a Kerr IMBH embedded in a cluster core with stellar density ~3×10<sup>3</sup> M<sub>☉</sub> pc<sup>−3</sup> and velocity dispersion ~20 km s<sup>−1</sup>. Extending recent passive-stability results for stellar engines and Dyson bubbles to the combined Kerr-plus-cluster potential, and combining analytic tidal, thermal, and material limits with a Monte Carlo of gravitationally focused stellar flybys, we derive an allowed envelope in the (orbital radius, architecture) plane for a fiducial 2×10<sup>4</sup> M<sub>☉</sub> hole in the ω Cen core: precession-tolerant swarms survive passively from ~10<sup>2</sup> gravitational radii out to the cluster stripping radius at ~4×10<sup>3</sup> AU, and, contrary to our initial expectation, stellar flybys never bind: the Monte Carlo yields a scale-free, conservative diffusion floor of ~3×10<sup>9</sup> yr throughout the envelope, further lengthened at depth by adiabatic protection. Tidal disruption events set the hazard-recurrence horizon (≳10<sup>7</sup> yr), black-hole Brownian wander is benign for the installation while biasing the observer's astrometry, and the measured intracluster medium (n<sub>e</sub> ≃ 0.23 cm<sup>−3</sup>) funds, via Bondi accretion at magnetically-arrested efficiencies, a power budget of ~10<sup>6</sup> L<sub>☉</sub>: supply never binds; thermal concealment does. We further show that an <span class="imp">abandoned</span> deep swarm grinds to debris within 10<sup>2</sup>–10<sup>3</sup> yr and is then drained by the hole, leaving spin, which Blandford–Znajek use erodes only on ≫ Hubble timescales at ambient fueling, as the only durable fossil of engineered history. Second, <span class="imp">residue and adjudication</span>: the feasibility envelope implies two forward-modeled observables, a Landauer-limited waste-heat floor and a magnetically-arrested-disk (MAD) regulation signature, namely suppression of the flux-eruption variability that general-relativistic magnetohydrodynamic simulations identify as characteristic of natural MAD accretion. We then construct a hierarchical Bayesian framework, with per-messenger Bayes factors against an explicit menu of astrophysical null hypotheses (gas-starved quiescent IMBH; no IMBH, with a stellar-remnant subcluster) combined through coincidence likelihoods of the kind developed for gravitational-wave counterpart searches, and with pre-registered decision thresholds. Applied end-to-end to the current ω Cen data (fast-star kinematics, pulsar-timing bounds, deep radio and infrared silence), the framework yields posterior odds that favor the astrophysical nulls, as expected, while quantifying for the first time how much each planned observation from Paper C can move the odds. The framework is stated instrument-agnostically and is usable by any technosignature program. All results are conditional on the optimization premise shared by the hypothesis family; the contribution is the feasibility envelope, the forward-modeled residue, and the adjudication machinery.</p>
+<p class="kw"><b>Keywords:</b> Fermi paradox · SETI · technosignatures · intermediate-mass black holes · Omega Centauri · megastructures · magnetically arrested disks · Bayesian model selection · multi-messenger astronomy</p>
+</div>
+</section>
+
+<div class="toc">
+<div class="toc-h">Contents</div>
+<ol>
+<li><a href="#sec-intro">Introduction</a></li>
+<li><a href="#sec-envelope">The feasibility envelope</a></li>
+<li><a href="#sec-residue">Observable residue</a></li>
+<li><a href="#sec-adjudication">The adjudication framework</a></li>
+<li><a href="#sec-worked">Worked example: Omega Centauri today</a></li>
+<li><a href="#sec-discussion">Discussion</a></li>
+<li><a href="#sec-appendix">Appendices: Monte Carlo, priors, reproducibility</a></li>
+<li><a href="#sec-refs">References</a></li>
+</ol>
+</div>
+
+<section id="sec-intro">
+<h2>1. Introduction</h2>
+
+<h3>1.1 The missing quadrant</h3>
+<p>Four papers in this series have examined the hypothesis that computation-optimizing civilizations migrate toward rapidly spinning massive black holes in dense old stellar systems. Paper A argued <span class="imp">why</span>: the thermodynamic advantages of Kerr accretion efficiency, horizon entropy disposal, and Bekenstein-bounded information storage. Paper B surveyed <span class="imp">who</span>: the seven-member family of inward-migration proposals and their falsifiability grades. Paper C planned <span class="imp">how to look</span>: eight instrument-matched programs targeting Omega Centauri (NGC 5139), the nearest strong IMBH candidate. Paper D priced <span class="imp">whether to go</span>: closed-form crossover conditions between migration, densification, and seeding strategies.</p>
+<p>Two questions remain unaddressed, in this series and, so far as we can determine, in the literature. First: could the infrastructure such a civilization requires actually <span class="imp">persist</span> at the destination? The destination is a demanding one. A cluster-core IMBH sits in a stellar environment three to four orders of magnitude denser than the solar neighborhood, threaded by gravitationally focused stellar traffic, and (if fueled) surrounded by a relativistic accretion flow. Black-hole computing proposals treat the hole as an idealized resource and the environment as empty. Megastructure stability analyses treat single stars in isolation. The intersection, engineered structures bound to a Kerr hole inside a live cluster core, is unexamined.</p>
+<p>Second: if the campaign of Paper C ever records an anomaly, by what procedure would the community decide what it had seen? Radio SETI has mature per-signal verification practice and Bayesian population inference, and multi-messenger astrophysics has quantitative coincidence formalisms, but no published framework adjudicates a candidate <span class="imp">technosignature</span> across multiple messengers against an explicit menu of astrophysical alternatives. Paper C's rule that "every anomaly is adjudicated by at least two independent messengers" was stated as policy; here we give it mathematical content.</p>
+<p>The two questions are coupled, and that coupling is the reason they share a paper. A feasibility envelope is a prior: it tells the adjudicator where in parameter space an engineered system could sit, and therefore which anomalies deserve elevated scrutiny and which are excluded on engineering grounds regardless of how anomalous they appear. Forward-modeled residue channels are likelihoods: they specify what an engineered system would look like, channel by channel, so that Bayes factors can be computed rather than gestured at. The paper thus runs in one direction: constraints (Section 2) produce observables (Section 3) which feed an adjudication engine (Section 4) that we exercise on real data (Section 5).</p>
+
+<h3>1.2 Fiducial system</h3>
+<p>We work throughout with the fiducial system of Papers A and C: a black hole of mass M = 2×10<sup>4</sup> M<sub>☉</sub> (bracketed by the 8.2×10<sup>3</sup> M<sub>☉</sub> kinematic lower bound and the ~5×10<sup>4</sup> M<sub>☉</sub> N-body preferred value), spin left free, embedded in the ω Cen core: central density ρ<sub>0</sub> ≃ 3×10<sup>3</sup> M<sub>☉</sub> pc<sup>−3</sup>, core radius r<sub>c</sub> ≃ 3.6 pc, line-of-sight velocity dispersion σ ≃ 20–23 km s<sup>−1</sup> near the center. The gravitational radius is</p>
+<span class="eq">r<sub>g</sub> ≡ GM/c² ≃ 3.0×10<sup>9</sup> cm ≃ 2.0×10<sup>−4</sup> AU <span class="eqno">(1)</span></span>
+<p>so the dynamic range between horizon scale and cluster scale is nine orders of magnitude in radius. The feasibility question is where in that range infrastructure can live.</p>
+</section>
+
+<section id="sec-envelope">
+<h2>2. The feasibility envelope</h2>
+
+<h3>2.1 Constraint inventory</h3>
+<p>We consider a one-parameter family of architectures indexed by compactness: at one end, a dense swarm of independent elements on near-circular orbits at r ~ 10<sup>2</sup>–10<sup>4</sup> r<sub>g</sub> (the configuration favored by the thermodynamic argument of Paper A, since proximity to the horizon minimizes entropy-transport losses); at the other, an extended bubble or shell of elements at r ~ 10–10<sup>3</sup> AU supported partly by radiation pressure or tether stress, the black-hole analogue of recently stability-verified Dyson bubbles. Intermediate cases (rings, nested tori) inherit constraints from both ends. We deliberately do not commit to an architecture; the envelope is the set of (r, architecture) pairs surviving all constraints simultaneously.</p>
+<p>Six constraints bound the envelope: (i) relativistic orbit stability (inner); (ii) tidal stress on extended elements (inner); (iii) accretion-flow radiation and magnetic environment, if the hole is fueled (inner); (iv) cluster tidal truncation of bound orbits (outer); (v) stellar flyby perturbation and collision hazard (outer); (vi) thermal rejection capacity, which couples to the residue analysis of Section 3.</p>
+
+<h3>2.2 Inner boundary</h3>
+<p><span class="imp">Orbit stability.</span> Circular equatorial orbits around a Kerr hole are stable outside the innermost stable circular orbit, r<sub>ISCO</sub> = 6 r<sub>g</sub> (Schwarzschild) shrinking to r<sub>g</sub> (prograde, extremal). For M = 2×10<sup>4</sup> M<sub>☉</sub> this is ~10<sup>−3</sup> AU: dynamically, matter can orbit extraordinarily deep. Orbital periods there are P ~ minutes, and communication latency across the swarm is milliseconds, part of the computational attraction (Paper A, §4).</p>
+<p><span class="imp">Tidal stress.</span> A rigid element of size ℓ at radius r experiences differential acceleration ~2GMℓ/r³. Requiring internal stress below a material strength S for an element of density ρ<sub>el</sub> gives</p>
+<span class="eq">ℓ ≲ (S r³ / 2GM ρ<sub>el</sub>)<sup>1/2</sup> ≃ 2×10² km <span class="eqno">(2)</span></span>
+<p>for S = 10 GPa (present-day carbon composites), r = 10² r<sub>g</sub>, M = 2×10⁴ M<sub>☉</sub>. Tides therefore never forbid the swarm architecture (elements of km scale are unconstrained down to ~10 r<sub>g</sub>); they forbid <span class="imp">monolithic</span> structures below ~10³ r<sub>g</sub> and thereby select swarms at small radii.</p>
+<p><span class="imp">Radiation and magnetic environment.</span> If the hole is fueled at the level required for the Blandford–Znajek power budget of Paper A, the inner ~10² r<sub>g</sub> contains a magnetically arrested flow with field strength B ~ 10²–10⁴ G near the horizon and a jet along the spin axis. Equatorial swarm orbits outside the disk body (r ≳ 10² r<sub>g</sub>, inclined to avoid both disk and jet) survive; structures inside ~30 r<sub>g</sub> face erosion by the flow itself. We adopt r<sub>in</sub> ≃ 10² r<sub>g</sub> as the practical inner boundary of a fueled configuration, and r<sub>ISCO</sub> for a dormant one.</p>
+<p><span class="imp">Formation coherence under relativistic precession.</span> A constraint with no single-star analogue: swarm elements at different radii and inclinations precess differentially. Pericenter advance and Lense–Thirring nodal precession scale as (r<sub>g</sub>/r) and a<sub>★</sub>(r<sub>g</sub>/r)<sup>3/2</sup> per orbit; at r ~ 10² r<sub>g</sub> with orbital periods of hours, a formation spanning even a few per cent in radius decoheres in days to weeks. Rigid geometric formations are therefore excluded deep in the envelope; what survives is either axisymmetric shells, which are precession-invariant by symmetry, or swarms that treat element phases as free and route function through communication rather than geometry. This is the Kerr-specific amendment to the single-star stability literature: the deep envelope selects not only swarm over monolith (tides, above) but symmetric or phase-agnostic swarms over shaped formations.</p>
+
+<h3>2.3 Outer boundary</h3>
+<p><span class="imp">Cluster truncation.</span> The hole dominates the cluster potential inside its influence radius</p>
+<span class="eq">r<sub>infl</sub> = GM/σ² ≃ 0.2 pc ≃ 4×10⁴ AU <span class="eqno">(3)</span></span>
+<p>Orbits bound to the hole are progressively stripped by the fluctuating cluster field as r → r<sub>infl</sub>; by analogy with tidal truncation of binaries in clusters, orbits are secure only for r ≲ 0.1 r<sub>infl</sub> ~ 4×10³ AU.</p>
+<p><span class="imp">Stellar flybys.</span> The operative outer constraint is sharper than truncation: stellar traffic. The rate at which cluster stars pass within impact parameter b of the hole, including gravitational focusing, is</p>
+<span class="eq">Γ(b) = n<sub>★</sub> π b² v<sub>rel</sub> (1 + 2GM / b v<sub>rel</sub>²) <span class="eqno">(4)</span></span>
+<p>with n<sub>★</sub> ≃ 10⁴ pc<sup>−3</sup> (mean stellar mass 0.3 M<sub>☉</sub> at the quoted mass density) and v<sub>rel</sub> ≃ √2 σ ≃ 30 km s<sup>−1</sup>. At b = 10³ AU the focusing term is ~60 and Eq. 4 gives one passage per ~10³ yr; at b = 10² AU, one per ~10⁴ yr; at b = 10 AU, one per ~10⁵ yr (focusing-dominated regime, Γ ∝ b). Each passage tidally perturbs swarm orbits at the impulsive level δ ~ 2(m<sub>★</sub>/M)(a/b)²(v<sub>orb</sub>/v<sub>rel</sub>) for structure semi-major axis a &lt; b, saturating at ~2(m<sub>★</sub>/M)(v<sub>orb</sub>/v<sub>rel</sub>) for penetrating passages. The mass ratio controls everything: at m<sub>★</sub>/M ~ 10<sup>−5</sup> even a penetrating passage delivers δ ≲ 10<sup>−2</sup>, so no single flyby disrupts a hole-bound orbit, and the hazard is cumulative, a random walk in eccentricity. Two further protections apply. Direct star–element scattering requires approach within a fraction ≲10<sup>−7</sup> of the orbital cross-section per penetrating passage: negligible. And deep in the envelope the encounter duration b/v<sub>rel</sub> exceeds the orbital period by orders of magnitude, so the impulsive estimate above is an overestimate: adiabatic invariance suppresses the coupling of slow perturbations to fast orbits exponentially.</p>
+
+<h3>2.4 Monte Carlo of flyby histories</h3>
+<p>We quantify the cumulative hazard with a Monte Carlo over encounter statistics (Figure 1; method and parameters in the Appendix; code in the paper repository, <code>paper/figs/fig1_envelope.py</code>): impact parameters from the focused distribution of Eq. 4 within b &lt; 30a, velocities from a Maxwellian at dispersion σ, masses from a two-component mass function (main sequence plus white-dwarf tail), impulsive kicks with the saturated form above, and survival defined as eccentricity random-walking to orbit-crossing (e ~ 0.5). The calculation is deliberately conservative in omitting adiabatic suppression.</p>
+<p>The result is simpler than the constraint inventory led us to expect, and we flag it as a revision of our own initial estimates: <span class="imp">flybys never set the outer boundary</span>. The median impulsive-diffusion lifetime is ~3×10⁹ yr, roughly flat from 10<sup>−3</sup> to 4×10³ AU, because the kick variance per encounter and the encounter rate scale inversely (⟨δ²⟩ ∝ a<sup>−1</sup> from the saturated penetrating passages that dominate it, Γ ∝ a in the focused regime), so their product is scale-free. A conservative floor comparable to the cluster age everywhere, exponentially lengthened by adiabaticity at depth, means station-keeping against stellar traffic is a trim budget rather than a survival requirement. The operative outer boundary is therefore the cluster stripping radius of Section 2.3, ~0.1 r<sub>infl</sub> ~ 4×10³ AU, with the flyby Monte Carlo demoted to confirming that everything interior to it is dynamically quiet.</p>
+
+<figure id="fig1">
+<img src="/papers/figs/fig1_envelope.png" alt="Survival time of hole-bound swarm structures against cumulative stellar-flyby perturbation, roughly flat around 3 billion years from 10^-3 to 4x10^3 AU, on log-log axes">
+<figcaption><b>Figure 1.</b> Survival time of hole-bound swarm structures against cumulative stellar-flyby perturbation, from the impulsive Monte Carlo of Section 2.4 (median and 16–84 per cent band; 2×10⁴ histories per radius bin). The floor is conservative: adiabatic invariance suppresses the deep-envelope hazard below the impulsive estimate. Flybys never bind inside the cluster stripping radius.</figcaption>
+</figure>
+
+<h3>2.5 The envelope</h3>
+<p>Combining Sections 2.2–2.4: for the fiducial system, engineered swarms (symmetric or phase-agnostic, per the precession constraint) persist passively from r ≃ 10² r<sub>g</sub> (2×10<sup>−2</sup> AU, fueled) or r<sub>ISCO</sub> (dormant) out to the cluster stripping radius ~4×10³ AU, with a conservative flyby-diffusion floor of ~3×10⁹ yr throughout and exponentially longer protected lifetimes at depth. Beyond the stripping radius, orbits bound to the hole are not durable and only cluster-orbiting architectures (outside this paper's scope) remain.</p>
+<p>Two corollaries matter downstream. First, the thermodynamically favored location (deep, near the flow) is also the dynamically safest, doubly so once adiabatic protection is counted: the environment does not penalize the architecture Paper A's physics prefers, a nontrivial consistency check the hypothesis could have failed. Second, the envelope concentrates any engineered mass within ~4×10³ AU ~ 10<sup>−1</sup> r<sub>infl</sub> of the hole, with the thermodynamic gradient pushing occupation deep into the arcsecond-unresolvable interior: observable only through its energetic and dynamical residue, the subject of Section 3.</p>
+
+<h3>2.6 Hazards beyond flybys</h3>
+<p>Three further environmental processes deserve quantitative treatment. Each is a candidate defeater; none defeats, though the first comes closest.</p>
+<p><span class="imp">Tidal disruption events.</span> A cluster-core IMBH tidally disrupts stars scattered into its loss cone. Rates for IMBHs in evolved globular clusters are ~10<sup>−8</sup>–10<sup>−7</sup> yr<sup>−1</sup> per cluster for main-sequence stars, with white-dwarf disruptions rarer by a factor of ~30–100. During a disruption the accretion luminosity approaches Eddington, sustained for months to years of fallback: the flux at r = 1 AU is ~10⁹ times the solar constant, and no plausible material hardening survives it in place. Feasibility therefore requires that a TDE be survivable by <span class="imp">response</span> rather than endurance: loss-cone stars are in principle identifiable and trackable long before disruption, and the months-long fallback rise gives further warning, so temporary evacuation outward along the envelope, or shadowing at large inclination, is an engineering requirement we impose on any architecture rather than a reason to exclude one. The expected recurrence time of ≳10⁷ yr sets the natural amortization horizon of the installation: a 10⁸–10⁹-yr occupation must plan for several such events. The TDE duty cycle also reconciles engineered occupation with the present silence at no extra cost: post-TDE fallback outshines any steady configuration for ~10²–10³ yr per ~10⁷-yr recurrence, a duty cycle of ≲10<sup>−4</sup>, so catching ω Cen mid-flare was never likely under any hypothesis. And TDEs cut the other way, as an observational gift: any future TDE flare in ω Cen both confirms the hole and activates the variability channel of Section 3.2 at high signal-to-noise.</p>
+<p><span class="imp">Black-hole wander.</span> The hole is a Brownian particle in the stellar bath: N-body characterizations give r.m.s. displacements of order 10<sup>−2</sup>–10<sup>−1</sup> pc for 10³–10⁴ M<sub>☉</sub> holes in ω Cen-like cores, with wander amplitude scaling inversely with hole mass. For the fiducial 2×10⁴ M<sub>☉</sub> hole the expected wander is ≲10<sup>−2</sup> pc ~ 2×10³ AU: larger than the envelope. Structures bound to the hole simply ride along (the swarm orbits the hole, and hole plus swarm wander together through the cluster), so wander does not threaten the installation; what it threatens is the observer's astrometry, since the kinematic center and the hole need not coincide at the 10<sup>−2</sup>-pc level. Paper C's astrometric programs already marginalize over center position; the wander amplitude is itself mass-dependent and therefore carries independent information about M in long-baseline proper-motion data.</p>
+<p><span class="imp">Gas drag and erosion.</span> ω Cen retains a measurable intracluster medium: central ionized densities n<sub>e</sub> ~ 0.1–0.3 cm<sup>−3</sup>. Ram-pressure drag on a swarm element at the deep-envelope orbital velocity (~10³ km s<sup>−1</sup>) removes a fractional momentum ≲10<sup>−6</sup> per kyr at the measured densities: negligible. Sputtering and dust impacts are similarly small in an old cluster with no star formation and depleted debris populations. Gas matters for fuel, however, the next subsection.</p>
+
+<h3>2.7 The fuel budget</h3>
+<p>The Blandford–Znajek architecture of Paper A needs mass supply, and the measured medium bounds it. Bondi accretion from gas of density n<sub>e</sub> ≃ 0.23 cm<sup>−3</sup> at relative velocity ~σ gives</p>
+<span class="eq">Ṁ<sub>B</sub> = 4π(GM)² ρ<sub>gas</sub> / (σ² + c<sub>s</sub>²)<sup>3/2</sup> ≃ 3×10¹⁸ g s<sup>−1</sup> ≃ 5×10<sup>−8</sup> M<sub>☉</sub> yr<sup>−1</sup> <span class="eqno">(5)</span></span>
+<p>about 10<sup>−4</sup> of the Eddington rate. Two caveats bound this from both sides. It is an upper bound insofar as the density at the hole's actual location may be below the cluster mean: the accretion non-detections are consistent with the hole occupying a locally evacuated region, and the Bondi radius (~GM/c<sub>s</sub>² ~ 2×10⁵ AU) samples gas the surveys average over. It is a lower bound insofar as it ignores harvesting: stellar winds from the ~10³ giants inside the influence radius, or deliberately imported mass, can raise supply by orders of magnitude at the cost of visibility. At MAD-plus-spin effective efficiencies of order unity, the ambient rate alone gives extractable power P ~ Ṁ<sub>B</sub>c² ~ 3×10³² W ~ 10⁶ L<sub>☉</sub>: the ambient medium alone, with no harvesting of stellar winds or imported fuel, funds a computational budget two orders of magnitude above the waste-heat ceiling derived in Section 3.1. The binding constraint on a present-day ω Cen installation is therefore thermal (getting rid of entropy without detection), never supply. This ordering is a nontrivial output: for stellar-mass holes in the same environment the two constraints reverse, an independent reason the hypothesis family selects IMBHs. The same numbers close the loop on the accretion non-detection: the deep ATCA and JWST limits require the <span class="imp">natural</span> radiative efficiency of any Bondi-fed flow to be ≲4×10<sup>−3</sup>, uncomfortable for the quiescent-IMBH null at the upper end of the mass range and what an engineered-occupation flow predicts for output extracted as work rather than radiation. The adjudication in Section 5 prices this observation for both hypotheses rather than letting either claim it informally.</p>
+</section>
+
+<section id="sec-residue">
+<h2>3. Observable residue</h2>
+
+<h3>3.1 Waste-heat floor</h3>
+<p>Paper A argued that horizon entropy disposal permits computation with radiated waste heat far below the Dyson-sphere expectation. Here we make the floor quantitative. Let P<sub>comp</sub> be the power processed by the swarm and f<sub>sink</sub> the fraction of generated entropy delivered to the horizon rather than radiated. The radiated luminosity is L<sub>waste</sub> = (1 − f<sub>sink</sub>) P<sub>comp</sub>, emitted from the swarm photosphere at temperature set by the emitting area. For a swarm of total area A at radius r ~ 1 AU around a dark hole, thermal emission at L<sub>waste</sub> peaks in the mid-infrared for L<sub>waste</sub> ~ 10<sup>−2</sup>–10² L<sub>☉</sub>.</p>
+<p>The engineering limit on f<sub>sink</sub> is transport: entropy must be carried inward, against the swarm's own power draw, by mass flux or directed radiation into the horizon. A conservative accounting (Appendix, §A.3) bounds 1 − f<sub>sink</sub> ≳ 10<sup>−4</sup> for swarm architectures within the envelope, set by the fraction of processed power unavoidably intercepted and re-thermalized by swarm elements outside the beaming solid angle. The floor is therefore</p>
+<span class="eq">L<sub>waste</sub> ≳ 10<sup>−4</sup> P<sub>comp</sub> <span class="eqno">(6)</span></span>
+<p>and any mid-infrared point-source limit L<sub>lim</sub> translates directly into P<sub>comp</sub> ≲ L<sub>lim</sub>/(1 − f<sub>sink</sub>) ≲ 10⁴ L<sub>lim</sub>: for the sub-L<sub>☉</sub> limits at the kinematic center from the JWST photometry of Paper C program 1, the current bound is P<sub>comp</sub> ≲ 10³–10⁴ L<sub>☉</sub> for fiducial swarm geometry, far below the Eddington-scale budgets of Paper A but far above zero. An engineered system operating at the ceiling of this bound is consistent with all current data. Deeper MIR photometry tightens the bound linearly. Figure 2 assembles the waste-heat wedge, the transport floor, and the fuel ceiling of Section 2.7 into the constraint plane that defines the surviving engineered-occupation parameter space.</p>
+
+<figure id="fig2">
+<img src="/papers/figs/fig2_constraint_plane.png" alt="Constraint plane in computation power versus one minus entropy sink fraction, showing the JWST exclusion region, the entropy transport floor, and the Bondi fuel ceiling">
+<figcaption><b>Figure 2.</b> The (P<sub>comp</sub>, 1 − f<sub>sink</sub>) constraint plane for an ω Cen installation. Excluded above by the JWST mid-infrared point-source limit; excluded below the entropy-transport floor; bounded on the right by the ambient Bondi fuel ceiling (~8×10⁵ L<sub>☉</sub>; imported mass moves it right at the cost of visibility). The surviving region is dormant or low-power and deep.</figcaption>
+</figure>
+
+<h3>3.2 The MAD-regulation signature</h3>
+<p>The second channel is new to this paper. General-relativistic magnetohydrodynamic simulations establish that natural accretion in the magnetically arrested state is intrinsically episodic: magnetic flux accumulates at the horizon, chokes the inflow, and erupts in quasi-regular flux-expulsion events, producing characteristic variability in jet power and radiative output with a MAD &gt; intermediate &gt; SANE hierarchy in both luminosity and its variance. The eruption cycle time is ~10²–10³ r<sub>g</sub>/c, which for M = 2×10⁴ M<sub>☉</sub> is ~10–10² s: minutes, comfortably within the cadence of radio and X-ray monitoring.</p>
+<p>A system engineered for steady power extraction has an incentive absent in nature: eruptions are interruptions. Regulating the delivered mass and flux (the control variable identified by the simulations is horizon magnetic flux itself) suppresses the eruption cycle and its variability signature. We therefore forward-model the residue as a <span class="imp">variability deficit</span>: an accreting IMBH whose radio/X-ray power spectrum lacks the flux-eruption band that GRMHD baselines predict for its luminosity and inferred state. Quantitatively, we define the regulation statistic R as the ratio of integrated power in the eruption band (10<sup>−3</sup>–10<sup>−1</sup> Hz for the fiducial mass) to the GRMHD-calibrated expectation at matched mean luminosity; natural MADs populate R ~ 1 with factor-of-few scatter, and R ≪ 10<sup>−1</sup> sustained over many cycle times has no identified natural mechanism (Figure 3).</p>
+<div class="specbox"><strong>Epistemic status:</strong> The GRMHD variability baseline is simulation-calibrated rather than observationally calibrated at IMBH masses (Section 6.1); intermediate-state contamination is the leading confusion risk for the R statistic and is not yet quantified.</div>
+
+<figure id="fig3">
+<img src="/papers/figs/fig4_r_statistic.png" alt="Schematic power spectra comparing natural magnetically arrested disk accretion, with a populated flux-eruption band and R near 1, against regulated inflow with a suppressed band and R much less than 0.1">
+<figcaption><b>Figure 3.</b> Schematic definition of the regulation statistic R: power spectra of an accreting IMBH at matched mean luminosity under natural MAD accretion (flux-eruption band populated, R ~ 1) and regulated inflow (R ≪ 10<sup>−1</sup>). Band location scales inversely with black-hole mass; values shown for M = 2×10⁴ M<sub>☉</sub>.</figcaption>
+</figure>
+
+<p>The signature has three properties valuable for adjudication. It is <span class="imp">conditional</span>: it activates only if accretion is ever detected, so it presently constrains nothing (ω Cen's hole is electromagnetically silent). It is <span class="imp">differential</span>: it compares a source against a physics baseline at matched parameters, canceling many systematics. And it is <span class="imp">disprovable in place</span>: detection of normal flux-eruption variability from a future ω Cen accretion flare would count <span class="imp">against</span> engineered occupation in the framework below, making the channel one of the few that can move evidence in both directions.</p>
+
+<h3>3.3 Relic residue: the abandoned swarm</h3>
+<p>Persistence is conditional on maintenance, and prior work on megastructure collisional cascades has shown what maintenance failure means: once guidance fails, swarm elements collide, and a collisional cascade grinds the population to dust on a timescale of roughly the orbital period divided by the covering fraction. The deep envelope makes this dramatic. At r ~ 1 AU around the fiducial hole the orbital period is ~3 days; for covering fractions 10<sup>−4</sup>–10<sup>−2</sup> the first-collision timescale ~ P/f<sub>cov</sub> is years to decades, and the full cascade completes within 10²–10³ yr, orders of magnitude faster than for stellar-orbit megaswarms. The end state differs too, and the difference is observationally decisive: cascade debris around a star settles into a long-lived warm dust population, a passive relic technosignature, whereas debris around a black hole is progressively drained, its periapsis distribution fed toward the loss cone by continuing collisions and flyby perturbations and its finest grindings coupled to whatever gas flow exists. The hole removes its own debris. An abandoned engineered-IMBH system therefore passes through a brief bright phase (cascade grinding plus enhanced accretion luminosity as debris drains) and then reverts to a naked quiescent hole, indistinguishable from the gas-starved null except possibly through spin.</p>
+<div class="specbox"><strong>Epistemic status:</strong> The debris-drainage timescale following cascade completion is not yet derived quantitatively (Section 6.1); the qualitative asymmetry against the stellar case, that the hole removes its own debris, is robust and does not depend on the rate.</div>
+<p>Three consequences follow. First, a fourth hypothesis joins the menu at zero structural cost: a formerly engineered, now-abandoned system, whose observables today equal the gas-starved quiescent null plus high spin, and whose prior couples to the goal-stability open problem flagged in Paper B. Second, the searchable relic window is short, so population-level searches for dead installations have low yield around IMBHs specifically; non-detection of relic dust in ω Cen carries almost no evidence either way, and the framework scores it accordingly. Third, spin becomes the only durable fossil, and an objection must be met before relying on it: Blandford–Znajek extraction spins the hole <span class="imp">down</span>, and MAD jets remove angular momentum faster than accretion supplies it, so one might expect long use to erase the very fossil we propose reading. The rates rescue the argument: spin-down requires processing a mass of order the hole's own, and at the ambient fueling of Section 2.7 the timescale is M/Ṁ<sub>B</sub> ~ 4×10¹¹ yr. Only a civilization importing mass at far above ambient rates for ≫10⁹ yr would measurably despin the hole, and that regime is separately excluded by the waste-heat ceiling. High spin at low luminosity therefore remains the discriminating fossil: the engineered-history hypotheses predict spins drawn from the high tail (selection at arrival, negligible erosion in use), while the natural in-situ channels predict the moderate spins of chaotic hierarchical growth.</p>
+
+<h3>3.4 Predicted-signature table</h3>
+<p>Table 1 summarizes what each channel looks like under the engineered hypothesis and the two astrophysical nulls defined in Section 4.1.</p>
+
+<table>
+<caption><b>Table 1.</b> Forward-modeled observables under the three hypotheses of Section 4.1. "Silent" means below current limits.</caption>
+<thead><tr><th>Channel</th><th>Engineered</th><th>Quiescent IMBH</th><th>Remnant subcluster</th></tr></thead>
+<tbody>
+<tr><td>MIR point source</td><td>floor at 10<sup>−4</sup>P<sub>comp</sub>; may sit near current limits</td><td>silent; L ∝ Ṁ of ambient gas only</td><td>silent; no compact source</td></tr>
+<tr><td>Radio continuum</td><td>silent while dormant; regulated (low-R) if fueled</td><td>silent or canonical fundamental-plane track</td><td>silent</td></tr>
+<tr><td>Variability (R statistic)</td><td>R ≪ 1 if accreting</td><td>R ~ 1 if accreting</td><td>n/a</td></tr>
+<tr><td>LISA EMRI spin</td><td>high-tail spin (selection at arrival)</td><td>moderate spin (in-situ growth prior)</td><td>no EMRI (no massive central object)</td></tr>
+<tr><td>Fast-star kinematics</td><td>IMBH-like point mass</td><td>IMBH point mass</td><td>extended mass profile</td></tr>
+<tr><td>MSP timing</td><td>point-mass potential</td><td>point-mass potential</td><td>extended potential (current data lean this way)</td></tr>
+</tbody>
+</table>
+<p>The table exposes the central inferential difficulty, stated plainly in Paper A and now quantified: <span class="imp">silence is predicted by everything</span>. The engineered and quiescent-IMBH hypotheses are near-degenerate in every electromagnetic channel while the system is dormant. The channels that separate them are spin (engineered selection favors the high tail; in-situ growth favors moderate values), the R statistic (active only during accretion episodes), and the waste-heat floor (which separates them only near the sensitivity ceiling). This degeneracy structure, rather than any single measurement, is what the adjudication framework must manage.</p>
+</section>
+
+<section id="sec-adjudication">
+<h2>4. The adjudication framework</h2>
+
+<h3>4.1 Hypothesis space</h3>
+<p>We adjudicate among three hypotheses about the ω Cen center:</p>
+<div class="postulate"><b>H<sub>q</sub> (quiescent IMBH).</b> A quiescent IMBH of mass 10⁴–5×10⁴ M<sub>☉</sub>, electromagnetically silent for want of fuel, spin drawn from an uninformative prior. The parsimonious reading of the fast stars.</div>
+<div class="postulate"><b>H<sub>sub</sub> (remnant subcluster).</b> No IMBH; the central mass is an extended subcluster of stellar remnants of ~10⁵ M<sub>☉</sub> within the core, as favored by the pulsar-timing analysis.</div>
+<div class="postulate"><b>H<sub>eng</sub> (engineered).</b> An IMBH hosting engineered infrastructure within the envelope of Section 2, with observables forward-modeled in Section 3 and parameters (P<sub>comp</sub>, f<sub>sink</sub>, R, a<sub>★</sub>) assigned the priors stated in the Appendix.</div>
+<p>The menu is explicit and extensible; adding hypotheses (an exotic compact object, instrumental systematics on the fast stars, the abandoned-system variant of Section 3.3) changes bookkeeping, never structure. We follow the convention that H<sub>eng</sub> is reported <span class="imp">only</span> as odds against the best-performing null, never against a strawman.</p>
+
+<h3>4.2 Per-messenger Bayes factors</h3>
+<p>For each observational channel i with data d<sub>i</sub>, the Bayes factor between hypotheses H<sub>a</sub>, H<sub>b</sub> is</p>
+<span class="eq">K<sub>i</sub><sup>ab</sup> = ∫ 𝓛(d<sub>i</sub> | θ<sub>a</sub>) π(θ<sub>a</sub>) dθ<sub>a</sub> &nbsp;/&nbsp; ∫ 𝓛(d<sub>i</sub> | θ<sub>b</sub>) π(θ<sub>b</sub>) dθ<sub>b</sub> <span class="eqno">(7)</span></span>
+<p>with channel likelihoods built from the forward models of Section 3 and, following radio-SETI practice, an explicit interference/systematics component mixed into every likelihood so that "instrumental artifact" is priced inside each channel rather than adjudicated informally afterward. Priors on H<sub>eng</sub> parameters are pre-registered (Appendix, §B) and varied over stated ranges in sensitivity analysis; the framework's outputs are always reported as (odds, prior-sensitivity band) pairs, never as bare odds.</p>
+
+<h3>4.3 Cross-messenger combination</h3>
+<p>Channels are combined multiplicatively where independent, K<sub>tot</sub> = ∏<sub>i</sub> K<sub>i</sub>, with two corrections imported from gravitational-wave counterpart methodology. First, a <span class="imp">coincidence term</span>: hypotheses that predict correlated anomalies across channels (as H<sub>eng</sub> does for MIR excess and low R during an accretion episode) earn a likelihood contribution from the observed coincidence structure itself, computed from the joint forward model rather than the product of marginals. Second, an <span class="imp">independence audit</span>: channels sharing calibrators, atmospheric paths, or reduction pipelines are grouped and their shared systematics marginalized jointly before multiplication. Both corrections are conservative in effect: the coincidence term rewards only pre-registered correlation patterns, and the audit only ever weakens evidence.</p>
+
+<h3>4.4 Decision thresholds</h3>
+<p>We adopt a logarithmic odds scale with pre-registered action bands, stated here for ln K of H<sub>eng</sub> over the best null:</p>
+<table>
+<thead><tr><th>Band</th><th>ln K</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>Null-favored</td><td class="c">&lt; 0</td><td>routine monitoring; H<sub>eng</sub> parameter space shrinks</td></tr>
+<tr><td>Uninformative</td><td class="c">0 to 1</td><td>no action; report in campaign updates</td></tr>
+<tr><td>Anomaly</td><td class="c">1 to 3</td><td>targeted follow-up on the discriminating channels</td></tr>
+<tr><td>Strong anomaly</td><td class="c">3 to 5</td><td>independent-team replication; data release</td></tr>
+<tr><td>Candidate</td><td class="c">&gt; 5, sustained, ≥2 messengers</td><td>community adjudication per post-detection protocols</td></tr>
+</tbody>
+</table>
+<p>Two design points. The "candidate" band requires multi-messenger support by construction, honoring Paper C's two-messenger rule; no single channel, at any significance, can reach it, because single-channel anomalies are where every historical false alarm has lived. And the kill conditions of Paper A map onto the same scale in the other direction: the pre-registered falsifiers (e.g., LISA measurement of low spin; resolution of the mass tension in favor of H<sub>sub</sub>) enter as ordinary likelihood terms and drive ln K negative, so confirmation and falsification run through one pipeline rather than two standards. The framework is deliberately instrument-agnostic: nothing in Sections 4.2–4.4 references ω Cen, and the machinery applies unchanged to any technosignature target with a defined null menu.</p>
+</section>
+
+<section id="sec-worked">
+<h2>5. Worked example: Omega Centauri today</h2>
+<p>We now run the current ω Cen data through the framework. Inputs: the fast-star kinematics, the N-body modeling, the MSP timing bound (with the TRAPUM 2026 mass limit), the deep radio silence, and the JWST infrared limits. The computation implements the Appendix-B model (deliberately minimal: hard-threshold MIR likelihood, log-flat priors, 2×10⁶ prior draws); code in <code>paper/figs/fig3_lnk.py</code>, results in Figure 4.</p>
+<ul class="body-list">
+<li><span class="imp">Quiescent IMBH vs. remnant subcluster:</span> the interesting contest, and the framework's finding is that it is currently a stand-off dominated by the kinematics-versus-timing tension: the fast stars pull toward a point mass, the pulsars toward an extended one, and the combined |ln K| is ≲1 with sign depending on how the two datasets' systematics are weighted. As an independent check, the <code>imbh-constraints</code> aggregation engine of the series' public toolchain, run on its nine-constraint curated compilation, returns an empty jointly-allowed mass window (formal tension verdict: the kinematic floor exceeds the tightest model-dependent ceiling), confirming that no point-mass value satisfies all published constraints at face value. The framework adds discipline, and no verdict, to a tension the community already knows; per series policy the tension is recorded, never collapsed.</li>
+<li><span class="imp">Engineered vs. best null:</span> ln K sits in the null-favored band, as it should. The only active channel today is waste heat, and it yields ln K = −0.40 at fiducial priors (prior-sensitivity band −0.90 to −0.07 as the dormancy prior runs from 0.1 to 0.9): the electromagnetic silence sometimes informally cited as consistent with engineering is, in the accounting, mildly <span class="imp">against</span> engineered occupation, because the JWST limit excludes the ~66 per cent of the active-installation prior volume with L<sub>waste</sub> above it, while every other channel is inactive or degenerate and contributes nothing. The surviving configurations are dormant or low-power, deep-envelope systems (Figure 2). Quantifying that shrinkage is the point; the hypothesis pays for its unfalsified survival in measured parameter volume.</li>
+<li><span class="imp">Information forecast:</span> ranking the Paper C programs by expected |Δln K| per unit cost, the leaders are (1) resolution of the mass tension by continued MSP timing plus Gaia DR4 astrometry, which arbitrates the two astrophysical nulls and thereby moves the engineered hypothesis's denominator; (2) any detection of accretion at any level, which activates the R statistic, the only cheap channel with large discriminating power in both directions; (3) the LISA-era spin measurement, the single largest mover but the least schedulable: intermediate-mass-ratio inspiral rates per IMBH are ~10<sup>−7</sup>–10<sup>−6</sup> yr<sup>−1</sup>, so ω Cen yielding its own inspiral during the mission is unlikely and the spin constraint will more probably arrive statistically, from the population of ω Cen-like systems LISA does catch, than from ω Cen itself. The relic analysis of Section 3.3 raises the stakes on this channel: spin is the one fossil that survives abandonment, so the LISA-era population measurement adjudicates the engineered-history hypotheses for the whole Galactic IMBH population at once. Deeper radio silence, by contrast, now moves ln K weakly for every pairing: for this hypothesis menu the existing limits are already deep enough that further depth buys little discrimination.</li>
+</ul>
+
+<figure id="fig4">
+<img src="/papers/figs/fig3_lnk.png" alt="Bar chart of per-channel log Bayes factor for engineered occupation versus the quiescent IMBH null on 2026 data, showing waste heat as the only active channel at negative 0.40">
+<figcaption><b>Figure 4.</b> Per-channel ln K (engineered vs. quiescent IMBH) on 2026 data, from the Appendix-B computation. Waste heat is the only live channel; its −0.40 (whiskers: dormancy-prior sensitivity) is the entire present evidence budget. The empty bars are the framework's forecastable headroom: each activates with the observations ranked in the information forecast.</figcaption>
+</figure>
+</section>
+
+<section id="sec-discussion">
+<h2>6. Discussion</h2>
+
+<h3>6.1 Limitations</h3>
+<p>The feasibility envelope depends on cluster-center parameters that carry real uncertainty (mass function of the remnant tail, central density profile inside the influence radius) and on a material-strength scale taken from present technology; both are varied in the Appendix, and the envelope boundaries move by factors of a few, not orders of magnitude. The MAD-regulation channel inherits the systematic uncertainties of the GRMHD baseline literature, which is simulation-calibrated rather than observationally calibrated at IMBH masses. The adjudication framework shares the standard vulnerability of Bayesian model selection to unmodeled hypotheses: it ranks the menu it is given, and a surprise outside the menu (an astrophysical mechanism not yet imagined) would be mis-scored until added. The mitigation is procedural rather than mathematical: the menu is public, extensible, and versioned.</p>
+<p>Three specific quantitative claims are flagged as unfinished pending v1.0/v1.1 revision, each also noted in place:</p>
+<ul class="body-list">
+<li><span class="imp">The R statistic (Section 3.2)</span> is validated only against the GRMHD baseline literature as it stood at draft time; a check against the 2026 variability tables is outstanding, and intermediate-state contamination is not yet quantified as a confusion risk.</li>
+<li><span class="imp">The abandoned-swarm drainage timescale (Section 3.3)</span> is qualitative only: the hole-versus-star asymmetry in debris fate is robust, but no rate has been derived.</li>
+<li><span class="imp">The entropy-transport floor 1 − f<sub>sink</sub> ≳ 10<sup>−4</sup> (Appendix A.3)</span> is a geometric solid-angle estimate, not a radiative-transfer derivation, and is the weakest quantitative claim in the paper.</li>
+</ul>
+
+<h3>6.2 Relation to the series and beyond</h3>
+<p>Within the series, this paper closes the constructive quadrant: Paper A argued the destination is attractive, and Section 2 finds the destination is habitable by infrastructure, with the thermodynamically preferred region also the dynamically safest. It also arms Paper C's campaign with the scoring machinery its two-messenger policy presupposed, and returns to Paper D a refined survival input (p<sub>s</sub> now decomposable into transit and residence terms, the latter bounded here). Beyond the series, the two exportable products are the envelope method, applicable to any proposed megastructure environment with a stated perturber population, and the adjudication framework, applicable to any technosignature program willing to pre-register its nulls.</p>
+
+<h3>6.3 Conclusion</h3>
+<p>The engineered-IMBH hypothesis survives its first engineering audit and its first quantitative adjudication, in both cases by narrowing: infrastructure persists only within ~4×10³ AU of the hole, and the surviving parameter space after current data is dormant, low-power, and deep. Every forthcoming measurement listed in Section 5 shrinks it further or breaks it open. Either outcome is progress that a hypothesis without an envelope, a residue model, and a scoring rule could not deliver.</p>
+</section>
+
+<section id="sec-appendix">
+<h2>7. Appendices: Monte Carlo, priors, reproducibility</h2>
+
+<h3>A. Flyby Monte Carlo: method and parameters</h3>
+<p><span class="imp">Method</span> (implemented in <code>paper/figs/fig1_envelope.py</code>; fixed seed 20260717). For each of 40 logarithmic radius bins a ∈ [10<sup>−3</sup>, 4×10³] AU: (1) 2×10⁵ encounters are drawn with impact parameter from the gravitationally focused cumulative distribution Q(b) ∝ v<sub>rel</sub>²b² + 2GMb truncated at b<sub>max</sub> = 30a (contributions beyond carry &lt;10<sup>−3</sup> of the kick variance), speed from a Maxwellian at σ = 21 km s<sup>−1</sup>, and mass from a two-component function (0.35 M<sub>☉</sub> with weight 0.7; 0.6 M<sub>☉</sub> white-dwarf tail with weight 0.3). (2) Each encounter contributes an impulsive eccentricity kick δ = 2(m<sub>★</sub>/M) min[1,(a/b)²](v<sub>orb</sub>/v); no adiabatic suppression is applied (conservative). (3) Per history (2×10⁴ per bin), survival time is the random-walk first-passage to e = 0.5: encounters to threshold n<sub>★</sub> = e²/⟨δ²⟩ with CLT scatter, divided by the total encounter rate Γ(&lt;b<sub>max</sub>), capped at 12 Gyr. Single-passage disruption is impossible at these mass ratios (δ ≲ 10<sup>−2</sup> even for penetrating passages); direct star–element scattering contributes negligibly at any realistic covering fraction.</p>
+<p><span class="imp">Results.</span> Median lifetimes 3.4×10⁹, 3.3×10⁹, and 2.5×10⁹ yr at a = 10, 10², 10³ AU: flat, by the scale cancellation ⟨δ²⟩ ∝ a<sup>−1</sup>, Γ ∝ a discussed in Section 2.4. Varying the mean stellar mass by ×2, the density by ×3, and e<sub>cross</sub> over 0.3–0.7 moves the floor by factors of a few; no variation brings any part of the envelope below 10⁸ yr.</p>
+<p><span class="imp">A.3: transport bound.</span> The floor 1 − f<sub>sink</sub> ≳ 10<sup>−4</sup> follows from intercepted-power geometry: entropy export to the horizon requires beaming waste flux into the solid angle subtended by the disposal channel, and for swarm geometries within the envelope, the fraction of beamed power intercepted and re-thermalized by other swarm elements is bounded below by the swarm covering fraction as seen from a typical element, ≳10<sup>−4</sup> for the covering fractions that make the swarm computationally worthwhile.</p>
+<div class="specbox"><strong>Epistemic status:</strong> The 1 − f<sub>sink</sub> ≳ 10<sup>−4</sup> transport floor is a geometric estimate from intercepted-power solid-angle arguments, not a full radiative-transfer derivation (Section 6.1); it is the weakest quantitative claim in the paper.</div>
+
+<h3>B. Priors, likelihoods, and computation</h3>
+<p>Implemented in <code>paper/figs/fig3_lnk.py</code> (2×10⁶ prior draws; fixed seed). H<sub>eng</sub> parameters: P<sub>comp</sub> log-uniform on [1, P<sub>fuel</sub>] L<sub>☉</sub> with P<sub>fuel</sub> = 7.6×10⁵ L<sub>☉</sub> (the ambient Bondi ceiling of Section 2.7); 1 − f<sub>sink</sub> log-uniform on [10<sup>−4</sup>, 1]; dormancy probability f<sub>d</sub> = 0.5, varied over [0.1, 0.9] for the sensitivity band. MIR channel likelihood: hard detection threshold at L<sub>lim</sub> = 1 L<sub>☉</sub> (a soft threshold changes ln K by &lt;0.1); data = non-detection; P(quiet | active) = 0.34, giving ln K<sub>MIR</sub> = ln[f<sub>d</sub> + (1 − f<sub>d</sub>) × 0.34] = −0.40 at fiducial f<sub>d</sub>, band [−0.90, −0.07]. Radio, R, spin, kinematic, and timing channels are inactive or degenerate between the engineered and quiescent-IMBH hypotheses on current data and contribute ln K = 0 each, as Table 1 requires. The quiescent-vs-subcluster contest is checked against the <code>imbh-constraints</code> v1.0.0 aggregation engine (nine curated constraints; empty joint window, tension verdict), whose mass-window math is anchored by the series' replayed golden and CI parity gate.</p>
+
+<h3>C. Reproducibility</h3>
+<p>Figure scripts and outputs are published alongside this page at <a href="/papers/figs/">/papers/figs/</a> (<a href="/papers/figs/common.py">common.py</a> for shared constants, one script per figure — <a href="/papers/figs/fig1_envelope.py">fig1_envelope.py</a>, <a href="/papers/figs/fig2_constraint_plane.py">fig2_constraint_plane.py</a>, <a href="/papers/figs/fig3_lnk.py">fig3_lnk.py</a>, <a href="/papers/figs/fig4_r_statistic.py">fig4_r_statistic.py</a> — plus <a href="/papers/figs/fig1_results.json">fig1_results.json</a> for machine-readable Monte Carlo output and a <a href="/papers/figs/README.md">README</a>). The full LaTeX source for all five papers (<code>.tex</code> + <code>.bib</code>) is at <a href="/papers/source/">/papers/source/</a>. All random draws use fixed seeds; all quoted numbers regenerate from the scripts. The measurement compilation and aggregation library are the public series toolchain (<code>imbh-constraints</code> v1.0.0, Zenodo DOI 10.5281/zenodo.20689279, ASCL submitted); interactive calculator versions of the Figure 1 and Section 2.7 computations are the site's <a href="/tools/flyby-survival.html">flyby-survival.html</a> (single-point), <a href="/tools/flyby-survival-simulator.html">flyby-survival-simulator.html</a> (full envelope sweep, this paper's Figure 1 reimplemented in browser JS), and <a href="/tools/imbh-fuel-budget.html">imbh-fuel-budget.html</a> tools (see cross-check note below).</p>
+<p class="kw"><b>Cross-check status:</b> the browser reimplementations of the flyby Monte Carlo at <a href="/tools/flyby-survival.html">flyby-survival.html</a> and <a href="/tools/flyby-survival-simulator.html">flyby-survival-simulator.html</a> (in-browser draws, hash-state deep links, no network calls) agree with the paper's Python Monte Carlo within a factor of a few, fully explained by the reduced sample counts (interactive-friendly trial counts vs. the paper's 2×10⁵ encounter draws / 2×10⁴ histories per bin) and the σ default (site SSOT 18.2 km/s from <code>measurements.js</code> <code>clusterParams</code> vs this paper's 21 km/s fiducial). Known follow-up: harmonize the σ fiducial across paper and site when Appendix A gets its parameter-variation production pass.</p>
+</section>
+
+<section id="sec-refs">
+<h2>References</h2>
+<div class="refs">
+<ol>
+<li>Abbate, F., et al. 2018, MNRAS, 481, 627 — Pulsar-based intracluster medium density estimates.</li>
+<li>Amaro-Seoane, P., et al. 2018 — Laser Interferometer Space Antenna (arXiv:1702.00786).</li>
+<li>Ashton, G., et al. 2018, ApJS, 241, 27 — Coincident detection significance in multimessenger astronomy.</li>
+<li>Bañares-Hernández, A., et al. 2025, A&amp;A, 693, A104 — Pulsar-timing mass constraint on the ω Centauri center.</li>
+<li>Bardeen, J. M., Press, W. H. &amp; Teukolsky, S. A. 1972, ApJ, 178, 347 — Rotating black holes: locally nonrotating frames, energy extraction, and scalar synchrotron radiation.</li>
+<li>Baumgardt, H. &amp; Vasiliev, E. 2021, MNRAS, 505, 5957 — Accurate distances to Galactic globular clusters.</li>
+<li>Binney, J. &amp; Tremaine, S. 2008, Galactic Dynamics, 2nd ed., Princeton University Press.</li>
+<li>Breschi, M., et al. 2024, PRD, 109, 043062 — Multimessenger coincidence likelihoods for compact binary counterparts.</li>
+<li>Chen, X., et al. 2025 — JWST mid-infrared photometric limits on the ω Cen center (Paper C program 1 data).</li>
+<li>de Vita, R., et al. 2018, MNRAS, 475, 1574 — Brownian wandering of intermediate-mass black holes in globular clusters.</li>
+<li>Dvali, G. 2023 — Black holes as saturated quantum information systems (arXiv preprint).</li>
+<li>Forgan, D. H. 2018, IJA, 17, 337 — Quantifying the detectability of technosignatures: the Rio scale revisited.</li>
+<li>Fragione, G., et al. 2018, ApJ, 856, 92 — Tidal disruption rates by intermediate-mass black holes in globular clusters.</li>
+<li>Freire, P. C., et al. 2001, MNRAS, 326, 901 — Pulsar dispersion-measure constraints on the ω Cen intracluster medium.</li>
+<li>González Prieto, E., et al. 2025 — N-body preferred mass for the ω Cen central object.</li>
+<li>Häberle, M., et al. 2024, Nature, 631, 285 — Fast-moving stars around an intermediate-mass black hole in ω Centauri.</li>
+<li>Häberle, M., et al. 2026 — oMEGACat II: white-dwarf and remnant mass function.</li>
+<li>Häberle, M., et al. 2026 — oMEGACat VII: intracluster medium density measurement.</li>
+<li>Heggie, D. &amp; Hut, P. 2003, The Gravitational Million-Body Problem, Cambridge University Press.</li>
+<li>Inoue, K. 2011 — Black holes as computational substrates (arXiv preprint).</li>
+<li>Kass, R. E. &amp; Raftery, A. E. 1995, JASA, 90, 773 — Bayes factors.</li>
+<li>Lacki, B. C. 2025 — Collisional cascades in megastructure debris (arXiv preprint).</li>
+<li>Luan, J., et al. 2026 — Interference rejection practice in modern radio SETI surveys.</li>
+<li>Mahida, R., et al. 2026 — Deep ATCA radio non-detection limits on the ω Cen center.</li>
+<li>Mandel, I., et al. 2008, ApJ, 681, 1431 — Rate estimates for intermediate-mass-ratio inspirals.</li>
+<li>McInnes, C. R. 2026 — Passive stability of Dyson bubbles and stellar-engine swarms (arXiv preprint).</li>
+<li>Narayan, R., et al. 2022 — Magnetically arrested disks: jet power and variability from GRMHD simulation.</li>
+<li>Nitschai, M. S., et al. 2023, MNRAS, 522, 5926 — Kinematic modeling of the ω Cen central velocity dispersion.</li>
+<li>Opatrny, T. 2017 — Computation at black-hole horizons (arXiv preprint).</li>
+<li>Raval, U., et al. 2024 — Stability of stellar-engine formation geometries.</li>
+<li>Sheikh, S. Z., et al. 2021, AJ, 161, 55 — Analysis of the Breakthrough Listen signal of interest.</li>
+<li>Swanson, T. 2026a — The Macro Transcension Hypothesis (Paper A). <a href="/macro-transcension-hypothesis.html">omegacentauri.me/macro-transcension-hypothesis.html</a></li>
+<li>Swanson, T. 2026b — Inward Resolutions of the Fermi Paradox (Paper B). <a href="/inward-migration-fermi-paradox-review.html">omegacentauri.me/inward-migration-fermi-paradox-review.html</a></li>
+<li>Swanson, T. 2026c — A Multi-Messenger Technosignature and Anomaly-Detection Campaign for Omega Centauri (Paper C). <a href="/omega-centauri-technosignature-campaign.html">omegacentauri.me/omega-centauri-technosignature-campaign.html</a></li>
+<li>Swanson, T. 2026d — The Economics of Inward Migration (Paper D). <a href="/inward-migration-economics.html">omegacentauri.me/inward-migration-economics.html</a></li>
+<li>Tchekhovskoy, A., Narayan, R. &amp; McKinney, J. C. 2011, MNRAS, 418, L79 — Efficient generation of jets from magnetically arrested accretion on a rapidly spinning black hole.</li>
+<li>Tremou, E., et al. 2018, ApJ, 862, 16 — Deep radio continuum limits on globular-cluster intermediate-mass black holes.</li>
+<li>Universe (2026 GRMHD variability compilation) — MAD/intermediate/SANE variability hierarchy tables.</li>
+<li>Wright, J. T. 2020 — Dyson sphere/swarm structural stability considerations.</li>
+</ol>
+</div>
+</section>
+
+<div class="footer">
+<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
+<p>Preprint; intended for arXiv submission. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. Interactive calculators implementing the quantitative material are available under <a href="/tools/">/tools/</a>. This HTML edition is generated from the LaTeX source (<code>paper/engineered-imbh-paper.tex</code>) and mirrors it; the PDF is canonical for citation.</p>
+</div>
+
+</main>
+</body>
+</html>
