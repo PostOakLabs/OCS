@@ -105,6 +105,19 @@ made cheap:
   to the URL hash on every interaction and restore from the hash on page load.
   Use the helper functions in spec §11.
 
+## Local validation hook
+
+`scripts/pre-push` mirrors Job 1 (Validate) in `deploy.yml` — count drift, broken
+links, stranded pages, JS syntax, hash lint, schema. Git cannot install hooks from
+the repository itself, so run this once per clone:
+
+```
+cp scripts/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+```
+
+Edit `scripts/pre-push` (the tracked copy), never `.git/hooks/pre-push`, then re-run
+the command above. To bypass in an emergency: `git push --no-verify`.
+
 ## Pull-request checklist
 
 Before opening a PR, confirm:
@@ -116,6 +129,8 @@ Before opening a PR, confirm:
       (version bumped, "Last updated" matches the commit date, license trio
       declared, data sources listed).
 - [ ] Tested in Chrome and Firefox at desktop width and at 720 px.
+- [ ] A new tool page has a card in `tools/index.html`, and any new page is
+      linked from a hub — `python3 scripts/check-orphans.py` passes.
 - [ ] If a shared utility function (spec §11) was modified, all consumer tools
       updated in the same PR.
 - [ ] If a hardcoded measurement was modified, the change has been migrated to
