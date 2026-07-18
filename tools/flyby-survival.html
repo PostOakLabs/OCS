@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--
+  Flyby Survival — Swarm Structure Lifetime Against Stellar Traffic
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Version: 1.0  ·  Last updated: 2026-07-17
+  Register: speculative engineering (MTH) — physics inputs peer-reviewed
+  Companion to Paper E (engineered-IMBH systems), Fig. 1 / Appendix A.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flyby Survival — Hole-Bound Structure Lifetimes — Omega Centauri Society</title>
+<meta name="description" content="Monte Carlo survival time of structures orbiting a cluster-core IMBH against cumulative stellar flyby perturbation: encounter rates with gravitational focusing, impulsive eccentricity diffusion, adiabatic protection.">
+<link rel="canonical" href="https://omegacentauri.me/tools/flyby-survival.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--red-glow:#ff6060;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 80% 20%,rgba(29,186,144,.05),transparent 50%),radial-gradient(ellipse at 15% 70%,rgba(112,85,212,.06),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:200}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}.nav-brand:hover{color:var(--amber-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid;color:var(--amber-bright);background:rgba(240,160,32,.06);border-color:var(--amber-mid)}
+.input-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 26px;margin-bottom:20px}
+.ic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.ic-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);display:block;margin-bottom:5px}
+.num-input{background:rgba(7,5,21,.8);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);font-family:'Orbitron',sans-serif;font-size:15px;padding:9px 12px;outline:none;width:100%}
+.num-input:focus{border-color:var(--purple-mid)}
+.output-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.output-table td{padding:9px 14px;border-bottom:1px dotted rgba(80,72,112,.15);vertical-align:middle}
+.output-table tr:hover td{background:rgba(112,85,212,.03)}
+.otd-name{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.otd-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--purple-glow);min-width:180px}
+.otd-desc{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
+.section-header{background:rgba(26,16,64,.4)}
+.section-header td{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);padding:8px 14px;border-bottom:1px dashed var(--border-subtle)}
+.quick-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.qp-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.qp-btn:hover{border-color:var(--purple-mid);color:var(--text-secondary)}
+.note-card{border:1px solid var(--border-teal);border-radius:12px;padding:16px 20px;font-size:14px;color:var(--text-secondary);background:rgba(29,186,144,.03);margin-bottom:20px}
+.wf-link{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;padding:9px 20px;border-radius:10px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.05);margin-right:10px;margin-bottom:8px;transition:all .15s}
+.wf-link:hover{background:rgba(29,186,144,.12);color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Flyby Survival</span>
+    <a class="nav-link" href="https://omegacentauri.me/#engineering">← #engineering</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Flyby Survival</h1>
+      <p class="tool-subtitle">How long does a structure bound to a cluster-core IMBH survive the stellar traffic? Impulsive Monte Carlo of encounter-driven eccentricity diffusion, with gravitational focusing and a two-component mass function. Paper E, Fig.&nbsp;1 / Appendix&nbsp;A.</p>
+    </div>
+    <span class="tier-badge">Speculative register · MTH engineering</span>
+  </header>
+
+  <div class="quick-presets">
+    <button class="qp-btn" onclick="setPreset({a:1})">deep swarm (1 AU)</button>
+    <button class="qp-btn" onclick="setPreset({a:100})">mid envelope (100 AU)</button>
+    <button class="qp-btn" onclick="setPreset({a:3000})">near stripping radius (3,000 AU)</button>
+    <button class="qp-btn" onclick="setPreset({mbh:8200,a:10})">Häberle floor mass</button>
+    <button class="qp-btn" onclick="setPreset({mbh:50000,a:10})">N-body preferred mass</button>
+  </div>
+
+  <div class="input-card"><div class="ic-grid">
+    <div><label class="ic-label" for="in-mbh">IMBH mass [M☉]</label><input class="num-input" id="in-mbh" type="number" value="20000"></div>
+    <div><label class="ic-label" for="in-a">structure semi-major axis a [AU]</label><input class="num-input" id="in-a" type="number" value="10"></div>
+    <div><label class="ic-label" for="in-sigma">velocity dispersion σ [km/s]</label><input class="num-input" id="in-sigma" type="number" value="18.2"></div>
+    <div><label class="ic-label" for="in-nstar">stellar density [pc⁻³]</label><input class="num-input" id="in-nstar" type="number" value="10000"></div>
+    <div><label class="ic-label" for="in-ecross">orbit-crossing eccentricity</label><input class="num-input" id="in-ecross" type="number" step="0.1" value="0.5"></div>
+  </div></div>
+
+  <table class="output-table"><tbody id="out-body"></tbody></table>
+
+  <div class="note-card">
+    <strong>Conservative by construction.</strong> Kicks use the impulsive approximation with saturation for penetrating passages; adiabatic invariance (encounter duration ≫ orbital period, the deep-envelope norm) suppresses the real hazard exponentially below this estimate. Single-passage disruption is impossible at stellar-to-IMBH mass ratios (Δv/v ≲ 10⁻²). Defaults: σ from <code>measurements.js clusterParams</code>; densities from the ω&nbsp;Cen core. Method: Paper E Appendix&nbsp;A (seeded reference run: <code>paper/figs/fig1_envelope.py</code>).
+  </div>
+  <a class="wf-link" href="imbh-fuel-budget.html">→ fuel budget</a>
+  <a class="wf-link" href="infall-survival.html">→ infall survival</a>
+  <a class="wf-link" href="compute-in-space.html">→ compute in space</a>
+</div>
+
+<script src="data/measurements.js"></script>
+<script>
+const G=6.674e-11,MSUN=1.989e30,AU=1.496e11,PC=3.086e16,YR=3.156e7;
+const MF=[[0.35*MSUN,0.7],[0.60*MSUN,0.3]];
+const BFAC=30;
+
+function simulate(mbhMsun,aAU,sigmaKms,nstarPc3,eCross){
+  const M=mbhMsun*MSUN, GM=G*M, a=aAU*AU, sig=sigmaKms*1e3;
+  const n=nstarPc3/(PC**3), vrel=Math.SQRT2*sig, vorb=Math.sqrt(GM/a);
+  const bmax=BFAC*a;
+  const lam=n*Math.PI*bmax*bmax*vrel*(1+2*GM/(bmax*vrel*vrel)); // encounters/s
+  // Monte Carlo over encounter statistics
+  const N=40000; let sum2=0,pen=0;
+  let s=20260717; const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};
+  for(let i=0;i<N;i++){
+    // Rayleigh-ish speed draw
+    const v=sig*Math.sqrt(-2*Math.log(1-rnd()))+0.3*sig;
+    const v2=v*v, Qmax=v2*bmax*bmax+2*GM*bmax, u=rnd()*Qmax;
+    const b=(-2*GM+Math.sqrt(4*GM*GM+4*v2*u))/(2*v2);
+    const m=rnd()<MF[0][1]?MF[0][0]:MF[1][0];
+    if(b<a)pen++;
+    const geom=Math.min(1,(a/b)**2);
+    const d=2*(m/M)*geom*(vorb/v);
+    sum2+=d*d;
+  }
+  const mu=sum2/N, nNeeded=eCross*eCross/mu;
+  const tDiff=nNeeded/lam;                       // seconds
+  const rinfl=GM/(sig*sig);
+  return {lamYr:lam*YR, tDiffYr:tDiff/YR, pen:pen/N, vorbKms:vorb/1e3,
+          rinflAU:rinfl/AU, stripAU:0.1*rinfl/AU, periodDays:2*Math.PI*Math.sqrt(a**3/GM)/86400,
+          encWait:1/(lam*YR)};
+}
+
+function fmt(x){
+  if(!isFinite(x))return '∞';
+  if(x===0)return '0';
+  const e=Math.floor(Math.log10(Math.abs(x)));
+  if(e>=4||e<=-3){return (x/10**e).toFixed(2)+'×10'+supers(e);}
+  return x>=100?x.toFixed(0):x>=1?x.toFixed(2):x.toFixed(4);
+}
+function supers(e){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(e).split('').map(c=>m[c]).join('');}
+
+function row(n,v,d){return `<tr><td class="otd-name">${n}</td><td class="otd-val">${v}</td><td class="otd-desc">${d}</td></tr>`;}
+function sect(t){return `<tr class="section-header"><td colspan="3">${t}</td></tr>`;}
+
+function calculate(){
+  const mbh=+document.getElementById('in-mbh').value||2e4;
+  const a=+document.getElementById('in-a').value||10;
+  const sig=+document.getElementById('in-sigma').value||18.2;
+  const ns=+document.getElementById('in-nstar').value||1e4;
+  const ec=+document.getElementById('in-ecross').value||0.5;
+  const r=simulate(mbh,a,sig,ns,ec);
+  let capNote='';
+  let t=r.tDiffYr;
+  if(t>1.2e10){capNote=' (exceeds cluster age)';}
+  const strip=a>r.stripAU?'⚠ beyond cluster stripping radius — orbit not durable':'inside stripping radius';
+  document.getElementById('out-body').innerHTML=
+    sect('Survival')+
+    row('impulsive diffusion lifetime',fmt(t)+' yr'+capNote,'conservative floor; adiabatic protection lengthens it')+
+    row('orbit status',strip,`stripping radius ≈ ${fmt(r.stripAU)} AU (0.1 r_infl)`)+
+    sect('Encounter statistics')+
+    row('encounter rate (b < 30a)',fmt(r.lamYr)+' yr⁻¹','gravitationally focused')+
+    row('mean wait between encounters',fmt(r.encWait)+' yr','1/rate')+
+    row('penetrating fraction (b < a)',fmt(100*r.pen)+' %','saturated kicks, never disruptive alone')+
+    sect('Orbit')+
+    row('orbital velocity',fmt(r.vorbKms)+' km/s','v_orb = √(GM/a)')+
+    row('orbital period',fmt(r.periodDays)+' d','sets the adiabatic ratio b/(v P)')+
+    row('influence radius',fmt(r.rinflAU)+' AU','GM/σ²');
+  saveHash({mbh,a,sigma:sig,nstar:ns,ecross:ec});
+}
+function setPreset(o){
+  if(o.mbh)document.getElementById('in-mbh').value=o.mbh;
+  if(o.a)document.getElementById('in-a').value=o.a;
+  calculate();
+}
+function saveHash(o){history.replaceState(null,'','#'+new URLSearchParams(o).toString());}
+function loadHash(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  const map={mbh:'in-mbh',a:'in-a',sigma:'in-sigma',nstar:'in-nstar',ecross:'in-ecross'};
+  for(const[k,id]of Object.entries(map))if(p.has(k))document.getElementById(id).value=p.get(k);
+}
+// defaults from measurements SSOT
+try{
+  const cp=window.OCS_MEASUREMENTS&&window.OCS_MEASUREMENTS.clusterParams;
+  if(cp&&cp.OC_sigma0_kms)document.getElementById('in-sigma').value=cp.OC_sigma0_kms;
+}catch(e){}
+window.OCS_APPLY_PREFILL=function(o){setPreset(o);};
+window.OCS_RUN=calculate;
+loadHash();
+calculate();
+</script>
+<script src="data/prefill.js"></script>
+</body>
+</html>

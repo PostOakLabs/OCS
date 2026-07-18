@@ -465,6 +465,8 @@ window.OCS_MEASUREMENTS = {
   clusterParams: {
     OC_distance_pc: 5490,   // parsecs; Harris 2010 / oMEGACat consensus value (range in literature: 5,030–5,494)
     OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (A&A 445:513)
+    OC_ne_cm3:      0.23,   // cm^-3; central ionized intracluster-medium density, oMEGACat VII (arXiv:2510.00330), method precedent Freire et al. 2001 (47 Tuc MSP dispersion)
+    OC_rho0_msun_pc3: 3.0e3,// M☉/pc^3; core mass density (Chandra study ApJ 697:224 / Baumgardt & Vasiliev 2021 compilation)
   },
 
   /* ================================================================
