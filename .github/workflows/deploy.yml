@@ -248,6 +248,7 @@ jobs:
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.well-known/acme-challenge/' \
+            --exclude='.dh-diag' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
@@ -284,6 +285,7 @@ jobs:
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.well-known/acme-challenge/' \
+            --exclude='.dh-diag' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
@@ -293,9 +295,18 @@ jobs:
           echo "=== $(wc -l < /tmp/would-delete.txt) path(s) would be deleted ==="
 
       # ── 5. rsync live deploy (skipped on dry_run) ──────────────────────────
-      # NOTE: --delete is deliberately ABSENT here, pending Tim's review of the
-      # would-delete audit above (standing order 7). Until then this deploy stays
-      # additive-only and removals do not reach production.
+      # --delete enabled 2026-07-18 with Tim's approval under standing order 7,
+      # after he read the would-delete audit from run 29650366247: 36 paths, all
+      # classified. 34 were the stale renames/removals this work set out to clear
+      # (30 demo-* pages, campaign.html, review.html, papers/mth-2026.pdf, and the
+      # empty-basename tools/.html artifact), every renamed one already covered by
+      # a 301 in .htaccess. favicon.gif was released (zero repo references;
+      # browsers auto-request favicon.ico, which is tracked). .dh-diag is excluded
+      # above rather than deleted — unknown provenance, nothing written by this
+      # workflow, and keeping it costs nothing.
+      #
+      # Keep the exclude list byte-identical to the would-delete audit's, or the
+      # audit stops describing the operation that actually runs.
       - name: rsync live deploy
         if: ${{ github.event.inputs.dry_run != 'true' }}
         env:
@@ -305,10 +316,11 @@ jobs:
         run: |
           set -euo pipefail
           echo "=== LIVE DEPLOY ==="
-          rsync -avz --omit-dir-times \
+          rsync -avz --omit-dir-times --delete \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='.well-known/acme-challenge/' \
+            --exclude='.dh-diag' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
