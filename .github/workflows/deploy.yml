@@ -247,12 +247,55 @@ jobs:
           rsync -avz --omit-dir-times --dry-run \
             --exclude='.git/' \
             --exclude='.github/' \
+            --exclude='.well-known/acme-challenge/' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
             ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
 
+      # ── 4b. WOULD-DELETE AUDIT (dry run, never writes) ────────────────────
+      # Vendored from AINumbers/repo/.github/workflows/deploy-to-dreamhost.yml,
+      # which has run --delete against the same DreamHost host class for months.
+      #
+      # This deploy has never carried --delete, so the web root has accumulated
+      # every file ever removed or renamed on main (see
+      # OCS-PROD-ORPHAN-ASSETS-ISSUE.md — ~34 stale URLs at the time of writing).
+      # The web root has NEVER been diffed against the repo, so nobody knows what
+      # else is up there: hand-uploaded files, control-panel artifacts, stats
+      # directories, a legacy .htaccess.
+      #
+      # This step exists to produce that list and nothing else. It writes no
+      # files. Read its output before anyone adds --delete to the live rsync
+      # below — an unreviewed --delete is an irreversible production deletion.
+      #
+      # The exclude list MUST stay byte-identical to the live rsync's, or this
+      # audit is describing a different operation than the one that will run.
+      - name: rsync would-delete audit (dry run)
+        env:
+          DH_SSH_USER: ${{ secrets.DH_SSH_USER }}
+          DH_SSH_HOST: ${{ secrets.DH_SSH_HOST }}
+          DH_WEB_ROOT: ${{ secrets.DH_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          echo "=== WOULD-DELETE AUDIT — dry run, nothing is written ==="
+          echo "Every path listed below exists on the host but NOT in this repo."
+          echo ""
+          rsync -avz --omit-dir-times --dry-run --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.well-known/acme-challenge/' \
+            --exclude='CLAUDE.md' \
+            --exclude='.DS_Store' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
+            ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/" \
+            | sed -n '/^deleting /p' | sort | tee /tmp/would-delete.txt
+          echo ""
+          echo "=== $(wc -l < /tmp/would-delete.txt) path(s) would be deleted ==="
+
       # ── 5. rsync live deploy (skipped on dry_run) ──────────────────────────
+      # NOTE: --delete is deliberately ABSENT here, pending Tim's review of the
+      # would-delete audit above (standing order 7). Until then this deploy stays
+      # additive-only and removals do not reach production.
       - name: rsync live deploy
         if: ${{ github.event.inputs.dry_run != 'true' }}
         env:
@@ -265,10 +308,52 @@ jobs:
           rsync -avz --omit-dir-times \
             --exclude='.git/' \
             --exclude='.github/' \
+            --exclude='.well-known/acme-challenge/' \
             --exclude='CLAUDE.md' \
             --exclude='.DS_Store' \
             -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30" \
             ./ "${DH_SSH_USER}@${DH_SSH_HOST}:${DH_WEB_ROOT}/"
+
+      # ── 5b. Purge Cloudflare cache (skipped on dry_run) ───────────────────
+      # Vendored from AINumbers/repo/.github/workflows/deploy-to-dreamhost.yml.
+      #
+      # omegacentauri.me is Cloudflare-fronted (confirmed 2026-07-18: responses
+      # carry Server: cloudflare + CF-RAY). Without a purge the edge serves stale
+      # content past a deploy, which is not just cosmetic — when the .htaccess
+      # rename-301s went live, cached paths kept returning 200 with the old page
+      # while uncached ones correctly returned 301. Verification against a warm
+      # cache reports the wrong answer.
+      #
+      # Requires two repo secrets (GitHub → Settings → Secrets → Actions):
+      #   CF_ZONE_ID    — omegacentauri.me zone ID (CF dashboard → Overview → API)
+      #   CF_API_TOKEN  — scoped token, permission: Zone → Cache Purge → Purge
+      # NEITHER IS SET on this repo as of 2026-07-18, so this step currently logs
+      # a skip notice and exits 0. It never blocks an otherwise-good deploy.
+      # purge_everything is used because prefix/tag purge is Enterprise-only.
+      - name: Purge Cloudflare cache
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CF_ZONE_ID:-}" ] || [ -z "${CF_API_TOKEN:-}" ]; then
+            echo "CF_ZONE_ID / CF_API_TOKEN not set — skipping Cloudflare purge."
+            echo "Deployed content will go live as edge TTLs expire."
+            exit 0
+          fi
+          RESP=$(curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${CF_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}')
+          echo "$RESP"
+          if echo "$RESP" | grep -q '"success":true'; then
+            echo "Cloudflare cache purged — fresh content live."
+          else
+            echo "::error::Cloudflare purge failed (see response above). Files deployed OK; cache clears on TTL."
+            exit 1
+          fi
 
       # ── 6. Smoke test (skipped on dry_run) ────────────────────────────────
       # Accepts 200, 301, or 302 — DreamHost typically issues an HTTP→HTTPS
