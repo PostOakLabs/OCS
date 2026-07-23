@@ -139,6 +139,14 @@ jobs:
       - name: Test — imbh-constraints library
         run: node --test scripts/tests/lib-imbh-constraints.test.mjs
 
+      # Copy-hallmarks gate (OCS-COPY-GATE, vendored from AINumbers per standing
+      # order 9). Baseline+ratchet on em-dash/bold/italics (scripts/copy-hallmarks-
+      # baseline.json), zero-tolerance on category-3 prose tells (heading emphasis,
+      # "not just X but", twotone pivots, filler vocab, header emoji). Scope =
+      # reader-facing HTML (root + tools/) + README.md.
+      - name: Copy-hallmarks gate (anti-AI-tell)
+        run: node scripts/check-copy-hallmarks.mjs
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):
