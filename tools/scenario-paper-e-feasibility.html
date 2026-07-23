@@ -175,7 +175,7 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">flyby-survival-simulator &middot; Paper E &sect;2.4 &middot; Monte Carlo envelope sweep</div>
         <div class="step-title">Do stellar flybys ever bind the envelope?</div>
-        <p class="step-prose">This sweep runs the impulsive-diffusion Monte Carlo across the full radius range at once: impact parameters from the gravitationally focused encounter rate, velocities from a Maxwellian at dispersion &sigma;, masses from a two-component stellar mass function, and survival defined as eccentricity walking to the orbit-crossing threshold. Paper E&rsquo;s result is the paper&rsquo;s own surprise: the median survival time is <strong>&asymp;3&times;10&#8313; yr</strong>, roughly flat from 10&#8315;&sup3; to 4&times;10&sup3; AU, because the per-encounter kick variance and the encounter rate scale inversely with radius and their product cancels. Flybys never set the outer boundary; they are a trim budget, not a survival requirement.</p>
+        <p class="step-prose">This sweep runs the impulsive-diffusion Monte Carlo across the full radius range at once: impact parameters from the gravitationally focused encounter rate, velocities from a Maxwellian at dispersion &sigma;, masses from the perturber mass function, and survival defined as eccentricity walking to the orbit-crossing threshold. The mass function carries a mass-segregated heavy-remnant tail (10 M&#9737; stellar BHs at the fiducial 1% number fraction, the <code>fbh</code> deeplink here), and that tail sets the floor: the median survival time is <strong>&asymp;3&times;10&#8310; yr</strong>, roughly flat from 10&#8315;&sup3; to 4&times;10&sup3; AU, because the per-encounter kick variance and the encounter rate scale inversely with radius and their product cancels. This supersedes the stars-only &asymp;3&times;10&#8313; yr floor Paper E first reported (recover it with <code>fbh=0</code>). The floor stays well above the 10&#8310; yr passive-safety criterion, so flybys still never set the outer boundary; they are a trim budget, not a survival requirement.</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="sweep" href="flyby-survival-simulator.html">Open Flyby Survival Simulator &rarr;</a>
           <span class="step-params" id="p1"></span>
@@ -275,7 +275,8 @@ a:hover{color:var(--teal-glow)}
 // URL hash on this page: #scenario=deep|outer
 //
 // CRITICAL hash-unit notes (verified 2026-07-18 against each tool's loadHash()):
-//   flyby-survival-simulator : mbh, sigma, nstar, ecross, bins, trials — ALL LINEAR
+//   flyby-survival-simulator : mbh, sigma, nstar, fbh, ecross, bins, trials — ALL LINEAR
+//                              (fbh = remnant-BH fraction in per cent; 1 = fiducial)
 //   flyby-survival           : mbh, a, sigma, nstar, ecross — ALL LINEAR (a = AU)
 //   imbh-fuel-budget         : mbh, ne, sigma, cs, eta, llim, leak — ALL LINEAR
 //   bayes-factor-router      : mode ('bf'|'k'); log10bf is LOG10 (0–20, BF mode);
@@ -286,12 +287,12 @@ a:hover{color:var(--teal-glow)}
 var SCENARIOS = {
   deep: {
     label: 'Deep swarm — thermodynamically favored',
-    sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', ecross:'0.5', bins:'32', trials:'6000'},
+    sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', fbh:'1', ecross:'0.5', bins:'32', trials:'6000'},
     drill: {mbh:'20000', a:'0.02', sigma:'18.2', nstar:'10000', ecross:'0.5'},
     fuel:  {mbh:'20000', ne:'0.23', sigma:'18.2', cs:'10', eta:'1.0', llim:'1.0', leak:'0.0001'},
     router:{mode:'k', k:'-0.80'},
     summary: {
-      sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · e_cross=0.5 · sweep full envelope',
+      sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · f_BH=1% (remnant MF) · e_cross=0.5 · sweep full envelope',
       drill:  'a=0.02 AU (≈10² r_g, fueled inner boundary, §2.2)',
       fuel:   'n_e=0.23 cm⁻³ · η=1.0 · L_lim=1.0 L☉ · 1−f_sink=10⁻⁴',
       router: '2·ln K = −0.58 (ln K = −0.29, Paper E §5 headline) → supports null hypothesis'
@@ -299,12 +300,12 @@ var SCENARIOS = {
   },
   outer: {
     label: 'Outer envelope — stripping-radius limit',
-    sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', ecross:'0.5', bins:'32', trials:'6000'},
+    sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', fbh:'1', ecross:'0.5', bins:'32', trials:'6000'},
     drill: {mbh:'20000', a:'4000', sigma:'18.2', nstar:'10000', ecross:'0.5'},
     fuel:  {mbh:'20000', ne:'0.23', sigma:'18.2', cs:'10', eta:'1.0', llim:'1.0', leak:'0.0001'},
     router:{mode:'k', k:'-0.80'},
     summary: {
-      sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · e_cross=0.5 · sweep full envelope',
+      sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · f_BH=1% (remnant MF) · e_cross=0.5 · sweep full envelope',
       drill:  'a=4,000 AU (≈0.1 r_infl, cluster stripping radius, §2.3)',
       fuel:   'n_e=0.23 cm⁻³ · η=1.0 · L_lim=1.0 L☉ · 1−f_sink=10⁻⁴ (unchanged — ambient supply, not architecture)',
       router: '2·ln K = −0.58 (ln K = −0.29, Paper E §5 headline) → supports null hypothesis (unchanged — today\'s evidence, not architecture)'
