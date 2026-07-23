@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<!--
+  RV-Drift Sensitivity Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-07-23
+  Site section: #science  ·  Epistemic tier: 🔬 Closed-form sensitivity forecast (Campaign Paper §Program 3)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RV-Drift Sensitivity Calculator — Omega Centauri Society</title>
+<meta name="description" content="Radial-velocity-drift acceleration channel for the fast stars: sigma_vdot = sigma_RV*sqrt(12)/(sqrt(n)*T) against the line-of-sight acceleration a_los = GM/r^2 induced by a central mass. Reproduces the Campaign Paper's GO 5137 NIRSpec forecast.">
+<link rel="canonical" href="https://omegacentauri.me/tools/rv-drift-sensitivity.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:150px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.verdict-box{margin-top:8px;padding:10px 14px;background:rgba(29,186,144,.06);border-left:2px solid var(--teal-mid);border-radius:0 6px 6px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary)}
+.verdict-box .v{color:var(--teal-glow)}
+.verdict-box.under .v{color:var(--red-bright)}
+.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px 8px;margin-bottom:24px}
+canvas{width:100%;display:block}
+.chart-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin:-4px 0 12px;font-style:italic}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:20px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">RV-Drift Sensitivity Calculator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>RV-Drift Sensitivity Calculator</h1>
+      <p class="tool-subtitle">A second acceleration channel for the fast stars, independent of proper-motion curvature: repeat NIRSpec radial-velocity visits open a drift-detection window free of frame-tie and geometric-distortion systematics. Compare the recoverable drift uncertainty against the line-of-sight acceleration a central mass would impose.</p>
+    </div>
+    <span class="tier-badge">🔬 Closed-form forecast</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>This is a sensitivity forecast, not a measurement.</strong> It combines a standard white-noise drift-uncertainty formula with the point-mass acceleration law; it does not model NIRSpec's actual per-epoch systematics, crowded-field blending, or the true cadence GO 5137 will fly. Compare relative numbers (channel vs. channel, radius vs. radius) rather than treating either curve as a guaranteed forecast.
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Central mass &amp; target star</div>
+
+      <div class="slider-block">
+        <label>Central mass M (M☉, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="mass-slider" min="3" max="6" step="0.02" value="4.301">
+          <span class="slider-value" id="mass-val">2.0×10⁴ M☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-mass="3.914">Häberle lower bound (8,200)</button>
+          <button class="preset-btn" data-log-mass="4.301">Campaign fiducial (2×10⁴)</button>
+          <button class="preset-btn" data-log-mass="4.690">González-Prieto mass (4.9×10⁴)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Projected radius r (pc, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="r-slider" min="-2.301" max="-0.301" step="0.01" value="-1.097">
+          <span class="slider-value" id="r-val">0.080 pc</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-r="-1.097">Nominal fast star (0.08 pc)</button>
+          <button class="preset-btn" data-log-r="-2">Discovery case, MICADO-class (0.01 pc)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">NIRSpec RV-drift campaign</div>
+
+      <div class="slider-block">
+        <label>Per-epoch RV precision σ_RV (km/s, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="srv-slider" min="-1" max="1" step="0.02" value="0.477">
+          <span class="slider-value" id="srv-val">3.0 km/s</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-srv="0.477">GO 5137 crowded-field (3 km/s)</button>
+          <button class="preset-btn" data-log-srv="0">Bright-star ideal (1 km/s)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Visit cadence (visits/yr)</label>
+        <div class="slider-row">
+          <input type="range" id="cadence-slider" min="0.2" max="4" step="0.1" value="1">
+          <span class="slider-value" id="cadence-val">1.0 / yr</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Baseline T (yr, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="t-slider" min="0" max="1.6" step="0.02" value="0.699">
+          <span class="slider-value" id="t-val">5.0 yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-t="0.699">GO 5137 extension (5 yr)</button>
+          <button class="preset-btn" data-log-t="1.398">Long baseline (25 yr)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Signal: a_los at this mass and radius</div>
+      <div class="row">
+        <div class="row-label">a_los = GM/r²</div>
+        <div class="row-value" id="alos-ms2-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">a_los, as an RV drift rate</div>
+        <div class="row-value" id="alos-val">—</div>
+      </div>
+      <div class="row-meta">The full acceleration is line-of-sight; a random orientation projects a fraction of this onto the observed RV.</div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Noise: recoverable drift uncertainty</div>
+      <div class="row">
+        <div class="row-label">Epochs n = cadence × T</div>
+        <div class="row-value" id="n-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">σ_v̇ = σ_RV·√12 / (√n · T)</div>
+        <div class="row-value" id="sigvdot-val">—</div>
+      </div>
+      <div class="row-meta" id="verdict-meta">—</div>
+      <div class="verdict-box" id="verdict-box">computing…</div>
+    </section>
+  </div>
+
+  <section class="chart-card">
+    <div class="card-title">σ_v̇ vs. baseline, against the a_los signal at two radii</div>
+    <div class="chart-sub">Violet curve: σ_v̇(T) at the current σ_RV and cadence. Dashed lines: a_los at the nominal fast-star radius and the MICADO discovery-case radius, both at the current mass. Matches the Campaign Paper's Figure (lower panel).</div>
+    <canvas id="cvDrift" height="300"></canvas>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The channel</h3>
+      <p>A central mass M at projected radius r imposes a line-of-sight acceleration <code>a_los = GM/r²</code> on a star at that projection. Repeat spectroscopic visits open an independent test of this acceleration: fit a linear drift to n radial-velocity measurements of per-epoch precision σ_RV, spread over a baseline T. For white noise and uniform cadence, the recoverable drift-rate uncertainty is</p>
+      <p><code>σ_v̇ = σ_RV · √12 / (√n · T)</code></p>
+      <p>This channel shares none of the proper-motion channel's systematics (HST frame tie, geometric distortion) and inherits the full r⁻² gain for any inner star: the same acceleration law drives both channels, so a discovery-case star closer to the centre helps this one just as much.</p>
+
+      <h3>Reproducing the Campaign Paper numbers</h3>
+      <p>At the fiducial parameters (M = 2×10⁴ M☉, r = 0.08 pc, σ_RV = 3 km/s, annual cadence, T = 5 yr): a_los ≈ 4.4×10⁻⁷ m/s² ≈ 0.014 km/s/yr, and σ_v̇ ≈ 0.9 km/s/yr, a factor ~65–70 above the nominal signal, the same verdict as the proper-motion channel. At the MICADO-class discovery radius (r = 0.01 pc, same mass) the signal itself reaches ≈0.9 km/s/yr, comparable to σ_v̇ at this baseline: detectable within a five-year GO 5137 extension, and improving rapidly with either more visits or a longer baseline (σ_v̇ ∝ n⁻¹ᐟ²T⁻¹).</p>
+
+      <h3>What this tool does not include</h3>
+      <p>Orbital-phase projection factors (a randomly oriented star sees only a fraction of the full a_los on its line of sight), correlated instrumental systematics across epochs, crowded-field blending in crowded NIRSpec fields, and any prior on which stars are the best drift targets. The headline numbers are the bare white-noise floor.</p>
+
+      <h3>OCS connection</h3>
+      <p>This is the lower panel of the astrometric sensitivity figure in the Campaign Paper's Program 3 (Astrometry): the proper-motion curvature test is marginal on any current or near-future baseline (<a href="pulsar-accel-mapper.html">Pulsar Acceleration Mapper</a> covers the timing side of the same mass tension), so the campaign routes its near-term decision weight through wander, reference-frame, and discovery measurements instead. This RV-drift channel is one of three worked measurements, and the one that most directly rewards finding an inner star.</p>
+
+      <p class="meta-line">v1.0 — 2026-07-23 · Code MIT · Prose CC BY 4.0 · Swanson 2026, "The Omega Centauri Campaign" ("Paper C") §Program 3; Häberle et al. 2024, Nature; González-Prieto et al. 2025</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const G_CONST = 6.674e-11;
+const M_SUN   = 1.989e30;
+const PC_M    = 3.086e16;
+const SEC_YR  = 3.156e7;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { logMass: 4.301, logR: -1.097, logSrv: 0.477, cadence: 1, logT: 0.699 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.logMass){const v=parseFloat(p.logMass); if(!isNaN(v)&&v>=3&&v<=6) state.logMass=v;}
+  if(p.logR){const v=parseFloat(p.logR); if(!isNaN(v)&&v>=-2.301&&v<=-0.301) state.logR=v;}
+  if(p.logSrv){const v=parseFloat(p.logSrv); if(!isNaN(v)&&v>=-1&&v<=1) state.logSrv=v;}
+  if(p.cadence){const v=parseFloat(p.cadence); if(!isNaN(v)&&v>0) state.cadence=v;}
+  if(p.logT){const v=parseFloat(p.logT); if(!isNaN(v)&&v>=0&&v<=1.6) state.logT=v;}
+}
+function saveHash(){
+  setHash({
+    logMass: state.logMass.toFixed(3),
+    logR: state.logR.toFixed(3),
+    logSrv: state.logSrv.toFixed(3),
+    cadence: state.cadence.toFixed(2),
+    logT: state.logT.toFixed(3)
+  });
+}
+
+// a_los = GM/r^2 (m/s^2), then converted to an RV drift rate (km/s/yr)
+function aLos_ms2(M_sun, r_pc){
+  const r_m = r_pc * PC_M;
+  return G_CONST * M_sun * M_SUN / (r_m * r_m);
+}
+function msPerS2_to_kmPerSPerYr(a_ms2){ return a_ms2 * SEC_YR / 1000; }
+
+// Recoverable drift-rate uncertainty, white noise, uniform cadence
+function sigmaVdot(sigmaRv_kms, n, T_yr){ return sigmaRv_kms * Math.sqrt(12) / (Math.sqrt(n) * T_yr); }
+
+function render(){
+  const M   = Math.pow(10, state.logMass);
+  const r   = Math.pow(10, state.logR);
+  const srv = Math.pow(10, state.logSrv);
+  const T   = Math.pow(10, state.logT);
+  const n   = Math.max(2, state.cadence * T);
+
+  document.getElementById('mass-val').textContent = fmtSci(M, 2) + ' M☉';
+  document.getElementById('r-val').textContent = r.toFixed(3) + ' pc';
+  document.getElementById('srv-val').textContent = srv.toFixed(2) + ' km/s';
+  document.getElementById('cadence-val').textContent = state.cadence.toFixed(1) + ' / yr';
+  document.getElementById('t-val').textContent = T.toFixed(1) + ' yr';
+
+  const aMs2 = aLos_ms2(M, r);
+  const aKmsYr = msPerS2_to_kmPerSPerYr(aMs2);
+  const sv = sigmaVdot(srv, n, T);
+  const ratio = sv / aKmsYr;
+
+  document.getElementById('alos-ms2-val').innerHTML = fmtSci(aMs2, 2) + ' <span class="unit">m/s²</span>';
+  document.getElementById('alos-val').innerHTML = fmtSci(aKmsYr, 2) + ' <span class="unit">km/s/yr</span>';
+  document.getElementById('n-val').innerHTML = n.toFixed(1);
+  document.getElementById('sigvdot-val').innerHTML = fmtSci(sv, 2) + ' <span class="unit">km/s/yr</span>';
+
+  const vBox = document.getElementById('verdict-box');
+  const vMeta = document.getElementById('verdict-meta');
+  if (ratio <= 1){
+    vBox.classList.remove('under');
+    vMeta.textContent = `This configuration crosses the signal: σ_v̇ is ${(1/ratio).toFixed(2)}× below the a_los signal.`;
+    vBox.innerHTML = `<span class="v">Detectable</span> at the current baseline and cadence, σ_v̇/a_los = <span class="v">${ratio.toFixed(2)}×</span>.`;
+  } else {
+    vBox.classList.add('under');
+    vMeta.textContent = `σ_v̇ exceeds a_los by ${ratio.toFixed(1)}×; longer baseline (∝T⁻¹) or more visits (∝n⁻¹ᐟ²) close the gap.`;
+    vBox.innerHTML = `<span class="v">Below threshold</span>, σ_v̇/a_los = <span class="v">${ratio.toFixed(1)}×</span> above the signal.`;
+  }
+
+  drawChart(M, srv, state.cadence);
+}
+
+function drawChart(M, srv, cadence){
+  const cv = document.getElementById('cvDrift');
+  const W = cv.offsetWidth || 900, H = 300;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const pad = { l: 78, r: 26, t: 20, b: 44 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(7,5,21,0.6)';
+  ctx.fillRect(pad.l, pad.t, pw, ph);
+
+  const logTmin = 0, logTmax = 1.6; // 1-40 yr
+  const logYmin = -2.5, logYmax = 0.5; // 0.003-3 km/s/yr
+
+  function xPx(logT){ return pad.l + (logT-logTmin)/(logTmax-logTmin)*pw; }
+  function yPx(logY){ return pad.t + ph - (logY-logYmin)/(logYmax-logYmin)*ph; }
+
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)'; ctx.lineWidth = 1;
+  for(let lt=Math.ceil(logTmin*2)/2; lt<=logTmax; lt+=0.5){
+    const x = xPx(lt); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,pad.t+ph); ctx.stroke();
+  }
+  for(let ly=Math.ceil(logYmin); ly<=logYmax; ly+=1){
+    const y = yPx(ly); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+pw,y); ctx.stroke();
+  }
+
+  // sigma_vdot(T) curve at current sigma_RV, cadence
+  ctx.strokeStyle = 'rgba(160,128,240,0.9)'; ctx.lineWidth = 2.5; ctx.setLineDash([]);
+  ctx.beginPath();
+  let first = true;
+  for(let i=0;i<=200;i++){
+    const logT = logTmin + i/200*(logTmax-logTmin);
+    const T = Math.pow(10, logT);
+    const n = Math.max(2, cadence * T);
+    const sv = sigmaVdot(srv, n, T);
+    const logY = Math.log10(sv);
+    const x = xPx(logT), y = yPx(Math.max(logYmin, Math.min(logYmax, logY)));
+    if (first){ ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // Signal lines: nominal (0.08 pc) and discovery-case (0.01 pc), at current mass
+  function signalLine(r_pc, color){
+    const aKmsYr = msPerS2_to_kmPerSPerYr(aLos_ms2(M, r_pc));
+    const logY = Math.max(logYmin, Math.min(logYmax, Math.log10(aKmsYr)));
+    const y = yPx(logY);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+pw, y); ctx.stroke();
+    ctx.setLineDash([]);
+    return { y, aKmsYr };
+  }
+  const s1 = signalLine(0.08, 'rgba(240,160,32,0.85)');
+  const s2 = signalLine(0.01, 'rgba(29,186,144,0.85)');
+
+  ctx.font = '10px Space Mono, monospace'; ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(240,160,32,0.9)';
+  ctx.fillText('signal: r = 0.08 pc (' + fmtSci(s1.aKmsYr,1) + ' km/s/yr)', pad.l+6, s1.y-5);
+  ctx.fillStyle = 'rgba(29,186,144,0.9)';
+  ctx.fillText('signal: r = 0.01 pc, discovery case (' + fmtSci(s2.aKmsYr,1) + ' km/s/yr)', pad.l+6, s2.y-5);
+
+  // Current selection marker
+  const T = Math.pow(10, state.logT);
+  const n = Math.max(2, cadence * T);
+  const svCur = sigmaVdot(srv, n, T);
+  const xc = xPx(state.logT), yc = yPx(Math.max(logYmin, Math.min(logYmax, Math.log10(svCur))));
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.beginPath(); ctx.arc(xc, yc, 4.5, 0, 2*Math.PI); ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(xc, pad.t); ctx.lineTo(xc, pad.t+ph); ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(184,176,224,0.5)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+
+  ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace'; ctx.textAlign = 'center';
+  [1,2,5,10,20,40].forEach(t=>{ ctx.fillText(t+' yr', xPx(Math.log10(t)), pad.t+ph+16); });
+  ctx.textAlign = 'right';
+  for(let ly=Math.ceil(logYmin); ly<=logYmax; ly+=1){
+    ctx.fillText('10'+supDigits(String(ly)), pad.l-8, yPx(ly)+4);
+  }
+
+  ctx.save(); ctx.translate(18, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace';
+  ctx.fillText('σ_v̇ or signal [km/s/yr]', 0, 0); ctx.restore();
+}
+
+function wire(){
+  const ms = document.getElementById('mass-slider');
+  ms.value = state.logMass; ms.addEventListener('input', ()=>{ state.logMass=parseFloat(ms.value); saveHash(); render(); });
+
+  const rs = document.getElementById('r-slider');
+  rs.value = state.logR; rs.addEventListener('input', ()=>{ state.logR=parseFloat(rs.value); saveHash(); render(); });
+
+  const srvs = document.getElementById('srv-slider');
+  srvs.value = state.logSrv; srvs.addEventListener('input', ()=>{ state.logSrv=parseFloat(srvs.value); saveHash(); render(); });
+
+  const cs = document.getElementById('cadence-slider');
+  cs.value = state.cadence; cs.addEventListener('input', ()=>{ state.cadence=parseFloat(cs.value); saveHash(); render(); });
+
+  const ts = document.getElementById('t-slider');
+  ts.value = state.logT; ts.addEventListener('input', ()=>{ state.logT=parseFloat(ts.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-log-mass]').forEach(b=>b.addEventListener('click', ()=>{ state.logMass=parseFloat(b.dataset.logMass); ms.value=state.logMass; saveHash(); render(); }));
+  document.querySelectorAll('[data-log-r]').forEach(b=>b.addEventListener('click', ()=>{ state.logR=parseFloat(b.dataset.logR); rs.value=state.logR; saveHash(); render(); }));
+  document.querySelectorAll('[data-log-srv]').forEach(b=>b.addEventListener('click', ()=>{ state.logSrv=parseFloat(b.dataset.logSrv); srvs.value=state.logSrv; saveHash(); render(); }));
+  document.querySelectorAll('[data-log-t]').forEach(b=>b.addEventListener('click', ()=>{ state.logT=parseFloat(b.dataset.logT); ts.value=state.logT; saveHash(); render(); }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', ()=>{
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  window.addEventListener('resize', ()=>drawChart(Math.pow(10,state.logMass), Math.pow(10,state.logSrv), state.cadence));
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>

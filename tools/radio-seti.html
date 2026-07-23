@@ -65,6 +65,10 @@ a:hover{color:var(--teal-glow)}
 .preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
 .preset-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+.mode-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.mode-btn{font-family:'Space Mono',monospace;font-size:11px;padding:6px 14px;border-radius:14px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.mode-btn:hover{color:var(--purple-glow);border-color:var(--purple-bright)}
+.mode-btn.active{color:var(--purple-glow);border-color:var(--purple-bright);background:rgba(155,92,255,.12)}
 
 .headline{background:linear-gradient(135deg,rgba(160,128,240,.10),rgba(29,186,144,.06));border:1px solid var(--purple-bright);border-radius:12px;padding:26px 30px;margin-bottom:24px;text-align:center}
 .headline-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:8px}
@@ -195,6 +199,15 @@ a:hover{color:var(--teal-glow)}
         </div>
       </div>
 
+      <div class="slider-block" style="grid-column:1/-1">
+        <label>Noise floor input: compute SEFD from aperture/T_sys, or enter SEFD directly (e.g. from a telescope spec sheet or a tied-array/incoherent-beam calculation)</label>
+        <div class="mode-row" id="sefd-mode-row">
+          <button class="mode-btn" data-sefdmode="0">Aperture + T_sys</button>
+          <button class="mode-btn" data-sefdmode="1">SEFD direct (Jy)</button>
+        </div>
+      </div>
+
+      <div id="aeff-tsys-group" style="display:contents">
       <div class="slider-block">
         <label>Receiver effective area A_eff (m², log slider)</label>
         <div class="slider-row">
@@ -224,6 +237,40 @@ a:hover{color:var(--teal-glow)}
           <button class="preset-btn" data-tsys="2.3">200 K (high freq)</button>
         </div>
       </div>
+      </div>
+
+      <div class="slider-block" id="sefd-direct-block" style="display:none">
+        <label>System Equivalent Flux Density, SEFD (Jy, log slider)</label>
+        <div class="slider-row">
+          <input type="range" id="sefd-slider" min="0" max="6" step="0.02" value="2.63">
+          <span class="slider-value" id="sefd-val">425 Jy</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-sefd="2.63">MeerKAT tied-array, coherent (~425 Jy)</button>
+          <button class="preset-btn" data-sefd="1.5">SKA-Mid coherent (~30 Jy)</button>
+          <button class="preset-btn" data-sefd="3.5">Single 13.5m MeerKAT dish (~3,400 Jy)</button>
+        </div>
+      </div>
+
+      <div class="slider-block" style="grid-column:1/-1">
+        <label>Beamforming: coherent tied-array beam (no N_ant penalty) vs incoherent array sum (full-beam commensal backend, √N_ant SEFD penalty)</label>
+        <div class="mode-row" id="coh-mode-row">
+          <button class="mode-btn" data-cohmode="0">Coherent (tied-array)</button>
+          <button class="mode-btn" data-cohmode="1">Incoherent (array sum)</button>
+        </div>
+      </div>
+
+      <div class="slider-block" id="nant-block" style="display:none">
+        <label>Antennas summed incoherently, N_ant (linear slider)</label>
+        <div class="slider-row">
+          <input type="range" id="nant-slider" min="2" max="200" step="1" value="64">
+          <span class="slider-value" id="nant-val">64</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-nant="64">MeerKAT (64)</button>
+          <button class="preset-btn" data-nant="197">SKA-Mid (197)</button>
+        </div>
+      </div>
 
       <div class="slider-block">
         <label>Integration time τ (seconds, log slider)</label>
@@ -236,6 +283,7 @@ a:hover{color:var(--teal-glow)}
           <button class="preset-btn" data-tau="2.78">10 min</button>
           <button class="preset-btn" data-tau="3.56">1 hr</button>
           <button class="preset-btn" data-tau="4.94">1 day</button>
+          <button class="preset-btn" data-tau="5.40">70 hr (Paper C SETI)</button>
           <button class="preset-btn" data-tau="6.5">1 month</button>
         </div>
       </div>
@@ -268,6 +316,7 @@ a:hover{color:var(--teal-glow)}
     <section class="card">
       <div class="card-title">Signal at the receiver</div>
       <div class="row"><span class="row-label">Distance (metres)</span><span class="row-value" id="dist-m">—</span></div>
+      <div class="row"><span class="row-label">SEFD in use (after beamforming penalty)</span><span class="row-value" id="sefd-used">—</span></div>
       <div class="row"><span class="row-label">Received flux density</span><span class="row-value" id="flux">—</span></div>
       <div class="row"><span class="row-label">Sensitivity (S_min, W/m²)</span><span class="row-value" id="smin">—</span></div>
       <div class="row"><span class="row-label">Sensitivity per Hz</span><span class="row-value" id="smin-hz">—</span></div>
@@ -339,6 +388,9 @@ a:hover{color:var(--teal-glow)}
       <p><code>EIRP_min = S_min(per Hz) · B_sig · 4π d²</code></p>
       <p>The leverage is in the √τ — every quadrupling of integration time gives you 2× sensitivity. Aperture A_eff and T_sys are linear, so the gain from going from MeerKAT to SKA-1 (~50× A_eff) is much larger than the gain from staring for a week instead of an hour.</p>
 
+      <h3>SEFD-direct input and the coherent/incoherent split</h3>
+      <p>The aperture and T_sys sliders combine as SEFD = 2 k_B T_sys / A_eff; switching to "SEFD direct" lets you enter a published or independently derived system-equivalent flux density instead, in jansky (1 Jy = 10⁻²⁶ W m⁻² Hz⁻¹). A coherent tied-array beam sums antenna voltages before squaring and reaches the SEFD you enter (or compute) directly, but only covers an arcsecond-scale beam. An incoherent array sum, needed to cover a full primary beam containing an entire target field, sums power instead of voltage across N_ant antennas, which costs a factor √N_ant in SEFD (and hence in minimum detectable EIRP, since EIRP_min is linear in SEFD). At MeerKAT defaults (SEFD ≈ 425 Jy coherent, N_ant = 64, d = 5.49 kpc, SNR = 10, δν = 1 Hz, t = 70 h) this tool returns EIRP_min ≈ 3×10¹⁶ W coherent and ≈ 2–3×10¹⁷ W incoherent, the coherent/incoherent split behind the Omega Centauri campaign's narrowband SETI program (Program 2), where the incoherent, full-cluster figure is the one that applies to a commensal search.</p>
+
       <h3>The 0.1 W benchmark</h3>
       <p>In December 2025, Breakthrough Listen used MeerKAT to observe 3I/ATLAS before closest approach and reported a 0.17 W EIRP detection limit. This tool's bare-radiometer floor at the same settings (A_eff = 6,300 m², T_sys = 20 K, 1 Hz channel, 1 hour integration, 0.3 AU) is <strong>~0.3 mW</strong> — roughly 600× below the published limit. The gap reflects real-world penalties (RFI rejection, Doppler-search overhead, confirmation requirements) that the radiometer equation does not include. The banner at the top of this page quotes the tool's floor; the 0.17 W published limit is the appropriate benchmark for survey planning.</p>
 
@@ -381,7 +433,7 @@ const AU_M = 1.496e11;
 const OCS_ARTIFACT_VERSION   = '1.0.0';
 const OCS_CHAINGRAPH_VERSION = '0.4.0';
 const OCS_TOOL_ID            = 'radio-seti';
-const OCS_TOOL_VERSION       = '1.2.0';
+const OCS_TOOL_VERSION       = '1.3.0';
 const OCS_MANDATE_TYPE       = 'me.omegacentauri/seti_detection';
 
 // Vendored from AINumbers ChainGraph SSOT kernels/_hash.mjs (OCG Standard §4 JCS). Namespace me.omegacentauri.
@@ -438,7 +490,8 @@ const SNR_REQ = 10;
 const N_POL = 2;
 
 const state = {
-  logEirp: 13, logDist: 4.23, logAeff: 3.8, logTsys: 1.3, logTau: 3.56, logBw: 0
+  logEirp: 13, logDist: 4.23, logAeff: 3.8, logTsys: 1.3, logTau: 3.56, logBw: 0,
+  logSefd: 2.63, sefdMode: 0, cohMode: 0, nant: 64
 };
 
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
@@ -450,10 +503,15 @@ function loadHash(){const h=getHash();
   if(h.tsys!==undefined){const v=parseFloat(h.tsys);if(!isNaN(v))state.logTsys=clamp(v,0.5,3)}
   if(h.tau!==undefined){const v=parseFloat(h.tau);if(!isNaN(v))state.logTau=clamp(v,0,7)}
   if(h.bw!==undefined){const v=parseFloat(h.bw);if(!isNaN(v))state.logBw=clamp(v,-1,9)}
+  if(h.sefd!==undefined){const v=parseFloat(h.sefd);if(!isNaN(v))state.logSefd=clamp(v,0,6)}
+  if(h.sefdmode!==undefined){const v=parseInt(h.sefdmode,10);if(v===0||v===1)state.sefdMode=v}
+  if(h.coh!==undefined){const v=parseInt(h.coh,10);if(v===0||v===1)state.cohMode=v}
+  if(h.nant!==undefined){const v=parseFloat(h.nant);if(!isNaN(v))state.nant=clamp(v,2,200)}
 }
 function saveHash(){setHash({
   eirp:state.logEirp.toFixed(2), dist:state.logDist.toFixed(2), aeff:state.logAeff.toFixed(2),
-  tsys:state.logTsys.toFixed(2), tau:state.logTau.toFixed(2), bw:state.logBw.toFixed(2)
+  tsys:state.logTsys.toFixed(2), tau:state.logTau.toFixed(2), bw:state.logBw.toFixed(2),
+  sefd:state.logSefd.toFixed(2), sefdmode:state.sefdMode, coh:state.cohMode, nant:state.nant
 });}
 function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
 
@@ -505,12 +563,22 @@ function compute() {
   const tau = Math.pow(10, state.logTau);
   const bw = Math.pow(10, state.logBw);
 
-  // System Equivalent Flux Density (W/m²/Hz): SEFD = 2 k_B T_sys / A_eff
-  const SEFD = 2 * K_B * tsys / aeff;
+  // System Equivalent Flux Density (W/m²/Hz): either from aperture + T_sys, or entered directly (Jy -> W/m^2/Hz)
+  const JY = 1e-26;
+  const sefdJy = Math.pow(10, state.logSefd);
+  let SEFD = state.sefdMode === 1 ? sefdJy * JY : 2 * K_B * tsys / aeff;
 
-  // Noise on integrated bandwidth (W/m²) — matched-filter, narrowband signal of width bw
-  // σ_S_total = SEFD × √(B / (n_pol × τ))
-  const sigma_S_total = SEFD * Math.sqrt(bw / (N_POL * tau));
+  // Incoherent array-sum beam pays a sqrt(N_ant) SEFD penalty relative to a coherent tied-array beam
+  // (the incoherent sum covers the full primary beam; the tied-array beam does not, Campaign Paper §Program 2)
+  if (state.cohMode === 1) SEFD *= Math.sqrt(state.nant);
+
+  // Noise on integrated bandwidth (W/m²) — matched-filter, narrowband signal of width bw.
+  // Aperture+T_sys mode: σ_S_total = SEFD × √(B / (n_pol × τ)) (this tool's original dual-pol convention).
+  // SEFD-direct mode: σ_S_total = SEFD × √(B/τ), matching the Campaign Paper's Eq. (radio SETI EIRP_min)
+  // literally (no explicit n_pol term) so a pasted-in SEFD reproduces the paper's quoted EIRP figures.
+  const sigma_S_total = state.sefdMode === 1
+    ? SEFD * Math.sqrt(bw / tau)
+    : SEFD * Math.sqrt(bw / (N_POL * tau));
 
   // Minimum detectable flux at SNR threshold
   const sMin_W_m2 = SNR_REQ * sigma_S_total;
@@ -526,7 +594,7 @@ function compute() {
   // Minimum detectable EIRP at this dist (threshold SNR)
   const eirpMin = sMin_W_m2 * 4 * Math.PI * dM * dM;
 
-  return { eirp, dLy, dM, aeff, tsys, tau, bw,
+  return { eirp, dLy, dM, aeff, tsys, tau, bw, SEFD, sefdJy: SEFD / JY,
            sMinPerHz: sMinPerHz_thresh, sMin: sMin_W_m2,
            flux: flux_W_m2, flux_per_hz, snr, eirpMin };
 }
@@ -538,6 +606,15 @@ function render() {
   document.getElementById('dist-val').textContent = fmtDist(dLy);
   document.getElementById('aeff-val').textContent = Math.round(Math.pow(10, state.logAeff)).toLocaleString() + ' m²';
   document.getElementById('tsys-val').textContent = Math.round(Math.pow(10, state.logTsys)) + ' K';
+  document.getElementById('sefd-val').textContent = fmtSci(Math.pow(10, state.logSefd), 0) + ' Jy';
+  document.getElementById('nant-val').textContent = String(Math.round(state.nant));
+
+  document.getElementById('aeff-tsys-group').style.display = state.sefdMode === 1 ? 'none' : 'contents';
+  document.getElementById('sefd-direct-block').style.display = state.sefdMode === 1 ? '' : 'none';
+  document.querySelectorAll('#sefd-mode-row [data-sefdmode]').forEach(b => b.classList.toggle('active', parseInt(b.dataset.sefdmode,10) === state.sefdMode));
+
+  document.getElementById('nant-block').style.display = state.cohMode === 1 ? '' : 'none';
+  document.querySelectorAll('#coh-mode-row [data-cohmode]').forEach(b => b.classList.toggle('active', parseInt(b.dataset.cohmode,10) === state.cohMode));
   document.getElementById('tau-val').textContent = fmtTau(Math.pow(10, state.logTau));
   const bw = Math.pow(10, state.logBw);
   document.getElementById('bw-val').textContent =
@@ -551,10 +628,14 @@ function render() {
   // Headline
   document.getElementById('head-val').textContent = fmtPower(c.eirpMin);
   const sub = document.getElementById('head-sub');
-  sub.innerHTML = `At distance <strong>${fmtDist(c.dLy)}</strong> through a <strong>${Math.round(c.aeff).toLocaleString()} m²</strong> aperture with <strong>${fmtTau(c.tau)}</strong> of integration, your receiver detects (SNR ≥ ${SNR_REQ}) any transmitter emitting at least <strong>${fmtPower(c.eirpMin)}</strong> EIRP in a narrowband ${bw < 1e3 ? bw.toFixed(0) + ' Hz' : bw < 1e6 ? (bw/1e3).toFixed(0) + ' kHz' : (bw/1e6).toFixed(0) + ' MHz'} channel.`;
+  const apertureClause = state.sefdMode === 1
+    ? `an SEFD of <strong>${fmtSci(c.sefdJy,0)} Jy</strong>${state.cohMode===1?` (incoherent, N_ant=${state.nant})`:' (coherent)'}`
+    : `a <strong>${Math.round(c.aeff).toLocaleString()} m²</strong> aperture`;
+  sub.innerHTML = `At distance <strong>${fmtDist(c.dLy)}</strong> through ${apertureClause} with <strong>${fmtTau(c.tau)}</strong> of integration, your receiver detects (SNR ≥ ${SNR_REQ}) any transmitter emitting at least <strong>${fmtPower(c.eirpMin)}</strong> EIRP in a narrowband ${bw < 1e3 ? bw.toFixed(0) + ' Hz' : bw < 1e6 ? (bw/1e3).toFixed(0) + ' kHz' : (bw/1e6).toFixed(0) + ' MHz'} channel.`;
 
   // Detail rows
   document.getElementById('dist-m').textContent = fmtSci(c.dM) + ' m';
+  document.getElementById('sefd-used').textContent = fmtSci(c.sefdJy) + ' Jy' + (state.cohMode===1 ? ` (×√${state.nant} incoherent penalty)` : '');
   document.getElementById('flux').textContent = fmtSci(c.flux) + ' W/m²';
   document.getElementById('smin').textContent = fmtSci(c.sMin) + ' W/m²';
   document.getElementById('smin-hz').textContent = fmtSci(c.sMinPerHz) + ' W/m²/Hz';
@@ -605,7 +686,7 @@ function render() {
   else symLine = `Earth's commercial radio leakage <em>would</em> be detectable — but the assumption here is the OC observer has a giant array.`;
   symBody.innerHTML = `With an SKA-2-class telescope (~10⁶ m² A_eff), T_sys = 20 K, 1 hr integration, narrowband 1 Hz channel, an OC observer 17,900 ly away would need a minimum EIRP of <strong>${fmtPower(eirpMinOC)}</strong> from Earth to register a detection. That ${symLine}. ` +
     `For reference: TV broadcaster ≈ 5 MW, military radar ≈ 10 GW, Arecibo planetary radar pulse ≈ 20 TW, hypothetical 1% K-II Dyson at 10²⁵ W. <strong>Earth's most intentional signals are still ${fmtSci(eirpMinOC / arecibo)}× too quiet to be detected from Omega Centauri.</strong>`;
-  window._toolArtifactData = { policy: { aeff_m2: Math.pow(10, state.logAeff), bw_Hz: Math.pow(10, state.logBw), dist_ly: Math.pow(10, state.logDist), eirp_W: Math.pow(10, state.logEirp), tau_s: Math.pow(10, state.logTau), tsys_K: Math.pow(10, state.logTsys) }, output: { snr: c.snr, detected: c.snr >= SNR_REQ, eirp_min_W: c.eirpMin } };
+  window._toolArtifactData = { policy: { aeff_m2: Math.pow(10, state.logAeff), bw_Hz: Math.pow(10, state.logBw), dist_ly: Math.pow(10, state.logDist), eirp_W: Math.pow(10, state.logEirp), tau_s: Math.pow(10, state.logTau), tsys_K: Math.pow(10, state.logTsys), sefd_mode: state.sefdMode === 1 ? 'direct' : 'aperture', sefd_Jy: c.sefdJy, coherent: state.cohMode === 0, n_ant: state.nant }, output: { snr: c.snr, detected: c.snr >= SNR_REQ, eirp_min_W: c.eirpMin } };
   if (window.invalidateArtifact) invalidateArtifact();
 }
 
@@ -622,6 +703,15 @@ function wire() {
   tauS.addEventListener('input', () => { state.logTau = parseFloat(tauS.value); saveHash(); render(); });
   const bwS = document.getElementById('bw-slider'); bwS.value = state.logBw;
   bwS.addEventListener('input', () => { state.logBw = parseFloat(bwS.value); saveHash(); render(); });
+  const sefdS = document.getElementById('sefd-slider'); sefdS.value = state.logSefd;
+  sefdS.addEventListener('input', () => { state.logSefd = parseFloat(sefdS.value); saveHash(); render(); });
+  const nantS = document.getElementById('nant-slider'); nantS.value = state.nant;
+  nantS.addEventListener('input', () => { state.nant = parseFloat(nantS.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-sefd]').forEach(b => b.addEventListener('click', () => { state.logSefd = parseFloat(b.dataset.sefd); sefdS.value = state.logSefd; saveHash(); render(); }));
+  document.querySelectorAll('[data-nant]').forEach(b => b.addEventListener('click', () => { state.nant = parseFloat(b.dataset.nant); nantS.value = state.nant; saveHash(); render(); }));
+  document.querySelectorAll('[data-sefdmode]').forEach(b => b.addEventListener('click', () => { state.sefdMode = parseInt(b.dataset.sefdmode,10); saveHash(); render(); }));
+  document.querySelectorAll('[data-cohmode]').forEach(b => b.addEventListener('click', () => { state.cohMode = parseInt(b.dataset.cohmode,10); saveHash(); render(); }));
 
   document.querySelectorAll('[data-eirp]').forEach(b => b.addEventListener('click', () => { state.logEirp = parseFloat(b.dataset.eirp); eirpS.value = state.logEirp; saveHash(); render(); }));
   document.querySelectorAll('[data-dist]').forEach(b => b.addEventListener('click', () => { state.logDist = parseFloat(b.dataset.dist); distS.value = state.logDist; saveHash(); render(); }));
@@ -646,6 +736,10 @@ window.OCS_APPLY_PREFILL = function(obj) {
   if (obj.tsys !== undefined) { var v = parseFloat(obj.tsys); if (!isNaN(v)) state.logTsys = clamp(v, 0.5, 3); }
   if (obj.tau  !== undefined) { var v = parseFloat(obj.tau);  if (!isNaN(v)) state.logTau  = clamp(v, 0, 7); }
   if (obj.bw   !== undefined) { var v = parseFloat(obj.bw);   if (!isNaN(v)) state.logBw   = clamp(v, -1, 9); }
+  if (obj.sefd !== undefined) { var v = parseFloat(obj.sefd); if (!isNaN(v)) state.logSefd = clamp(v, 0, 6); }
+  if (obj.sefdmode !== undefined) { var v = parseInt(obj.sefdmode,10); if (v===0||v===1) state.sefdMode = v; }
+  if (obj.coh  !== undefined) { var v = parseInt(obj.coh,10); if (v===0||v===1) state.cohMode = v; }
+  if (obj.nant !== undefined) { var v = parseFloat(obj.nant); if (!isNaN(v)) state.nant = clamp(v, 2, 200); }
   saveHash(); render();
 };
 function init(){ loadHash(); wire(); render(); wireArtifact(); }
