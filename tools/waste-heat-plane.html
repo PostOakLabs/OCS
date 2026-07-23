@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<!--
+  Waste-Heat Constraint Plane
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-07-23
+  Site section: #science  ·  Epistemic tier: 🔬 Closed-form (Paper E §2.7/3.1, fig2_constraint_plane.py)
+  Physics SSOT: repo/papers/figs/fig2_constraint_plane.py + common.py (mirror exactly, do not re-derive)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waste-Heat Constraint Plane — Omega Centauri Society</title>
+<meta name="description" content="Paper E's constraint plane, interactive: the (r, L_waste) plane with T_eff blackbody contours and the JWST/WISE/Spitzer mid-infrared instrument wedges, plus the (P_comp, 1-f_sink) warm-swarm plane with the 10^-4 transport floor and the 8x10^5 L_sun Bondi fuel ceiling. Mirrors fig2_constraint_plane.py exactly.">
+<link rel="canonical" href="https://omegacentauri.me/tools/waste-heat-plane.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:120px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.verdict-box{margin-top:8px;padding:10px 14px;background:rgba(29,186,144,.06);border-left:2px solid var(--teal-mid);border-radius:0 6px 6px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary)}
+.verdict-box.excl{background:rgba(138,32,32,.1);border-left-color:var(--red-bright)}
+.verdict-box .v{color:var(--teal-glow)}
+.verdict-box.excl .v{color:var(--red-bright)}
+.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px 8px;margin-bottom:24px}
+canvas{width:100%;display:block}
+.chart-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin:-4px 0 12px;font-style:italic}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body ul{margin:0 0 10px 20px}
+.about-body li{margin-bottom:6px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:20px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Waste-Heat Constraint Plane</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Waste-Heat Constraint Plane</h1>
+      <p class="tool-subtitle">Paper E's Figure 2, interactive. An engineered swarm that processes power P_comp radiates a waste luminosity L_waste = (1 − f_sink)·P_comp at a blackbody temperature set by its radius. Which telescope bounds it depends on where that emission peaks, so the mid-infrared limit is radius-dependent. Drag a source through the (r, L_waste) plane and the (P_comp, 1 − f_sink) plane to read where it sits against the JWST/WISE/Spitzer wedges, the transport floor, and the fuel ceiling.</p>
+    </div>
+    <span class="tier-badge">🔬 Closed-form</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>The mid-infrared exclusion is radius-dependent, not a single number.</strong> A warm inner swarm (r ≲ a few AU, T_eff ≳ 150 K) peaks inside JWST/MIRI and inherits a sub-L☉ point-source limit. A cool outer swarm (r ~ 10²–10³ AU) peaks past 20 μm where the operative limits are WISE and Spitzer/MIPS, confusion-limited in the ω Cen core, weakening to ~10²–10⁴ L☉. This tool reproduces the piecewise wedge of <code>fig2_constraint_plane.py</code> exactly; the load-bearing assumptions behind it are listed under "Caveats" below.
+  </div>
+
+  <!-- ============ PANEL B: (r, L_waste) temperature-resolved plane ============ -->
+  <section class="chart-card">
+    <div class="card-title">Temperature-resolved plane · (r, L_waste)</div>
+    <div class="chart-sub">Red: excluded by the radius-appropriate mid-infrared limit L_lim_mir(T_eff). Dotted: T_eff contours. Blue dashed: fuel ceiling (L_waste if the ambient Bondi supply were fully radiated). White marker: the source set by the sliders below. Mirrors panel (b) of fig2_constraint_plane.py.</div>
+    <canvas id="cvB" height="380"></canvas>
+  </section>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Source in the (r, L_waste) plane</div>
+      <div class="slider-block">
+        <label>Swarm radius r [AU, log scale]</label>
+        <div class="slider-row">
+          <input type="range" id="r-slider" min="-1.699" max="3.602" step="0.01" value="0">
+          <span class="slider-value" id="r-val">1.0 AU</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-logr="0">Warm inner (1 AU)</button>
+          <button class="preset-btn" data-logr="2">100 AU</button>
+          <button class="preset-btn" data-logr="3">Cool outer (1000 AU)</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Radiated waste luminosity L_waste [L☉, log scale]</label>
+        <div class="slider-row">
+          <input type="range" id="l-slider" min="-2" max="7" step="0.02" value="0">
+          <span class="slider-value" id="l-val">1.0 L☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-logl="0">1 L☉</button>
+          <button class="preset-btn" data-logl="2">10² L☉</button>
+          <button class="preset-btn" data-logl="4">10⁴ L☉</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Readout</div>
+      <div class="row">
+        <div class="row-label">Effective temperature T_eff</div>
+        <div class="row-value" id="teff-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Operative instrument</div>
+        <div class="row-value" id="instr-val" style="font-size:13px">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Its point-source limit L_lim</div>
+        <div class="row-value" id="llim-val">—</div>
+      </div>
+      <div class="verdict-box" id="verdict-b">computing…</div>
+    </section>
+  </div>
+
+  <!-- ============ PANEL A: (P_comp, 1 - f_sink) warm-swarm plane ============ -->
+  <section class="chart-card">
+    <div class="card-title">Warm-swarm plane · (P_comp, 1 − f_sink)</div>
+    <div class="chart-sub">Red: excluded by the JWST warm-swarm limit, L_waste = P_comp·(1 − f_sink) &gt; 1 L☉ (r ≲ 3 AU). Grey hatch below the dashed line: the adopted 10⁻⁴ entropy-transport floor (an adopted parameter, not a data boundary). Blue dashed: the 8×10⁵ L☉ ambient Bondi fuel ceiling. Dash-dot: L_Edd. Mirrors panel (a) of fig2_constraint_plane.py.</div>
+    <canvas id="cvA" height="380"></canvas>
+  </section>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Source in the (P_comp, 1 − f_sink) plane</div>
+      <div class="slider-block">
+        <label>Processed power P_comp [L☉, log scale]</label>
+        <div class="slider-row">
+          <input type="range" id="p-slider" min="0" max="10" step="0.02" value="2">
+          <span class="slider-value" id="p-val">10² L☉</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-logp="2">Low power (10² L☉)</button>
+          <button class="preset-btn" data-logp="5.882">Bondi ceiling</button>
+          <button class="preset-btn" data-logp="8.818">L_Edd</button>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Radiated fraction 1 − f_sink [log scale]</label>
+        <div class="slider-row">
+          <input type="range" id="leak-slider" min="-6" max="0" step="0.02" value="-3">
+          <span class="slider-value" id="leak-val">10⁻³</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-logleak="-4">Transport floor (10⁻⁴)</button>
+          <button class="preset-btn" data-logleak="-2">10⁻²</button>
+          <button class="preset-btn" data-logleak="0">Fully radiated (1)</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Readout</div>
+      <div class="row">
+        <div class="row-label">Radiated L_waste = P_comp·(1 − f_sink)</div>
+        <div class="row-value" id="lwa-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Below the 10⁻⁴ transport floor?</div>
+        <div class="row-value" id="floor-val" style="font-size:14px">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">P_comp vs fuel ceiling / L_Edd</div>
+        <div class="row-value" id="fuel-val" style="font-size:13px">—</div>
+      </div>
+      <div class="verdict-box" id="verdict-a">computing…</div>
+    </section>
+  </div>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The two planes</h3>
+      <p>A swarm processing power <code>P_comp</code> and delivering a fraction <code>f_sink</code> of its generated entropy to the horizon radiates the remainder, <code>L_waste = (1 − f_sink)·P_comp</code>, thermally at <code>T_eff = (L_waste / 4π r² σ_SB)^(1/4)</code>. That is roughly 300 K for 1 L☉ at r ~ 1 AU but only ~50 K at 10³ AU. The <b>(r, L_waste) plane</b> resolves this temperature axis: which telescope limits a source depends on where its blackbody peaks. The <b>(P_comp, 1 − f_sink) plane</b> is the warm-swarm slice, where the JWST sub-L☉ limit maps to a simple hyperbola <code>P_comp·(1 − f_sink) &gt; 1 L☉</code>.</p>
+
+      <h3>The instrument wedge (radius-dependent limit)</h3>
+      <p>The piecewise mid-infrared point-source limit <code>L_lim_mir(T_eff)</code>, degraded for crowding at the 5.43 kpc distance of the ω Cen core, is taken verbatim from <code>common.py</code>:</p>
+      <ul>
+        <li><b>T_eff ≥ 150 K</b> (peak &lt; ~20 μm): JWST/MIRI, sub-arcsec PSF → <b>~1 L☉</b></li>
+        <li><b>50–150 K</b> (peak 20–60 μm): WISE W3/W4, Spitzer/MIPS 24 μm, 6–18 arcsec PSF, confusion-limited → <b>~10² L☉</b></li>
+        <li><b>T_eff &lt; 50 K</b> (peak &gt; 60 μm): Spitzer/MIPS 70 μm only, heavily confused in the core → <b>~2×10⁴ L☉</b></li>
+      </ul>
+      <p>The red wedge is the locus <code>L_waste &gt; L_lim_mir(T_eff(L_waste, r))</code>, computed on the same L-grid the figure uses. A cool outer swarm evades the bound entirely: past 60 μm the only photometry is MIPS 70 μm, and it is insensitive at the L☉ level in this field.</p>
+
+      <h3>Caveats (load-bearing, not decoration)</h3>
+      <p>Three assumptions carry the constraint. They are stated in Paper E §2.7 and are the reason the wedge sits where it does:</p>
+      <ul>
+        <li><b>Unit covering fraction, single-sided radiators.</b> <code>T_eff(r)</code> assumes the swarm fully intercepts and re-radiates. A sparse swarm of covering fraction f_cov runs hotter by f_cov^(−1/4), moving mass into the JWST wedge. The paper reports this shifts the composite ln K to −0.34 at f_cov = 10⁻², still inside the quoted band.</li>
+        <li><b>Peak-band limits.</b> Each wedge limit is the point-source sensitivity in the band where a blackbody of that T_eff peaks. A real spectral energy distribution spreads flux across bands; the single-band peak limit is the conservative adjudication the paper adopts.</li>
+        <li><b>MIPS-70 insensitivity.</b> The cold wedge (T &lt; 50 K) rests on there being no L☉-level far-infrared photometry of the core past 60 μm. Spitzer/MIPS 70 μm is the only instrument and is heavily confused, so the ~2×10⁴ L☉ floor is what a cool outer swarm has to clear. Far-infrared sensitivity is where this bound would tighten.</li>
+      </ul>
+
+      <h3>Transport floor and fuel ceiling</h3>
+      <p>The dashed line at <code>1 − f_sink = 10⁻⁴</code> is the Appendix A.3 entropy-transport bound, drawn (as in the figure) as an adopted parameter over hatching rather than a data-driven boundary: below it is disfavoured by the A.3 accounting, not excluded by data. A lower true floor weakens the mid-infrared charge and moves ln K toward zero; a higher floor tightens the P_comp ceiling. The blue dashed <b>8×10⁵ L☉ fuel ceiling</b> is the ambient Bondi accretion supply (<code>ṁ_Bondi·c²</code>, MAD efficiency ~1); imported mass moves it right at the cost of visibility. <code>L_Edd</code> for the 2×10⁴ M☉ hole is shown for reference.</p>
+
+      <h3>A note on σ</h3>
+      <p>The fuel ceiling is computed with the paper's central velocity dispersion σ = 21 km/s (from <code>common.py</code>), the value Paper E adopts. The site's other calculators use a fiducial σ = 18.2 km/s; the offset is documented and deliberate (A5 decision) and is not silently harmonized. The ceiling scales weakly with σ through the Bondi rate, so the ~8×10⁵ L☉ figure is robust to the difference.</p>
+
+      <h3>OCS connection</h3>
+      <p>This is the waste-heat leg of the <a href="../engineered-imbh-systems.html">engineered-IMBH feasibility argument</a> (Paper E). The (P_comp, 1 − f_sink) and (r, L_waste) planes together define the surviving parameter volume the paper's Bayesian adjudication marginalizes over. See also <a href="scenario-paper-e-feasibility.html">the Paper E feasibility scenario</a> and <a href="compute-in-space.html">Compute-in-Space</a>.</p>
+
+      <p class="meta-line">v1.0 — 2026-07-23 · Code MIT · Prose CC BY 4.0 · Swanson 2026, "Engineered IMBH Systems" (Paper E) §2.7/3.1; figs/fig2_constraint_plane.py + common.py. Instrument limits: Chen et al. 2025 (JWST); WISE; Spitzer/MIPS.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+// ---- constants, mirrored verbatim from repo/papers/figs/common.py ----
+const G = 6.674e-11, C = 2.998e8, MSUN = 1.989e30, AU = 1.496e11;
+const LSUN = 3.828e26, MP = 1.673e-27, SIGMA_SB = 5.670e-8;
+const M_BH = 2.0e4 * MSUN, GM = G * M_BH;
+const SIGMA = 21e3;            // m/s, 1-D dispersion near centre (Paper E value; site tools use 18.2, A5 offset)
+const CS_GAS = 1.0e4;          // m/s
+const N_E = 0.23e6;            // electrons m^-3 (oMEGACat VII)
+const RHO_GAS = 1.2 * N_E * MP;
+function mdotBondi(){ return 4 * Math.PI * GM * GM * RHO_GAS / Math.pow(SIGMA*SIGMA + CS_GAS*CS_GAS, 1.5); }
+const L_EDD_LSUN = 1.26e31 * (M_BH / MSUN) / LSUN;      // ~6.6e8
+const P_FUEL = mdotBondi() * C * C / LSUN;              // ~7.6e5 -> "8e5" ceiling
+const L_LIM_LSUN = 1.0;        // JWST warm-swarm MIR point-source limit (Lsun)
+const LEAK_FLOOR = 1e-4;       // Appendix A.3 transport floor on 1 - f_sink
+
+// t_eff(L_W, r_m) and L_lim_mir(T) from common.py
+function tEff(L_W, r_m){ return Math.pow(L_W / (4 * Math.PI * r_m*r_m * SIGMA_SB), 0.25); }
+function lLimMirLsun(T){ return T >= 150 ? 1.0 : (T >= 50 ? 1e2 : 2e4); }   // in Lsun
+function instrumentFor(T){
+  return T >= 150 ? 'JWST/MIRI'
+       : T >= 50  ? 'WISE / MIPS-24'
+                  : 'MIPS-70 only';
+}
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);if(e>=-1&&e<=2){const v=x;return (Math.abs(v)>=100?v.toFixed(0):Math.abs(v)>=10?v.toFixed(1):v.toFixed(2));}return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtPow10(logv){const r=Math.round(logv);return (Math.abs(logv-r)<1e-9)?('10'+supDigits(String(r))):fmtSci(Math.pow(10,logv),1);}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+// all four hash params are log10 (radio-seti convention); ranges match the sliders
+const state = { logR: 0, logL: 0, logP: 2, logLeak: -3 };
+
+function clampNum(v, lo, hi){ return v < lo ? lo : v > hi ? hi : v; }
+
+function loadHash(){
+  const p = getHash();
+  if(p.logr   !== undefined){const v=parseFloat(p.logr);   if(isFinite(v)) state.logR   =clampNum(v,-1.699,3.602);}
+  if(p.logl   !== undefined){const v=parseFloat(p.logl);   if(isFinite(v)) state.logL   =clampNum(v,-2,7);}
+  if(p.logp   !== undefined){const v=parseFloat(p.logp);   if(isFinite(v)) state.logP   =clampNum(v,0,10);}
+  if(p.logleak!== undefined){const v=parseFloat(p.logleak);if(isFinite(v)) state.logLeak=clampNum(v,-6,0);}
+}
+function saveHash(){
+  setHash({
+    logr:    state.logR.toFixed(3),
+    logl:    state.logL.toFixed(3),
+    logp:    state.logP.toFixed(3),
+    logleak: state.logLeak.toFixed(3)
+  });
+}
+
+// ---------- generic log-log plot frame ----------
+function logFrame(ctx, W, H, pad, xLo, xHi, yLo, yHi){
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+  const lxLo = Math.log10(xLo), lxHi = Math.log10(xHi);
+  const lyLo = Math.log10(yLo), lyHi = Math.log10(yHi);
+  const xPx = lx => pad.l + (Math.log10(lx) - lxLo)/(lxHi - lxLo) * pw;
+  const yPx = ly => pad.t + ph - (Math.log10(ly) - lyLo)/(lyHi - lyLo) * ph;
+  return { pw, ph, xPx, yPx, lxLo, lxHi, lyLo, lyHi };
+}
+function drawGridAndAxes(ctx, W, H, pad, fr, xLo, xHi, yLo, yHi, xLabel, yLabel){
+  const {pw, ph, xPx, yPx} = fr;
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)'; ctx.lineWidth = 1;
+  for(let e=Math.ceil(Math.log10(xLo)); e<=Math.floor(Math.log10(xHi)); e++){
+    const x=xPx(Math.pow(10,e)); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,pad.t+ph); ctx.stroke();
+  }
+  for(let e=Math.ceil(Math.log10(yLo)); e<=Math.floor(Math.log10(yHi)); e++){
+    const y=yPx(Math.pow(10,e)); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+pw,y); ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(184,176,224,0.5)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+  ctx.fillStyle='#9890c0'; ctx.font='10px Space Mono, monospace'; ctx.textAlign='center';
+  for(let e=Math.ceil(Math.log10(xLo)); e<=Math.floor(Math.log10(xHi)); e++){
+    ctx.fillText('10'+supDigits(String(e)), xPx(Math.pow(10,e)), pad.t+ph+15);
+  }
+  ctx.textAlign='right';
+  for(let e=Math.ceil(Math.log10(yLo)); e<=Math.floor(Math.log10(yHi)); e++){
+    ctx.fillText('10'+supDigits(String(e)), pad.l-6, yPx(Math.pow(10,e))+3.5);
+  }
+  ctx.textAlign='center'; ctx.fillStyle='#9890c0'; ctx.font='11px Space Mono, monospace';
+  ctx.fillText(xLabel, pad.l+pw/2, H-6);
+  ctx.save(); ctx.translate(14, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(yLabel, 0, 0); ctx.restore();
+}
+
+// ---------------- Panel B: (r, L_waste) ----------------
+const B = { xLo:2e-2, xHi:4e3, yLo:1e-2, yHi:1e7 };
+function drawB(){
+  const cv=document.getElementById('cvB'); if(!cv) return;
+  const W=cv.offsetWidth||900, H=380; cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  const pad={l:64,r:22,t:16,b:40}; const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(7,5,21,0.6)'; ctx.fillRect(pad.l,pad.t,pw,ph);
+  const fr=logFrame(ctx,W,H,pad,B.xLo,B.xHi,B.yLo,B.yHi);
+  const {xPx,yPx,lxLo,lxHi,lyLo,lyHi}=fr;
+
+  // excluded region via per-pixel test: L_W > L_lim_mir(T_eff)
+  const img=ctx.getImageData(pad.l,pad.t,pw,ph); const d=img.data;
+  for(let px=0; px<pw; px++){
+    const lx=lxLo+(px/(pw-1))*(lxHi-lxLo); const r_m=Math.pow(10,lx)*AU;
+    for(let py=0; py<ph; py++){
+      const ly=lyHi-(py/(ph-1))*(lyHi-lyLo); const L_W=Math.pow(10,ly)*LSUN;
+      if(L_W > lLimMirLsun(tEff(L_W,r_m))*LSUN){
+        const i=(py*pw+px)*4; d[i]=198; d[i+1]=91; d[i+2]=91; d[i+3]=90;
+      }
+    }
+  }
+  ctx.putImageData(img,pad.l,pad.t);
+
+  drawGridAndAxes(ctx,W,H,pad,fr,B.xLo,B.xHi,B.yLo,B.yHi,'swarm radius  r  [AU]','radiated  L_waste  [L☉]');
+
+  // T_eff contours: constant T -> L(r) = 4 pi r^2 sigma_SB T^4  (analytic locus)
+  ctx.setLineDash([2,3]); ctx.strokeStyle='rgba(180,176,200,0.55)'; ctx.lineWidth=0.9;
+  ctx.font='9px Space Mono, monospace'; ctx.fillStyle='rgba(190,186,210,0.8)';
+  [50,150,300,1000].forEach(T=>{
+    ctx.beginPath(); let started=false, lastPt=null;
+    for(let px=0; px<=pw; px+=2){
+      const lx=lxLo+(px/pw)*(lxHi-lxLo); const r_m=Math.pow(10,lx)*AU;
+      const L_Lsun = 4*Math.PI*r_m*r_m*SIGMA_SB*Math.pow(T,4)/LSUN;
+      if(L_Lsun<B.yLo||L_Lsun>B.yHi){started=false;continue;}
+      const x=xPx(Math.pow(10,lx)), y=yPx(L_Lsun);
+      if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+      lastPt={x,y};
+    }
+    ctx.stroke();
+    if(lastPt){ctx.setLineDash([]); ctx.textAlign='left'; ctx.fillText(T+' K', Math.min(lastPt.x+3,pad.l+pw-30), lastPt.y+3); ctx.setLineDash([2,3]);}
+  });
+  ctx.setLineDash([]);
+
+  // wedge boundary: min excluded L at each r (same argmax scan as fig2, L-grid 1e-2..1e7)
+  ctx.strokeStyle='#d06060'; ctx.lineWidth=1.6; ctx.beginPath();
+  let bStarted=false;
+  for(let px=0; px<=pw; px+=1){
+    const lx=lxLo+(px/pw)*(lxHi-lxLo); const r_m=Math.pow(10,lx)*AU;
+    let boundL=null;
+    for(let k=0;k<500;k++){
+      const lL=-2+(k/499)*9; const L_W=Math.pow(10,lL)*LSUN;
+      if(L_W>lLimMirLsun(tEff(L_W,r_m))*LSUN){boundL=Math.pow(10,lL);break;}
+    }
+    if(boundL===null){bStarted=false;continue;}
+    const x=xPx(Math.pow(10,lx)), y=yPx(boundL);
+    if(!bStarted){ctx.moveTo(x,y);bStarted=true;}else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // fuel ceiling (blue dashed horizontal)
+  ctx.setLineDash([6,4]); ctx.strokeStyle='#5a6dc0'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(pad.l,yPx(P_FUEL)); ctx.lineTo(pad.l+pw,yPx(P_FUEL)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#8f9fd8'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='left';
+  ctx.fillText('fuel ceiling', pad.l+4, yPx(P_FUEL)-4);
+
+  // region labels
+  ctx.fillStyle='#c88a8a'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='center';
+  ctx.fillText('JWST/MIRI', xPx(0.25), yPx(3e2));
+  ctx.fillText('WISE / MIPS-24', xPx(80), yPx(3e3));
+  ctx.fillText('MIPS-70 only', xPx(1.6e3), yPx(3e5));
+  ctx.fillStyle='#5fc78c';
+  ctx.fillText('allowed: cool outer', xPx(300), yPx(3));
+
+  drawMarkerB(ctx,xPx,yPx);
+}
+function drawMarkerB(ctx,xPx,yPx){
+  const r=Math.pow(10,state.logR), L=Math.pow(10,state.logL);
+  const x=xPx(clampNum(r,B.xLo,B.xHi)), y=yPx(clampNum(L,B.yLo,B.yHi));
+  const excl = L*LSUN > lLimMirLsun(tEff(L*LSUN, r*AU))*LSUN;
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=1; ctx.setLineDash([2,3]);
+  ctx.beginPath(); ctx.moveTo(x,ctx.canvas.height-40-0); ctx.lineTo(x,16); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = excl ? '#ff8080' : '#ffffff';
+  ctx.beginPath(); ctx.arc(x,y,5,0,2*Math.PI); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
+}
+
+// ---------------- Panel A: (P_comp, 1 - f_sink) ----------------
+const A = { xLo:1e0, xHi:1e10, yLo:1e-6, yHi:1e0 };
+function drawA(){
+  const cv=document.getElementById('cvA'); if(!cv) return;
+  const W=cv.offsetWidth||900, H=380; cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  const pad={l:64,r:22,t:16,b:40}; const pw=W-pad.l-pad.r, ph=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(7,5,21,0.6)'; ctx.fillRect(pad.l,pad.t,pw,ph);
+  const fr=logFrame(ctx,W,H,pad,A.xLo,A.xHi,A.yLo,A.yHi);
+  const {xPx,yPx,lxLo,lxHi,lyLo,lyHi}=fr;
+
+  // excluded: P * leak > L_LIM_LSUN (=1). shade above the hyperbola.
+  const img=ctx.getImageData(pad.l,pad.t,pw,ph); const d=img.data;
+  for(let px=0; px<pw; px++){
+    const lx=lxLo+(px/(pw-1))*(lxHi-lxLo); const P=Math.pow(10,lx);
+    for(let py=0; py<ph; py++){
+      const ly=lyHi-(py/(ph-1))*(lyHi-lyLo); const leak=Math.pow(10,ly);
+      if(P*leak > L_LIM_LSUN){
+        const i=(py*pw+px)*4; d[i]=198; d[i+1]=91; d[i+2]=91; d[i+3]=90;
+      }
+    }
+  }
+  ctx.putImageData(img,pad.l,pad.t);
+
+  drawGridAndAxes(ctx,W,H,pad,fr,A.xLo,A.xHi,A.yLo,A.yHi,'processed power  P_comp  [L☉]','radiated fraction  1 − f_sink');
+
+  // exclusion boundary leak = L_LIM/P
+  ctx.strokeStyle='#d06060'; ctx.lineWidth=1.6; ctx.beginPath();
+  let started=false;
+  for(let px=0; px<=pw; px+=1){
+    const lx=lxLo+(px/pw)*(lxHi-lxLo); const P=Math.pow(10,lx);
+    const leak=clampNum(L_LIM_LSUN/P, A.yLo, A.yHi);
+    const x=xPx(P), y=yPx(leak);
+    if(!started){ctx.moveTo(x,y);started=true;}else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // transport floor: hatch below 1e-4 + dashed line
+  const yFloor=yPx(LEAK_FLOOR), yBot=yPx(A.yLo);
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l,yFloor,pw,yBot-yFloor); ctx.clip();
+  ctx.strokeStyle='rgba(190,190,200,0.28)'; ctx.lineWidth=0.8;
+  for(let xx=pad.l-ph; xx<pad.l+pw; xx+=8){ ctx.beginPath(); ctx.moveTo(xx,yBot); ctx.lineTo(xx+(yBot-yFloor),yFloor); ctx.stroke(); }
+  ctx.restore();
+  ctx.setLineDash([6,4]); ctx.strokeStyle='rgba(160,160,175,0.9)'; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(pad.l,yFloor); ctx.lineTo(pad.l+pw,yFloor); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='rgba(180,180,195,0.85)'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='left';
+  ctx.fillText('adopted transport floor 10⁻⁴', pad.l+4, yFloor-4);
+
+  // fuel ceiling (blue dashed vertical) + L_Edd (dash-dot vertical)
+  ctx.setLineDash([6,4]); ctx.strokeStyle='#5a6dc0'; ctx.lineWidth=1.3;
+  ctx.beginPath(); ctx.moveTo(xPx(P_FUEL),pad.t); ctx.lineTo(xPx(P_FUEL),pad.t+ph); ctx.stroke();
+  ctx.setLineDash([5,3,1,3]); ctx.strokeStyle='rgba(140,140,150,0.85)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(xPx(L_EDD_LSUN),pad.t); ctx.lineTo(xPx(L_EDD_LSUN),pad.t+ph); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='#8f9fd8'; ctx.textAlign='right'; ctx.font='9px Space Mono, monospace';
+  ctx.save(); ctx.translate(xPx(P_FUEL)-3, pad.t+ph*0.5); ctx.rotate(-Math.PI/2); ctx.textAlign='center'; ctx.fillText('Bondi ceiling 8×10⁵ L☉',0,0); ctx.restore();
+  ctx.fillStyle='#9a9aa8'; ctx.save(); ctx.translate(xPx(L_EDD_LSUN)+11, pad.t+ph*0.5); ctx.rotate(-Math.PI/2); ctx.textAlign='center'; ctx.fillText('L_Edd',0,0); ctx.restore();
+
+  // region labels
+  ctx.fillStyle='#c88a8a'; ctx.font='9px Space Mono, monospace'; ctx.textAlign='center';
+  ctx.fillText('excluded by JWST waste heat', xPx(3e5), yPx(3e-2));
+  ctx.fillStyle='#5fc78c';
+  ctx.fillText('allowed: dormant / low-power', xPx(60), yPx(2e-3));
+
+  drawMarkerA(ctx,xPx,yPx);
+}
+function drawMarkerA(ctx,xPx,yPx){
+  const P=Math.pow(10,state.logP), leak=Math.pow(10,state.logLeak);
+  const x=xPx(clampNum(P,A.xLo,A.xHi)), y=yPx(clampNum(leak,A.yLo,A.yHi));
+  const excl = P*leak > L_LIM_LSUN;
+  ctx.fillStyle = excl ? '#ff8080' : '#ffffff';
+  ctx.beginPath(); ctx.arc(x,y,5,0,2*Math.PI); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.6)'; ctx.lineWidth=1.5; ctx.stroke();
+}
+
+// ---------------- render (arg-less; drives off module state) ----------------
+function render(){
+  // slider labels
+  const r=Math.pow(10,state.logR), L=Math.pow(10,state.logL);
+  const P=Math.pow(10,state.logP), leak=Math.pow(10,state.logLeak);
+  const set=(id,html)=>{const el=document.getElementById(id); if(el) el.innerHTML=html;};
+  set('r-val', fmtSci(r,2)+' AU');
+  set('l-val', fmtSci(L,2)+' L☉');
+  set('p-val', fmtPow10(state.logP)+' L☉');
+  set('leak-val', fmtPow10(state.logLeak));
+
+  // panel B readout
+  const T = tEff(L*LSUN, r*AU);
+  const llim = lLimMirLsun(T);
+  const exclB = L > llim;
+  set('teff-val', fmtSci(T,T<100?1:0)+' <span class="unit">K</span>');
+  set('instr-val', instrumentFor(T));
+  set('llim-val', fmtSci(llim,0)+' <span class="unit">L☉</span>');
+  const vb=document.getElementById('verdict-b');
+  if(vb){
+    vb.classList.toggle('excl',exclB);
+    vb.innerHTML = exclB
+      ? `<span class="v">Excluded.</span> At T_eff = ${fmtSci(T,T<100?1:0)} K the operative limit is ${instrumentFor(T)} (~${fmtSci(llim,0)} L☉); this source's ${fmtSci(L,2)} L☉ sits above it.`
+      : `<span class="v">Allowed.</span> At T_eff = ${fmtSci(T,T<100?1:0)} K the ${instrumentFor(T)} limit is ~${fmtSci(llim,0)} L☉; this source's ${fmtSci(L,2)} L☉ stays below it.`;
+  }
+
+  // panel A readout
+  const Lwa = P*leak;
+  const exclA = Lwa > L_LIM_LSUN;
+  const belowFloor = leak < LEAK_FLOOR;
+  set('lwa-val', fmtSci(Lwa,2)+' <span class="unit">L☉</span>');
+  set('floor-val', belowFloor ? 'yes (disfavoured)' : 'no');
+  const ratioFuel = P/P_FUEL;
+  set('fuel-val', (P>P_FUEL?'&gt; ceiling':'&lt; ceiling')+' · '+(P>L_EDD_LSUN?'&gt; L_Edd':'&lt; L_Edd'));
+  const va=document.getElementById('verdict-a');
+  if(va){
+    va.classList.toggle('excl',exclA);
+    let msg = exclA
+      ? `<span class="v">Excluded by JWST waste heat.</span> A warm swarm radiating ${fmtSci(Lwa,2)} L☉ exceeds the 1 L☉ point-source limit.`
+      : `<span class="v">Allowed today.</span> Radiated ${fmtSci(Lwa,2)} L☉ stays under the 1 L☉ warm-swarm limit.`;
+    if(belowFloor) msg += ` Below the 10⁻⁴ transport floor: disfavoured by the A.3 accounting, not excluded by data.`;
+    if(P>P_FUEL) msg += ` P_comp exceeds the ambient Bondi ceiling (${fmtSci(P_FUEL,1)} L☉) and needs imported mass.`;
+    va.innerHTML = msg;
+  }
+
+  drawB(); drawA();
+}
+
+// ---------------- wiring ----------------
+function wire(){
+  const bind=(id,key,lo,hi)=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.value=state[key];
+    el.addEventListener('input',()=>{ state[key]=clampNum(parseFloat(el.value),lo,hi); saveHash(); render(); });
+  };
+  bind('r-slider','logR',-1.699,3.602);
+  bind('l-slider','logL',-2,7);
+  bind('p-slider','logP',0,10);
+  bind('leak-slider','logLeak',-6,0);
+
+  document.querySelectorAll('[data-logr]').forEach(b=>b.addEventListener('click',()=>{state.logR=parseFloat(b.dataset.logr);const s=document.getElementById('r-slider');if(s)s.value=state.logR;saveHash();render();}));
+  document.querySelectorAll('[data-logl]').forEach(b=>b.addEventListener('click',()=>{state.logL=parseFloat(b.dataset.logl);const s=document.getElementById('l-slider');if(s)s.value=state.logL;saveHash();render();}));
+  document.querySelectorAll('[data-logp]').forEach(b=>b.addEventListener('click',()=>{state.logP=parseFloat(b.dataset.logp);const s=document.getElementById('p-slider');if(s)s.value=state.logP;saveHash();render();}));
+  document.querySelectorAll('[data-logleak]').forEach(b=>b.addEventListener('click',()=>{state.logLeak=parseFloat(b.dataset.logleak);const s=document.getElementById('leak-slider');if(s)s.value=state.logLeak;saveHash();render();}));
+
+  const at=document.getElementById('about-toggle'), ab=document.getElementById('about-this-tool');
+  if(at&&ab) at.addEventListener('click',()=>{const open=!ab.classList.contains('open');ab.classList.toggle('open',open);at.classList.toggle('open',open);});
+
+  window.addEventListener('resize',()=>{ drawB(); drawA(); });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+</body>
+</html>
