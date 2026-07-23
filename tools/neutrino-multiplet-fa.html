@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!--
+  Neutrino Multiplet False-Alarm Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-07-23
+  Site section: #science  ·  Epistemic tier: Falsification test (Paper A T6, Poisson background estimate)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neutrino Multiplet False-Alarm Calculator — Omega Centauri Society</title>
+<meta name="description" content="Poisson false-alarm rate for a high-energy neutrino multiplet search at a candidate site: cone background rate, per-window multiplet probability, and expected accidental multiplets over a survey livetime, from Paper A's T6 kill condition (KM3NeT/ARCA).">
+<link rel="canonical" href="https://omegacentauri.me/tools/neutrino-multiplet-fa.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--teal-bright);background:rgba(29,186,144,.06)}
+.warning-banner{background:rgba(13,110,88,.08);border-left:3px solid var(--teal-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--teal-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--teal-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(77,232,192,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--teal-glow);min-width:150px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--teal-glow);border-color:var(--teal-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--teal-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.trials-note{margin-top:8px;padding:10px 14px;background:rgba(29,186,144,.06);border-left:2px solid var(--teal-mid);border-radius:0 6px 6px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary)}
+.trials-note .v{color:var(--teal-glow)}
+.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px 8px;margin-bottom:24px}
+canvas{width:100%;display:block}
+.chart-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin:-4px 0 12px;font-style:italic}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:20px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Neutrino Multiplet False-Alarm Calculator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Neutrino Multiplet False-Alarm Calculator</h1>
+      <p class="tool-subtitle">The background budget behind Paper A's T6 kill condition: how often does an atmospheric-neutrino background alone throw an accidental multi-track cluster inside a search cone, at a given detector rate, cone size, coincidence window, and multiplicity threshold? Set the cuts and read off the expected false multiplet count over a survey livetime.</p>
+    </div>
+    <span class="tier-badge">Falsification test</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>Background estimate, not a detector simulation.</strong>
+    This is the same order-of-magnitude Poisson accounting behind Paper A §7 T6: a uniform atmospheric background over the up-going hemisphere, no angular-resolution smearing, no energy cuts beyond the stated threshold. It reproduces the paper's headline number; a real analysis needs the full instrument response (Swanson 2026, "Macro Transcension Hypothesis," §7, Table 2).
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Search parameters</div>
+
+      <div class="slider-block">
+        <label>Background rate  (up-going ν events / yr over full hemisphere, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="rate-slider" min="1" max="5" step="0.02" value="3">
+          <span class="slider-value" id="rate-val">1.0×10³ yr⁻¹</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-rate="3">Full ARCA (10³ yr⁻¹)</button>
+          <button class="preset-btn" data-log-rate="2.5">Partial array (~3×10²)</button>
+          <button class="preset-btn" data-log-rate="3.5">IceCube+ARCA combined (~3×10³)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Search cone radius  (deg)</label>
+        <div class="slider-row">
+          <input type="range" id="cone-slider" min="0.1" max="5" step="0.05" value="1">
+          <span class="slider-value" id="cone-val">1.00°</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-cone="1">T6 fiducial (1°)</button>
+          <button class="preset-btn" data-cone="0.5">Tight (0.5°)</button>
+          <button class="preset-btn" data-cone="3">Loose (3°)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Coincidence window  (s, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="window-slider" min="1" max="5" step="0.02" value="3">
+          <span class="slider-value" id="window-val">1.0×10³ s</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-window="2">10² s</button>
+          <button class="preset-btn" data-log-window="3">T6 fiducial (10³ s)</button>
+          <button class="preset-btn" data-log-window="4">10⁴ s</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Multiplicity threshold k  (≥ this many tracks)</label>
+        <div class="slider-row">
+          <input type="range" id="mult-slider" min="2" max="6" step="1" value="3">
+          <span class="slider-value" id="mult-val">3</span>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Survey livetime  (yr)</label>
+        <div class="slider-row">
+          <input type="range" id="livetime-slider" min="1" max="30" step="1" value="10">
+          <span class="slider-value" id="livetime-val">10 yr</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Poisson outputs</div>
+      <div class="row">
+        <div class="row-label">Cone solid angle Ω</div>
+        <div class="row-value" id="omega-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Cone background rate λ</div>
+        <div class="row-value" id="lambda-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Window expectation μ = λ·window</div>
+        <div class="row-value" id="mu-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">P(≥k) per window</div>
+        <div class="row-value" id="pk-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Independent windows over livetime</div>
+        <div class="row-value" id="windows-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Expected false multiplets over livetime</div>
+        <div class="row-value" id="expected-val">—</div>
+      </div>
+      <div class="row-meta" id="verdict-meta">—</div>
+
+      <div class="trials-note" id="trials-note">computing…</div>
+    </section>
+  </div>
+
+  <section class="chart-card">
+    <div class="card-title">Expected false multiplets vs. multiplicity threshold</div>
+    <div class="chart-sub">Expected accidental ≥k multiplets over the current livetime, at the current rate/cone/window, swept over k. The current threshold is marked.</div>
+    <canvas id="cvMult" height="300"></canvas>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The model</h3>
+      <p>A search cone of radius θ subtends solid angle <code>Ω = 2π(1 − cos θ)</code>. If the full up-going hemisphere (2π sr) sees a background rate R (events/yr), the cone sees a fraction <code>Ω/2π</code> of it, giving a cone background rate <code>λ = R·(Ω/2π)</code> in events/s. Over a coincidence window of duration w, the Poisson expectation is <code>μ = λ·w</code>, and the probability of an accidental multiplet of k or more tracks in one window is the Poisson upper tail</p>
+      <p><code>P(≥k) = 1 − Σ<sub>i=0</sub><sup>k−1</sup> e<sup>−μ</sup>μ<sup>i</sup>/i!</code></p>
+      <p>which for the small μ typical of a background-free search reduces to the leading term <code>μᵏ/k!</code>. Multiplying by the number of independent windows in the survey livetime gives the expected count of accidental multiplets over the whole campaign — the number that must be small for a single confirmed multiplet to be trusted as a genuine trigger.</p>
+
+      <h3>Trials factor</h3>
+      <p>The number above is for one fixed window duration. A real search scans several candidate window lengths (Paper A notes generous headroom even after this correction), which multiplies the single-window false-alarm count by roughly the number of independent durations scanned. The trials note below applies a fiducial ×10 scan penalty to the expected count; it does not change the per-window μ or P(≥k) shown in the outputs above.</p>
+
+      <h3>Reproducing Paper A's T6 number</h3>
+      <p>At the T6 fiducials — full-array ARCA background R = 10³ yr⁻¹ over the up-going hemisphere, 1° cone, 10³ s window, k = 3, 10 yr livetime — this tool gives λ ≈ 4.8×10⁻⁹ s⁻¹, μ ≈ 4.8×10⁻⁶, P(≥3) ≈ 1.9×10⁻¹⁷, ≈3.16×10⁵ independent windows per decade, and an expected false-multiplet count ≈ 6×10⁻¹² per decade — the same order of magnitude as Paper A's rounded headline of ~10⁻¹¹ per decade (Swanson 2026, "Macro Transcension Hypothesis," §7). The criterion is background-free by many orders of magnitude; the practical limit on T6 is exposure, not background.</p>
+
+      <p class="meta-line">v1.0 — 2026-07-23 · Code MIT · Prose CC BY 4.0 · Swanson 2026, "Macro Transcension Hypothesis" ("Paper A") §7, Table 2 (T6); Adrián-Martínez et al. 2016 (KM3NeT 2.0 letter of intent)</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const SEC_PER_YR = 365.25 * 86400;
+const OMEGA_HEMI = 2 * Math.PI;
+const TRIALS_PENALTY = 10;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { logRate: 3, cone: 1, logWindow: 3, mult: 3, livetime: 10 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.rate){const v=parseFloat(p.rate); if(!isNaN(v)) state.logRate=v;}
+  if(p.cone){const v=parseFloat(p.cone); if(!isNaN(v)&&v>0) state.cone=v;}
+  if(p.window){const v=parseFloat(p.window); if(!isNaN(v)) state.logWindow=v;}
+  if(p.mult){const v=parseFloat(p.mult); if(!isNaN(v)&&v>=1) state.mult=Math.round(v);}
+  if(p.livetime){const v=parseFloat(p.livetime); if(!isNaN(v)&&v>0) state.livetime=v;}
+}
+function saveHash(){
+  setHash({
+    rate: state.logRate.toFixed(3),
+    cone: state.cone.toFixed(3),
+    window: state.logWindow.toFixed(3),
+    mult: state.mult.toFixed(0),
+    livetime: state.livetime.toFixed(2)
+  });
+}
+
+// Physics — Paper A §7, T6 background estimate
+function factorial(n){let f=1;for(let i=2;i<=n;i++)f*=i;return f;}
+function poissonUpperTail(mu, k){
+  if(mu<=0) return k<=0?1:0;
+  if(k<=0) return 1;
+  let logTerm = -mu + k*Math.log(mu) - Math.log(factorial(k));
+  let term = Math.exp(logTerm);
+  let sum = term;
+  let i = k;
+  while(term > sum*1e-15 && i < k+300){
+    i++;
+    term *= mu/i;
+    sum += term;
+  }
+  return sum;
+}
+function coneOmega(coneDeg){ return 2*Math.PI*(1 - Math.cos(coneDeg*Math.PI/180)); }
+function coneLambda(rateYr, coneDeg){ return (rateYr * coneOmega(coneDeg)/OMEGA_HEMI) / SEC_PER_YR; }
+
+function compute(rateYr, coneDeg, windowS, k, livetimeYr){
+  const lambda = coneLambda(rateYr, coneDeg);
+  const mu = lambda * windowS;
+  const pk = poissonUpperTail(mu, k);
+  const windows = livetimeYr * SEC_PER_YR / windowS;
+  const expected = pk * windows;
+  return { lambda, mu, pk, windows, expected };
+}
+
+function render(){
+  const rateYr = Math.pow(10, state.logRate);
+  const windowS = Math.pow(10, state.logWindow);
+  const { lambda, mu, pk, windows, expected } = compute(rateYr, state.cone, windowS, state.mult, state.livetime);
+  const omega = coneOmega(state.cone);
+
+  document.getElementById('rate-val').textContent = fmtSci(rateYr,1) + ' yr⁻¹';
+  document.getElementById('cone-val').textContent = state.cone.toFixed(2) + '°';
+  document.getElementById('window-val').textContent = fmtSci(windowS,1) + ' s';
+  document.getElementById('mult-val').textContent = state.mult.toFixed(0);
+  document.getElementById('livetime-val').textContent = state.livetime.toFixed(0) + ' yr';
+
+  document.getElementById('omega-val').innerHTML = fmtSci(omega,2) + ' <span class="unit">sr</span>';
+  document.getElementById('lambda-val').innerHTML = fmtSci(lambda,2) + ' <span class="unit">s⁻¹</span>';
+  document.getElementById('mu-val').innerHTML = fmtSci(mu,2);
+  document.getElementById('pk-val').innerHTML = fmtSci(pk,2);
+  document.getElementById('windows-val').innerHTML = fmtSci(windows,2);
+  document.getElementById('expected-val').innerHTML = fmtSci(expected,2);
+
+  const verdict = document.getElementById('verdict-meta');
+  verdict.textContent = `At these cuts, an accidental background-only ≥${state.mult}-fold multiplet is expected ${fmtSci(expected,2)} times over ${state.livetime.toFixed(0)} yr of livetime — background-free by many orders of magnitude when this is ≪1.`;
+
+  const trials = document.getElementById('trials-note');
+  const trialsExpected = expected * TRIALS_PENALTY;
+  trials.innerHTML = `Trials factor (fiducial ×${TRIALS_PENALTY} for scanning several window durations): expected false multiplets <span class="v">${fmtSci(trialsExpected,2)}</span> over the livetime. Even at this penalty the criterion stays background-free by orders of magnitude at the T6 fiducials.`;
+
+  drawMultChart(rateYr, state.cone, windowS, state.livetime);
+}
+
+function drawMultChart(rateYr, coneDeg, windowS, livetimeYr){
+  const cv = document.getElementById('cvMult');
+  const W = cv.offsetWidth || 900, H = 300;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const pad = { l: 66, r: 26, t: 20, b: 44 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(7,5,21,0.6)';
+  ctx.fillRect(pad.l, pad.t, pw, ph);
+
+  const kMin = 2, kMax = 8;
+  const logYmin = -30, logYmax = 2;
+
+  function xPx(k){ return pad.l + (k-kMin)/(kMax-kMin)*pw; }
+  function yPx(logY){ return pad.t + ph - (logY-logYmin)/(logYmax-logYmin)*ph; }
+
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)'; ctx.lineWidth = 1;
+  for(let k=kMin;k<=kMax;k++){ const x=xPx(k); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,pad.t+ph); ctx.stroke(); }
+  for(let ly=Math.ceil(logYmin/4)*4; ly<=logYmax; ly+=4){ const y=yPx(ly); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+pw,y); ctx.stroke(); }
+
+  // y = 1 reference line (expected count of 1)
+  ctx.strokeStyle = 'rgba(208,64,64,0.5)'; ctx.setLineDash([5,4]); ctx.lineWidth = 1.2;
+  const y1 = yPx(0);
+  ctx.beginPath(); ctx.moveTo(pad.l,y1); ctx.lineTo(pad.l+pw,y1); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.strokeStyle = 'rgba(29,186,144,0.9)'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  let first = true;
+  for(let k=kMin;k<=kMax;k++){
+    const { expected } = compute(rateYr, coneDeg, windowS, k, livetimeYr);
+    const logY = expected>0 ? Math.max(logYmin, Math.min(logYmax, Math.log10(expected))) : logYmin;
+    const x = xPx(k), y = yPx(logY);
+    if(first){ ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  for(let k=kMin;k<=kMax;k++){
+    const { expected } = compute(rateYr, coneDeg, windowS, k, livetimeYr);
+    const logY = expected>0 ? Math.max(logYmin, Math.min(logYmax, Math.log10(expected))) : logYmin;
+    const x = xPx(k), y = yPx(logY);
+    ctx.fillStyle = (k===state.mult) ? 'rgba(255,200,64,1)' : 'rgba(29,186,144,0.9)';
+    ctx.beginPath(); ctx.arc(x, y, k===state.mult?5:3, 0, 2*Math.PI); ctx.fill();
+  }
+
+  // current-k vertical marker
+  const xc = xPx(state.mult);
+  ctx.strokeStyle = 'rgba(255,200,64,0.6)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(xc,pad.t); ctx.lineTo(xc,pad.t+ph); ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(184,176,224,0.5)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+
+  ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace'; ctx.textAlign = 'center';
+  for(let k=kMin;k<=kMax;k++){ ctx.fillText('k='+k, xPx(k), pad.t+ph+16); }
+  ctx.textAlign = 'right';
+  for(let ly=Math.ceil(logYmin/4)*4; ly<=logYmax; ly+=4){ ctx.fillText('10'+supDigits(String(ly)), pad.l-8, yPx(ly)+4); }
+
+  ctx.save(); ctx.translate(16, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace';
+  ctx.fillText('expected false multiplets over livetime', 0, 0); ctx.restore();
+}
+
+function wire(){
+  const rs = document.getElementById('rate-slider');
+  rs.value = state.logRate; rs.addEventListener('input', ()=>{ state.logRate=parseFloat(rs.value); saveHash(); render(); });
+
+  const cs = document.getElementById('cone-slider');
+  cs.value = state.cone; cs.addEventListener('input', ()=>{ state.cone=parseFloat(cs.value); saveHash(); render(); });
+
+  const ws = document.getElementById('window-slider');
+  ws.value = state.logWindow; ws.addEventListener('input', ()=>{ state.logWindow=parseFloat(ws.value); saveHash(); render(); });
+
+  const ms = document.getElementById('mult-slider');
+  ms.value = state.mult; ms.addEventListener('input', ()=>{ state.mult=Math.round(parseFloat(ms.value)); saveHash(); render(); });
+
+  const ls = document.getElementById('livetime-slider');
+  ls.value = state.livetime; ls.addEventListener('input', ()=>{ state.livetime=parseFloat(ls.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-log-rate]').forEach(b=>b.addEventListener('click', ()=>{ state.logRate=parseFloat(b.dataset.logRate); rs.value=state.logRate; saveHash(); render(); }));
+  document.querySelectorAll('[data-cone]').forEach(b=>b.addEventListener('click', ()=>{ state.cone=parseFloat(b.dataset.cone); cs.value=state.cone; saveHash(); render(); }));
+  document.querySelectorAll('[data-log-window]').forEach(b=>b.addEventListener('click', ()=>{ state.logWindow=parseFloat(b.dataset.logWindow); ws.value=state.logWindow; saveHash(); render(); }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', ()=>{
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  window.addEventListener('resize', ()=>{
+    const rateYr = Math.pow(10, state.logRate);
+    const windowS = Math.pow(10, state.logWindow);
+    drawMultChart(rateYr, state.cone, windowS, state.livetime);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
