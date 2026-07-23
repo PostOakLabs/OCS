@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<!--
+  P2 Candidate-Cluster Scorer
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-07-23
+  Site section: #science  ·  Epistemic tier: ⚠ Selection-criteria scorecard (Paper A Table tab:candidates)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2 Candidate-Cluster Scorer — Omega Centauri Society</title>
+<meta name="description" content="Weight the four P2 selection criteria (IMBH evidence, mass in range, fuel reservoir, dynamical age/quiescence) from Paper A's Table of leading Galactic candidate systems and watch the ranking re-sort live. At equal weights omega Cen tops every entry.">
+<link rel="canonical" href="https://omegacentauri.me/tools/p2-candidate-scorer.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px;margin-bottom:24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.weights-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media (max-width:820px){.weights-grid{grid-template-columns:1fr 1fr}}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:34px;text-align:right;white-space:nowrap}
+.preset-row{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.rank-card{padding:14px 24px}
+.rank-row{display:grid;grid-template-columns:36px 1fr 110px;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dotted var(--border-subtle);transition:background .2s}
+.rank-row:last-child{border-bottom:none}
+.rank-row.top{background:rgba(240,160,32,.06);border-radius:6px;padding-left:10px;padding-right:10px}
+.rank-num{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--text-dim);text-align:center}
+.rank-row.top .rank-num{color:var(--amber-glow)}
+.rank-name{font-family:'Space Mono',monospace;font-size:14px;color:var(--text-primary);letter-spacing:.02em}
+.rank-score{font-family:'Orbitron',sans-serif;font-size:16px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+table.candtab{width:100%;border-collapse:collapse;font-size:14px}
+table.candtab th{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-secondary);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border-subtle)}
+table.candtab td{padding:9px 10px;border-bottom:1px dotted var(--border-subtle);vertical-align:top}
+table.candtab tr.top-row td{background:rgba(240,160,32,.05)}
+.sym{font-family:'Orbitron',sans-serif;font-weight:600;text-align:center;display:block}
+.sym.pp{color:var(--teal-glow)}
+.sym.p{color:var(--teal-mid)}
+.sym.o{color:var(--text-dim)}
+.sym.m{color:var(--red-bright)}
+.cite{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);display:block;margin-top:2px}
+.notes-cell{font-size:12.5px;color:var(--text-secondary);max-width:280px}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+.table-wrap{overflow-x:auto}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:20px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">P2 Candidate-Cluster Scorer</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>P2 Candidate-Cluster Scorer</h1>
+      <p class="tool-subtitle">Paper A's postulate P2 (intermediate mass, high/spin-uppable, dense old fuel reservoir, dynamical quiescence) ranks real Galactic systems, not just &omega;&nbsp;Cen in isolation. Weight the four selection criteria yourself and watch the seven leading candidates re-sort live.</p>
+    </div>
+    <span class="tier-badge">⚠ Selection-criteria scorecard</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>This is the paper's own qualitative scorecard, not a new measurement.</strong>
+    Symbols (++ strong, + favourable, &deg; neutral/contested, &minus; unfavourable) are Paper A Table&nbsp;tab:candidates verbatim, mapped to scores 2/1/0/&minus;1 per criterion. The IMBH-evidence column in particular is contested for every entry (Swanson 2026, "The Macro Transcension Hypothesis," &sect;3.2).
+  </div>
+
+  <section class="card">
+    <div class="card-title">Criterion weights</div>
+    <div class="weights-grid">
+      <div class="slider-block">
+        <label>IMBH evidence</label>
+        <div class="slider-row">
+          <input type="range" id="w-evidence" min="0" max="3" step="0.1" value="1">
+          <span class="slider-value" id="w-evidence-val">1.0</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Mass in 10³&ndash;10⁵ M☉ range</label>
+        <div class="slider-row">
+          <input type="range" id="w-mass" min="0" max="3" step="0.1" value="1">
+          <span class="slider-value" id="w-mass-val">1.0</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Fuel reservoir</label>
+        <div class="slider-row">
+          <input type="range" id="w-fuel" min="0" max="3" step="0.1" value="1">
+          <span class="slider-value" id="w-fuel-val">1.0</span>
+        </div>
+      </div>
+      <div class="slider-block">
+        <label>Dynamical age / quiescence</label>
+        <div class="slider-row">
+          <input type="range" id="w-age" min="0" max="3" step="0.1" value="1">
+          <span class="slider-value" id="w-age-val">1.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="preset-row">
+      <button class="preset-btn" data-preset="equal">Equal weights (paper default)</button>
+      <button class="preset-btn" data-preset="evidence-only">Evidence-only</button>
+      <button class="preset-btn" data-preset="fuel-age">Fuel + age only</button>
+      <button class="preset-btn" data-preset="mass-strict">Mass-strict</button>
+    </div>
+  </section>
+
+  <section class="card rank-card">
+    <div class="card-title">Ranked output</div>
+    <div id="rank-list"></div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">Table tab:candidates — the four criteria scored</div>
+    <div class="table-wrap">
+      <table class="candtab">
+        <thead>
+          <tr><th>System</th><th>Evidence</th><th>Mass</th><th>Fuel</th><th>Age/quiet</th><th>Notes and key references</th></tr>
+        </thead>
+        <tbody id="cand-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The four criteria</h3>
+      <p>Paper A &sect;"Selection criteria over host systems" derives P2's ranking from four competing requirements: (1) black-hole mass in the intermediate 10³&ndash;10⁵&nbsp;M☉ range, where Eddington-limited throughput and Bekenstein&ndash;Hawking storage both favour larger M while tidal-disruption risk and galactic-centre crowding favour smaller M; (2) high spin or spin-up feasibility via Blandford&ndash;Znajek and prograde-disk accretion; (3) a dense, old, low-mass stellar reservoir a globular-cluster core supplies at ~10⁵&ndash;10⁶ stars per parsec; (4) dynamical age &gt;10 Gyr and gas-poor quiescence, minimizing both natural accretion noise and hazards to infrastructure. This tool folds criterion 2 (spin/spin-up) into the fuel-reservoir score since spin-up requires the same accretable fuel supply the paper's table already scores jointly, and reproduces the paper's four displayed columns exactly: evidence, mass, fuel, age/quiet.</p>
+
+      <h3>Scoring convention</h3>
+      <p>Each cell's symbol maps to a score: <code>++</code> = 2, <code>+</code> = 1, <code>&deg;</code> = 0, <code>&minus;</code> = &minus;1. The ranked output is the weight-dotted sum <code>&sum; w_i &middot; s_i</code> across the four criteria, re-sorted live as the sliders move. Because &omega;&nbsp;Cen scores <code>++</code> on all four criteria, no non-negative weighting can place another candidate above it &mdash; the paper's "&omega;&nbsp;Cen satisfies them maximally" claim is a structural property of the table, not an artifact of one weighting choice.</p>
+
+      <h3>Reading the candidates</h3>
+      <p><strong>&omega;&nbsp;Cen</strong> tops every criterion, though its fast-star kinematic lower bound on IMBH mass is contested by pulsar-timing non-detections (Häberle et al. 2024; Bañares-Hernández et al. 2025). <strong>47&nbsp;Tuc</strong> carries a pulsar-timing mass claim not required by later dynamical modelling (Kiziltan et al. 2017; Mann et al. 2019). <strong>M54</strong>, the Sagittarius dwarf's nuclear cluster, shows kinematic hints at ~10⁴&nbsp;M☉ but sits 26&nbsp;kpc away (Greene et al. 2020). <strong>NGC&nbsp;6388</strong> and <strong>NGC&nbsp;6441</strong> both carry disputed kinematic claims alongside deep radio non-detections (Tremou et al. 2018). <strong>Terzan&nbsp;5</strong> hosts the densest known millisecond-pulsar population but suffers heavy bulge extinction and no direct IMBH evidence (Tremou et al. 2018). <strong>M15</strong> is a historical IMBH candidate whose kinematics are equally well fit by a concentrated stellar-remnant population (Baumgardt &amp; Hilker 2019; Greene et al. 2020).</p>
+
+      <h3>MCP-exposure note</h3>
+      <p>Flagged as a good MCP-exposure candidate for the next <code>tools-manifest.json</code> revision (per OCS-TOOLS-GAP-SCAN_2026-07-23 item 6); not added to the manifest in this pass &mdash; that decision rides with the manifest rev, not this build.</p>
+
+      <p class="meta-line">v1.0 — 2026-07-23 · Code MIT · Prose CC BY 4.0 · Swanson 2026, "The Macro Transcension Hypothesis" ("Paper A"), Table tab:candidates &amp; &sect;"Selection criteria over host systems"; Häberle et al. 2024 (<em>Nature</em>); Bañares-Hernández et al. 2025 (<em>A&amp;A</em>); Kiziltan et al. 2017; Mann et al. 2019; Greene et al. 2020; Tremou et al. 2018; Baumgardt &amp; Hilker 2019; Martinez et al. 2026</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+// Paper A Table tab:candidates, verbatim symbols. score: ++ =2, + =1, deg =0, - =-1.
+const CANDIDATES = [
+  { name: 'ω Cen', sym: { evidence:'++', mass:'++', fuel:'++', age:'++' },
+    cite: { evidence:'Häberle+2024; Bañares-Hernández+2025', mass:'Häberle+2024; Bañares-Hernández+2025', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'Fast-star kinematic lower bound contested by pulsar timing (Häberle et al. 2024; Bañares-Hernández et al. 2025)' },
+  { name: '47 Tuc', sym: { evidence:'o', mass:'+', fuel:'++', age:'++' },
+    cite: { evidence:'Kiziltan+2017; Mann+2019', mass:'Kiziltan+2017', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'Pulsar-timing claim of ~2.3×10³ M☉ (Kiziltan et al. 2017); not required by later modelling (Mann et al. 2019)' },
+  { name: 'M54', sym: { evidence:'+', mass:'+', fuel:'+', age:'+' },
+    cite: { evidence:'Greene+2020', mass:'Greene+2020', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'Nuclear cluster of the Sagittarius dwarf; kinematic hints at ~10⁴ M☉ (Greene et al. 2020); 26 kpc distant' },
+  { name: 'NGC 6388', sym: { evidence:'o', mass:'+', fuel:'+', age:'+' },
+    cite: { evidence:'Tremou+2018', mass:'Tremou+2018', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'Kinematic claims disputed; deep radio nulls (Tremou et al. 2018)' },
+  { name: 'NGC 6441', sym: { evidence:'o', mass:'+', fuel:'+', age:'+' },
+    cite: { evidence:'Tremou+2018', mass:'Tremou+2018', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'As NGC 6388; radio nulls (Tremou et al. 2018)' },
+  { name: 'Terzan 5', sym: { evidence:'-', mass:'o', fuel:'++', age:'o' },
+    cite: { evidence:'Tremou+2018', mass:'Tremou+2018', fuel:'Tremou+2018', age:'Tremou+2018' },
+    notes: 'Densest MSP population known, but heavy bulge extinction and no direct IMBH evidence (Tremou et al. 2018)' },
+  { name: 'M15', sym: { evidence:'o', mass:'o', fuel:'++', age:'++' },
+    cite: { evidence:'Baumgardt+2019; Greene+2020', mass:'Baumgardt+2019; Greene+2020', fuel:'Paper A §3', age:'Paper A §3' },
+    notes: 'Historical candidate; kinematics equally fit by a concentrated remnant population (Baumgardt & Hilker 2019; Greene et al. 2020)' }
+];
+
+const SYM_SCORE = { '++': 2, '+': 1, 'o': 0, '-': -1 };
+const SYM_CLASS = { '++': 'pp', '+': 'p', 'o': 'o', '-': 'm' };
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { wEvidence: 1, wMass: 1, wFuel: 1, wAge: 1 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.wEvidence){const v=parseFloat(p.wEvidence); if(!isNaN(v)&&v>=0&&v<=3) state.wEvidence=v;}
+  if(p.wMass){const v=parseFloat(p.wMass); if(!isNaN(v)&&v>=0&&v<=3) state.wMass=v;}
+  if(p.wFuel){const v=parseFloat(p.wFuel); if(!isNaN(v)&&v>=0&&v<=3) state.wFuel=v;}
+  if(p.wAge){const v=parseFloat(p.wAge); if(!isNaN(v)&&v>=0&&v<=3) state.wAge=v;}
+}
+function saveHash(){
+  setHash({
+    wEvidence: state.wEvidence.toFixed(2),
+    wMass: state.wMass.toFixed(2),
+    wFuel: state.wFuel.toFixed(2),
+    wAge: state.wAge.toFixed(2)
+  });
+}
+
+function weightedScore(c){
+  return SYM_SCORE[c.sym.evidence]*state.wEvidence
+       + SYM_SCORE[c.sym.mass]*state.wMass
+       + SYM_SCORE[c.sym.fuel]*state.wFuel
+       + SYM_SCORE[c.sym.age]*state.wAge;
+}
+
+function symCell(sym, citeLabel){
+  return `<span class="sym ${SYM_CLASS[sym]}">${sym}</span><span class="cite">${citeLabel}</span>`;
+}
+
+function render(){
+  document.getElementById('w-evidence-val').textContent = state.wEvidence.toFixed(1);
+  document.getElementById('w-mass-val').textContent = state.wMass.toFixed(1);
+  document.getElementById('w-fuel-val').textContent = state.wFuel.toFixed(1);
+  document.getElementById('w-age-val').textContent = state.wAge.toFixed(1);
+
+  const ranked = CANDIDATES.map(c => ({ c, score: weightedScore(c) })).sort((a,b) => b.score - a.score);
+
+  const rankList = document.getElementById('rank-list');
+  rankList.innerHTML = ranked.map((r,i) => `
+    <div class="rank-row${i===0 ? ' top' : ''}">
+      <div class="rank-num">${i+1}</div>
+      <div class="rank-name">${r.c.name}</div>
+      <div class="rank-score">${r.score.toFixed(2)}</div>
+    </div>`).join('');
+
+  const topName = ranked[0].c.name;
+  const tbody = document.getElementById('cand-tbody');
+  tbody.innerHTML = ranked.map(r => {
+    const c = r.c;
+    return `<tr class="${c.name===topName ? 'top-row' : ''}">
+      <td>${c.name}</td>
+      <td>${symCell(c.sym.evidence, c.cite.evidence)}</td>
+      <td>${symCell(c.sym.mass, c.cite.mass)}</td>
+      <td>${symCell(c.sym.fuel, c.cite.fuel)}</td>
+      <td>${symCell(c.sym.age, c.cite.age)}</td>
+      <td class="notes-cell">${c.notes}</td>
+    </tr>`;
+  }).join('');
+}
+
+function wire(){
+  const we = document.getElementById('w-evidence');
+  we.value = state.wEvidence; we.addEventListener('input', ()=>{ state.wEvidence=parseFloat(we.value); saveHash(); render(); });
+
+  const wm = document.getElementById('w-mass');
+  wm.value = state.wMass; wm.addEventListener('input', ()=>{ state.wMass=parseFloat(wm.value); saveHash(); render(); });
+
+  const wf = document.getElementById('w-fuel');
+  wf.value = state.wFuel; wf.addEventListener('input', ()=>{ state.wFuel=parseFloat(wf.value); saveHash(); render(); });
+
+  const wa = document.getElementById('w-age');
+  wa.value = state.wAge; wa.addEventListener('input', ()=>{ state.wAge=parseFloat(wa.value); saveHash(); render(); });
+
+  const PRESETS = {
+    'equal': { wEvidence:1, wMass:1, wFuel:1, wAge:1 },
+    'evidence-only': { wEvidence:1, wMass:0, wFuel:0, wAge:0 },
+    'fuel-age': { wEvidence:0, wMass:0, wFuel:1, wAge:1 },
+    'mass-strict': { wEvidence:0.5, wMass:3, wFuel:0.5, wAge:0.5 }
+  };
+  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click', ()=>{
+    const p = PRESETS[b.dataset.preset];
+    state.wEvidence=p.wEvidence; state.wMass=p.wMass; state.wFuel=p.wFuel; state.wAge=p.wAge;
+    we.value=state.wEvidence; wm.value=state.wMass; wf.value=state.wFuel; wa.value=state.wAge;
+    saveHash(); render();
+  }));
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', ()=>{
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
