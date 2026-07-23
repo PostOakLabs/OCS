@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--
+  Scenario - Background-Free
+  Omega Centauri Society . omegacentauri.me
+  Walks Paper A's T6 falsification spine: neutrino-multiplet background accounting -> multi-messenger corroboration -> the follow-up campaign it justifies.
+  Chains: neutrino-multiplet-fa . multi-messenger-alert . observing-campaign-planner
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-07-23
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario - Background-Free &middot; OCS</title>
+<meta name="description" content="Three chained tools walk Paper A's T6 falsification test: the Poisson background accounting behind a claimed background-free neutrino multiplet, the multi-messenger coincidence score that would corroborate it, and the astrometric follow-up campaign the result justifies.">
+<link rel="canonical" href="https://omegacentauri.me/tools/scenario-background-free.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 5%,rgba(29,186,144,.08),transparent 50%),
+    radial-gradient(ellipse at 80% 50%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 50% 95%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.08);box-shadow:0 0 0 1px var(--teal-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s3{border-color:var(--purple-mid);box-shadow:0 0 0 1px var(--purple-mid) inset}
+.step.s3 .step-title{color:var(--purple-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">&#8857; OCS</a>
+    <span class="nav-title">Scenario &middot; Background-Free</span>
+    <a href="https://omegacentauri.me/" class="nav-link">&larr; Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Scenario &middot; falsification test &middot; chains three tools</div>
+    <h1>Background-Free: From Multiplet to Campaign</h1>
+    <p class="hero-sub">Three tools trace Paper A's T6 falsification spine in order: the Poisson accounting that decides whether a neutrino multiplet is background-free, the multi-messenger coincidence score that would corroborate it, and the astrometric follow-up campaign the result justifies. A quiet detector field and a busy one lead to different downstream campaigns.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-07-23</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Pick a detector environment</div>
+    <p class="scenario-help">Both environments run the same three-tool chain; only the background rate/cone/window in Step 1, the transient brightness in Step 2, and the resulting campaign choice in Step 3 change.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="quiet">
+        <span class="name">Quiet field</span>
+        <span class="desc">Low background rate, tight cone and window: the T6 background-free claim holds by many orders of magnitude, and a bright counterpart clears every messenger channel.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="busy">
+        <span class="name">Busy field</span>
+        <span class="desc">Higher background rate, wider cone and window: the background-free claim is marginal once a trials-factor penalty is applied, even though the messenger corroboration score comes back the same.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">neutrino-multiplet-fa &middot; Paper A &sect;7, T6 &middot; background-only Poisson accounting</div>
+        <div class="step-title">Is the multiplet background-free?</div>
+        <p class="step-prose">The T6 kill condition asks how often an atmospheric-neutrino background alone throws an accidental multi-track coincidence inside a search cone, at a given detector rate, cone radius, coincidence window, and multiplicity threshold. In the <em>quiet field</em> (10&sup2; yr&#8315;&#185; background, 1&deg; cone, 100 s window, &ge;3-fold) the expected count over 10 yr of livetime is <strong>5.91&times;10&#8315;&#185;&#8311;</strong>, background-free by many orders of magnitude even after a &times;10 trials-factor penalty. In the <em>busy field</em> (10&#8308; yr&#8315;&#185; background, 3&deg; cone, 10&#8308; s window, &ge;2-fold) the same accounting gives <strong>2.97&times;10&#8315;&sup1;</strong>, which is no longer &#8810;1, and a &times;10 trials-factor penalty for scanning multiple window durations pushes the expected count to &sim;3, past the point where a single coincidence can be called background-free on its own.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="neutrino" href="neutrino-multiplet-fa.html">Open Neutrino Multiplet Calculator &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-t">Theoretical (order-of-magnitude background estimate)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">A background-free claim on its own is not evidence of anything, only the absence of one obvious way to explain a coincidence away. Step 2 asks whether independent channels corroborate the same source.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">multi-messenger-alert &middot; LISA / Fermi-LAT / CTA / KM3NeT coincidence score</div>
+        <div class="step-title">Do other messengers corroborate?</div>
+        <p class="step-prose">The same &omega;&nbsp;Cen IMBH mass range feeds an EMRI gravitational-wave calculation and, for a posited transient, a gamma-ray and neutrino flux estimate against each instrument's threshold. At OC's distance, any transient within the tool's allowed source-power range (10&sup3;&sup2;&ndash;10&#8308;&#8312; W) clears the Fermi-LAT, CTA, and KM3NeT thresholds by many orders of magnitude, so both environments here return the tool's maximum <strong>4/4 coincidence</strong> score, publish-worthy on the tool's own scoring, false-alarm rate &lt; 1 per 10&#8310; yr. What does change between them is the EMRI itself: the <em>quiet field</em>'s 8,128&nbsp;M&#9737; hole with a 1.4&nbsp;M&#9737; companion gives strain h&#8320; = 5.1&times;10&#8315;&#185;&#8312;, the <em>busy field</em>'s lighter 6,026&nbsp;M&#9737; hole with a 10&nbsp;M&#9737; companion gives h&#8320; = 3.7&times;10&#8315;&#185;&#8311; (a heavier companion partly compensating for the smaller primary); both sit far above LISA's SNR = 8 threshold regardless.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="alert" href="multi-messenger-alert.html">Open Multi-Messenger Alert Simulator &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-e">Established (GR EMRI, Landauer-independent)</span>
+          <span class="tier-mini tier-t">Theoretical (transient flux model)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">Corroboration strength here turns out not to distinguish the two environments; both clear every channel the tool checks. The real difference upstream, Step 1's background test, is what should drive the Step 3 campaign choice, not the coincidence score.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">observing-campaign-planner &middot; instrument, science goal, and campaign feasibility</div>
+        <div class="step-title">What follow-up campaign does the result justify?</div>
+        <p class="step-prose">Since Step 2's corroboration score does not distinguish the two environments, the campaign choice tracks Step 1's background result instead. The <em>quiet field</em>'s background-free claim justifies going straight at confirmation: ELT-MICADO targeted at confirming any central mass (3&sigma;), feasible, a required ensemble precision of 115.9 &mu;as/yr against ELT's 80 &mu;as single-epoch precision over 500 stars, 3 epochs, 1.5 telescope-hours, 1 semester. The <em>busy field</em>'s marginal background result argues for a broader independent line of evidence before leaning on the neutrino channel at all: Roman Space Telescope aimed at discovery-level detection (5&sigma;) over a larger 2,000-star sample, also feasible, 95.1 &mu;as/yr required against Roman's 15 &mu;as precision, 3 epochs, 0.75 telescope-hours, 1 semester. Neither campaign is expensive at these fiducials; the difference is which goal the background result can support on its own.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="campaign" href="observing-campaign-planner.html">Open Observing Campaign Planner &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-e">Established (astrometric precision scaling)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &middot; the chain closes</div>
+        <div class="payoff-body">The chain runs from a background test, through corroboration, to a concrete telescope proposal, and the corroboration step turned out to be uninformative between these two environments at OC's distance: it is the background test in Step 1 that ends up doing the work of choosing the campaign.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9878; Why these three tools are the argument's spine</div>
+    <div class="synth-prose">
+      <p>Paper A's T6 falsification test is built to fail loudly: it exists so that a claimed detection can be checked against the boring explanation first. The three tools here follow that same discipline in order, ruling out background, checking for independent corroboration, and only then sizing a follow-up campaign around whatever corroboration actually exists.</p>
+      <p>The two environments show that a background-free claim is a necessary first gate, not the whole case, though corroboration does not always add information on top of it: at OC's distance, any posited transient within the tools' allowed power range clears every gamma-ray and neutrino threshold checked here, so the coincidence score is 4/4 regardless of which environment is chosen. The environments still diverge sharply at Step 1, and that divergence is what should drive the Step 3 campaign choice.</p>
+      <p>For the full T6 derivation and Table 2's instrument response requirements, see the companion paper this chain draws from at <a href="/paper.html">the papers index</a>. For a different chain through the same decision-theory family, see <a href="scenario-migrate-or-stay.html">Scenario: Migrate or Stay</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-s">&#10022; Speculative</span> = published conjecture, no strong empirical support yet.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into three interactive tools. &middot; <a href="/tools/">All tools</a>
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Scenario - Background-Free
+// Scenario -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=quiet|busy
+//
+// CRITICAL hash-unit notes (verified 2026-07-23 against each tool's loadHash()):
+//   neutrino-multiplet-fa     : rate (LOG10, key "rate" = logRate), cone (LINEAR, deg),
+//                                window (LOG10, key "window" = logWindow), mult (LINEAR, integer),
+//                                livetime (LINEAR, yr)
+//   multi-messenger-alert     : M (LOG10 M_sun, key "M" = logM, clamped 3.7-4.7),
+//                                m2 (LINEAR M_sun, clamped 0.3-30), T (LINEAR yr, key "T" = tobs,
+//                                clamped 0.5-10), e (LINEAR eccentricity, clamped 0-0.9),
+//                                P (LOG10 W, key "P" = logP, clamped 32-48 — the slider's own
+//                                range keeps any posited transient's gamma/neutrino flux at OC's
+//                                distance far above every instrument threshold; there is no
+//                                allowed value that produces an undetected transient), dt (LOG10 s,
+//                                key "dt" = logDt, clamped 0-6). BUG FOUND + FIXED this session:
+//                                the tool's wire() re-synced sliders from stale HTML defaults on
+//                                load, silently discarding any hash-loaded state before first
+//                                render — fixed in multi-messenger-alert.html by syncing slider
+//                                .value from state right after loadHash(), before wire()'s initial
+//                                update() call.
+//   observing-campaign-planner: instr (STRING enum), goal (STRING enum),
+//                                time (LINEAR hours), stars (LINEAR integer),
+//                                cprec (LINEAR microarcsec, only used if instr="custom")
+// All numeric outputs below were verified live against these exact hash strings via a local
+// static server (file:// loads do not execute hash-driven JS in this harness's preview pane).
+// =========================================================================
+
+var SCENARIOS = {
+  quiet: {
+    label: 'Quiet field',
+    neutrino: {rate:'2', cone:'1', window:'2', mult:'3', livetime:'10'},
+    alert:    {M:'3.914', m2:'1.4', T:'5', e:'0.3', P:'38', dt:'2'},
+    campaign: {instr:'elt', goal:'confirm', time:'40', stars:'500'},
+    summary: {
+      neutrino: 'rate=10² yr⁻¹ · cone=1° · window=10² s · k≥3 · 10 yr → 5.91×10⁻¹⁷ expected false multiplets',
+      alert:    '8,128 M☉ · m₂=1.4 M☉ · 10³⁸ W / 100 s transient → 4/4 channels detected, FAR<1/10⁶ yr',
+      campaign: 'ELT-MICADO · confirm any mass (3σ) · 500 stars → feasible, 3 epochs, 1.5 h, 1 semester'
+    }
+  },
+  busy: {
+    label: 'Busy field',
+    neutrino: {rate:'4', cone:'3', window:'4', mult:'2', livetime:'10'},
+    alert:    {M:'3.778', m2:'10', T:'1', e:'0.6', P:'38', dt:'2'},
+    campaign: {instr:'roman', goal:'discovery', time:'100', stars:'2000'},
+    summary: {
+      neutrino: 'rate=10⁴ yr⁻¹ · cone=3° · window=10⁴ s · k≥2 · 10 yr → 2.97×10⁻¹ expected (≈3 with ×10 trials factor)',
+      alert:    '6,026 M☉ · m₂=10 M☉ · 10³⁸ W / 100 s transient → 4/4 channels detected (same as quiet field)',
+      campaign: 'Roman Space Telescope · discovery (5σ) · 2,000 stars → feasible, 3 epochs, 0.75 h, 1 semester'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+
+  var links = {
+    neutrino: 'neutrino-multiplet-fa.html'      + buildHash(s.neutrino),
+    alert:    'multi-messenger-alert.html'      + buildHash(s.alert),
+    campaign: 'observing-campaign-planner.html' + buildHash(s.campaign)
+  };
+
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+
+  document.getElementById('p1').textContent = s.summary.neutrino;
+  document.getElementById('p2').textContent = s.summary.alert;
+  document.getElementById('p3').textContent = s.summary.campaign;
+
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'quiet';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>

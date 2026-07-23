@@ -595,6 +595,12 @@ function wire(){
   const psl  = document.getElementById('p-sl');
   const dtsl = document.getElementById('dt-sl');
 
+  // Sync slider DOM values from state (set by loadHash()) before the initial
+  // update() below reads them back — otherwise a hash-loaded state is
+  // immediately overwritten by each slider's static HTML default.
+  msl.value = state.logM; m2sl.value = state.m2; tosl.value = state.tobs;
+  esl.value = state.e; psl.value = state.logP; dtsl.value = state.logDt;
+
   function update(){
     state.logM  = parseFloat(msl.value);
     state.m2    = parseFloat(m2sl.value);

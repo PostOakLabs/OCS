@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<!--
+  Scenario - Migrate or Stay
+  Omega Centauri Society . omegacentauri.me
+  Walks Paper D's migration-economics spine: patience threshold -> discount-rate uncertainty -> concrete wait-or-act verdict.
+  Chains: patience-threshold . gamma-discounting . workflow-wait-or-act
+  Code: MIT . Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0 . 2026-07-23
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario - Migrate or Stay &middot; OCS</title>
+<meta name="description" content="Three chained tools walk Paper D's migration-economics argument: the closed-form patience threshold that decides migrate-versus-densify, the gamma-discounting correction for uncertainty about one's own discount rate, and the concrete wait-versus-act verdict for a civilisation holding a real engine.">
+<link rel="canonical" href="https://omegacentauri.me/tools/scenario-migrate-or-stay.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;
+  --purple-bright:#7055d4;--purple-glow:#a080f0;
+  --teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;
+  --amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;
+  --red-mid:#8a2020;--red-bright:#d04040;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);color:var(--text-primary);
+  font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 20% 5%,rgba(29,186,144,.08),transparent 50%),
+    radial-gradient(ellipse at 80% 50%,rgba(112,85,212,.10),transparent 50%),
+    radial-gradient(ellipse at 50% 95%,rgba(240,160,32,.04),transparent 60%);
+}
+a{color:var(--purple-glow);text-decoration:none}
+a:hover{color:var(--teal-glow)}
+
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+
+.container{max-width:1100px;margin:0 auto;padding:50px 28px 80px}
+
+.hero{margin-bottom:36px}
+.hero-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);margin-bottom:14px}
+.hero h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:42px;line-height:1.1;letter-spacing:.01em;margin-bottom:14px;background:linear-gradient(120deg,var(--text-primary),var(--teal-glow),var(--purple-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--text-secondary);font-size:18px;font-style:italic;max-width:820px;margin-bottom:14px}
+.hero-meta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--text-dim);text-transform:uppercase}
+.hero-meta strong{color:var(--text-secondary);font-weight:400}
+
+.scenario{background:linear-gradient(180deg,rgba(13,10,36,.65),rgba(7,5,21,.85));border:1px solid var(--border-subtle);border-radius:14px;padding:22px 24px;margin-bottom:42px}
+.scenario-title{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.scenario-help{font-family:'Crimson Pro',serif;font-size:14px;font-style:italic;color:var(--text-secondary);margin-bottom:14px}
+.scenario-row{display:flex;gap:10px;flex-wrap:wrap}
+.scenario-btn{flex:1;min-width:240px;background:rgba(7,5,21,.6);border:1px solid var(--border-subtle);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--text-primary);font-family:'Crimson Pro',serif;font-size:14px;line-height:1.4;transition:all .15s}
+.scenario-btn:hover{border-color:var(--purple-bright)}
+.scenario-btn.active{border-color:var(--teal-bright);background:rgba(29,186,144,.08);box-shadow:0 0 0 1px var(--teal-bright) inset}
+.scenario-btn .name{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);display:block;margin-bottom:4px}
+.scenario-btn .desc{color:var(--text-secondary);font-size:13px}
+
+.steps{display:flex;flex-direction:column;gap:22px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:22px;background:linear-gradient(180deg,rgba(13,10,36,.55),rgba(7,5,21,.75));border:1px solid var(--border-subtle);border-radius:14px;padding:24px 26px;position:relative;overflow:hidden}
+.step::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,transparent,var(--accent),transparent);opacity:.6}
+.step.s1{--accent:var(--teal-bright)}
+.step.s2{--accent:var(--purple-bright)}
+.step.s3{--accent:var(--amber-bright)}
+.step.s3{border-color:var(--purple-mid);box-shadow:0 0 0 1px var(--purple-mid) inset}
+.step.s3 .step-title{color:var(--purple-glow)}
+
+.step-num{font-family:'Orbitron',sans-serif;font-weight:900;font-size:32px;color:var(--accent);line-height:1;margin-top:4px}
+.step-body{display:flex;flex-direction:column;gap:10px}
+.step-kicker{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.step-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.25}
+.step-prose{color:var(--text-secondary);font-size:15px;line-height:1.7;max-width:820px}
+.step-prose em{color:var(--text-primary);font-style:italic}
+.step-prose strong{color:var(--text-primary);font-weight:600}
+.step-prose code{font-family:'Space Mono',monospace;font-size:13px;background:rgba(7,5,21,.6);padding:1px 6px;border-radius:4px;color:var(--teal-glow)}
+.step-meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:6px}
+.step-cta{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);background:rgba(7,5,21,.4);transition:all .15s}
+.step-cta:hover{background:var(--accent);color:var(--void)}
+.step-params{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:.02em}
+.tier-mini{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor}
+.tier-e{color:var(--teal-bright);background:rgba(29,186,144,.05)}
+.tier-d{color:var(--amber-bright);background:rgba(240,160,32,.05)}
+.tier-t{color:var(--amber-mid);background:rgba(196,120,0,.05)}
+.tier-s{color:var(--purple-glow);background:rgba(160,128,240,.05)}
+
+.payoff{margin-top:24px;background:linear-gradient(180deg,rgba(13,42,36,.5),rgba(7,5,21,.85));border:1px solid var(--teal-mid);border-radius:14px;padding:18px 22px}
+.payoff-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:6px}
+.payoff-body{color:var(--text-primary);font-size:14px;line-height:1.6}
+
+.synthesis{margin-top:42px;background:linear-gradient(180deg,rgba(26,16,64,.4),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:30px 32px}
+.synth-title{font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin-bottom:14px}
+.synth-prose{color:var(--text-primary);font-size:16px;line-height:1.8;max-width:860px}
+.synth-prose p+p{margin-top:10px}
+.synth-prose a{color:var(--teal-glow);border-bottom:1px dashed var(--teal-mid)}
+.synth-prose a:hover{color:var(--amber-glow);border-color:var(--amber-bright)}
+
+.legend{margin-top:36px;padding:18px 22px;background:rgba(7,5,21,.5);border:1px dashed var(--border-subtle);border-radius:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.04em;line-height:1.9}
+.legend strong{color:var(--text-primary);font-weight:400;letter-spacing:.08em}
+
+.footer{margin-top:60px;padding:30px 0;border-top:1px solid var(--border-subtle);text-align:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.9;letter-spacing:.04em}
+.footer a{color:var(--text-secondary)}
+.footer a:hover{color:var(--teal-glow)}
+.footer-licenses{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+
+@media (max-width:720px){
+  .hero h1{font-size:30px}
+  .hero-sub{font-size:16px}
+  .container{padding:36px 18px 60px}
+  .step{grid-template-columns:1fr;gap:8px;padding:20px}
+  .step-num{font-size:24px}
+  .step-title{font-size:17px}
+  .scenario-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="https://omegacentauri.me/" class="nav-brand">&#8857; OCS</a>
+    <span class="nav-title">Scenario &middot; Migrate or Stay</span>
+    <a href="https://omegacentauri.me/" class="nav-link">&larr; Main site</a>
+    <a href="/tools/" class="nav-link">All tools</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <header class="hero">
+    <div class="hero-tag">Scenario &middot; migration economics &middot; chains three tools</div>
+    <h1>Migrate or Stay: The Discount-Rate Verdict</h1>
+    <p class="hero-sub">Three tools trace Paper D's migration-economics argument in order: the closed-form patience threshold that sets the crossover discount-plus-hazard rate for migrating to an IMBH platform over staying home and densifying, the gamma-discounting correction for a civilisation that is uncertain about its own discount rate, and the concrete wait-or-act verdict once a real engine (or the lack of one) enters the picture. Two profiles show both directions the chain can resolve.</p>
+    <div class="hero-meta">No backend &middot; No tracking &middot; Works offline &middot; <strong>v1.0</strong> &middot; 2026-07-23</div>
+  </header>
+
+  <section class="scenario" id="scenario">
+    <div class="scenario-title">&#9881; Pick a civilisation profile</div>
+    <p class="scenario-help">Both profiles share the same patience threshold (the destination-gain and transit-survival fiducials in Step 1 are unchanged); only the discount-rate prior in Step 2 and the engine available in Step 3 change.</p>
+    <div class="scenario-row" role="radiogroup">
+      <button class="scenario-btn active" data-scenario="patient">
+        <span class="name">Patient, high-power</span>
+        <span class="desc">A symmetric prior over discount rates that clears the patience threshold as the horizon lengthens, paired with a large IMBH engine.</span>
+      </button>
+      <button class="scenario-btn" data-scenario="impatient">
+        <span class="name">Impatient, low-power</span>
+        <span class="desc">A prior weighted toward the higher discount rate at a shorter horizon, paired with a small engine that cannot outrun aestivation.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="steps" id="steps">
+
+    <article class="step s1" id="step1">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-kicker">patience-threshold &middot; Paper D &sect;5&ndash;6 &middot; the migrate-versus-stay crossover</div>
+        <div class="step-title">How patient must a lineage be to migrate?</div>
+        <p class="step-prose">At the fiducial destination gain (G = 10&#8313;, a power-ratio, no fuel stack assumed), transit survival probability (p_s = 0.5), and bare transit-plus-construction time (&tau; = 10&#8309; yr, no braking), the closed-form threshold gives <strong>&rho;* = 2.00&times;10&#8315;&#8308; yr&#8315;&#185;</strong>, a half-life of <strong>3.46&times;10&sup3; yr</strong>. A lineage whose combined discount-plus-hazard rate sits below that clears the bar for migration over densification; the seed-and-stay hybrid band extends the same conclusion out to 1.69&times; that threshold. This value carries forward unchanged into Step 2, which asks whether ordinary discount-rate uncertainty alone can put a lineage under it.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="threshold" href="patience-threshold.html">Open Patience Threshold Calculator &rarr;</a>
+          <span class="step-params" id="p1"></span>
+          <span class="tier-mini tier-t">Theoretical (decision model)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The threshold is fixed by the environment, not by the lineage's psychology. Step 2 asks what a lineage actually believes about its own patience, which is where the two profiles diverge.</div></div>
+      </div>
+    </article>
+
+    <article class="step s2" id="step2">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-kicker">gamma-discounting &middot; Paper D &sect;7 &middot; Weitzman gamma-discounting under rate uncertainty</div>
+        <div class="step-title">Does uncertainty about the discount rate clear the bar?</div>
+        <p class="step-prose">A lineage uncertain between two possible discount rates values the far future by the expectation of the discount factor, not the expectation of the rate, and that certainty-equivalent rate declines toward the lower rate in the prior as the horizon lengthens. Under the <em>patient</em> profile (&rho;&#8321;=10&#8315;&sup3;, &rho;&#8322;=10&#8315;&#8310;, equal weight, t=10&#8309; yr) the naive mean is 5.00&times;10&#8315;&#8308; yr&#8315;&#185; but &rho;_eff falls to <strong>7.93&times;10&#8315;&#8310; yr&#8315;&#185;</strong>, well under the 2.00&times;10&#8315;&#8308; yr&#8315;&#185; threshold from Step 1: migration is favored under uncertainty alone. Under the <em>impatient</em> profile (&rho;&#8321;=10&#8315;&sup2;, &rho;&#8322;=10&#8315;&#8308;, 70% weight on the higher rate, t=10&#8308; yr) &rho;_eff only falls to <strong>2.20&times;10&#8315;&#8308; yr&#8315;&#185;</strong>, still above the same threshold: this lineage has not bought its way to patience.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="gamma" href="gamma-discounting.html">Open Gamma Discounting Calculator &rarr;</a>
+          <span class="step-params" id="p2"></span>
+          <span class="tier-mini tier-t">Theoretical (Weitzman 1998, 2001)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff</div>
+        <div class="payoff-body">The gap between the two profiles is small in the inputs (a shorter horizon, more weight on the impatient rate) but decisive in the output: one profile clears the threshold, the other stays pinned just above it. Step 3 asks what that means once a concrete engine is on the table.</div></div>
+      </div>
+    </article>
+
+    <article class="step s3" id="step3">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-kicker">workflow-wait-or-act &middot; aestivation vs. IMBH ergosphere &middot; the concrete verdict</div>
+        <div class="step-title">Given a real engine, wait or act?</div>
+        <p class="step-prose">The workflow's own four-stage comparison (Drake prior, Sandberg aestivation gain, Landauer-limited IMBH ops, and the Bennett-corrected ratio) delivers the practical version of the same question. With the <em>patient</em> profile's large engine (30,000 M&#9737;, a* = 0.9, B = 10&#8310; T) the act strategy wins by <strong>7.23&times;10&sup1;&#8304;&times;</strong> (7.93&times;10&sup1;&sup2;&times; under the Bennett critique): a lineage that has already cleared the patience threshold and holds a real IMBH platform should act now, not aestivate. With the <em>impatient</em> profile's small engine (1 M&#9737;, a* = 0.01, B = 1 T) the same comparison flips: aestivation wins by <strong>1.75&times;10&#185;&#8308;&times;</strong> (4.73&times;10&#185;&#8308;&times; under Bennett), since an engine too weak to outrun the CMB cooling toward the Landauer floor is not worth running at all, regardless of what Step 2 said about patience.</p>
+        <div class="step-meta">
+          <a class="step-cta" data-tool="workflow" href="workflow-wait-or-act.html">Open Wait-or-Act Workflow &rarr;</a>
+          <span class="step-params" id="p3"></span>
+          <span class="tier-mini tier-t">Theoretical (Fermi/Aestivation)</span>
+          <span class="tier-mini tier-e">Established (Landauer, Hawking)</span>
+        </div>
+        <div class="payoff"><div class="payoff-title">Step payoff &middot; the chain closes</div>
+        <div class="payoff-body">Patience and power are separate questions that both have to clear before migration beats staying home: a lineage can be patient with a weak engine, or impatient with a strong one, and either mismatch changes the verdict.</div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="synthesis">
+    <div class="synth-title">&#9878; Why these three tools are the argument's spine</div>
+    <div class="synth-prose">
+      <p>Paper D's migration argument runs in one direction: a closed-form threshold set by the destination and the journey (&sect;5&ndash;6), a correction for what a real lineage can actually know about its own discount rate (&sect;7), and a concrete comparison against the alternative of waiting out the universe's cooling (the aestivation literature the workflow chains against). The three tools here follow that same order.</p>
+      <p>What the two profiles show together is that the threshold from Step 1 is necessary but not sufficient on its own: clearing it under discount-rate uncertainty (Step 2) still has to be paired with an engine capable of using the destination (Step 3). The patient profile clears both bars and should act; the impatient profile clears neither and should wait, independent of which single number looks most favorable in isolation.</p>
+      <p>For the full derivation, including the threshold's logarithmic insensitivity to the destination-gain multiplier and the gamma-discounting horizon dependence, see the companion papers this chain draws from at <a href="/paper.html">the papers index</a>. For a different chain through the same decision-theory family, see <a href="scenario-background-free.html">Scenario: Background-Free</a>.</p>
+    </div>
+  </section>
+
+  <div class="legend">
+    <strong>EPISTEMIC TIERS:</strong>
+    <span class="tier-mini tier-e">Established</span> = peer-reviewed physics within the standard formulation.
+    <span class="tier-mini tier-d">Debated</span> = active disagreement in the published literature.
+    <span class="tier-mini tier-t">Theoretical</span> = published framework, awaiting decisive observation.
+    <span class="tier-mini tier-s">&#10022; Speculative</span> = published conjecture, no strong empirical support yet.
+  </div>
+
+  <footer class="footer">
+    Omega Centauri Society &middot; <a href="https://omegacentauri.me/">omegacentauri.me</a> &middot; This page deep-links into three interactive tools. &middot; <a href="/tools/">All tools</a>
+    <div class="footer-licenses">
+      <span>Code: <a href="https://opensource.org/licenses/MIT">MIT</a></span>
+      <span>Content: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =========================================================================
+// Scenario - Migrate or Stay
+// Scenario -> per-tool hash deeplinks. Pure DOM; no fetch, no PII, no storage.
+// URL hash on this page: #scenario=patient|impatient
+//
+// CRITICAL hash-unit notes (verified 2026-07-23 against each tool's loadHash()):
+//   patience-threshold     : logG (LOG10), ps (LINEAR, 0-1), logTau (LOG10),
+//                             brake (LINEAR, >=1), d (LINEAR, kpc), v (LINEAR, c)
+//   gamma-discounting       : logRho1 (LOG10), logRho2 (LOG10), w1 (LINEAR, 0-1), logT (LOG10)
+//   workflow-wait-or-act    : bio (LINEAR log10(f_l*f_i) exponent already log-valued),
+//                             L (LOG10 yr, key "L"), at (LOG10 yr, key "at" = logAestT),
+//                             E (LOG10 J, key "E" = logE), M (LINEAR M_sun, key "M"),
+//                             a (LINEAR spin 0-1), B (LOG10 T, key "B" = logB),
+//                             t (LOG10 K, key "t" = logT3, CMB temp for BZ stage)
+// All numeric outputs below were computed live against these exact hash strings.
+// =========================================================================
+
+var SCENARIOS = {
+  patient: {
+    label: 'Patient, high-power',
+    threshold: {logG:'9', ps:'0.5', logTau:'5', brake:'1', d:'5.49', v:'0.2'},
+    gamma:     {logRho1:'-3', logRho2:'-6', w1:'0.5', logT:'5'},
+    workflow:  {bio:'-10', L:'3', at:'11', E:'44', M:'30000', a:'0.9', B:'6', t:'0.435'},
+    summary: {
+      threshold: 'G=10⁹ · p_s=0.5 · τ=10⁵ yr, no braking → ρ*=2.00×10⁻⁴ yr⁻¹',
+      gamma:     'ρ₁=10⁻³, ρ₂=10⁻⁶, w₁=0.5, t=10⁵ yr → ρ_eff=7.93×10⁻⁶ yr⁻¹ (clears threshold)',
+      workflow:  '30,000 M☉, a*=0.9, B=10⁶ T → Act wins 7.23×10¹⁰× (Bennett 7.93×10¹²×)'
+    }
+  },
+  impatient: {
+    label: 'Impatient, low-power',
+    threshold: {logG:'9', ps:'0.5', logTau:'5', brake:'1', d:'5.49', v:'0.2'},
+    gamma:     {logRho1:'-2', logRho2:'-4', w1:'0.7', logT:'4'},
+    workflow:  {bio:'-3', L:'6', at:'8', E:'44', M:'1', a:'0.01', B:'0', t:'0.435'},
+    summary: {
+      threshold: 'G=10⁹ · p_s=0.5 · τ=10⁵ yr, no braking → ρ*=2.00×10⁻⁴ yr⁻¹ (unchanged)',
+      gamma:     'ρ₁=10⁻², ρ₂=10⁻⁴, w₁=0.7, t=10⁴ yr → ρ_eff=2.20×10⁻⁴ yr⁻¹ (still above threshold)',
+      workflow:  '1 M☉, a*=0.01, B=1 T → Wait wins 1.75×10¹⁴× (Bennett 4.73×10¹⁴×)'
+    }
+  }
+};
+
+function buildHash(obj) {
+  var parts = [];
+  for (var k in obj) {
+    if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+    var v = obj[k];
+    if (v === null || v === undefined || v === '') continue;
+    parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  }
+  return '#' + parts.join('&');
+}
+
+function applyScenario(name) {
+  var s = SCENARIOS[name];
+  if (!s) return;
+
+  var links = {
+    threshold: 'patience-threshold.html'   + buildHash(s.threshold),
+    gamma:     'gamma-discounting.html'    + buildHash(s.gamma),
+    workflow:  'workflow-wait-or-act.html' + buildHash(s.workflow)
+  };
+
+  var anchors = document.querySelectorAll('a[data-tool]');
+  for (var i = 0; i < anchors.length; i++) {
+    var t = anchors[i].getAttribute('data-tool');
+    if (links[t]) anchors[i].setAttribute('href', links[t]);
+  }
+
+  document.getElementById('p1').textContent = s.summary.threshold;
+  document.getElementById('p2').textContent = s.summary.gamma;
+  document.getElementById('p3').textContent = s.summary.workflow;
+
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var j = 0; j < btns.length; j++) {
+    btns[j].classList.toggle('active', btns[j].getAttribute('data-scenario') === name);
+  }
+
+  history.replaceState(null, '', '#scenario=' + name);
+}
+
+function init() {
+  var m = window.location.hash.match(/scenario=([a-z0-9]+)/i);
+  var initial = (m && SCENARIOS[m[1]]) ? m[1] : 'patient';
+  var btns = document.querySelectorAll('.scenario-btn');
+  for (var i = 0; i < btns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() { applyScenario(btn.getAttribute('data-scenario')); });
+    })(btns[i]);
+  }
+  applyScenario(initial);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
