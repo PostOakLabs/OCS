@@ -14,12 +14,15 @@ Channels and data (2026):
 H_eng priors (pre-registered, log-flat):
   P_comp  : log-uniform over [1, P_fuel] Lsun  (fuel ceiling from fig2/common)
   leak = 1 - f_sink : log-uniform over [1e-4, 1]  (transport floor)
+  r_swarm : log-uniform over the envelope [2e-2, 4e3] AU (referee M3)
   dormant fraction f_d: probability the installation is dormant (P_comp -> 0);
          prior 0.5 (varied 0.1--0.9 for the sensitivity band)
 
-MIR likelihood: detection iff L_waste = leak * P_comp > L_lim (hard threshold;
-a soft threshold changes ln K by < 0.1). Data = no detection.
-  P(no det | H_eng) = f_d + (1 - f_d) * P(leak * P < L_lim)
+MIR likelihood (radius-dependent, referee M3): the swarm re-radiates
+L_waste = leak * P_comp at T_eff(r) = (L / 4 pi r^2 sigma_SB)^{1/4}; detection
+iff L_waste > L_lim(T_eff), the piecewise instrument limit of common.L_lim_mir
+(JWST/MIRI warm; WISE/MIPS cool, confusion-limited).  Data = no detection.
+  P(no det | H_eng) = f_d + (1 - f_d) * P(L_waste < L_lim(T_eff))
   P(no det | H_q)   = 1
 ln K_MIR = ln P(no det | H_eng)  (negative: H_eng pays for its detectable prior mass)
 
@@ -35,7 +38,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from common import LSUN, C, mdot_bondi, STYLE
+from common import LSUN, AU, C, mdot_bondi, t_eff, L_lim_mir, STYLE
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--leak-floor-dex", type=float, default=-4.0)
@@ -49,10 +52,15 @@ P_FUEL = mdot_bondi() * C**2 / LSUN
 L_LIM = 1.0
 N = 2_000_000
 
+R_MIN_AU, R_MAX_AU = 2e-2, 4e3      # fueled inner bound to cluster stripping radius
+
 def lnK_mir(f_dormant):
     logP = rng.uniform(np.log10(1.0), np.log10(P_FUEL), N)
     logleak = rng.uniform(LEAK_FLOOR_DEX, 0, N)
-    p_quiet_active = np.mean(10 ** (logP + logleak) < L_LIM)
+    logr = rng.uniform(np.log10(R_MIN_AU), np.log10(R_MAX_AU), N)
+    L_waste = 10 ** (logP + logleak) * LSUN            # W
+    T = t_eff(L_waste, 10 ** logr * AU)
+    p_quiet_active = np.mean(L_waste < L_lim_mir(T))
     return np.log(f_dormant + (1 - f_dormant) * p_quiet_active), p_quiet_active
 
 lnK_c, p_qa = lnK_mir(0.5)

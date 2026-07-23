@@ -29,6 +29,45 @@ CS_GAS  = 1.0e4                          # m/s sound speed (1e4 K ionized)
 MF_MASSES = np.array([0.35, 0.60]) * MSUN
 MF_WEIGHTS = np.array([0.70, 0.30])
 
+# Mass-segregated heavy-remnant extension (referee M1): stellar-mass BHs (10 Msun)
+# and neutron stars (1.4 Msun) as extra number-fraction components inside r_infl.
+# The Gonzalez Prieto et al. (2025) growth models retain a core BH population whose
+# global number fraction is ~0.1-1 per cent; mass segregation enhances the central
+# value, so 1 per cent is the fiducial and 0.1 / 3 per cent bracket it.
+F_NS = 0.02            # neutron-star number fraction (all remnant variants)
+F_BH_FID = 0.01        # fiducial segregated BH number fraction
+F_BH_GRID = (0.001, 0.01, 0.03)
+
+def remnant_mf(f_bh, f_ns=F_NS):
+    """Return (masses, weights) for the stellar MF + NS + BH remnant components."""
+    masses = np.concatenate([MF_MASSES, np.array([1.4, 10.0]) * MSUN])
+    weights = np.concatenate([MF_WEIGHTS * (1.0 - f_bh - f_ns),
+                              np.array([f_ns, f_bh])])
+    return masses, weights / weights.sum()
+
+# Radius-dependent mid-infrared detection limit (referee M3): a swarm of radius r
+# re-radiating L_waste does so at T_eff = (L / 4 pi r^2 sigma_SB)^{1/4}; which
+# instrument bounds it depends on where that blackbody peaks.  Order-of-magnitude
+# point-source limits at 5.43 kpc, degraded for crowding in the omega Cen core:
+#   T >= 150 K  (peak < ~20 um) : JWST/MIRI, sub-arcsec PSF        ~ 1    Lsun
+#   50-150 K    (peak 20-60 um) : WISE W3/W4, Spitzer/MIPS 24 um,
+#                                 6-18 arcsec PSF, confusion-limited ~ 1e2 Lsun
+#   T < 50 K    (peak > 60 um)  : Spitzer/MIPS 70 um only, heavily
+#                                 confused in the core               ~ 2e4 Lsun
+SIGMA_SB = 5.670e-8     # W m^-2 K^-4
+
+def t_eff(L_W, r_m):
+    """Effective re-radiation temperature of a swarm of radius r intercepting L."""
+    return (L_W / (4 * np.pi * r_m**2 * SIGMA_SB)) ** 0.25
+
+def L_lim_mir(T):
+    """Piecewise instrument limit in W as a function of swarm T_eff (K)."""
+    T = np.asarray(T, dtype=float)
+    import numpy as _np
+    LSUN_ = 3.828e26
+    return _np.where(T >= 150.0, 1.0 * LSUN_,
+                     _np.where(T >= 50.0, 1e2 * LSUN_, 2e4 * LSUN_))
+
 L_EDD  = 1.26e31 * (M_BH / MSUN)         # W
 MDOT_EDD = L_EDD / (0.1 * C**2)          # kg/s
 
