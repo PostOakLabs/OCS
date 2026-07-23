@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--
+  Patience Threshold Calculator
+  Omega Centauri Society — omegacentauri.me
+  Code: MIT  ·  Prose: CC BY 4.0
+  Author: The Omega Centauri Society (Tim Swanson)
+  Version: 1.0  ·  Last updated: 2026-07-23
+  Site section: #science  ·  Epistemic tier: ⚠ Decision-theory model (Paper D, closed-form derivation)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patience Threshold Calculator — Omega Centauri Society</title>
+<meta name="description" content="The migrate-versus-stay patience threshold rho* = ln(G p_s)/tau from Paper D's inward-migration economics: destination gain, transit survival probability, transit-plus-construction time, braking multiplier, hybrid-dominance band, and threshold vs. destination distance with named Galactic targets.">
+<link rel="canonical" href="https://omegacentauri.me/tools/patience-threshold.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--void:#03020a;--deep:#070515;--nebula:#0d0a24;--purple-dark:#1a1040;--purple-mid:#3d2d8a;--purple-bright:#7055d4;--purple-glow:#a080f0;--teal-dark:#042a24;--teal-mid:#0d6e58;--teal-bright:#1dba90;--teal-glow:#4de8c0;--amber-mid:#c47800;--amber-bright:#f0a020;--amber-glow:#ffc840;--red-mid:#8a2020;--red-bright:#d04040;--text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;--border-subtle:rgba(112,85,212,0.2)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;min-height:100vh;background-image:radial-gradient(ellipse at 15% 10%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 85% 60%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none;transition:color .15s}
+a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary);text-transform:uppercase}
+.nav-brand:hover{color:var(--purple-glow)}
+.nav-title{font-family:'Space Mono',monospace;font-size:13px;color:var(--text-secondary);letter-spacing:.04em;margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
+.nav-link:hover{color:var(--teal-glow)}
+.container{max-width:1100px;margin:0 auto;padding:40px 28px 80px}
+.tool-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.tool-header h1{font-family:'Orbitron',sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:.02em;margin-bottom:8px;background:linear-gradient(120deg,var(--text-primary),var(--amber-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tool-subtitle{color:var(--text-secondary);font-size:16px;font-style:italic;max-width:680px}
+.tier-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:10px;white-space:nowrap;border:1px solid currentColor;color:var(--amber-bright);background:rgba(240,160,32,.06)}
+.warning-banner{background:rgba(138,32,32,.08);border-left:3px solid var(--amber-bright);padding:14px 20px;margin-bottom:24px;border-radius:0 6px 6px 0;font-size:15px;color:var(--text-primary)}
+.warning-banner strong{color:var(--amber-glow)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px}
+.card-title{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-secondary);margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--border-subtle)}
+.slider-block{margin-bottom:16px}
+.slider-block label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-secondary);display:block;margin-bottom:6px}
+.slider-row{display:flex;align-items:center;gap:14px}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,var(--purple-dark),var(--amber-mid));height:4px;border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--amber-glow);cursor:pointer;border:none;box-shadow:0 0 10px rgba(255,200,64,.5)}
+.slider-value{font-family:'Space Mono',monospace;font-size:13px;color:var(--amber-glow);min-width:150px;text-align:right;white-space:nowrap}
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.preset-btn{font-family:'Space Mono',monospace;font-size:10px;padding:3px 9px;border-radius:12px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.preset-btn:hover{color:var(--amber-glow);border-color:var(--amber-mid)}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dotted var(--border-subtle);gap:14px}
+.row:last-child{border-bottom:none}
+.row-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);letter-spacing:.04em;flex:1}
+.row-value{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--amber-glow);text-align:right;white-space:nowrap}
+.row-value .unit{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);margin-left:4px;letter-spacing:.04em}
+.row-meta{font-size:11px;color:var(--text-dim);font-style:italic;margin-top:4px;font-family:'Space Mono',monospace}
+.hybrid-band{margin-top:8px;padding:10px 14px;background:rgba(240,160,32,.06);border-left:2px solid var(--amber-mid);border-radius:0 6px 6px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary)}
+.hybrid-band .v{color:var(--amber-glow)}
+.chart-card{background:linear-gradient(180deg,rgba(13,10,36,.5),rgba(7,5,21,.7));border:1px solid var(--border-subtle);border-radius:12px;padding:22px 24px 8px;margin-bottom:24px}
+canvas{width:100%;display:block}
+.chart-sub{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin:-4px 0 12px;font-style:italic}
+.about{border-top:1px solid var(--border-subtle);padding-top:24px}
+.about-toggle{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:8px 0;display:inline-flex;align-items:center;gap:8px}
+.about-toggle:hover{color:var(--teal-glow)}
+.about-toggle .arrow{transition:transform .2s}
+.about-toggle.open .arrow{transform:rotate(90deg)}
+.about-body{display:none;margin-top:16px;padding:20px 24px;background:rgba(13,10,36,.3);border-radius:8px;font-size:15px;color:var(--text-secondary)}
+.about-body.open{display:block}
+.about-body h3{font-family:'Orbitron',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-primary);margin:16px 0 8px}
+.about-body h3:first-child{margin-top:0}
+.about-body p{margin-bottom:10px}
+.about-body code{font-family:'Space Mono',monospace;background:rgba(7,5,21,.6);padding:1px 5px;border-radius:3px;font-size:13px}
+.about-body .meta-line{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:12px}
+@media (max-width:720px){.tool-header{flex-direction:column-reverse;align-items:stretch}.tool-header h1{font-size:20px}.container{padding:24px 18px 60px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="https://omegacentauri.me/">OCS</a>
+    <span class="nav-title">Patience Threshold Calculator</span>
+    <a class="nav-link" href="https://omegacentauri.me/#science">← #science</a>
+    <a class="nav-link" href="/tools/">All tools</a>
+  </div>
+</nav>
+<div class="container">
+  <header class="tool-header">
+    <div>
+      <h1>Patience Threshold Calculator</h1>
+      <p class="tool-subtitle">The migrate-versus-stay crossover: how patient must a computation-maximizing lineage be before relocating to an IMBH platform beats staying home and densifying? Adjust the destination gain, transit survival probability, and transit time; watch the threshold, its half-life, and the hybrid seed-and-stay dominance band update.</p>
+    </div>
+    <span class="tier-badge">⚠ Decision-theory model</span>
+  </header>
+
+  <div class="warning-banner">
+    <strong>This is a closed-form decision model, not a measurement.</strong>
+    ρ, λ, G, and p_s are distributions over agents we have never observed. The defensible claim is the threshold's logarithmic insensitivity to the enormous destination-gain multiplier, structural rather than a point estimate (Swanson 2026, "The Economics of Inward Migration", &sect;5–6).
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <div class="card-title">Decision parameters</div>
+
+      <div class="slider-block">
+        <label>Destination gain G  (power ratio, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="g-slider" min="6" max="21" step="0.05" value="9">
+          <span class="slider-value" id="g-val">10⁹</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-g="6">Power-only, no fuel (10⁶)</button>
+          <button class="preset-btn" data-log-g="9">Fiducial (10⁹)</button>
+          <button class="preset-btn" data-log-g="21">Full efficiency stack (10²¹)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Transit survival probability p_s</label>
+        <div class="slider-row">
+          <input type="range" id="ps-slider" min="0.001" max="1" step="0.001" value="0.5">
+          <span class="slider-value" id="ps-val">0.50</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-ps="0.01">Pessimistic (0.01)</button>
+          <button class="preset-btn" data-ps="0.5">Fiducial (0.5)</button>
+          <button class="preset-btn" data-ps="0.9">Optimistic (0.9)</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>Transit + construction time τ  (yr, log scale)</label>
+        <div class="slider-row">
+          <input type="range" id="tau-slider" min="4" max="6.5" step="0.02" value="5">
+          <span class="slider-value" id="tau-val">1.0×10⁵ yr</span>
+        </div>
+        <div class="preset-row">
+          <button class="preset-btn" data-log-tau="5">1×10⁵ (bare cruise)</button>
+          <button class="preset-btn" data-log-tau="5.301">2×10⁵</button>
+          <button class="preset-btn" data-log-tau="5.477">3×10⁵</button>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label>τ-braking multiplier  (magsail / drag deceleration)</label>
+        <div class="slider-row">
+          <input type="range" id="brake-slider" min="1" max="3" step="0.05" value="1">
+          <span class="slider-value" id="brake-val">1.00×</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Threshold outputs</div>
+      <div class="row">
+        <div class="row-label">G · p_s</div>
+        <div class="row-value" id="gps-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Effective τ (braked)</div>
+        <div class="row-value" id="taueff-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Patience threshold ρ* = ln(G p_s)/τ</div>
+        <div class="row-value" id="rhostar-val">—</div>
+      </div>
+      <div class="row">
+        <div class="row-label">Half-life t½ = ln 2 / ρ*</div>
+        <div class="row-value" id="thalf-val">—</div>
+      </div>
+      <div class="row-meta" id="verdict-meta">—</div>
+
+      <div class="hybrid-band" id="hybrid-band">computing…</div>
+    </section>
+  </div>
+
+  <section class="chart-card">
+    <div class="card-title">Patience threshold vs. destination distance</div>
+    <div class="chart-sub">ρ* = ln(G p_s)/(d·3,261.56 ly/kpc / v) for the beamed-sail speed range, at the current G·p_s. Bare cruise time, no braking. Named points use each cluster's own distance at v = 0.2c.</div>
+    <canvas id="cvDist" height="300"></canvas>
+  </section>
+
+  <section class="about">
+    <button class="about-toggle" id="about-toggle"><span class="arrow">▶</span> About this tool</button>
+    <div class="about-body" id="about-this-tool">
+      <h3>The model</h3>
+      <p>Three strategies span the decision space: <strong>S</strong> (stay and densify to the local Matrioshka ceiling), <strong>M</strong> (migrate to an IMBH platform after a transit-plus-construction delay τ, discounted by survival probability p_s and destination gain G), and <strong>H</strong> (dispatch a cheap self-replicating seed while continuing S at home). Comparing the discounted value of M against S gives the crossover condition</p>
+      <p><code>ρ + λ &lt; ln(G p_s) / τ ≡ ρ*</code></p>
+      <p>where ρ is the discount rate and λ a goal-stability hazard rate that enters additively. Because the threshold depends on the enormous destination-gain multiplier only through its logarithm, order-of-magnitude uncertainty in G moves ρ* by less than a factor of 2.5, the structural result the model leans on.</p>
+
+      <h3>The hybrid band</h3>
+      <p>Strategy H dominates pure stay-and-densify whenever the seed cost fraction <code>f &lt; G p_s e^(-(ρ+λ)τ)</code>. At a physically plausible seed cost f = 10⁻⁶ (gram-to-kilogram payloads against a Dyson-scale economy), the dominance band extends to roughly <strong>1.7× the migration threshold</strong> at the fiducial parameters; the exact ratio shown above scales with the chosen G·p_s. Outside the band the calculus reverts to pure stay-and-densify; inside it, and everywhere migration itself clears, the hybrid strategy is strictly best.</p>
+
+      <h3>Reading the distance curve</h3>
+      <p>Because τ ∝ d for a fixed cruise speed, the threshold scales as 1/d: closer destinations relax the patience requirement proportionally. The three named points (ω Cen, 47 Tuc, M54) assume each cluster is the nearest adequate destination for the deciding lineage, at the beamed-sail speed v = 0.2c, using distances from Baumgardt &amp; Vasiliev (2021).</p>
+
+      <h3>Fiducial values</h3>
+      <p>G = 10⁹ (power ratio only, crediting Eddington-luminosity capacity but not fuel import; Paper D §3.2), p_s = 0.5 (Hoang et al. 2017 transit-attrition order-of-magnitude), τ = 10⁵ yr (bare cruise at ≈0.18c to ω Cen, rounded to include ≲10³ yr of construction time). At these fiducials ρ* ≈ 2.0×10⁻⁴ yr⁻¹, t½ ≈ 3,500 yr.</p>
+
+      <p class="meta-line">v1.0 — 2026-07-23 · Code MIT · Prose CC BY 4.0 · Swanson 2026, "The Economics of Inward Migration" ("Paper D") §3–4; Hoang et al. 2017; Baumgardt &amp; Vasiliev 2021</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const LY_PER_KPC = 3261.56;
+
+function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','.':'·'};return String(n).split('').map(c=>m[c]||c).join('')}
+function fmtSci(x,dp=2){if(x===0||!isFinite(x))return'0';const e=Math.floor(Math.log10(Math.abs(x)));const m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+supDigits(e)}
+function fmtYr(x){if(x>=1000)return fmtSci(x,2)+' yr';return x.toFixed(0)+' yr'}
+
+function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
+function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
+
+const state = { logG: 9, ps: 0.5, logTau: 5, brake: 1, d: 5.49, v: 0.2 };
+
+function loadHash(){
+  const p = getHash();
+  if(p.logG){const v=parseFloat(p.logG); if(!isNaN(v)) state.logG=v;}
+  if(p.ps){const v=parseFloat(p.ps); if(!isNaN(v)&&v>0&&v<=1) state.ps=v;}
+  if(p.logTau){const v=parseFloat(p.logTau); if(!isNaN(v)) state.logTau=v;}
+  if(p.brake){const v=parseFloat(p.brake); if(!isNaN(v)&&v>=1) state.brake=v;}
+  if(p.d){const v=parseFloat(p.d); if(!isNaN(v)&&v>0) state.d=v;}
+  if(p.v){const v=parseFloat(p.v); if(!isNaN(v)&&v>0) state.v=v;}
+}
+function saveHash(){
+  setHash({
+    logG: state.logG.toFixed(3),
+    ps: state.ps.toFixed(3),
+    logTau: state.logTau.toFixed(3),
+    brake: state.brake.toFixed(2),
+    d: state.d.toFixed(2),
+    v: state.v.toFixed(3)
+  });
+}
+
+// Physics — Paper D eq:threshold, eq:hybrid
+function rhoStar(G, ps, tau){ return Math.log(G*ps) / tau; }
+function tHalf(rs){ return Math.LN2 / rs; }
+function hybridEdge(G, ps, tau, f){ return Math.log((G*ps)/f) / tau; }
+const F_SEED = 1e-6;
+
+function render(){
+  const G = Math.pow(10, state.logG);
+  const tauBare = Math.pow(10, state.logTau);
+  const tauEff = tauBare * state.brake;
+  const gps = G * state.ps;
+  const rs = rhoStar(G, state.ps, tauEff);
+  const th = tHalf(rs);
+  const hEdge = hybridEdge(G, state.ps, tauEff, F_SEED);
+  const ratio = hEdge / rs;
+
+  document.getElementById('g-val').textContent = '10' + supDigits(state.logG.toFixed(2));
+  document.getElementById('ps-val').textContent = state.ps.toFixed(3);
+  document.getElementById('tau-val').textContent = fmtSci(tauBare, 1) + ' yr';
+  document.getElementById('brake-val').textContent = state.brake.toFixed(2) + '×';
+
+  document.getElementById('gps-val').innerHTML = fmtSci(gps, 2);
+  document.getElementById('taueff-val').innerHTML = fmtSci(tauEff, 2) + ' <span class="unit">yr</span>';
+  document.getElementById('rhostar-val').innerHTML = fmtSci(rs, 2) + ' <span class="unit">yr⁻¹</span>';
+  document.getElementById('thalf-val').innerHTML = fmtYr(th);
+
+  const verdict = document.getElementById('verdict-meta');
+  verdict.textContent = `A lineage whose combined discount-plus-hazard rate ρ+λ is below ${fmtSci(rs,2)} yr⁻¹ (planning horizons beyond ~${fmtYr(th)}) prefers migration to densification.`;
+
+  const hb = document.getElementById('hybrid-band');
+  hb.innerHTML = `Seed-and-stay hybrid dominance band (f = 10⁻⁶ seed cost): ρ+λ &lt; <span class="v">${fmtSci(hEdge,2)} yr⁻¹</span>, <span class="v">${ratio.toFixed(2)}×</span> the pure-migration threshold. Inside this band, and everywhere migration itself clears, the hybrid strategy is strictly best.`;
+
+  drawDistanceChart(gps);
+}
+
+function drawDistanceChart(gps){
+  const cv = document.getElementById('cvDist');
+  const W = cv.offsetWidth || 900, H = 300;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const pad = { l: 74, r: 26, t: 20, b: 44 };
+  const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(7,5,21,0.6)';
+  ctx.fillRect(pad.l, pad.t, pw, ph);
+
+  const logDmin = Math.log10(0.5), logDmax = Math.log10(30);
+  const logRmin = Math.log10(2e-5), logRmax = Math.log10(3e-3);
+
+  function xPx(logD){ return pad.l + (logD-logDmin)/(logDmax-logDmin)*pw; }
+  function yPx(logR){ return pad.t + ph - (logR-logRmin)/(logRmax-logRmin)*ph; }
+
+  ctx.strokeStyle = 'rgba(112,85,212,0.12)'; ctx.lineWidth = 1;
+  for(let ld=Math.ceil(logDmin*2)/2; ld<=logDmax; ld+=0.5){
+    const x = xPx(ld); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,pad.t+ph); ctx.stroke();
+  }
+  for(let lr=Math.ceil(logRmin); lr<=logRmax; lr+=1){
+    const y = yPx(lr); ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+pw,y); ctx.stroke();
+  }
+
+  function tauOf(d, v){ return d * LY_PER_KPC / v; }
+  function curve(v, color, dash){
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    if (dash) ctx.setLineDash(dash); else ctx.setLineDash([]);
+    ctx.beginPath();
+    let first = true;
+    for(let i=0;i<=200;i++){
+      const logD = logDmin + i/200*(logDmax-logDmin);
+      const d = Math.pow(10, logD);
+      const rs = Math.log(gps) / tauOf(d, v);
+      if (rs<=0) continue;
+      const logR = Math.log10(rs);
+      const x = xPx(logD), y = yPx(Math.max(logRmin, Math.min(logRmax, logR)));
+      if (first){ ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  curve(0.2, 'rgba(112,85,212,0.85)', null);
+  curve(0.1, 'rgba(208,64,64,0.85)', [6,4]);
+
+  // Named targets at v = 0.2c
+  const targets = [
+    { d: 5.49, label: 'ω Cen' },
+    { d: 4.52, label: '47 Tuc' },
+    { d: 26.28, label: 'M54' }
+  ];
+  ctx.font = '10px Space Mono, monospace';
+  targets.forEach(t=>{
+    const rs = Math.log(gps) / tauOf(t.d, 0.2);
+    const logR = Math.log10(rs);
+    const x = xPx(Math.log10(t.d)), y = yPx(Math.max(logRmin, Math.min(logRmax, logR)));
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.beginPath(); ctx.arc(x, y, 3.2, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = '#9890c0'; ctx.textAlign = 'center';
+    ctx.fillText(t.label, x, y-10);
+  });
+
+  // Current (d,v) selection marker
+  const rsCur = Math.log(gps) / tauOf(state.d, state.v);
+  const logRcur = Math.log10(rsCur);
+  const xc = xPx(Math.log10(state.d)), yc = yPx(Math.max(logRmin, Math.min(logRmax, logRcur)));
+  ctx.strokeStyle = 'rgba(255,200,64,0.9)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(xc, pad.t); ctx.lineTo(xc, pad.t+ph); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,200,64,1)';
+  ctx.beginPath(); ctx.arc(xc, yc, 4.5, 0, 2*Math.PI); ctx.fill();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(184,176,224,0.5)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(pad.l+pw,pad.t+ph); ctx.stroke();
+
+  ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace'; ctx.textAlign = 'center';
+  [0.5,1,3,10,30].forEach(d=>{ ctx.fillText(d+' kpc', xPx(Math.log10(d)), pad.t+ph+16); });
+  ctx.textAlign = 'right';
+  for(let lr=Math.ceil(logRmin); lr<=logRmax; lr+=1){
+    ctx.fillText('10'+supDigits(String(lr)), pad.l-8, yPx(lr)+4);
+  }
+
+  // Legend
+  const lgX = pad.l+16, lgY = pad.t+16;
+  ctx.textAlign = 'left'; ctx.font = '11px Space Mono, monospace';
+  [['v = 0.2c','rgba(112,85,212,0.85)'],['v = 0.1c','rgba(208,64,64,0.85)'],['current d,v','rgba(255,200,64,1)']].forEach(([label,color],i)=>{
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(lgX, lgY+i*18); ctx.lineTo(lgX+22, lgY+i*18); ctx.stroke();
+    ctx.fillStyle = '#9890c0'; ctx.fillText(label, lgX+28, lgY+i*18+4);
+  });
+
+  ctx.save(); ctx.translate(16, pad.t+ph/2); ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#9890c0'; ctx.font = '11px Space Mono, monospace';
+  ctx.fillText('patience threshold ρ* [yr⁻¹]', 0, 0); ctx.restore();
+}
+
+function wire(){
+  const gs = document.getElementById('g-slider');
+  gs.value = state.logG; gs.addEventListener('input', ()=>{ state.logG=parseFloat(gs.value); saveHash(); render(); });
+
+  const pss = document.getElementById('ps-slider');
+  pss.value = state.ps; pss.addEventListener('input', ()=>{ state.ps=parseFloat(pss.value); saveHash(); render(); });
+
+  const ts = document.getElementById('tau-slider');
+  ts.value = state.logTau; ts.addEventListener('input', ()=>{ state.logTau=parseFloat(ts.value); saveHash(); render(); });
+
+  const bs = document.getElementById('brake-slider');
+  bs.value = state.brake; bs.addEventListener('input', ()=>{ state.brake=parseFloat(bs.value); saveHash(); render(); });
+
+  document.querySelectorAll('[data-log-g]').forEach(b=>b.addEventListener('click', ()=>{ state.logG=parseFloat(b.dataset.logG); gs.value=state.logG; saveHash(); render(); }));
+  document.querySelectorAll('[data-ps]').forEach(b=>b.addEventListener('click', ()=>{ state.ps=parseFloat(b.dataset.ps); pss.value=state.ps; saveHash(); render(); }));
+  document.querySelectorAll('[data-log-tau]').forEach(b=>b.addEventListener('click', ()=>{ state.logTau=parseFloat(b.dataset.logTau); ts.value=state.logTau; saveHash(); render(); }));
+
+  const cv = document.getElementById('cvDist');
+  cv.style.cursor = 'crosshair';
+  cv.addEventListener('click', (e)=>{
+    const rect = cv.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (cv.width / rect.width);
+    const pad = { l:74, r:26 };
+    const pw = cv.width - pad.l - pad.r;
+    const logDmin = Math.log10(0.5), logDmax = Math.log10(30);
+    const frac = Math.max(0, Math.min(1, (x-pad.l)/pw));
+    state.d = Math.pow(10, logDmin + frac*(logDmax-logDmin));
+    saveHash(); render();
+  });
+
+  const at = document.getElementById('about-toggle');
+  const ab = document.getElementById('about-this-tool');
+  at.addEventListener('click', ()=>{
+    const open = !ab.classList.contains('open');
+    ab.classList.toggle('open', open);
+    at.classList.toggle('open', open);
+  });
+
+  window.addEventListener('resize', ()=>drawDistanceChart(Math.pow(10,state.logG)*state.ps));
+}
+
+function init(){ loadHash(); wire(); render(); }
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
