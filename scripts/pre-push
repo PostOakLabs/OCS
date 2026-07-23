@@ -17,7 +17,7 @@ cd "$(git rev-parse --show-toplevel)"
 
 echo "=== OCS pre-push validate ==="
 
-# ── [1/8] Required files ─────────────────────────────────────────────────────
+# ── [1/9] Required files ─────────────────────────────────────────────────────
 # Job 1's first step checks a hardcoded list of files that must exist. PR #20
 # removed advisors.html while deploy.yml still listed it as required: the six
 # gates below all passed locally, the push went out, and main went red.
@@ -25,7 +25,7 @@ echo "=== OCS pre-push validate ==="
 # The list is PARSED FROM deploy.yml rather than duplicated here. A second copy
 # would drift, and a drifted copy of a drift-detector is worse than none — it
 # would pass locally for exactly the files CI is about to fail on.
-echo "[1/8] Required-files gate (list read from deploy.yml)..."
+echo "[1/9] Required-files gate (list read from deploy.yml)..."
 WORKFLOW=".github/workflows/deploy.yml"
 if [ ! -f "$WORKFLOW" ]; then
   echo "::error::$WORKFLOW not found — cannot verify the required-files list."
@@ -59,25 +59,28 @@ if [ "$MISSING" -gt 0 ]; then
 fi
 echo "  all $COUNT required files present."
 
-echo "[2/8] Count-drift gate..."
+echo "[2/9] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[3/8] Broken-link gate..."
+echo "[3/9] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[4/8] Stranded-page gate..."
+echo "[4/9] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[5/8] JS syntax check..."
+echo "[5/9] Sitemap-coverage gate..."
+python3 scripts/check-sitemap.py
+
+echo "[6/9] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[6/8] Forbidden-hash lint..."
+echo "[7/9] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[7/8] Schema validation..."
+echo "[8/9] Schema validation..."
 node scripts/schema-validate.mjs
 
-echo "[8/8] Copy-hallmarks gate (anti-AI-tell)..."
+echo "[9/9] Copy-hallmarks gate (anti-AI-tell)..."
 node scripts/check-copy-hallmarks.mjs
 
 echo ""

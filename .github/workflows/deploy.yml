@@ -114,6 +114,11 @@ jobs:
       - name: Stranded-page gate
         run: python3 scripts/check-orphans.py
 
+      # Sitemap-coverage gate: every tools/*.html page must be listed in BOTH
+      # sitemap.xml and sitemap.html (companion to the stranded-page gate).
+      - name: Sitemap-coverage gate
+        run: python3 scripts/check-sitemap.py
+
       # OpenChainGraph gates (OCG 0.2→0.8 Phase B): inline-script syntax check,
       # forbidden-hash-scheme lint on all artifact-qualified tools, and a
       # frozen-envelope schema validation against a captured live fixture.
