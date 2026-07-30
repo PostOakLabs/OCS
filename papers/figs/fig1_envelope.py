@@ -297,17 +297,27 @@ sec_line, = axB.loglog(sec_a[sec_window], np.array(secular["t_sec_yr"])[sec_wind
                         color="#c2185b", lw=1.6, ls="-.")
 if sec_window.any():
     a_edge = sec_a[sec_window][0]
-    axB.annotate("station-keeping cadence (not a survival limit)",
-                 xy=(a_edge * 1.05, secular["t_sec_yr"][np.argmax(sec_window)]),
-                 fontsize=6.6, color="#8e1245", rotation=25, va="bottom")
+    sec_x, sec_y = sec_a[sec_window], np.array(secular["t_sec_yr"])[sec_window]
+    mid = len(sec_x) // 2
+    axB.annotate("station-keeping cadence\n(not a survival limit)",
+                 xy=(sec_x[mid], sec_y[mid]), xycoords="data",
+                 xytext=(0.56, 0.14), textcoords="axes fraction",
+                 fontsize=6.6, color="#8e1245", ha="left", va="center",
+                 arrowprops=dict(arrowstyle="-", color="#8e1245", lw=0.7))
     axB.axvline(a_edge, color="#c2185b", ls=":", lw=0.9)
-    axB.text(a_edge * 0.92, 2.0e2, r"GR-quenched inward of $\sim4\times10^{2}$ AU",
-             rotation=90, fontsize=6.4, va="bottom", ha="right", color="#8e1245")
+    axB.text(a_edge * 0.93, 3.0e6, "GR-quenched\ninward of\n" + r"$\sim4\times10^{2}$ AU",
+             fontsize=6.2, va="bottom", ha="right", color="#8e1245")
 
+# panel (b) is dominated by the flat 12 Gyr cap; the bound channel only departs
+# from it in the last decade (D1.2.6), so give that decade the full panel width
+# and only draw shared landmarks that fall inside it.
+AXB_XLIM = (2.5e2, 6.0e3)
 for x, lab in [(6 * RG / AU, r"$r_{\rm ISCO}$"),
                (100 * RG / AU, r"$10^2\,r_{\rm g}$"),
                (0.1 * R_INFL / AU, r"$0.1\,r_{\rm infl}$")]:
-    for ax in (axA, axB):
+    for ax, xlim in [(axA, (0.8 * A_MIN / AU, 5.5e3)), (axB, AXB_XLIM)]:
+        if not (xlim[0] <= x <= xlim[1]):
+            continue
         ax.axvline(x, color="0.4", ls=":", lw=1)
         ax.text(x / 1.35, 1.6e2, lab, rotation=90, fontsize=7.5, va="bottom", ha="right",
                 color="0.25")
@@ -316,8 +326,9 @@ for ax in (axA, axB):
     ax.axhline(1e6, color="#b98a2e", ls="--", lw=1)
     ax.axhline(1.2e10, color="0.6", ls="-", lw=0.8)
     ax.set_xlabel("structure semi-major axis  $a$  [AU]")
-    ax.set_xlim(0.8 * A_MIN / AU, 5.5e3)
     ax.set_ylim(1e2, 5e10)
+axA.set_xlim(0.8 * A_MIN / AU, 5.5e3)
+axB.set_xlim(*AXB_XLIM)
 axA.text(2.2e-3, 1.3e6, "passive-safety criterion ($10^6$ yr)", fontsize=7.5, color="#7a5a1d")
 axA.text(2.2e-3, 1.5e10, "cluster age cap", fontsize=7.5, color="0.4")
 axA.set_ylabel("survival time against flybys  [yr]")
