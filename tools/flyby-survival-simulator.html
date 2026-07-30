@@ -3,7 +3,7 @@
   Flyby Survival Simulator — Full Envelope Sweep (Paper E, Fig. 1 reimplementation)
   Omega Centauri Society — omegacentauri.me
   Code: MIT  ·  Prose: CC BY 4.0
-  Version: 1.1  ·  Last updated: 2026-07-23  (f_BH remnant-fraction control + paper-reference mode + secular-tide readout; Paper E v0.4)
+  Version: 1.2  ·  Last updated: 2026-07-30  (bound-cusp diffusion channel + Kozai-Lidov station-keeping cadence, Paper E D1-MODEL rebuild, v0.91)
   Register: speculative engineering (MTH) — physics inputs peer-reviewed
   Companion to Paper E (engineered-IMBH systems), Fig. 1 / Appendix A.
   Reimplements paper/figs/fig1_envelope.py's per-radius-bin Monte Carlo in
@@ -88,6 +88,7 @@ code{font-family:'Space Mono',monospace;font-size:0.92em;color:var(--teal-glow)}
     <button class="qp-btn" onclick="setPreset({fbh:1})">f_BH = 1% (fiducial)</button>
     <button class="qp-btn" onclick="setPreset({fbh:3})">f_BH = 3%</button>
     <button class="qp-btn" onclick="setPreset({paper:1})">paper reference (fig1)</button>
+    <button class="qp-btn" onclick="setPreset({paper:1,bound:1})">+ bound cusp channel (paper)</button>
     <button class="qp-btn" onclick="setPreset({paper:0})">back to live MC</button>
     <button class="qp-btn" onclick="setPreset({mbh:8200})">Häberle floor mass</button>
     <button class="qp-btn" onclick="setPreset({trials:20000})">precise (20k trials/bin)</button>
@@ -104,6 +105,7 @@ code{font-family:'Space Mono',monospace;font-size:0.92em;color:var(--teal-glow)}
     <div><label class="ic-label" for="in-trials">trials per bin</label><input class="num-input" id="in-trials" type="number" value="6000"></div>
     <div><label class="ic-label" for="in-adiab">adiabatic correction</label><label style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);padding:9px 0"><input id="in-adiab" type="checkbox" style="width:16px;height:16px;accent-color:var(--teal-bright)"> apply (1+x²)<sup>−5/2</sup> per encounter</label></div>
     <div><label class="ic-label" for="in-paper">paper reference mode</label><label style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);padding:9px 0"><input id="in-paper" type="checkbox" style="width:16px;height:16px;accent-color:var(--teal-bright)"> plot fig1_results.json verbatim</label></div>
+    <div><label class="ic-label" for="in-bound">bound-cusp channel</label><label style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:12px;color:var(--text-secondary);padding:9px 0"><input id="in-bound" type="checkbox" style="width:16px;height:16px;accent-color:var(--red-bright)"> overlay bound-member diffusion + Kozai cadence (paper reference only)</label></div>
   </div></div>
 
   <div class="plot-card">
@@ -118,7 +120,9 @@ code{font-family:'Space Mono',monospace;font-size:0.92em;color:var(--teal-glow)}
     <br><br>
     <strong>Perturber mass function, perturber mass, and the f<sub>BH</sub> control (Paper E v0.6).</strong> The background is two-component stellar (0.35 M☉ weight 0.70, 0.60 M☉ white-dwarf tail weight 0.30). A mass-segregated heavy-remnant extension adds neutron stars (1.4 M☉, fixed number fraction f<sub>NS</sub> = 2%) and stellar-mass black holes at the perturber mass set by the control, segregated fraction <code>f_BH</code> (fiducial 1%, grid 0.1/1/3%). The heavy tail is the controlling perturber, because kick variance scales as ⟨m²⟩, so both the fraction and the mass matter and the mass matters more. The default perturber mass is now 31 M☉, the mean mass of black holes inspiraling into the IMBH in the González Prieto et al. (2025) ω Cen models, which name 10 M☉ as the assumption they are correcting; the metal-poor progenitors of a cluster at [Fe/H] ~ −1.5 leave heavier remnants than the solar-metallicity default. Moving from 10 to 31 M☉ at fixed f<sub>BH</sub> = 1% raises ⟨m²⟩ by a factor 8.0 and shortens the impulsive floor from ~5×10⁸ to ~6×10⁷ yr, a larger displacement than the whole 0.1–3% fraction bracket produces at fixed mass. Set the control back to 10 M☉ to reproduce the pre-2026-07-30 curves; set f<sub>BH</sub> = 0 to recover the stars-only baseline (~1.8×10⁹ yr).
     <br><br>
-    <strong>The adiabatic correction, and why the impulsive floor is only a floor.</strong> The impulsive kernel above is valid only when the encounter is short compared with the orbit, x = ω<sub>orb</sub>τ<sub>enc</sub> = (b/a)(v<sub>orb</sub>/v) ≪ 1. For this system x is 2.2 at the cluster stripping radius and ~4×10³ at the ISCO, so unbound cluster stars are adiabatically decoupled from every orbit an installation could occupy: the impulsive numbers are a conservative floor, not an estimate. Ticking the adiabatic-correction control applies the Gnedin &amp; Ostriker (1999) kernel A(x) = (1+x²)<sup>−5/2</sup> to δ² per encounter, the less-suppressing of the standard choices and calibrated against N-body results. With it, the fiducial median reaches the 12 Gyr cluster-age cap inside ~3 AU and stays above ~3×10⁸ yr at the envelope edge. The flat, scale-free profile is a property of the impulsive kernel; the corrected curve rises inward. What can still bind at the envelope edge is the bound cusp population, whose members move at the local Keplerian speed so that x ~ 1 and they are not protected; Paper E §2.4 treats that channel analytically and this tool does not model it.
+    <strong>The adiabatic correction, and why the impulsive floor was only a floor.</strong> The impulsive kernel above is valid only when the encounter is short compared with the orbit, x = ω<sub>orb</sub>τ<sub>enc</sub> = (b/a)(v<sub>orb</sub>/v) ≪ 1. For this system x is 2.2 at the cluster stripping radius and ~4×10³ at the ISCO, so unbound cluster stars are adiabatically decoupled from every orbit an installation could occupy: the impulsive numbers above are the conservative floor for a channel that does not operate, not a physical estimate. Ticking the adiabatic-correction control applies the Gnedin &amp; Ostriker (1999) kernel A(x) = (1+x²)<sup>−5/2</sup> to δ² per encounter, the less-suppressing of the standard choices and calibrated against N-body results. With it, the fiducial median reaches the 12 Gyr cluster-age cap inside ~3 AU and stays above ~3×10⁸ yr at the envelope edge. The flat, scale-free profile is a property of the impulsive kernel; the corrected curve rises inward.
+    <br><br>
+    <strong>The bound-cusp channel (Paper E D1-MODEL, 2026-07-30).</strong> What actually binds at the envelope edge is the bound cusp population: members move at the local Keplerian speed, so x ~ 1 for them (not ≪ 1), the impulsive kernel with the same adiabatic correction applies, and they are granular rather than diffuse. Each species follows N<sub>s</sub>(&lt;r) ∝ r<sup>3−γ<sub>s</sub></sup> (γ<sub>★</sub> = 1.3, γ<sub>NS</sub> = 1.5, γ<sub>BH</sub> = 2.0, González Prieto et al. 2025); at γ<sub>BH</sub> = 2 the expected black-hole count is ≲ 1 everywhere in the envelope, so each history draws a Poisson perturber count from the local shell rather than using a smooth rate, and the resulting lifetime distribution is bimodal: a bound black hole is present in 53% of histories at the envelope edge, giving a diffusion floor of ~4×10⁷ yr (16th percentile ~2×10⁷ yr); when none is drawn the channel reaches the cluster-age cap. The perturber population is now anchored jointly rather than assembled from separate figures: f<sub>BH,central</sub> = 10 × (M<sub>dark</sub>/m<sub>BH</sub>)/(7×10⁶ stars), fiducial 1.15% at M<sub>dark</sub> = 2.5×10⁵ M☉ and m<sub>BH</sub> = 31 M☉ (Bañares-Hernández et al. 2025 pulsar timing), narrowing the old 0.1–3% fraction bracket (factor 30 in variance) to a factor 3.1 in the M<sub>dark</sub>/m<sub>BH</sub> bracket. The same bound remnant also forces the orbit secularly (Kozai–Lidov): t<sub>sec</sub>(a) = (M/m<sub>pert</sub>)(r<sub>p</sub>/a)³P<sub>orb</sub>(a) with the outermost bound black hole fixed at r<sub>p</sub> = 4×10³ AU, but relativistic apsidal precession quenches the resonance (t<sub>sec</sub>/t<sub>GR</sub> ∝ a<sup>−4</sup>) inward of a ≈ 4×10² AU, where t<sub>sec</sub> ≈ t<sub>GR</sub> ≈ 3.7×10⁷ yr. That forcing is coherent and oscillatory, not diffusive, so it is a station-keeping cadence over its 4×10²–4×10³ AU operating window, not a third survival curve. Tick <em>overlay bound-cusp channel</em> above (with paper reference mode) to plot both against the unbound impulsive/adiabatic curves; this channel is not yet live-sampled in the browser, only the published fiducial run is shown.
     <br><br>
     <strong>Paper reference mode.</strong> Ticking <em>paper reference</em> plots the exact fiducial arrays from <a href="/papers/figs/fig1_results.json">fig1_results.json</a> verbatim (2×10⁵ encounter draws × 2×10⁴ histories × 40 bins, fixed seed 20260717, σ = 21 km/s, <a href="/papers/figs/fig1_envelope.py">fig1_envelope.py</a>, full bundle at <a href="/papers/source/">/papers/source/</a>): no live sampling, so it reproduces the published numbers rather than approximating them. The live MC trades sample count for interactivity; expect its median to sit inside the reference band, not land on it. The <em>paper MC floor</em> summary card always shows the published floor for the grid f<sub>BH</sub> nearest your setting, for side-by-side comparison. σ default from <code>measurements.js clusterParams</code> (18.2 km/s, cluster-averaged); Paper E adopts σ = 21 km/s, the midpoint of the 20–23 km/s central-region range of Baumgardt &amp; Vasiliev (2021) and Nitschai et al. (2023). The difference lengthens survival times by tens of per cent and is inside the paper’s stated parameter variations.
   </div>
@@ -173,9 +177,30 @@ const PAPER_MC={
  t_lo:[1.7124e+07,1.1858e+07,7.6703e+06,5.3612e+06,3.6970e+06,2.5694e+06,1.7480e+06,1.2984e+06,8.5978e+05,6.0202e+05,4.2793e+05,3.2967e+05,2.1866e+05,1.5179e+05,1.0115e+05,7.6857e+04,6.5913e+04,5.5443e+04,3.5384e+04,4.4437e+04,7.9466e+06,2.1712e+07,3.0116e+07,3.1313e+07,3.0454e+07,5.3814e+07,6.4446e+07,4.9865e+07,6.6297e+07,5.3907e+07,5.2013e+07,6.2372e+07,7.4808e+07,5.6722e+07,5.7228e+07,6.5074e+07,3.2362e+07,4.0725e+07,5.0106e+07,2.6762e+07],
  t_hi:[3.6479e+09,2.4191e+09,2.5785e+09,1.6191e+09,1.6403e+09,1.1616e+09,9.2709e+08,8.8845e+08,7.0798e+08,5.5498e+08,4.6079e+08,3.9747e+08,3.8074e+08,2.6919e+08,2.8053e+08,2.4442e+08,2.1766e+08,1.8036e+08,1.4512e+08,1.5160e+08,1.6742e+08,1.1525e+08,1.3573e+08,1.0297e+08,9.8900e+07,1.1658e+08,1.0314e+08,8.4485e+07,9.3348e+07,7.4985e+07,7.0978e+07,7.7240e+07,8.8597e+07,6.6350e+07,6.5200e+07,7.1917e+07,3.6661e+07,4.4321e+07,5.2533e+07,2.8142e+07],
  t_ad:[1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,2.7605e+09,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,9.9151e+09,1.2000e+10,3.9728e+09,3.3541e+09,8.0378e+09,1.9240e+09,2.2771e+09,5.9654e+09,3.0417e+09,1.8130e+09,1.5789e+09,1.5113e+09,1.4964e+09,1.9752e+09,1.3818e+09,5.1785e+08,3.6857e+08,3.0487e+08],
- floors:{'stars_only':{t10:3.402e+09,t100:3.303e+09,t1000:2.521e+09,tmin:1.791e+09},'fbh_0.001':{t10:1.006e+09,t100:9.254e+08,t1000:5.801e+08,tmin:1.01e+08},'fbh_0.01':{t10:6.607e+07,t100:6.317e+07,t1000:5.196e+07,tmin:2.745e+07},'fbh_0.03':{t10:2.162e+07,t100:1.985e+07,t1000:1.932e+07,tmin:1.135e+07},'fbh_0.01_m10':{t10:5.429e+08,t100:5.133e+08,t1000:3.452e+08,tmin:2.017e+08},'fbh_0.01_adiabatic':{t10:7.251e+09,t100:4.467e+09,t1000:1.71e+09,tmin:3.049e+08}}
+ floors:{'stars_only':{t10:3.402e+09,t100:3.303e+09,t1000:2.521e+09,tmin:1.791e+09},'fbh_0.001':{t10:1.006e+09,t100:9.254e+08,t1000:5.801e+08,tmin:1.01e+08},'fbh_0.01':{t10:6.607e+07,t100:6.317e+07,t1000:5.196e+07,tmin:2.745e+07},'fbh_0.03':{t10:2.162e+07,t100:1.985e+07,t1000:1.932e+07,tmin:1.135e+07},'fbh_0.01_m10':{t10:5.429e+08,t100:5.133e+08,t1000:3.452e+08,tmin:2.017e+08},'fbh_0.01_adiabatic':{t10:7.251e+09,t100:4.467e+09,t1000:1.71e+09,tmin:3.049e+08},'bound_fid':{tmin:4.3145e+07,pBhEdge:0.5302,fCapEdge:0.2683},'bound_lo':{tmin:1.0397e+08,pBhEdge:0.7132,fCapEdge:0.1612},'bound_hi':{tmin:4.3554e+07,pBhEdge:0.5961,fCapEdge:0.2314}}
 };
 function nearestGridFbh(fbh){const g=[0.001,0.01,0.03];let best=g[0],bd=1e9;for(const x of g){const d=Math.abs(x-fbh);if(d<bd){bd=d;best=x;}}return best;}
+
+// Bound-cusp channel, D1-MODEL (OCS-MC-PHYSICS/OCS-MC-IMPL, 2026-07-30), embedded
+// from fig1_results.json per_config.bound_fid (joint-anchored fiducial, f_BH,central
+// =1.15%, 31 Msun, kernel applied) and results.secular (Kozai-Lidov clock, same
+// perturber, r_p=4e3 AU). Re-copy by hand if the paper MC is re-run.
+const BOUND_MC={
+ a_AU:[1.1847e-03,1.7418e-03,2.5609e-03,3.7653e-03,5.5360e-03,8.1393e-03,1.1967e-02,1.7595e-02,2.5869e-02,3.8034e-02,5.5920e-02,8.2218e-02,1.2088e-01,1.7773e-01,2.6131e-01,3.8419e-01,5.6487e-01,8.3051e-01,1.2211e+00,1.7953e+00,2.6396e+00,3.8809e+00,5.7059e+00,8.3892e+00,1.2334e+01,1.8135e+01,2.6663e+01,3.9202e+01,5.7637e+01,8.4742e+01,1.2459e+02,1.8319e+02,2.6933e+02,3.9599e+02,5.8221e+02,8.5600e+02,1.2586e+03,1.8504e+03,2.7206e+03,4.0000e+03],
+ t_med:[1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.1576e+10,7.7580e+09,4.3145e+07],
+ t_lo:[1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,5.6902e+09,5.1507e+09,4.6168e+09,1.7402e+09,7.6909e+06,1.3631e+07,2.4378e+07,2.1592e+07],
+ t_hi:[1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10,1.2000e+10],
+ p_bh_present:[2.2374e-07,3.2896e-07,4.8366e-07,7.1111e-07,1.0455e-06,1.5372e-06,2.2601e-06,3.3230e-06,4.8856e-06,7.1832e-06,1.0561e-05,1.5528e-05,2.2830e-05,3.3566e-05,4.9350e-05,7.2557e-05,1.0668e-04,1.5684e-04,2.3059e-04,3.3900e-04,4.9839e-04,7.3268e-04,1.0770e-03,1.5831e-03,2.3268e-03,3.4191e-03,5.0230e-03,7.3764e-03,1.0826e-02,1.5877e-02,2.3256e-02,3.4005e-02,4.9594e-02,7.2059e-02,1.0413e-01,1.4927e-01,2.1155e-01,2.9494e-01,4.0179e-01,5.3020e-01]
+};
+// Kozai-Lidov secular clock, D1.3: t_sec = (M/m_pert)(r_p/a)^3 P_orb(a); t_gr =
+// [a/(3 r_g)] P_orb(a). Plotted only over the GR-quenched-to-mass-quenched window,
+// ~4e2-4e3 AU (t_sec < t_gr), as a maintenance cadence rather than a survival curve.
+const SECULAR={
+ a_AU:BOUND_MC.a_AU,
+ t_sec:[7.1590e+15,4.0157e+15,2.2525e+15,1.2635e+15,7.0872e+14,3.9754e+14,2.2299e+14,1.2508e+14,7.0161e+13,3.9355e+13,2.2075e+13,1.2383e+13,6.9458e+12,3.8961e+12,2.1854e+12,1.2258e+12,6.8761e+11,3.8570e+11,2.1635e+11,1.2136e+11,6.8072e+10,3.8183e+10,2.1418e+10,1.2014e+10,6.7389e+09,3.7800e+09,2.1203e+09,1.1893e+09,6.6713e+08,3.7421e+08,2.0990e+08,1.1774e+08,6.6044e+07,3.7046e+07,2.0780e+07,1.1656e+07,6.5382e+06,3.6674e+06,2.0572e+06,1.1539e+06],
+ t_gr:[5.7658e-07,1.5113e-06,3.9613e-06,1.0383e-05,2.7216e-05,7.1336e-05,1.8698e-04,4.9011e-04,1.2846e-03,3.3672e-03,8.8259e-03,2.3134e-02,6.0638e-02,1.5894e-01,4.1660e-01,1.0920e+00,2.8622e+00,7.5023e+00,1.9665e+01,5.1544e+01,1.3510e+02,3.5413e+02,9.2821e+02,2.4330e+03,6.3772e+03,1.6716e+04,4.3814e+04,1.1484e+05,3.0102e+05,7.8901e+05,2.0681e+06,5.4208e+06,1.4209e+07,3.7243e+07,9.7619e+07,2.5587e+08,6.7068e+08,1.7579e+09,4.6078e+09,1.2078e+10]
+};
+const JOINT_ANCHOR={M_dark_fid:2.5e5,m_BH_fid:31,f_BH_central_fid:0.01152,seg_enhance:10,variance_bracket:3.1};
 
 // deterministic PRNG (mulberry32) so repeat runs with the same inputs are stable
 function makeRng(seed){
@@ -238,6 +263,7 @@ function runSweep(){
   const mbhPert=Math.max(1,Math.min(60,+document.getElementById('in-mbhpert').value||31));
   const adiab=!!(document.getElementById('in-adiab')||{}).checked;
   const paperMode=!!(document.getElementById('in-paper')||{}).checked;
+  const boundMode=paperMode&&!!(document.getElementById('in-bound')||{}).checked;
   const mf=remnantMF(fbh,mbhPert);
 
   const GM=G*mbh*MSUN, sigMs=sig*1e3;
@@ -269,13 +295,13 @@ function runSweep(){
     }
     dt=(performance.now()-t0).toFixed(0);
   }
-  lastResults={results,rInfl,strip,rISCO,rFueled,mbh,sig,ns,ec,nbins,ntrials,fbh,fbhPct,mbhPert,adiab,mf,paperMode};
+  lastResults={results,rInfl,strip,rISCO,rFueled,mbh,sig,ns,ec,nbins,ntrials,fbh,fbhPct,mbhPert,adiab,mf,paperMode,boundMode};
   document.getElementById('plot-status').textContent= paperMode
-    ? `40 bins × paper reference MC · stripping radius ${fmt(strip)} AU${statusExtra}`
+    ? `40 bins × paper reference MC · stripping radius ${fmt(strip)} AU${statusExtra}${boundMode?' · + bound-cusp channel (D1-MODEL, 2026-07-30)':''}`
     : `${nbins} bins × ${ntrials} trials computed in ${dt} ms · f_BH=${fmt(fbhPct)}% at ${mbhPert} M☉ · ${adiab?'adiabatically corrected':'impulsive (no adiabatic correction)'} · stripping radius ${fmt(strip)} AU · influence radius ${fmt(rInfl)} AU`;
   draw(lastResults);
   summarize(lastResults);
-  saveHash({mbh,sigma:sig,nstar:ns,ecross:ec,bins:nbins,trials:ntrials,fbh:fbhPct,mbhpert:mbhPert,adiab:adiab?1:0,paper:paperMode?1:0});
+  saveHash({mbh,sigma:sig,nstar:ns,ecross:ec,bins:nbins,trials:ntrials,fbh:fbhPct,mbhpert:mbhPert,adiab:adiab?1:0,paper:paperMode?1:0,bound:boundMode?1:0});
 }
 
 function fmt(x){
@@ -288,7 +314,7 @@ function fmt(x){
 function supers(e){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(e).split('').map(c=>m[c]).join('');}
 
 function summarize(state){
-  const {results,strip,rISCO,rFueled,fbhPct,fbh,mf,ns,mbh,paperMode,adiab}=state;
+  const {results,strip,rISCO,rFueled,fbhPct,fbh,mf,ns,mbh,paperMode,adiab,boundMode}=state;
   const kernelLbl=adiab?'adiabatically corrected (Gnedin & Ostriker kernel)':'impulsive-flyby diffusion floor';
   const med=results.map(r=>r.tMed);
   const aAU=results.map(r=>r.aAU);
@@ -329,6 +355,14 @@ function summarize(state){
     ['ISCO / fueled inner bound',fmt(rISCO)+' / '+fmt(rFueled)+' AU','dormant vs. fueled configuration'],
     ['cluster stripping radius',fmt(strip)+' AU','outer boundary — orbits not durable beyond'],
   ];
+  if(boundMode){
+    const bf=PAPER_MC.floors.bound_fid;
+    cards.push(
+      ['bound-channel floor @ edge (paper)',fmt(bf.tmin)+' yr','bound-member diffusion, D1-MODEL, joint-anchored fiducial'],
+      ['P(bound BH present) @ edge',(bf.pBhEdge*100).toFixed(0)+'%','Poisson-granular perturber population, D1.1'],
+      ['Kozai cadence @ GR-quench edge',fmt(SECULAR.t_sec[33])+' yr','station-keeping requirement, not a survival limit, ~4×10² AU'],
+    );
+  }
   document.getElementById('summary').innerHTML=cards.map(([l,v,d])=>
     `<div class="sum-card"><div class="sum-label">${l}</div><div class="sum-val">${v}</div><div class="sum-desc">${d}</div></div>`
   ).join('');
@@ -342,7 +376,7 @@ function draw(state){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#0a0820'; ctx.fillRect(0,0,W,H);
 
-  const {results,strip,rISCO,rFueled}=state;
+  const {results,strip,rISCO,rFueled,boundMode}=state;
   const marL=90,marR=30,marT=30,marB=70;
   const plotW=W-marL-marR, plotH=H-marT-marB;
 
@@ -389,6 +423,29 @@ function draw(state){
   results.forEach((r,i)=>{const x=X(r.aAU),y=Y(r.tMed); if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);});
   ctx.strokeStyle='#4de8c0'; ctx.lineWidth=3; ctx.stroke();
 
+  // bound-cusp channel overlay (paper reference only): median + 16th-pct + Kozai cadence
+  if(boundMode){
+    ctx.beginPath();
+    BOUND_MC.a_AU.forEach((a,i)=>{const x=X(a),y=Y(BOUND_MC.t_med[i]); if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);});
+    ctx.strokeStyle='#d04040'; ctx.lineWidth=2.4; ctx.stroke();
+    ctx.beginPath();
+    BOUND_MC.a_AU.forEach((a,i)=>{const x=X(a),y=Y(BOUND_MC.t_lo[i]); if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);});
+    ctx.strokeStyle='#f0a020'; ctx.lineWidth=1.6; ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+    // Kozai cadence, drawn only over its GR-quenched-to-4e3AU operating window
+    ctx.beginPath(); let started=false;
+    SECULAR.a_AU.forEach((a,i)=>{
+      if(SECULAR.t_sec[i]>=SECULAR.t_gr[i])return;
+      const x=X(a),y=Y(SECULAR.t_sec[i]);
+      if(!started){ctx.moveTo(x,y);started=true;} else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle='#ff6ea0'; ctx.lineWidth=1.8; ctx.setLineDash([2,5]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#d04040'; ctx.fillRect(marL+plotW-260,marT+54,22,4);
+    ctx.fillStyle='#bdb8e6'; ctx.font='18px "Space Mono",monospace'; ctx.textAlign='left';
+    ctx.fillText('bound-member diffusion (paper)',marL+plotW-230,marT+62);
+    ctx.fillStyle='#ff6ea0'; ctx.fillRect(marL+plotW-260,marT+76,22,4);
+    ctx.fillStyle='#bdb8e6'; ctx.fillText('Kozai cadence (not survival)',marL+plotW-230,marT+84);
+  }
+
   // reference lines: passive-safety 1e6 yr, cluster age cap 1.2e10 yr
   function hline(t,color,label){
     const y=Y(t);
@@ -432,6 +489,7 @@ function setPreset(o){
   if(o.mbhpert!==undefined)document.getElementById('in-mbhpert').value=o.mbhpert;
   if(o.adiab!==undefined)document.getElementById('in-adiab').checked=!!o.adiab;
   if(o.paper!==undefined)document.getElementById('in-paper').checked=!!o.paper;
+  if(o.bound!==undefined)document.getElementById('in-bound').checked=!!o.bound;
   runSweep();
 }
 function saveHash(o){history.replaceState(null,'','#'+new URLSearchParams(o).toString());}
@@ -439,8 +497,8 @@ function loadHash(){
   const p=new URLSearchParams(location.hash.slice(1));
   const map={mbh:'in-mbh',sigma:'in-sigma',nstar:'in-nstar',ecross:'in-ecross',bins:'in-bins',trials:'in-trials',fbh:'in-fbh',mbhpert:'in-mbhpert'};
   for(const[k,id]of Object.entries(map))if(p.has(k)){const el=document.getElementById(id);if(el)el.value=p.get(k);}
-  for(const k of ['paper','adiab']){
-    if(p.has(k)){const el=document.getElementById('in-'+(k==='adiab'?'adiab':'paper'));if(el)el.checked=(p.get(k)==='1'||p.get(k)==='true');}
+  for(const k of ['paper','adiab','bound']){
+    if(p.has(k)){const el=document.getElementById('in-'+k);if(el)el.checked=(p.get(k)==='1'||p.get(k)==='true');}
   }
 }
 try{
