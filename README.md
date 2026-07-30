@@ -29,7 +29,6 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 OCS/
 ├── index.html                      ← Homepage
 ├── faq.html                        ← Frequently asked questions
-├── membership.html                 ← Membership information
 ├── advisors.html                   ← Advisory board
 ├── proposals.html                  ← Proposals index
 ├── proposal_*.html                 ← Individual instrument proposals
