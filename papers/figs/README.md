@@ -73,34 +73,53 @@ seeds, which is where Appendix A's ±20–40 per cent figure comes from.
 
 ## The ln K computation (fig3)
 
-`fig3_lnk.py` exposes every prior boundary, because ln K here is a prior-volume ratio
-and the boundaries are the levers:
+`fig3_lnk.py` implements the v1.0 continuous MIRI likelihood (OCS-MIRI-1, referee R5
+5.3): a two-temperature swarm SED integrated against the real JWST/MIRI point-source
+sensitivity curve (`miri_sensitivity.json`, OCS-MIRI-DATA), detected if it exceeds the
+crowding-penalized limit in any of the nine imaging filters (logical OR, never a sum).
+This replaces the earlier piecewise hard-threshold model. Every prior boundary is still
+a command-line switch, because ln K here is a prior-volume ratio and the boundaries are
+the levers:
 
 ```sh
 python fig3_lnk.py --leak-floor-dex -6      # softer transport bound
 python fig3_lnk.py --pcomp-floor-dex -3     # P_comp prior floor at 1e-3 Lsun
 python fig3_lnk.py --pcomp-ceiling 1e3      # ADIOS-suppressed natural fuel ceiling
-python fig3_lnk.py --soft-threshold 0.3     # logistic instead of hard threshold
-python fig3_lnk.py --mips70-scale 0.1 --lmid-scale 0.1
+python fig3_lnk.py --soft-threshold 0.5     # logistic instead of hard per-filter threshold
+python fig3_lnk.py --split-floor-dex -1     # warm mass-fraction floor raised to 10%
 python fig3_lnk.py --r-range 0.02 1000
+python fig3_lnk.py --crowding-factor 1.0    # no crowding penalty (sanity check)
 ```
 
 Measured (central ln K, band over f_d ∈ [0.1, 0.9], ξ = excluded active-prior fraction):
 
 | configuration | ξ | ln K | band |
 |---|---|---|---|
-| **fiducial** | 0.497 | **−0.286** | [−0.593, −0.051] |
-| leak floor 10⁻⁶ | 0.358 | −0.197 | [−0.389, −0.036] |
-| P_comp floor 10⁻³ L☉ | 0.329 | −0.180 | [−0.351, −0.033] |
-| ADIOS ceiling 10³ L☉ | 0.222 | −0.118 | [−0.223, −0.022] |
-| soft threshold 0.3 / 0.5 dex | 0.494 / 0.490 | −0.284 / −0.281 | — |
-| MIPS 70 μm ×10 harder | 0.498 | −0.286 | — |
-| mid + cold wedges ×10 harder | 0.528 | −0.306 | — |
-| radius prior [0.02, 10³] AU | 0.538 | −0.313 | — |
+| **fiducial** | 0.755 | **−0.474** | [−1.138, −0.079] |
+| leak floor 10⁻⁶ | 0.620 | −0.371 | [−0.817, −0.064] |
+| P_comp floor 10⁻³ L☉ | 0.549 | −0.321 | [−0.681, −0.056] |
+| ADIOS ceiling 10³ L☉ | 0.595 | −0.353 | [−0.766, −0.061] |
+| radius prior [0.02, 10³] AU | 0.812 | −0.521 | [−1.313, −0.085] |
+| temperature split floor 10⁻¹ | 0.747 | −0.468 | [−1.116, −0.078] |
+| soft threshold 0.5 dex | 0.770 | −0.486 | [−1.182, −0.080] |
+
+The largest lever is the P_comp floor (+0.153 nats over the fiducial), ahead of the
+transport floor (+0.103) and now the fuel ceiling (+0.121) too. The temperature-split
+prior is the weakest lever measured (+0.006 nats): total waste luminosity and swarm
+radius dominate detectability, not how that luminosity partitions between the warm and
+cool blackbody components.
 
 The channel is one-sided: P(no detection | H_q) = 1, so ln K ≥ ln f_d = −0.693 for any
-depth of photometry. At the fiducial dormancy prior the channel has spent 41 per cent
-of that capacity and has 0.41 nats of headroom left, in total, forever.
+depth of photometry. At the fiducial dormancy prior the channel has spent 68 per cent
+of that capacity (up from 41 per cent under the retired hard-threshold model, because
+the real MIRI depths exclude far more of the active-installation prior volume than the
+old order-of-magnitude piecewise limits) and has 0.22 nats of headroom left, in total,
+forever.
+
+The far-infrared corner (swarms cold enough that their Wien tail is negligible at every
+MIRI wavelength, ≤25.5 μm) is not clamped by an assumed placeholder limit: it falls out
+of the physics as undetected by any filter in the array, which is the honest state,
+since no far-infrared instrument is currently operating (OCS-MIRI-DATA).
 
 ## Browser standalone
 

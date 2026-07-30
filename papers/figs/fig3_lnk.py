@@ -1,9 +1,11 @@
 """Fig 3: worked-example ln K per channel, H_eng vs H_q (best null), omega Cen today.
 
-Appendix B model, deliberately minimal and fully stated:
+Appendix B model, v1.0 continuous MIRI likelihood (OCS-MIRI-1, R5 5.3):
 
 Channels and data (2026):
-  MIR  : point-source limit L_lim = 1 Lsun at kinematic centre (Chen 2025 JWST)
+  MIR  : continuous per-filter detection against the real MIRI point-source
+         sensitivity curve (JDox Table 1, ETC 6.0; miri_sensitivity.json,
+         OCS-MIRI-DATA), crowding-penalized for the omega Cen core
   radio: no detection to 1.1 uJy at 7.25 GHz (Mahida 2026) -- both hypotheses
          predict silence in dormancy; likelihood ratio ~ 1 by construction
   R    : accretion never detected; channel inactive (ln K = 0)
@@ -15,16 +17,36 @@ H_eng priors (pre-registered, log-flat):
   P_comp  : log-uniform over [1, P_fuel] Lsun  (fuel ceiling from fig2/common)
   leak = 1 - f_sink : log-uniform over [1e-4, 1]  (transport floor)
   r_swarm : log-uniform over the envelope [2e-2, 4e3] AU (referee M3)
+  f_warm  : log-uniform mass-fraction split between the two blackbody
+            components (referee R5 5.3); the one new free parameter this
+            build introduces
   dormant fraction f_d: probability the installation is dormant (P_comp -> 0);
          prior 0.5 (varied 0.1--0.9 for the sensitivity band)
 
-MIR likelihood (radius-dependent, referee M3): the swarm re-radiates
-L_waste = leak * P_comp at T_eff(r) = (L / 4 pi r^2 sigma_SB)^{1/4}; detection
-iff L_waste > L_lim(T_eff), the piecewise instrument limit of common.L_lim_mir
-(JWST/MIRI warm; WISE/MIPS cool, confusion-limited).  Data = no detection.
-  P(no det | H_eng) = f_d + (1 - f_d) * P(L_waste < L_lim(T_eff))
-  P(no det | H_q)   = 1
-ln K_MIR = ln P(no det | H_eng)  (negative: H_eng pays for its detectable prior mass)
+MIR likelihood, continuous (R5 5.3, replacing the piecewise hard threshold):
+the swarm's waste luminosity L_waste = leak * P_comp splits into a warm
+component f_warm * L_waste and a cool component (1 - f_warm) * L_waste, each
+re-radiated as a blackbody from the same swarm radius r via the existing
+common.t_eff(L, r) -- so the SED is fixed by (L_waste, r, f_warm) with f_warm
+the only new free parameter. Each component's flux density at each MIRI
+filter's pivot wavelength is F_nu = pi * B_nu(T) * (r/d)^2 at d = 5.43 kpc.
+A configuration is detected iff the summed (warm + cool) flux exceeds the
+crowding-penalized sensitivity in ANY filter (logical OR over filters, never
+a sum of per-filter significances). Filter bandpass width is not folded in:
+no published per-filter bandwidth is sourced in miri_sensitivity.json, so
+each filter's response is treated as a delta function at its pivot
+wavelength, a stated approximation, not a claimed measurement.
+
+The far-infrared corner (swarm cold enough that its Wien tail is negligible
+at all MIRI wavelengths, <=25.5 um / F2550W) is not clamped by an assumed
+placeholder limit: it falls out of the physics as simply undetected by any
+filter in the array, which is the honest state (no far-IR instrument is
+operating; OCS-MIRI-DATA). This replaces both the piecewise T_eff step
+function and the "Wien-peak band" / "cross-band leakage" language Appendix B
+previously claimed and the script did not implement (R5-V7).
+
+Report xi = 1 - P(quiet | active) as the data-only statistic, separately
+from ln K.
 
 Outputs fig3_lnk.pdf + prints the numbers quoted in section 5.
 
@@ -40,73 +62,120 @@ boundaries are the levers.
                      engineered-unsuppressed Bondi ceiling; 1e3 is the
                      ADIOS-suppressed natural ceiling)
   --r-range          swarm-radius prior in AU, two values
-  --soft-threshold   replace the hard detection threshold with a logistic in
-                     log10(L_waste / L_lim) of the given width in dex (0 = hard)
-  --mips70-scale     multiply the T < 50 K (MIPS 70 um) limit by this factor
-  --lmid-scale       multiply the 50-150 K (WISE/MIPS 24) limit by this factor
+  --split-floor-dex  lower bound of the f_warm (warm mass-fraction) prior in
+                     log10 (default -3: warm component can be as small as
+                     0.1 per cent of the waste luminosity)
+  --split-ceiling    upper bound of the f_warm prior (default 0.999: warm
+                     component can dominate but never fully exclude the cool
+                     one, which would make the split parameter undefined)
+  --soft-threshold   replace the hard per-filter detection threshold with a
+                     logistic in log10(F_nu / sensitivity) of the given width
+                     in dex (0 = hard); per-filter probabilities combine as
+                     P(nondetect) = product over filters of (1 - p_det,i),
+                     the probabilistic form of the same OR rule
+  --crowding-factor  multiplicative crowding/confusion penalty on the MIRI
+                     sensitivities (default 3.0, OCS-MIRI-DATA / Paper C)
 
-Structural note (referee R5-V1): because P(no detection | H_q) = 1, this channel
-is one-sided and its evidence is capped at ln K >= ln f_d for any depth of
-photometry.  The script prints the capacity and the spent fraction alongside the
-value.  The data-only statistic is xi = 1 - P(quiet | active), the fraction of
-the *active* prior volume the limits exclude; it carries no dormancy prior.
+Structural note (referee R5-V1): because P(no detection | H_q) = 1, this
+channel is one-sided and its evidence is capped at ln K >= ln f_d for any
+depth of photometry. The script prints the capacity and the spent fraction
+alongside the value. The data-only statistic is xi = 1 - P(quiet | active),
+the fraction of the *active* prior volume the limits exclude; it carries no
+dormancy prior.
 
-Outputs fig3_lnk.pdf + prints the numbers quoted in section 5.  The figure is
+Outputs fig3_lnk.pdf + prints the numbers quoted in section 5. The figure is
 written only when every prior boundary sits at its default.
 """
 import argparse
+import json
+import os
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from common import LSUN, AU, C, mdot_bondi, t_eff, L_lim_mir, STYLE
+from common import LSUN, AU, C, PC, mdot_bondi, t_eff, STYLE
 
 P_FUEL = mdot_bondi() * C**2 / LSUN
+DIST_M = 5.43e3 * PC          # Paper C adopted distance, 5.43 kpc
+H_PLANCK = 6.62607015e-34     # J s
+K_BOLTZ = 1.380649e-23        # J K^-1
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(_HERE, "miri_sensitivity.json")) as _fh:
+    _SENS = json.load(_fh)
+FILTERS = _SENS["filters"]
+LAM_M = np.array([f["pivot_wavelength_um"] for f in FILTERS]) * 1e-6
+SENS_UJY = np.array([f["sensitivity_ujy"] for f in FILTERS])
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--leak-floor-dex", type=float, default=-4.0)
 ap.add_argument("--pcomp-floor-dex", type=float, default=0.0)
 ap.add_argument("--pcomp-ceiling", type=float, default=P_FUEL)
 ap.add_argument("--r-range", type=float, nargs=2, default=[2e-2, 4e3])
+ap.add_argument("--split-floor-dex", type=float, default=-3.0)
+ap.add_argument("--split-ceiling", type=float, default=0.999)
 ap.add_argument("--soft-threshold", type=float, default=0.0)
-ap.add_argument("--mips70-scale", type=float, default=1.0)
-ap.add_argument("--lmid-scale", type=float, default=1.0)
+ap.add_argument("--crowding-factor", type=float, default=3.0)
 args = ap.parse_args()
 LEAK_FLOOR_DEX = args.leak_floor_dex
 IS_DEFAULT = (LEAK_FLOOR_DEX == -4.0 and args.pcomp_floor_dex == 0.0
               and args.pcomp_ceiling == P_FUEL and args.r_range == [2e-2, 4e3]
-              and args.soft_threshold == 0.0 and args.mips70_scale == 1.0
-              and args.lmid_scale == 1.0)
+              and args.split_floor_dex == -3.0 and args.split_ceiling == 0.999
+              and args.soft_threshold == 0.0 and args.crowding_factor == 3.0)
 
 plt.rcParams.update(STYLE)
 rng = np.random.default_rng(20260717)
 
-L_LIM = 1.0
 N = 2_000_000
+SENS_JY_EFF = SENS_UJY * 1e-6 * args.crowding_factor   # crowded effective limit, Jy
 
 R_MIN_AU, R_MAX_AU = args.r_range   # fueled inner bound to cluster stripping radius
 
-def p_quiet_given_active():
-    """Fraction of the active-installation prior volume that evades the limits.
+def planck_nu(nu, T):
+    """Spectral radiance B_nu(T), W m^-2 Hz^-1 sr^-1. Cold limit -> 0, not NaN."""
+    with np.errstate(over="ignore", divide="ignore"):
+        x = H_PLANCK * nu / (K_BOLTZ * np.maximum(T, 1e-3))
+        return (2.0 * H_PLANCK * nu**3 / C**2) / np.expm1(x)
 
-    This is the data-only statistic: no dormancy prior enters.  One set of draws
-    serves every f_d, so the sensitivity band uses common random numbers.
+def p_quiet_given_active():
+    """Fraction of the active-installation prior volume that evades every filter.
+
+    This is the data-only statistic: no dormancy prior enters. One set of
+    draws serves every f_d, so the sensitivity band uses common random
+    numbers. Per-filter flux is accumulated in a loop over the 9 filters to
+    keep peak memory at O(N) rather than O(N x n_filters).
     """
     logP = rng.uniform(args.pcomp_floor_dex, np.log10(args.pcomp_ceiling), N)
     logleak = rng.uniform(LEAK_FLOOR_DEX, 0, N)
     logr = rng.uniform(np.log10(R_MIN_AU), np.log10(R_MAX_AU), N)
-    L_waste = 10 ** (logP + logleak) * LSUN            # W
-    T = t_eff(L_waste, 10 ** logr * AU)
-    lim = L_lim_mir(T)
-    # rescale the two confusion-limited wedges if asked (T thresholds unchanged)
-    lim = np.where(T < 50.0, lim * args.mips70_scale,
-                   np.where(T < 150.0, lim * args.lmid_scale, lim))
+    logsplit = rng.uniform(args.split_floor_dex, np.log10(args.split_ceiling), N)
+
+    L_waste = 10 ** (logP + logleak) * LSUN         # W
+    f_warm = 10 ** logsplit
+    r_m = 10 ** logr * AU
+    T_warm = t_eff(f_warm * L_waste, r_m)
+    T_cool = t_eff((1.0 - f_warm) * L_waste, r_m)
+    area_term = (r_m / DIST_M) ** 2                  # (R_emit / d)^2, shared by both components
+
     if args.soft_threshold > 0:
-        # logistic detection probability in log10(L/L_lim); width in dex
-        z = np.log10(L_waste / lim) / args.soft_threshold
-        p_det = 1.0 / (1.0 + np.exp(-z))
-        return float(np.mean(1.0 - p_det))
-    return float(np.mean(L_waste < lim))
+        log_p_nondet_total = np.zeros(N)
+    else:
+        detected_any = np.zeros(N, dtype=bool)
+
+    for lam, lim_jy in zip(LAM_M, SENS_JY_EFF):
+        nu = C / lam
+        F_nu = np.pi * area_term * (planck_nu(nu, T_warm) + planck_nu(nu, T_cool))  # W m^-2 Hz^-1
+        F_jy = F_nu / 1e-26
+        if args.soft_threshold > 0:
+            z = np.log10(np.maximum(F_jy, 1e-300) / lim_jy) / args.soft_threshold
+            p_det = 1.0 / (1.0 + np.exp(-z))
+            log_p_nondet_total += np.log(np.maximum(1.0 - p_det, 1e-300))
+        else:
+            detected_any |= (F_jy > lim_jy)
+
+    if args.soft_threshold > 0:
+        return float(np.mean(np.exp(log_p_nondet_total)))
+    return float(np.mean(~detected_any))
 
 def lnK_mir(f_dormant, p_qa):
     return float(np.log(f_dormant + (1 - f_dormant) * p_qa))
@@ -145,7 +214,8 @@ if IS_DEFAULT:
 cap = np.log(0.5)
 print(f"leak floor 1e{LEAK_FLOOR_DEX:.0f}  P_comp [1e{args.pcomp_floor_dex:.0f}, "
       f"{args.pcomp_ceiling:.2e}] Lsun  r [{R_MIN_AU:g}, {R_MAX_AU:g}] AU  "
-      f"soft {args.soft_threshold:g} dex  mips70x{args.mips70_scale:g} midx{args.lmid_scale:g}")
+      f"split [1e{args.split_floor_dex:.0f}, {args.split_ceiling:g}]  "
+      f"soft {args.soft_threshold:g} dex  crowding x{args.crowding_factor:g}")
 print(f"  xi (excluded active-prior fraction) {1-p_qa:.3f}   P(quiet|active) {p_qa:.3f}")
 print(f"  lnK_MIR central {lnK_c:+.3f}  band [{lo:+.3f}, {hi:+.3f}]")
 print(f"  channel capacity ln f_d = {cap:+.3f} nats; spent {lnK_c/cap:.0%}, "
