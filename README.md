@@ -64,6 +64,19 @@ The deploy is additive only — files on the server but absent from this repo ar
 
 ---
 
+## Running the tests
+
+The validate job runs two `node --test` suites:
+
+```bash
+node --test scripts/tests/tier-c-*.test.mjs
+node --test scripts/tests/lib-imbh-constraints.test.mjs
+```
+
+No build step and no server needed. Node 18+ is enough.
+
+---
+
 ## Editing the site
 
 ```bash
