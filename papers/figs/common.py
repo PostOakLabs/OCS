@@ -29,21 +29,45 @@ CS_GAS  = 1.0e4                          # m/s sound speed (1e4 K ionized)
 MF_MASSES = np.array([0.35, 0.60]) * MSUN
 MF_WEIGHTS = np.array([0.70, 0.30])
 
-# Mass-segregated heavy-remnant extension (referee M1): stellar-mass BHs (10 Msun)
-# and neutron stars (1.4 Msun) as extra number-fraction components inside r_infl.
+# Mass-segregated heavy-remnant extension (referee M1): stellar-mass BHs and
+# neutron stars (1.4 Msun) as extra number-fraction components inside r_infl.
 # The Gonzalez Prieto et al. (2025) growth models retain a core BH population whose
 # global number fraction is ~0.1-1 per cent; mass segregation enhances the central
 # value, so 1 per cent is the fiducial and 0.1 / 3 per cent bracket it.
+#
+# Referee-5 update (2026-07-30): the perturber BH mass is now 31 Msun, the mean mass
+# of black holes inspiraling into the IMBH in the Gonzalez Prieto et al. (2025)
+# models, which name 10 Msun as the assumption they are correcting.  Kick variance
+# scales as <m^2>, so this raises <m^2> by a factor 8.0 at fixed f_BH.  M_BH_PERT_OLD
+# reproduces the pre-R5 curves for comparison.
 F_NS = 0.02            # neutron-star number fraction (all remnant variants)
 F_BH_FID = 0.01        # fiducial segregated BH number fraction
 F_BH_GRID = (0.001, 0.01, 0.03)
+M_BH_PERT = 31.0       # Msun, GP2025 mean inspiraling BH mass
+M_BH_PERT_OLD = 10.0   # Msun, pre-R5 assumption, retained for the comparison curve
 
-def remnant_mf(f_bh, f_ns=F_NS):
+def remnant_mf(f_bh, f_ns=F_NS, m_bh=M_BH_PERT):
     """Return (masses, weights) for the stellar MF + NS + BH remnant components."""
-    masses = np.concatenate([MF_MASSES, np.array([1.4, 10.0]) * MSUN])
+    masses = np.concatenate([MF_MASSES, np.array([1.4, m_bh]) * MSUN])
     weights = np.concatenate([MF_WEIGHTS * (1.0 - f_bh - f_ns),
                               np.array([f_ns, f_bh])])
     return masses, weights / weights.sum()
+
+# --- adiabatic suppression of impulsive kicks (referee M5 / R5-O2) --------------
+# For a bound orbit of semi-major axis a perturbed by a star passing at impact
+# parameter b with speed v, the adiabatic parameter is x = omega_orb * tau_enc =
+# (b/a)(v_orb/v).  The impulsive estimate holds only for x << 1; across the whole
+# feasibility envelope x runs from 2.2 at the cluster stripping radius to 4.5e3 at
+# the ISCO, so unbound cluster stars are adiabatically decoupled from every orbit
+# in the envelope.  We use the Gnedin & Ostriker (1999) power-law correction rather
+# than the Spitzer (1987) exp(-x^2) form, which over-suppresses; the power law is
+# the conservative (less suppressing) choice and is calibrated against N-body.
+# A(x) multiplies the second-order quantity, i.e. <delta^2> directly.
+GAMMA_AD = 2.5
+
+def adiabatic_factor(x, gamma_ad=GAMMA_AD):
+    """Gnedin & Ostriker (1999) adiabatic correction A(x) = (1 + x^2)^(-gamma_ad)."""
+    return (1.0 + np.asarray(x, dtype=float) ** 2) ** (-gamma_ad)
 
 # Radius-dependent mid-infrared detection limit (referee M3): a swarm of radius r
 # re-radiating L_waste does so at T_eff = (L / 4 pi r^2 sigma_SB)^{1/4}; which
