@@ -1,0 +1,59 @@
+{
+  "_purpose": "C2.3 seal: menu, priors, channel decomposition, and one-line source justification per prior, committed before any scoring code or results (own commit, no scoring output). appendix_d_validation.py implements the scoring against exactly this record; a prior changed after ln K has been seen is visible as a diff to this file post-dating the scoring commit.",
+  "cases": {
+    "lgm1": {
+      "epoch_1a": "1967-11-30",
+      "menu": {
+        "H_int": "terrestrial interference / instrumental artifact; admitted at every epoch by construction (protocol C2.3 rule 3)",
+        "H_art": "artificial celestial signal (LGM); the hypothesis under test",
+        "H_nat": "natural celestial source, class undetermined; catch-all, priced per C2.4"
+      },
+      "menu_exclusions": {
+        "radial_pulsation_wd_ns": "not on Epoch-1a menu; enters Epoch 2 (Hewish et al. 1968, submitted 1968-02-09)",
+        "rotation": "not on Epoch-1a menu; enters Epoch 3 (Gold 1968, 1968-05-25); scored only in Collapse B as the counterfactual menu-completion test",
+        "pacini_1967": "dated <= epoch-1a (1967-11-11) but not connected to a pulsating radio source by anyone at that date (menu rule 2 fails: no dated primary record ties it to CP1919); excluded from fiducial per protocol C2.2, admitted only in sensitivity (not run in this pass)"
+      },
+      "priors": {
+        "T_ref_natural_coherent_period_s": {
+          "value": 3600.0,
+          "justification": "stated historical judgment: fastest coherent (non-stochastic) natural periodicity catalogued for a celestial source as of Nov 1967 was of order 1 hr (short-period pulsating variables); flare-star flickering is stochastic, not coherent, and excluded as a reference point. No machine-readable 1967 radio-source catalog was located; Appendix D states this as a limitation.",
+          "source_date": "<= 1967-11-30 by construction (reference class, not a dated citation)"
+        },
+        "ch2_ln_r_int_sidereal": {"value": -5.0, "justification": "man-made/terrestrial interference tied to a solar-day schedule recurring instead at fixed sidereal time is strongly disfavored; stated construction.", "source_date": "1967 (Bell Burnell 1977 account of the internal test)"},
+        "ch3_ln_r_int_second_telescope": {"value": -3.0, "justification": "second, independent telescope/receiver chain (Scott & Collins) confirming the signal excludes single-instrument artifact; stated construction.", "source_date": "1967 (Bell Burnell 1977)"},
+        "ch4_p_null_doppler_given_art": {"value": 0.3, "justification": "prior probability H_art's own orbital geometry evades a Doppler detection (low inclination / long period); stated construction, not measured.", "source_date": "1967 (Bell Burnell 1977, describes the test being run)"},
+        "ch5_p_second_source_given_art": {"value": 0.02, "justification": "Bell Burnell's own contemporaneous reasoning: twin simultaneous artificial beacons at the same improbable frequency implausible.", "source_date": "1967 (Bell Burnell 1977)"},
+        "ch5_p_second_source_given_nat": {"value": 0.95, "justification": "finding a second member of a real natural source class shortly after the first is the expected, not surprising, outcome.", "source_date": "stated construction"},
+        "collapseB_ch1_ln_r_pulsar_edge": {"value": 0.5, "justification": "rotating-lighthouse geometry more naturally predicts a duty cycle well under unity than an arbitrary artificial beacon design; stated construction.", "source_date": "1968-05-25 (Gold 1968 mechanism, priced counterfactually per protocol instruction)"},
+        "lambda_fiducial": 1.0,
+        "lambda_sweep": [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0],
+        "pi_nat_sweep": [0.1, 0.3, 0.5, 0.7, 0.9]
+      }
+    },
+    "hephaistos": {
+      "menu": {
+        "H_art": "Dyson sphere / technosignature megastructure (Suazo et al. 2024 framing)",
+        "H_bg": "background dust-obscured galaxy, chance line-of-sight alignment"
+      },
+      "epoch_1_menu_finding": "Suazo et al. 2024 (arXiv:2405.02927) full text, Sec. 3.1 'Potential contamination' and Sec. 4 discussion (verified via ar5iv full-text fetch this session), already discusses chance alignment with dust-obscured background galaxies as a considered, quantified, unresolved alternative ('~2 contaminated sources expected'; 'the possibility of perfect alignments cannot be ruled out'). H_bg is therefore on the Epoch-1 (2024-05-06) menu by C2.3 rule 1, resolving dossier gap note 1.",
+      "priors": {
+        "p_bg_epoch1_per_candidate": {"value": 0.2857142857142857, "justification": "Suazo et al. 2024 Sec. 3.1's own estimate: ~2 expected contaminants among the 7 candidates.", "source_date": "2024-05-06"},
+        "G_2024-05-23_ln_r_bg": {"value": 4.0, "justification": "off-star radio counterpart offset (~5.0 arcsec) from the Gaia stellar position (Ren et al. 2024); near-decisive AGN/background-source signature. Stated construction magnitude.", "source_date": "2024-05-23"},
+        "D_E_2026-07-03_ln_r_bg": {"value": -1.5, "justification": "archival diagnostics (Ren et al. 2026) find no contamination signature for D/E in contrast to B/C; absence of the signatures that worked elsewhere shifts weight toward H_art. Stated construction.", "source_date": "2026-07-03"},
+        "D_E_2026-07-10_ln_r_bg": {"value": 6.0, "justification": "JWST/MIRI spectroscopic point-source identification (Zackrisson et al. 2026) as background galaxies (Hot DOG for D, dusty starburst for E); near-decisive. Stated construction magnitude.", "source_date": "2026-07-10"}
+      }
+    },
+    "boyajian": {
+      "menu": {
+        "H_art": "solid megastructure occulter (optically thick material); enters menu 2015-10-15 (Wright et al. 2016)",
+        "H_dust": "ordinary circumstellar dust, particle size as a free parameter"
+      },
+      "priors": {
+        "particle_size_prior_um": {"range": [0.001, 10.0], "distribution": "log-uniform", "justification": "Boyajian et al. 2018's own stated constraint region: particle sizes << 1 um for at least some dips.", "source_date": "2018-01-02"},
+        "bands_um": {"blue": 0.44, "red": 0.79, "justification": "standard B/I bandpass pivot wavelengths, representative of the multiband ground-based photometry setup in Boyajian et al. 2018.", "source_date": "2018-01-02"},
+        "s_obs_percentile": {"value": 0.90, "justification": "conservative (not most-favorable) read of the paper's own qualified language ('at least some dips'); observed statistic taken at the 90th percentile of the dust-prior's own achromaticity predictive rather than its extreme tail.", "source_date": "stated construction"}
+      },
+      "note": "exact measured reddening slope and its uncertainty were not extracted from the primary photometry in this pass; scored at the qualitative level (large, non-grey, small-particle-consistent) the paper itself commits to. Stated as a limitation in Appendix D."
+    }
+  }
+}
