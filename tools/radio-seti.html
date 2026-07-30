@@ -242,13 +242,13 @@ a:hover{color:var(--teal-glow)}
       <div class="slider-block" id="sefd-direct-block" style="display:none">
         <label>System Equivalent Flux Density, SEFD (Jy, log slider)</label>
         <div class="slider-row">
-          <input type="range" id="sefd-slider" min="0" max="6" step="0.02" value="2.63">
-          <span class="slider-value" id="sefd-val">425 Jy</span>
+          <input type="range" id="sefd-slider" min="0" max="6" step="0.02" value="0.85">
+          <span class="slider-value" id="sefd-val">7 Jy</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-sefd="2.63">MeerKAT tied-array, coherent (~425 Jy)</button>
-          <button class="preset-btn" data-sefd="1.5">SKA-Mid coherent (~30 Jy)</button>
-          <button class="preset-btn" data-sefd="3.5">Single 13.5m MeerKAT dish (~3,400 Jy)</button>
+          <button class="preset-btn" data-sefd="0.85">MeerKAT tied-array, coherent (~7 Jy)</button>
+          <button class="preset-btn" data-sefd="0.3">SKA-Mid coherent (~2 Jy)</button>
+          <button class="preset-btn" data-sefd="2.63">Single 13.5m MeerKAT dish, per-antenna (~430 Jy)</button>
         </div>
       </div>
 
@@ -389,7 +389,7 @@ a:hover{color:var(--teal-glow)}
       <p>The leverage is in the √τ — every quadrupling of integration time gives you 2× sensitivity. Aperture A_eff and T_sys are linear, so the gain from going from MeerKAT to SKA-1 (~50× A_eff) is much larger than the gain from staring for a week instead of an hour.</p>
 
       <h3>SEFD-direct input and the coherent/incoherent split</h3>
-      <p>The aperture and T_sys sliders combine as SEFD = 2 k_B T_sys / A_eff; switching to "SEFD direct" lets you enter a published or independently derived system-equivalent flux density instead, in jansky (1 Jy = 10⁻²⁶ W m⁻² Hz⁻¹). A coherent tied-array beam sums antenna voltages before squaring and reaches the SEFD you enter (or compute) directly, but only covers an arcsecond-scale beam. An incoherent array sum, needed to cover a full primary beam containing an entire target field, sums power instead of voltage across N_ant antennas, which costs a factor √N_ant in SEFD (and hence in minimum detectable EIRP, since EIRP_min is linear in SEFD). At MeerKAT defaults (SEFD ≈ 425 Jy coherent, N_ant = 64, d = 5.49 kpc, SNR = 10, δν = 1 Hz, t = 70 h) this tool returns EIRP_min ≈ 3×10¹⁶ W coherent and ≈ 2–3×10¹⁷ W incoherent, the coherent/incoherent split behind the Omega Centauri campaign's narrowband SETI program (Program 2), where the incoherent, full-cluster figure is the one that applies to a commensal search.</p>
+      <p>The aperture and T_sys sliders combine as SEFD = 2 k_B T_sys / A_eff; switching to "SEFD direct" lets you enter a published or independently derived system-equivalent flux density instead, in jansky (1 Jy = 10⁻²⁶ W m⁻² Hz⁻¹). A coherent tied-array beam sums antenna voltages before squaring and reaches the SEFD you enter (or compute) directly, but only covers an arcsecond-scale beam. An incoherent array sum, needed to cover a full primary beam containing an entire target field, sums power instead of voltage across N_ant antennas, which costs a factor √N_ant in SEFD (and hence in minimum detectable EIRP, since EIRP_min is linear in SEFD). At MeerKAT the per-antenna SEFD of a single 13.5-m dish is ≈ 430 Jy (Czech et al. 2021); a coherent tied-array sum over ~60 antennas improves on it by N to ≈ 7 Jy, and an incoherent sum by √N to ≈ 55 Jy. At those values (N_ant = 64, d = 5.49 kpc, SNR = 10, δν = 1 Hz, t = 70 h) this tool returns EIRP_min ≈ 5×10¹⁴ W coherent and ≈ 4×10¹⁵ W incoherent, the coherent/incoherent split behind the Omega Centauri campaign's narrowband SETI program (Program 2), where the incoherent, full-cluster figure is the one that applies to a commensal search.</p>
 
       <h3>The 0.1 W benchmark</h3>
       <p>In December 2025, Breakthrough Listen used MeerKAT to observe 3I/ATLAS before closest approach and reported a 0.17 W EIRP detection limit. This tool's bare-radiometer floor at the same settings (A_eff = 6,300 m², T_sys = 20 K, 1 Hz channel, 1 hour integration, 0.3 AU) is <strong>~0.3 mW</strong> — roughly 600× below the published limit. The gap reflects real-world penalties (RFI rejection, Doppler-search overhead, confirmation requirements) that the radiometer equation does not include. The banner at the top of this page quotes the tool's floor; the 0.17 W published limit is the appropriate benchmark for survey planning.</p>
@@ -491,7 +491,7 @@ const N_POL = 2;
 
 const state = {
   logEirp: 13, logDist: 4.23, logAeff: 3.8, logTsys: 1.3, logTau: 3.56, logBw: 0,
-  logSefd: 2.63, sefdMode: 0, cohMode: 0, nant: 64
+  logSefd: 0.85, sefdMode: 0, cohMode: 0, nant: 64
 };
 
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}

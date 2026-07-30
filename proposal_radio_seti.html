@@ -173,7 +173,7 @@
 
 <h2>1. Scientific Rationale</h2>
 <h3>1.1 Why Radio Technosignatures from OC</h3>
-<p>The OCS Macro Transcension Hypothesis predicts a Phase 5 civilisation that is electromagnetically <em>silent</em> by design — computing at thermodynamic limits near the IMBH, producing no radio leakage. However, this does not exclude all radio signatures. A Phase 2 or early Phase 3 civilisation in transition — still operating communications infrastructure before fully compressing inward — <em>would</em> produce conventional radio emissions. Additionally, early-phase probes arriving at OC and using radar/ranging systems would produce narrowband Doppler-shifted signals.</p>
+<p>The OCS Macro Transcension Hypothesis predicts a Phase 5 civilisation that is electromagnetically silent by design — computing at thermodynamic limits near the IMBH, producing no radio leakage. However, this does not exclude all radio signatures. A Phase 2 or early Phase 3 civilisation in transition — still operating communications infrastructure before fully compressing inward — would produce conventional radio emissions. Additionally, early-phase probes arriving at OC and using radar/ranging systems would produce narrowband Doppler-shifted signals.</p>
 
 <p>More conservatively: even if the OCS hypothesis is entirely wrong, OC as the nearest massive globular cluster with a confirmed IMBH candidate deserves the most thorough technosignature characterisation of any such system. The FAST survey established that dedicated GC searches are now scientifically publishable and technically viable. OC is the logical next target.</p>
 
@@ -195,9 +195,9 @@
     <tr><td>Pointing</td><td>OC core (RA 13h 26m 47.24s, δ −47° 28′ 46.5″); full primary beam (~1°)</td></tr>
     <tr><td>Integration per session</td><td>3–4 hours (comparable to FAST-SETI program)</td></tr>
     <tr><td>Total program</td><td>~20 sessions over 2 years = ~70 hours</td></tr>
-    <tr><td>Sensitivity</td><td>MeerKAT rms ~5 µJy/beam at L-band in 1 hr; EIRP threshold ~(3–6)×10¹⁷ W at 5.49 kpc (comparable to, slightly above, FAST-SETI limits at closest clusters)</td></tr>
-    <tr><td>RFI mitigation</td><td>On-off source cadence; baseline subtraction; doppler-drift search (turboSETI or equivalent)</td></tr>
-    <tr><td>Significance threshold</td><td>SNR &gt; 15 for candidate; independent re-detection in separate session required</td></tr>
+    <tr><td>Sensitivity</td><td>Incoherent ~60-antenna array sum over the full ~1° beam: EIRP_min ≈ 4×10¹⁵ W at 5.49 kpc over 70 h (below the FAST-SETI ~10¹⁶ W limits at its closest clusters); coherent tied-array follow-up beam: ≈ 5×10¹⁴ W over an arcseconds-scale beam</td></tr>
+    <tr><td>RFI mitigation</td><td>On-off source cadence; baseline subtraction; doppler-drift search (turboSETI or equivalent); BLUSE-style simultaneous coherent multi-beam candidate cross-rejection (anti-coincidence beams plus a reduced-baseline subarray) against LEO-constellation downlinks, which dominate the false-candidate budget</td></tr>
+    <tr><td>Significance threshold</td><td>SNR &gt; 15 for candidate; scintillation-aware confirmation: multiple re-observation epochs spaced by at least the refractive timescale, with significance computed under exponential-intensity statistics (Cordes, Lazio &amp; Sagan 1997); a single-epoch non-detection demotes rather than kills a candidate</td></tr>
   </tbody>
 </table>
 
@@ -209,11 +209,13 @@ FAST-SETI (Huang et al. 2025, arXiv:2511.21085):
   [NOTE: earlier draft stated 2×10¹⁹ W, which was ~1000× inflated]
 
 MeerKAT OC program:
-  d = 5.49 kpc; MeerKAT effective area ~30% of FAST
-  Equivalent EIRP threshold: ~(3–6)×10¹⁷ W [scales as d² / (A_eff/A_FAST)]
-  [NOTE: earlier draft stated 3×10²⁰ W, corrected proportionally]
-  
-For comparison: Arecibo planetary radar EIRP ~ 2×10¹³ W (transmitter much fainter than detectable)
+  d = 5.49 kpc; per-antenna SEFD ≈ 430 Jy (single 13.5-m dish; Czech et al. 2021)
+  ~60-antenna sum: incoherent ≈ 55 Jy (√N gain) · coherent tied-array ≈ 7 Jy (N gain)
+  EIRP_min (SNR 10, 1 Hz, 70 h): ≈ 4×10¹⁵ W incoherent (full cluster) / ≈ 5×10¹⁴ W coherent (arcsec beam)
+  [NOTE: earlier drafts quoted (3–6)×10¹⁷ W by treating the 430 Jy per-antenna SEFD as an array figure;
+   the corrected incoherent limit sits BELOW the FAST-SETI thresholds]
+
+For comparison: Arecibo planetary radar EIRP ~ 2×10¹³ W → incoherent limit ≈ 2×10² × Arecibo radar
 Type II civilisation transmitter (10²⁶ W) would be detectable at OC from current SETI instruments
 </div>
 
@@ -225,7 +227,7 @@ Type II civilisation transmitter (10²⁶ W) would be detectable at OC from curr
   <thead><tr><th>Result</th><th>Interpretation</th></tr></thead>
   <tbody>
     <tr><td>Null — no narrowband signals above threshold</td><td>First dedicated radio technosignature upper limit for OC; EIRP limit placed; closes this channel at current MeerKAT sensitivity</td></tr>
-    <tr><td>Narrowband signal, confirmed in multiple sessions, Doppler-consistent with OC distance</td><td>Technosignature candidate — requires independent telescope confirmation (Parkes, ATCA, future SKA), spectral characterisation, and multi-wavelength follow-up</td></tr>
+    <tr><td>Narrowband signal surviving multi-beam cross-rejection and scintillation-aware multi-epoch confirmation, Doppler-consistent with OC distance</td><td>Technosignature candidate — requires independent telescope confirmation (Parkes, ATCA, future SKA), spectral characterisation, and multi-wavelength follow-up</td></tr>
     <tr><td>New MSPs discovered</td><td>Advances OC pulsar census independent of technosignature result; feeds companion timing proposal</td></tr>
   </tbody>
 </table>
@@ -260,6 +262,8 @@ Type II civilisation transmitter (10²⁶ W) would be detectable at OC from curr
   <li>Häberle, M., et al. (2024). Fast-moving stars in ω Cen. <em>Nature</em>, 631, 285. <a href="https://arxiv.org/abs/2405.06015">arXiv:2405.06015</a></li>
   <li>Lacki, B. C., &amp; DiKerby, S. (2025). Possibilities for SETI at High Energy. <a href="https://arxiv.org/abs/2506.16351">arXiv:2506.16351</a> (preprint)</li>
   <li>Enriquez, J. E., et al. (2017). The Breakthrough Listen Search for Intelligent Life: 1.1–1.9 GHz observations. <em>ApJ</em>, 849, 104. (turboSETI methodology reference)</li>
+  <li>Czech, D., et al. (2021). The Breakthrough Listen search for intelligent life: MeerKAT target selection. <em>PASP</em>, 133, 064502. <a href="https://arxiv.org/abs/2103.16383">arXiv:2103.16383</a> (per-antenna SEFD ≈ 430 Jy; BLUSE coherent multi-beam architecture)</li>
+  <li>Cordes, J. M., Lazio, T. J. W., &amp; Sagan, C. (1997). Scintillation-induced Intermittency in SETI. <em>ApJ</em>, 487, 782. <a href="https://doi.org/10.1086/304620">doi:10.1086/304620</a></li>
   <li>Dvali, G., &amp; Osmanov, Z. (2023). Black holes as quantum computing substrates. <em>Int. J. Astrobiology</em>, 22, 617–640. <a href="https://doi.org/10.1017/S1473550423000186">doi:10.1017/S1473550423000186</a></li>
 </ol></div>
 
