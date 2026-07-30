@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "purpose": "MIRI imaging point-source sensitivities for the continuous-likelihood build (OCS-MIRI-1, gated on this WU).",
+    "wu": "OCS-MIRI-DATA",
+    "date_sourced": "2026-07-30",
+    "primary_source": "STScI JWST User Documentation (JDox), 'MIRI Sensitivity' page, https://jwst-docs.stsci.edu/jwst-mid-infrared-instrument/miri-performance/miri-sensitivity",
+    "primary_source_basis": "Table 1 on that page, values from JWST Exposure Time Calculator (ETC) v6.0, which folds in the post-commissioning throughput/background model. Page cites Glasse et al. 2015 (PASP 127, 686) for the pre-launch sensitivity model and Pontoppidan et al. 2016 (SPIE 9910) for the ETC.",
+    "commissioning_cross_check": "Dicken et al. 2024, A&A 689, A5 (arXiv:2403.16686), 'JWST MIRI Flight Performance: Imaging' -- states measured in-flight imaging sensitivity is 10 +/- 14% better than pre-launch predictions and does not itself tabulate per-filter depths, directing readers to the ETC. Used here only to confirm the ETC-6.0 table is post-commissioning, not pre-launch.",
+    "table_definition": "Minimum detectable flux density, S/N = 10, 10,000 s (10 ksec) integration, FULL array, unresolved point source, low-background field.",
+    "long_wavelength_cutoff": {
+      "filter": "F2550W",
+      "pivot_wavelength_um": 25.5,
+      "note": "Imager cutoff is 25.5 um (F2550W), not 30 um. Finding R4-X2 flagged three papers stating '10-30 um'; this file must not re-introduce that error."
+    },
+    "crowding_confusion_penalty": {
+      "basis": "campaign-paper.tex (Paper C) Section on deep imaging, lines ~215: a factor ~3x crowding penalty applied to MIRI F770W/F1000W ETC-class point-source depths in the omega Cen core.",
+      "provenance_of_the_factor": "Not a MIRI-specific measurement. Paper C anchors the crowding penalty to the empirical NIRCam point-source recovery of Chen et al. 2025 (archival JWST NIRCam analysis of the omega Cen core, cited there as Chen2025JWST) and states explicitly that transferring that NIRCam-calibrated penalty to the MIRI mid-IR PSF is an assumption still requiring verification by a full scene simulation.",
+      "value_applied": 3.0,
+      "caveat": "Paper C itself flags this as a larger systematic than the NIRCam figures: RGB-tip giants are mJy-level sources at 10 um, their extended PSF halos overlap in the core, and in-flight long-wave throughput degradation must be budgeted. Use factor 3 as the stated, sourced value -- not as a validated MIRI-specific crowding limit."
+    },
+    "reconciliation_2026_07_30": {
+      "trigger": "Orchestrator verification disputed F560W (0.17 vs 0.14) and F2550W (27-36 range vs 15.6), and attributed the table to ETC 5.0 not 6.0.",
+      "method": "JDox page is JS-rendered; plain WebFetch returns nav-shell only. Re-checked by loading the page in a JS-executing browser session and reading the rendered Table 1 directly, 2026-07-30.",
+      "finding": "Live rendered page confirms F560W = 0.14 uJy and F2550W = 15.6 uJy verbatim, single-value column labeled 'Low Background Detection Limit (uJy)' -- no high-background column, no range, for any filter. Page states explicitly 'The values in the table and plots below were obtained from ETC 6.0,' with changelog entry '13 Jul 2026 -- Updated sensitivity plots based on ETC 6.0' superseding an earlier ETC 4.0 entry. ETC 5.0 appears on the page only in an unrelated MRS end-of-mission context.",
+      "disposition": "Orchestrator's disputed values (0.17, 27-36, ETC 5.0, low/high ranges) are not supported by current live JDox content and are not applied. Original filters[] values and ETC-6.0 attribution stand as verified, not merely as originally sourced.",
+      "caveat": "No archived/cached snapshot of the exact live page state was independently cross-verified (Wayback Machine fetch failed); this reconciliation rests on one direct rendered read, not two independent reads of the primary plus a reproducing secondary."
+    },
+    "far_infrared_wedge": {
+      "status": "no_instrument",
+      "statement": "No currently operating instrument provides a citable point-source sensitivity limit for T < 50 K (far-IR, longward of MIRI's 25.5 um cutoff) at omega Cen's distance. Herschel PACS/SPIRE (the last facility with relevant far-IR point-source depths in this regime) was decommissioned in 2013 and is not re-observable; SOFIA ceased operations in 2022. No JWST instrument covers this band. The far-IR wedge below 50 K therefore remains a stated placeholder in the likelihood, not a sourced sensitivity, per this WU's instruction."
+    }
+  },
+  "filters": [
+    { "filter": "F560W",  "pivot_wavelength_um": 5.6,  "sensitivity_ujy": 0.14, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F770W",  "pivot_wavelength_um": 7.7,  "sensitivity_ujy": 0.25, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F1000W", "pivot_wavelength_um": 10.0, "sensitivity_ujy": 0.47, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F1130W", "pivot_wavelength_um": 11.3, "sensitivity_ujy": 1.05, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F1280W", "pivot_wavelength_um": 12.8, "sensitivity_ujy": 0.85, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F1500W", "pivot_wavelength_um": 15.0, "sensitivity_ujy": 1.21, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F1800W", "pivot_wavelength_um": 18.0, "sensitivity_ujy": 2.46, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F2100W", "pivot_wavelength_um": 21.0, "sensitivity_ujy": 4.78, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" },
+    { "filter": "F2550W", "pivot_wavelength_um": 25.5, "sensitivity_ujy": 15.6, "snr": 10, "exposure_s": 10000, "background": "low", "citation": "JDox MIRI Sensitivity Table 1 (ETC 6.0)" }
+  ]
+}
