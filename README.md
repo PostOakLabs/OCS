@@ -23,6 +23,18 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 
 ---
 
+## Verifiable results
+
+Every tool emits a hash-canonical artifact carrying a verifiable `execution_hash`, indexed in [`chaingraph.json`](chaingraph.json) — 28 tools, declaring OpenChainGraph spec `0.8.0` at conformance level **L4**. Recompute the hash from the same inputs and you get the same value; if a number moved, you find out rather than guess.
+
+That matters more here than in most science tooling. A calculator that quietly changes its constants between the day you ran it and the day a referee checks it is worse than no calculator. The artifact pins the inputs, the canon version, and the output together.
+
+Verify a result with the `verify_execution_hash` tool on the MCP server at [`mcp.omegacentauri.me/mcp`](https://mcp.omegacentauri.me/mcp), or in your own CI with [`ocg-verify-action`](https://github.com/PostOakLabs/ocg-verify-action) — zero dependencies, no call back to us.
+
+The format is [OpenChainGraph](https://github.com/PostOakLabs/chaingraph), an open standard shared with [AINumbers.co](https://github.com/PostOakLabs/ainumbers) and [ApexLogics.org](https://github.com/PostOakLabs/apexlogics).
+
+---
+
 ## Repository layout
 
 ```
@@ -109,8 +121,10 @@ ssh-keygen -t ed25519 -f "C:\Users\<you>\.ssh\ocs_deploy_key" -C "ocs-github-dep
 ### 3. Add the public key to DreamHost
 
 ```powershell
-type C:\Users\<you>\.ssh\ocs_deploy_key.pub | ssh omegacentauri@pdx1-shared-a1-41.dreamhost.com "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+type C:\Users\<you>\.ssh\ocs_deploy_key.pub | ssh <dh-user>@<dh-host> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
+
+Take `<dh-user>` and `<dh-host>` from the DreamHost panel — they're the same values you'll store as `DH_SSH_USER` and `DH_SSH_HOST` below.
 
 ### 4. Add five repository secrets
 
@@ -119,9 +133,9 @@ type C:\Users\<you>\.ssh\ocs_deploy_key.pub | ssh omegacentauri@pdx1-shared-a1-4
 | Secret | Value |
 |---|---|
 | `DH_SSH_KEY` | Full contents of the private key file `ocs_deploy_key` |
-| `DH_SSH_USER` | `omegacentauri` |
-| `DH_SSH_HOST` | `pdx1-shared-a1-41.dreamhost.com` |
-| `DH_WEB_ROOT` | `/home/omegacentauri/omegacentauri.me` |
+| `DH_SSH_USER` | Shell username from the DreamHost panel |
+| `DH_SSH_HOST` | Server hostname from the DreamHost panel |
+| `DH_WEB_ROOT` | `/home/<dh-user>/omegacentauri.me` |
 | `DH_SITE_URL` | `https://omegacentauri.me` |
 
 Once secrets exist, the next push to `main` deploys automatically.
