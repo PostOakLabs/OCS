@@ -25,11 +25,11 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 
 ## Verifiable results
 
-Every tool emits a hash-canonical artifact carrying a verifiable `execution_hash`, indexed in [`chaingraph.json`](chaingraph.json) — 28 tools, declaring OpenChainGraph spec `0.8.0` at conformance level **L4**. Recompute the hash from the same inputs and you get the same value; if a number moved, you find out rather than guess.
+Every tool emits a hash-canonical artifact carrying a verifiable `execution_hash`, indexed in [`chaingraph.json`](chaingraph.json). That file declares OpenChainGraph spec `0.8.0` at conformance level **L4** across 28 tools. Recompute the hash from the same inputs and you get the same value; if a number moved, you find out rather than guess.
 
-That matters more here than in most science tooling. A calculator that quietly changes its constants between the day you ran it and the day a referee checks it is worse than no calculator. The artifact pins the inputs, the canon version, and the output together.
+That matters more here than in most science tooling. A calculator that quietly changes its constants between the day you ran it and the day a referee checks it is worse than no calculator. The artifact pins inputs to canon version to output.
 
-Verify a result with the `verify_execution_hash` tool on the MCP server at [`mcp.omegacentauri.me/mcp`](https://mcp.omegacentauri.me/mcp), or in your own CI with [`ocg-verify-action`](https://github.com/PostOakLabs/ocg-verify-action) — zero dependencies, no call back to us.
+Verify a result with the `verify_execution_hash` tool on the MCP server at [`mcp.omegacentauri.me/mcp`](https://mcp.omegacentauri.me/mcp), or in your own CI with [`ocg-verify-action`](https://github.com/PostOakLabs/ocg-verify-action), which has zero dependencies and calls nothing back to us.
 
 The format is [OpenChainGraph](https://github.com/PostOakLabs/chaingraph), an open standard shared with [AINumbers.co](https://github.com/PostOakLabs/ainumbers) and [ApexLogics.org](https://github.com/PostOakLabs/apexlogics).
 
@@ -124,7 +124,7 @@ ssh-keygen -t ed25519 -f "C:\Users\<you>\.ssh\ocs_deploy_key" -C "ocs-github-dep
 type C:\Users\<you>\.ssh\ocs_deploy_key.pub | ssh <dh-user>@<dh-host> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
 
-Take `<dh-user>` and `<dh-host>` from the DreamHost panel — they're the same values you'll store as `DH_SSH_USER` and `DH_SSH_HOST` below.
+Take `<dh-user>` and `<dh-host>` from the DreamHost panel. They're the same values you'll store as `DH_SSH_USER` and `DH_SSH_HOST` below.
 
 ### 4. Add five repository secrets
 
