@@ -16,7 +16,7 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 
 ## What's on the site
 
-- **Observational proposals** — peer-reviewed instrument proposals spanning JWST, HST, MeerKAT, LIGO/Auger, IceCube, KM3NeT, Fermi/CTA, ELT/MICADO, and radio SETI
+- **Observational proposals** — instrument proposals spanning JWST, HST, MeerKAT, LIGO/Auger, IceCube, KM3NeT, Fermi/CTA, ELT/MICADO, and radio SETI
 - **Interactive science tools** — browser-based calculators and simulators covering stellar dynamics, black hole physics, gravitational waves, cosmology, and SETI, plus multi-stage workflow chains. Current counts drift as tools ship — see `llms.txt` or run `python3 scripts/verify-counts.py`, never trust a hardcoded number here
 - **Membership & advisors** — society structure, advisory board, and how to get involved
 - **FAQ** — foundational questions about Omega Centauri and the society's mission
