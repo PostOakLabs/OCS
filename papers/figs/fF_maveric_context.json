@@ -1,0 +1,127 @@
+{
+ "source": "Tremou et al. 2018 (arXiv:1806.00259), MAVERIC survey",
+ "extraction_wu": "OCS-F-DATA-1",
+ "omega_cen": {
+  "position_J2000": "13 26 47.28, -47 28 46.1",
+  "position_uncertainty": {
+   "value": 0.1,
+   "unit": "arcsec",
+   "where": "Table 2, ref 1 (Goldsbury et al. 2010)"
+  },
+  "distance": {
+   "value": 4.9,
+   "unit": "kpc",
+   "where": "Table 2, row omega Cen",
+   "verbatim": null,
+   "source": "Watkins et al. 2015 (ref 15)",
+   "note": "distinct from both Haggard 5.2 kpc and Chen/Mahida ~5.43-5.49 kpc; this is an older/lower distance estimate, expected paper-to-paper variation, not an error"
+  },
+  "flux_density_3sigma_table": {
+   "value": 8.8,
+   "unit": "uJy",
+   "where": "Table 2, row omega Cen"
+  },
+  "flux_density_3sigma_prose": {
+   "value": 8.9,
+   "unit": "uJy",
+   "where": "Section V.2.1",
+   "verbatim": "Our 3-sigma ATCA upper limit of <8.9 uJy on a central radio source implies a 3-sigma IMBH mass upper limit of <1000 Msun",
+   "note": "minor internal rounding discrepancy vs Table 2's 8.8 uJy; both are exact quotes"
+  },
+  "radio_luminosity_3sigma": {
+   "value": 1.3e+27,
+   "unit": "erg/s",
+   "where": "Table 2"
+  },
+  "imbh_mass_limit_3sigma": {
+   "value": 1000,
+   "unit": "Msun",
+   "where": "Table 2 + Section V.2.1"
+  },
+  "predicted_xray_luminosity_3sigma": {
+   "value": 2.5e+30,
+   "unit": "erg/s",
+   "where": "Table 2"
+  },
+  "mass_fraction_limit": {
+   "value": 0.03,
+   "unit": "percent of cluster mass",
+   "where": "Table 2"
+  },
+  "xray_comparison_note": {
+   "value": null,
+   "where": "Section V.2.1",
+   "verbatim": "observed (95%) upper limit of <1.7e30 erg s-1 (Haggard et al. 2013) ... if an IMBH of mass >~1e4 Msun is present in omega Cen, then it must be accreting at a relative rate below any other central black hole known in the universe, with L_bol/L_edd <~2e-11",
+   "note": "the '<1.7e30 erg/s' figure cited here for Haggard+2013 differs slightly from Haggard's own stated 1.6e30 erg/s (both 95% confidence) -- likely a rounding transcription in Tremou+2018, report as-is"
+  }
+ },
+ "sample_context": {
+  "total_clusters": 50,
+  "vla_clusters": 29,
+  "atca_clusters": 27,
+  "vla_median_mass_limit_pct": 0.36,
+  "atca_median_mass_limit_pct": 0.52,
+  "vla_stacked_flux_rms": {
+   "value": 0.65,
+   "unit": "uJy/beam",
+   "where": "Section IV.2"
+  },
+  "vla_stacked_mass_limit": {
+   "value": [
+    800,
+    730
+   ],
+   "unit": "Msun",
+   "where": "Section IV.2",
+   "verbatim": "this corresponds to a 3-sigma VLA stack limit of <800 Msun (<730 Msun)",
+   "note": "two numbers given in the same sentence, not disambiguated by the paper; report both"
+  },
+  "atca_stacked_flux_rms": {
+   "value": 1.42,
+   "unit": "uJy/beam",
+   "where": "Section IV.2"
+  },
+  "atca_stacked_mass_limit": {
+   "value": 970,
+   "unit": "Msun",
+   "where": "Section IV.2"
+  },
+  "stacking_method": {
+   "value": "AIPS task STACK, weighted-mean image",
+   "where": "Section II.4",
+   "verbatim": "We then used the AIPS task STACK to produce the weighted mean image (see Lindroos et al. 2015 for details of the stacking technique)."
+  },
+  "omega_cen_in_atca_stack": {
+   "value": null,
+   "note": "NOT EXPLICITLY STATED whether omega Cen (via reprocessed Lu & Kong 2011 archival data) is included in the 14-cluster ATCA stack; the paper's explicit exclusion list (M54, NGC 6139, Djorg 2, NGC 4372, clusters with central stellar radio sources) does not mention omega Cen, implying likely inclusion, but this is inference not a direct statement"
+  },
+  "detections": {
+   "value": 0,
+   "note": "zero credible IMBH detections across the full 50-cluster sample; some clusters show central radio sources attributed to pulsars/other stellar sources (e.g. NGC 6388, NGC 6624), not tabulated as a single exclusion count"
+  }
+ },
+ "frequencies_and_rms": {
+  "vla_band": "C-band, 4-8 GHz, basebands centered 5.0 & 6.75/7.0 GHz, averaged image ~6.0 GHz",
+  "vla_median_rms": {
+   "value": [
+    1.5,
+    1.7
+   ],
+   "unit": "uJy/beam",
+   "note": "3-bit vs 8-bit basebands respectively"
+  },
+  "atca_band": "CABB, 5.5 & 9.0 GHz, 2 GHz bandwidth each, averaged ~7.25 GHz",
+  "atca_median_rms": {
+   "value": 3.3,
+   "unit": "uJy/beam",
+   "where": "Section II.3"
+  },
+  "fp_reference_freq": {
+   "value": 5,
+   "unit": "GHz",
+   "where": "table captions",
+   "verbatim": "we assume 5 GHz as central frequency in order to calculate the radio luminosities and the mass upper limits"
+  }
+ },
+ "staging_note": "Data staging only; no Tremou value enters the v0.3 posterior. Two internal ambiguities travel with these numbers: the omega Cen flux limit is 8.8 uJy in Table 2 and 8.9 uJy in Section V.2.1, and the VLA stack mass limit is given as both <800 and <730 Msun in one sentence. Both are reported unresolved. Tremou's adopted distance for omega Cen (4.9 kpc) is lower than Haggard's 5.2 and Chen/Mahida's ~5.49; any context figure must state which distance each point assumes."
+}

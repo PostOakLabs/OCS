@@ -1,0 +1,187 @@
+{
+  "_meta": {
+    "purpose": "Measured-input extraction for Paper F (accretion-limit-paper.tex), data only, no fitting/no tex edits.",
+    "wu": "OCS-F-DATA-1",
+    "sources_read": "full text (arXiv HTML), not abstracts",
+    "convention": "each leaf value carries {value, unit, where, verbatim}; unstated values are null with a note"
+  },
+  "mahida2026": {
+    "arxiv": "2512.09649",
+    "title": "No evidence for accretion around the intermediate-mass black hole in Omega Centauri",
+    "rms_noise_combined": {"value": 1.1, "unit": "uJy/beam", "where": "Section III (Results), para 1", "verbatim": "noise rms of 1.1 uJy beam-1 at an apparent frequency of 7.25 GHz"},
+    "rms_effective_freq": {"value": 7.25, "unit": "GHz", "where": "Section III, para 1", "verbatim": "an apparent frequency of 7.25 GHz"},
+    "rms_5.5GHz": {"value": 1.7, "unit": "uJy/beam", "where": "Section III, para 1", "verbatim": null},
+    "rms_9.0GHz": {"value": 1.4, "unit": "uJy/beam", "where": "Section III, para 1", "verbatim": null},
+    "flux_at_centers": {
+      "value": null,
+      "unit": null,
+      "where": "Table 2 + Section III.1",
+      "verbatim": "We did not detect radio sources at any of these locations, with a 3-sigma upper limit of S_nu,lim=3.3 uJy beam-1 within the reported uncertainties of any of the proposed photometric centers listed in Table 2.",
+      "note": "single combined non-detection statement across 3 candidate centers (A, B, C); no per-center flux/rms values given; 3.3 uJy is quoted at 5.5 GHz, not the 7.25 GHz combined rms"
+    },
+    "nearest_5sigma_source": {"value": 13, "unit": "arcsec", "where": "Section III.1", "verbatim": "The closest 5-sigma unidentified source is ~13'' away from the Center B."},
+    "observing_blocks": {
+      "value": "25 blocks across 3 projects (CX556 2024, C2877 2014-15, C2158 2010), see table below",
+      "unit": "UTC date / hours on source",
+      "where": "Table 1",
+      "verbatim": "the array was in 6A and 6C configurations (Section II.1)",
+      "table": [
+        {"project": "CX556", "date": "2024-12-27", "start_utc": "13:29", "hours": 7.89},
+        {"project": "CX556", "date": "2024-12-26", "start_utc": "13:35", "hours": 8.90},
+        {"project": "CX556", "date": "2024-12-23", "start_utc": "14:17", "hours": 9.01},
+        {"project": "CX556", "date": "2024-09-29", "start_utc": "03:00", "hours": 5.02},
+        {"project": "CX556", "date": "2024-09-28", "start_utc": "02:00", "hours": 5.99},
+        {"project": "CX556", "date": "2024-09-25", "start_utc": "20:49", "hours": 5.05},
+        {"project": "CX556", "date": "2024-09-15", "start_utc": "21:26", "hours": 9.99},
+        {"project": "CX556", "date": "2024-09-04", "start_utc": "04:00", "hours": 4.65},
+        {"project": "CX556", "date": "2024-09-01", "start_utc": "02:04", "hours": 5.99},
+        {"project": "CX556", "date": "2024-08-31", "start_utc": "02:03", "hours": 5.08},
+        {"project": "CX556", "date": "2024-08-30", "start_utc": "22:15", "hours": 4.25},
+        {"project": "CX556", "date": "2024-08-29", "start_utc": "05:02", "hours": 5.10},
+        {"project": "CX556", "date": "2024-03-24", "start_utc": "09:01", "hours": 9.82},
+        {"project": "CX556", "date": "2024-03-06", "start_utc": "09:50", "hours": 9.99},
+        {"project": "CX556", "date": "2024-03-05", "start_utc": "10:19", "hours": 9.89},
+        {"project": "CX556", "date": "2024-03-02", "start_utc": "10:21", "hours": 9.89},
+        {"project": "CX556", "date": "2024-02-29", "start_utc": "19:54", "hours": 1.48},
+        {"project": "CX556", "date": "2024-02-28", "start_utc": "10:01", "hours": 9.89},
+        {"project": "CX556", "date": "2024-02-23", "start_utc": "10:57", "hours": 9.82},
+        {"project": "CX556", "date": "2024-02-14", "start_utc": "12:29", "hours": 9.39},
+        {"project": "C2877", "date": "2015-01-09", "start_utc": "14:04", "hours": 7.04},
+        {"project": "C2877", "date": "2014-12-06", "start_utc": "19:16", "hours": 1.91},
+        {"project": "C2877", "date": "2014-12-04", "start_utc": "15:22", "hours": 2.84},
+        {"project": "C2158", "date": "2010-01-23", "start_utc": "01:14", "hours": 7.61},
+        {"project": "C2158", "date": "2010-01-22", "start_utc": "12:31", "hours": 10.70}
+      ],
+      "note": "Table 1 rows sum to ~148.1 hr, not the ~170 hr (Abstract) / 172 hr (Section II.3) quoted in prose; paper does not reconcile this gap. Report, do not silently correct."
+    },
+    "epsilon_definition": {"value": "L_X = epsilon * Mdot * c^2 (standard radiative efficiency)", "unit": null, "where": "Section IV.1", "verbatim": "We assume that the X-ray luminosity can be derived from the standard equation L_X = eps*Mdot*c^2"},
+    "epsilon_headline_conservative_adiabatic": {"value": 4.0e-3, "unit": "dimensionless", "where": "Abstract + Section IV.1", "verbatim": "Conservatively, accounting for the scatter in the fundamental plane increases these upper limits to 4x10^-3 and 5x10^-5 for the adiabatic and isothermal cases, respectively."},
+    "epsilon_headline_conservative_isothermal": {"value": 5.0e-5, "unit": "dimensionless", "where": "Section IV.1", "verbatim": "same sentence as above"},
+    "epsilon_summary_section_value": {"value": 4.0e-6, "unit": "dimensionless", "where": "Section V (Summary/Conclusion)", "verbatim": "with a conservative 3-sigma upper limit of eps<=4x10^-6", "note": "INTERNAL PAPER INCONSISTENCY: 3 orders of magnitude off the Abstract and Section IV.1's 4x10^-3. Likely a typo in the paper (10^-3 vs 10^-6); 2 of 3 mentions agree on 4x10^-3. Do not silently pick one; report both."},
+    "fundamental_plane_eq": {"value": "log M_BH = (1.638+/-0.070) log L_R - (1.136+/-0.077) log L_X - (6.863+/-0.790)", "unit": null, "where": "Section IV.1, Eq. (per Gultekin+2019, Paduano+2024)", "verbatim": null},
+    "bondi_fraction_assumed": {"value": 0.03, "unit": "dimensionless (fraction of Bondi rate)", "where": "Section IV.1", "verbatim": "we can assume that the accretion rate is a fraction F=3% of the Bondi rate (Bondi 1952; Pellegrini 2005)"},
+    "bh_mass_used": {"value": [39000, 47000], "unit": "Msun", "where": "Section IV.1", "verbatim": "models incorporating the full velocity distribution favours a central IMBH with a mass in the range 39000-47000 Msun", "note": "Haberle et al. 2024b (ref 33); separate firm lower limit of 8200 Msun from velocities alone also mentioned but not used for the headline eps"},
+    "distance": {"value": 5.494, "unit": "kpc", "sigma": 0.061, "where": "Section IV para 1 (also Section I)", "verbatim": "at the kinematic distance of omega Cen (d=5494+/-61 pc)", "source": "Haberle et al. 2025 (oMEGACat VI, kinematic distance)"},
+    "gas_density_ne": {"value": 0.2, "unit": "cm^-3", "sigma": 0.1, "where": "Section IV.1", "verbatim": "we assume n=0.2+/-0.1 cm-3, based on the estimated free electron density derived using pulsars in other globular clusters", "note": "imported assumption from other GCs (Strader et al. 2012 precedent), NOT a direct omega Cen measurement"}
+  },
+  "haggard2013": {
+    "arxiv": "1307.6217",
+    "title": "A Deep Chandra X-ray Limit on the Putative IMBH in Omega Centauri",
+    "distance": {"value": 5.2, "unit": "kpc", "where": "Abstract; Table 1", "verbatim": "for a cluster distance of 5.2 kpc, Galactic column density N_H=1.2e21 cm-2, and powerlaw spectrum with Gamma=2.3.", "source": "Harris 1996 catalog (Table 1, ref 2)", "note": "DISCREPANCY: Paper F's fF_posterior_v2.py hardcodes D_REF_X = 4.8 kpc for this paper with comment 'distance at which Haggard+13 luminosity was quoted'. The actual paper states 5.2 kpc, NOT 4.8 kpc. Neither 4.8 nor 5.43 kpc appears anywhere in Haggard et al. 2013."},
+    "flux_limit_0.5_7keV": {"value": 5.0e-16, "unit": "erg/cm^2/s", "confidence": "95% (NOT 3-sigma)", "where": "Abstract, Table 1, Section II para 6", "verbatim": "f_X(0.5-7.0 keV) <=5.0e-16 erg s-1 cm-2, and L_X(0.5-7.0 keV) <1.6e30 erg s-1", "note": "DISCREPANCY: Paper F's tex (Section 2, Observational inputs) and script comment both label this a '3-sigma' limit. The paper itself states '95% confidence' explicitly (Table 1 footnote c), not 3-sigma. These are numerically close for a one-sided Gaussian tail (95% ~ 1.64-sigma one-sided, vs the paper's own internal count-rate limit also stated at '95% confidence') but not identical conventions; Paper F should not silently relabel 95% as 3-sigma."},
+    "luminosity_limit_0.5_7keV": {"value": 1.6e30, "unit": "erg/s", "confidence": "95%", "where": "Abstract, Table 1", "verbatim": "L_X(0.5-7.0 keV) <1.6e30 erg s-1"},
+    "flux_limit_0.5_2.5keV": {"value": 2.8e-16, "unit": "erg/cm^2/s", "confidence": "95%", "where": "Table 1", "verbatim": null},
+    "luminosity_limit_0.5_2.5keV": {"value": 9.0e29, "unit": "erg/s", "confidence": "95%", "where": "Table 1", "verbatim": null},
+    "net_count_rate_upper_limit": {"value": 4.43e-5, "unit": "counts/s", "confidence": "95%", "band": "0.5-7.0 keV", "where": "Section II, para 5", "verbatim": "an upper limit (95% confidence) on the 0.5-7.0 keV X-ray count rate of 4.43e-5 counts s-1"},
+    "background_level": {"value": 0.0643, "unit": "counts/pixel", "where": "Section II, para 4", "verbatim": "an average 0.5-7.0 keV background level of 0.0643 counts/pixel", "basis": "averaged over five 45-pixel-radius source-free regions, on-axis"},
+    "per_epoch_source_counts": {"value": null, "unit": null, "where": null, "note": "NOT STATED separately per epoch; only combined 290.9 ks total across 4 exposures reported"},
+    "observing_epochs": {
+      "value": [
+        {"obsid": ["653", "1519"], "dates": "2000-01-24 to 2000-01-25"},
+        {"obsid": ["13726", "13727"], "dates": "2012-04-16 to 2012-04-17"}
+      ],
+      "unit": null,
+      "where": "Section II, para 1",
+      "verbatim": null,
+      "total_exposure_ks": 290.9
+    },
+    "extraction_aperture": {"value": 6, "unit": "arcsec radius", "where": "Section II, para 5", "verbatim": "We use the aprates tool with a 6-arcsec aperture at the AvdM10 cluster center.", "note": "a separate ~1 arcsec / 2-pixel source-detection localization radius is also mentioned earlier in Section II, distinct from this flux-limit aperture"},
+    "spectral_model": {"photon_index_Gamma": 2.3, "N_H": {"value": 1.2e21, "unit": "cm^-2"}, "where": "Table 1, Section II para 6", "verbatim": "assuming a PL spectrum with Gamma=2.3 (Table 1)", "note": "alternate Gamma=2.7 (Sgr A* quiescent, Baganoff+2003) checked and gives 'nearly identical result'; N_H is Galactic (Willingale et al. 2013)"},
+    "eta_definitions": {
+      "simple_bondi": {"value": [4e-9, 1.3e-8], "unit": "dimensionless", "where": "Section III.1", "verbatim": null, "basis": "L_acc,1 = c^2 * eta * Mdot_Bondi (Eq. 3), M_BH=1.8e4 Msun, n~0.038 cm^-3, T=1e4 K"},
+      "maccarone_servillat_scaling": {"value": 1.7e-5, "unit": "dimensionless", "where": "Section III.1", "verbatim": "eta=0.1*((Mdot/Mdot_Edd)/0.02)", "basis": "M_BH=1.8e4 Msun"},
+      "abstract_headline_range": {"value": [1e-8, 1e-6], "unit": "dimensionless", "where": "Abstract; Section III.2/Summary; Fig. 2 caption", "verbatim": "eta < 1e-5-1e-9 range for the IMBH mass window 3e3-3e4 Msun", "note": "the abstract's rounded '1e-6 to 1e-8' summary is NOT one of the two computed eta values above at the single fiducial M_BH=1.8e4 Msun; it spans a mass range, not a point estimate"}
+    },
+    "gas_density_used": {"value": 0.038, "unit": "cm^-3", "where": "Section III.1", "verbatim": null, "basis": "Pfahl & Rappaport 2001 mass-loss formalism, half-cluster mass/half-mass radius, v_w=50 km/s"}
+  },
+  "chen2025jwst": {
+    "arxiv": "2511.20945",
+    "title": "The Intermediate Mass Black Hole in Omega Centauri: Constraints on Accretion from JWST",
+    "distance": {"value": 5.49, "unit": "kpc", "where": "Introduction", "verbatim": "at the cluster distance of 5.49 kpc", "source_ref": "in-text citation marker [16] (full author/year not resolved in this pass)", "note": "close to but NOT identical to Paper F's D_REF_IR=5.43 kpc (Haberle et al. 2025 oMEGACat VI value used elsewhere in the paper set); Paper F's own sigma-fiducial-decision memory says papers keep 21 km/s and tools keep 18.2 for a different constant, an analogous never-silently-harmonize policy likely applies here"},
+    "per_filter_limits": {
+      "value": "see table below, units 1e-19 erg/s/cm^2/A (flux) and 1e30 erg/s (luminosity @ 5.49 kpc)",
+      "where": "Table 1",
+      "verbatim": "Luminosity calculated as L=4*pi*d^2*F_lambda*Delta_lambda",
+      "table": [
+        {"filter": "F200W", "completeness": "99.7%", "vega_mag_limit": ">17.8", "flux_lim_1e-19cgs": 44, "flux_lim_upper_1e-19cgs": 75, "lum_lim_1e30ergs": 44, "lum_lim_upper_1e30ergs": 75},
+        {"filter": "F200W", "completeness": "95%", "vega_mag_limit": ">20.8", "flux_lim_1e-19cgs": 2.8, "lum_lim_1e30ergs": 4.8},
+        {"filter": "F200W", "completeness": "68%", "vega_mag_limit": ">23.2", "flux_lim_1e-19cgs": 0.30, "lum_lim_1e30ergs": 0.51},
+        {"filter": "F200W", "completeness": "delta_color=1", "vega_mag_limit": ">24.1", "flux_lim_1e-19cgs": 0.13, "lum_lim_1e30ergs": 0.22},
+        {"filter": "F444W", "completeness": "99.7%", "vega_mag_limit": ">14.8", "flux_lim_1e-19cgs": 37, "lum_lim_1e30ergs": 150},
+        {"filter": "F444W", "completeness": "95%", "vega_mag_limit": ">17.8", "flux_lim_1e-19cgs": 2.3, "lum_lim_1e30ergs": 9.2},
+        {"filter": "F444W", "completeness": "68%", "vega_mag_limit": ">20.2", "flux_lim_1e-19cgs": 0.25, "lum_lim_1e30ergs": 1.0},
+        {"filter": "F444W", "completeness": "delta_color=1", "vega_mag_limit": ">21.1", "flux_lim_1e-19cgs": 0.10, "lum_lim_1e30ergs": 0.4},
+        {"filter": "F770W", "completeness": "99.7%", "vega_mag_limit": ">16.6", "flux_lim_1e-19cgs": 0.82, "lum_lim_1e30ergs": 4.4},
+        {"filter": "F770W", "completeness": "95%", "vega_mag_limit": ">17.5", "flux_lim_1e-19cgs": 0.36, "lum_lim_1e30ergs": 1.9},
+        {"filter": "F770W", "completeness": "68%", "vega_mag_limit": ">19.0", "flux_lim_1e-19cgs": 0.09, "lum_lim_1e30ergs": 0.49},
+        {"filter": "F770W", "completeness": "delta_color=1", "vega_mag_limit": ">20.2", "flux_lim_1e-19cgs": 0.027, "lum_lim_1e30ergs": 0.15},
+        {"filter": "F1500W", "completeness": "99.7%", "vega_mag_limit": ">13.6", "flux_lim_1e-19cgs": 1.17, "lum_lim_1e30ergs": 11},
+        {"filter": "F1500W", "completeness": "95%", "vega_mag_limit": ">14.5", "flux_lim_1e-19cgs": 0.51, "lum_lim_1e30ergs": 4.9},
+        {"filter": "F1500W", "completeness": "68%", "vega_mag_limit": ">16.0", "flux_lim_1e-19cgs": 0.12, "lum_lim_1e30ergs": 1.2},
+        {"filter": "F1500W", "completeness": "delta_color=1", "vega_mag_limit": ">17.2", "flux_lim_1e-19cgs": 0.042, "lum_lim_1e30ergs": 0.41}
+      ],
+      "note": "limits are pure detection/completeness limits, NOT quoted per a specific assumed BH mass range; mass-range framing only appears when combined with the paper's own Bondi/radiative model (see bh_mass_considered below)"
+    },
+    "mass_range_for_limits": {"value": null, "unit": "Msun", "where": null, "note": "the tex's claim that Chen+25 IR limits are 'quoted for masses up to ~2e4 Msun' is NOT the paper's own stated figure; the paper's own stated accretion-constraint mass threshold is 10,000 Msun (1e4), not 2e4. Flag as a likely rounding/misquote in Paper F's Section 2 text, for the editorial (Fable) session to check."},
+    "band_peak_luminosity_3e31_proxy": {"value": null, "unit": "erg/s", "where": null, "note": "NOT STATED as such anywhere in the paper. Paper F's fF_posterior_v2.py sets LIR_LIM = 3.0e31 erg/s labeled 'band-peak nuLnu proxy (Chen+25)'. The paper's actual per-filter luminosity limits (Table 1, above) range from ~2.7e26 to ~1.5e35 erg/s depending on filter/completeness, with the highest completeness (99.7%) F444W value = 1.5e32 erg/s and F200W 99.7% = 7.5e31 erg/s -- both far from a clean 3e31. No single number in Chen+25 corresponds directly to Paper F's LIR_LIM constant; the script's proxy is not traceable to an explicit stated value in this source."},
+    "figure7_comparison": {
+      "value": "contour comparison in M_BH-Mdot0 plane: JWST (F770W), radio (~3.3 uJy @ 5.5 GHz, ATCA follow-up ref), X-ray (0.07 nJy @ 1 keV, Chandra ref)",
+      "where": "Section V (Discussion) + Section VI (Conclusions)",
+      "verbatim": "the ATCA radio flux limit is more restrictive than the JWST data for M_BH >~ 6,000 Msun ... For M_BH <~ 6,000 Msun, the JWST limits are more restrictive (in terms of Mdot) than the radio and X-ray limits",
+      "note": "no numeric axis ranges given in the extracted text; crossover mass explicitly stated as ~6000 Msun"
+    },
+    "bh_mass_fiducial": {"value": 8200, "unit": "Msun", "where": "Section V", "verbatim": "the firm H+24's M_BH lower limit of ~8,200 Msun"},
+    "bh_mass_full_range_cited": {"value": [39000, 47000], "unit": "Msun", "where": "Section V", "verbatim": "most plausible range of IMBH masses is 39,000-47,000 Msun, with a lower limit of 8,200 Msun. This limit increases to 21,100 Msun (at 99% confidence)"},
+    "bh_mass_considered_for_own_constraint": {"value": 10000, "unit": "Msun", "where": "Conclusions, Section VI", "verbatim": "an IMBH with M_BH <~10,000 Msun and Mdot0 <~2e-8 ... is allowed by both JWST limits and by the 5.5 GHz radio limit"},
+    "bondi_accretion_model": {
+      "formula": "Mdot_Bondi = 4*pi*G^2*M^2*n*m_p/(v_BH^2+c_s^2)^1.5",
+      "worked_example": "2e18 (M_BH/1e4 Msun)^2 (n/0.1 cm^-3)(T/1e4 K)^-1.5 g/s",
+      "outflow_index_p": 0.3,
+      "temperature_K": 10000,
+      "gas_density_range_cm3": [0.01, 0.2],
+      "where": "Section V, Eqs 1-7",
+      "verbatim": "a plausible range appears to be n = 0.01-0.2 cm-3 with most likely values being toward the middle of this range",
+      "note": "additional density constraints cited: sodium-absorption column <=2.17e18 cm^-2 -> n<=0.045 cm^-3 over 15 pc; DM-based n_e<=2 cm^-3 (flagged by the paper itself as likely foreground-contaminated)"
+    }
+  },
+  "tremou2018": {
+    "arxiv": "1806.00259",
+    "title": "The MAVERIC Survey: Still No Evidence for Accreting Intermediate-mass Black Holes in Globular Clusters",
+    "omega_cen_row": {
+      "position_J2000": "13 26 47.28, -47 28 46.1",
+      "position_uncertainty": {"value": 0.1, "unit": "arcsec", "where": "Table 2, ref 1 (Goldsbury et al. 2010)"},
+      "distance": {"value": 4.9, "unit": "kpc", "where": "Table 2, row omega Cen", "verbatim": null, "source": "Watkins et al. 2015 (ref 15)", "note": "distinct from both Haggard 5.2 kpc and Chen/Mahida ~5.43-5.49 kpc; this is an older/lower distance estimate, expected paper-to-paper variation, not an error"},
+      "flux_density_3sigma_table": {"value": 8.8, "unit": "uJy", "where": "Table 2, row omega Cen"},
+      "flux_density_3sigma_prose": {"value": 8.9, "unit": "uJy", "where": "Section V.2.1", "verbatim": "Our 3-sigma ATCA upper limit of <8.9 uJy on a central radio source implies a 3-sigma IMBH mass upper limit of <1000 Msun", "note": "minor internal rounding discrepancy vs Table 2's 8.8 uJy; both are exact quotes"},
+      "radio_luminosity_3sigma": {"value": 1.3e27, "unit": "erg/s", "where": "Table 2"},
+      "imbh_mass_limit_3sigma": {"value": 1000, "unit": "Msun", "where": "Table 2 + Section V.2.1"},
+      "predicted_xray_luminosity_3sigma": {"value": 2.5e30, "unit": "erg/s", "where": "Table 2"},
+      "mass_fraction_limit": {"value": 0.03, "unit": "percent of cluster mass", "where": "Table 2"},
+      "xray_comparison_note": {"value": null, "where": "Section V.2.1", "verbatim": "observed (95%) upper limit of <1.7e30 erg s-1 (Haggard et al. 2013) ... if an IMBH of mass >~1e4 Msun is present in omega Cen, then it must be accreting at a relative rate below any other central black hole known in the universe, with L_bol/L_edd <~2e-11", "note": "the '<1.7e30 erg/s' figure cited here for Haggard+2013 differs slightly from Haggard's own stated 1.6e30 erg/s (both 95% confidence) -- likely a rounding transcription in Tremou+2018, report as-is"}
+    },
+    "sample_context": {
+      "total_clusters": 50,
+      "vla_clusters": 29,
+      "atca_clusters": 27,
+      "vla_median_mass_limit_pct": 0.36,
+      "atca_median_mass_limit_pct": 0.52,
+      "vla_stacked_flux_rms": {"value": 0.65, "unit": "uJy/beam", "where": "Section IV.2"},
+      "vla_stacked_mass_limit": {"value": [800, 730], "unit": "Msun", "where": "Section IV.2", "verbatim": "this corresponds to a 3-sigma VLA stack limit of <800 Msun (<730 Msun)", "note": "two numbers given in the same sentence, not disambiguated by the paper; report both"},
+      "atca_stacked_flux_rms": {"value": 1.42, "unit": "uJy/beam", "where": "Section IV.2"},
+      "atca_stacked_mass_limit": {"value": 970, "unit": "Msun", "where": "Section IV.2"},
+      "stacking_method": {"value": "AIPS task STACK, weighted-mean image", "where": "Section II.4", "verbatim": "We then used the AIPS task STACK to produce the weighted mean image (see Lindroos et al. 2015 for details of the stacking technique)."},
+      "omega_cen_in_atca_stack": {"value": null, "note": "NOT EXPLICITLY STATED whether omega Cen (via reprocessed Lu & Kong 2011 archival data) is included in the 14-cluster ATCA stack; the paper's explicit exclusion list (M54, NGC 6139, Djorg 2, NGC 4372, clusters with central stellar radio sources) does not mention omega Cen, implying likely inclusion, but this is inference not a direct statement"},
+      "detections": {"value": 0, "note": "zero credible IMBH detections across the full 50-cluster sample; some clusters show central radio sources attributed to pulsars/other stellar sources (e.g. NGC 6388, NGC 6624), not tabulated as a single exclusion count"}
+    },
+    "frequencies_and_rms": {
+      "vla_band": "C-band, 4-8 GHz, basebands centered 5.0 & 6.75/7.0 GHz, averaged image ~6.0 GHz",
+      "vla_median_rms": {"value": [1.5, 1.7], "unit": "uJy/beam", "note": "3-bit vs 8-bit basebands respectively"},
+      "atca_band": "CABB, 5.5 & 9.0 GHz, 2 GHz bandwidth each, averaged ~7.25 GHz",
+      "atca_median_rms": {"value": 3.3, "unit": "uJy/beam", "where": "Section II.3"},
+      "fp_reference_freq": {"value": 5, "unit": "GHz", "where": "table captions", "verbatim": "we assume 5 GHz as central frequency in order to calculate the radio luminosities and the mass upper limits"}
+    },
+    "fundamental_plane_eq": {"value": "log M_BH = (1.638+/-0.070) log L_R - (1.136+/-0.077) log L_X - (6.863+/-0.790)", "where": "Section III.1, Eq. 1", "basis": "Miller-Jones et al. 2012 / Plotkin et al. 2012 form; L_X 0.5-10 keV, L_R at 5 GHz"},
+    "bondi_rate_eq": {"value": "Mdot_Bondi = 1.18e17 (M/2000 Msun)^2 (n/0.2 cm^-3)(T/1e4 K)^-1.5 g/s", "where": "Section III.1, Eq. 2", "assumptions": {"gamma": 1, "n_cm3": 0.2, "n_e_cm3": 0.1, "T_K": 10000, "mu": 0.59}},
+    "eta_fb2_product": {"value": 0.0045, "unit": "dimensionless (eta * f_b^2)", "where": "Section III.1", "verbatim": "this value is equivalent to the eta*f_b^2=0.0045 implicitly used in Strader et al. 2012, and for consistency we use this latter value.", "note": "no standalone eta or f_b limit given separately; only this combined product, adopted as an assumption not derived from the omega Cen non-detection specifically"}
+  }
+}
