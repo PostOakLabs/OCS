@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Component-Differential Residual in the Omega Centauri Dispersion Profile — Omega Centauri Society</title>
+<meta name="description" content="A pre-registered campaign to identify the mechanism behind the component-differential residual in the oMEGACat proper-motion dispersion profile of Omega Centauri, run to its stopping rule and closed on its own pre-registered outcome that no mechanism can be named. Methods companion to Paper H (Swanson 2026).">
+<meta name="keywords" content="globular clusters, NGC 5139, Omega Centauri, proper motions, stellar kinematics, anisotropy, statistical methods, pre-registration">
+<meta property="og:title" content="The Component-Differential Residual in the Omega Centauri Dispersion Profile — full note">
+<meta property="og:description" content="Methods companion to Paper H: four hypotheses, six gates, and the pre-registered negative outcome that the campaign cannot identify its mechanism.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://omegacentauri.me/omega-centauri-axi-note.html">
+<link rel="canonical" href="https://omegacentauri.me/omega-centauri-axi-note.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
+  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
+  --teal-bright:#1dba90; --teal-glow:#4de8c0;
+  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
+  --amber-glow:#EF9F27; --amber-soft:#FAC775;
+  --red-bright:#E24B4A;
+  --border-subtle:rgba(112,85,212,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
+a{color:var(--teal-glow);text-decoration:none;}
+a:hover{text-decoration:underline;}
+nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;flex-wrap:wrap;}
+nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+h1{font-family:'Orbitron',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+p{margin:0 0 1rem;}
+.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.banner strong{color:var(--amber-glow);}
+.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
+.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.toc ol{margin-left:1.3rem;}
+figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
+figure svg{width:100%;height:auto;display:block;}
+figure img{width:100%;height:auto;display:block;border-radius:4px;background:#0a0820;}
+figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
+figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
+caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
+caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
+td.c{text-align:center;}
+td.ok{color:var(--teal-glow);text-align:center;font-weight:600;}
+.tbl-wrap{overflow-x:auto;}
+.eq{display:block;text-align:center;font-size:1.06rem;margin:1.1rem 0;color:var(--text-primary);}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
+.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+blockquote{margin:1.2rem 0;padding:0.9rem 1.2rem;background:var(--panel);border-left:3px solid var(--teal-bright);border-radius:0 4px 4px 0;color:var(--text-secondary);font-size:0.96rem;}
+.refs{font-size:0.88rem;line-height:1.65;}
+.refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
+.refs ol{margin-left:1.3rem;}
+ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
+ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
+.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+sup,sub{line-height:0;}
+.imp{color:var(--text-primary);font-weight:600;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
+@media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <span class="brand">OCS</span>
+  <a href="/index.html">Home</a>
+  <a href="/tools/">Tools</a>
+  <a href="/proposals.html">Proposals</a>
+  <a href="/paper.html">Papers</a>
+  <a href="/omega-centauri-mass-tension.html">Paper H</a>
+  <a href="/omega-centauri-accretion-limit.html">Accretion limit</a>
+  <a href="/omega-centauri-xray-census.html">X-ray census</a>
+  <span style="margin-left:auto;color:var(--text-dim);">AXI note · draft v0.2 · August 2026</span>
+</nav>
+
+<main>
+
+<p class="eyebrow">OCS Research Note · Preprint · AXI methods companion to Paper H</p>
+<h1>The Component-Differential Residual in the Omega Centauri Proper-Motion Dispersion Profile: A Pre-Registered Campaign That Cannot Identify Its Mechanism</h1>
+<p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
+<p class="venue">Draft v0.2, last revised 2026-08-16 · methods note for the AXI campaign, companion to the mass-tension paper (Paper H) in the eight-paper set (A: hypothesis · B: review · C: observational campaign · D: economics · E: engineering and adjudication · F: accretion limit · G: X-ray census · H: mass tension)</p>
+
+<div class="dl-row">
+  <a class="dl-btn" href="/papers/omega-centauri-axi-note.pdf">⬇ PDF</a>
+  <a class="dl-btn" href="/papers/source/">LaTeX source</a>
+  <a class="dl-btn" href="/omega-centauri-mass-tension.html">← Paper H — the mass tension</a>
+  <a class="dl-btn" href="#sec-outcome">The outcome</a>
+  <a class="dl-btn" href="#sec-refs">References</a>
+</div>
+
+<section id="sec-abstract">
+<div class="abstract">
+<span class="lead">Abstract</span>
+<p>A fit of the oMEGACat proper-motion dispersion profile of ω Cen under a shared smooth discrepancy in the mean leaves a component-differential residual: the model under-predicts the sky-radial dispersion and over-predicts the sky-tangential one, coherently, at every radius and every reading of the grid (Swanson 2026f). This note records a campaign pre-registered to identify the mechanism behind that residual (Swanson 2026c), run to its stopping rule, and closed on its own pre-registered outcome that no mechanism can be named. Four hypotheses were specified in advance with separating discriminants: anisotropy structure beyond one Osipkov-Merritt scale (H-A), flattening with azimuthal averaging (H-B), unrelaxed accretion-origin substructure (H-C), and component-dependent measurement systematics (H-D). Stage 0 could run two of the four on the frozen radial table, and both discriminants failed at all twelve residual-evaluation points; H-B and H-C were not tested. Stage 1 fitted M1, a component-resolved discrepancy model that decomposes the shared spline into a shared term δ<sub>S</sub> and a differential term δ<sub>D</sub> on the same four knots. M1 clears the per-component adequacy test the shared model failed, at all 36 readings, with a minimum p of 0.0301 over 144 tests. Two other gates go against it. Cross-axis stability fails on one of five pre-committed statements, through a discrete switch between the differential and the white systematic term that moves with the δ<sub>D</sub> prior width; and the budget check fires, because the differential the profile leg requires exceeds twice its equipartition-derived budget beyond about 130″, by up to a factor of 3.8. Under the pre-registered consequence clauses this makes decision criterion 4, "the campaign cannot identify the mechanism", the only quotable outcome. The measured object that survives is the δ<sub>D</sub> amplitude, 0.16 to 0.45 km s<sup>−1</sup> over 36 readings, positive everywhere and inside the calibrated region everywhere, with a median split of 0.29 to 0.33 km s<sup>−1</sup> inside the knot span against the 0.27 to 0.31 km s<sup>−1</sup> that stage 0 measured independently. Escalation to an axisymmetric model is forbidden by the budget gate's own clause. Paper H is untouched throughout.</p>
+<p class="kw"><b>Keywords:</b> globular clusters: individual: NGC 5139 (Omega Centauri) · stars: kinematics and dynamics · proper motions · methods: statistical</p>
+</div>
+</section>
+
+<div class="specbox"><strong>Epistemic status:</strong> This is a methods record of a pre-registered campaign that reached a pre-registered negative outcome. Nothing here is a mechanism claim, and nothing here is a claim about the cluster's dark component. The one measured quantity offered for quotation is the δ<sub>D</sub> amplitude, which is quotable only inside the calibrated region of Section 3.2 and travels with the two gate failures of Section 4.</div>
+
+<div class="toc">
+<div class="toc-h">Contents</div>
+<ol>
+<li><a href="#sec-question">The question, and the plan it was asked under</a></li>
+<li><a href="#sec-stage0">Stage 0: the two discriminants the frozen table can carry</a></li>
+<li><a href="#sec-m1">Stage 1: the M1 model and the gate battery</a></li>
+<li><a href="#sec-outcome">Outcome: criterion 4, and the differential that was measured</a></li>
+<li><a href="#sec-deviations">Disclosed deviations</a></li>
+<li><a href="#sec-feeds">What this feeds, and what it does not</a></li>
+<li><a href="#sec-refs">References</a></li>
+</ol>
+</div>
+
+<section id="sec-question">
+<h2>1. The question, and the plan it was asked under</h2>
+<p>Paper H's A2 amendment replaced every quadrature floor on the profile leg with a smooth discrepancy in the mean, a four-knot cubic spline δ(r) in log<sub>10</sub> r with knots at {5, 20, 80, 300}″, shared by both proper-motion components, in the framework of Kennedy &amp; O'Hagan (2001). The FIT-2 record measured what that model leaves behind (Swanson 2026f). Runs tests on the standardised profile residuals pass everywhere, at p = 0.24 to 0.98. The sign tests do not: 31 to 34 of 40 sky-radial residuals are positive, at p = 4.2×10<sup>−5</sup> to 8.4×10<sup>−6</sup>, while the sky-tangential component is over-predicted in 25 to 29 of 40 bins. The verdict is identical at all three cell readings and in all twelve profile-leg configurations.</p>
+<p>A shared δ(r) cannot represent a residual of that shape, and the marginalisation over a single Osipkov-Merritt anisotropy scale, r<sub>a</sub> ∈ {1.5, 3, 6, 15, ∞} pc, does not absorb it either. The object is a coherent split between the two sky components at every radius. The campaign recorded here was pre-registered to ask which named mechanism produces it (Swanson 2026c).</p>
+
+<h3>1.1 Scope, fixed before any fit</h3>
+<p>The pre-registration carries a mandatory disclosure into every report the campaign produces, and it is reproduced here once, in its own words:</p>
+<blockquote>This campaign improves the visible model and may open the inner bins. The outer profile does not arbitrate compact-versus-extended under any version of it.</blockquote>
+<p>The boundary comes from a radius-resolved terminality ruling on Paper H's profile leg. Beyond about 50″ the systematics budget runs 10 to 40 times the statistical errors, and those radii carry less than 10<sup>−3</sup> of the dark component's enclosed-mass signal, so the bins that dominate the leg carry no verdict signal. A better error model does not create signal the geometry does not put there.</p>
+<p>What the boundary permits is narrow and conditional: the inner bins (≲ 10″), where signal-to-systematics is of order unity, are marginal rather than terminal, and a campaign that closed the component-differential residual there might make them usable. That route runs through decision criterion 5 of the plan and needs its own ratified amendment to Paper H's pre-registration. What the boundary forbids is pre-committed and absolute: no re-scoring of Paper H's criteria 2, 3 or 4 from this campaign's output, no restoration of the profile leg to the configuration that Paper H's own misspecification gate dropped, and no relaxation of Paper H's standing embargo list. This note makes no statement of any kind about the cluster's dark component, and it quotes no dark-component posterior.</p>
+
+<h3>1.2 Four hypotheses, with their separating discriminants</h3>
+<ul class="body-list">
+<li><span class="imp">H-A, anisotropy structure beyond one Osipkov-Merritt scale.</span> The true β(r) is not in the one-parameter family the visible model carries, and the mismatch shows as a component-differential residual because β enters σ<sub>R</sub> and σ<sub>T</sub> with opposite sign. Signature: the split tracks the gradient of the measured anisotropy profile rather than the local dispersion amplitude (Zocchi et al. 2017, 2019; Aros et al. 2020).</li>
+<li><span class="imp">H-B, flattening with azimuthal averaging.</span> A spherical model fitted to azimuthally averaged data of a flattened system (ε = 0.17, White &amp; Shawl 1987, the largest published value; star-count isophotes give 0.11–0.12 with a rounder core, Geyer et al. 1983; Pancino et al. 2003) produces a component-differential residual by construction. Signature: residual power at cos 2φ in position angle, with the split amplitude scaling as the flattening (van der Marel &amp; Anderson 2010).</li>
+<li><span class="imp">H-C, unrelaxed substructure of accretion origin.</span> ω Cen is the stripped nucleus of an accreted system, and the split is the imprint of a subpopulation that has not phase-mixed (Ibata et al. 2019; Bekki &amp; Tsujimoto 2019; Clontz et al. 2024). Signature: a patchy split differing between subsamples at the same radius, the one signature of the four that separates subsamples of the same catalogue.</li>
+<li><span class="imp">H-D, component-dependent measurement systematics.</span> The split is in the catalogue rather than in the cluster: residual distortion or a per-epoch orientation imbalance projects unequally onto the two sky directions once they are defined relative to the cluster centre (Häberle et al. 2024, 2025). Signature: organisation on detector or epoch geometry and on per-bin star counts rather than on cluster-centric radius. Confirming H-D would end the campaign rather than extend the model, so it was tested first.</li>
+</ul>
+<p>Decision criterion 2 names a hypothesis as identified only when its own discriminant passes and the other three fail on theirs. Criterion 4 records in advance that "the campaign cannot identify the mechanism" is an acceptable and publishable outcome, to be stated as such if criterion 2 names no hypothesis in at least half the defined cells.</p>
+
+<h3>1.3 Data and gates</h3>
+<p>The data are frozen at listed versions: the 40 adaptive log bins of the oMEGACat VI dispersion and anisotropy table, r = 1.8209 to 311.1198″ over 610,846 stars, undigitised, with its asymmetric sky-radial and sky-tangential errors (Häberle et al. 2025); the visible-model pair carried as a reported bracket with neither member promoted, a Plummer sphere at the Baumgardt &amp; Hilker (2018) half-light scale and the αβγ profile of Bañares-Hernández et al. (2025); and both distances, 5494 and 5200 pc. The line-of-sight rotation table (Häberle et al. 2026) is a line-of-sight observable and enters no likelihood at any stage. No fast-star data and no pulsar data enter the campaign, so both legs of Paper H's verdict configuration are untouched by construction.</p>
+<p>Six gates were fixed before any fit, each with its consequence clause: X-G-a, injection and recovery at the real per-bin error level with component-differential misspecification injections including a sign-flipped member; X-G-b, per-component sign and runs tests at p &gt; 0.01 in all four tests at all three readings; X-G-c, cross-axis stability of every reported statement across both visible models, both distances and the halved and doubled δ<sub>D</sub> prior rows; X-G-d, a budget check that fires if the required differential exceeds twice its named budget anywhere inside the knot span; X-G-e, a standing scope gate with no statistic, checked by the referee panel; and X-G-f, a pre-real-data check that M1 at δ<sub>D</sub> ≡ 0 reproduces the shared-discrepancy fit to the recorded digit. Section 4.3 of the plan opens with the rule that all gates must pass before any statement from the campaign is quotable.</p>
+</section>
+
+<section id="sec-stage0">
+<h2>2. Stage 0: the two discriminants the frozen table can carry</h2>
+<p>Stage 0 was diagnostic only, with no new likelihood, run against the existing residuals at the three residual-evaluation points crossed with both visible models and both distances (Swanson 2026d). Its thresholds were committed and dated in the deliverable before any discriminant statistic was computed. The primary statistic is the per-bin split D<sub>i</sub> = e<sub>R,i</sub> − e<sub>T,i</sub>, from which the shared δ(r) cancels by construction, so it is independent of the shared-term posterior.</p>
+<p>Two of the four hypotheses cannot be tested on the frozen radial table at all. H-B needs a position-angle-resolved dispersion field and H-C needs per-star population assignments, and neither is in the table. Stage 0 therefore recorded in advance that it cannot name any hypothesis as identified whatever its statistics return, because two of the three required failures are unavailable. H-B and H-C are not tested and are nowhere called disfavoured.</p>
+<p><span class="imp">H-A: FAIL.</span> The correlation of the split with the anisotropy gradient runs |ρ| = 0.081 to 0.185 at p = 0.248 to 0.614, against a committed threshold of |ρ| ≥ 0.40 at p &lt; 0.01 at all twelve readings. The signature condition, that the split track the anisotropy gradient more strongly than the dispersion amplitude, holds at none of the twelve. The verdict is stable at all three smoothing bandwidths.</p>
+<p><span class="imp">H-D: FAIL.</span> The correlation with per-bin star counts runs |ρ| = 0.144 to 0.233 at p = 0.147 to 0.370, and its radius-controlled partial runs 0.082 to 0.145 against a threshold of 0.30. The surface-density form of the predictor behaves the same way. The committed stop-or-continue rule stops the campaign only on a passing H-D discriminant, so it did not fire.</p>
+<p><span class="imp">What the table cannot separate.</span> The three predictors and radius are close to the same variable in rank space over the frozen 40 bins: the anisotropy gradient correlates with radius at ρ = −0.986 at the primary bandwidth and at −1.000 at the widest, star counts with radius at +0.986, and dispersion with radius at −0.970. An uncontrolled rank correlation with any of them is close to a rank correlation with radius, which is why the partial-correlation controls were committed in advance and why both hypotheses fail those controls on the secondary standardised statistic while passing the raw correlation. This is a measurement-design fact about the azimuthally averaged table rather than a finding about the cluster.</p>
+<p><span class="imp">The scale check.</span> The one component-differential effect measured in the same catalogue is the energy-equipartition asymmetry, η = 0.088 ± 0.017 at the centre falling to 0.049 ± 0.009 at the half-light radius over the mass range 0.288 to 0.690 M<sub>☉</sub>, with the radial component of equipartition declining much faster with radius than the tangential (Häberle et al. 2025). Against the predicted differential scale Δ<sub>pred</sub> = σ η ½ ln(m<sub>max</sub>/m<sub>min</sub>), the observed median |D| of 0.52 to 0.53 km s<sup>−1</sup> gives a ratio of 0.724 to 0.735 at every reading, inside the committed consistency band of [0.5, 2.0]. The median signed split is +0.27 to +0.31 km s<sup>−1</sup>, with the sky-radial component as the under-predicted one, reproducing the direction of the FIT-2 record. The comparison carries no verdict for any hypothesis and was committed as a check on the prior derivation of Section 3.</p>
+</section>
+
+<section id="sec-m1">
+<h2>3. Stage 1: the M1 model and the gate battery</h2>
+<p>M1 is the minimal extension of the shared discrepancy model, in the same framework. The shared mean discrepancy is decomposed on the same four knots,</p>
+<span class="eq">σ<sub>R,model</sub>(r) → σ<sub>R,model</sub>(r) + δ<sub>S</sub>(r) + δ<sub>D</sub>(r), <span class="eqno">(1)</span></span>
+<span class="eq">σ<sub>T,model</sub>(r) → σ<sub>T,model</sub>(r) + δ<sub>S</sub>(r) − δ<sub>D</sub>(r), <span class="eqno">(2)</span></span>
+<p>with δ<sub>S</sub> keeping the existing Normal(0, 1.0 km s<sup>−1</sup>) independent knot priors, the half-Normal(0, 0.3 km s<sup>−1</sup>) white systematic s retained unchanged, and both terms marginalised in every reported quantity. M1 reduces to the shared model exactly at δ<sub>D</sub> ≡ 0. It adds four nuisance dimensions and no new physics machinery, and by construction it measures the differential rather than explaining it.</p>
+<p>The δ<sub>D</sub> knot prior is Normal(0, 0.5 km s<sup>−1</sup>), derived before any fit as the upper edge of the equipartition-differential term from the frozen η profile rather than as half of the shared budget. Flattening is excluded from that scale. The halved and doubled prior rows, τ<sub>D</sub> ∈ {0.25, 0.5, 1.0} km s<sup>−1</sup>, are mandatory and were noted non-trivial in advance, on the precedent that halving the shared model's knot prior had flipped evidence signs across whole configurations.</p>
+
+<h3>3.1 X-G-f, the pre-real-data reproduction check: PASS</h3>
+<p>Against the artifact the gate originally named, the check failed: log-evidence moved by 0.065 to 0.291 nats in all 16 configurations. The traced cause is not M1. The profile leg is the only object M1 changes, and the M1 profile-leg likelihood cube reproduces the reference to 0.000×10<sup>0</sup> nats in all 16 configurations, with the whole discrepancy sitting in the acceleration leg, which the campaign does not touch, and accounted for by a reconciliation of the two pulsar spatial distributions committed one day after the reference was recorded (Swanson 2026b). No code in the repository could reproduce the superseded kernel, so the gate as written tested a property of its reference. Amendment AXI-A1 repointed it to the same driver re-executed under the reconciled kernel, against which the same run reproduces every scalar, every posterior array, every log-likelihood cube, all 288 prior cells and the gate record to 0.000×10<sup>0</sup>. No code and no number changed between the failure and the pass.</p>
+
+<h3>3.2 X-G-a, injection and recovery: FAIL, with a calibrated region</h3>
+<p>Nine signed members were run at n = 400 mock realisations each: a point-mass injection, an extended injection, and a null, each carrying a coherent component-differential misspecification at +0.5, +1.0 and −0.5 km s<sup>−1</sup>. Five of the nine fail a committed threshold, in two modes that separate cleanly (Swanson 2026b).</p>
+<p><span class="imp">Mode 1, the amplitude interval.</span> Empirical two-sided 90 per cent interval coverage of the δ<sub>D</sub> amplitude is 0.8500 to 0.8775 at an injected ±0.5 km s<sup>−1</sup>, inside the required [0.85, 0.95], and 0.7125 to 0.7200 at +1.0 km s<sup>−1</sup> in every injection, with Wilson intervals reaching only 0.755 to 0.762. The measured cause is a 7 to 8 per cent multiplicative shrinkage of the amplitude from the knot prior, against an interval width that does not grow to match it.</p>
+<p><span class="imp">Mode 2, inherited coverage.</span> Coverage of the injected dark component under the extended injection sits at 0.8425 to 0.8475 at n = 400, below the band with Wilson intervals containing it. Amendment AXI-A2 authorised one pre-committed extension of the three extended members to n = 1600 on a continued seed stream, committed and dated before it was run, with the verdict scored on the pooled sample whatever it returned and no second extension permitted. It resolves below the band: 0.8237 to 0.8325 pooled, with Wilson upper limits of 0.8416, 0.8452 and 0.8500. The coverage curve reproduces to about 0.01 at every nominal level the compression measured for the shared model before any differential block existed (Swanson 2026e), and it is constant along the differential axis, so this is an inherited property of the profile leg rather than an effect of δ<sub>D</sub>. The campaign quotes no dark-component posterior, so the consequence attaches to criterion 5, which stays closed.</p>
+<p><span class="imp">What passes.</span> The null member manufactures no evidence at any differential, with median |ln K| = 0.16 to 0.18 against a threshold of 1 and a breach fraction of at most 0.0025. Correct-sign recovery is 400 of 400 in both signal injections, and the sign-flipped member added at referee request recovers at least as well as its mirror, symmetric to 0.025.</p>
+<p><span class="imp">The regional ruling.</span> Under AXI-A2 the amplitude axis is scored regionally. δ<sub>D</sub> amplitudes are quotable only inside the calibrated region |δ<sub>D</sub>| ≤ 0.5 km s<sup>−1</sup>, where all six ±0.5 members pass; the +1.0 members remain failed and mark the boundary. Any amplitude outside the region is reported with the measured calibration attached, a bias of about −8 per cent of amplitude and an interval about 15 per cent narrow at 1.0 km s<sup>−1</sup>, and is not quotable as a measurement. Every δ<sub>D</sub> figure carries the region boundary, and the doubled-prior row is reported alongside the primary as the shrinkage sensitivity check.</p>
+
+<h3>3.3 X-G-b, the adequacy gate the shared model failed: PASS</h3>
+<p>Twelve fits were run, the four primary configurations crossed with the three δ<sub>D</sub> prior rows, each read at the three residual-evaluation points, for 36 readings and 144 tests. The fit driver and the gate scorer were committed unexecuted before the first fit ran, so neither gate is scored on a statement list chosen after the numbers were seen (Swanson 2026a).</p>
+
+<div class="tbl-wrap">
+<table id="tab-xgb">
+<caption><b>Table 1.</b> The per-component adequacy tests, M1 against the shared discrepancy model on the same 40 bins. Both models pass every runs test; the sign test is where they differ.</caption>
+<thead>
+<tr><th>statistic</th><th>shared model (A2)</th><th>M1</th></tr>
+</thead>
+<tbody>
+<tr><td>sign test, sky-radial</td><td>31 to 34 of 40 positive</td><td>20 to 25 of 40 positive</td></tr>
+<tr><td>sign test, sky-radial, p</td><td>4.2×10<sup>−5</sup> to 8.4×10<sup>−6</sup></td><td>0.154 to 1.000</td></tr>
+<tr><td>sign test, sky-tangential</td><td>25 to 29 of 40 over-predicted</td><td>19 to 26 of 40 positive</td></tr>
+<tr><td>sign test, sky-tangential, p</td><td>failing at every reading</td><td>0.0807 to 1.000</td></tr>
+<tr><td>runs tests, both components</td><td>0.24 to 0.98</td><td>0.0301 to 0.932</td></tr>
+<tr><td>minimum p at any reading</td><td>sign test, 8.4×10<sup>−6</sup></td><td>runs test, 0.0301</td></tr>
+<tr><td>readings passing</td><td>0 of 12 configurations</td><td>36 of 36 readings</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><span class="imp">X-G-b: PASS</span>, at all 36 readings, with a minimum p of 0.0301 over the 144 tests (Table 1). The tightest value anywhere in the battery is now a runs test rather than a sign test. The profile-leg best cell is where a sceptic should look, because the joint MAP is chosen by a different leg, and M1 passes there as well.</p>
+<p>One qualification travels with the pass. Clearing the adequacy gate says the residual is absorbed rather than explained, because a discrepancy term absorbs component-differential signal by construction, as the plan's own description of M1 states in advance. The pass is evidence that the differential axis was the missing degree of freedom, and not evidence about which mechanism supplies it.</p>
+
+<h3>3.4 X-G-c, cross-axis stability: FAIL, with the mechanism measured</h3>
+<p>Five statements were fixed in the committed scorer: the X-G-b verdict; whether any bin inside the knot span has a δ<sub>D</sub> interval excluding zero, and with which sign; the X-G-d verdict; whether the maximum |δ<sub>D</sub>| inside the span lies inside the calibrated region; and the sign of the amplitude with whether its interval excludes zero. Four hold across all twelve rows. The fourth does not, so <span class="imp">X-G-c: FAIL</span>.</p>
+<p>In the eight rows at τ<sub>D</sub> = 0.5 and 1.0 km s<sup>−1</sup> the maximum |δ<sub>D</sub>| inside the span is 1.140 to 1.151 km s<sup>−1</sup> at all three readings, outside the region. In the four rows at τ<sub>D</sub> = 0.25 km s<sup>−1</sup> the readings disagree with each other: the posterior-mean and joint-MAP cells give 0.335 to 0.426 km s<sup>−1</sup>, inside the region, while the profile-leg best cell gives 1.140 to 1.144, outside it.</p>
+
+<div class="tbl-wrap">
+<table id="tab-switch">
+<caption><b>Table 2.</b> The switch behind the X-G-c failure, at the fiducial-bracket MAP cell, Plummer at 5494 pc. Each row is unimodal in the white systematic s; the preferred solution switches between rows. Prior shrinkage cannot produce the move, because the outermost knot carries a posterior standard deviation of 0.022 to 0.042 km s<sup>−1</sup>.</caption>
+<thead>
+<tr><th>τ<sub>D</sub> [km s<sup>−1</sup>]</th><th>s mode</th><th>s median</th><th>mass at s &lt; 0.06</th><th>outer knot δ<sub>D</sub> [km s<sup>−1</sup>]</th></tr>
+</thead>
+<tbody>
+<tr><td class="c">0.25</td><td class="c">0.09</td><td class="c">0.090</td><td class="c">0.034</td><td class="c">0.354 ± 0.042</td></tr>
+<tr><td class="c">0.50</td><td class="c">0.03</td><td class="c">0.030</td><td class="c">0.968</td><td class="c">1.207 ± 0.026</td></tr>
+<tr><td class="c">1.00</td><td class="c">0.03</td><td class="c">0.030</td><td class="c">0.969</td><td class="c">1.209 ± 0.026</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The mechanism is a degeneracy between δ<sub>D</sub> and the white systematic s, and it is measured rather than inferred (Table 2). The outer bins carry a component split that has to be paid for somewhere. At τ<sub>D</sub> = 0.5 or 1.0 the model pays with a large differential and a small white systematic; at τ<sub>D</sub> = 0.25 the differential is expensive enough that the model pays instead with a white systematic three times larger and inflated errors. The switch is discrete and it lands between 0.25 and 0.5.</p>
+<p>The pre-registration recorded before any fit that the shared model had replaced one assumption controlling the verdict with another, that a component-resolved discrepancy adds a third, and that X-G-c exists to make prior-width control visible if it occurs. It occurred, the gate saw it, and it is reported as the anticipated mechanism rather than as an anomaly. The failure is confined to one statement, so what it removes is the ability to say where the differential sits at the outer radii, which is the region the scope boundary already places outside arbitration.</p>
+
+<h3>3.5 X-G-d, the budget check: FIRES</h3>
+<p>The gate was scored two ways, both fixed before the run: against the constant 0.5 km s<sup>−1</sup> scale named for the δ<sub>D</sub> prior, and against the radius-dependent equipartition band it was derived from. It fires if either is exceeded by more than a factor of two anywhere inside the knot span [5, 300]″; the two bins outside the span, where the spline is a linear extrapolation, are excluded from the verdict.</p>
+<p>The maximum |δ<sub>D</sub>| inside the span runs 0.335 to 1.151 km s<sup>−1</sup> over the 36 readings, at 280.9″ in every one of them. Twenty-nine of the 36 readings exceed twice the constant scale, and the same 29 exceed twice the equipartition band, with a maximum ratio to the band of 1.10 to 3.77. <span class="imp">X-G-d: the clause FIRES.</span> The seven readings that do not fire are the large-s solutions of Section 3.4, so the two gate outcomes have one mechanism between them.</p>
+<p>The consequence is applied as written: the component-differential model is declared misspecified beyond this campaign's scope, and the campaign does not escalate to an axisymmetric model on the strength of it. The excess is confined to large radius. Beyond about 130″ the required differential exceeds twice its budget, by up to a factor of 3.8 at the outermost bins inside the span, while inside 50″ it sits at 0.04 to 0.26 km s<sup>−1</sup> against a budget of 0.72 to 0.80. A four-knot spline that has to reach 1.2 km s<sup>−1</sup> at 300″ is not a model of the equipartition asymmetry it was scaled against; it is a model absorbing something else at radii where the systematics budget is an order of magnitude above the statistical errors. That is a misspecification statement about M1 at large radius, and under Section 1.1 it is not a statement about the dark component.</p>
+</section>
+
+<section id="sec-outcome">
+<h2>4. Outcome: criterion 4, and the differential that was measured</h2>
+<p>Three of the six gates stand against escalation and none stands for it. X-G-c's consequence clause makes criterion 4 the only quotable outcome, X-G-d's clause forbids escalation to an axisymmetric model, and X-G-a stood failed with its regional licence before the real-data fit began. The campaign's outcome is therefore <span class="imp">criterion 4, the pre-registered "the campaign cannot identify the mechanism"</span>, reported with the mechanism of the X-G-c failure named, as the clause requires. Criterion 2 is not scored: two of its four discriminants cannot be run on the frozen radial table, and nothing in stage 1 adds either. H-B and H-C remain not tested.</p>
+
+<h3>4.1 The measured object</h3>
+
+<figure id="fig1">
+<img src="/papers/figs/fAXI_fig1.png" alt="The δD posterior against radius at the primary prior row, Plummer at 5494 pc, fiducial bracket, read at the joint MAP as a residual-evaluation point.">
+<figcaption><b>Figure 1.</b> The primary output, criterion 1: the δ<sub>D</sub> posterior against radius at the primary prior row, Plummer at 5494 pc, fiducial bracket, read at the joint MAP as a residual-evaluation point. The other eleven rows and the other two brackets differ in the third decimal except where Section 3.4 says otherwise. The curve crosses the calibrated-region boundary at about 130″, and <span class="imp">the pointwise curve beyond that crossing is outside the calibrated region and is not quotable as a measurement</span> (Section 3.2). Values from <code>fit_results/m1_fit_results.json</code>.</figcaption>
+</figure>
+
+<p>The δ<sub>D</sub> amplitude, defined as the injection gate defined it, runs 0.159 to 0.447 km s<sup>−1</sup> over the 36 readings, positive everywhere, with the 90 per cent interval excluding zero everywhere. Every value sits inside the calibrated region, so no amplitude reported here needs the out-of-region calibration attached. The pointwise curve is a different matter (Figure 1): δ<sub>D</sub>(r) crosses the region boundary at about 130″ and reaches 1.15 km s<sup>−1</sup> at 280.9″, so the outer half of the curve is outside the calibrated region, is drawn with the boundary marked, and is not quotable as a measurement. The regional calibration was measured on the amplitude rather than on the pointwise curve, which is a limitation of the calibration and is stated as one.</p>
+<p>Two regimes separate in the posterior width. Inside about 50″ the posterior standard deviation is 0.054 to 0.187 km s<sup>−1</sup>, of order the prior scale, so the inner differential is prior-dominated and the data barely constrain it. Beyond about 100″ it falls to 0.018 to 0.019 km s<sup>−1</sup>, twenty to fifty times smaller, with the posterior at 0.5 to 1.0 km s<sup>−1</sup>. The differential the profile leg requires is concentrated at the radii the terminality ruling of Section 1.1 already places behind a systematics floor 10 to 40 times the statistical errors. The inner-region statement here is about the width of a prior-dominated posterior and is not an inner-bin usability claim, which routes through criterion 5 alone.</p>
+<p><span class="imp">The untuned external check.</span> Stage 0 measured the split D = e<sub>R</sub> − e<sub>T</sub> at a median of +0.27 to +0.31 km s<sup>−1</sup> before M1 existed, and M1 parameterises that split as 2δ<sub>D</sub>. Over the twelve primary-row readings the fitted median 2δ<sub>D</sub> inside the knot span is +0.291 to +0.334 km s<sup>−1</sup>, recovering the stage-0 split to about 5 per cent with no part of the pipeline tuned to make it do so. The ratio to the budget does not carry across as cleanly: on the absolute statistic stage 0 used, the median |2δ<sub>D</sub>| over the median budget is 0.41 to 0.47 here against 0.72 to 0.74 there. Stage 0 took the absolute value of a noisy per-bin residual, which inflates its median, while M1's δ<sub>D</sub> is a spline that has already smoothed that noise away. The signed medians, which are not subject to that inflation, agree.</p>
+
+<figure id="fig2">
+<img src="/papers/figs/fAXI_fig2.png" alt="The mandatory shrinkage sensitivity check, all three δD prior rows at the same configuration and reading as Figure 1.">
+<figcaption><b>Figure 2.</b> The mandatory shrinkage sensitivity check, all three δ<sub>D</sub> prior rows at the same configuration and reading as Figure 1. The doubled row lies within the line width of the primary. The halved row departs from both beyond about 60″ and stays inside the calibrated region at the outer bins, which is the disagreement gate X-G-c failed on and the switch measured in Table 2. Beyond the boundary crossing the pointwise curves are not quotable as measurements.</figcaption>
+</figure>
+
+<h3>4.2 What is not quotable</h3>
+<p>Stated explicitly, because the campaign's outcome is a negative one and negative outcomes are the easy ones to overread. No mechanism is identified, and "cannot identify the mechanism" is the finding rather than a stand-in for one. No pointwise δ<sub>D</sub> value beyond about 130″ is a measurement, because it sits outside the calibrated region. No dark-component number appears anywhere in this note, and criterion 5 stays closed. No compact-versus-extended statement is made in any register, sourced to the profile leg or otherwise. H-B and H-C are not tested and are not disfavoured; the frozen radial table carries neither their data nor their discriminants.</p>
+</section>
+
+<section id="sec-deviations">
+<h2>5. Disclosed deviations</h2>
+<p>Three amendments were ruled and ratified during the campaign, all after adoption and all disclosed here as deviations rather than folded in silently (Table 3). None changes a threshold, a prior or a model, and none changes a member's verdict.</p>
+
+<div class="tbl-wrap">
+<table id="tab-amendments">
+<caption><b>Table 3.</b> Amendments to the plan of record, all dated 2026-08-15 and ratified by the project owner. Each was ruled by the author of the gate whose scope was in question, on the precedent the plan's amendment protocol names.</caption>
+<thead>
+<tr><th></th><th>kind</th><th>what changed</th><th>why</th></tr>
+</thead>
+<tbody>
+<tr><td>AXI-A1</td><td>gate-scope clarification</td><td>X-G-f's digit-level reference repointed from the original fit record to the same driver re-executed under the reconciled pulsar kernel</td><td>the original reference was produced under a kernel superseded one day later, so no code could reproduce it and the gate tested a property of its reference rather than of M1</td></tr>
+<tr><td>AXI-A2</td><td>gate-scope clarification</td><td>X-G-a's amplitude axis scored regionally, with the calibrated region |δ<sub>D</sub>| ≤ 0.5 km s<sup>−1</sup>; one pre-committed extension of the three extended members to n = 1600, with no second extension under any outcome</td><td>the failing members were the doubled-scale probes and mapped where the estimator breaks, while the campaign's own target lies inside the region. The extension resolves whether the coverage edge was a sampling excursion, under an optional-stopping condition set in advance</td></tr>
+<tr><td>AXI-A3</td><td>documentation clarification</td><td>records that the equipartition derivation is a statement about the split σ<sub>R</sub> − σ<sub>T</sub>, which under M1's convention is 2δ<sub>D</sub>, so the δ<sub>D</sub> knot prior is a factor of two looser than the derivation's literal edge</td><td>the campaign's own fit surfaced the ambiguity. The looser reading is the conservative direction, with less shrinkage and wider intervals, and every gate was scored on the prior as run, so no rerun follows</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>A fourth process note belongs with them. The standing note added with AXI-A1 requires any future gate or amendment in this campaign that names a numerical reference to name a post-reconciliation artifact, or to state explicitly which kernel that artifact was produced under.</p>
+</section>
+
+<section id="sec-feeds">
+<h2>6. What this feeds, and what it does not</h2>
+<p><span class="imp">Feeds.</span> The characterisation of the profile leg's misfit that a shared discrepancy could not provide, for Paper H's successor analysis. The visible-model bracket for any future fit, since a component-resolved discrepancy with calibrated uncertainty is a better statement of what the visible model does not know than a shared radial term. The methods record itself: a measured, gated answer to what the component-differential residual is, publishable whether or not a mechanism is named.</p>
+<p><span class="imp">Does not feed.</span> Paper H's verdict machinery. Not criterion 2, not criterion 3, not criterion 4, not the fast-star leg's quotable set, not the standing embargo list, and not the terminality ruling, which this campaign is scoped inside rather than against. The fit of record stands where its own amendments left it.</p>
+<p><span class="imp">Disposition.</span> Stage 1 is closed. Escalation to the axisymmetric model M2 is forbidden by X-G-d's clause. The position-angle data work unit is neither triggered nor cleared by this fit, and if the question is ever taken up again that extraction goes forward as an independent work unit judged on its own merits. The orbit-superposition model M3 was rejected on the record at pre-registration and stays rejected. What the campaign leaves behind for a successor is the degeneracy of Section 2: on an azimuthally averaged radial table the candidate mechanisms are close to the same variable in rank space, and the axes that break the degeneracy are position angle and subpopulation, neither of which is a function of radius by construction.</p>
+<p><span class="imp">Compute.</span> The twelve fits took 1.2 minutes of wall clock on CPU, dominated by four model-table builds at 5 to 9 seconds each, because the base tables are shared across the three prior rows and M1's marginalisation is closed-form. The gate battery is where the cost sits: the pre-committed extension alone ran 1200 realisations in 47.7 minutes at eight workers.</p>
+</section>
+
+<section id="sec-refs">
+<h2>References</h2>
+<div class="refs">
+<ol>
+<li>Francisco I. Aros, Anna C. Sippel, Alessandra Mastrobuono-Battisti, et al. Dynamical modelling of globular clusters: challenges for the robust determination of IMBH candidates. Monthly Notices of the Royal Astronomical Society, 499:4646–4665, 2020. 10.1093/mnras/staa2821. <a href="https://arxiv.org/abs/2009.07275">arXiv:2009.07275</a></li>
+<li>Andrés Bañares-Hernández, Francesca Calore, Jorge Martín Camalich, and Justin I. Read. New constraints on the central mass contents of Omega Centauri from combined stellar kinematics and pulsar timing. Astronomy &amp; Astrophysics, 693:A104, 2025. 10.1051/0004-6361/202451763. <a href="https://arxiv.org/abs/2408.00939">arXiv:2408.00939</a></li>
+<li>Holger Baumgardt and Michael Hilker. A catalogue of masses, structural parameters, and velocity dispersion profiles of 112 Milky Way globular clusters. Monthly Notices of the Royal Astronomical Society, 478:1520–1557, 2018. 10.1093/mnras/sty1057. <a href="https://arxiv.org/abs/1804.08359">arXiv:1804.08359</a></li>
+<li>Kenji Bekki and Takuji Tsujimoto. A new formation model for ω Centauri: A complex interplay of astrophysical processes. The Astrophysical Journal, 886:121, 2019. 10.3847/1538-4357/ab464d. <a href="https://arxiv.org/abs/1909.11295">arXiv:1909.11295</a></li>
+<li>C. Clontz, Anil C. Seth, Aaron Dotter, Maximilian Häberle, Nadine Neumayer, et al. oMEGACat. IV. Constraining the ages of Omega Centauri subgiant branch stars with HST and MUSE. The Astrophysical Journal, 977:14, 2024. 10.3847/1538-4357/ad8621. <a href="https://arxiv.org/abs/2409.13855">arXiv:2409.13855</a></li>
+<li>E. H. Geyer, B. Nelles, and U. Hopp. The shape of NGC 5139 (omega Centauri): the ellipticity as a function of radius. Astronomy &amp; Astrophysics, 125:359–364, 1983. Bibcode 1983A&amp;A...125..359G.</li>
+<li>Maximilian Häberle, Nadine Neumayer, Andrea Bellini, Mattia Libralato, Callie Clontz, Anil C. Seth, et al. oMEGACat. II. Photometry and proper motions for 1.4 million stars in Omega Centauri and its rotation in the plane of the sky. The Astrophysical Journal, 970:192, 2024. 10.3847/1538-4357/ad47f5. <a href="https://arxiv.org/abs/2404.03722">arXiv:2404.03722</a></li>
+<li>Maximilian Häberle, Nadine Neumayer, Callie Clontz, Anil C. Seth, Andrea Bellini, et al. oMEGACat. VI. Analysis of the overall kinematics of Omega Centauri in 3D: Velocity dispersion, kinematic distance, anisotropy, and energy equipartition. The Astrophysical Journal, 983:95, 2025. 10.3847/1538-4357/adbe67. <a href="https://arxiv.org/abs/2503.04903">arXiv:2503.04903</a></li>
+<li>Maximilian Häberle et al. SDSS-V local volume mapper (LVM): The integrated light and internal rotation of omega Centauri, 2026. arXiv:2607.28809; unpublished as of 2026-08-16. <a href="https://arxiv.org/abs/2607.28809">arXiv:2607.28809</a></li>
+<li>Rodrigo A. Ibata, Michele Bellazzini, Khyati Malhan, Nicolas Martin, and Paolo Bianchini. Identification of the long stellar stream of the prototypical massive globular cluster ω Centauri. Nature Astronomy, 3:667–672, 2019. 10.1038/s41550-019-0751-x. <a href="https://arxiv.org/abs/1902.09544">arXiv:1902.09544</a></li>
+<li>Marc C. Kennedy and Anthony O'Hagan. Bayesian calibration of computer models. Journal of the Royal Statistical Society: Series B, 63:425–464, 2001. 10.1111/1467-9868.00294. <a href="https://doi.org/10.1111/1467-9868.00294">doi:10.1111/1467-9868.00294</a></li>
+<li>Elena Pancino, Anton Seleznev, Francesco R. Ferraro, Michele Bellazzini, and Giampaolo Piotto. The multiple stellar population in ω Centauri: spatial distribution and structural properties. Monthly Notices of the Royal Astronomical Society, 345:683–690, 2003. 10.1046/j.1365-8711.2003.06981.x. <a href="https://doi.org/10.1046/j.1365-8711.2003.06981.x">doi:10.1046/j.1365-8711.2003.06981.x</a></li>
+<li>Tim Swanson. OCS-AXI-M1-FIT-1: the M1 fit on the frozen real table, and gates X-G-b, X-G-c, X-G-d. The Omega Centauri Society, internal record, 2026a. Work unit OCS-AXI-M1-FIT-1, 2026-08-16. Internal record, paper/axi/stage1/M1_FIT_REPORT.md.</li>
+<li>Tim Swanson. OCS-AXI-M1-GATES-1: M1 build and the pre-real-data gate battery. The Omega Centauri Society, internal record, 2026b. Work units OCS-AXI-M1-GATES-1 to GATES-3, 2026-08-15. Internal record, paper/axi/stage1/GATES_REPORT.md.</li>
+<li>Tim Swanson. Axisymmetric / anisotropy profile campaign: pre-registration. The Omega Centauri Society, internal record, 2026c. Adopted 2026-08-14; amendments AXI-A1, AXI-A2 and AXI-A3 dated 2026-08-15. Internal record, paper/AXI-PREREGISTRATION.md.</li>
+<li>Tim Swanson. AXI campaign, stage 0: H-A and H-D diagnostics on the FIT-2 residuals. The Omega Centauri Society, internal record, 2026d. Work unit OCS-AXI-STAGE0-1, 2026-08-14. Internal record, paper/axi/stage0/STAGE0_REPORT.md.</li>
+<li>Tim Swanson. Paper H CAL-1: calibration of the A2 fit at real precision. The Omega Centauri Society, internal record, 2026e. 2026-08-14. Internal record, paper/h/cal/CAL_REPORT.md.</li>
+<li>Tim Swanson. Paper H FIT-2: the A2 discrepancy model on the frozen profile leg. The Omega Centauri Society, internal record, 2026f. 2026-08-13. Internal record, paper/h/fit2/FIT2_REPORT.md.</li>
+<li>Roeland P. van der Marel and Jay Anderson. New limits on an intermediate-mass black hole in Omega Centauri. II. Dynamical models. The Astrophysical Journal, 710:1063–1088, 2010. 10.1088/0004-637X/710/2/1063. <a href="https://doi.org/10.1088/0004-637X/710/2/1063">doi:10.1088/0004-637X/710/2/1063</a></li>
+<li>Raymond E. White and Stephen J. Shawl. Axial ratios and orientations of 100 galactic globular clusters. The Astronomical Journal, 94:30–34, 1987. 10.1086/114442. Bibcode 1987AJ.....94...30W; compiled in the Harris Milky Way GC catalogue. <a href="https://doi.org/10.1086/114442">doi:10.1086/114442</a></li>
+<li>Alice Zocchi, Mark Gieles, and Vincent Hénault-Brunet. Radial anisotropy in ω Cen limiting the room for an intermediate-mass black hole. Monthly Notices of the Royal Astronomical Society, 468:4429–4440, 2017. 10.1093/mnras/stx316. <a href="https://arxiv.org/abs/1702.00725">arXiv:1702.00725</a></li>
+<li>Alice Zocchi, Mark Gieles, and Vincent Hénault-Brunet. The effect of stellar-mass black holes on the central kinematics of ω Cen: a cautionary tale for IMBH interpretations. Monthly Notices of the Royal Astronomical Society, 482:4713–4725, 2019. 10.1093/mnras/sty1508. <a href="https://arxiv.org/abs/1806.02157">arXiv:1806.02157</a></li>
+</ol>
+</div>
+</section>
+
+<div class="footer">
+<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
+<p>Preprint. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. Interactive calculators implementing the quantitative material are available under <a href="/tools/">/tools/</a>. This HTML edition is generated from the LaTeX source (<code>paper/axi/axi-note.tex</code>) and mirrors it; the PDF is canonical for citation.</p>
+</div>
+
+</main>
+</body>
+</html>
