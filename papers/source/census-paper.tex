@@ -9,6 +9,11 @@
 % Data provenance: paper/g/data/DATA_REPORT.md + xray_census.json,
 %   msp_counterparts.json, control_47tuc.json (WUs OCS-G-DATA-1/2)
 % Number-provenance map: paper/g/DRAFT_EDITLOG.md
+% v1.2 expansion (WU OCS-G-EXPAND-1): paper/figs/fG_expand_v1.py
+%   -> fG_expand_{skymap,colourflux,lognlogs,control}.{png,json},
+%      fG_target_list.json, fG_expand_variability.json
+%   Ranking rule for the target list was pre-registered in
+%   board/notes/G-EXPAND-1-EDITLOG.md Sec. 1 before it was computed.
 % =====================================================================
 \documentclass[11pt]{article}
 
@@ -37,14 +42,14 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small v1.1 (last revised 2026-08-20) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small v1.2 (last revised 2026-08-20) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 \noindent
-The deepest Chandra catalogue of Omega Centauri \citep{Henleywillis2018} lists 233 X-ray sources, 188 of them without an optical identification, and notes that more than 30 of the unidentified sources carry luminosities and X-ray colours resembling millisecond pulsars (MSPs) in other clusters. That catalogue was published when no radio MSP was known in the cluster. Nineteen are known now \citep{ColomiBernadich2026}, and the catalogue has never been cross-matched against them as a set. We supply that cross-match and the residual census it leaves behind, running the identical pipeline on 47~Tucanae first as a control. The control recovers 18 of 21 known MSP X-ray counterparts at the 95\,per~cent match radius, and the three it misses are the three rows the source catalogue itself flags as deviating beyond that radius \citep{Bhattacharya2017}, so the pipeline reproduces the control's own flag set rather than an independent error budget. In \ocen{} the Chandra astrometric frame carries a measured $+0.42\as$ declination offset relative to the radio frame; registering it takes tier-1 matches from three of eight to five of eight and, with the new timing positions, tightens two published associations from $2.65\as$ and $2.42\as$ to $0.07\as$ and $0.01\as$. All five registered associations sit between $0.01\as$ and $0.35\as$ with per-source chance-coincidence probabilities below $2.3\times10^{-3}$ under each of three independent estimators, reported separately and never combined. One published association is discrepant: the timing position of MSP~H sits $1.81\as$ from source 14c after registration, in the opposite declination sense to the other five anchors, against the $0.73\as$ offset quoted for the same pulsar in \citet{ZhaoHeinke2023}. We record that as a data-quality finding rather than reconciling it. This is a positional and colour census; variability is deferred and addressed only in the back matter. After subtracting a log~$N$--log~$S$ background expectation of 146.9 (92.4--215.5) sources from the 159 unidentified sources inside a $480\as$ aperture, the residual is 12.1 ($-56.5$, $+66.6$), consistent with zero and dominated by the background bracket. Between 39 and 53 unidentified sources fall inside a colour-flux region defined by this cluster's own confirmed counterparts, a quantity that is not interchangeable with the catalogue's own ``more than 30''. The two published population predictions disagree, predicted totals of 324 and 6 pulsars (a factor of 54), which against 19 known imply 176.6 and zero X-ray-detectable undiscovered pulsars \citep{Yin2024}. We bound that disagreement against the residual without adjudicating it. The residual is an input to future identification work and is not a detection of anything.
+The deepest Chandra catalogue of Omega Centauri \citep{Henleywillis2018} lists 233 X-ray sources, 188 of them without an optical identification, and notes that more than 30 of the unidentified sources carry luminosities and X-ray colours resembling millisecond pulsars (MSPs) in other clusters. That catalogue was published when no radio MSP was known in the cluster. Nineteen are known now \citep{ColomiBernadich2026}, and the catalogue has never been cross-matched against them as a set. We supply that cross-match and the residual census it leaves behind, running the identical pipeline on 47~Tucanae first as a control. The control recovers 18 of 21 known MSP X-ray counterparts at the 95\,per~cent match radius, and the three it misses are the three rows the source catalogue itself flags as deviating beyond that radius \citep{Bhattacharya2017}, so the pipeline reproduces the control's own flag set rather than an independent error budget. In \ocen{} the Chandra astrometric frame carries a measured $+0.42\as$ declination offset relative to the radio frame; registering it takes tier-1 matches from three of eight to five of eight and, with the new timing positions, tightens two published associations from $2.65\as$ and $2.42\as$ to $0.07\as$ and $0.01\as$. All five registered associations sit between $0.01\as$ and $0.35\as$ with per-source chance-coincidence probabilities below $2.3\times10^{-3}$ under each of three independent estimators, reported separately and never combined. One published association is discrepant: the timing position of MSP~H sits $1.81\as$ from source 14c after registration, in the opposite declination sense to the other five anchors, against the $0.73\as$ offset quoted for the same pulsar in \citet{ZhaoHeinke2023}. We record that as a data-quality finding rather than reconciling it. This is a positional and colour census; variability is deferred and addressed only in the back matter. After subtracting a log~$N$--log~$S$ background expectation of 146.9 (92.4--215.5) sources from the 159 unidentified sources inside a $480\as$ aperture, the residual is 12.1 ($-56.5$, $+66.6$), consistent with zero and dominated by the background bracket. Between 39 and 53 unidentified sources fall inside a colour-flux region defined by this cluster's own confirmed counterparts, a quantity that is not interchangeable with the catalogue's own ``more than 30''. The two published population predictions disagree, predicted totals of 324 and 6 pulsars (a factor of 54), which against 19 known imply 176.6 and zero X-ray-detectable undiscovered pulsars \citep{Yin2024}. We bound that disagreement against the residual without adjudicating it. From the 39 sources inside the primary colour-flux region we publish a ranked follow-up list under a ranking rule fixed before the ranking was computed, together with the epoch-comparison depth each entry would need. The residual is an input to future identification work and is not a detection of anything.
 \end{abstract}
 
 \bigskip
@@ -190,7 +195,26 @@ $2.5$ & 21 & 2.39 & 0.64 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\linewidth]{../figs/fG_expand_control.png}
+\caption{Control recovery on 47~Tucanae. Left: recovered fraction of the 21 known
+MSP X-ray counterparts against match-radius scale (left axis), with the expected
+number of spurious matches over the whole probe set from the two randomisation
+estimators (right axis). Recovery reaches unity at $2.5\times$ the 95\,per~cent
+radius, by which point the rotation estimator expects 2.4 spurious entries in a set
+of 21. Right: per-counterpart separation against its own match radius at scale
+$1.0$; the three points above the diagonal are the three the source catalogue
+itself flags. Values from \texttt{analysis/results\_control\_47tuc.json}.}
+\label{fig:control}
+\end{figure}
+
 The three counterparts missed at the 95\,per~cent radius are Q, L and R, at separations of $0.34\as$, $0.63\as$ and $0.45\as$. These are the three rows of the source table whose normalised deviation $D/X_{\mathrm{err}}$ exceeds unity, at 1.04, 2.03 and 1.42. The pipeline reproduces the control catalogue's own flag set. It recovers a high fraction of counterparts, and the identity of what it misses is predicted by the source table.
+
+Figure~\ref{fig:control} shows recovery and purity together: each relaxation of the
+radius buys counterparts at the cost of expected false entries. The paper adopts
+scale $1.0$ for every \ocen{} number because that is where the expected spurious
+count over the probe set stays below one half.
 
 The control brings two further checks. The median X-ray minus radio deviation over all 21 counterparts is $0.000\as$ in right ascension and $-0.070\as$ in declination, a bulk offset consistent with zero, which is what an already-registered catalogue should show and which confirms that the radio positions reconstructed for this test carry no systematic error. Those radio positions are reconstructed as the X-ray position minus the tabulated deviation vector, and the reconstruction reproduces the table's own total deviations to $0.01\as$.
 
@@ -198,6 +222,23 @@ The control result is an optimistic bound on match performance rather than an in
 
 \section{Results for Omega Centauri}
 \label{sec:results}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\linewidth]{../figs/fG_expand_skymap.png}
+\caption{The field. All 233 catalogue sources of \citet{Henleywillis2018} against
+the timing positions of \citet{ColomiBernadich2026} after frame registration, with
+the $155\as$ core radius and the $480\as$ analysis aperture marked. Left: the full
+aperture. Right: the inner $130\as$. Match circles are sub-arcsecond and are drawn
+at the exaggerated scale stated in each panel title, so their sizes are indicative
+and every separation quoted in the text is the true one. Green arrows give the
+per-anchor X-ray minus radio deviation before registration, also exaggerated.
+The dashed red segment marks the discrepant MSP~H association of
+Section~\ref{sec:results-h}. Diamonds are the 39 unidentified sources inside the
+primary colour-flux region of Section~\ref{sec:results-msplike}. Positions from
+\texttt{data/xray\_census.json} and \texttt{paper/h/data/pulsars.json}.}
+\label{fig:skymap}
+\end{figure}
 
 \subsection{Frame registration}
 \label{sec:results-frame}
@@ -398,9 +439,33 @@ median soft & $9.90\times10^{-16}$ & 787   & 43.9  & 29.4--60.7 \\
 Inside the $480\as$ aperture the catalogue holds 200 sources, of which 41 carry a published identification (27 published members, 14 published non-members) and 159 do not. Eleven sources are confirmed MSP X-ray counterparts. Subtracting the adopted background expectation from the unidentified count gives
 \begin{equation}
 N_{\mathrm{residual}} = 159 - 146.9\,(92.4\text{--}215.5) = 12.1\ (-56.5,\ +66.6).
+\label{eq:residual}
 \end{equation}
 
 The residual is background-dominated. Its central value is 8\,per~cent of the quantity subtracted and its bracket spans zero by a wide margin on both sides. The conservative reading is that the unidentified population inside this aperture is consistent with the extragalactic background alone, and that no excess is required by these data at this flux limit. Nothing in the rest of this paper should be read as claiming otherwise. What the residual does supply is a scale: an identification programme working through this field is working against a background that supplies of order 150 sources, and any cluster population it hopes to extract is a minority of the unidentified list.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.92\linewidth]{../figs/fG_expand_lognlogs.png}
+\caption{The residual, drawn rather than quoted. Top: cumulative count of
+unidentified sources inside the $480\as$ aperture above a soft-band flux limit,
+against the \citet{Moretti2003} background expectation over the same solid angle
+with its published parameter uncertainties propagated as a bracket. Bottom: the
+same difference on a linear scale. The observed curve stays inside the bracket at
+90\,per~cent of the sampled limits; where it crosses the upper edge, between
+$4$ and $13\times10^{-16}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$, it does so by at most
+2.1 sources against a Poisson error of 7.5 on the count there, so the crossing
+carries no excess. The faint-end flattening of the observed curve is catalogue
+incompleteness. Values from \texttt{figs/fG\_expand\_lognlogs.json}.}
+\label{fig:lognlogs}
+\end{figure}
+
+Figure~\ref{fig:lognlogs} draws the same accounting continuously in flux. What the
+bracket does to the residual is visible directly: it is wider than the residual at
+every limit sampled, and at the adopted limit the observed curve and the background
+expectation cross. Two sources of the 159 carry no tabulated soft flux and drop out
+of the drawn curve, which is why the curve reads 145 rather than 147 at the adopted
+limit while the residual of Equation~\eqref{eq:residual} uses the full unidentified count.
 
 Three accounting conventions change the number and are stated here. Published non-member AGN identifications sit in the identified column, so the subtraction removes a predicted background from a population that already excludes background sources someone has taken the trouble to identify, which biases the residual low. The aperture excludes 33 catalogue sources from both sides, so this is not a statement about the full 233. And the eleven confirmed MSP X-ray counterparts are retained in the unidentified column, since the catalogue's own optical-identification field predates the pulsar timing set; removing them would lower the residual by that count, well inside the quoted bracket.
 
@@ -408,6 +473,20 @@ Three accounting conventions change the number and are stated here. Published no
 \label{sec:results-msplike}
 
 The confirmed counterparts define a region in the colour-flux plane from this cluster's own data. Four of them ($n=4$: 23g, 11f, 24f, 21d) carry both a tabulated colour and a flux and anchor it; a fifth recovered counterpart lacks a tabulated colour and is dropped. The primary construction is a bounding box on those same four anchors: counting unidentified sources inside it gives 39, of which 14.85 survive membership weighting at the adopted normalisation. A $2\sigma$ ellipse on the same $n=4$ anchors, reported as a secondary and wider construction, gives 53 (19.44 weighted). Eleven unidentified sources carry neither a colour nor a flux and cannot be placed in the plane at all. Neither region screens for background AGN, so the 39 and 53 counts are upper bounds on MSP-like membership rather than membership estimates.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.92\linewidth]{../figs/fG_expand_colourflux.png}
+\caption{The colour-flux plane inside the $480\as$ aperture, with the primary
+bounding box and the secondary $2\sigma$ ellipse drawn on the four confirmed
+counterparts that anchor them. Both regions are constructed from the four stars
+plotted inside them, so the anchors' position in the region is a construction and
+not a test of it. The box holds 39 unidentified sources and the ellipse 53, and
+neither screens for background AGN, which is why both counts are upper bounds.
+Twelve aperture sources lack a colour or a flux and do not appear.
+Values from \texttt{figs/fG\_expand\_colourflux.json}.}
+\label{fig:colourflux}
+\end{figure}
 
 This is not the ``more than 30 MSP-like'' count of \citet{Henleywillis2018}. That criterion compares against MSPs in other clusters and is not tabulated in the source paper, so it cannot be reproduced from the machine-readable table. The region used here is defined from four counterparts in this cluster, a different construction with a different systematic. The two numbers are not interchangeable, and the numerical proximity of 39 to ``more than 30'' is a coincidence of construction rather than a confirmation.
 
@@ -443,6 +522,103 @@ The escape-velocity number exceeds the residual of 12.1 by more than an order of
 
 Adjudicating it requires the identification work this census is meant to enable, not a preference asserted here.
 
+\section{A ranked candidate list}
+\label{sec:targets}
+
+The stated purpose of a census of this kind is to supply a target list, so this
+section supplies one. Table~\ref{tab:targets} ranks the 39 unidentified sources
+inside the primary colour-flux region for follow-up. The full ranked pool, with
+positions, all three chance-coincidence estimators and every flag, ships as
+\texttt{figs/fG\_target\_list.json}.
+
+\subsection{Pre-registration of the ranking rule}
+\label{sec:targets-rule}
+
+The rule was written down and committed to the project record before any candidate
+score existed, as Section~1 of the work-unit editlog
+(\texttt{board/notes/G-EXPAND-1-EDITLOG.md}). It scores each candidate
+
+\begin{equation}
+R = P_{\mathrm{member}} \times \left(1 - \pchance{}\right),
+\end{equation}
+
+with $P_{\mathrm{member}}$ the spatial membership probability of
+Section~\ref{sec:method-membership} under the adopted normalisation
+($N_{\mathrm{mem}} = 60$, background at the fifth-percentile soft limit), and
+\pchance{} the largest of the three estimators of Section~\ref{sec:method-chance}
+evaluated with the candidate treated as its own probe and removed from the
+comparison catalogue. Ties break by soft flux. No threshold is applied to either
+factor: the whole pool is ranked and the first twenty are printed.
+
+The reason for fixing the rule in advance shows up in what the list then looks
+like.
+
+\textbf{The chance factor barely moves the ranking.} Over the whole pool the three estimators
+return between $2.5\times10^{-4}$ and $3.2\times10^{-3}$, so $(1-\pchance{})$ never
+moves a candidate more than one place. The ordering is the membership probability,
+which under a spatial model is a monotonic function of cluster-centric radius. The
+rank column is therefore close to a radius ordering, and a reader should treat it
+as one. That is a property of the data rather than of the rule: with a catalogue
+this shallow and error circles this small, positional confusion is not what limits
+follow-up in this cluster.
+
+\textbf{Four rows are already identified.} The pool is defined by the absence of a
+published optical identification, which is the catalogue's own field, and the
+eleven X-ray counterparts of radio MSPs carry none. Four
+of them survive the colour and flux cuts and rank in the top twenty (11f, 21d, 23g
+and 32d, flagged \texttt{c}). Three of those four are also the anchors that define
+the box, so their high rank is circular twice over and is not evidence that the
+score works. A follow-up programme would drop all four; the pre-registered pool
+retains them, and Table~\ref{tab:targets} flags rather than removes them. With them
+removed the first five entries are 12c, 11e, 13g, 22l and 24j.
+
+\textbf{No row is an identification.} Section~\ref{sec:results-msplike}'s
+upper-bound caveat applies unchanged: the region carries no AGN screen, and at the
+adopted limit the background expectation over this aperture is 146.9 sources. Most
+of this list is expected to be background, and the ordering is of follow-up effort
+rather than of likelihood.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Top twenty of the 39-source candidate pool under the pre-registered rule
+of Section~\ref{sec:targets-rule}. Radius is cluster-centric; colour is
+$\log(\mathrm{soft}/\mathrm{hard})$; $F_{\mathrm{soft}}$ is in
+$10^{-16}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$. Flags: \texttt{a} box anchor,
+\texttt{c} confirmed MSP X-ray counterpart, \texttt{n} source new in the 2012 data,
+\texttt{v} tabulated 2012/2000 flux ratio beyond a factor of two, \texttt{l} fewer
+than ten corrected medium-band counts, \texttt{e} inside the box but outside the
+$2\sigma$ ellipse. Positions and the remaining nineteen rows are in
+\texttt{figs/fG\_target\_list.json}.}
+\label{tab:targets}
+\begin{tabular}{rlrrrrrrl}
+\toprule
+Rank & Source & $r$ (\as) & colour & $F_{\mathrm{soft}}$ & $P_{\mathrm{member}}$ & $10^{3}\pchance{}$ & $R$ & flags \\
+\midrule
+1 & 12c & 36 & $+0.22$ & 4.0 & 0.612 & 1.0 & 0.611 & n \\
+2 & 11e & 50 & $+0.00$ & 3.6 & 0.601 & 0.7 & 0.601 & n \\
+3 & 13g & 70 & $+0.12$ & 4.8 & 0.580 & 0.9 & 0.579 & n \\
+4 & 22l & 79 & $+0.14$ & 6.2 & 0.569 & 1.0 & 0.568 & n \\
+5 & 11f & 95 & $+0.17$ & 4.1 & 0.547 & 0.7 & 0.547 & acn \\
+6 & 24j & 105 & $+0.50$ & 7.4 & 0.532 & 1.0 & 0.531 & n \\
+7 & 21d & 113 & $-0.20$ & 16.0 & 0.520 & 1.0 & 0.519 & ac \\
+8 & 21e & 116 & $+0.63$ & 13.9 & 0.515 & 1.0 & 0.515 & e \\
+9 & 23g & 118 & $+0.68$ & 5.5 & 0.513 & 1.0 & 0.512 & acn \\
+10 & 24d & 129 & $+0.37$ & 6.4 & 0.496 & 0.9 & 0.495 & -- \\
+11 & 23e & 132 & $+0.29$ & 3.3 & 0.491 & 1.2 & 0.490 & ln \\
+12 & 21f & 132 & $+0.64$ & 6.9 & 0.491 & 1.6 & 0.490 & n \\
+13 & 24b & 136 & $+0.38$ & 6.0 & 0.483 & 1.0 & 0.483 & -- \\
+14 & 22d & 140 & $+0.34$ & 7.3 & 0.478 & 0.9 & 0.478 & v \\
+15 & 34e & 150 & $+0.09$ & 6.0 & 0.461 & 0.9 & 0.461 & n \\
+16 & 34h & 167 & $+0.06$ & 4.5 & 0.434 & 0.8 & 0.434 & n \\
+17 & 31c & 180 & $+0.40$ & 6.9 & 0.414 & 0.7 & 0.414 & v \\
+18 & 31g & 181 & $+0.15$ & 5.0 & 0.412 & 0.7 & 0.412 & n \\
+19 & 32d & 195 & $+0.44$ & 5.4 & 0.391 & 2.8 & 0.390 & c \\
+20 & 31e & 195 & $+0.15$ & 3.3 & 0.391 & 3.1 & 0.390 & n \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Discussion}
 \label{sec:discussion}
 
@@ -473,11 +649,11 @@ We have cross-matched the 233-source Chandra catalogue of \citet{Henleywillis201
 
 The control recovers 18 of 21 known counterparts at the 95\,per~cent match radius and misses the three rows the control catalogue itself flags. The \ocen{} Chandra frame carries a measured $+0.41\as$ declination offset against the radio frame; registering it takes tier-1 matches from three of eight to five of eight, and the five registered associations sit between $0.01\as$ and $0.35\as$ with chance-coincidence probabilities below $2.3\times10^{-3}$ under three independent estimators. The published association of MSP~H with source 14c does not survive registration, sitting at $1.81\as$ in the wrong declination sense, which we record as a data-quality finding requiring a position-by-position check of the counterpart chain.
 
-The residual census inside a $480\as$ aperture is 12.1 unidentified sources $(-56.5, +66.6)$ after subtracting a background expectation of 146.9 (92.4--215.5), which is to say it is consistent with the background alone. Between 39 and 53 unidentified sources fall in a colour-flux region defined by this cluster's own confirmed counterparts, a quantity constructed differently from the catalogue's own ``more than 30'' and not interchangeable with it. The two published population predictions differ by a factor of 54, and the larger over-predicts the residual by more than an order of magnitude, which bounds the extrapolation, the detection fraction, or the background subtraction without deciding among them.
+The residual census inside a $480\as$ aperture is 12.1 unidentified sources $(-56.5, +66.6)$ after subtracting a background expectation of 146.9 (92.4--215.5), which is to say it is consistent with the background alone. Between 39 and 53 unidentified sources fall in a colour-flux region defined by this cluster's own confirmed counterparts, a quantity constructed differently from the catalogue's own ``more than 30'' and not interchangeable with it. The two published population predictions differ by a factor of 54, and the larger over-predicts the residual by more than an order of magnitude, which bounds the extrapolation, the detection fraction, or the background subtraction without deciding among them. The practical output is Table~\ref{tab:targets}, a ranked follow-up list under a rule fixed before the ranking was computed, together with the epoch-comparison depth each entry would require.
 
 \section*{Data availability}
 
-The analysis pipeline (\texttt{crossmatch.py}, \texttt{classify.py}, \texttt{residual.py}, \texttt{run\_g.py}), its fixed seed, its two results files and the mechanical analysis report accompany this paper under \texttt{paper/g/analysis/}. The vendored source catalogues, their checksums and their provenance record are under \texttt{paper/g/data/}. Both source catalogues are public at VizieR (\texttt{J/MNRAS/479/2834} and \texttt{J/MNRAS/472/3706}).
+The analysis pipeline (\texttt{crossmatch.py}, \texttt{classify.py}, \texttt{residual.py}, \texttt{run\_g.py}), its fixed seed, its two results files and the mechanical analysis report accompany this paper under \texttt{paper/g/analysis/}. The vendored source catalogues, their checksums and their provenance record are under \texttt{paper/g/data/}. Both source catalogues are public at VizieR (\texttt{J/MNRAS/479/2834} and \texttt{J/MNRAS/472/3706}). The v1.2 figures, the ranked candidate list and the epoch-comparison table are produced by \texttt{paper/figs/fG\_expand\_v1.py}, which reproduces and asserts the analysis of record before computing anything new; the candidate list is machine-readable at \texttt{figs/fG\_target\_list.json}.
 
 \appendix
 
@@ -489,7 +665,7 @@ The following are stated as limitations of this analysis and are not corrected f
 \begin{enumerate}
 \item \textbf{Eddington bias.} Fluxes near the detection limit are biased high, so a background count computed above a limit derived from those same fluxes is a lower bound on contamination. No deboosting is possible without the detection-significance distribution, which the vendored table does not carry.
 \item \textbf{Completeness varies with off-axis angle} across the ACIS-I field. A single flux limit is applied over the whole area, which overestimates the effective depth at large radius and therefore overestimates the background count there while underestimating the true source count.
-\item \textbf{No variability analysis} is performed. Epoch-resolved data are not staged and the single tabulated 2012/2000 flux ratio does not support a Poisson-honest test. Explicitly out of scope, and the largest departure from what a full identification programme requires.
+\item \textbf{No variability analysis} is performed. Epoch-resolved data are not staged and the single tabulated 2012/2000 flux ratio does not support a Poisson-honest test. Explicitly out of scope, and the largest departure from what a full identification programme requires. Appendix~\ref{app:variability} states what the missing work would cost without doing it.
 \item \textbf{The residual is an input to future identification work.} It is not a detection and it is not evidence for any hypothesis.
 \item \textbf{Chance-coincidence rates} are reported per probe by three independent estimators and are never collapsed into one number.
 \item \textbf{Membership} is reported as a probability under stated external normalisations, never as a binary label, and every published membership statement is carried alongside rather than overwritten.
@@ -498,8 +674,77 @@ The following are stated as limitations of this analysis and are not corrected f
 \item \textbf{The background-relation parameter uncertainties} are published asymmetrically and are used here only as symmetric bracket widths; no asymmetric error is quoted.
 \item \textbf{The internal membership fit is degenerate} and is reported as a diagnostic only; membership uses external normalisations throughout.
 \item \textbf{The control is an optimistic bound.} The control catalogue was itself astrometrically registered against its MSP truth set, so control recovery bounds match performance from above rather than testing astrometry independently.
+\item \textbf{The candidate ranking is a follow-up ordering}, not a set of identifications. Its rule was fixed before it was computed, its chance-coincidence factor is numerically inert, and four of its top twenty rows are already-identified MSP counterparts that the pre-registered pool definition retains.
+\item \textbf{The epoch-comparison table of Appendix~\ref{app:variability}} assumes the shallower epoch differs from the deeper one only in exposure. It does not, so the tabulated sensitivity is a floor.
 \item \textbf{Six pulsars are absent} from the cross-match for want of a published position, so every match count is conditional on a 13-probe subset of the 19-pulsar timing set.
 \end{enumerate}
+
+
+\section{What an epoch comparison would cost}
+\label{app:variability}
+
+Variability is absent from this paper and Appendix~\ref{app:caveats} lists that
+absence as its largest departure from a full identification programme. This
+appendix states what that work would cost. It analyses no epoch-resolved data and
+classifies
+no source as variable; it converts the catalogue's own counts into the sensitivity
+a two-epoch comparison would have.
+
+The catalogue's counts come from the 2012 ACIS-I exposure alone, 173.7 and
+48.5\,ks \citep{Henleywillis2018}. The other deep Chandra epoch of this field is
+the $\sim$70\,ks exposure of \citet{Haggard2009}, so a second epoch collects
+$r = 0.315$ of the counts at constant flux. Propagating Poisson errors on the two
+rates, the smallest flux ratio a three-sigma comparison could detect is
+$R_{\min} = \exp[3(1/n_{2012} + 1/n_{2000})^{1/2}]$. Table~\ref{tab:variability}
+counts how many sources clear each threshold. Rows are given twice: once
+restricted to sources where the shallower epoch expects at least ten counts, which
+is where the Gaussian propagation holds, and once without that restriction. The
+restriction bites at 31.7 counts in the deep epoch, where $R_{\min}$ is already
+2.95, so requiring validity and requiring a factor of three are nearly the same
+cut and neither is presented as the answer alone.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Sources whose 2012 counts would support a three-sigma detection of a flux
+change by the tabulated factor against the $\sim$70\,ks 2000 epoch. The pool
+column counts the 39 candidates of Section~\ref{sec:targets}. Columns 2--3 keep
+only rows where the shallower epoch expects at least ten counts; columns 4--5 drop
+that restriction. Values from \texttt{figs/fG\_expand\_variability.json}.}
+\label{tab:variability}
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Gaussian regime} & \multicolumn{2}{c}{no validity cut} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Flux ratio & aperture (200) & pool (39) & aperture (200) & pool (39) \\
+\midrule
+1.5 & 18 & 0 & 18 & 0 \\
+2.0 & 53 & 0 & 53 & 0 \\
+3.0 & 98 & 10 & 98 & 10 \\
+5.0 & 98 & 10 & 165 & 35 \\
+10.0 & 98 & 10 & 194 & 39 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The candidate pool is worse placed than the aperture at large. Ninety-eight of the 200
+aperture sources sit in the Gaussian regime and 53 would show a factor-of-two
+change, but none of those 53 is in the candidate pool: the MSP-like region selects
+faint sources, and the five best-placed pool members need factors of 4.0 to 6.0.
+Reaching a factor of two on the top of Table~\ref{tab:targets} needs new exposure,
+not a re-reduction of the archive. The comparison itself carries costs this
+arithmetic does not price. The 2000 exposure reaches a limiting flux of
+$\sim$$4.3\times10^{-16}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$ against
+$\sim$$3\times10^{-16}$ for the 2012 data, and the two reductions differ in
+aperture, off-axis angle and extraction, so $R_{\min}$ is a floor rather than a
+forecast.
+
+An all-sky survey does not substitute. Four of the 200 aperture sources reach the
+eRASS1 50\,per~cent completeness limit of
+$5\times10^{-14}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$ \citep{Merloni2024}, and 106 of
+the 200 have a catalogue neighbour inside the $26\as$ half-energy width that
+eROSITA averages over its field of view \citep{Predehl2021}. Its depth and its beam
+each rule it out for this field independently.
 
 \bibliographystyle{apalike}
 \bibliography{../references,../engineered-extra,census-extra}
