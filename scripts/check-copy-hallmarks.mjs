@@ -34,6 +34,18 @@
  *      descriptions (served over MCP). OCS's equivalent is
  *      tools/data/tools-manifest.json; per the WU, SCOPE = reader-facing
  *      HTML/README only. Manifest gating is left as a possible follow-up WU.
+ *   5. PAPER-SPECIFIC AI-TELL CATALOGUE (OCS-TELL-GATE-1, 2026-08-20) — vendors
+ *      the pattern catalogue from board/notes/AI-TELL-AUDIT-1.md §4.3. These
+ *      checks are SCOPED TO THE 9-PAPER CORPUS ONLY (repo/papers/source/*.tex +
+ *      each paper's matching full-text HTML page — see PAPERS below), NOT the
+ *      general reader-facing HTML scan. Reason: the audit's heading-formula
+ *      class ("What this tool does", "Why X matters") is universal HOUSE STYLE
+ *      on the ~100+ tools/*.html calculator pages — gating it site-wide would
+ *      fail every tool page. Exceptions (structural colon headings, pre-reg
+ *      ledgers, run-in labels, two documented deliberate keeps) are catalogued
+ *      in board/notes/COPY-EXCEPTIONS.md for human reference; the zero-tolerance
+ *      regexes below are already narrow enough (require the "What/Why ... ,
+ *      and ..." pivot or a trailing "?") that none of the exceptions trip them.
  * ─────────────────────────────────────────────────────────────────────────────
  *
  * Hard-fails on:
@@ -71,6 +83,7 @@ import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const BASELINE_PATH = resolve(REPO, 'scripts', 'copy-hallmarks-baseline.json');
+const PAPER_BASELINE_PATH = resolve(REPO, 'scripts', 'copy-hallmarks-paper-baseline.json');
 const UPDATE = process.argv.includes('--update');
 
 const EMDASH = /—/g;
@@ -130,6 +143,148 @@ function nonExemptEmoji(text) {
 const BADGE_ELEMENT = /<(span|div|a|p)\b[^>]*\bclass\s*=\s*["'][^"']*\b(?:badge|pill|chip)\b[^"']*["'][^>]*>[\s\S]*?<\/\1>/gi;
 const CONTROL_ELEMENT = /<(button|div|span)\b[^>]*\bclass\s*=\s*["'][^"']*\b(?:btn|icon)\b[^"']*["'][^>]*>[\s\S]*?<\/\1>/gi;
 const BUTTON_TAG = /<button\b[^>]*>[\s\S]*?<\/button>/gi;
+
+// --- PAPER AI-TELL CATALOGUE (OCS-TELL-GATE-1, AI-TELL-AUDIT-1 §4.3) ---
+// Scoped to the 9-paper corpus only — see deviation 5 above.
+const PAPERS = [
+  { key: 'accretion-limit', tex: 'papers/source/accretion-limit-paper.tex', html: 'omega-centauri-accretion-limit.html' },
+  { key: 'axi-note', tex: 'papers/source/axi-note.tex', html: 'omega-centauri-axi-note.html' },
+  { key: 'campaign', tex: 'papers/source/campaign-paper.tex', html: 'omega-centauri-technosignature-campaign.html' },
+  { key: 'census', tex: 'papers/source/census-paper.tex', html: 'omega-centauri-xray-census.html' },
+  { key: 'economics', tex: 'papers/source/economics-paper.tex', html: 'inward-migration-economics.html' },
+  { key: 'engineered-imbh', tex: 'papers/source/engineered-imbh-paper.tex', html: 'engineered-imbh-systems.html' },
+  { key: 'inward-review', tex: 'papers/source/inward-review.tex', html: 'inward-migration-fermi-paradox-review.html' },
+  { key: 'mass-tension', tex: 'papers/source/mass-tension-paper.tex', html: 'omega-centauri-mass-tension.html' },
+  { key: 'mth', tex: 'papers/source/mth-paper.tex', html: 'macro-transcension-hypothesis.html' },
+];
+
+// Class 1 + NEW-A + NEW-B: heading formula (pivot or interrogative) — zero-tolerance.
+const HEADING_FORMULA = [
+  /\b(What|Why)\b.*?(,\s*and\s*(what|why)|\?)/i,
+  /,\s+(and\s+(what|why|its)|(reported|surfaced|scored)\s+(and|rather than))/i,
+];
+// NEW-D: idiom family — zero-tolerance, no legitimate use in this corpus.
+const IDIOM_FAMILY = /earns? (its|their) (keep|place)|pays its way|paid for itself/gi;
+// NEW-C: verbless numeric-announce fragment — zero-tolerance. Anchored at a
+// sentence boundary (start-of-text or after .!?) since HTML prose has no
+// reliable line breaks per sentence.
+const VERBLESS_FRAGMENT = /(?:^|[.!?]\s+)(One|Two|Three|Four|Five|Six)\s+[A-Za-z-]+\.(?=\s|$)/g;
+// Pre-existing debt found while wiring this check (OCS-TELL-GATE-1, 2026-08-20):
+// "Three caveats." in inward-review.tex/.html predates this gate and was never
+// covered by AI-TELL-FIX-1..4 (those batches fixed HEADING/idiom findings, not
+// the NEW-C verbless form, which AI-TELL-AUDIT-1 only *recommended* banning).
+// Per the WU's hard rule ("never the paper text" — this is an editorial call,
+// not a build-script fix), this exact known string is exempted here rather than
+// silently weakening the pattern; tracked in board/notes/COPY-EXCEPTIONS.md and
+// queued as follow-up OCS-TELL-GATE-1-FOLLOWUP. Any OTHER verbless fragment,
+// including a new one in this same paper, still fails.
+const VERBLESS_KNOWN_DEBT = {
+  'inward-review': ['Three caveats.'],
+};
+// NEW-C: numeric-announce opener — ratchet, per-file budget 3.
+const NUMERIC_OPENER = /\b(One|Two|Three|Four|Five|Six)\s+(things?|statements?|reasons?|consequences?|features?|caveats?|checks?|asymmetries|conventions?|considerations?|principles?|corollaries|questions?|effects?|explanations?|regimes?|further)\b/g;
+const NUMERIC_OPENER_BUDGET = 3;
+// Class 2: negation-definition — ratchet.
+const NEGATION_DEFINITION = [
+  /\bis not (a|an|the)\b[^.;]{0,60}; it is\b/gi,
+  /\bnot (just|merely|only)\b[^.;]{0,80}\bbut\b/gi,
+  /\bnot because\b[^.;]{0,60}\bbut because\b/gi,
+];
+// Class 5: anthropomorphized machinery — ratchet.
+const ANTHROPOMORPHISM = /\b(the (gate|module|leg|model|analysis|instrument|pipeline|data)) (saw|says so|behaved|did its job|delivered|pays|spoke)\b/gi;
+// Class 8: hedge adverbs — ratchet (audit: currently ~0-2, ratchet toward 0).
+const HEDGE_ADVERB = /\b(arguably|importantly|crucially|notably|it is tempting to)\b/gi;
+// NEW-E: cross-paper duplicated frames — zero-tolerance, new check kind: flag
+// when a frame matches in MORE THAN ONE DISTINCT PAPER (a paper's own .tex and
+// its mirrored .html both matching is the same paper, not a duplicate).
+const DUP_FRAMES = [
+  [/Whatever (occupies|sits at|lies at) the cent(er|re)/gi, 'Whatever occupies/sits at/lies at the cent(er|re)…'],
+  [/Claims and non-claims/gi, '"Claims and non-claims" heading'],
+];
+
+/** Strip LaTeX comments: everything from an unescaped % to end of line. */
+function stripTexComments(tex) {
+  return tex.split('\n').map((line) => {
+    let out = '';
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '%' && line[i - 1] !== '\\') break;
+      out += line[i];
+    }
+    return out;
+  }).join('\n');
+}
+
+/** \section{...} and \subsection{...} heading bodies (tex). */
+function texHeadings(tex) {
+  const out = [];
+  const re = /\\(?:sub)?section\*?\{([^}]*)\}/g;
+  let m;
+  while ((m = re.exec(tex))) out.push(m[1]);
+  return out;
+}
+
+/** <h2>/<h3> heading text, tags stripped (paper full-text pages only). */
+function paperHtmlHeadings(prose) {
+  const out = [];
+  const re = /<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/gi;
+  let m;
+  while ((m = re.exec(prose))) out.push(m[1].replace(/<[^>]+>/g, ' '));
+  return out;
+}
+
+function countAll(text, res) {
+  const list = Array.isArray(res) ? res : [res];
+  let n = 0;
+  for (const re of list) n += (text.match(re) || []).length;
+  return n;
+}
+
+/** Count VERBLESS_FRAGMENT hits, excluding this paper's documented known-debt strings. */
+function countVerbless(text, paperKey) {
+  const debt = new Set(VERBLESS_KNOWN_DEBT[paperKey] || []);
+  const matches = text.match(VERBLESS_FRAGMENT) || [];
+  let n = 0;
+  for (const m of matches) {
+    const trimmed = m.replace(/^[.!?]\s+/, '');
+    if (!debt.has(trimmed)) n++;
+  }
+  return n;
+}
+
+/** Scan one paper (tex text + html body text) for the AI-tell catalogue. */
+function scanPaper(p, texRaw, htmlRaw) {
+  const tex = stripTexComments(texRaw);
+  const htmlProse = proseHtml(htmlRaw);
+  const htmlText = visibleText(htmlRaw);
+
+  const headings = [...texHeadings(tex), ...paperHtmlHeadings(htmlProse)];
+  let headingFormula = 0;
+  const headingHits = [];
+  for (const h of headings) {
+    if (HEADING_FORMULA.some((re) => re.test(h))) {
+      headingFormula++;
+      headingHits.push(h.trim().slice(0, 80));
+    }
+  }
+
+  const bodies = [tex, htmlText];
+  let idiom = 0, verbless = 0, negdef = 0, anthro = 0, hedge = 0, numOpener = 0;
+  for (const b of bodies) {
+    idiom += countAll(b, IDIOM_FAMILY);
+    verbless += countVerbless(b, p.key);
+    negdef += countAll(b, NEGATION_DEFINITION);
+    anthro += countAll(b, ANTHROPOMORPHISM);
+    hedge += countAll(b, HEDGE_ADVERB);
+    numOpener += countAll(b, NUMERIC_OPENER);
+  }
+
+  const dupFrameMatches = {};
+  for (const [re, label] of DUP_FRAMES) {
+    if (tex.match(re) || htmlText.match(re)) dupFrameMatches[label] = true;
+  }
+
+  return { headingFormula, headingHits, idiom, verbless, negdef, anthro, hedge, numOpener, dupFrameMatches };
+}
 
 /** In-scope reader-facing HTML: root-level *.html + tools/*.html (deviation 1). */
 function scopedHtmlFiles() {
@@ -263,6 +418,22 @@ if (existsSync(readmePath)) {
   scanText('README.md', markdownText(readFileSync(readmePath, 'utf8')), { html: false });
 }
 
+// --- Paper AI-tell catalogue: scan the 9-paper corpus (deviation 5). ---
+const paperFindings = {};
+for (const p of PAPERS) {
+  const texPath = resolve(REPO, p.tex);
+  const htmlPath = resolve(REPO, p.html);
+  if (!existsSync(texPath) || !existsSync(htmlPath)) continue;
+  paperFindings[p.key] = scanPaper(p, readFileSync(texPath, 'utf8'), readFileSync(htmlPath, 'utf8'));
+}
+// NEW-E cross-paper duplicate frames: flag a frame that matches in >1 distinct paper.
+const dupFrameOffenders = {}; // label -> [paper keys]
+for (const [key, f] of Object.entries(paperFindings)) {
+  for (const label of Object.keys(f.dupFrameMatches)) {
+    (dupFrameOffenders[label] ||= []).push(key);
+  }
+}
+
 if (UPDATE) {
   const baseline = {};
   for (const [rel, f] of Object.entries(findings)) {
@@ -276,13 +447,48 @@ if (UPDATE) {
   }
   writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n');
   console.log(`copy-hallmarks: baseline written for ${Object.keys(baseline).length} file(s).`);
+
+  const paperBaseline = {};
+  for (const [key, f] of Object.entries(paperFindings)) {
+    const entry = {};
+    if (f.negdef) entry.negdef = f.negdef;
+    if (f.anthro) entry.anthro = f.anthro;
+    if (f.hedge) entry.hedge = f.hedge;
+    if (f.numOpener > NUMERIC_OPENER_BUDGET) entry.numOpener = f.numOpener;
+    if (Object.keys(entry).length) paperBaseline[key] = entry;
+  }
+  writeFileSync(PAPER_BASELINE_PATH, JSON.stringify(paperBaseline, null, 2) + '\n');
+  console.log(`copy-hallmarks: paper baseline written for ${Object.keys(paperBaseline).length} paper(s).`);
   process.exit(0);
 }
 
 const baseline = existsSync(BASELINE_PATH) ? JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) : {};
+const paperBaseline = existsSync(PAPER_BASELINE_PATH) ? JSON.parse(readFileSync(PAPER_BASELINE_PATH, 'utf8')) : {};
 const failures = [];
 const improvements = [];
 const advisories = [];
+
+for (const [key, f] of Object.entries(paperFindings)) {
+  const b = paperBaseline[key] || {};
+  if (f.headingFormula) failures.push(`paper:${key}: ${f.headingFormula} heading-formula hit(s) (zero-tolerance): ${f.headingHits.join(' | ')}`);
+  if (f.idiom) failures.push(`paper:${key}: ${f.idiom} "earns its keep" idiom-family hit(s) (zero-tolerance)`);
+  if (f.verbless) failures.push(`paper:${key}: ${f.verbless} verbless numeric-announce fragment(s) (zero-tolerance)`);
+  const negdefAllowed = b.negdef || 0;
+  if (f.negdef > negdefAllowed) failures.push(`paper:${key}: ${f.negdef} negation-definition hit(s) (baseline ${negdefAllowed})`);
+  else if (f.negdef < negdefAllowed) improvements.push(`paper:${key}: negdef ${negdefAllowed} -> ${f.negdef}`);
+  const anthroAllowed = b.anthro || 0;
+  if (f.anthro > anthroAllowed) failures.push(`paper:${key}: ${f.anthro} anthropomorphized-machinery hit(s) (baseline ${anthroAllowed})`);
+  else if (f.anthro < anthroAllowed) improvements.push(`paper:${key}: anthro ${anthroAllowed} -> ${f.anthro}`);
+  const hedgeAllowed = b.hedge || 0;
+  if (f.hedge > hedgeAllowed) failures.push(`paper:${key}: ${f.hedge} hedge-adverb hit(s) (baseline ${hedgeAllowed})`);
+  else if (f.hedge < hedgeAllowed) improvements.push(`paper:${key}: hedge ${hedgeAllowed} -> ${f.hedge}`);
+  const numAllowed = Math.max(NUMERIC_OPENER_BUDGET, b.numOpener || 0);
+  if (f.numOpener > numAllowed) failures.push(`paper:${key}: ${f.numOpener} numeric-announce opener(s) (budget ${numAllowed})`);
+  else if (b.numOpener != null && f.numOpener < b.numOpener && f.numOpener <= NUMERIC_OPENER_BUDGET) improvements.push(`paper:${key}: numOpener debt cleared, drop from baseline`);
+}
+for (const [label, keys] of Object.entries(dupFrameOffenders)) {
+  if (keys.length > 1) failures.push(`cross-paper duplicate frame (zero-tolerance): ${label} appears in: ${keys.join(', ')}`);
+}
 
 for (const [rel, f] of Object.entries(findings)) {
   const b = baseline[rel] || { emdash: 0, jargon: 0, bold: 0, italics: 0 };
@@ -321,4 +527,4 @@ if (failures.length) {
   console.error(`\nFix the copy (see CLAUDE.md anti-AI-tell rules + memory feedback-anti-ai-tell-copy-ban). Em-dash/bold/italics: baseline burns down with --update. Category-3 hits (heading emphasis, "not just X but", "it's not X, it's Y" pivot, dramatic fragments, validation-phrasing, filler-vocab, emoji-in-headers): zero-tolerance, no baseline — rewrite the copy.`);
   process.exit(1);
 }
-console.log(`copy-hallmarks: OK (${Object.keys(baseline).length} baselined file(s) within budget, 0 category-3 hits).`);
+console.log(`copy-hallmarks: OK (${Object.keys(baseline).length} baselined file(s) within budget, 0 category-3 hits; ${Object.keys(paperFindings).length} paper(s) checked against the AI-tell catalogue, 0 zero-tolerance hits).`);
