@@ -12,6 +12,12 @@
 % v0.2 restructure per referee memos of 2026-08-13
 % (OCS-REFEREE-F-REVIEW_2026-08-13.md): likelihood-based posterior,
 % SED families, gas-supply floor, natural-expectation band, forecasts.
+% v1.2 expansion per OCS-REFEREE-FGH-EXPANSION_2026-08-20.md items F-1..F-5
+% (WU OCS-F-EXPAND-1): nuisance ladder, band adjudication figure, continuous
+% exclusion curve, epoch-resolved duty-cycle analysis, DM requirement table.
+% Expansion analyses: figs/fF_expand_v1.py -> figs/fF_expand_*.json,
+%   figs/fF_expand_sed.png.  No v0.3 number is changed by that script; it
+%   asserts the reproduced RIAF anchors against fF_v3_results.json at run time.
 % v0.3 input corrections per figs/fF_v3_DELTA.md (WU OCS-F-V03-1):
 % Haggard distance 5.2 kpc, X-ray limit at 95 per cent CL, per-filter
 % Chen limits, epoch list, MAVERIC context.
@@ -44,14 +50,14 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small v1.1 (last revised 2026-08-20) --- sixth paper of the set (Paper F); companion to the Macro Transcension\\ \small Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign (Paper C),\\ \small the migration economics (Paper D), and the engineered-IMBH systems paper (Paper E);\\ \small prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small v1.2 (last revised 2026-08-20) --- sixth paper of the set (Paper F); companion to the Macro Transcension\\ \small Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign (Paper C),\\ \small the migration economics (Paper D), and the engineered-IMBH systems paper (Paper E);\\ \small prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 \noindent
-Three deep non-detections now constrain any accretion flow onto the candidate intermediate-mass black hole (IMBH) at the center of Omega Centauri: a 170-hour ATCA radio campaign reaching 1.1\,$\mu$Jy rms at 7.25\,GHz \citep{Mahida2026}, JWST NIRCam/MIRI imaging showing no accretion-like point source at any proposed center \citep{Chen2025JWST}, and a 291-ks Chandra exposure bounding $L_X(0.5\text{--}7\,\mathrm{keV}) \leq 1.6\times10^{30}\,\mathrm{erg\,s^{-1}}$ \citep{Haggard2013}. \citet{Chen2025JWST} compare the infrared and radio limits qualitatively; no formal joint bound with propagated uncertainties has been published. We supply one, as a posterior. Defining the Bondi radiative efficiency $\eps \equiv L_{\mathrm{bol}}/(\mdotB c^{2})$, we build a forward model from $(\eps, M)$ and seven shared nuisance parameters (gas density, sound speed, distance, two SED band fractions, fundamental-plane scatter as a latent variable, inflow-suppression index) to the three measured quantities, evaluate Gaussian likelihoods on the measurements themselves, and report the 95\,per~cent credible upper limit $\epsl(M)$ for three named accretion-flow families. For a radiatively inefficient (RIAF-like) flow, $\epsl = 2.8\times10^{-10}$ at the fast-star mass anchor of $8{,}200\,\msun$ and $1.0\times10^{-11}$ at $4\times10^{4}\,\msun$; removing the fundamental-plane radio leg entirely relaxes these to $8.8\times10^{-9}$ and $5.0\times10^{-10}$. Overplotting the expectation band for a natural outflow-suppressed hot flow at the same nuisance draws converts the curve into a calibrated verdict: at $4\times10^{4}\,\msun$ the limit excludes 90\,per~cent of natural-flow parameter space (44\,per~cent using no radio information), while at $8{,}200\,\msun$ the natural flow survives comfortably (31 and 2\,per~cent excluded). A high-mass IMBH feeding from a 47~Tucanae-like medium through a standard hot flow is therefore close to ruled out; at the high anchor something must give, whether the mass, the gas density, or the suppression physics. The limit's normalization is conditional on the unmeasured central gas density throughout, and we quantify that dependence three ways: prior-widening and prior-shift tests (factor $\sim$6 each), a stellar-wind replenishment floor that truncates the low-density tail on astrophysical grounds, and a forecast showing that a pulsar dispersion-measure determination of the core density, feasible with the current 19-pulsar timing set, would harden the entire curve. All results derive from a fixed-seed Monte Carlo shipped with the paper.
+Three deep non-detections now constrain any accretion flow onto the candidate intermediate-mass black hole (IMBH) at the center of Omega Centauri: a 170-hour ATCA radio campaign reaching 1.1\,$\mu$Jy rms at 7.25\,GHz \citep{Mahida2026}, JWST NIRCam/MIRI imaging showing no accretion-like point source at any proposed center \citep{Chen2025JWST}, and a 291-ks Chandra exposure bounding $L_X(0.5\text{--}7\,\mathrm{keV}) \leq 1.6\times10^{30}\,\mathrm{erg\,s^{-1}}$ \citep{Haggard2013}. \citet{Chen2025JWST} compare the infrared and radio limits qualitatively; no formal joint bound with propagated uncertainties has been published. We supply one, as a posterior. Defining the Bondi radiative efficiency $\eps \equiv L_{\mathrm{bol}}/(\mdotB c^{2})$, we build a forward model from $(\eps, M)$ and seven shared nuisance parameters (gas density, sound speed, distance, two SED band fractions, fundamental-plane scatter as a latent variable, inflow-suppression index) to the three measured quantities, evaluate Gaussian likelihoods on the measurements themselves, and report the 95\,per~cent credible upper limit $\epsl(M)$ for three named accretion-flow families. For a radiatively inefficient (RIAF-like) flow, $\epsl = 2.8\times10^{-10}$ at the fast-star mass anchor of $8{,}200\,\msun$ and $1.0\times10^{-11}$ at $4\times10^{4}\,\msun$; removing the fundamental-plane radio leg entirely relaxes these to $8.8\times10^{-9}$ and $5.0\times10^{-10}$. Overplotting the expectation band for a natural outflow-suppressed hot flow at the same nuisance draws converts the curve into a calibrated verdict: at $4\times10^{4}\,\msun$ the limit excludes 90\,per~cent of natural-flow parameter space (44\,per~cent using no radio information), while at $8{,}200\,\msun$ the natural flow survives comfortably (31 and 2\,per~cent excluded). A high-mass IMBH feeding from a 47~Tucanae-like medium through a standard hot flow is therefore close to ruled out; at the high anchor something must give, whether the mass, the gas density, or the suppression physics. The limit's normalization is conditional on the unmeasured central gas density throughout, and we quantify that dependence three ways: prior-widening and prior-shift tests (factor $\sim$6 each), a stellar-wind replenishment floor that truncates the low-density tail on astrophysical grounds, and a forecast showing that a pulsar dispersion-measure determination of the core density, feasible with the current 19-pulsar timing set, would harden the entire curve. Resolving the radio campaign into the 25 observing blocks its source paper tabulates also converts the duty-cycle loophole from an acknowledgement into a bounded region: a train of $100\,\mu$Jy flares lasting 2\,hr is excluded for recurrence intervals shorter than 31\,hr, while a 1\,mJy flare lasting half an hour escapes the whole campaign if it recurs less often than every 3.4\,days, a duty cycle of $6\times10^{-3}$. All results derive from a fixed-seed Monte Carlo shipped with the paper.
 \end{abstract}
 
 \bigskip
@@ -261,6 +267,56 @@ Figure~\ref{fig:curves} and Table~\ref{tab:anchors} carry the content. Three sta
 
 \emph{The thin disk is dead everywhere.} $\epsl$ for the disk family sits four to five decades below the $\eta \sim 0.06$--$0.4$ a disk radiates at; no Bondi-fed thin disk at any mass in the range survives, quantifying what every prior single-band paper assumed informally.
 
+\subsection{The exclusion fraction as a continuous function of mass}
+\label{sec:exclcurve}
+
+Table~\ref{tab:anchors} evaluates $P_{\mathrm{excl}}$ at three masses because those are the masses the kinematic literature argues about. The Monte Carlo evaluates it on the whole grid, and the continuous version (Figure~\ref{fig:exclcurve}) is the more useful object for a reader who holds a different mass prior than any of the three anchors. It also locates the transitions. Under the RIAF family the exclusion fraction passes 50\,per~cent at $1.3\times10^{4}\,\msun$ and 90\,per~cent at $4.0\times10^{4}\,\msun$; under the jet family the same thresholds fall at $1.6\times10^{4}$ and $4.9\times10^{4}\,\msun$. Using no radio information the 50\,per~cent point moves to $4.8\times10^{4}\,\msun$ and the 90\,per~cent point lies above the grid entirely.
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=0.92\linewidth, height=7.0cm,
+  xlabel={$M\ (\msun)$}, ylabel={$P_{\mathrm{excl}}$ (natural-flow draws excluded)},
+  xmin=1000, xmax=100000, ymin=0, ymax=1.02,
+  legend style={font=\footnotesize, at={(0.02,0.98)}, anchor=north west},
+  grid=major, grid style={black!12},
+  tick label style={font=\small}, label style={font=\small},
+]
+\addplot[blue, thick] coordinates {(1000,0.0000) (1122.02,0.0000) (1258.93,0.0000) (1412.54,0.0001) (1584.89,0.0001) (1778.28,0.0004) (1995.26,0.0013) (2238.72,0.0034) (2511.89,0.0067) (2818.38,0.0138) (3162.28,0.0253) (3548.13,0.0410) (3981.07,0.0633) (4466.84,0.0921) (5011.87,0.1263) (5623.41,0.1674) (6309.57,0.2117) (7079.46,0.2562) (7943.28,0.3024) (8912.51,0.3485) (10000,0.3955) (11220.2,0.4417) (12589.3,0.4885) (14125.4,0.5355) (15848.9,0.5832) (17782.8,0.6273) (19952.6,0.6712) (22387.2,0.7129) (25118.9,0.7552) (28183.8,0.7944) (31622.8,0.8323) (35481.3,0.8681) (39810.7,0.8979) (44668.4,0.9229) (50118.7,0.9448) (56234.1,0.9608) (63095.7,0.9731) (70794.6,0.9831) (79432.8,0.9888) (89125.1,0.9933) (100000,0.9962)};
+\addlegendentry{RIAF}
+\addplot[teal, thick, dashed] coordinates {(1000,0.0000) (1122.02,0.0000) (1258.93,0.0000) (1412.54,0.0000) (1584.89,0.0001) (1778.28,0.0001) (1995.26,0.0003) (2238.72,0.0010) (2511.89,0.0027) (2818.38,0.0053) (3162.28,0.0112) (3548.13,0.0212) (3981.07,0.0352) (4466.84,0.0539) (5011.87,0.0794) (5623.41,0.1106) (6309.57,0.1481) (7079.46,0.1889) (7943.28,0.2325) (8912.51,0.2781) (10000,0.3239) (11220.2,0.3689) (12589.3,0.4146) (14125.4,0.4601) (15848.9,0.5060) (17782.8,0.5524) (19952.6,0.6003) (22387.2,0.6427) (25118.9,0.6851) (28183.8,0.7278) (31622.8,0.7694) (35481.3,0.8082) (39810.7,0.8461) (44668.4,0.8801) (50118.7,0.9082) (56234.1,0.9325) (63095.7,0.9519) (70794.6,0.9670) (79432.8,0.9783) (89125.1,0.9861) (100000,0.9916)};
+\addlegendentry{jet-dominated}
+\addplot[red, thick] coordinates {(1000,0.0000) (1122.02,0.0000) (1258.93,0.0000) (1412.54,0.0000) (1584.89,0.0000) (1778.28,0.0000) (1995.26,0.0000) (2238.72,0.0000) (2511.89,0.0000) (2818.38,0.0000) (3162.28,0.0001) (3548.13,0.0001) (3981.07,0.0001) (4466.84,0.0004) (5011.87,0.0010) (5623.41,0.0024) (6309.57,0.0046) (7079.46,0.0085) (7943.28,0.0150) (8912.51,0.0243) (10000,0.0371) (11220.2,0.0537) (12589.3,0.0755) (14125.4,0.1009) (15848.9,0.1299) (17782.8,0.1632) (19952.6,0.2001) (22387.2,0.2374) (25118.9,0.2768) (28183.8,0.3160) (31622.8,0.3557) (35481.3,0.3967) (39810.7,0.4374) (44668.4,0.4766) (50118.7,0.5181) (56234.1,0.5583) (63095.7,0.6012) (70794.6,0.6390) (79432.8,0.6787) (89125.1,0.7175) (100000,0.7573)};
+\addlegendentry{RIAF, radio leg removed}
+\draw[black!40, dashed] (axis cs:6000,0) -- (axis cs:6000,1.02);
+\draw[black!40, dashed] (axis cs:8200,0) -- (axis cs:8200,1.02);
+\draw[black!40, dashed] (axis cs:40000,0) -- (axis cs:40000,1.02);
+\node[font=\scriptsize, rotate=90, anchor=south] at (axis cs:6000,0.30) {$6{,}000$};
+\node[font=\scriptsize, rotate=90, anchor=south] at (axis cs:8200,0.30) {$8{,}200$};
+\node[font=\scriptsize, rotate=90, anchor=south] at (axis cs:40000,0.30) {$4\times10^{4}$};
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Fraction of natural-flow parameter space excluded, $P_{\mathrm{excl}} = P[\varepsilon_{\mathrm{nat}} > \epsl]$, as a continuous function of mass: the vertical relationship of Figure~\ref{fig:curves} read off at every grid mass rather than at three. Vertical lines mark the pulsar-timing point-mass cap \citep{BanaresHernandez2025}, the fast-star lower bound \citep{Haberle2024Nature}, and the upper kinematic range. The three anchor values of Table~\ref{tab:anchors} sit on these curves by construction. Coordinates from \texttt{figs/fF\_expand\_exclcurve.json}, which re-exports the grid the v0.3 run already evaluated.}
+\label{fig:exclcurve}
+\end{figure}
+
+\subsection{Which band binds which family}
+\label{sec:bandadj}
+
+Figure~\ref{fig:bands} shows what the family definitions of Section~\ref{sec:families} change. At each anchor the figure evaluates the forward model at that family's own $\epsl$ and plots the predicted $\nu L_{\nu}$ in every observed band against the published limit in that band, so the three instruments and the three families appear on one axis.
+
+The ordering is family-dependent in the way Section~\ref{sec:families} claims. For the RIAF family the median predicted radio flux density at $\epsl$ sits at 1.4 times the ATCA $5\sigma$ point at $8{,}200\,\msun$ and 4.7 times it at $4\times10^{4}\,\msun$, while the X-ray prediction sits at 1\,per~cent of the Chandra bound and the tightest infrared filter at 1\,per~cent of its own. For the jet family the radio ratios are 1.0 and 3.2 and the F770W ratio rises to 3\,per~cent, an order of magnitude closer than under the RIAF band fractions and still not competitive with the plane. The thin disk, which carries no radio leg, is bound jointly by F770W (0.28 and 0.38 of the limit) and by the X-ray band (0.26 and 0.36); those two ratios sit within 10\,per~cent of each other, so for that family the infrared and the X-ray legs share the constraint rather than one dominating.
+
+Ratios above unity for the radio band are expected and are not a detection claim: $\epsl$ is a 95\,per~cent posterior quantile marginalized over the plane's 0.88-dex latent scatter, so at that $\eps$ the median draw predicts a flux the image would have seen while a substantial tail does not. The five-percentile whiskers, which reach two decades below the medians in the radio and a factor of ten in the other bands, are that scatter. And the infrared points are flat across the four filters by construction, since the model predicts one band-peak $\nu L_{\nu}$ and each filter constrains it separately; the filters differ only in their limits, which is why F770W sets the infrared constraint.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\linewidth]{figs/fF_expand_sed.png}
+\caption{Predicted band luminosities at each family's own $\epsl$, against the published limits (black bars, arrows marking the excluded direction). Points are medians over the $4\times10^{4}$ nuisance draws, whiskers the 5th to 95th percentiles. The thin-disk family has no radio point because the fundamental-plane leg is not applied to it (Section~\ref{sec:families}). The radio limit is drawn at $5\sigma$ (5.5\,$\mu$Jy) so that it is comparable with the X-ray and infrared bounds, which are published as limits; the likelihood itself uses the $1.1\,\mu$Jy rms as a Gaussian $\sigma$ and is unaffected. Script \texttt{figs/fF\_expand\_v1.py}, numbers in \texttt{figs/fF\_expand\_sed.json}.}
+\label{fig:bands}
+\end{figure}
+
 \subsection{Sensitivity budget}
 \label{sec:sensitivity}
 
@@ -283,6 +339,58 @@ $\eps$-grid floor raised to $10^{-11}$ & $4.6\times10^{-9}$ & $2.8\times10^{-9}$
 \end{table}
 
 Table~\ref{tab:sens} is the quantified version of Section~\ref{sec:priors}'s caveat. Widening the $n_{e}$ prior by a decade in each direction, or dividing its median by ten, each relax \epsl{} by a factor $\sim$6: the curve's normalization belongs to the gas-density assumption, in both its width and its center, and no claim in this paper escapes that conditioning. Two things bound the damage. The wind-replenishment floor of Section~\ref{sec:gas} truncates the low-density tail on astrophysical grounds, and with it in place the widened prior returns almost to baseline. And the $\eps$-prior floor matters as it always does for non-detections, a factor $\sim$10 when the grid floor rises three decades; every \epsl{} in this paper is quoted on the $10^{-14}$ grid, and the machine-readable likelihood tables let any reader impose their own.
+
+\subsubsection{Which nuisance carries the spread}
+\label{sec:nuisance}
+
+Table~\ref{tab:sens} varies analysis choices. The seven nuisance parameters can be interrogated separately, by re-running the same posterior with one of them held at its prior's central value while the other six are drawn, and again with only that one drawn and the other six held (Figure~\ref{fig:nuisance}). The two views answer different questions: the first asks how much of the limit's looseness a given parameter is responsible for, the second asks how much looseness that parameter would produce on its own.
+
+The answer is that the fundamental plane's latent scatter carries the spread. Freezing $\delta_{\mathrm{FP}}$ at zero tightens \epsl{} by a factor of 11 at $8{,}200\,\msun$ and 29 at $4\times10^{4}\,\msun$; drawing it alone, with everything else fixed, reproduces a limit 18 and 60 times looser than the fully frozen case. No other parameter comes within an order of magnitude. The gas density is second and is a distant second in this accounting: freezing it tightens \epsl{} by 22 to 25\,per~cent, and drawing it alone loosens the frozen limit by a factor 1.6 to 2.4. The X-ray band fraction contributes 6 to 9\,per~cent, the sound speed under 1\,per~cent, and the distance nothing measurable, as expected from a 1\,per~cent prior. The infrared band fraction moves the RIAF limit by 2\,per~cent in the opposite direction, which is the signature of a leg that never binds in this family.
+
+The distance prior and the suppression index are inert here, for structural reasons worth naming. The distance prior is narrow enough that its 1\,per~cent width cannot register against the plane's 0.88 dex. The suppression index $s$ does not enter the likelihood at all: it sets the natural-flow expectation $\varepsilon_{\mathrm{nat}}$ against which the limit is compared, not the limit itself, so its entire influence in this paper runs through $P_{\mathrm{excl}}$ and the grey band of Figure~\ref{fig:curves} rather than through \epsl.
+
+This does not contradict Section~\ref{sec:priors}'s statement that the gas density owns the result. The two statements are about different things. Within the stated priors, the plane's scatter is what widens the posterior; the density's danger is in the choice of prior centre, which no freezing test can expose, and which Table~\ref{tab:sens}'s prior-shift rows price at a factor $\sim$6. A reader who distrusts the plane has the radio-free curve; a reader who distrusts the density analogy has the shift rows and the wind floor.
+
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[
+  width=0.47\linewidth, height=6.2cm,
+  name=leftplot,
+  xlabel={$\epsl$(frozen) / $\epsl$(baseline)},
+  xmin=0.02, xmax=3, xtick={0.03,0.1,0.3,1},
+  xticklabels={0.03,0.1,0.3,1},
+  ytick=data, symbolic y coords={s,d,c_s,f_IR,f_X,n_e,fp},
+  yticklabels={$s$,$d$,$c_{s}$,$f_{\mathrm{IR}}$,$f_{X}$,$n_{e}$,$\delta_{\mathrm{FP}}$},
+  grid=major, grid style={black!12},
+  tick label style={font=\small}, label style={font=\footnotesize},
+  legend style={font=\scriptsize, at={(0.03,0.03)}, anchor=south west},
+]
+\addplot[only marks, mark=*, blue] coordinates {(1.0000,s) (1.0000,d) (0.9931,c_s) (1.0171,f_IR) (0.9317,f_X) (0.7796,n_e) (0.0801,fp)};
+\addlegendentry{$8{,}200\,\msun$}
+\addplot[only marks, mark=triangle*, red] coordinates {(1.0000,s) (0.9999,d) (0.9927,c_s) (1.0124,f_IR) (0.9136,f_X) (0.7527,n_e) (0.0354,fp)};
+\addlegendentry{$4\times10^{4}\,\msun$}
+\draw[black!45, densely dashed] (axis cs:1,s) -- (axis cs:1,fp);
+\end{semilogxaxis}
+\begin{semilogxaxis}[
+  width=0.47\linewidth, height=6.2cm,
+  at={(leftplot.east)}, anchor=west, xshift=0.055\linewidth,
+  xlabel={$\epsl$(only this drawn) / $\epsl$(all frozen)},
+  xmin=0.7, xmax=200, xtick={1,3,10,30,100},
+  xticklabels={1,3,10,30,100},
+  ytick=data, symbolic y coords={s,d,c_s,f_IR,f_X,n_e,fp},
+  yticklabels={,,,,,,},
+  grid=major, grid style={black!12},
+  tick label style={font=\small}, label style={font=\footnotesize},
+]
+\addplot[only marks, mark=*, blue] coordinates {(1.0000,s) (1.0000,d) (1.0219,c_s) (1.0000,f_IR) (1.1917,f_X) (1.6341,n_e) (17.5678,fp)};
+\addplot[only marks, mark=triangle*, red] coordinates {(1.0000,s) (1.0004,d) (1.0534,c_s) (1.0000,f_IR) (1.4033,f_X) (2.3951,n_e) (59.8187,fp)};
+\draw[black!45, densely dashed] (axis cs:1,s) -- (axis cs:1,fp);
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Per-nuisance contribution to the RIAF-family limit, at two mass anchors. Left: \epsl{} with that nuisance held at its prior's central value, divided by the baseline \epsl{}; a point far to the left means that parameter's spread was inflating the limit by that factor. Right: \epsl{} with only that nuisance drawn, divided by the limit with all seven frozen. Neither panel is a variance decomposition, since \epsl{} is a posterior quantile rather than a sum of independent terms, and the two panels do not multiply back to unity. The distance and the suppression index sit on the reference line in both panels; $s$ does so because it enters the natural-flow expectation and not the likelihood. Numbers in \texttt{figs/fF\_expand\_nuisance.json}.}
+\label{fig:nuisance}
+\end{figure}
 
 \subsection{Where this sits against the survey population}
 \label{sec:maveric}
@@ -315,12 +423,79 @@ The three inputs sample time very differently, and \citet{Mahida2026}'s Table~1 
 
 Two consequences follow on different timescales. For variability slower than the sampled span, the limits above apply to the time-average $\delta\,\varepsilon_{\mathrm{on}}$ of a flow active a fraction $\delta$ of the time at $\varepsilon_{\mathrm{on}}$, so $\varepsilon_{\mathrm{on}} \lesssim \epsl/\delta$; the radio image is a weighted combination over the full fourteen-year span, so this is the operative statement there. For variability faster than a block, the source must be off during every epoch to escape, which for $N \simeq 30$ independent epochs (25 radio blocks, four Chandra exposures, one JWST visit) gives a miss probability $(1-\delta)^{N}$ reaching 50\,per~cent only near $\delta \approx 0.02$. The excluded region is therefore the band $\varepsilon_{\mathrm{on}} > \epsl/\delta$ down to a few per~cent duty cycle, and effectively nothing below that: a flow that spends 99\,per~cent of its time off is constrained only by the luck of the sampling. An earlier draft put the epoch count at $N \sim 6$ and the sampling break at $\delta \approx 0.1$, having treated the radio campaign as one epoch. This is the standard loophole of every quiescent-limit paper, here made explicit because Paper E's tidal-disruption arithmetic predicts exactly such intermittency on $10^{7}$-yr recurrence with $10^{-4}$ duty, far below the reach of any current sampling; nothing in this paper's nulls bears on that channel, in either direction.
 
+\subsection{What the block list actually excludes}
+\label{sec:dutyquant}
+
+The block list supports a stronger statement than a miss probability, because each block is an image in its own right. Scaling the combined image's sensitivity by on-source time, $\sigma_{i} = 1.1\,\mu\mathrm{Jy}\,\sqrt{177.19\,\mathrm{hr}/t_{i}}$, the 25 blocks reach 4.5 to 12.0\,$\mu$Jy rms with a median of 5.3\,$\mu$Jy over a median 7.6\,hr on source, so a single block detects a source at $5\sigma$ near 27\,$\mu$Jy while the combined image reaches 5.5\,$\mu$Jy. That scaling assumes each on-source hour is equally sensitive across the three projects and both observing frequencies, which \citet{Mahida2026} do not state block by block; it is the only scaling their published table supports.
+
+A flare train is then a two-parameter object: amplitude $S$ and duration $\tau$, recurring with period $T_{\mathrm{rec}}$ at an unknown phase. Laying such a train over the real block timeline (2010 January 22 to 2024 December 27, a 14.9-yr span containing 177.19\,hr of on-source time) and asking whether any single block's $\tau$-averaged flux exceeds its own $5\sigma$ point, or the campaign mean exceeds 5.5\,$\mu$Jy, gives a detection probability over phase. Table~\ref{tab:duty} reports, for each $(S, \tau)$, the longest recurrence interval that would still have been caught in at least 95\,per~cent of phases. Anything recurring faster than that is excluded; anything slower is not.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Longest flare recurrence interval excluded at 95\,per~cent of phases, from the 25-block ATCA timeline (4000 fixed-seed realizations per cell; script \texttt{figs/fF\_expand\_v1.py}, seed 20260820). Entries are hours; a dash means no recurrence interval on the grid is excluded for that amplitude and duration. The implied duty cycle $\tau/T_{\mathrm{rec}}$ at each threshold is in parentheses.}
+\label{tab:duty}
+\begin{tabular}{lcccc}
+\toprule
+Flare amplitude & $\tau = 0.5$\,hr & 2\,hr & 8\,hr & 24\,hr \\
+\midrule
+$10\,\mu$Jy & -- & -- & $12$ (0.655) & $31$ (0.763) \\
+$30\,\mu$Jy & -- & $8$ (0.263) & $25$ (0.322) & $130$ (0.184) \\
+$100\,\mu$Jy & $8$ (0.066) & $31$ (0.064) & $130$ (0.061) & $209$ (0.115) \\
+$300\,\mu$Jy & $15$ (0.032) & $81$ (0.025) & $130$ (0.061) & $209$ (0.115) \\
+$1$\,mJy & $81$ (0.006) & $81$ (0.025) & $130$ (0.061) & $209$ (0.115) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Low-amplitude trains are excluded only when they are almost always on: a 10\,$\mu$Jy source is invisible in any single block and can be caught only through the campaign mean, which requires a duty cycle above 0.7. Bright, brief trains are bounded by the sampling rather than by the sensitivity: at 300\,$\mu$Jy and above, for durations of 2\,hr and longer, the exclusion saturates near a recurrence interval of 3 to 9\,days, because 177\,hr of on-source time spread over 14.9\,yr covers 0.14\,per~cent of the span, and a flare that recurs more slowly than about a week simply misses every block most of the time no matter how bright it is. Between those regimes the campaign excludes real parameter space: a 100\,$\mu$Jy, 2-hr flare is excluded for recurrence faster than 31\,hr, a duty cycle of $6\times10^{-2}$.
+
+The floor of the excluded region is therefore a duty cycle of $6\times10^{-3}$, reached at 1\,mJy and half an hour, and it is set by sampling coverage rather than by image depth. This tightens the order-of-magnitude estimate above by a factor of a few and it changes the instrument implication: for the flare channel, more epochs at the present depth would buy more than the same time added to a single deep image, which is the opposite of the priority ordering that Section~\ref{sec:forecast} gives for the steady channel. Paper E's predicted tidal-disruption intermittency, at $10^{-4}$ duty on $10^{7}$-yr recurrence, remains two decades below the floor and 12 decades outside the recurrence range, so the conclusion of the preceding paragraph is unchanged: this campaign says nothing about that channel.
+
 \section{Forecasts}
 \label{sec:forecast}
 
 Three measurements would harden or move the curves, in descending order of leverage per unit effort.
 
 \textbf{A measured core density.} The 19-pulsar timing set \citep{ColomiBernadich2026} makes an \ocen{} dispersion-measure gas detection feasible for the first time, by the method that measured 47 Tuc \citep{Freire2001,Abbate2018}; the caveat, that DM gradients constrain the column through the pulsar volume rather than the density at the hole, is real and enters as geometry. The forecast gain on \epsl{} itself is modest (a $\pm$10\,per~cent density measurement tightens the baseline by $\sim$22\,per~cent, since the 0.5-dex prior is already informative). A measurement converts every curve from analogy-conditional to measured, removes the largest single objection to the enterprise, and, if the density comes in low, legitimately weakens the bounds when the conditions are tested.
+
+Table~\ref{tab:dm} is the requirement that forecast implies, computed from the published timing set. All 19 pulsars have measured dispersion measures; eight have them from full timing solutions with formal uncertainties of $5\times10^{-5}$ to $1.3\times10^{-3}$\,pc\,cm$^{-3}$, and five of those eight also have a measured first DM derivative. Timing precision is not the obstacle.
+
+Geometry sets what a dispersion-measure gradient can reach. Gas filling the cluster core, a uniform sphere of the catalogue core radius $2.37'$ \citep{Harris1996}, or 3.74\,pc at 5.43\,kpc, imprints a central-chord excess of $0.75$\,pc\,cm$^{-3}$ at $n_{e} = 0.1\,\mathrm{cm^{-3}}$, and 13 of the 19 sight lines pass inside it. Gas confined to the influence radius of the hole, the 0.4\,pc region the Bondi rate is actually about, imprints $0.08$\,pc\,cm$^{-3}$ and no published sight line passes through it: the innermost pulsar, H at $0.56'$, projects to 0.88\,pc. A DM determination therefore measures the core-filling component and reaches the Bondi-scale density only through an assumed profile, which is the caveat named above, now with a number attached.
+
+The sight-line scatter sets how well it can be measured. The 19 published DMs span 94.3 to 102.6\,pc\,cm$^{-3}$ with an r.m.s. of 2.9\,pc\,cm$^{-3}$, three orders of magnitude above the per-pulsar measurement precision and four times the signal a core-filling $n_{e} = 0.1\,\mathrm{cm^{-3}}$ would produce. Fitting the chord template plus a free foreground constant to the 19 measurements by least squares returns an amplitude of $-0.33 \pm 0.24\,\mathrm{cm^{-3}}$, consistent with zero and formally negative, with a residual r.m.s. of 2.8\,pc\,cm$^{-3}$. We do not quote the implied upper limit as a constraint on the cluster's gas: a model whose residuals exceed its measurement errors by three orders of magnitude is falsified by its own fit, and the formal error bar of a falsified model is not a credible interval. What the fit does establish is the requirement. At the present per-sight-line scatter, a $3\sigma$ determination of $n_{e} = 0.1\,\mathrm{cm^{-3}}$ needs the scatter modelled down by a factor of 7, or of order $10^{3}$ sight lines at the current scatter, which no foreseeable timing programme will deliver. The tractable path is the former: the excess scatter is structure, in the Galactic foreground or in the cluster, and it is measurable in its own right through the DM derivatives that five of these pulsars already have.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{The 19 timed pulsars as a gas probe. $\theta$ is the angular offset from the cluster centre \citep{ColomiBernadich2026}, $b$ the projected radius at 5.43\,kpc, and $\Delta\mathrm{DM}$ the excess a uniform core-filling $n_{e} = 0.1\,\mathrm{cm^{-3}}$ would imprint on that sight line. Pulsars without a quoted DM uncertainty have search-level or partial solutions. Numbers in \texttt{figs/fF\_expand\_dm.json}.}
+\label{tab:dm}
+\begin{tabular}{lccccc}
+\toprule
+PSR J1326$-$4728 & $\theta$ ($'$) & $b$ (pc) & DM (pc\,cm$^{-3}$) & $\sigma_{\mathrm{DM}}$ & $\Delta\mathrm{DM}$ at $0.1\,\mathrm{cm^{-3}}$ \\
+\midrule
+H & 0.56 & 0.88 & 98.1716 & $0.0005$ & $0.73$ \\
+B & 0.76 & 1.20 & 100.2806 & $0.0008$ & $0.71$ \\
+F & 1.00 & 1.58 & 98.29 & -- & $0.68$ \\
+P & 1.00 & 1.58 & 102.17 & -- & $0.68$ \\
+O & 1.50 & 2.37 & 94.305 & -- & $0.58$ \\
+E & 1.58 & 2.50 & 94.33967 & $5\times10^{-5}$ & $0.56$ \\
+J & 1.80 & 2.84 & 97.28 & -- & $0.49$ \\
+K & 1.89 & 2.99 & 94.7836 & $0.0007$ & $0.45$ \\
+A & 1.93 & 3.05 & 100.3267 & $0.0004$ & $0.43$ \\
+G & 1.96 & 3.10 & 99.7445 & $0.001$ & $0.42$ \\
+C & 1.98 & 3.13 & 100.6643 & $0.0013$ & $0.41$ \\
+Q & 2.30 & 3.63 & 95.923 & -- & $0.18$ \\
+S & 2.32 & 3.66 & 96.24 & -- & $0.15$ \\
+M & 2.40 & 3.79 & 101.47 & -- & $0$ \\
+D & 2.50 & 3.95 & 96.5462 & $0.0009$ & $0$ \\
+N & 2.66 & 4.20 & 102.1 & -- & $0$ \\
+L & 3.32 & 5.24 & 101.4759 & -- & $0$ \\
+I & 3.53 & 5.58 & 102.555 & -- & $0$ \\
+R & 3.90 & 6.16 & 102.2 & -- & $0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \textbf{Deeper radio.} The radio-leg limit scales as $\sigma_{S}^{1/0.60}$. A tenfold rms improvement (SKA-Mid-era depth, $\sim$0.1\,$\mu$Jy) tightens the RIAF \epsl{} by an order of magnitude at every anchor ($2.8\times10^{-10} \rightarrow 2.5\times10^{-11}$ at $8{,}200\,\msun$), pushing the natural-flow exclusion fraction at the fast-star anchor from 31 toward the regime where the null itself becomes diagnostic.
 
@@ -340,7 +515,7 @@ The deepest radio, infrared, and X-ray observations of \ocen's center jointly ad
 
 \section*{Data availability}
 \begin{sloppypar}
-The posterior script (\texttt{figs/fF\_posterior\_v3.py}, fixed seed), its full output (\texttt{figs/fF\_v3\_results.json}), the exclusion-fraction tables, the measured-input provenance file that supplies every observational number used above with its source location and verbatim quotation (\texttt{figs/fF\_measured\_inputs.json}) together with the derived epoch and survey-context exports (\texttt{figs/fF\_epochs.json}, \texttt{figs/fF\_maveric\_context.json}), the superseded v0.2 script and output retained for comparison, the appendix cross-check script (\texttt{figs/fF\_joint\_bound.py}), and the figure coordinate tables are distributed with the paper source at omegacentauri.me. The provenance file also records two internal inconsistencies in the sources that a reader checking our inputs will meet: \citet{Mahida2026}'s conservative efficiency limit is stated as $4\times10^{-3}$ in their abstract and Section~IV.1 and as $4\times10^{-6}$ in their Section~V, and their Table~1 observing hours exceed their own prose totals. Neither enters any number in this paper, and both are flagged here for that paper's authors.
+The posterior script (\texttt{figs/fF\_posterior\_v3.py}, fixed seed), its full output (\texttt{figs/fF\_v3\_results.json}), the exclusion-fraction tables, the measured-input provenance file that supplies every observational number used above with its source location and verbatim quotation (\texttt{figs/fF\_measured\_inputs.json}) together with the derived epoch and survey-context exports (\texttt{figs/fF\_epochs.json}, \texttt{figs/fF\_maveric\_context.json}), the superseded v0.2 script and output retained for comparison, the appendix cross-check script (\texttt{figs/fF\_joint\_bound.py}), the expansion-analysis script behind Figures~\ref{fig:exclcurve}, \ref{fig:bands} and \ref{fig:nuisance} and Tables~\ref{tab:duty} and \ref{tab:dm} (\texttt{figs/fF\_expand\_v1.py}, fixed seed, with its outputs \texttt{fF\_expand\_nuisance.json}, \texttt{fF\_expand\_sed.json}, \texttt{fF\_expand\_exclcurve.json}, \texttt{fF\_expand\_duty.json} and \texttt{fF\_expand\_dm.json}), and the figure coordinate tables are distributed with the paper source at omegacentauri.me. The pulsar dispersion measures of Table~\ref{tab:dm} are read from the timing-set extraction \texttt{h/data/pulsars.json}, which records each value's source location in \citet{ColomiBernadich2026}. The provenance file also records two internal inconsistencies in the sources that a reader checking our inputs will meet: \citet{Mahida2026}'s conservative efficiency limit is stated as $4\times10^{-3}$ in their abstract and Section~IV.1 and as $4\times10^{-6}$ in their Section~V, and their Table~1 observing hours exceed their own prose totals. Neither enters any number in this paper, and both are flagged here for that paper's authors.
 The analysis would improve with, and the machinery directly ingests, the measured central-pixel flux density and its uncertainty from the ATCA image, the per-epoch Chandra source counts and background at the center list, and the per-filter MIRI/NIRCam limiting fluxes; we request them from the respective teams.
 \end{sloppypar}
 
