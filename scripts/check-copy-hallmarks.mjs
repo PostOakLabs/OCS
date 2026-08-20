@@ -179,7 +179,6 @@ const VERBLESS_FRAGMENT = /(?:^|[.!?]\s+)(One|Two|Three|Four|Five|Six)\s+[A-Za-z
 // queued as follow-up OCS-TELL-GATE-1-FOLLOWUP. Any OTHER verbless fragment,
 // including a new one in this same paper, still fails.
 const VERBLESS_KNOWN_DEBT = {
-  'inward-review': ['Three caveats.'],
 };
 // NEW-C: numeric-announce opener — ratchet, per-file budget 3.
 const NUMERIC_OPENER = /\b(One|Two|Three|Four|Five|Six)\s+(things?|statements?|reasons?|consequences?|features?|caveats?|checks?|asymmetries|conventions?|considerations?|principles?|corollaries|questions?|effects?|explanations?|regimes?|further)\b/g;
