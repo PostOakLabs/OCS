@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paper E figure source — Omega Centauri Society</title>
+<title>Figure and analysis source — Omega Centauri Society</title>
 <meta name="description" content="Source scripts, outputs, and reproduction instructions for the Paper E figures (feasibility envelope, constraint plane, ln K, R statistic).">
 <link rel="canonical" href="https://omegacentauri.me/papers/figs/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -26,7 +26,8 @@ td a{font-family:'Space Mono',monospace;}
 </head>
 <body>
 <main>
-<h1>Paper E figure source</h1>
+<h1>Figure and analysis source</h1>
+<h2>Paper E — engineered-IMBH systems</h2>
 <p class="lede">Reproduction scripts and outputs for <a href="/engineered-imbh-systems.html">Engineered Intermediate-Mass Black Hole Systems</a> (Paper E). Fixed seed 20260717; all quoted numbers regenerate from these scripts. Full LaTeX source for all five papers is at <a href="/papers/source/">/papers/source/</a>.</p>
 <table>
 <thead><tr><th>File</th><th>What it is</th></tr></thead>
@@ -39,7 +40,65 @@ td a{font-family:'Space Mono',monospace;}
 <tr><td><a href="fig1_results.json">fig1_results.json</a></td><td>Machine-readable Monte Carlo output: per-radius median/16–84% survival times, encounter rates, kick variances</td></tr>
 <tr><td><a href="README.md">README.md</a></td><td>Method notes and reproduction instructions</td></tr>
 </tbody>
+<tr><td><a href="appendix_d_validation.py">appendix_d_validation.py</a></td><td>Appendix E (E6) adjudication-machinery validation script for Paper E.</td></tr>
 </table>
+
+<h2>Paper F — joint accretion bound</h2>
+<p>Reproduction scripts and outputs for <a href="/omega-centauri-accretion-limit.html">the joint radio–infrared–X-ray accretion bound</a> (fixed seed 42, N = 40,000 draws).</p>
+<table>
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="fF_posterior_v3.py">fF_posterior_v3.py</a></td><td>The Monte Carlo of record: forward model, likelihoods, three flow families. Outputs <a href="fF_v3_results.json">fF_v3_results.json</a>.</td></tr>
+<tr><td><a href="fF_posterior_v2.py">fF_posterior_v2.py</a></td><td>Earlier draft MC, retained for the version record. Outputs <a href="fF_v2_results.json">fF_v2_results.json</a>, <a href="fF_v2_exclfrac.json">fF_v2_exclfrac.json</a>.</td></tr>
+<tr><td><a href="fF_joint_bound.py">fF_joint_bound.py</a></td><td>Appendix threshold-inversion cross-check. Outputs <a href="fF_results.json">fF_results.json</a>.</td></tr>
+<tr><td><a href="fF_expand_v1.py">fF_expand_v1.py</a></td><td>v1.2 expansion: nuisance dominance, SED-family adjudication, continuous exclusion curve, epoch-resolved duty cycle, DM forecast. Outputs <a href="fF_expand_nuisance.json">nuisance.json</a> (<a href="fF_expand_nuisance.png">png</a>), <a href="fF_expand_sed.json">sed.json</a> (<a href="fF_expand_sed.png">png</a>), <a href="fF_expand_exclcurve.json">exclcurve.json</a> (<a href="fF_expand_exclcurve.png">png</a>), <a href="fF_expand_duty.json">duty.json</a>, <a href="fF_expand_dm.json">dm.json</a>.</td></tr>
+<tr><td><a href="fF_epochs.json">fF_epochs.json</a></td><td>ATCA per-block epoch table (25 blocks, 177.19 h) behind the duty-cycle analysis.</td></tr>
+<tr><td><a href="fF_measured_inputs.json">fF_measured_inputs.json</a></td><td>Measured observational inputs of record (<a href="fF_measured_inputs_REPORT.md">provenance report</a>).</td></tr>
+<tr><td><a href="fF_maveric_context.json">fF_maveric_context.json</a></td><td>MAVERIC survey-population context values.</td></tr>
+<tr><td><a href="fF_fig1.png">fF_fig1.png</a></td><td>Posterior figure as rendered on the full-text page.</td></tr>
+<tr><td><a href="fF_v03_2_EDITLOG.md">fF_v03_2_EDITLOG.md</a></td><td>v0.3 build editlog, version record.</td></tr>
+</table>
+
+<h2>Paper G — X-ray census</h2>
+<p>Outputs for <a href="/omega-centauri-xray-census.html">the residual X-ray census</a>. The manuscript source is in <a href="/papers/source/">papers/source/</a>.</p>
+<table>
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="fG_expand_v1.py">fG_expand_v1.py</a></td><td>v1.2 expansion script: sky map, colour–flux plane, log N–log S residual, control recovery, ranked target list, epoch-comparison cost. Asserts the run of record before computing anything new.</td></tr>
+<tr><td><a href="fG_target_list.json">fG_target_list.json</a></td><td>The ranked 39-source MSP-like candidate pool, machine-readable: pre-registered ranking rule, all three chance-coincidence estimators per source, caveat flags.</td></tr>
+<tr><td><a href="fG_expand_skymap.json">fG_expand_skymap.json</a> (<a href="fG_expand_skymap.png">png</a>)</td><td>Core sky map (paper Fig. 2).</td></tr>
+<tr><td><a href="fG_expand_colourflux.json">fG_expand_colourflux.json</a> (<a href="fG_expand_colourflux.png">png</a>)</td><td>Colour–flux plane (Fig. 6).</td></tr>
+<tr><td><a href="fG_expand_lognlogs.json">fG_expand_lognlogs.json</a> (<a href="fG_expand_lognlogs.png">png</a>)</td><td>log N–log S residual (Fig. 5).</td></tr>
+<tr><td><a href="fG_expand_control.json">fG_expand_control.json</a> (<a href="fG_expand_control.png">png</a>)</td><td>47 Tucanae control recovery (Fig. 1).</td></tr>
+<tr><td><a href="fG_expand_variability.json">fG_expand_variability.json</a></td><td>Epoch-comparison cost table (Appendix B).</td></tr>
+<tr><td><a href="fG_fig1.png">fG_fig1.png</a>, <a href="fG_fig2.png">fG_fig2.png</a></td><td>Original page figures (frame registration; population comparison).</td></tr>
+</table>
+
+<h2>Paper H — mass tension</h2>
+<p>Figure outputs for <a href="/omega-centauri-mass-tension.html">the pre-registered mass-tension analysis</a>. Every JSON renders a frozen result file from the fit of record.</p>
+<table>
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="fH_expand_v1.py">fH_expand_v1.py</a></td><td>v1.2 expansion script; asserts leg-dropped cube identity and FIT-3 reproduction before drawing.</td></tr>
+<tr><td><a href="fH_posterior_plane.json">fH_posterior_plane.json</a> (<a href="fH_posterior_plane.png">png</a>)</td><td>2×2 verdict-configuration posterior plane, HPD90 + PL90 (Fig. 4).</td></tr>
+<tr><td><a href="fH_lnk_ladder.json">fH_lnk_ladder.json</a> (<a href="fH_lnk_ladder.png">png</a>)</td><td>Sixteen-configuration ln K ladder (Fig. 3).</td></tr>
+<tr><td><a href="fH_fast_stars.json">fH_fast_stars.json</a> (<a href="fH_fast_stars.png">png</a>)</td><td>Seven fast stars against escape-velocity curves (Fig. 6).</td></tr>
+<tr><td><a href="fH_pulsar_bounds.json">fH_pulsar_bounds.json</a> (<a href="fH_pulsar_bounds.png">png</a>)</td><td>Seven pulsar acceleration bounds with model envelopes (Fig. 5).</td></tr>
+<tr><td><a href="fH_jerk_dist.json">fH_jerk_dist.json</a> (<a href="fH_jerk_dist.png">png</a>)</td><td>Nearest-neighbour jerk distribution with the ξ = 3.04 and 3.4596 floors (Fig. 1 and Box 1).</td></tr>
+<tr><td><a href="fH_g3_overlay.json">fH_g3_overlay.json</a> (<a href="fH_g3_overlay.png">png</a>)</td><td>Formation-physics buildability map under the posterior contours (Fig. 7).</td></tr>
+<tr><td><a href="fH_fig1.png">fH_fig1.png</a></td><td>Original page figure (error-model ladder).</td></tr>
+</table>
+
+<h2>AXI methods note</h2>
+<table>
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="fAXI_fig1.png">fAXI_fig1.png</a>, <a href="fAXI_fig2.png">fAXI_fig2.png</a></td><td>Figures of <a href="/omega-centauri-axi-note.html">the AXI campaign methods note</a> as rendered on its page.</td></tr>
+</table>
+
+<h2>Shared</h2>
+<table>
+<tr><th>File</th><th>What it is</th></tr>
+<tr><td><a href="README.md">README.md</a></td><td>Directory readme.</td></tr>
+<tr><td><a href="miri_sensitivity.json">miri_sensitivity.json</a></td><td>JWST/MIRI sensitivity values used by Papers E and F.</td></tr>
+</table>
+
 <a class="back" href="/paper.html">← All papers</a>
 </main>
 </body>
