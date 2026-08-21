@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<!--
+  Joint Accretion Bound Explorer
+  Omega Centauri Society  -  omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-08-20
+
+  Interactive companion to Paper F (Joint X-ray/IR/Radio Accretion Bound on the
+  omega Cen IMBH). Interpolates the paper's shipped fixed-seed Monte Carlo output
+  (fF_expand_exclcurve.json, fF_v3_results.json v0.3, N_MC=40000, seed=42). No
+  physics re-implementation: every number on this page is a log-log interpolation
+  of the paper's own result grid.
+
+  Data sources:
+    - Paper F, "A Joint X-ray/IR/Radio Accretion Bound on the omega Cen IMBH" (Omega Centauri Society)
+    - fF_expand_exclcurve.json / fF_v3_results.json (OCS-F-DATA-1 pipeline, v0.3)
+
+  Site section: #science
+  Epistemic tier(s): 🔬 Established physics (Bondi/ADAF/jet accretion models) / ⚠ Observationally debated (n_e prior, radiative efficiency)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joint Accretion Bound Explorer  -  Omega Centauri Society</title>
+<meta name="description" content="Interpolates Paper F's shipped Monte Carlo exclusion-fraction curves (RIAF, jet, RIAF-no-radio) vs IMBH mass for omega Centauri, with the epsilon_95 anchors and 50%/90% crossings.">
+<link rel="canonical" href="https://omegacentauri.me/tools/joint-accretion-bound-explorer.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --border-amber: rgba(240, 160, 32, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.03em; line-height: 1.2; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--amber-mid); color: var(--amber-bright); background: rgba(240,160,32,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65; }
+
+.notice {
+  background: rgba(240,160,32,0.05); border: 1px solid var(--border-amber); border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px; font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--amber-bright); letter-spacing: 0.02em; line-height: 1.6;
+}
+.notice .notice-label { color: var(--amber-glow); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+.notice a { color: var(--amber-glow); text-decoration: underline; }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.input-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.input-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); min-width: 90px; letter-spacing: 0.03em; }
+.input-row input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(90deg, var(--purple-dark), var(--purple-mid));
+  height: 4px; border-radius: 2px; outline: none;
+}
+.input-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--purple-glow); cursor: pointer;
+  box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-row input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--purple-glow);
+  cursor: pointer; border: none; box-shadow: 0 0 10px rgba(160,128,240,0.5);
+}
+.input-val { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--teal-glow); min-width: 120px; text-align: right; white-space: nowrap; }
+.input-help { font-size: 13px; color: var(--text-dim); margin-top: 4px; font-style: italic; padding-left: 104px; }
+
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; padding-left: 104px; }
+.chip { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-subtle); color: var(--text-secondary); background: transparent; cursor: pointer; }
+.chip.active { border-color: var(--teal-bright); color: var(--teal-glow); background: rgba(29,186,144,0.08); }
+.toggle-row { display: flex; align-items: center; gap: 10px; padding-left: 104px; margin-bottom: 4px; }
+.toggle-row input { accent-color: var(--teal-bright); }
+.toggle-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); }
+.toggle-row.disabled label, .toggle-row.disabled { opacity: 0.4; }
+
+.plot-wrap { margin: 4px 0 6px; }
+canvas#curve-canvas { width: 100%; height: 260px; display: block; background: rgba(7,5,21,0.5); border: 1px solid var(--border-subtle); border-radius: 8px; }
+.plot-axis-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: center; margin-top: 4px; }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+.result-item .k { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 4px; }
+.result-item .v { font-family: 'Orbitron', sans-serif; font-size: 20px; color: var(--amber-bright); letter-spacing: 0.02em; }
+.result-verdict { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); line-height: 1.6; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-size: 14px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/omega-centauri-accretion-limit.html">Paper F</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Joint Accretion<br>Bound Explorer</h1>
+    <span class="register-badge">Monte Carlo interpolation</span>
+  </div>
+
+  <p class="intro">Interactive companion to Paper F. Interpolates the paper's shipped exclusion-fraction curves  -  the fraction of the paper's fixed-seed Monte Carlo ambient-density/temperature draws that a given IMBH mass would have been excluded under, for each accretion-family assumption (RIAF, jet, RIAF-with-no-radio-leg)  -  against the JWST/X-ray/radio non-detection.</p>
+
+  <div class="notice">
+    <span class="notice-label">Interpolation of shipped output, not a live re-run</span>
+    Every value here is a log-log interpolation of Paper F's v0.3 fixed-seed Monte Carlo grid (N=40,000, seed=42)  -  no physics is recomputed in the browser. The result depends materially on the assumed ambient electron density n_e prior; Paper F states this dependence is roughly a factor of ~6 across the priors it considered. Treat exact epsilon_95 values as grid-interpolated, not independently derived. Full method and caveats: <a href="/omega-centauri-accretion-limit.html">Paper F, full text</a> · <a href="/papers/omega-centauri-accretion-limit.pdf">PDF</a>.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Parameters</div>
+
+    <div class="input-row">
+      <label>M_BH</label>
+      <input type="range" id="mass-slider" min="3" max="5" step="0.005" value="3.91" oninput="onMassSlider(this.value)">
+      <span class="input-val" id="mass-display">8,200 M☉</span>
+    </div>
+    <div class="input-help">Log-mass slider, 1,000–100,000 M☉ (the paper's shipped grid range).</div>
+
+    <div class="chip-row" id="anchor-chips">
+      <button class="chip" onclick="setMassMsun(6000)">Bañares 6,000</button>
+      <button class="chip" onclick="setMassMsun(8200)">Häberle 8,200</button>
+      <button class="chip" onclick="setMassMsun(40000)">Noyola 40,000</button>
+    </div>
+
+    <div class="input-row" style="margin-top:6px">
+      <label>Family</label>
+    </div>
+    <div class="chip-row" id="family-chips">
+      <button class="chip" data-fam="riaf" onclick="setFamily('riaf')">RIAF</button>
+      <button class="chip" data-fam="jet" onclick="setFamily('jet')">Jet</button>
+    </div>
+
+    <div class="toggle-row" id="radio-leg-row">
+      <input type="checkbox" id="radio-leg-toggle" checked onchange="onRadioLegToggle(this.checked)">
+      <label for="radio-leg-toggle">Radio leg included (RIAF family only  -  unchecked switches to the RIAF-no-radio-leg curve)</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Exclusion-fraction curve</div>
+    <div class="plot-wrap">
+      <canvas id="curve-canvas" width="800" height="260"></canvas>
+    </div>
+    <div class="plot-axis-label">M_BH (M☉, log scale, 10³–10⁵)  -  cursor marks the current mass</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Readout</div>
+    <div class="result-block">
+      <div class="result-grid">
+        <div class="result-item"><div class="k">epsilon_95 (interpolated)</div><div class="v" id="eps95-out">n/a</div></div>
+        <div class="result-item"><div class="k">Natural-flow exclusion fraction</div><div class="v" id="exclfrac-out">n/a</div></div>
+        <div class="result-item"><div class="k">Position vs. 50% crossing</div><div class="v" id="m50-out">n/a</div></div>
+        <div class="result-item"><div class="k">Position vs. 90% crossing</div><div class="v" id="m90-out">n/a</div></div>
+      </div>
+      <div class="result-verdict" id="verdict-out"></div>
+    </div>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool does</h3>
+      <p>Paper F ran a fixed-seed Monte Carlo (N=40,000, seed=42) over ambient electron density n_e, sound speed c_s, and density-slope priors for three accretion-family assumptions (RIAF, jet, RIAF-with-no-radio-leg), and recorded, for a grid of 40 IMBH masses from 1,000 to 100,000 M☉, what fraction of MC draws the joint X-ray/IR/radio non-detection would have excluded. This tool log-log interpolates that shipped grid (<code>fF_expand_exclcurve.json</code>, <code>fF_v3_results.json</code>) for an arbitrary mass on a slider  -  it does not re-run the Monte Carlo.</p>
+      <h3>epsilon_95</h3>
+      <p>epsilon_95 is the 95th-percentile radiative-efficiency threshold from the paper's grid at each mass and family  -  read directly off the shipped <code>eps95_*</code> arrays, log-log interpolated in mass. Lower epsilon_95 at a given mass means the non-detection excludes that mass more easily under the assumed accretion physics.</p>
+      <h3>Crossings</h3>
+      <p>M50 and M90 are the masses at which the exclusion-fraction curve crosses 50% and 90%, taken directly from the paper's shipped <code>crossings</code> block (no re-solving). RIAF-no-radio-leg does not reach a 90% crossing within the paper's mass grid.</p>
+      <h3>Caveats (Paper F)</h3>
+      <ul>
+        <li>The n_e prior dominates the result: Paper F reports roughly a factor of ~6 spread in epsilon_95 across the n_e priors it tested.</li>
+        <li>The Bañares-Hernández et al. 2025 3σ upper limit (6,000 M☉) is a pulsar-timing bound, not derived from this accretion analysis  -  shown here only as a slider preset for comparison.</li>
+        <li>Distance references: D_REF_X = 5.2 kpc (X-ray), D_REF_IR ≈ 5.49 kpc (IR); dispersion values elsewhere on this site use the tools' 18.2 km/s convention while Paper F and this companion inherit the paper's own fiducials  -  see the <a href="/omega-centauri-accretion-limit.html">paper page</a> for the exact provenance of each number quoted here.</li>
+      </ul>
+      <h3>Source</h3>
+      <ul>
+        <li><a href="/omega-centauri-accretion-limit.html">Paper F  -  full text</a></li>
+        <li><a href="/papers/omega-centauri-accretion-limit.pdf">Paper F  -  PDF</a></li>
+      </ul>
+      <div class="meta-line">Tool v1.0  -  2026-08-20 · content revised as the underlying paper's Monte Carlo output is revised.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Joint Accretion Bound Explorer · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- Shipped data (fF_expand_exclcurve.json + fF_v3_results.json, v0.3, N_MC=40000, seed=42) ----------
+const M_GRID = [1000.0,1122.018454301963,1258.9254117941675,1412.537544622754,1584.893192461114,1778.2794100389228,1995.2623149688789,2238.72113856834,2511.88643150958,2818.382931264455,3162.277660168379,3548.1338923357525,3981.071705534973,4466.835921509631,5011.872336272725,5623.413251903491,6309.573444801929,7079.457843841381,7943.282347242814,8912.509381337459,10000.0,11220.18454301963,12589.254117941662,14125.375446227556,15848.931924611143,17782.794100389227,19952.62314968879,22387.211385683375,25118.86431509582,28183.82931264455,31622.776601683792,35481.33892335753,39810.71705534969,44668.359215096345,50118.72336272725,56234.13251903491,63095.73444801929,70794.57843841374,79432.82347242821,89125.0938133746,100000.0];
+
+const EXCLFRAC = {
+  riaf: [0.0,0.0,2.5e-05,5e-05,0.000125,0.000425,0.0013,0.003425,0.006725,0.01385,0.0253,0.040975,0.063325,0.09215,0.12625,0.167425,0.2117,0.256175,0.30235,0.348525,0.395475,0.4417,0.4885,0.535475,0.5832,0.62735,0.671175,0.7129,0.755175,0.79445,0.83225,0.86815,0.89785,0.9229,0.944825,0.960825,0.973075,0.983125,0.98875,0.993325,0.9962],
+  jet: [0.0,0.0,0.0,2.5e-05,5e-05,0.0001,0.000325,0.000975,0.002675,0.00535,0.011225,0.021175,0.0352,0.053875,0.079425,0.110625,0.148075,0.188925,0.2325,0.278125,0.3239,0.368925,0.414625,0.460075,0.50595,0.552425,0.600275,0.6427,0.68505,0.727775,0.7694,0.8082,0.846075,0.880075,0.9082,0.932525,0.951875,0.96705,0.9783,0.986075,0.991625],
+  riaf_noradio: [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.5e-05,5e-05,0.0001,0.000125,0.000425,0.000975,0.0024,0.004625,0.008475,0.015,0.024275,0.037125,0.0537,0.075475,0.100875,0.129875,0.163225,0.200075,0.23745,0.27685,0.31595,0.35565,0.39675,0.437375,0.476575,0.518075,0.558325,0.60125,0.63895,0.678725,0.717475,0.75735]
+};
+
+const EPS95 = {
+  riaf: [4.306222208857976e-08,3.2386927592251965e-08,2.4474618753089218e-08,1.855598991329295e-08,1.402501974177434e-08,1.0564310268224854e-08,7.93175818619403e-09,6.025868291894739e-09,4.567161305455621e-09,3.4529793660745194e-09,2.603808018081736e-09,1.9680268455267947e-09,1.4996229055074117e-09,1.1413428531847794e-09,8.677390889022382e-10,6.591451304868274e-10,5.005988310489739e-10,3.847400171072194e-10,2.9588307553281507e-10,2.2777828032835227e-10,1.756033694381028e-10,1.3564197688082585e-10,1.0503393277042008e-10,8.158112480088724e-11,6.359648358773891e-11,4.988021149010568e-11,3.9346109942222296e-11,3.1154805911169694e-11,2.476842455014146e-11,1.9773606715753436e-11,1.585456676929824e-11,1.2833639326929374e-11,1.0446261099189583e-11,8.546340608738166e-12,7.023077202285346e-12,5.792536569809251e-12,4.791248313056795e-12,3.971190422188767e-12,3.353203616163728e-12,2.8345351329453915e-12,2.394350608344257e-12],
+  jet: [6.232740872370095e-08,4.802558058589747e-08,3.6937908548160515e-08,2.8354434556327974e-08,2.1719831771722438e-08,1.6600108831354554e-08,1.2656412615156738e-08,9.72294814697414e-09,7.46818738804538e-09,5.7271277677286535e-09,4.384727078000056e-09,3.3513218339739813e-09,2.557099392209239e-09,1.9603948301943166e-09,1.5088564521346115e-09,1.1605657075841307e-09,8.922151595486366e-10,6.856861335653076e-10,5.26908970871166e-10,4.049701647479775e-10,3.127225532791607e-10,2.428348291087542e-10,1.888083650962465e-10,1.4704225609366608e-10,1.1474595009146959e-10,8.975905275391187e-11,7.041075762967949e-11,5.5410346231833185e-11,4.3761726325389e-11,3.46968843566319e-11,2.762423001987837e-11,2.2088508027280526e-11,1.7739743692790306e-11,1.4309165634498055e-11,1.1590457338595953e-11,9.425218437310654e-12,7.691805358750047e-12,6.296763175500069e-12,5.233668310839817e-12,4.3641837304771035e-12,3.644835363678565e-12],
+  riaf_noradio: [4.207361050458135e-07,3.4054615541662283e-07,2.7554431738181173e-07,2.2287516453378963e-07,1.8021536123418234e-07,1.4567557755386853e-07,1.177202429627515e-07,9.510194999882316e-08,7.680787623146411e-08,6.2016055653573e-08,5.005971440156379e-08,4.0627495049015315e-08,3.297211981959343e-08,2.6747155073820815e-08,2.1688039784116347e-08,1.7578530774915838e-08,1.4242018649803652e-08,1.1534371968413055e-08,9.33804838132785e-09,7.557254265582776e-09,6.113970670975116e-09,4.944693977488813e-09,4.004641611034719e-09,3.2595681725816866e-09,2.6515760284849455e-09,2.155794933560169e-09,1.7517861983809956e-09,1.4227718306211712e-09,1.1549933054322586e-09,9.371792507875947e-10,7.601043708996864e-10,6.162245948956567e-10,4.993757539093138e-10,4.0731846501914994e-10,3.325017872335786e-10,2.712305383045495e-10,2.2109770463004265e-10,1.8011339858511223e-10,1.466350952306616e-10,1.1930892090672075e-10,9.702039863724378e-11]
+};
+
+const CROSSINGS = {
+  riaf: { M50: 12965.313623535867, M90: 40227.64043432994 },
+  jet: { M50: 15625.386179730873, M90: 48529.639415684636 },
+  riaf_noradio: { M50: 47744.85994180126, M90: null }
+};
+
+const ANCHORS_M = [6000.0, 8200.0, 40000.0];
+const ANCHORS_EXCL = {
+  riaf: [0.1913, 0.314875, 0.898875],
+  jet: [0.13095, 0.245125, 0.8476],
+  riaf_noradio: [0.0037, 0.01735, 0.438825]
+};
+
+// ---------- Interpolation (log-log on the paper's own grid, no extrapolation beyond it) ----------
+const LOG_M = M_GRID.map(Math.log10);
+function interpLogLog(xLog, yArr) {
+  const n = LOG_M.length;
+  if (xLog <= LOG_M[0]) return yArr[0];
+  if (xLog >= LOG_M[n-1]) return yArr[n-1];
+  let i = 0;
+  while (i < n-1 && LOG_M[i+1] < xLog) i++;
+  const x0 = LOG_M[i], x1 = LOG_M[i+1];
+  const t = (xLog - x0) / (x1 - x0);
+  const y0 = yArr[i], y1 = yArr[i+1];
+  if (y0 > 0 && y1 > 0) {
+    return Math.pow(10, Math.log10(y0) * (1-t) + Math.log10(y1) * t);
+  }
+  return y0 * (1-t) + y1 * t;
+}
+
+// ---------- State ----------
+let state = { logM: Math.log10(8200), family: 'riaf', radioLeg: true };
+
+function curveKey() {
+  return (state.family === 'riaf' && !state.radioLeg) ? 'riaf_noradio' : state.family;
+}
+
+function fmtExp(v) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return 'n/a';
+  if (v === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  const m = v / Math.pow(10, e);
+  return m.toFixed(2) + '×10' + e.toString().split('').map(c=>({'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).join('');
+}
+function fmtM(v) { return Math.round(v).toLocaleString('en-US') + ' M☉'; }
+
+function onMassSlider(v) {
+  state.logM = parseFloat(v);
+  saveHash(); render();
+}
+function setMassMsun(m) {
+  state.logM = Math.log10(m);
+  document.getElementById('mass-slider').value = state.logM.toFixed(3);
+  saveHash(); render();
+}
+function setFamily(f) {
+  state.family = f;
+  if (f === 'jet') { state.radioLeg = true; }
+  saveHash(); render();
+}
+function onRadioLegToggle(checked) {
+  state.radioLeg = checked;
+  saveHash(); render();
+}
+
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('logM', state.logM.toFixed(4));
+  p.set('family', state.family);
+  p.set('radioLeg', state.radioLeg ? '1' : '0');
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const lm = parseFloat(p.get('logM'));
+  if (Number.isFinite(lm)) state.logM = Math.max(3, Math.min(5, lm));
+  const fam = p.get('family');
+  if (fam === 'riaf' || fam === 'jet') state.family = fam;
+  const rl = p.get('radioLeg');
+  if (rl !== null) state.radioLeg = rl === '1';
+}
+
+function render() {
+  const key = curveKey();
+  const M = Math.pow(10, state.logM);
+  document.getElementById('mass-slider').value = state.logM.toFixed(3);
+  document.getElementById('mass-display').textContent = fmtM(M);
+
+  document.querySelectorAll('#family-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.fam === state.family));
+  const radioRow = document.getElementById('radio-leg-row');
+  radioRow.classList.toggle('disabled', state.family === 'jet');
+  document.getElementById('radio-leg-toggle').disabled = state.family === 'jet';
+
+  const eps95 = interpLogLog(state.logM, EPS95[key] || EPS95.riaf);
+  const exclfrac = interpLogLog(state.logM, EXCLFRAC[key] || EXCLFRAC.riaf);
+  const cross = CROSSINGS[key] || CROSSINGS.riaf;
+
+  document.getElementById('eps95-out').textContent = fmtExp(eps95);
+  document.getElementById('exclfrac-out').textContent = (exclfrac*100).toFixed(1) + '%';
+  document.getElementById('m50-out').textContent = M < cross.M50 ? 'below (' + fmtM(cross.M50) + ')' : 'above (' + fmtM(cross.M50) + ')';
+  document.getElementById('m90-out').textContent = cross.M90 === null ? 'not reached on grid' : (M < cross.M90 ? 'below (' + fmtM(cross.M90) + ')' : 'above (' + fmtM(cross.M90) + ')');
+
+  let verdict = 'At ' + fmtM(M) + ' under the ' + key.replace('_',' ') + ' family, the shipped grid gives an exclusion fraction of ' + (exclfrac*100).toFixed(1) + '% (epsilon_95 = ' + fmtExp(eps95) + '). Interpolated from the paper\'s fixed-seed Monte Carlo output; not independently recomputed.';
+  document.getElementById('verdict-out').textContent = verdict;
+
+  drawCurve(key, state.logM);
+}
+
+// ---------- Canvas plot ----------
+function drawCurve(key, cursorLogM) {
+  const canvas = document.getElementById('curve-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 800, h = 260;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+
+  const padL = 46, padR = 16, padT = 14, padB = 8;
+  const plotW = w - padL - padR, plotH = h - padT - padB;
+  const xMin = LOG_M[0], xMax = LOG_M[LOG_M.length-1];
+  const xPix = (lm) => padL + (lm - xMin) / (xMax - xMin) * plotW;
+  const yPix = (frac) => padT + (1 - frac) * plotH;
+
+  // gridlines
+  ctx.strokeStyle = 'rgba(112,85,212,0.15)'; ctx.lineWidth = 1;
+  [0,0.25,0.5,0.75,1].forEach(f => {
+    ctx.beginPath(); ctx.moveTo(padL, yPix(f)); ctx.lineTo(w-padR, yPix(f)); ctx.stroke();
+    ctx.fillStyle = '#9890c0'; ctx.font = '10px "Space Mono", monospace';
+    ctx.fillText((f*100)+'%', 4, yPix(f)+3);
+  });
+
+  // curve
+  const arr = EXCLFRAC[key] || EXCLFRAC.riaf;
+  ctx.strokeStyle = '#4de8c0'; ctx.lineWidth = 2; ctx.beginPath();
+  LOG_M.forEach((lm,i) => { const x = xPix(lm), y = yPix(arr[i]); i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); });
+  ctx.stroke();
+
+  // anchor markers
+  ctx.fillStyle = '#f0a020';
+  ANCHORS_M.forEach((m, idx) => {
+    const excl = ANCHORS_EXCL[key] ? ANCHORS_EXCL[key][idx] : null;
+    if (excl === null || excl === undefined) return;
+    const x = xPix(Math.log10(m)), y = yPix(excl);
+    ctx.beginPath(); ctx.arc(x,y,3,0,2*Math.PI); ctx.fill();
+  });
+
+  // cursor
+  const cx = xPix(cursorLogM);
+  ctx.strokeStyle = '#a080f0'; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(cx, padT); ctx.lineTo(cx, h-padB); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ---------- About ----------
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+function init() {
+  loadHash();
+  wireAbout();
+  render();
+  window.addEventListener('resize', () => render());
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
