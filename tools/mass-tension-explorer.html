@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!--
+  Mass Tension Explorer
+  Omega Centauri Society  -  omegacentauri.me
+
+  Code: MIT License
+  Prose content: CC BY 4.0
+  Curated data tables: CC0 1.0
+  Author: The Omega Centauri Society (Tim Swanson)
+
+  Version: 1.0
+  Last updated: 2026-08-20
+
+  EMBARGO (binding on every rendered string in this file  -  see board/queued/OCS-TOOLS-FH-1.md):
+  fiducial bracket only; 90% regions only; never say "resolved"; the ladder's
+  use_profile=true rows are labelled "error-model sensitivity rows" exactly as
+  the paper labels them; no compact-vs-extended verdict language beyond what
+  this data itself carries (M/a boxes, ln K numbers, G3 verdict counts).
+
+  Data sources (shipped, not recomputed):
+    - fH_posterior_plane.json (H-1: HPD90 + PL90 regions, 4 configurations, fiducial bracket)
+    - fH_lnk_ladder.json (H-2: 16-row ln K ladder, fiducial bracket)
+    - fH_g3_overlay.json (H-6: G3 buildability verdict counts + BH25-favoured region, consistency overlay only)
+
+  Site section: #science
+  Epistemic tier(s): ⚠ Observationally debated (mass-vs-extension tension, unresolved at fiducial bracket)
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mass Tension Explorer  -  Omega Centauri Society</title>
+<meta name="description" content="Interactive companion to Paper H: the compact-vs-extended central mass posterior planes (HPD90 / PL90), the 16-row ln K sensitivity ladder, and the G3 buildability overlay, at the paper's fiducial bracket.">
+<link rel="canonical" href="https://omegacentauri.me/tools/mass-tension-explorer.html">
+<meta name="theme-color" content="#0d0a24">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #03020a; --deep: #070515; --nebula: #0d0a24; --purple-dark: #1a1040;
+  --purple-mid: #3d2d8a; --purple-bright: #7055d4; --purple-glow: #a080f0;
+  --teal-dark: #042a24; --teal-mid: #0d6e58; --teal-bright: #1dba90; --teal-glow: #4de8c0;
+  --amber-mid: #c47800; --amber-bright: #f0a020; --amber-glow: #ffc840;
+  --red-mid: #8a2020; --red-bright: #d04040;
+  --text-primary: #e8e4ff; --text-secondary: #9890c0; --text-dim: #504870;
+  --border-subtle: rgba(112, 85, 212, 0.2); --border-teal: rgba(29, 186, 144, 0.25);
+  --border-amber: rgba(240, 160, 32, 0.25);
+  --glow-purple: 0 0 40px rgba(112, 85, 212, 0.3); --glow-teal: 0 0 40px rgba(29, 186, 144, 0.3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void); color: var(--text-primary);
+  font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; min-height: 100vh;
+  background-image: radial-gradient(ellipse at 15% 10%, rgba(112,85,212,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 60%, rgba(29,186,144,0.05), transparent 50%);
+}
+a { color: var(--purple-glow); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--teal-glow); }
+
+.nav { border-bottom: 1px solid var(--border-subtle); background: rgba(7,5,21,0.85); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; height: 52px; }
+.nav-brand { font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 0.12em; color: var(--purple-glow); }
+.nav-links { display: flex; gap: 20px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+.nav-links a { color: var(--text-dim); }
+.nav-links a:hover { color: var(--purple-glow); }
+
+.page { max-width: 920px; margin: 0 auto; padding: 48px 24px 80px; }
+.tool-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; flex-wrap: wrap; }
+.tool-header h1 { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.03em; line-height: 1.2; }
+.register-badge { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--amber-mid); color: var(--amber-bright); background: rgba(240,160,32,0.06); white-space: nowrap; }
+.intro { font-size: 16px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.65; }
+
+.notice {
+  background: rgba(240,160,32,0.05); border: 1px solid var(--border-amber); border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px; font-family: 'Space Mono', monospace; font-size: 12px;
+  color: var(--amber-bright); letter-spacing: 0.02em; line-height: 1.6;
+}
+.notice .notice-label { color: var(--amber-glow); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+.notice a { color: var(--amber-glow); text-decoration: underline; }
+
+.panel { background: linear-gradient(180deg, rgba(26,16,64,0.3), rgba(13,10,36,0.5)); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+.panel-title { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); margin-bottom: 20px; }
+
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.04em; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--border-subtle); color: var(--text-secondary); background: transparent; cursor: pointer; text-align: left; }
+.chip.active { border-color: var(--teal-bright); color: var(--teal-glow); background: rgba(29,186,144,0.08); }
+.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.toggle-row input { accent-color: var(--teal-bright); }
+.toggle-row label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-secondary); }
+
+.plot-wrap { margin: 4px 0 6px; }
+canvas#plane-canvas { width: 100%; height: 300px; display: block; background: rgba(7,5,21,0.5); border: 1px solid var(--border-subtle); border-radius: 8px; }
+.plot-axis-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); text-align: center; margin-top: 4px; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+.legend span.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+
+.result-block { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 22px 24px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+.result-item .k { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 4px; }
+.result-item .v { font-family: 'Orbitron', sans-serif; font-size: 18px; color: var(--amber-bright); letter-spacing: 0.02em; }
+
+.ladder-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 11.5px; }
+.ladder-table th { text-align: left; padding: 6px 8px; color: var(--text-dim); border-bottom: 1px solid var(--border-subtle); font-weight: 400; text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; }
+.ladder-table td { padding: 6px 8px; border-bottom: 1px solid rgba(112,85,212,0.1); color: var(--text-secondary); }
+.ladder-table tr.selected td { color: var(--teal-glow); background: rgba(29,186,144,0.06); }
+.ladder-table tr.sensitivity td.tag { color: var(--amber-bright); }
+.ladder-table td.tag { font-size: 10px; }
+
+.g3-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.g3-cell { background: rgba(7,5,21,0.4); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; text-align: center; }
+.g3-cell .n { font-family: 'Orbitron', sans-serif; font-size: 20px; color: var(--teal-glow); }
+.g3-cell .lbl { font-family: 'Space Mono', monospace; font-size: 9.5px; color: var(--text-dim); margin-top: 4px; letter-spacing: 0.02em; }
+
+.about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
+.about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
+.about-toggle:hover { color: var(--teal-glow); }
+.about-toggle .arrow { transition: transform 0.2s; }
+.about-toggle.open .arrow { transform: rotate(90deg); }
+.about-body { display: none; margin-top: 16px; padding: 20px 24px; background: rgba(13,10,36,0.3); border-radius: 8px; font-size: 15px; color: var(--text-secondary); }
+.about-body.open { display: block; }
+.about-body h3 { font-family: 'Orbitron', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-primary); margin: 16px 0 8px; }
+.about-body h3:first-child { margin-top: 0; }
+.about-body p { margin-bottom: 10px; }
+.about-body ul { list-style: none; padding-left: 0; }
+.about-body li { margin-bottom: 6px; font-size: 14px; }
+.about-body .meta-line { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 12px; }
+footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); text-align: center; letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-brand">OCS</span>
+    <div class="nav-links">
+      <a href="https://omegacentauri.me/">Home</a>
+      <a href="/tools/">Tools</a>
+      <a href="/omega-centauri-mass-tension.html">Paper H</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="tool-header">
+    <h1>Mass Tension<br>Explorer</h1>
+    <span class="register-badge">Fiducial bracket · 90% regions</span>
+  </div>
+
+  <p class="intro">Interactive companion to Paper H's joint fit of ω Cen's central dark mass. Shows the mass–extension (M, a) posterior region for four verdict configurations (tracer profile × assumed distance), the 16-row ln K sensitivity ladder those configurations sit on, and the G3 formation-channel buildability overlay  -  all at the paper's fiducial bracket.</p>
+
+  <div class="notice">
+    <span class="notice-label">Embargoed to the fiducial bracket  -  90% regions only</span>
+    Every number on this page is the paper's fiducial-bracket, 90%-credibility output (HPD90 / PL90). This tool never asserts the tension is resolved  -  Paper H's own conclusion is that the joint data cannot yet decide between a compact and an extended central dark mass. The ln K rows with an error-model dependence are labelled "error-model sensitivity rows," matching the paper's own label, not "profile-leg" or any other shorthand. Full method and caveats: <a href="/omega-centauri-mass-tension.html">Paper H, full text</a> · <a href="/papers/omega-centauri-mass-tension.pdf">PDF</a> · <a href="/omega-centauri-axi-note.html">AXI methods note</a>.
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Verdict configuration</div>
+    <div class="chip-row" id="config-chips"></div>
+    <div class="toggle-row">
+      <input type="checkbox" id="pl-toggle" checked onchange="onToggle()">
+      <label for="pl-toggle">Show PL90 (profile-likelihood 90%) outline alongside HPD90</label>
+    </div>
+    <div class="toggle-row">
+      <input type="checkbox" id="g3-toggle" onchange="onToggle()">
+      <label for="g3-toggle">Show G3 buildability overlay note (formation-channel consistency check only  -  never enters the likelihood or prior)</label>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Posterior plane  -  M vs. extension parameter a (fiducial bracket, 90%)</div>
+    <div class="plot-wrap"><canvas id="plane-canvas" width="860" height="300"></canvas></div>
+    <div class="plot-axis-label">M (M☉, x-axis) vs. a (dimensionless extension parameter, y-axis, as defined on the paper's shipped result grid)</div>
+    <div class="legend">
+      <span><span class="sw" style="background:#4de8c0"></span>HPD90 (primary, r_a marginalised)</span>
+      <span><span class="sw" style="background:#f0a020"></span>PL90 (secondary, r_a profiled)</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Readout</div>
+    <div class="result-block">
+      <div class="result-grid">
+        <div class="result-item"><div class="k">HPD90 M range</div><div class="v" id="hpd-m-out">n/a</div></div>
+        <div class="result-item"><div class="k">HPD90 a upper bound</div><div class="v" id="hpd-a-out">n/a</div></div>
+        <div class="result-item"><div class="k">PL90 M range</div><div class="v" id="pl-m-out">n/a</div></div>
+        <div class="result-item"><div class="k">PL90 a upper bound</div><div class="v" id="pl-a-out">n/a</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">ln K sensitivity ladder (16 rows, fiducial bracket)  -  selected configuration highlighted</div>
+    <table class="ladder-table">
+      <thead><tr><th>Row</th><th>Tracer</th><th>Dist. (pc)</th><th>ln K (full)</th><th>ln K range</th><th></th></tr></thead>
+      <tbody id="ladder-body"></tbody>
+    </table>
+  </div>
+
+  <div class="panel" id="g3-panel" style="display:none">
+    <div class="panel-title">G3 buildability overlay  -  consistency check only, never a likelihood term</div>
+    <div class="g3-grid">
+      <div class="g3-cell"><div class="n">557</div><div class="lbl">Buildable, pessimistic remnant IMF</div></div>
+      <div class="g3-cell"><div class="n">153</div><div class="lbl">Buildable, optimistic remnant IMF</div></div>
+      <div class="g3-cell"><div class="n">140</div><div class="lbl">Not buildable (either IMF)</div></div>
+      <div class="g3-cell"><div class="n">111</div><div class="lbl">Literature silent</div></div>
+    </div>
+    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6">Bañares-Hernández et al. 2025 (arXiv:2408.00939, A&amp;A 693, A104) favour an extended central mass of 2–3×10⁵ M☉ at a 1.5–2.2 pc scale, emulating a cluster of heavy stellar remnants  -  alongside their independently reported 3σ IMBH upper limit of 6,000 M☉ from pulsar timing. This overlay is a formation-physics consistency check on candidate (M, a) regions; per the paper, it never enters any likelihood or prior.</p>
+  </div>
+
+  <div class="about">
+    <button class="about-toggle" id="about-toggle" aria-expanded="false">
+      <span class="arrow">&#9654;</span> About this tool
+    </button>
+    <div class="about-body" id="about-this-tool">
+      <h3>What this tool shows</h3>
+      <p>Paper H ran a joint fit of ω Cen's central dark mass against four tracer-profile / assumed-distance configurations (Plummer or αβγ tracer profile, at 5,200 pc or 5,494 pc), reporting each configuration's 90% HPD (highest posterior density, r_a marginalised) and 90% profile-likelihood (r_a profiled) region in the (M, a) plane, and a 16-row ln K sensitivity ladder spanning the same four configurations plus knot-prior and error-model variants. This tool renders that shipped output directly (<code>fH_posterior_plane.json</code>, <code>fH_lnk_ladder.json</code>, <code>fH_g3_overlay.json</code>)  -  it recomputes nothing.</p>
+      <h3>Reading the ln K ladder</h3>
+      <p>Rows marked <span class="notice-label" style="display:inline">error-model sensitivity row</span> use a profiled error-model leg (<code>use_profile: true</code>); this is the paper's own row label, kept verbatim here. Rows without that tag use the mandatory no-profile-leg companion setup. The ladder's spread across knot-prior variants (τ=0.5, 1.0, 2.0) is itself part of the paper's reported sensitivity  -  not a single point estimate.</p>
+      <h3>What this tool deliberately does not do</h3>
+      <ul>
+        <li>Does not assert the mass tension is resolved. Paper H's conclusion is that current data cannot decide between a compact and an extended central dark mass at the fiducial bracket.</li>
+        <li>Does not plot the G3 buildability overlay spatially on the (M, a) plane  -  the shipped data gives verdict counts and one favoured-region summary in different units (mass and parsec scale), not a full outline on this plane, so it is shown as a text panel instead of a fabricated spatial overlay.</li>
+        <li>Does not quote any single-sentence "consistency statement" from the paper outside its full context  -  see the paper page for that language in place.</li>
+      </ul>
+      <h3>Source</h3>
+      <ul>
+        <li><a href="/omega-centauri-mass-tension.html">Paper H  -  full text</a></li>
+        <li><a href="/papers/omega-centauri-mass-tension.pdf">Paper H  -  PDF</a></li>
+        <li><a href="/omega-centauri-axi-note.html">AXI methods note</a></li>
+      </ul>
+      <div class="meta-line">Tool v1.0  -  2026-08-20 · content revised as the underlying paper's fit output is revised.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Mass Tension Explorer · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
+</footer>
+
+<script>
+// ---------- Shipped data (fH_posterior_plane.json H-1, fH_lnk_ladder.json H-2, fH_g3_overlay.json H-6) ----------
+const CONFIGS = {
+  nolegprof_plummer_5200: {
+    label: 'Plummer, 5,200 pc', tracer: 'Plummer', dist: 5200,
+    hpd: { M_lo: 17782.794100389227, M_hi: 25118.864315095823, a_hi: 0.012283531735409992 },
+    pl:  { M_lo: 17782.794100389227, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 }
+  },
+  nolegprof_plummer_5494: {
+    label: 'Plummer, 5,494 pc', tracer: 'Plummer', dist: 5494,
+    hpd: { M_lo: 22387.21138568338, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 },
+    pl:  { M_lo: 19952.62314968879, M_hi: 31622.776601683792, a_hi: 0.017320508075688777 }
+  },
+  nolegprof_abg_5200: {
+    label: 'αβγ, 5,200 pc', tracer: 'αβγ', dist: 5200,
+    hpd: { M_lo: 17782.794100389227, M_hi: 22387.21138568338, a_hi: 0.012283531735409992 },
+    pl:  { M_lo: 15848.93192461114, M_hi: 25118.864315095823, a_hi: 0.017320508075688777 }
+  },
+  nolegprof_abg_5494: {
+    label: 'αβγ, 5,494 pc', tracer: 'αβγ', dist: 5494,
+    hpd: { M_lo: 19952.62314968879, M_hi: 25118.864315095823, a_hi: 0.008711358306319453 },
+    pl:  { M_lo: 19952.62314968879, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 }
+  }
+};
+const CONFIG_KEYS = Object.keys(CONFIGS);
+
+const LADDER = [
+  { label: 'nolegprof_abg_5200', visible: 'abg', distance: 5200, tau: 1.0, use_profile: false, n_cells: 8, lnK_full: 10.738988582200626, lnK_min: 10.738988582200626, lnK_max: 11.83565624403744 },
+  { label: 'nolegprof_abg_5494', visible: 'abg', distance: 5494, tau: 1.0, use_profile: false, n_cells: 8, lnK_full: 10.639457354307558, lnK_min: 10.639457354307558, lnK_max: 11.844411660410534 },
+  { label: 'nolegprof_plummer_5200', visible: 'plummer', distance: 5200, tau: 1.0, use_profile: false, n_cells: 8, lnK_full: 10.657319541221987, lnK_min: 10.657319541221987, lnK_max: 11.994185212988015 },
+  { label: 'nolegprof_plummer_5494', visible: 'plummer', distance: 5494, tau: 1.0, use_profile: false, n_cells: 8, lnK_full: 10.848692388981458, lnK_min: 10.848692388981458, lnK_max: 12.195466246993952 },
+  { label: 'a2_abg_5200', visible: 'abg', distance: 5200, tau: 1.0, use_profile: true, n_cells: 8, lnK_full: 4.889754207511658, lnK_min: 4.457487297456652, lnK_max: 5.36238539631529 },
+  { label: 'a2_abg_5494', visible: 'abg', distance: 5494, tau: 1.0, use_profile: true, n_cells: 8, lnK_full: 4.983433269486383, lnK_min: 4.487834136474532, lnK_max: 5.559571402422634 },
+  { label: 'a2_plummer_5200', visible: 'plummer', distance: 5200, tau: 1.0, use_profile: true, n_cells: 8, lnK_full: 7.201250922779508, lnK_min: 6.703442340922933, lnK_max: 7.60452353345552 },
+  { label: 'a2_plummer_5494', visible: 'plummer', distance: 5494, tau: 1.0, use_profile: true, n_cells: 8, lnK_full: 7.0307201424194545, lnK_min: 6.521081875093515, lnK_max: 7.8040113810703104 },
+  { label: 'tau2.0_abg_5200', visible: 'abg', distance: 5200, tau: 2.0, use_profile: true, n_cells: 8, lnK_full: 6.667914915554576, lnK_min: 6.667914915554576, lnK_max: 8.107900465934904 },
+  { label: 'tau2.0_abg_5494', visible: 'abg', distance: 5494, tau: 2.0, use_profile: true, n_cells: 8, lnK_full: 6.346916925175293, lnK_min: 6.346916925175293, lnK_max: 7.688184393286619 },
+  { label: 'tau2.0_plummer_5200', visible: 'plummer', distance: 5200, tau: 2.0, use_profile: true, n_cells: 8, lnK_full: 8.059392348528888, lnK_min: 7.871061584343153, lnK_max: 8.834185821510616 },
+  { label: 'tau2.0_plummer_5494', visible: 'plummer', distance: 5494, tau: 2.0, use_profile: true, n_cells: 8, lnK_full: 7.76546648870503, lnK_min: 7.459751592253937, lnK_max: 8.758384765729588 },
+  { label: 'tau0.5_abg_5200', visible: 'abg', distance: 5200, tau: 0.5, use_profile: true, n_cells: 8, lnK_full: -5.553689819653485, lnK_min: -6.054775683345866, lnK_max: -5.487742595862201 },
+  { label: 'tau0.5_abg_5494', visible: 'abg', distance: 5494, tau: 0.5, use_profile: true, n_cells: 8, lnK_full: -2.423759969942978, lnK_min: -2.9323982594388696, lnK_max: -1.7796361429048773 },
+  { label: 'tau0.5_plummer_5200', visible: 'plummer', distance: 5200, tau: 0.5, use_profile: true, n_cells: 8, lnK_full: 3.090981270457391, lnK_min: 2.5820146308234655, lnK_max: 3.4270839819171073 },
+  { label: 'tau0.5_plummer_5494', visible: 'plummer', distance: 5494, tau: 0.5, use_profile: true, n_cells: 8, lnK_full: 4.007526748533564, lnK_min: 3.496734550307636, lnK_max: 4.781026269537591 }
+];
+
+// ---------- State ----------
+let state = { config: 'nolegprof_plummer_5200', showPL: true, showG3: false };
+
+function fmtM(v) { return Math.round(v).toLocaleString('en-US') + ' M☉'; }
+
+function buildChips() {
+  const row = document.getElementById('config-chips');
+  row.innerHTML = '';
+  CONFIG_KEYS.forEach(k => {
+    const btn = document.createElement('button');
+    btn.className = 'chip'; btn.dataset.cfg = k;
+    btn.textContent = CONFIGS[k].label;
+    btn.onclick = () => { state.config = k; saveHash(); render(); };
+    row.appendChild(btn);
+  });
+}
+
+function onToggle() {
+  state.showPL = document.getElementById('pl-toggle').checked;
+  state.showG3 = document.getElementById('g3-toggle').checked;
+  saveHash(); render();
+}
+
+function saveHash() {
+  const p = new URLSearchParams();
+  p.set('config', state.config);
+  p.set('pl', state.showPL ? '1' : '0');
+  p.set('g3', state.showG3 ? '1' : '0');
+  history.replaceState(null, '', '#' + p.toString());
+}
+function loadHash() {
+  const s = location.hash.slice(1);
+  if (!s) return;
+  const p = new URLSearchParams(s);
+  const c = p.get('config');
+  if (c && CONFIGS[c]) state.config = c;
+  const pl = p.get('pl'); if (pl !== null) state.showPL = pl === '1';
+  const g3 = p.get('g3'); if (g3 !== null) state.showG3 = g3 === '1';
+}
+
+function render() {
+  document.querySelectorAll('#config-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.cfg === state.config));
+  document.getElementById('pl-toggle').checked = state.showPL;
+  document.getElementById('g3-toggle').checked = state.showG3;
+  document.getElementById('g3-panel').style.display = state.showG3 ? '' : 'none';
+
+  const cfg = CONFIGS[state.config];
+  document.getElementById('hpd-m-out').textContent = fmtM(cfg.hpd.M_lo) + ' – ' + fmtM(cfg.hpd.M_hi);
+  document.getElementById('hpd-a-out').textContent = cfg.hpd.a_hi.toFixed(4) + ' (upper bound; region touches a=0)';
+  document.getElementById('pl-m-out').textContent = fmtM(cfg.pl.M_lo) + ' – ' + fmtM(cfg.pl.M_hi);
+  document.getElementById('pl-a-out').textContent = cfg.pl.a_hi.toFixed(4) + ' (upper bound; region touches a=0)';
+
+  const [visible, dist] = [cfg.tracer === 'Plummer' ? 'plummer' : 'abg', cfg.dist];
+  const tbody = document.getElementById('ladder-body');
+  tbody.innerHTML = '';
+  LADDER.forEach(row => {
+    const tr = document.createElement('tr');
+    const isMatch = row.visible === visible && row.distance === dist;
+    if (isMatch) tr.classList.add('selected');
+    if (row.use_profile) tr.classList.add('sensitivity');
+    tr.innerHTML = `<td>${row.label}</td><td>${row.visible}</td><td>${row.distance}</td><td>${row.lnK_full.toFixed(2)}</td><td>[${row.lnK_min.toFixed(2)}, ${row.lnK_max.toFixed(2)}]</td><td class="tag">${row.use_profile ? 'error-model sensitivity row (τ=' + row.tau + ')' : 'mandatory no-profile-leg row'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  drawPlane(cfg);
+}
+
+// ---------- Canvas plot: M (x) vs a (y) boxes ----------
+function drawPlane(cfg) {
+  const canvas = document.getElementById('plane-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 860, h = 300;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+
+  const padL = 66, padR = 20, padT = 16, padB = 30;
+  const plotW = w - padL - padR, plotH = h - padT - padB;
+
+  // fixed domain covering all configs' HPD/PL ranges with margin
+  const xMin = Math.log10(15000), xMax = Math.log10(35000);
+  const yMax = 0.02;
+  const xPix = (m) => padL + (Math.log10(m) - xMin) / (xMax - xMin) * plotW;
+  const yPix = (a) => padT + (1 - a / yMax) * plotH;
+
+  ctx.strokeStyle = 'rgba(112,85,212,0.15)'; ctx.lineWidth = 1;
+  ctx.font = '10px "Space Mono", monospace'; ctx.fillStyle = '#9890c0';
+  [15000,20000,25000,30000,35000].forEach(m => {
+    const x = xPix(m);
+    ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,h-padB); ctx.stroke();
+    ctx.fillText(Math.round(m/1000)+'k', x-10, h-padB+14);
+  });
+  [0,0.005,0.01,0.015,0.02].forEach(a => {
+    const y = yPix(a);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+    ctx.fillText(a.toFixed(3), 4, y+3);
+  });
+
+  function box(region, color) {
+    const x0 = xPix(region.M_lo), x1 = xPix(region.M_hi);
+    const y0 = yPix(0), y1 = yPix(region.a_hi);
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.strokeRect(Math.min(x0,x1), Math.min(y0,y1), Math.abs(x1-x0), Math.abs(y1-y0));
+    ctx.fillStyle = color.replace(')', ',0.10)').replace('rgb','rgba');
+    ctx.fillRect(Math.min(x0,x1), Math.min(y0,y1), Math.abs(x1-x0), Math.abs(y1-y0));
+  }
+  if (state.showPL) box(cfg.pl, 'rgb(240,160,32)');
+  box(cfg.hpd, 'rgb(77,232,192)');
+}
+
+function wireAbout() {
+  const btn = document.getElementById('about-toggle');
+  const body = document.getElementById('about-this-tool');
+  btn.addEventListener('click', () => {
+    const open = !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+function init() {
+  buildChips();
+  loadHash();
+  wireAbout();
+  render();
+  window.addEventListener('resize', () => render());
+}
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+</script>
+</body>
+</html>
