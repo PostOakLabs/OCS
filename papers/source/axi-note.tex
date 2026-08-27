@@ -5,7 +5,7 @@
 % Tim Swanson -- The Omega Centauri Society / Post Oak Labs
 % Build: pdflatex axi-note && bibtex axi-note && pdflatex x2
 % BUILDER DRAFT (WU OCS-AXI-NOTE-1). Version line owned by the editorial
-% session; leave \date at "Draft v0.5 (last revised 2026-08-27)".
+% session; leave \date at "Draft v0.6 (last revised 2026-08-27)".
 %
 % Plan of record: paper/AXI-PREREGISTRATION.md (ADOPTED 2026-08-14),
 %   including amendments AXI-A1, AXI-A2, AXI-A3 and the Campaign closure
@@ -48,7 +48,7 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small Draft v0.5 (last revised 2026-08-27) --- methods note for the AXI campaign;\\ \small companion to the mass-tension paper (Paper H); prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small Draft v0.6 (last revised 2026-08-27) --- methods note for the AXI campaign;\\ \small companion to the mass-tension paper (Paper H); prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
@@ -127,12 +127,12 @@ M1 is the minimal extension of the shared discrepancy model, in the same framewo
 \end{align}
 with \dS{} keeping the existing Normal$(0, 1.0\ {\rm km\,s^{-1}})$ independent knot priors, the half-Normal$(0, 0.3\ {\rm km\,s^{-1}})$ white systematic $s$ retained unchanged, and both terms marginalised in every reported quantity. M1 reduces to the shared model exactly at $\dD \equiv 0$. It adds four nuisance dimensions and no new physics machinery, and by construction it measures the differential rather than explaining it.
 
-The \dD{} knot prior is Normal$(0, 0.5\ {\rm km\,s^{-1}})$, derived before any fit as the upper edge of the equipartition-differential term from the frozen $\eta$ profile rather than as half of the shared budget. Flattening is excluded from that scale. The halved and doubled prior rows, $\tD \in \{0.25, 0.5, 1.0\}$~km\,s$^{-1}$, are mandatory and were noted non-trivial in advance, on the precedent that halving the shared model's knot prior had flipped evidence signs across whole configurations.
+The \dD{} knot prior is Normal$(0, 0.5\ {\rm km\,s^{-1}})$, derived before any fit as the upper edge of the equipartition-differential term from the frozen $\eta$ profile rather than as half of the shared budget. Flattening is excluded from that scale. The halved and doubled prior rows, $\tD \in \{0.25, 0.5, 1.0\}$~km\,s$^{-1}$, are pre-committed and mandatory and were noted non-trivial in advance, on the precedent that halving the shared model's knot prior had flipped evidence signs across whole configurations.
 
 \subsection{X-G-f, the pre-real-data reproduction check: PASS}
 \label{sec:gates-f}
 
-Against the artifact the gate originally named, the check failed: log-evidence moved by 0.065 to 0.291 nats in all 16 configurations. The traced cause is not M1. The profile leg is the only object M1 changes, and the M1 profile-leg likelihood cube reproduces the reference to $0.000\times10^{0}$ nats in all 16 configurations, with the whole discrepancy sitting in the acceleration leg, which the campaign does not touch, and accounted for by a reconciliation of the two pulsar spatial distributions committed one day after the reference was recorded \citep{AXIGatesReport2026}. No code in the repository could reproduce the superseded kernel, so the gate as written tested a property of its reference. Amendment AXI-A1 repointed it to the same driver re-executed under the reconciled kernel, against which the same run reproduces every scalar, every posterior array, every log-likelihood cube, all 288 prior cells and the gate record to $0.000\times10^{0}$. No code and no number changed between the failure and the pass.
+Against the artifact the gate originally named, the check failed: log-evidence moved by 0.065 to 0.291 nats in all 16 configurations. The traced cause is not M1. The profile leg is the only object M1 changes, and the M1 profile-leg likelihood cube reproduces the reference exactly in all 16 configurations, with the whole discrepancy sitting in the acceleration leg, which the campaign does not touch, and accounted for by a reconciliation of the two pulsar spatial distributions committed one day after the reference was recorded \citep{AXIGatesReport2026}. No code in the repository could reproduce the superseded kernel, so the gate as written tested a property of its reference. Amendment AXI-A1 repointed it to the same driver re-executed under the reconciled kernel, against which the same run reproduces every scalar, every posterior array, every log-likelihood cube, all 288 prior cells and the gate record. No code and no number changed between the failure and the pass.
 
 \subsection{X-G-a, injection and recovery: FAIL, with a calibrated region}
 \label{sec:gates-a}
@@ -282,7 +282,7 @@ The outcome carries two parts, both already recorded earlier in this note. The f
 \label{fig:deltaD}
 \end{figure}
 
-The \dD{} amplitude, defined as the injection gate defined it, runs 0.159 to 0.447~km\,s$^{-1}$ over the 36 readings, positive everywhere, with the 90\,per~cent interval excluding zero everywhere. Every value sits inside the calibrated region, so no amplitude reported here needs the out-of-region calibration attached. The pointwise curve is a different matter (Figure~\ref{fig:deltaD}): $\dD(r)$ crosses the region boundary at about $130\as$ and reaches 1.15~km\,s$^{-1}$ at $280.9\as$, so the outer half of the curve is outside the calibrated region, is drawn with the boundary marked, and is not quotable as a measurement. The regional calibration was measured on the amplitude rather than on the pointwise curve, which is a limitation of the calibration and is stated as one.
+The \dD{} amplitude, defined as the injection gate defined it, runs 0.16 to 0.45~km\,s$^{-1}$ over the 36 readings, positive everywhere, with the 90\,per~cent interval excluding zero everywhere. Every value sits inside the calibrated region, so no amplitude reported here needs the out-of-region calibration attached. The pointwise curve is a different matter (Figure~\ref{fig:deltaD}): $\dD(r)$ crosses the region boundary at about $130\as$ and reaches 1.15~km\,s$^{-1}$ at $280.9\as$, so the outer half of the curve is outside the calibrated region, is drawn with the boundary marked, and is not quotable as a measurement. The regional calibration was measured on the amplitude rather than on the pointwise curve, which is a limitation of the calibration and is stated as one.
 
 Two regimes separate in the posterior width. Inside about $50\as$ the posterior standard deviation is 0.054 to 0.187~km\,s$^{-1}$, of order the prior scale, so the inner differential is prior-dominated and the data barely constrain it. Beyond about $100\as$ it falls to 0.018 to 0.019~km\,s$^{-1}$, twenty to fifty times smaller, with the posterior at 0.5 to 1.0~km\,s$^{-1}$. The differential the profile leg requires is concentrated at the radii the terminality ruling of Section~\ref{sec:scope} already places behind a systematics floor 10 to 40 times the statistical errors. The inner-region statement here is about the width of a prior-dominated posterior and is not an inner-bin usability claim, which routes through criterion~5 alone.
 
@@ -369,13 +369,17 @@ A fourth process note belongs with them. The standing note added with AXI-A1 req
 
 \paragraph{A successor instruction.} Any future fit that draws on this campaign's \dD{} values must respect the calibrated-region rule of Section~\ref{sec:gates-a}: only $|\dD| \leq 0.5$~km\,s$^{-1}$ is a measurement, and any pointwise value beyond the boundary of Figure~\ref{fig:deltaD} (about $130\as$) is not, whatever the fit that produced it. No downstream consumer should take an uncalibrated value from this record as an input without applying the measured calibration of Section~\ref{sec:gates-a} first.
 
+\paragraph{Residual systematics.} Stage 0 could test H-D only against per-bin star counts and their surface-density form, the two proxies the frozen radial table carries, so the orientation-dependent reading of the hypothesis is untested here rather than excluded. A consumer wanting to bound it should run the split against per-epoch and detector-geometry predictors in the parent catalogue \citep{Haberle2024oMEGACatII,Haberle2025oMEGACatVI}; nothing in this record licenses treating H-D as closed.
+
+\paragraph{Cross-calibration with Paper H.} This campaign's mocks carry the profile leg and their coverage of the injected dark component sits below the required band (Section~\ref{sec:gates-a}), while Paper H's calibration passes only after the profile leg is dropped \citep{HCalReport2026}. The two results score different configurations, and each holds for the configuration it was run on. The compression measured here reproduces the shared-model compression Paper H measured before any differential block existed, which is the property Paper H removed by dropping the leg, so the two records agree once the configuration is named.
+
 \paragraph{Does not feed.} Paper H's verdict machinery. Not criterion 2, not criterion 3, not criterion 4, not the fast-star leg's quotable set, not the standing embargo list, and not the terminality ruling, which this campaign is scoped inside rather than against. The fit of record stands where its own amendments left it.
 
 \paragraph{Disposition.} Stage 1 is closed. Escalation to the axisymmetric model M2 is forbidden by X-G-d's clause. The position-angle data work unit is neither triggered nor cleared by this fit, and if the question is ever taken up again that extraction goes forward as an independent work unit judged on its own merits. The orbit-superposition model M3 was rejected on the record at pre-registration and stays rejected. What the campaign leaves behind for a successor is the degeneracy of Section~\ref{sec:stage0}: on an azimuthally averaged radial table the candidate mechanisms are close to the same variable in rank space, and the axes that break the degeneracy are position angle and subpopulation, neither of which is a function of radius by construction.
 
 \paragraph{Compute.} The twelve fits took 1.2 minutes of wall clock on CPU, dominated by four model-table builds at 5 to 9 seconds each, because the base tables are shared across the three prior rows and M1's marginalisation is closed-form. The gate battery is where the cost sits: the pre-committed extension alone ran 1200 realisations in 47.7 minutes at eight workers.
 
-\bibliographystyle{plainnat}
+\bibliographystyle{apalike}
 \bibliography{../references,../masstension-extra,axi-extra}
 
 \end{document}

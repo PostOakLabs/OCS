@@ -24,8 +24,10 @@
 \usepackage{microtype}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
 \usepackage{xcolor}
-
 \newcommand{\msun}{\ensuremath{M_\odot}}
+\newcounter{ocsbox}
+\newcommand{\boxanchor}[1]{\refstepcounter{ocsbox}\label{#1}}
+\renewcommand{\theocsbox}{\arabic{ocsbox}}
 \newcommand{\ocen}{$\omega$~Cen}
 \newcommand{\mdark}{\ensuremath{M_{\mathrm{dark}}}}
 \newcommand{\lnK}{\ensuremath{\ln K}}
@@ -36,7 +38,7 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small v1.5 (last revised 2026-08-27) --- seventh paper of the set (Paper H); companion to the Macro Transcension\\ \small Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign (Paper C), the migration\\ \small economics (Paper D), the engineered-IMBH systems paper (Paper E), and the joint accretion bound (Paper F);\\ \small prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small v1.6 (last revised 2026-08-27) --- seventh paper of the set (Paper H); companion to the Macro Transcension\\ \small Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign (Paper C), the migration\\ \small economics (Paper D), the engineered-IMBH systems paper (Paper E), and the joint accretion bound (Paper F);\\ \small prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
@@ -56,7 +58,7 @@ The center of Omega Centauri carries the sharpest unresolved mass question in gl
 \section{Introduction}
 \label{sec:intro}
 
-\ocen{} (NGC 5139) has hosted claims and counter-claims of a central intermediate-mass black hole (IMBH) for nearly two decades: integrated-light kinematics for $\sim 4\times10^{4}\,\msun$ \citep{Noyola2008,Noyola2010H}, proper-motion modeling capping the mass at $\lesssim 1.2\times10^{4}\,\msun$ with the verdict hinging on the adopted center \citep{vanderMarelAnderson2010}, radial anisotropy shown to mimic much of the signal \citep{Zocchi2017}, stellar-mass black-hole populations shown to mimic more of it \citep{Zocchi2018,Baumgardt2019}. The modern form of the question is sharper on both sides. \citet{Haberle2024Nature} found seven fast-moving stars inside the central $3''$, five robust, with velocities above the central escape speed of any IMBH-free model, giving a firm kinematic lower bound of $8{,}200\,\msun$ on an enclosed dark mass. \citet{BanaresHernandez2025} combined stellar kinematics with millisecond-pulsar accelerations and found the data favor an extended dark component of $2$--$3\times10^{5}\,\msun$ at parsec scale, with a $3\sigma$ cap of $6{,}000\,\msun$ on any point mass, below the fast-star bound. The TRAPUM timing release \citep{ColomiBernadich2026} expanded the pulsar census to 19 with an IMBH-insensitive upper limit of $10^{5}\,\msun$, sharpening the data without resolving the contradiction.
+\ocen{} (NGC 5139) has hosted claims and counter-claims of a central intermediate-mass black hole (IMBH) for nearly two decades: integrated-light kinematics for $\sim 4\times10^{4}\,\msun$ \citep{Noyola2008,Noyola2010H}, proper-motion modeling capping the mass at $\lesssim 1.2\times10^{4}\,\msun$ at $\sim 1\sigma$ ($1.8\times10^{4}\,\msun$ at $3\sigma$), with the verdict hinging on the adopted center \citep{vanderMarelAnderson2010}, radial anisotropy shown to mimic much of the signal \citep{Zocchi2017}, stellar-mass black-hole populations shown to mimic more of it \citep{Zocchi2018,Baumgardt2019}. The modern form of the question is sharper on both sides. \citet{Haberle2024Nature} found seven fast-moving stars inside the central $3''$, five robust, with velocities above the central escape speed of any IMBH-free model, giving a firm kinematic lower bound of $8{,}200\,\msun$ on an enclosed dark mass. \citet{BanaresHernandez2025} combined stellar kinematics with millisecond-pulsar accelerations and found the data favor an extended dark component of $2$--$3\times10^{5}\,\msun$ at parsec scale, with a $3\sigma$ cap of $6{,}000\,\msun$ on any point mass, below the fast-star bound. The TRAPUM timing release \citep{ColomiBernadich2026} expanded the pulsar census to 19 with an IMBH-insensitive upper limit of $10^{5}\,\msun$, sharpening the data without resolving the contradiction.
 
 The methodological history of this exact contest in other clusters is cautionary in both directions. In 47 Tucanae, a pulsar-dynamics IMBH claim \citep{Kiziltan2017} did not survive multimass remnant modeling \citep{Mann2019,Smith2024}; in NGC 6397, a claimed IMBH resolved into a diffuse inner subcluster \citep{VitralMamon2021}; and \citet{Aros2020} showed with mock data that Jeans-type fits fabricate IMBH masses at this scale when anisotropy or mass-to-light structure is mis-modeled. Any new joint analysis of \ocen{} enters a literature where the last three comparable verdicts were overturned by systematics, and it should be built accordingly.
 
@@ -69,9 +71,9 @@ The outcome is the pre-registered null: the data cannot yet decide. We consider 
 
 All inputs were extracted from their primary sources into versioned, provenance-annotated tables before any modeling, with every value carrying its source location and verbatim context; the fit records the content hash of each input it consumed. Four datasets enter.
 
-\textbf{Fast stars.} The seven candidates of \citet{Haberle2024Nature}, with the robust/candidate split preserved: the headline analysis uses the five robust stars (A, C, D, E, F), and the all-seven variant is a reported sensitivity row. Positions, proper motions, and uncertainties come from their Extended Data tables; the selection function is reconstructed from the stated quality-cut pass fraction (157{,}320 of 241{,}133 stars, completeness 0.652), the $3''$ search radius, the 2.41\,mas\,yr$^{-1}$ threshold, and the published contamination density, which reproduces the paper's own expected foreground count (0.0735 against their quoted 0.074). The N-body-informed mass range quoted in that paper's methods is model output, not data, and enters nowhere in this analysis.
+\textbf{Fast stars.} The seven candidates of \citet{Haberle2024Nature}, with the robust/candidate split preserved: the headline analysis uses the five robust stars (stars~A, C, D, E, F; star letters and pulsar letters are separate series throughout this paper and are prefixed wherever either could be meant), and the all-seven variant is a reported sensitivity row. Positions, proper motions, and uncertainties come from their Extended Data tables; the selection function is reconstructed from the stated quality-cut pass fraction (157{,}320 of 241{,}133 stars, completeness 0.652), the $3''$ search radius, the 2.41\,mas\,yr$^{-1}$ threshold, and the published contamination density, which reproduces the paper's own expected foreground count (0.0735 against their quoted 0.074). The N-body-informed mass range quoted in that paper's methods is model output, not data, and enters nowhere in this analysis.
 
-\textbf{Pulsar accelerations.} The TRAPUM timing solutions \citep{ColomiBernadich2026}: 8 of 19 pulsars have measured spin-period derivatives; every derived cluster line-of-sight acceleration is a one-sided bound, because the intrinsic spin-down is unknown and non-negative. Seven bounds enter the likelihood; one (pulsar C) is excluded because its published table entry is typeset in a form we could not disambiguate, and we do not silently repair source tables. Three of the seven bounds are negative-signed (B, D, K), and those carry what constraining power the leg has. We verified the published reduction chain by recomputing pulsar A's bound from its $P$, $\dot{P}$, and the Shklovskii and Galactic terms ($1.9796\times10^{-9}$ against the printed $1.98\times10^{-9}$\,m\,s$^{-2}$). The earlier five-pulsar solutions of \citet{Dai2023} are carried as a labelled sensitivity variant; Section~\ref{sec:diagnosis} reports what that comparison revealed.
+\textbf{Pulsar accelerations.} The TRAPUM timing solutions \citep{ColomiBernadich2026}: 8 of 19 pulsars have measured spin-period derivatives; every derived cluster line-of-sight acceleration is a one-sided bound, because the intrinsic spin-down is unknown and non-negative. Seven bounds enter the likelihood; one (pulsar~C, which is unrelated to star~C above) is excluded because its published table entry is typeset in a form we could not disambiguate, and we do not silently repair source tables. Three of the seven bounds are negative-signed (pulsars~B, D, K), and those carry what constraining power the leg has. We verified the published reduction chain by recomputing pulsar~A's bound from its $P$, $\dot{P}$, and the Shklovskii and Galactic terms ($1.9796\times10^{-9}$ against the printed $1.98\times10^{-9}$\,m\,s$^{-2}$). The earlier five-pulsar solutions of \citet{Dai2023} are carried as a labelled sensitivity variant; Section~\ref{sec:diagnosis} reports what that comparison revealed.
 
 \textbf{Dispersion, anisotropy, rotation.} The oMEGACat 40-bin sky-radial and sky-tangential proper-motion dispersion profiles with their anisotropy ratios, $r = 1.8''$--$311''$, statistical errors 0.023--0.05\,\kms{} in the best-measured bins, retrieved from the survey's machine-readable release and checksum-verified \citep{oMEGACatVI2025}; the integrated-light rotation profile (amplitude rising to $8.4 \pm 0.8$\,\kms{} at $4.7'$) frozen from \citet{Haberle2026LVM}; kinematic distance $5{,}494 \pm 61$\,pc from the same survey, with the 5{,}200\,pc value adopted by \citet{BanaresHernandez2025} carried as a reported axis rather than harmonized away.
 
@@ -106,12 +108,13 @@ Pulsar spin-frequency second derivatives probe a central mass through the jerk f
 \xi = \int_{0}^{\infty}\!\!\mathrm{d}x \int_{-1}^{1}\!\!\mathrm{d}\mu \left[ 1 - e^{-(1+3\mu^{2})/(2x^{2})} \right]
  = \sqrt{2\pi}\left[ 1 + \frac{\ln(2+\sqrt{3})}{2\sqrt{3}} \right] = 3.4596,
 \end{equation}
-against the published $\xi \simeq 3.04$, a 13.8\,per~cent difference confirmed by six independent routes (closed form, direct quadrature, a Poisson-field Monte Carlo that never uses the formula, symbolic evaluation, antiderivative differentiation, and 50-digit arithmetic). The published constant understates the jerk noise floor by 12.1\,per~cent, in the direction that inflates the apparent significance of jerk-based central-mass inferences; the derivation in the source papers is otherwise sound, and we have used the corrected value throughout. Gate G2 validated the module against the published distributional identities (18 of 20 checks at $10^{-10}$ or better; the two ``failures'' are the $\xi$ comparison itself). Box~1 gives the derivation and the verification ledger, since this is the one result here that other groups may want to check without reading anything else in the paper.
+against the published $\xi \simeq 3.04$, a 13.8\,per~cent difference confirmed by six independent routes (closed form, direct quadrature, a Poisson-field Monte Carlo that never uses the formula, symbolic evaluation, antiderivative differentiation, and 50-digit arithmetic). The published constant understates the jerk noise floor by 12.1\,per~cent, in the direction that inflates the apparent significance of jerk-based central-mass inferences; the derivation in the source papers is otherwise sound, and we have used the corrected value throughout. Gate G2 validated the module against the published distributional identities. Two of its twenty checks are the $\xi$ comparison itself and cannot pass by construction; the remaining 18 agree at $10^{-10}$ or better. Box~\ref{box:jerk} gives the derivation and the verification ledger, since this is the one result here that other groups may want to check without reading anything else in the paper.
 
 \begin{figure}[tbp]
 \centering
+\boxanchor{box:jerk}%
 \fbox{\parbox{0.95\linewidth}{\small
-\textbf{Box 1. The nearest-neighbour jerk constant, derived and checked.}
+\textbf{Box \theocsbox. The nearest-neighbour jerk constant, derived and checked.}
 \smallskip
 
 \textit{Setup.} The nearest-neighbour jerk field of a Poisson stellar background has no finite variance, so its scale is set by a characteristic value rather than an rms. Write the jerk from a single neighbour at separation $r$ moving with relative velocity $v$ as $|\dot{a}| \sim G m v / r^{3}$, and ask for the value $\dot{a}_{0}$ at which the expected number of neighbours producing a larger jerk is unity. Carrying out the angular average over the line of sight and the radial integral over a uniform background of number density $n$ and mean mass $\langle m \rangle$ gives $\dot{a}_{0} = (2\pi\xi/3)\,G\langle m \rangle \sigma n$, with the whole geometry collected into one dimensionless double integral, Equation~(1).
@@ -147,7 +150,7 @@ A buildability map over the $(\mdark, a)$ plane was compiled from published form
 
 The first pre-registered run returned a result about the machinery rather than the cluster, and we report it as such. No smooth, spherical, non-rotating, single-mass Jeans model survives the oMEGACat profile at its measured precision: $\chi^{2}/\nu = 473$ in the outer bins (179 over all 40) for the better visible model, with one-signed pulls reaching $20\sigma$, model below data across $50''$--$250''$, robust to swapping the visible model and the distance. With no systematic term, the first-contact configuration is dominated by this misfit and returns an extended component at $\lnK \approx -220$; adding a quadrature floor of 1.0\,\kms{} keeps the extended preference at $\lnK \approx -10$; a 2.0\,\kms{} floor flips the verdict to compact at $+4$; deleting the profile leg gives compact at $+11$. The compact-versus-extended answer was controlled entirely by an assumed error parameter, and the analysis was frozen at that point under the amendment protocol rather than tuned. (The floor values quoted in this paragraph are the first run's; Figure~\ref{fig:ladder} plots the amended rerun's sensitivity-appendix re-evaluation of the same ladder, under the re-derived visible-model normalization and with the amendment's marginalized white term present, which compresses the no-floor extreme from $-220$ to $-11$ without changing any sign along the ladder.)
 
-Figure~\ref{fig:ladder} shows this ladder, together with what became of it under Amendment A2. Three details of the first run bear on everything after. The floor value that best repairs $\chi^{2}$ ($\approx$1.0\,\kms) is calibrated against the rejected model itself and is therefore circular; the value that flips the verdict (2.0\,\kms) is rejected by the data from the other side ($\chi^{2}/\nu = 0.27$, a significant under-dispersion); and the bins that dominate the leg's formal weight, contributing a dynamic range of 339{,}145 nats across the parameter plane, lie at radii where the dark component contributes under $10^{-3}$ of the enclosed mass. The leg's dominance was spurious precision: its verdict-dominant bins carry no verdict signal.
+Figure~\ref{fig:ladder} shows this ladder, together with what became of it under Amendment A2. Three details of the first run bear on everything after. The floor value that best repairs $\chi^{2}$ ($\approx$1.0\,\kms) is calibrated against the rejected model itself and is therefore circular; the value that flips the verdict (2.0\,\kms) is rejected by the data from the other side ($\chi^{2}/\nu = 0.27$, a significant under-dispersion); and the bins that dominate the leg's formal weight, contributing a dynamic range of $3.4\times10^{5}$ nats across the parameter plane (the digits beyond the leading two are an artifact of summing 40 bins, not a meaningful precision), lie at radii where the dark component contributes under $10^{-3}$ of the enclosed mass. The leg's dominance was spurious precision: its verdict-dominant bins carry no verdict signal.
 
 \begin{figure}[tbp]
 \centering
@@ -211,7 +214,7 @@ Three disclosures required verbatim by Amendment A2: the discrepancy term absorb
 
 With the profile leg retired, the fit of record is the fast-star and pulsar joint analysis. It is stable in a way nothing else in this paper is: across both visible models, both distances, and all mass-to-light brackets, it returns $\mdark = 2.0$--$2.5\times10^{4}\,\msun$ at the point-mass limit of the grid, compact posterior mass 96.3--97.6\,per~cent, $\lnK = +10.0$ to $+12.2$ (the range over the sixteen-configuration bracket set of the amended rerun, under the reconciled mass-segregated pulsar tracer density of the released record), and a nominal, uncalibrated (per the gate of Section~\ref{sec:fit2}) 90\,per~cent upper limit of 2.2--2.7$\times10^{4}\,\msun$; its own decision-criterion tally passes in 31--33 of 36 prior cells. The optimum sits above the \citet{Haberle2024Nature} firm lower bound and a factor of a few below their model-informed range, from an analysis that shares no machinery with theirs. It also inherits the assumed Bahcall--Wolf tracer cusp inside the influence radius, a profile no dataset in this analysis measures: the mass range quoted here is conditional on that cusp, and the sensitivity to its form is a reported bracket rather than a resolved question. Shifting the tail exponent by $-0.25$ and $+0.5$ moves $\lnK$ by $+0.15$ and $-0.26$ nats and the 90\,per~cent upper limit by $-1{,}000$ and $+1{,}500\,\msun$ about the values quoted here, with the sign of the evidence positive in every prior cell; Maxwellian-family tails cannot be matched to the cusp kinematics at any scale, which is why the bracket is carried within the truncated-polytrope family (Section~\ref{sec:tailsens}).
 
-At the first writing of this section those numbers were reported and not promoted: the injection-calibration gate under-covered on the extended alternative, and an uncalibrated instrument cannot certify the preference. A dedicated calibration campaign then traced that failure to its source: the under-coverage is caused by the profile leg itself (dropping it moves extended-injection coverage from 0.820 to 0.882 on identical realizations), the same leg the kill switch had already removed from the verdict. Scoring the gate battery on the verdict configuration, formalized by gate-scope Amendments A3 and A4 (each ruled by the gate's author, each carrying the scoring change and nothing else, each with mandatory disclosures including the named-configuration failures the re-scoping does not hide), the battery passes: 90\,per~cent coverage 0.8825 extended and 0.865 point at $n = 400$, null and sign-recovery checks passed non-trivially, at the fiducial mass-to-light bracket. The gate author's statement of record:
+At the first writing of this section those numbers were reported and not promoted: the injection-calibration gate under-covered on the extended alternative, and an uncalibrated instrument cannot certify the preference. A dedicated calibration campaign then traced that failure to its source: the under-coverage is caused by the profile leg itself (dropping it moves extended-injection coverage from 0.820 to 0.882 on identical realizations), the same leg the kill switch had already removed from the verdict. Scoring the gate battery on the verdict configuration, formalized by gate-scope Amendments A3 and A4 (each ruled by the gate's author, each carrying the scoring change and nothing else, each with mandatory disclosures including the named-configuration failures the re-scoping does not hide; both reproduced verbatim in Appendix~\ref{app:a3a4}), the battery passes: 90\,per~cent coverage 0.8825 extended and 0.865 point at $n = 400$, null and sign-recovery checks passed non-trivially, at the fiducial mass-to-light bracket. The gate author's statement of record:
 
 \begin{quote}
 ``Under the fit of record --- profile leg dropped per gate A2-G-d --- the fast-star sample prefers the compact configuration, with the reporting machinery validated on that configuration by the A2 gate battery (90\% coverage 0.88 extended / 0.87 point, null and sign-recovery passed; $n = 400$) at the fiducial M/L bracket. The pessimistic bracket is uncalibrated and carries no validated region, and the coverage check's misspecification axis is satisfied trivially by construction for the leg-dropped configuration (Amendment A3).''
@@ -250,7 +253,12 @@ pessimistic bracket is calibrated equivalently to the fiducial one in the verdic
 (pooled diagonals 699 of 800 each; Fisher $p = 0.76$ on the point and $0.74$ on the extended
 injection; Amendment A5). Its rows remain labelled sensitivity rows outside the quotable set, and
 the joint cube stays uncalibrated at every bracket. HPD is the primary estimator; the
-profile-likelihood (PL) region is the disclosed secondary. The restricted rows evaluate the hypothesis the data prefer, $a = 0$ exactly, under identical priors; their $\lnK$ relative to the continuous optimum is $+0.83$ to $+0.87$ in all four configurations, so the continuous parameterization spends about a nat of Occam factor on a scale radius the data do not use. All regions abut the $a = 10^{-4}$\,pc
+profile-likelihood (PL) region is the disclosed secondary. The two interval estimators and the
+upper limit answer different questions and can order either way: HPD90 is the shortest region
+holding 90\,per~cent of the marginal posterior, PL90 is the region above a fixed drop in profile
+likelihood, and the 90\,per~cent upper limit is the one-sided quantile with 90\,per~cent of the
+posterior below it. A one-sided quantile printed below an HPD upper edge is the ordinary behaviour
+of a right-skewed marginal, not an inconsistency between the columns. The restricted rows evaluate the hypothesis the data prefer, $a = 0$ exactly, under identical priors; their $\lnK$ relative to the continuous optimum is $+0.83$ to $+0.87$ in all four configurations, so the continuous parameterization spends about a nat of Occam factor on a scale radius the data do not use. All regions abut the $a = 10^{-4}$\,pc
 grid edge and are one-sided in $a$.}
 \label{tab:regions}
 \begin{tabular}{lcccc}
@@ -311,7 +319,7 @@ E & $94.3690(4)$ & $94.33967(5)$ & $-0.0293$ & $4\times10^{-4}$ & $73\sigma$ \\
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\linewidth]{figs/fH_pulsar_bounds.png}
-\caption{The seven usable TRAPUM line-of-sight accelerations against projected radius, each a one-sided bound with the arrow marking the permitted direction, together with the largest $|a_{\mathrm{LOS}}|$ the model can produce along the line of sight at that radius for a compact and for an extended dark component at the fiducial bracket. Three bounds are negative-signed (B, D, K) and those are the ones a model has to reach. The envelopes are computed by the same line-of-sight quadrature the likelihood uses, and reproduce the released posterior-predictive extrema of the record cell to nine digits. The compact and extended curves cross at $0.52$\,pc, inside the innermost timed pulsar at $0.89$\,pc, which is the geometric statement behind the leg's 3\,nats of dynamic range. Data and script: \texttt{figs/fH\_pulsar\_bounds.json}, \texttt{figs/fH\_expand\_v1.py}.}
+\caption{The seven usable TRAPUM line-of-sight accelerations against projected radius, each a one-sided bound with the arrow marking the permitted direction, together with the largest $|a_{\mathrm{LOS}}|$ the model can produce along the line of sight at that radius for a compact and for an extended dark component at the fiducial bracket. Three bounds are negative-signed (B, D, K) and those are the ones a model has to reach. The envelopes are computed by the same line-of-sight quadrature the likelihood uses, and reproduce the released posterior-predictive extrema of the record cell to a relative agreement better than $10^{-8}$. The compact and extended curves cross at $0.52$\,pc, inside the innermost timed pulsar at $0.89$\,pc, which is the geometric statement behind the leg's 3\,nats of dynamic range. Data and script: \texttt{figs/fH\_pulsar\_bounds.json}, \texttt{figs/fH\_expand\_v1.py}.}
 \label{fig:pulsars}
 \end{figure}
 
@@ -338,7 +346,7 @@ Figure~\ref{fig:faststaroverlay} re-plots the same seven stars and curves with t
 \section{The formation-physics overlay}
 \label{sec:formation}
 
-The G3 map asks, independently of all kinematics, which regions of the $(\mdark, a)$ plane published formation and retention physics can populate. Its two headline statements frame the impasse from the opposite side. The compact region implied by the fast stars ($8\times10^{3}$--$5\times10^{4}\,\msun$, $a < 0.01$\,pc) is buildable under pessimistic retention throughout: it is what the merger-growth models of \citet{GonzalezPrieto2025} produce, with recoil from the dominant, capture-driven growth channel four orders of magnitude below the escape velocity. The extended region favored by \citet{BanaresHernandez2025} is the hard one: as a pure remnant population, $2.5$--$3\times10^{5}\,\msun$ exceeds the retained black-hole mass that \citet{Dickson2024} infer for \ocen{} even at the optimistic edge of their credible range, the remainder of the region admits an all-remnant reading only at the upper edge of the published retention credible range, and every hybrid configuration that reaches the upper masses requires an embedded IMBH of $1.5$--$6.6\times10^{4}\,\msun$, which the extended solution's own $3\sigma$ point-mass cap excludes. The upper half of the extended region is reachable, on published physics, only through configurations the extended fit itself rules out.
+The G3 map asks, independently of all kinematics, which regions of the $(\mdark, a)$ plane published formation and retention physics can populate. Its two headline statements frame the impasse from the opposite side. The compact region implied by the fast stars ($8\times10^{3}$--$5\times10^{4}\,\msun$, $a < 0.01$\,pc) is buildable under pessimistic retention throughout: it is what the merger-growth models of \citet{GonzalezPrieto2025} produce, with recoil we estimate from their capture-channel mass ratios to lie four orders of magnitude below the escape velocity. The recoil figure is our estimate under standard kick scaling, not a number \citet{GonzalezPrieto2025} print. The extended region favored by \citet{BanaresHernandez2025} is the hard one: as a pure remnant population, $2.5$--$3\times10^{5}\,\msun$ exceeds the retained black-hole mass that \citet{Dickson2024} infer for \ocen{} even at the optimistic edge of their credible range, the remainder of the region admits an all-remnant reading only at the upper edge of the published retention credible range, and every hybrid configuration that reaches the upper masses requires an embedded IMBH of $1.5$--$6.6\times10^{4}\,\msun$, which the extended solution's own $3\sigma$ point-mass cap excludes. The upper half of the extended region is reachable, on published physics, only through configurations the extended fit itself rules out.
 
 Figure~\ref{fig:g3} draws the map with the fit of record's regions on top of it. The four HPD regions fall wholly inside the region the published growth models populate under pessimistic retention, while the region the profile-driven analysis favours sits in the band that only the optimistic edge of the retention literature reaches, adjacent to cells no published channel populates at all.
 
@@ -413,5 +421,57 @@ $\tau{=}2.0$ Plummer, 5.49\,kpc & 1.56 & no & yes & no \\
 \end{tabular}
 \caption{Firing status of the A2-G-d kill rule under the three budget readings of the ratified P-12 disclosure. The recorded verdict used the flat 1.0\,\kms{} trigger.}
 \end{table}
+
+
+\section{Amendments A3 and A4, operative text}
+\label{app:a3a4}
+
+Section~\ref{sec:record} scores the A2 gate battery on the verdict configuration under two
+dated gate-scope amendments. Their operative clauses are reproduced here from the
+pre-registration file's amendment log, verbatim except where a bracketed ellipsis marks a
+result-of-record line whose numbers are stated in Section~\ref{sec:record} and
+Table~\ref{tab:regions}. Both are ruled by the gate's author and ratified on the same date;
+neither changes the model, the likelihood, the priors, the grid, or the data.
+
+\begin{quote}\small
+\textbf{A3 --- 2026-08-14: A2-G-c scope under a fired A2-G-d (gate-scope clarification only; no
+change to model, likelihood, priors, grid, or data).}
+\emph{Reason:} A2-G-c as written names the all-legs configuration. A2-G-d fired, and its
+consequence clause drops the profile leg from the verdict, so every quoted number comes from the
+leg-dropped configuration, which A2-G-c as written never scores. OCS-H-CAL-1 scored both
+(CAL\_REPORT \S6). \emph{Change:} when A2-G-d fires, A2-G-c is evaluated on the verdict
+configuration (profile leg dropped), which must pass all G-c checks at $n \geq 200$.
+[\,Result of record: PASS. \,]
+\emph{Mandatory disclosures traveling with any quoted region:} (1) the leg-dropped coverage check
+is exactly invariant to the profile-only mock misspecification, so along that axis it is satisfied
+trivially; the null and sign-recovery checks are non-trivial and passed on their own terms; (2) the
+all-legs configuration the gate names FAILs (extended 0.820, Wilson 0.779--0.855, $n = 400$),
+mechanism: profile-leg over-confidence (CAL\_REPORT \S2); (3) calibration holds at the fiducial M/L
+bracket only; the pessimistic bracket is uncalibrated in every configuration (0.680 extended, all
+legs). The profile-likelihood 90\% region is reported as a disclosed secondary estimator alongside
+the HPD region wherever a 90\% region is quoted; no inner-quantile statement is made from it;
+decision criteria 1 and 3 remain in posterior terms.
+\end{quote}
+
+\begin{quote}\small
+\textbf{A4 --- 2026-08-14: A2-G-a and A2-G-b scope under a fired A2-G-d (gate-scope clarification
+only; no change to model, likelihood, priors, grid, or data).}
+\emph{Reason:} A2-G-a and A2-G-b, as written, name axes that exist only while the profile leg is in
+the verdict. A2-G-d fired; per A3's principle, gates are scored on the verdict configuration.
+\emph{Change:} (a) When A2-G-d fires, A2-G-b is evaluated on the verdict configuration: $\ln K$
+sign identical in every defined prior cell, both visible models (per A1), both distances. The
+halved/doubled knot-prior rows are vacated, not passed: $\tau$ enters the profile leg only, and
+invariance to it is exact by construction --- the verdict-control channel those rows were built to
+expose is removed by the leg drop itself. [\,Result of record: PASS, all 96 defined cells positive.\,]
+The consequence clause reads over the verdict configuration's defined cells and does not fire.
+(b) \emph{Mandatory disclosures traveling with any criterion-2 statement:} (1) on the
+all-configuration set including profile-leg-inclusive fits, A2-G-b FAILed (52 of 288 minority-sign
+cells, FLAGD \S5); mechanism: discrepancy-prior control of profile-leg-inclusive verdicts, the
+finding that A2-G-d's leg drop remedies, not an anomaly the re-scoping hides; (2) the prior-scale
+rows are satisfied trivially on the verdict configuration, in the same sense as A3 disclosure~(1);
+(3) the unanimity of record spans a strictly smaller axis set than the gate as originally written.
+(c) A2-G-a is vacated when A2-G-d fires (no profile residuals in the verdict likelihood). It failed
+0 of 12 on the all-legs set. No consequence clause; disclosed in methods in one sentence.
+\end{quote}
 
 \end{document}
