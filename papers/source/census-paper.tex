@@ -80,7 +80,7 @@ Section~\ref{sec:data} fixes the catalogues and their provenance. Section~\ref{s
 \subsection{The X-ray catalogue}
 \label{sec:data-xray}
 
-The source catalogue is \citet{Henleywillis2018}, obtained as the machine-readable table from VizieR (\texttt{J/MNRAS/479/2834}) and parsed by byte-column specification rather than transcribed. The parse reproduces the paper's own abstract totals exactly: 233 sources, 95 new, 45 with a likely optical identification. Each source carries a position, a 95\,per~cent confidence error radius, an offset from the \citet{AndersonvanderMarel2010} cluster centre in units of the $155\as$ core radius, detected and exposure-corrected counts in the medium (0.5--4.5\,keV), soft (0.5--1.5\,keV) and hard (1.5--6.0\,keV) bands, unabsorbed fluxes, the soft-to-hard colour $\log(\mathrm{soft}/\mathrm{hard})$, and an optical identification field whose null value defines the unidentified population.
+The source catalogue is \citet{Henleywillis2018}, obtained as the machine-readable table from VizieR (\texttt{J/MNRAS/479/2834}) and parsed by byte-column specification rather than transcribed. The parse reproduces the paper's own abstract totals exactly: 233 sources, 95 new, 45 with a likely optical identification. Each source carries a position, a 95\,per~cent confidence error radius, an offset from the \citet{AndersonvanderMarel2010} cluster centre in units of the $155\as$ core radius, detected and exposure-corrected counts in the medium (0.5--4.5\,keV), soft (0.5--1.5\,keV) and hard (1.5--6.0\,keV) bands, unabsorbed fluxes, the soft-to-hard colour $\log(\mathrm{soft}/\mathrm{hard})$, and an optical identification field whose null value defines the unidentified population. The catalogue is flux-limited, and the standard statistical treatment of such censored samples is \citet{FeigelsonNelson1985}.
 
 \subsection{The pulsar positions}
 \label{sec:data-psr}
@@ -238,6 +238,27 @@ Section~\ref{sec:results-h}. Diamonds are the 39 unidentified sources inside the
 primary colour-flux region of Section~\ref{sec:results-msplike}. Positions from
 \texttt{data/xray\_census.json} and \texttt{paper/h/data/pulsars.json}.}
 \label{fig:skymap}
+\end{figure}
+
+Figure~\ref{fig:findingchart} is the companion finding chart: the same field on a dark background, with the five registered counterparts, the discrepant MSP~H association, and the twelve highest-ranked residual candidates of Section~\ref{sec:targets} marked individually.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.92\linewidth]{figs/fG_finding_chart.pdf}
+\caption{Finding chart for the residual census, in arcseconds relative to the
+kinematic centre (North up, East left). Grey: all 233 Chandra sources of
+\citet{Henleywillis2018} (\texttt{data/xray\_census.json}). Blue circles: the
+five registered MSP counterparts (B, C, E, G, K; Section~\ref{sec:results-frame}).
+Red circle: the discrepant MSP~H association, whose timing position sits
+$1.8\as$ from Henleywillis~14c after frame registration
+(Section~\ref{sec:results-h}). Orange numbered diamonds: the twelve
+highest-ranked non-counterpart candidates of the 39-source colour-flux pool,
+in pre-registered rank order (Section~\ref{sec:targets};
+\texttt{figs/fG\_target\_list.json}; ids in rank order 12c, 11e, 13g, 22l,
+24j, 21e, 24d, 23e, 21f, 24b, 22d, 34e). Dashed circles: the $155\as$ core
+radius and the $480\as$ analysis aperture. The cross marks the kinematic
+centre. Background is a plain dark rendering; no optical image is fetched.}
+\label{fig:findingchart}
 \end{figure}
 
 \subsection{Frame registration}
@@ -745,6 +766,44 @@ $5\times10^{-14}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$ \citep{Merloni2024}, and 106 of
 the 200 have a catalogue neighbour inside the $26\as$ half-energy width that
 eROSITA averages over its field of view \citep{Predehl2021}. Its depth and its beam
 each rule it out for this field independently.
+
+
+\section{Per-source table for the twelve finding-chart candidates}
+\label{app:twelvetable}
+
+The finding chart (Fig.~\ref{fig:findingchart}) numbers the twelve highest-ranked non-counterpart candidates of the 39-source colour--flux pool in pre-registered rank order (Sec.~\ref{sec:targets}; \texttt{figs/fG\_target\_list.json} ranks 1--4, 6, 8, 10--15 after removing the four confirmed MSP counterparts). Table~\ref{tab:twelve} gives the machine-readable row for each, from the vendored census (\texttt{data/xray\_census.json}, byte-parse of \citet{Henleywillis2018} table1.dat) and the ranked pool (\texttt{figs/fG\_target\_list.json}), with the epoch depth from \texttt{figs/fG\_expand\_variability.json}. Off-axis angle is proxied by cluster-centric radius $r$ (the Chandra aimpoint is the cluster centre; $\epsilon_{95}$ grows with off-axis angle and is listed) and by the catalogue $\epsilon_{95}$. Net counts are the exposure- and vignetting-corrected 0.5--4.5\,keV counts; flux is the unabsorbed 0.5--2.0\,keV (soft) flux in $10^{-19}$\,W\,m$^{-2}$ ($10^{-16}$\,erg\,cm$^{-2}$\,s$^{-1}$) under the $\Gamma=1.4$ power-law assumed by the source catalogue. Where the 2012/2000 flux ratio is not tabulated the source is new in the 2012 data set and no ratio is computable at this count rate; the ratio floor for a $3\sigma$ change is in Table~\ref{tab:variability}. Tier is the selection tier: all twelve are ``unidentified, inside the 480\as\ aperture, colour and flux both tabulated, inside the $n=4$ primary box''; flags are from the ranked pool (outside-ellipse, low-counts, variable-candidate).
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Per-source rows for the twelve finding-chart candidates (Fig.~\ref{fig:findingchart}), in chart order. RA/Dec from \texttt{data/xray\_census.json}; $r$ and $\epsilon_{95}$ in arcseconds; $C_{0.5-4.5}$ corrected medium-band counts; $F_{\rm soft}$ unabsorbed 0.5--2.0\,keV flux in $10^{-19}$\,W\,m$^{-2}$; $F_{X,{\rm tot}}$ total flux $10^{-19}$\,W\,m$^{-2}$; $R=F_{12}/F_{00}$ epoch ratio where tabulated; flags from \texttt{figs/fG\_target\_list.json}. Data as vendored, no re-derivation.}
+\label{tab:twelve}
+\begin{tabular}{cllccrrrrl}
+\toprule
+Chart & ID & RA (J2000) & Dec (J2000) & $r$ & $\epsilon_{95}$ & $C_{0.5-4.5}$ & $F_{\rm soft}$ & $R$ & Flags \\
+ & & & & (\as) & (\as) & (corr) & ($10^{-19}$) & $F_{12}/F_{00}$ & \\
+\midrule
+1 & 12c & 13h26m47.945s & $-47$:28:10.74 & 35.7 & 0.41 & 15.5 & 4.0 & --- & n \\
+2 & 11e & 13h26m43.279s & $-47$:28:16.18 & 49.6 & 0.43 & 14.6 & 3.6 & --- & n \\
+3 & 13g & 13h26m54.065s & $-47$:28:59.06 & 69.8 & 0.41 & 16.9 & 4.8 & --- & n \\
+4 & 22l & 13h26m54.828s & $-47$:28:32.66 & 79.1 & 0.40 & 19.6 & 6.2 & --- & n \\
+5 & 24j & 13h26m42.326s & $-47$:30:19.33 & 105.4 & 0.45 & 20.9 & 7.4 & --- & n \\
+6 & 21e & 13h26m45.206s & $-47$:26:52.25 & 116.3 & 0.39 & 42.3 & 13.9 & 0.96 & e \\
+7 & 24d & 13h26m37.399s & $-47$:30:06.97 & 128.7 & 0.49 & 21.2 & 6.4 & 0.98 & --- \\
+8 & 23e & 13h26m58.174s & $-47$:29:57.10 & 131.8 & 0.55 & 9.8 & 3.3 & --- & n,l \\
+9 & 21f & 13h26m37.860s & $-47$:27:15.51 & 131.8 & 0.48 & 20.6 & 6.9 & --- & n \\
+10 & 24b & 13h26m39.312s & $-47$:30:37.06 & 136.4 & 0.50 & 20.0 & 6.0 & 1.02 & --- \\
+11 & 22d & 13h26m58.723s & $-47$:27:28.73 & 139.5 & 0.44 & 21.9 & 7.3 & 0.47 & v \\
+12 & 34e & 13h26m43.202s & $-47$:31:10.62 & 150.4 & 0.51 & 21.0 & 6.0 & --- & n \\
+\bottomrule
+\multicolumn{10}{l}{\footnotesize Chart order is pre-registered rank order after removing confirmed MSP counterparts (see Fig.~\ref{fig:findingchart} caption;} \\
+\multicolumn{10}{l}{\footnotesize \phantom{Chart} ranks 1--4,6,8,10--15 in \texttt{figs/fG\_target\_list.json}). $R$ is the catalogue 2012/2000 flux ratio where} \\
+\multicolumn{10}{l}{\footnotesize \phantom{Chart} tabulated; ``---'' denotes a new 2012 source with no computable ratio (cf.\ Table~\ref{tab:variability}). Flags:} \\
+\multicolumn{10}{l}{\footnotesize \phantom{Chart} n\,=\,new in 2012, e\,=\,inside box but outside $2\sigma$ ellipse, l\,=\,$<10$ corrected counts, v\,=\,catalogued} \\
+\multicolumn{10}{l}{\footnotesize \phantom{Chart} flux ratio beyond a factor of two ($>2$). All twelve are unidentified and inside the primary box.} \\
+\end{tabular}
+\end{table}
+
 
 \bibliographystyle{apalike}
 \bibliography{../references,../engineered-extra,census-extra}

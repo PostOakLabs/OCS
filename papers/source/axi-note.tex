@@ -5,7 +5,7 @@
 % Tim Swanson -- The Omega Centauri Society / Post Oak Labs
 % Build: pdflatex axi-note && bibtex axi-note && pdflatex x2
 % BUILDER DRAFT (WU OCS-AXI-NOTE-1). Version line owned by the editorial
-% session; leave \date at "Draft v0.3 (last revised 2026-08-20)".
+% session; leave \date at "Draft v0.5 (last revised 2026-08-27)".
 %
 % Plan of record: paper/AXI-PREREGISTRATION.md (ADOPTED 2026-08-14),
 %   including amendments AXI-A1, AXI-A2, AXI-A3 and the Campaign closure
@@ -48,7 +48,7 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small Draft v0.3 (last revised 2026-08-20) --- methods note for the AXI campaign;\\ \small companion to the mass-tension paper (Paper H); prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small Draft v0.5 (last revised 2026-08-27) --- methods note for the AXI campaign;\\ \small companion to the mass-tension paper (Paper H); prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
@@ -88,7 +88,7 @@ The boundary permits, narrowly: the inner bins ($\lesssim 10\as$), where signal-
 
 \begin{description}
 \item[H-A, anisotropy structure beyond one Osipkov-Merritt scale.] The true $\beta(r)$ is not in the one-parameter family the visible model carries, and the mismatch shows as a component-differential residual because $\beta$ enters $\sigma_R$ and $\sigma_T$ with opposite sign. Signature: the split tracks the gradient of the measured anisotropy profile rather than the local dispersion amplitude \citep{Zocchi2017,Zocchi2019,Aros2020}.
-\item[H-B, flattening with azimuthal averaging.] A spherical model fitted to azimuthally averaged data of a flattened system ($\epsilon = 0.17$, \citealt{WhiteShawl1987}, the largest published value; star-count isophotes give 0.11--0.12 with a rounder core, \citealt{Geyer1983,Pancino2003}) produces a component-differential residual by construction. Signature: residual power at $\cos 2\phi$ in position angle, with the split amplitude scaling as the flattening \citep{vanderMarelAnderson2010}.
+\item[H-B, flattening with azimuthal averaging.] A spherical model fitted to azimuthally averaged data of a flattened system ($\epsilon = 0.17$, \citealt{WhiteShawl1987}, the largest published value; star-count isophotes give 0.11--0.12 with a rounder core, \citealt{Geyer1983,Pancino2003}) produces a component-differential residual by construction. Signature: this campaign takes residual power at $\cos 2\phi$ in position angle as the diagnostic for this mechanism, with the split amplitude scaling as the flattening of the axisymmetric models in \citep{vanderMarelAnderson2010}.
 \item[H-C, unrelaxed substructure of accretion origin.] \ocen{} is the stripped nucleus of an accreted system, and the split is the imprint of a subpopulation that has not phase-mixed \citep{Ibata2019,BekkiTsujimoto2019,Clontz2024}. Signature: a patchy split differing between subsamples at the same radius, the one signature of the four that separates subsamples of the same catalogue.
 \item[H-D, component-dependent measurement systematics.] The split is in the catalogue rather than in the cluster: residual distortion or a per-epoch orientation imbalance projects unequally onto the two sky directions once they are defined relative to the cluster centre \citep{Haberle2024oMEGACatII,Haberle2025oMEGACatVI}. Signature: organisation on detector or epoch geometry and on per-bin star counts rather than on cluster-centric radius. Confirming H-D would end the campaign rather than extend the model, so it was tested first.
 \end{description}
@@ -183,20 +183,24 @@ Five statements were fixed in the committed scorer: the X-G-b verdict; whether a
 
 In the eight rows at $\tD = 0.5$ and $1.0$~km\,s$^{-1}$ the maximum $|\dD|$ inside the span is 1.140 to 1.151~km\,s$^{-1}$ at all three readings, outside the region. In the four rows at $\tD = 0.25$~km\,s$^{-1}$ the readings disagree with each other: the posterior-mean and joint-MAP cells give 0.335 to 0.426~km\,s$^{-1}$, inside the region, while the profile-leg best cell gives 1.140 to 1.144, outside it.
 
+Read per cell, this is the two-mode signature directly: at the halved prior the posterior-mean and joint-MAP cells sample the low mode (inside the calibrated region) while the profile-leg best cell samples the high mode (outside it); at the primary and doubled priors every reading samples the high mode. The per-row, per-reading classification is in this note's released record companion (\texttt{calc7/axi\_calc7\_switch.json}); no mechanism statement follows from it.
+
 \begin{table}[htbp]
 \centering
 \small
-\caption{The switch behind the X-G-c failure, at the fiducial-bracket MAP cell, Plummer at 5494~pc. Each row is unimodal in the white systematic $s$; the preferred solution switches between rows. Prior shrinkage cannot produce the move, because the outermost knot carries a posterior standard deviation of 0.022 to 0.042~km\,s$^{-1}$.}
+\caption{The switch behind the X-G-c failure, at the fiducial-bracket MAP cell, Plummer at 5494~pc. Each row is unimodal in the white systematic $s$; the preferred solution switches between rows. Prior shrinkage cannot produce the move, because the outermost knot carries a posterior standard deviation of 0.022 to 0.042~km\,s$^{-1}$. The two right-hand columns are different objects: the bin-grid maximum is evaluated over the forty catalogue bins inside $[5, 300]\as$ (the gate convention; the $300\as$ knot is not a bin), while the outer-knot column is the spline's posterior mean at the $300\as$ knot itself. Both are correctly computed; an earlier version of this table carried only the knot value under a single ``outer knot \dD{}'' heading, where \S\ref{sec:gates-c}'s text separately quotes the bin-grid maximum. The ``mass at $s<0.06$'' column is computed directly from the posterior samples; the \texttt{s\_edge\_mass} field released alongside this note is a separate grid-edge tail-mass check ($10^{-52}$ to $10^{-57}$ in every reading) and is not this divider.}
 \label{tab:switch}
-\begin{tabular}{lrrrr}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
 \toprule
-$\tD$ [km\,s$^{-1}$] & $s$ mode & $s$ median & mass at $s < 0.06$ & outer knot \dD{} [km\,s$^{-1}$] \\
+$\tD$ [km\,s$^{-1}$] & $s$ mode & $s$ median & mass at $s < 0.06$ & bin-grid max, in span [km\,s$^{-1}$] & outer knot, posterior mean [km\,s$^{-1}$] \\
 \midrule
-0.25 & 0.09 & 0.090 & 0.034 & $0.354 \pm 0.042$ \\
-0.50 & 0.03 & 0.030 & 0.968 & $1.207 \pm 0.026$ \\
-1.00 & 0.03 & 0.030 & 0.969 & $1.209 \pm 0.026$ \\
+0.25 & 0.09 & 0.090 & 0.034 & 0.344 & $0.354 \pm 0.042$ \\
+0.50 & 0.03 & 0.030 & 0.968 & 1.145 & $1.207 \pm 0.026$ \\
+1.00 & 0.03 & 0.030 & 0.969 & 1.147 & $1.209 \pm 0.026$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 The mechanism is a degeneracy between \dD{} and the white systematic $s$, and it is measured rather than inferred (Table~\ref{tab:switch}). The outer bins carry a component split that the fit must assign to one term or the other. At $\tD = 0.5$ or $1.0$ the fit assigns the split to a large differential and a small white systematic; at $\tD = 0.25$ it assigns the split instead to a white systematic three times larger, with inflated errors. The switch is discrete and it lands between 0.25 and 0.5.
@@ -216,6 +220,8 @@ The consequence is applied as written: the component-differential model is decla
 \label{sec:outcome}
 
 Three of the six gates stand against escalation and none stands for it. X-G-c's consequence clause makes criterion~4 the only quotable outcome, X-G-d's clause forbids escalation to an axisymmetric model, and X-G-a stood failed with its regional licence before the real-data fit began. The campaign's outcome is therefore \textbf{criterion~4, the pre-registered ``the campaign cannot identify the mechanism''}, reported with the mechanism of the X-G-c failure named, as the clause requires. Criterion~2 is not scored: two of its four discriminants cannot be run on the frozen radial table, and nothing in stage 1 adds either. H-B and H-C remain not tested.
+
+The outcome carries two parts, both already recorded earlier in this note. The first is the plain failure-to-identify: on the frozen radial table, H-A and H-D fail their committed discriminants at all twelve readings (\S\ref{sec:stage0}), and H-B and H-C cannot be run on that table at all. The second is the structural reason a positive result was never available from this table alone: the anisotropy gradient and the star-count predictor are rank-collinear with cluster-centric radius, $|\rho| = 0.86$ to $1.00$ across the bandwidths tested (\S\ref{sec:stage0}, ``What the table cannot separate''; \citep{AXIStage0Report2026}), so an azimuthally averaged radial table cannot separate either testable discriminant from a radius trend by construction. Neither statement adds a mechanism claim or a compact-versus-extended statement; both restate \S\ref{sec:stage0}.
 
 \subsection{The measured object}
 \label{sec:measured}
@@ -360,6 +366,8 @@ A fourth process note belongs with them. The standing note added with AXI-A1 req
 \label{sec:feeds}
 
 \paragraph{Feeds.} The characterisation of the profile leg's misfit that a shared discrepancy could not provide, for Paper H's successor analysis. The visible-model bracket for any future fit, since a component-resolved discrepancy with calibrated uncertainty is a better statement of what the visible model does not know than a shared radial term. The methods record itself: a measured, gated answer to what the component-differential residual is, publishable whether or not a mechanism is named.
+
+\paragraph{A successor instruction.} Any future fit that draws on this campaign's \dD{} values must respect the calibrated-region rule of Section~\ref{sec:gates-a}: only $|\dD| \leq 0.5$~km\,s$^{-1}$ is a measurement, and any pointwise value beyond the boundary of Figure~\ref{fig:deltaD} (about $130\as$) is not, whatever the fit that produced it. No downstream consumer should take an uncalibrated value from this record as an input without applying the measured calibration of Section~\ref{sec:gates-a} first.
 
 \paragraph{Does not feed.} Paper H's verdict machinery. Not criterion 2, not criterion 3, not criterion 4, not the fast-star leg's quotable set, not the standing embargo list, and not the terminality ruling, which this campaign is scoped inside rather than against. The fit of record stands where its own amendments left it.
 
