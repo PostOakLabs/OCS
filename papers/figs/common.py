@@ -57,7 +57,7 @@ def remnant_mf(f_bh, f_ns=F_NS, m_bh=M_BH_PERT):
 # For a bound orbit of semi-major axis a perturbed by a star passing at impact
 # parameter b with speed v, the adiabatic parameter is x = omega_orb * tau_enc =
 # (b/a)(v_orb/v).  The impulsive estimate holds only for x << 1; across the whole
-# feasibility envelope x runs from 2.2 at the cluster stripping radius to 4.5e3 at
+# feasibility envelope x runs from 2.2 at the cluster stripping radius to 4.1e3 at
 # the ISCO, so unbound cluster stars are adiabatically decoupled from every orbit
 # in the envelope.  We use the Gnedin & Ostriker (1999) power-law correction rather
 # than the Spitzer (1987) exp(-x^2) form, which over-suppresses; the power law is
