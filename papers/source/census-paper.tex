@@ -42,7 +42,7 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small v1.2 (last revised 2026-08-20) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small v1.3 (last revised 2026-08-27) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
@@ -318,7 +318,7 @@ The analytic Poisson estimator returns $0.8\times10^{-3}$ to $1.2\times10^{-3}$ 
 
 Registration is what makes two of these associations tight. \citet{ZhaoHeinke2023} quote offsets of $2.65\as$ for pulsar G and $2.42\as$ for pulsar K between their radio and X-ray positions. With the timing positions of \citet{ColomiBernadich2026} and the measured frame shift applied, the same two associations sit at $0.071\as$ and $0.014\as$.
 
-Tier~2 returns no matches from five probes, at separations of $4.1\as$ to $24.1\as$, against an expected spurious count of 0.261 by rotation. Pulsar L, which \citet{ColomiBernadich2026} note as positionally consistent with source 32d at roughly $3\sigma$, sits $4.06\as$ from its nearest catalogue source and outside the match radius our uncertainty rule produces. That rule is ours, not the source paper's, so the non-match is reported as a consequence of a stated convention rather than as evidence against their association.
+Tier~2 returns no matches from five probes, at separations of $4.1\as$ to $24.1\as$, against an expected spurious count of 0.261 by rotation. Pulsar L, which \citet{ColomiBernadich2026} note as positionally consistent with source 32d at roughly $3\sigma$, sits $4.06\as$ from its nearest catalogue source and outside the match radius our uncertainty rule produces. That rule is ours, not the source paper's, so the non-match is reported as a consequence of a stated convention rather than as evidence against their association. L's own chance rate is small but not negligible: the nearest catalogue source lies $4.06\as$ away with a chance probability of 0.002--0.006 under the three estimators of Section~\ref{sec:method-chance}, at either reading of the tier-2 uncertainty (numbers in \texttt{paper/g/calc7/g\_calc7\_pulsarL.json}), two orders of magnitude above the registered tier-1 associations, consistent with the non-match.
 
 Six pulsars (F, J, M, O, P, R) carry no position in \citet{ColomiBernadich2026} and are absent from the cross-match entirely. Every match count in this paper is conditional on that omission.
 
@@ -493,7 +493,7 @@ Three accounting conventions change the number and are stated here. Published no
 \subsection{The MSP-like region}
 \label{sec:results-msplike}
 
-The confirmed counterparts define a region in the colour-flux plane from this cluster's own data. Four of them ($n=4$: 23g, 11f, 24f, 21d) carry both a tabulated colour and a flux and anchor it; a fifth recovered counterpart lacks a tabulated colour and is dropped. The primary construction is a bounding box on those same four anchors: counting unidentified sources inside it gives 39, of which 14.85 survive membership weighting at the adopted normalisation. A $2\sigma$ ellipse on the same $n=4$ anchors, reported as a secondary and wider construction, gives 53 (19.44 weighted). Eleven unidentified sources carry neither a colour nor a flux and cannot be placed in the plane at all. Neither region screens for background AGN, so the 39 and 53 counts are upper bounds on MSP-like membership rather than membership estimates.
+The confirmed counterparts define a region in the colour-flux plane from this cluster's own data. Four of them ($n=4$: 23g, 11f, 24f, 21d) carry both a tabulated colour and a flux and anchor it; a fifth recovered counterpart lacks a tabulated colour and is dropped. The primary construction is a bounding box on those same four anchors: counting unidentified sources inside it gives 39, of which 14.85 survive membership weighting at the adopted normalisation. A $2\sigma$ ellipse on the same $n=4$ anchors, reported as a secondary and wider construction, gives 53 (19.44 weighted). Both counts rest entirely on the four anchors, and the leave-one-out recounts say so: dropping any one anchor moves the box count over 15--39 and the ellipse count over 7--74 (membership-weighted 6.5--14.9 and 2.0--14.9), because each anchor sets an edge of one construction or the other. The upper-bound reading is unaffected (every recount is still an upper bound), but the point values 39 and 53 should be quoted with these ranges attached. Numbers in \texttt{paper/g/calc7/g\_calc7\_anchor\_loo.json}. Eleven unidentified sources carry neither a colour nor a flux and cannot be placed in the plane at all. Neither region screens for background AGN, so the 39 and 53 counts are upper bounds on MSP-like membership rather than membership estimates.
 
 \begin{figure}[tbp]
 \centering
@@ -569,7 +569,11 @@ Section~\ref{sec:method-membership} under the adopted normalisation
 \pchance{} the largest of the three estimators of Section~\ref{sec:method-chance}
 evaluated with the candidate treated as its own probe and removed from the
 comparison catalogue. Ties break by soft flux. No threshold is applied to either
-factor: the whole pool is ranked and the first twenty are printed.
+factor: the whole pool is ranked and the first twenty are printed. The adoption is
+not load-bearing for the ranking: re-scoring the pool under all six rows of
+Table~\ref{tab:membership} changes no position in the top twenty (Spearman
+$\rho = 1.00$ in every row), because the score ordering is a cluster-centric-radius
+ordering under any of them (\texttt{paper/g/calc7/g\_calc7\_anchor\_loo.json}).
 
 The reason for fixing the rule in advance shows up in what the list then looks
 like.
