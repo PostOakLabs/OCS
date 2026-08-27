@@ -1,0 +1,200 @@
+{
+ "meta": {
+  "wu": "R7-CALC-E",
+  "part": "E-CALC-4",
+  "date": "2026-08-23",
+  "sources": "repo/tools/data/measurements.js (OCS_MEASUREMENTS.imbh[]), repo/tools/lib/imbh-constraints.core.js, repo/tools/data/anchored-evidence.json (golden replay)",
+  "chen_lane_note": "Chen2025 lane is limitType parameterDependent; engine fiducial-curve upper = 709 Msun at eps=1e-3, rho=1e-21 kg/m3 (golden hiSrc)"
+ },
+ "constraints": [
+  {
+   "id": "noyola2008",
+   "year": 2008,
+   "authors": "Noyola, Gebhardt & Bergmann",
+   "value": 40000.0,
+   "uncLo": 10000.0,
+   "uncHi": 10000.0,
+   "limitType": "detection",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "kinematics",
+   "methodLabel": "Stellar kinematics (Gemini/GMOS integral-field)",
+   "journal": "ApJ 676:1008",
+   "doi": "10.1086/529002"
+  },
+  {
+   "id": "vandermarel2010",
+   "year": 2010,
+   "authors": "van der Marel & Anderson",
+   "value": 12000.0,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "upper",
+   "sigma": 3.0,
+   "confidenceLevel": null,
+   "method": "kinematics",
+   "methodLabel": "Stellar kinematics (HST proper motions)",
+   "journal": "ApJ 710:1063",
+   "doi": "10.1088/0004-637X/710/2/1063"
+  },
+  {
+   "id": "baumgardt2017",
+   "year": 2017,
+   "authors": "Baumgardt",
+   "value": null,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "noEvidence",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "nbody",
+   "methodLabel": "N-body modelling",
+   "journal": "MNRAS 464:2174",
+   "doi": "10.1093/mnras/stw2488"
+  },
+  {
+   "id": "haberle2024",
+   "year": 2024,
+   "authors": "H\u00e4berle et al.",
+   "value": 8200.0,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "lower",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "propermotion",
+   "methodLabel": "Proper motion (HST, 7 fast stars)",
+   "journal": "Nature 631:285",
+   "doi": "10.1038/s41586-024-07511-z"
+  },
+  {
+   "id": "banares2025",
+   "year": 2025,
+   "authors": "Ba\u00f1ares-Hern\u00e1ndez et al.",
+   "value": 6000.0,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "upper",
+   "sigma": 3.0,
+   "confidenceLevel": null,
+   "method": "timing",
+   "methodLabel": "Stellar kinematics + pulsar timing (combined)",
+   "journal": "A&A 693:A104",
+   "doi": "10.1051/0004-6361/202451763"
+  },
+  {
+   "id": "omegacat6_2025",
+   "year": 2025,
+   "authors": "H\u00e4berle et al. (oMEGACat VI)",
+   "value": null,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "noEvidence",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "kinematics",
+   "methodLabel": "3D kinematics (HST proper motion + VLT RVs)",
+   "journal": "ApJ (April 2025)",
+   "doi": "10.3847/1538-4357/adbe67"
+  },
+  {
+   "id": "chen2025jwst",
+   "year": 2025,
+   "authors": "Chen et al.",
+   "value": null,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "parameterDependent",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "accretion",
+   "methodLabel": "JWST NIRCam + MIRI photometry (no accretion signature)",
+   "journal": "arXiv:2511.20945",
+   "doi": "10.48550/arXiv.2511.20945"
+  },
+  {
+   "id": "gonzalezprieto2025",
+   "year": 2025,
+   "authors": "Gonz\u00e1lez Prieto, Rodriguez & Cabrera",
+   "value": 50000.0,
+   "uncLo": 20000.0,
+   "uncHi": 20000.0,
+   "limitType": "detection",
+   "sigma": null,
+   "confidenceLevel": null,
+   "method": "nbody",
+   "methodLabel": "Monte Carlo N-body (loss-cone dynamics, TDE + BH mergers)",
+   "journal": "ApJL",
+   "doi": "10.3847/2041-8213/adfd4a"
+  },
+  {
+   "id": "trapum2026",
+   "year": 2026,
+   "authors": "TRAPUM (Colom i Bernadich et al.)",
+   "value": 100000.0,
+   "uncLo": null,
+   "uncHi": null,
+   "limitType": "upper",
+   "sigma": 1.65,
+   "confidenceLevel": 0.9,
+   "method": "timing",
+   "methodLabel": "Pulsar timing (MeerKAT + Parkes, 2021\u20132025)",
+   "journal": "arXiv:2603.21845",
+   "doi": "10.48550/arXiv.2603.21845"
+  }
+ ],
+ "window": {
+  "lo": 8200.0,
+  "hi": 709.0,
+  "tension": true,
+  "lo_src": "haberle2024",
+  "hi_src": "chen2025jwst (fiducial curve; banares2025 next at 6000)"
+ },
+ "golden": {
+  "n_constraints_active": 9,
+  "lo": 8200,
+  "hi": 709,
+  "verdict": "tension \u2014 H\u00e4berle et al. 2024 (8,200 M\u2609) exceeds Chen et al. 2025 (709 M\u2609)",
+  "lower_bound_source": "H\u00e4berle et al. 2024",
+  "upper_limit_source": "Chen et al. 2025",
+  "execution_hash": "533362070f30bf62f874fcf9b589446c8ec745c1023b575d515a7f77d68ae59f"
+ },
+ "gate_G_E6_pass": true,
+ "p10_framings": {
+  "framing_identical_depths": {
+   "note": "Forecast (ETC-6.0, hypothetical exposure, crowding x3) and measurement-of-record framings consume the same depth array, so xi and ln K are identical; the difference is provenance labelling only. Numbers below are both framings' numbers.",
+   "fiducial": {
+    "xi": 0.755164,
+    "lnK": -0.47414338622765595,
+    "band": [
+     -1.1383336391193326,
+     -0.07851996763085158
+    ],
+    "capacity_spent_frac": 0.6840443119809397
+   }
+  },
+  "achieved_depth_sensitivity": {
+   "note": "The numbers that WOULD separate the framings are the achieved depths themselves, unknown on today's record. Bracket computed over the paper's own crowding switch (depth multiplier); crowd=1 is the raw ETC depth (deepest, most optimistic measured analogue).",
+   "crowding_1": {
+    "xi": 0.772142,
+    "lnK": -0.48787599270041054
+   },
+   "crowding_3_fiducial": {
+    "xi": 0.755164,
+    "lnK": -0.47414338622765595
+   },
+   "crowding_10": {
+    "xi": 0.732816,
+    "lnK": -0.45635006482425927
+   },
+   "crowding_30": {
+    "xi": 0.708486,
+    "lnK": -0.4373320069565396
+   },
+   "lnK_bracket": [
+    -0.4373320069565396,
+    -0.48787599270041054
+   ]
+  }
+ }
+}
