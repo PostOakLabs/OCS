@@ -117,9 +117,9 @@ a:hover { color: var(--teal-glow); }
 .result-val { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 600; color: var(--teal-glow); letter-spacing: 0.04em; }
 .result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
 .result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
-.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
-.result-table td:first-child { color: var(--text-dim); width: 170px; }
-.result-table tr:last-child td { border-bottom: none; }
+.result-table td, .result-table th { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); text-align: left; font-weight: normal; }
+.result-table td:first-child, .result-table th:first-child { color: var(--text-dim); width: 170px; }
+.result-table tr:last-child td, .result-table tr:last-child th { border-bottom: none; }
 
 .about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
 .about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
@@ -519,7 +519,7 @@ function render() {
   }
 
   document.getElementById('result-table').innerHTML = `
-    <tr><td>pi_rel_mas</td><td>${op.pi_rel_mas} mas</td></tr>
+    <tr><th scope="col">pi_rel_mas</th><th scope="col">${op.pi_rel_mas} mas</th></tr>
     <tr><td>kappa</td><td>${op.kappa_mas_Msun} mas/M-sun</td></tr>
     <tr><td>regime</td><td>${op.regime}</td></tr>
     <tr><td>yield_scaled</td><td>${op.yield_scaled_events.toLocaleString('en-US')} events (stellar)</td></tr>

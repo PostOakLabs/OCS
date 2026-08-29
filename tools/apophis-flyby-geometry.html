@@ -109,9 +109,9 @@ a:hover { color: var(--teal-glow); }
 .result-val.geo-outside { color: var(--green-glow); }
 .result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
 .result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
-.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
-.result-table td:first-child { color: var(--text-dim); width: 180px; }
-.result-table tr:last-child td { border-bottom: none; }
+.result-table td, .result-table th { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); text-align: left; font-weight: normal; }
+.result-table td:first-child, .result-table th:first-child { color: var(--text-dim); width: 180px; }
+.result-table tr:last-child td, .result-table tr:last-child th { border-bottom: none; }
 .inside-geo { color: var(--amber-bright); }
 .outside-geo { color: var(--green-bright); }
 
@@ -478,7 +478,7 @@ function render() {
     : margin.toLocaleString('en-US') + ' km (outside GEO)';
 
   document.getElementById('result-table').innerHTML = `
-    <tr><td>flyby_date</td><td>${op.flyby_date}</td></tr>
+    <tr><th scope="col">flyby_date</th><th scope="col">${op.flyby_date}</th></tr>
     <tr><td>perigee_km</td><td>${op.perigee_km.toLocaleString('en-US')} km from Earth centre</td></tr>
     <tr><td>perigee_altitude_km</td><td>${op.perigee_altitude_km.toLocaleString('en-US')} km above surface</td></tr>
     <tr><td>GEO_margin_km</td><td><span class="${op.inside_GEO ? 'inside-geo' : 'outside-geo'}">${marginStr}</span></td></tr>

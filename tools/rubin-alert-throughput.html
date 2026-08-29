@@ -104,9 +104,9 @@ a:hover { color: var(--teal-glow); }
 .result-val { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 600; color: var(--teal-glow); letter-spacing: 0.04em; }
 .result-label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); margin-top: 2px; letter-spacing: 0.04em; }
 .result-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
-.result-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
-.result-table td:first-child { color: var(--text-dim); width: 180px; }
-.result-table tr:last-child td { border-bottom: none; }
+.result-table td, .result-table th { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); text-align: left; font-weight: normal; }
+.result-table td:first-child, .result-table th:first-child { color: var(--text-dim); width: 180px; }
+.result-table tr:last-child td, .result-table tr:last-child th { border-bottom: none; }
 
 .about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
 .about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
@@ -445,7 +445,7 @@ function render() {
   document.getElementById('result-yrate').textContent   = op.yearly_data_rate_TB.toFixed(2) + ' TB';
 
   document.getElementById('result-table').innerHTML = `
-    <tr><td>survey</td><td>Vera C. Rubin Observatory — LSST</td></tr>
+    <tr><th scope="col">survey</th><th scope="col">Vera C. Rubin Observatory — LSST</th></tr>
     <tr><td>status</td><td>${op.status}</td></tr>
     <tr><td>alerts_per_night</td><td>${op.alerts_per_night.toLocaleString('en-US')}</td></tr>
     <tr><td>alerts_per_year</td><td>${op.alerts_per_year.toLocaleString('en-US')}</td></tr>
