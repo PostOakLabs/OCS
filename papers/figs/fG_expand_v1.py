@@ -844,6 +844,40 @@ def g5_control(S):
     return out
 
 
+# ---------------------------------------------------------------------------
+# LaTeX table bodies, so the manuscript rows are regenerable rather than typed
+# ---------------------------------------------------------------------------
+
+FLAG_KEY = {"new_source": "n", "variable_candidate": "v", "low_counts": "l",
+            "outside_ellipse": "e", "large_error_circle": "x",
+            "flux_ratio_flagged": "g", "outer_aperture": "o"}
+
+
+def latex_tables(targets, variability):
+    rows = []
+    for r in targets["candidates"][:targets["top_n_printed_in_paper"]]:
+        fl = "".join(sorted(FLAG_KEY[f] for f in r["flags"] if f in FLAG_KEY))
+        if r["confirmed_msp_counterpart"]:
+            fl = "c" + fl
+        if r["box_anchor"]:
+            fl = "a" + fl
+        rows.append("%d & %s & %.0f & $%+.2f$ & %.1f & %.3f & %.1f & %.3f & %s \\\\"
+                    % (r["rank"], r["id"], r["radius_arcsec"],
+                       r["colour_log_soft_hard"], r["flux_soft_1e-19_W_m2"],
+                       r["p_member"], 1000.0 * r["p_chance_used_max"], r["score"],
+                       (fl if fl else "--")))
+    with open(os.path.join(HERE, "_g4_table.tex"), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(rows) + "\n")
+
+    lad = ["%.1f & %d & %d & %d & %d \\\\"
+           % (row["flux_ratio"], row["n_aperture_sources"], row["n_msp_like_pool"],
+              row["n_aperture_sources_no_validity_cut"],
+              row["n_msp_like_pool_no_validity_cut"])
+           for row in variability["chandra"]["ladder"]]
+    with open(os.path.join(HERE, "_g6_table.tex"), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lad) + "\n")
+
+
 if __name__ == "__main__":
     S = rebuild()
     print("G-1", g1_skymap(S)["n_registered_matches"], "registered matches drawn")
@@ -861,6 +895,8 @@ if __name__ == "__main__":
     g3_figure(g3)
     t = g4_target_list(S)
     print("G-4 pool", t["n_pool"], "score range", t["score_range"])
+    latex_tables(t, g6)
+    print("wrote _g4_table.tex and _g6_table.tex")
     for r in t["candidates"][:20]:
         print(" %2d %-5s r=%6.1f Pm=%.3f Pch=%.4f S=%.4f %s"
               % (r["rank"], r["id"], r["radius_arcsec"], r["p_member"],
