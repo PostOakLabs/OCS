@@ -180,9 +180,9 @@ details[open] .about-toggle summary::before{content:'▼ '}
       <div class="ctrl-row">
         <div class="ctrl-label">
           <span>OC Distance</span>
-          <span class="ctrl-val" id="lbl-dist">5.43 kpc</span>
+          <span class="ctrl-val" id="lbl-dist">5.49 kpc</span>
         </div>
-        <input type="range" id="sl-dist" min="4.5" max="6.5" step="0.01" value="5.43">
+        <input type="range" id="sl-dist" min="4.5" max="6.5" step="0.01" value="5.49">
       </div>
 
       <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
@@ -333,7 +333,8 @@ function aObs(pulsar) {
 }
 
 // ── State ─────────────────────────────────────────────────────────────────
-const state = { mass: 50000, model: 'point', rc: 0.8, dist: 5.43 };
+const OC_DIST_KPC_SSOT = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc / 1000) || 5.49; // SSOT: measurements.js OC_distance_pc
+const state = { mass: 50000, model: 'point', rc: 0.8, dist: OC_DIST_KPC_SSOT };
 
 // ── Hash ──────────────────────────────────────────────────────────────────
 function getHash()  { return Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map(s=>s.split('='))); }
@@ -344,7 +345,7 @@ function loadHash() {
   if (h.mass)  state.mass  = Math.max(1e3, Math.min(1e6, parseFloat(h.mass)  || 50000));
   if (h.model && ['point','plummer','hybrid'].includes(h.model)) state.model = h.model;
   if (h.rc)    state.rc    = Math.max(0.1,  Math.min(3.0,  parseFloat(h.rc)   || 0.8));
-  if (h.dist)  state.dist  = Math.max(4.5,  Math.min(6.5,  parseFloat(h.dist) || 5.43));
+  if (h.dist)  state.dist  = Math.max(4.5,  Math.min(6.5,  parseFloat(h.dist) || OC_DIST_KPC_SSOT));
 }
 
 // ── SVG chart constants ────────────────────────────────────────────────────

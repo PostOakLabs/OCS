@@ -186,12 +186,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       <div class="slider-block">
         <label>OC DISTANCE D (kpc)</label>
         <div class="slider-row">
-          <input type="range" id="sl-D" min="5.0" max="6.5" step="0.01" value="5.43">
-          <span class="slider-val" id="v-D">5.43 kpc</span>
+          <input type="range" id="sl-D" min="5.0" max="6.5" step="0.01" value="5.49">
+          <span class="slider-val" id="v-D">5.49 kpc</span>
         </div>
         <div class="preset-row">
           <button class="preset-btn" data-D="5.2">5.2 kpc</button>
-          <button class="preset-btn" data-D="5.43">5.43 kpc (canonical)</button>
+          <button class="preset-btn" data-D="5.43">5.43 kpc</button>
+          <button class="preset-btn" data-D="5.49">5.49 kpc (canonical)</button>
           <button class="preset-btn" data-D="5.9">5.9 kpc</button>
         </div>
       </div>
@@ -296,11 +297,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 // Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
 const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
 const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
+const OC_DIST_KPC_SSOT = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc / 1000) || 5.49; // SSOT: measurements.js OC_distance_pc
 function fmtMsun(m){if(m>=1e4)return(m/1e3).toFixed(1)+'×10³ M☉';return m.toLocaleString(undefined,{maximumFractionDigits:0})+' M☉';}
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)));}
 function saveHash(s){history.replaceState(null,'','#'+Object.entries(s).map(([k,v])=>`${k}=${v}`).join('&'));}
 
-const state={Mb:3.914,sig:20,ms:0.5,D:5.43,T:10};
+const state={Mb:3.914,sig:20,ms:0.5,D:OC_DIST_KPC_SSOT,T:10};
 
 function mu_uas_yr(M_BH,sig,ms,D){
   const v1d=sig*Math.sqrt(ms/M_BH);

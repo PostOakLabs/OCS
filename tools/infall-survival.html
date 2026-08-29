@@ -364,16 +364,17 @@ function calculate(){
 function saveHash(){
   history.replaceState(null,'','#lm='+state.lm.toFixed(3)+'&h='+state.h+'&tol='+state.tol);
 }
+function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, v)); }
 function loadHash(){
   const p=new URLSearchParams(location.hash.slice(1));
-  if(p.has('lm')){ state.lm=parseFloat(p.get('lm')); document.getElementById('sl-lm').value=state.lm; upd('lm',state.lm); }
-  if(p.has('h')){ state.h=parseFloat(p.get('h')); document.getElementById('sl-h').value=state.h; upd('h',state.h); }
-  if(p.has('tol')){ state.tol=parseFloat(p.get('tol')); document.getElementById('sl-tol').value=state.tol; upd('tol',state.tol); }
+  if(p.has('lm')){ const v=parseFloat(p.get('lm')); if(!isNaN(v)) state.lm=clamp(v,0.477,10); document.getElementById('sl-lm').value=state.lm; upd('lm',state.lm); }
+  if(p.has('h')){ const v=parseFloat(p.get('h')); if(!isNaN(v)) state.h=clamp(v,0.5,3.0); document.getElementById('sl-h').value=state.h; upd('h',state.h); }
+  if(p.has('tol')){ const v=parseFloat(p.get('tol')); if(!isNaN(v)) state.tol=clamp(v,0.1,100); document.getElementById('sl-tol').value=state.tol; upd('tol',state.tol); }
 }
 
 window.OCS_APPLY_PREFILL = function(obj){
-  if(obj.mass_solar !== undefined){ const lm=Math.log10(Math.max(3,obj.mass_solar)); state.lm=lm; document.getElementById('sl-lm').value=lm; upd('lm',lm); }
-  if(obj.height_m !== undefined){ state.h=obj.height_m; document.getElementById('sl-h').value=state.h; upd('h',state.h); }
+  if(obj.mass_solar !== undefined){ const lm=clamp(Math.log10(Math.max(3,obj.mass_solar)),0.477,10); state.lm=lm; document.getElementById('sl-lm').value=lm; upd('lm',lm); }
+  if(obj.height_m !== undefined){ state.h=clamp(obj.height_m,0.5,3.0); document.getElementById('sl-h').value=state.h; upd('h',state.h); }
   calculate();
 };
 window.OCS_RUN = calculate;

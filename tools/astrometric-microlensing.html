@@ -165,11 +165,11 @@ a:hover{color:var(--teal-glow)}
       <div class="slider-block">
         <label>Lens distance D_L  (kpc)</label>
         <div class="slider-row">
-          <input type="range" id="dl-slider" min="1" max="10" step="0.01" value="5.43">
-          <span class="slider-value" id="dl-val">5.43 kpc</span>
+          <input type="range" id="dl-slider" min="1" max="10" step="0.01" value="5.49">
+          <span class="slider-value" id="dl-val">5.49 kpc</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-dl="5.43">OC centre (5.43)</button>
+          <button class="preset-btn" data-preset-dl="5.49">OC centre (5.49)</button>
         </div>
       </div>
 
@@ -391,7 +391,7 @@ function _updateCgStatus(ps){const el=document.getElementById('cg-parent-status'
 function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h);if(sp.has('cg')){try{const b=sp.get('cg').replace(/-/g,'+').replace(/_/g,'/');const pad=b+'==='.slice((b.length%4)||4);const ta=document.getElementById('cg-parent-ta');if(ta)ta.value=atob(pad);}catch(e){}}const ta=document.getElementById('cg-parent-ta');if(!ta)return;const go=()=>{_cgParents=_parseCgParents(ta.value);_updateCgStatus(_cgParents);if(typeof invalidateArtifact==='function')invalidateArtifact();};ta.addEventListener('input',go);if(ta.value)go();}
 function wireArtifact(){}
 function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};const TOOL_VERSION='1.2.0';return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_microlensing',tool_id:'astrometric-microlensing',tool_version:TOOL_VERSION,generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_astrometric_microlensing_2026,\n  author   = {Swanson, Tim},\n  title    = {{Astrometric Microlensing Predictor}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/astrometric-microlensing.html},\n  version  = {'+TOOL_VERSION+'},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
-const state = { ML: 8200, DL: 5.43, DS: 8, G: 17, mu: 5, Sigma: 2 };
+const state = { ML: 8200, DL: 5.49, DS: 8, G: 17, mu: 5, Sigma: 2 }; // SSOT: measurements.js OC_distance_pc
 function loadHash(){
   const p = getHash();
   if (p.ML)    { const v = parseFloat(p.ML);    if (!isNaN(v) && v > 0)   state.ML = v; }

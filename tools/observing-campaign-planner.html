@@ -426,20 +426,21 @@ function saveHash(){
   const h = `instr=${state.instr}&goal=${state.goal}&time=${state.time_h}&stars=${state.stars}&cprec=${state.custom_prec}`;
   history.replaceState(null,'','#'+h);
 }
+function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, v)); }
 function loadHash(){
   const h = location.hash.slice(1); if(!h) return;
   const p = new URLSearchParams(h);
   if(p.has('instr')){ document.getElementById('sel-instr').value=p.get('instr'); state.instr=p.get('instr'); }
   if(p.has('goal')){ document.getElementById('sel-goal').value=p.get('goal'); state.goal=p.get('goal'); }
-  if(p.has('time')){ state.time_h=parseFloat(p.get('time')); document.getElementById('sl-time').value=state.time_h; document.getElementById('sv-time').textContent=state.time_h+' h'; }
-  if(p.has('stars')){ state.stars=parseInt(p.get('stars')); document.getElementById('sl-stars').value=state.stars; document.getElementById('sv-stars').textContent=state.stars.toLocaleString(); }
-  if(p.has('cprec')){ state.custom_prec=parseFloat(p.get('cprec')); document.getElementById('sl-prec').value=state.custom_prec; document.getElementById('sv-prec').textContent=state.custom_prec+' μas'; }
+  if(p.has('time')){ const v=parseFloat(p.get('time')); if(!isNaN(v)) state.time_h=clamp(v,1,200); document.getElementById('sl-time').value=state.time_h; document.getElementById('sv-time').textContent=state.time_h+' h'; }
+  if(p.has('stars')){ const v=parseInt(p.get('stars')); if(!isNaN(v)) state.stars=clamp(v,10,5000); document.getElementById('sl-stars').value=state.stars; document.getElementById('sv-stars').textContent=state.stars.toLocaleString(); }
+  if(p.has('cprec')){ const v=parseFloat(p.get('cprec')); if(!isNaN(v)) state.custom_prec=clamp(v,1,200); document.getElementById('sl-prec').value=state.custom_prec; document.getElementById('sv-prec').textContent=state.custom_prec+' μas'; }
 }
 
 window.OCS_APPLY_PREFILL = function(obj){
   if(obj.instr){ document.getElementById('sel-instr').value=obj.instr; }
   if(obj.goal){ document.getElementById('sel-goal').value=obj.goal; }
-  if(obj.time_h !== undefined){ state.time_h=obj.time_h; document.getElementById('sl-time').value=obj.time_h; document.getElementById('sv-time').textContent=obj.time_h+' h'; }
+  if(obj.time_h !== undefined){ state.time_h=clamp(obj.time_h,1,200); document.getElementById('sl-time').value=state.time_h; document.getElementById('sv-time').textContent=state.time_h+' h'; }
   calculate();
 };
 window.OCS_RUN = calculate;

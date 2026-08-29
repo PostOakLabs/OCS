@@ -103,7 +103,7 @@ details summary::marker{color:var(--text-dim)}
 
 <div class="tool-header">
   <h1>GW Horizon Plotter</h1>
-  <p>Characteristic strain tracks for IMRI / EMRI / IMBH–IMBH compact binaries overlaid on analytic detector sensitivity curves spanning PTA (nHz) to next-generation ground-based (kHz). Default shows both ωCen IMBH bounds at 5.43&nbsp;kpc.</p>
+  <p>Characteristic strain tracks for IMRI / EMRI / IMBH–IMBH compact binaries overlaid on analytic detector sensitivity curves spanning PTA (nHz) to next-generation ground-based (kHz). Default shows both ωCen IMBH bounds at 5.49&nbsp;kpc.</p>
   <div class="badges">
     <span class="badge badge-blue">Multi-messenger</span>
     <span class="badge badge-teal">IMBH Evidence</span>
@@ -137,9 +137,9 @@ details summary::marker{color:var(--text-dim)}
       <div class="ctrl-row">
         <div class="ctrl-label">
           <span>Distance</span>
-          <span class="ctrl-val" id="lbl-dist">5.43 kpc</span>
+          <span class="ctrl-val" id="lbl-dist">5.49 kpc</span>
         </div>
-        <input type="range" id="sl-dist" min="0.1" max="50" step="0.05" value="5.43">
+        <input type="range" id="sl-dist" min="0.1" max="50" step="0.05" value="5.49">
       </div>
 
       <div class="ctrl-row">
@@ -273,6 +273,7 @@ const _IMBH = globalThis.IMBHConstraints;
 const _CSET = _IMBH.constraintsFromMeasurements();
 const OCS_HABERLE = _IMBH.computeWindow(_CSET, { show: 'propermotion' }).lo || 8200;
 const OCS_BANARES = _IMBH.computeWindow(_CSET, { show: 'timing' }).hi || 6000;
+const OC_DIST_KPC_SSOT = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc / 1000) || 5.49; // SSOT: measurements.js OC_distance_pc
 
 // ── Physics helpers ────────────────────────────────────────────────────────
 function chirpMass(m1, m2) {
@@ -579,7 +580,7 @@ function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h
 function wireArtifact(){}
 function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_gw_horizon',tool_id:'gw-horizon-plotter',tool_version:'1.2.0',generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_gw_horizon_plotter_2026,\n  author   = {Swanson, Tim},\n  title    = {{GW Horizon Plotter}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/gw-horizon-plotter.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
 // ── State & hash ───────────────────────────────────────────────────────────
-const DEF = { m1:OCS_HABERLE, m2:10, dist:5.43, spin:0 };
+const DEF = { m1:OCS_HABERLE, m2:10, dist:OC_DIST_KPC_SSOT, spin:0 };
 let state = {...DEF};
 
 function saveHash(s) {
