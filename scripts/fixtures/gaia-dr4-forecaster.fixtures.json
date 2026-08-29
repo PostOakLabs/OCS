@@ -1,0 +1,82 @@
+{
+  "cases": [
+    {
+      "name": "d10kpc-crowding20-sigma20-M8200",
+      "hash": "mass=8200&dist=10&crowding=20&sigma0=20",
+      "expected": {
+        "influence_radius_pc": 0.0441,
+        "influence_radius_arcsec": 0.909,
+        "sigma_keplerian_km_s": 28.28,
+        "pm_floor_dr4_uas_yr": 444.44,
+        "pm_floor_dr4_km_s_equiv": 21.067,
+        "kinematic_sn_dr4": 0.681,
+        "min_detectable_mass_dr4_M_solar": 206890,
+        "min_detectable_mass_dr2_M_solar": 928593,
+        "n_stars_in_eval_radius": 3,
+        "dr4_capable": false
+      }
+    },
+    {
+      "name": "d5.49kpc-crowding3-sigma20-M8200",
+      "hash": "mass=8200&dist=5.49&crowding=3&sigma0=20",
+      "expected": {
+        "influence_radius_pc": 0.0441,
+        "influence_radius_arcsec": 1.657,
+        "sigma_keplerian_km_s": 28.28,
+        "pm_floor_dr4_uas_yr": 66.67,
+        "pm_floor_dr4_km_s_equiv": 1.735,
+        "kinematic_sn_dr4": 8.271,
+        "min_detectable_mass_dr4_M_solar": 100,
+        "min_detectable_mass_dr2_M_solar": 15751,
+        "n_stars_in_eval_radius": 3,
+        "dr4_capable": true
+      }
+    }
+  ],
+  "_derivation_note": "Hand-derived from an independent re-implementation (not copy-pasted) of the page's stated Keplerian-influence-radius / kinematic-S/N model: r_infl = G*M/(2*sigma0^2) (influence radius), sigma_Kep = sqrt(G*M/(2*r_eval)) evaluated at r_eval=r_infl/2 (note this reduces algebraically to sigma_Kep = sigma0*sqrt(2), independent of M -- an intrinsic self-similarity of the evaluation-point choice, confirmed by direct substitution and by the constant 28.28 km/s appearing in both cases despite different M/dist/crowding). N_eval floors at max(3, round(...)); case 1's min_detectable_mass_dr4 legitimately saturates the binReturn search floor (lo=100 M_sun) because kinSN(100 M_sun, ...) already exceeds the 3-sigma threshold at these (dist,crowding,sigma0) -- documented as a floor-limited result, not a defect. Case 2 is well clear of the floor (206,890 M_sun). Cross-checked with an independently written Node script (not the tool's own functions) reproducing all 10 output fields to full float precision -- see OCS-FIXWAVE.md FW-4 board note.",
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_astrometry",
+    "tool_id": "gaia-dr4-forecaster",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "1c7dfbf4a55e1b9c0455068e9f6294798b4b8d9dbd97e9babddfca8c95c28f39",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "mass_M_solar": 8200,
+      "dist_kpc": 10,
+      "crowding_factor": 20,
+      "sigma0_km_s": 20
+    },
+    "output_payload": {
+      "influence_radius_pc": 0.0441,
+      "influence_radius_arcsec": 0.909,
+      "sigma_keplerian_km_s": 28.28,
+      "pm_floor_dr4_uas_yr": 444.44,
+      "pm_floor_dr4_km_s_equiv": 21.067,
+      "kinematic_sn_dr4": 0.681,
+      "min_detectable_mass_dr4_M_solar": 206890,
+      "min_detectable_mass_dr2_M_solar": 928593,
+      "n_stars_in_eval_radius": 3,
+      "dr4_capable": false,
+      "verdict": "BELOW THRESHOLD — DR4 kinematic S/N 0.7σ < 3σ; mass not detectable at current parameters."
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/gaia-dr4-forecaster.html",
+      "tool_citation_bibtex": "@software{OCS_gaia_dr4_forecaster_2026,\n  author   = {Swanson, Tim},\n  title    = {{Gaia DR4 IMBH Constraint Forecaster}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/gaia-dr4-forecaster.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

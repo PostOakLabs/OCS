@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "name": "f0.01-T300-d5490pc-L1-unconstrained",
+      "hash": "f=-2.0000&temp=300&dist=5490&lstar=1",
+      "expected": {
+        "bands_detecting": [],
+        "fmin_best_band": "WISE W3 12μm",
+        "fmin_best_covering_fraction": 0.3197,
+        "flux_wise_w3_mJy": 0.03128,
+        "flux_wise_w4_mJy": 0.03454,
+        "lam_peak_um": 9.66,
+        "n_bands_detecting": 0,
+        "orbit_radius_AU": 1.722,
+        "verdict": "UNCONSTRAINED — WELL BELOW SURVEY SENSITIVITY"
+      }
+    },
+    {
+      "name": "f0.5-T300-d5490pc-L1-excluded",
+      "hash": "f=-0.30103&temp=300&dist=5490&lstar=1",
+      "expected": {
+        "bands_detecting": [
+          "WISE W3 12μm"
+        ],
+        "fmin_best_band": "WISE W3 12μm",
+        "fmin_best_covering_fraction": 0.3197,
+        "flux_wise_w3_mJy": 1.564,
+        "flux_wise_w4_mJy": 1.727,
+        "lam_peak_um": 9.66,
+        "n_bands_detecting": 1,
+        "orbit_radius_AU": 1.722,
+        "verdict": "EXCLUDED — IR EXCESS DETECTABLE"
+      }
+    }
+  ],
+  "_derivation_note": "Hand-derived from an independent re-implementation of the page's stated Planck-function IR-excess model: B_nu(T,nu) (Planck function), F_nu = f*L*B_nu/(4*sigma*T^4*d^2) converted to mJy, orbit radius r = sqrt(L/(4*pi*sigma*T^4)). Detector bands (SPHEREx 3.5um/0.04mJy, SPHEREx 4.5um/0.08mJy, WISE W3 12um/1.0mJy, WISE W4 22um/6.0mJy) taken from the page's own BANDS table (physical constants, not tool output). Verified with an independently-written Node script reproducing all 9 output fields to the tool's own display precision (lam_peak_um to 2dp, orbit_radius_AU to 3dp, fluxes to 4 significant figures via toPrecision(4)) -- see OCS-FIXWAVE.md FW-4 board note. Case 1 uses the page's own default state (f=0.01, T=300K, d=OC distance, L=1 Lsun); case 2 raises the covering fraction to f=0.5 to cross the WISE W3 detection threshold (verdict flips to EXCLUDED).",
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/seti_ir_excess",
+    "tool_id": "ir-excess-checker",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "8a462f72629b3abeb326808a9a4b7a8ef486aa586772143440ad4687762fee5b",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "covering_fraction_f": 0.01,
+      "dist_pc": 5490,
+      "lstar_Lsun": 1,
+      "temp_K": 300
+    },
+    "output_payload": {
+      "bands_detecting": [],
+      "fmin_best_band": "WISE W3 12μm",
+      "fmin_best_covering_fraction": 0.3197,
+      "flux_wise_w3_mJy": 0.03128,
+      "flux_wise_w4_mJy": 0.03454,
+      "lam_peak_um": 9.66,
+      "n_bands_detecting": 0,
+      "orbit_radius_AU": 1.722,
+      "verdict": "UNCONSTRAINED — WELL BELOW SURVEY SENSITIVITY"
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/ir-excess-checker.html",
+      "tool_citation_bibtex": "@software{OCS_ir_excess_checker_2026,\n  author   = {Swanson, Tim},\n  title    = {{IR Excess Checker}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/ir-excess-checker.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}
