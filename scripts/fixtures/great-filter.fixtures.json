@@ -1,0 +1,78 @@
+{
+  "cases": [
+    {
+      "name": "balanced-default-you6-H1e10",
+      "hash": "",
+      "expected": {
+        "log_behind": -12,
+        "log_ahead": -3,
+        "log_N": -5,
+        "abio_current": -3,
+        "new_log_N_if_mars_life": -2
+      },
+      "note": "Hand-derived: balanced preset, youStep=6 splits the 8 stages into behind=[abio,prok,euk,multi,intel,tool]=(-3-1-3-2-2-1)=-12, ahead=[ind,stellar]=(-1-2)=-3; logN=log10(1e10)+(-15)=-5; Mars-life bump moves abio to 0 (delta=+3), newLogN=10+(-9)+(-3)=-2. All integer arithmetic, verified independently in board session FW-5."
+    },
+    {
+      "name": "early-preset-you6-H1e10",
+      "hash": "preset=early",
+      "expected": {
+        "log_behind": -21,
+        "log_ahead": -2,
+        "log_N": -13,
+        "abio_current": -9,
+        "new_log_N_if_mars_life": -4
+      },
+      "note": "early preset: behind=(-9-1-5-3-2-1)=-21, ahead=(-1-1)=-2, logN=10-23=-13, abioBump=+9, newLogN=10+(-12)+(-2)=-4."
+    },
+    {
+      "name": "custom-you4-H1e11",
+      "hash": "preset=custom&abio=-2&prok=-1&euk=-2&multi=-1&intel=-1&tool=-1&ind=-2&stellar=-3&you=4&H=1e11",
+      "expected": {
+        "log_behind": -6,
+        "log_ahead": -7,
+        "log_N": -2,
+        "abio_current": -2,
+        "new_log_N_if_mars_life": 0
+      },
+      "note": "custom stages, youStep=4, H=1e11: behind=stages[0..3]=(-2-1-2-1)=-6, ahead=stages[4..7]=(-1-1-2-3)=-7, logN=11-13=-2, abioBump=+2, newLogN=11+(-4)+(-7)=0."
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/fermi_filter",
+    "tool_id": "great-filter",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T13:58:34.213Z",
+    "execution_hash": "60531bce66c22badab2c7d00ed8a6bee5b09f9a7ecfe43b5235633aeda0b92f2",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "habitable": 10000000000,
+      "preset": "balanced",
+      "youStep": 6
+    },
+    "output_payload": {
+      "log_behind": -12,
+      "log_ahead": -3,
+      "log_N": -5,
+      "abio_current": -3,
+      "new_log_N_if_mars_life": -2
+    },
+    "compliance_flags": [
+      "register:speculative"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/probe.html",
+      "tool_citation_bibtex": "@software{OCS_great_filter_2026,\n  author   = {Swanson, Tim},\n  title    = {{Great Filter Localizer}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/great-filter.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

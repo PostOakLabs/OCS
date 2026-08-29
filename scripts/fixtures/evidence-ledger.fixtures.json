@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "name": "defaults-pi30-pd45-pn25",
+      "hash": "",
+      "expected": {
+        "p_imbh": 67.83,
+        "p_dark_cluster": 32.17,
+        "p_null": 0,
+        "dominant_hypothesis": "imbh",
+        "posterior_odds_imbh_vs_dc": 2.108,
+        "log10_bf_imbh_vs_dc": 0.324,
+        "log10_bf_mass_vs_null": 6.6,
+        "verdict": "moderately favors IMBH (68% posterior)"
+      },
+      "note": "Bayesian log-odds combine: logW_IMBH=log10(p_imbh/total)+sumR+sumS, logW_DC=log10(p_dc/total)+sumS, logW_NULL=log10(p_null/total) where sumR/sumS are the summed per-evidence log10 Bayes-factor sliders (defaults: kinematics r1.0 s2.0, pulsar r-0.8 s1.5, propmotion r0.4 s1.5, accretion r-0.3 s0.4, nbody r0.2 s1.2, microlensing r0 s0 -> sumR=0.5, sumS=6.6); normalize via softmax in log-space. Independently reimplemented and cross-checked exactly against the page formula in board session FW-5."
+    },
+    {
+      "name": "pi60-pd20-pn20",
+      "hash": "pi=60&pd=20&pn=20",
+      "expected": {
+        "p_imbh": 90.46,
+        "p_dark_cluster": 9.54,
+        "p_null": 0,
+        "dominant_hypothesis": "imbh",
+        "posterior_odds_imbh_vs_dc": 9.487,
+        "log10_bf_imbh_vs_dc": 0.977,
+        "log10_bf_mass_vs_null": 6.6,
+        "verdict": "strongly favors IMBH (90% posterior)"
+      },
+      "note": "Bayesian log-odds combine: logW_IMBH=log10(p_imbh/total)+sumR+sumS, logW_DC=log10(p_dc/total)+sumS, logW_NULL=log10(p_null/total) where sumR/sumS are the summed per-evidence log10 Bayes-factor sliders (defaults: kinematics r1.0 s2.0, pulsar r-0.8 s1.5, propmotion r0.4 s1.5, accretion r-0.3 s0.4, nbody r0.2 s1.2, microlensing r0 s0 -> sumR=0.5, sumS=6.6); normalize via softmax in log-space. Independently reimplemented and cross-checked exactly against the page formula in board session FW-5."
+    },
+    {
+      "name": "pi25-pd25-pn50-kinematics-r3",
+      "hash": "pi=25&pd=25&pn=50&r_kinematics=3.0",
+      "expected": {
+        "p_imbh": 99.68,
+        "p_dark_cluster": 0.32,
+        "p_null": 0,
+        "dominant_hypothesis": "imbh",
+        "posterior_odds_imbh_vs_dc": 316.228,
+        "log10_bf_imbh_vs_dc": 2.5,
+        "log10_bf_mass_vs_null": 6.6,
+        "verdict": "strongly favors IMBH (100% posterior)"
+      },
+      "note": "Bayesian log-odds combine: logW_IMBH=log10(p_imbh/total)+sumR+sumS, logW_DC=log10(p_dc/total)+sumS, logW_NULL=log10(p_null/total) where sumR/sumS are the summed per-evidence log10 Bayes-factor sliders (defaults: kinematics r1.0 s2.0, pulsar r-0.8 s1.5, propmotion r0.4 s1.5, accretion r-0.3 s0.4, nbody r0.2 s1.2, microlensing r0 s0 -> sumR=0.5, sumS=6.6); normalize via softmax in log-space. Independently reimplemented and cross-checked exactly against the page formula in board session FW-5."
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_evidence",
+    "tool_id": "evidence-ledger",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T13:58:34.246Z",
+    "execution_hash": "55b8788a9c49ec40bac0c2459cd05a7cf24e296227019e0f8a919e06a40ba0e1",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "prior_imbh_pct": 30,
+      "prior_dc_pct": 45,
+      "prior_null_pct": 25,
+      "evidence": {
+        "kinematics": {
+          "r": 1,
+          "s": 2
+        },
+        "pulsar": {
+          "r": -0.8,
+          "s": 1.5
+        },
+        "propmotion": {
+          "r": 0.4,
+          "s": 1.5
+        },
+        "accretion": {
+          "r": -0.3,
+          "s": 0.4
+        },
+        "nbody": {
+          "r": 0.2,
+          "s": 1.2
+        },
+        "microlensing": {
+          "r": 0,
+          "s": 0
+        }
+      }
+    },
+    "output_payload": {
+      "p_imbh": 67.83,
+      "p_dark_cluster": 32.17,
+      "p_null": 0,
+      "dominant_hypothesis": "imbh",
+      "posterior_odds_imbh_vs_dc": 2.108,
+      "log10_bf_imbh_vs_dc": 0.324,
+      "log10_bf_mass_vs_null": 6.6,
+      "verdict": "moderately favors IMBH (68% posterior)"
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/probe.html",
+      "tool_citation_bibtex": "@software{OCS_evidence_ledger_2026,\n  author   = {Swanson, Tim},\n  title    = {{Bayesian IMBH Evidence Ledger}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/evidence-ledger.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}"
+    }
+  }
+}
