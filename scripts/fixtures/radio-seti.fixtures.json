@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "name": "aperture-coherent-1e13W-10kly-notdetected",
+      "hash": "eirp=13&dist=4&aeff=3.8&tsys=1.3&tau=3.56&bw=0&sefd=0.85&sefdmode=0&coh=0&nant=64",
+      "expected": {
+        "snr": 0.08673759468807232,
+        "detected": false,
+        "eirp_min_W": 1152902618058781
+      }
+    },
+    {
+      "name": "sefd-direct-1e15W-10ly-detected",
+      "hash": "eirp=15&dist=1&aeff=3.8&tsys=1.3&tau=3.56&bw=0&sefd=0.85&sefdmode=1&coh=0&nant=64",
+      "expected": {
+        "snr": 7566866.135962201,
+        "detected": true,
+        "eirp_min_W": 1321551064.9083793
+      }
+    }
+  ],
+  "_derivation_note": "Hand-derived from the page's own stated radiometer equation (S_min = SNR * 2*k_B*T_sys/A_eff * sqrt(B_obs/(n_pol*tau)) in aperture mode, or SNR*SEFD*sqrt(B/tau) in SEFD-direct mode; EIRP_min = S_min(per Hz)*B_sig*4*pi*d^2), reimplemented independently in Node (not copied from the tool's compute()) and cross-checked to full float precision -- see OCS-FIXWAVE.md FW-4 board note. Case 1 is the tool's own default aperture-mode state (A_eff~6310 m^2, T_sys~20K matching the page's own '0.3mW at A_eff=6300,Tsys=20K' about-text example, scaled to 1e13 W EIRP at 10,000 ly) -- correctly not detected (SNR<10). Case 2 exercises the SEFD-direct branch at a much closer distance (10 ly) with 1e15 W EIRP, which clears SNR>=10 (detected=true). Both cases keep every numeric field (notably eirp_W and eirp_min_W) under Number.MAX_SAFE_INTEGER (2^53) so the page's own RFC-7493 assertIJson() guard does not degrade execution_hash to 'error' -- a pre-existing tool constraint (same one noted in the bz-kardashev FW-3 fixture), not something fixed here.",
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/seti_detection",
+    "tool_id": "radio-seti",
+    "tool_version": "1.3.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "35e018ce898ba992f590c58fcafa5f34fd7c9ab322020062bfd43218de45da02",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "aeff_m2": 6309.57344480193,
+      "bw_Hz": 1,
+      "dist_ly": 10000,
+      "eirp_W": 10000000000000,
+      "tau_s": 3630.780547701014,
+      "tsys_K": 19.952623149688797,
+      "sefd_mode": "aperture",
+      "sefd_Jy": 8.734210897385067,
+      "coherent": true,
+      "n_ant": 64
+    },
+    "output_payload": {
+      "snr": 0.08673759468807232,
+      "detected": false,
+      "eirp_min_W": 1152902618058781
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/radio-seti.html",
+      "tool_citation_bibtex": "@software{OCS_radio_seti_2026,\n  author   = {Swanson, Tim},\n  title    = {{Radio SETI Sensitivity}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/radio-seti.html},\n  version  = {1.3.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "name": "roman-tension-500stars-40h",
+      "hash": "instr=roman&goal=tension&time=40&stars=500&cprec=20",
+      "expected": {
+        "feasibility_verdict": "Feasible — instrument precision is sufficient",
+        "required_precision_uas": 63.75481059025362,
+        "effective_stars": 500,
+        "min_epochs": 3
+      }
+    },
+    {
+      "name": "elt-ruleout-1500stars-60h",
+      "hash": "instr=elt&goal=rule_out&time=60&stars=1500&cprec=20",
+      "expected": {
+        "feasibility_verdict": "Feasible — instrument precision is sufficient",
+        "required_precision_uas": 77.27855829121651,
+        "effective_stars": 1500,
+        "min_epochs": 3
+      }
+    }
+  ],
+  "_derivation_note": "Hand-derived from the page's own stated virial-mass-estimator resource model (sigma^2 ~ M/r so dM/M ~= 2*dsigma/sigma; dsigma_kms = sigma_v*dM/(2*M_ref) with sigma_v=20 km/s, M_ref=7000 Msun fixed constants; req_prec_uas = dsigma_kms/(4.74*d_kpc)*1000 with d_kpc=5.2 fixed; n_epochs = max(3, ceil((prec/sqrt(eff_stars)/req_prec_uas)^2))), reimplemented independently in Node and cross-checked to full float precision -- see OCS-FIXWAVE.md FW-4 board note. Both cases land in the feasible/green band with n_epochs floored at the minimum of 3 (search did not find a red/amber combination within the exposed slider ranges -- custom_prec is capped at 200 uas by the hash loader's clamp(1,200), which was not enough to cross the infeasibility threshold at any stars/goal combination tried); documented rather than manufactured via an out-of-range hash value. instr_key is read from the page's own DOM select (not the module state) inside calculate() -- loadHash() sets both, so driving the tool via hash (as a browser would) is required, and a bare state-mutation would not reproduce the real page's behavior.",
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_campaign",
+    "tool_id": "observing-campaign-planner",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "6d7ef1de0faa8a9e4f89c0a65721198ab65107ba64ab49458ddec9e4a0e17d3c",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "custom_prec": 20,
+      "goal": "tension",
+      "instr": "roman",
+      "stars": 500,
+      "time_h": 40
+    },
+    "output_payload": {
+      "feasibility_verdict": "Feasible — instrument precision is sufficient",
+      "required_precision_uas": 63.75481059025362,
+      "effective_stars": 500,
+      "min_epochs": 3
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/observing-campaign-planner.html",
+      "tool_citation_bibtex": "@software{OCS_observing_campaign_planner_2026,\n  author   = {Swanson, Tim},\n  title    = {{Observing Campaign Planner}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/observing-campaign-planner.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

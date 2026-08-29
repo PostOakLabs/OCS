@@ -114,7 +114,7 @@ function makeFakeEl() {
   });
 }
 
-function makeSandbox() {
+function makeSandbox(presetIds) {
   const location = { hash: '', href: 'https://omegacentauri.me/tools/probe.html' };
   const history = { replaceState(_s, _t, url) {
     const h = String(url || ''); const i = h.indexOf('#');
@@ -127,6 +127,19 @@ function makeSandbox() {
   // groups above never touch the DOM, so a fresh-element-per-call stub was
   // fine for them; FW-3's buildArtifact()-driven tools need the cache.
   const elCache = new Map();
+  // presetIds: {id: value} pairs seeded into the cache BEFORE the page's
+  // own top-level script runs — needed by observing-campaign-planner (FW-4),
+  // whose unconditional `loadHash(); calculate();` init call reads
+  // document.getElementById('sel-instr').value directly (a real browser
+  // initializes a <select> with no explicit "selected" option to its first
+  // <option>) before this harness ever gets a chance to set the hash.
+  if (presetIds) {
+    for (const [id, value] of Object.entries(presetIds)) {
+      const el = makeFakeEl();
+      el.value = value;
+      elCache.set(id, el);
+    }
+  }
   const document = {
     getElementById(id) { if (!elCache.has(id)) elCache.set(id, makeFakeEl()); return elCache.get(id); },
     querySelector() { return makeFakeEl(); },
@@ -154,11 +167,11 @@ function makeSandbox() {
   return sandbox;
 }
 
-function loadTool(toolId, extraCode = '') {
+function loadTool(toolId, extraCode = '', presetIds = null) {
   const entry = manifest.tools[toolId];
   const abs = resolve(REPO, entry.path);
   const html = readFileSync(abs, 'utf8');
-  const sandbox = makeSandbox();
+  const sandbox = makeSandbox(presetIds);
   const usesMeasurements = /measurements\.js/.test(html);
   const deps = externalScriptSources(html, dirname(entry.path));
   const code = (usesMeasurements ? MEASUREMENTS_SRC + '\n' : '')
@@ -556,4 +569,150 @@ test('tier-c known-value — constraint-stacker matches existing artifact fixtur
   const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
   assert.deepEqual(actualPayload, fixture.output_payload,
     'constraint-stacker: output_payload does not match the proven fixture for the same inputs');
+});
+
+// ---- Group 5: FW-4 buildArtifact()-driven tools (OCS-FIXWAVE.md FW-4) ----
+// Unlike FW-3's group, driving these five tools does NOT follow one uniform
+// loadHash()->render()/compute()->buildArtifact() sequence — each tool's own
+// buildArtifact() was inspected individually (per the FW-4 board note) and
+// three different shapes turned up:
+//   - detection-forecast, gaia-dr4-forecaster, ir-excess-checker: buildArtifact()
+//     is fully self-contained (recomputes everything from module-level `state`
+//     and calls the page's own executionHash() internally), so driving is just
+//     loadHash() -> await buildArtifact() — no render()/compute() needed.
+//   - radio-seti: buildArtifact() reads window._toolArtifactData, which is only
+//     populated as a side effect of render() (which also calls compute()
+//     internally) — driving is loadHash() -> render() -> await buildArtifact().
+//   - observing-campaign-planner: buildArtifact() is SYNCHRONOUS and also reads
+//     window._toolArtifactData (populated by calculate()), and execution_hash
+//     is computed OUTSIDE buildArtifact() (mirroring the page's own
+//     renderArtifact()) via a separate computeExecHash() call. calculate()
+//     also reads instr_key from document.getElementById('sel-instr').value
+//     directly (not from `state`) — a real browser initializes a <select> to
+//     its first <option>, so the harness's id-cached fake DOM must be
+//     pre-seeded with 'sel-instr'/'sel-goal' defaults before the page's own
+//     top-level `loadHash(); calculate();` init call runs (it runs
+//     unconditionally at script-load time, before this test ever touches the
+//     sandbox), or that first calculate() throws on an undefined instrument.
+// Golden cases were hand-derived from each tool's own stated closed-form
+// physics/resource model (detection-forecast: mass-resolution timeline
+// scaling; gaia-dr4-forecaster: Keplerian influence-radius kinematic S/N;
+// ir-excess-checker: Planck-function IR-excess flux vs SPHEREx/WISE
+// sensitivity; radio-seti: the radiometer equation; observing-campaign-planner:
+// the virial-mass-estimator resource-budget model) and cross-checked against
+// independently-written Node reimplementations, NOT by freezing the tool's
+// own live output — see each fixture's "_derivation_note" and OCS-FIXWAVE.md
+// FW-4 for the full derivations.
+function deepFieldEqual(actualVal, expectedVal, toolId, caseName, key) {
+  if (typeof expectedVal === 'number') {
+    assert.ok(typeof actualVal === 'number' && Number.isFinite(actualVal) === Number.isFinite(expectedVal),
+      `${toolId}/${caseName}: field '${key}' expected number ~${expectedVal}, got ${JSON.stringify(actualVal)}`);
+    const tol = Math.max(1e-6, Math.abs(expectedVal) * 1e-6);
+    assert.ok(Math.abs(actualVal - expectedVal) <= tol || actualVal === expectedVal,
+      `${toolId}/${caseName}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+  } else if (Array.isArray(expectedVal) || (typeof expectedVal === 'object' && expectedVal !== null)) {
+    assert.deepEqual(actualVal, expectedVal, `${toolId}/${caseName}: field '${key}' mismatch`);
+  } else {
+    assert.equal(actualVal, expectedVal, `${toolId}/${caseName}: field '${key}' expected ${JSON.stringify(expectedVal)}, got ${JSON.stringify(actualVal)}`);
+  }
+}
+
+test('tier-c known-value — FW-4 detection-forecast (self-contained buildArtifact())', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'detection-forecast.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`detection-forecast / ${c.name}`, async () => {
+      const sandbox = loadTool('detection-forecast');
+      sandbox.location.hash = '#' + c.hash;
+      sandbox.loadHash();
+      const artifact = await sandbox.buildArtifact();
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      for (const [key, expectedVal] of Object.entries(c.expected))
+        deepFieldEqual(actualPayload[key], expectedVal, 'detection-forecast', c.name, key);
+    });
+  }
+});
+
+test('tier-c known-value — FW-4 gaia-dr4-forecaster (self-contained buildArtifact())', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'gaia-dr4-forecaster.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`gaia-dr4-forecaster / ${c.name}`, async () => {
+      const sandbox = loadTool('gaia-dr4-forecaster');
+      sandbox.location.hash = '#' + c.hash;
+      sandbox.loadHash();
+      const artifact = await sandbox.buildArtifact();
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      for (const [key, expectedVal] of Object.entries(c.expected))
+        deepFieldEqual(actualPayload[key], expectedVal, 'gaia-dr4-forecaster', c.name, key);
+    });
+  }
+});
+
+test('tier-c known-value — FW-4 ir-excess-checker (self-contained buildArtifact())', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'ir-excess-checker.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`ir-excess-checker / ${c.name}`, async () => {
+      const sandbox = loadTool('ir-excess-checker');
+      sandbox.location.hash = '#' + c.hash;
+      sandbox.loadHash();
+      const artifact = await sandbox.buildArtifact();
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      for (const [key, expectedVal] of Object.entries(c.expected))
+        deepFieldEqual(actualPayload[key], expectedVal, 'ir-excess-checker', c.name, key);
+    });
+  }
+});
+
+test('tier-c known-value — FW-4 radio-seti (render()-populated window._toolArtifactData)', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'radio-seti.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`radio-seti / ${c.name}`, async () => {
+      const sandbox = loadTool('radio-seti');
+      assert.equal(typeof sandbox.render, 'function', 'radio-seti: expected render()');
+      sandbox.location.hash = '#' + c.hash;
+      sandbox.loadHash();
+      sandbox.render();
+      const artifact = await sandbox.buildArtifact();
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      for (const [key, expectedVal] of Object.entries(c.expected))
+        deepFieldEqual(actualPayload[key], expectedVal, 'radio-seti', c.name, key);
+    });
+  }
+});
+
+// observing-campaign-planner's calculate() reads the "selected" instrument
+// straight from document.getElementById('sel-instr').value rather than
+// `state.instr` (loadHash() sets both, matching what a browser would do when
+// the page's own onchange="calculate()" handler fires). Its own top-level
+// `loadHash(); calculate();` init call runs unconditionally the instant the
+// script is evaluated -- before this test ever gets a chance to set the
+// hash -- so the fake DOM must already have a valid <select> default (a real
+// browser initializes a <select> with no explicit "selected" option to its
+// first <option>) or that first calculate() throws on an undefined
+// instrument lookup. loadTool() takes an optional third `presetIds` param
+// for exactly this.
+function loadObservingCampaignPlanner() {
+  const sandbox = loadTool('observing-campaign-planner', '', {
+    'sel-instr': 'roman',
+    'sel-goal': 'tension',
+  });
+  return sandbox;
+}
+
+test('tier-c known-value — FW-4 observing-campaign-planner (sync buildArtifact() + external hash)', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'observing-campaign-planner.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`observing-campaign-planner / ${c.name}`, async () => {
+      const sandbox = loadObservingCampaignPlanner();
+      assert.equal(typeof sandbox.calculate, 'function', 'observing-campaign-planner: expected calculate()');
+      assert.equal(typeof sandbox.computeExecHash, 'function', 'observing-campaign-planner: expected computeExecHash()');
+      sandbox.location.hash = '#' + c.hash;
+      sandbox.loadHash();
+      sandbox.calculate();
+      const artifact = sandbox.buildArtifact();
+      artifact.execution_hash = await sandbox.computeExecHash(artifact.policy_parameters, artifact.output_payload);
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      for (const [key, expectedVal] of Object.entries(c.expected))
+        deepFieldEqual(actualPayload[key], expectedVal, 'observing-campaign-planner', c.name, key);
+    });
+  }
 });

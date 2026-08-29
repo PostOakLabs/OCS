@@ -1,0 +1,135 @@
+{
+  "cases": [
+    {
+      "name": "current-tension-8200v6000",
+      "hash": "lower=8200&upper=6000&sigma=3.0&scenario=current",
+      "expected": {
+        "mass_gap_M_solar": 2200,
+        "irreconcilable_tension": true,
+        "n_capable_instruments": 1,
+        "earliest_resolution_year": 2041,
+        "earliest_instrument_id": "lisa",
+        "instruments_forecast": [
+          {
+            "id": "gaia-dr4",
+            "year": 2042,
+            "capable": false
+          },
+          {
+            "id": "roman",
+            "year": 2044,
+            "capable": false
+          },
+          {
+            "id": "elt-micado",
+            "year": 2046,
+            "capable": false
+          },
+          {
+            "id": "lisa",
+            "year": 2041,
+            "capable": true
+          }
+        ],
+        "verdict": "Long-term resolution: LISA (~2041) can close the 2,200 M☉ gap at 3.0σ via emri signal detection in the mhz band."
+      }
+    },
+    {
+      "name": "rule-out-8200-sigma3",
+      "hash": "lower=8200&upper=6000&sigma=3.0&scenario=rule_out",
+      "expected": {
+        "mass_gap_M_solar": 2200,
+        "irreconcilable_tension": true,
+        "n_capable_instruments": 4,
+        "earliest_resolution_year": 2028,
+        "earliest_instrument_id": "gaia-dr4",
+        "instruments_forecast": [
+          {
+            "id": "gaia-dr4",
+            "year": 2028,
+            "capable": true
+          },
+          {
+            "id": "roman",
+            "year": 2029,
+            "capable": true
+          },
+          {
+            "id": "elt-micado",
+            "year": 2031,
+            "capable": true
+          },
+          {
+            "id": "lisa",
+            "year": 2039,
+            "capable": true
+          }
+        ],
+        "verdict": "Near-term resolution: Gaia DR4 (~2028) can close the 2,200 M☉ gap at 3.0σ via proper-motion dispersion profile."
+      }
+    }
+  ],
+  "_derivation_note": "Hand-derived from the page's own estimateDetection()/buildVerdictDF() closed-form scaling law (no Monte Carlo). requiredMassRes = gap/(2*sigma) for scenario='current' (= 2200/6 = 366.667 M_sun), or lower/sigma for 'rule_out' (= 8200/3 = 2733.33 M_sun). Each instrument (gaia-dr4 mass_res=3500/launch=2026/lag=1, roman 1800/2027/2, elt-micado 1200/2028/3, lisa 500/2037/2) is capable outright if mass_res<=requiredMassRes (year=launch+lag), else extraYears=ceil(lag*((mass_res/requiredMassRes)^2-1)) capped at 15, capable iff extraYears<=10. Arithmetic verified independently in Node (fractions: 366.667=1100/3, 2733.33=8200/3) reproducing exactly {2042,2044,2046,2041} and {2028,2029,2031,2039} above -- see OCS-FIXWAVE.md FW-4 board note for the session transcript.",
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_detection_forecast",
+    "tool_id": "detection-forecast",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "0be28a57e93113d02d6a8eb98c27519aaad53503a28fcbf3f852c936ed7881d7",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "lower_bound_M_solar": 8200,
+      "upper_limit_M_solar": 6000,
+      "sigma_target": 3,
+      "scenario": "current"
+    },
+    "output_payload": {
+      "mass_gap_M_solar": 2200,
+      "irreconcilable_tension": true,
+      "n_capable_instruments": 1,
+      "earliest_resolution_year": 2041,
+      "earliest_instrument_id": "lisa",
+      "instruments_forecast": [
+        {
+          "id": "gaia-dr4",
+          "year": 2042,
+          "capable": false
+        },
+        {
+          "id": "roman",
+          "year": 2044,
+          "capable": false
+        },
+        {
+          "id": "elt-micado",
+          "year": 2046,
+          "capable": false
+        },
+        {
+          "id": "lisa",
+          "year": 2041,
+          "capable": true
+        }
+      ],
+      "verdict": "Long-term resolution: LISA (~2041) can close the 2,200 M☉ gap at 3.0σ via emri signal detection in the mhz band."
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/detection-forecast.html",
+      "tool_citation_bibtex": "@software{OCS_detection_forecast_2026,\n  author   = {Swanson, Tim},\n  title    = {{Detection Forecast}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/detection-forecast.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

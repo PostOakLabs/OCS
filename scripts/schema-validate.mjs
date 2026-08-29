@@ -46,11 +46,11 @@ const ALLOWLIST = new Set([
   // pulsar-accel-mapper, dark-cluster) — see scripts/fixtures/*.fixtures.json
   // FW-3: landed (adaf-sed-modeler, bz-kardashev, cosmology-calculator,
   // gw-horizon-plotter, qpo-mass-spin) — see scripts/fixtures/*.fixtures.json
-  // FW-4
-  'detection-forecast', 'gaia-dr4-forecaster', 'ir-excess-checker',
-  'observing-campaign-planner', 'radio-seti',
+  // FW-4: landed (detection-forecast, gaia-dr4-forecaster, ir-excess-checker,
+  // observing-campaign-planner, radio-seti) — see scripts/fixtures/*.fixtures.json
   // FW-5: landed (anisotropy-degeneracy-explorer, drake-monte-carlo,
   // evidence-ledger, great-filter, infall-survival) — see scripts/fixtures/*.fixtures.json
+  // end state reached 2026-08-29: 28/28 covered, allowlist empty.
 ]);
 
 function artifactQualifiedTools() {
