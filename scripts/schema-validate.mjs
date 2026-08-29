@@ -42,9 +42,8 @@ const FIXTURES_DIR = process.env.FIXTURES_DIR || join(HERE, 'fixtures');
 // removing it from the list with no fixture in place is what the FAIL below
 // is for.
 const ALLOWLIST = new Set([
-  // FW-2
-  'shadow-imaging', 'velocity-dispersion', 'astrometric-microlensing',
-  'pulsar-accel-mapper', 'dark-cluster',
+  // FW-2: landed (shadow-imaging, velocity-dispersion, astrometric-microlensing,
+  // pulsar-accel-mapper, dark-cluster) — see scripts/fixtures/*.fixtures.json
   // FW-3: landed (adaf-sed-modeler, bz-kardashev, cosmology-calculator,
   // gw-horizon-plotter, qpo-mass-spin) — see scripts/fixtures/*.fixtures.json
   // FW-4
