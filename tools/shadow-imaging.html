@@ -5,7 +5,7 @@
   Code: MIT  ·  Prose: CC BY 4.0
   Version: 1.0  ·  Last updated: 2026-06-10
   Physics: θ_shadow ≈ 5.2 GM/(c² d) [Bardeen 1973; Luminet 1979]
-  For ω Cen IMBH at 5.2 kpc: ~0.17 μas vs EHT resolution ~25 μas
+  For ω Cen IMBH at 5.49 kpc: ~0.133 μas vs EHT resolution ~25 μas
   Register: peer-reviewed
 -->
 <html lang="en">
@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shadow Imaging — Black Hole Shadow Size — Omega Centauri Society</title>
-<meta name="description" content="Calculate the angular shadow size of a black hole and compare to EHT and ngEHT resolution. For the ω Cen IMBH at 5.2 kpc, the shadow is ~150× too small for any current radio telescope.">
+<meta name="description" content="Calculate the angular shadow size of a black hole and compare to EHT and ngEHT resolution. For the ω Cen IMBH at 5.49 kpc, the shadow is ~189× too small for any current radio telescope.">
 <link rel="canonical" href="https://omegacentauri.me/tools/shadow-imaging.html">
 <meta name="theme-color" content="#0d0a24">
 <meta name="color-scheme" content="dark">
@@ -141,12 +141,12 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
       <div class="slider-block">
         <label>Distance (kpc)</label>
         <div class="slider-row">
-          <input type="range" id="sl-d" min="0.001" max="1000" step="0.1" value="5.2" oninput="updD(this.value)">
-          <span class="sl-val" id="sv-d">5.2 kpc</span>
+          <input type="range" id="sl-d" min="0.001" max="1000" step="0.1" value="5.49" oninput="updD(this.value)">
+          <span class="sl-val" id="sv-d">5.49 kpc</span>
         </div>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-        <button onclick="preset(3.851,5.2,'ω Cen IMBH midpoint')" style="font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer">ω Cen midpoint</button>
+        <button onclick="preset(3.851,5.49,'ω Cen IMBH midpoint')" style="font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer">ω Cen midpoint</button>
         <button onclick="preset(Math.log10(4.15e6),8.178,'Sgr A*')" style="font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer">Sgr A*</button>
         <button onclick="preset(Math.log10(6.5e9),16.8e3,'M87*')" style="font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer">M87*</button>
       </div>
@@ -211,9 +211,9 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
       <h3>Shadow formula</h3>
       <p>The angular radius of the photon capture shadow for a Schwarzschild black hole is: <code>θ_shadow = 3√3 · GM/(c²d)</code> ≈ <code>5.196 GM/(c²d)</code> (Bardeen 1973). This is commonly approximated as 5.2 GM/(c²d). Note this gives the radius; the diameter quoted here is 2× this value — consistent with EHT convention where the "shadow" is the dark central region bounded by the photon ring.</p>
       <h3>EHT Results</h3>
-      <p>Event Horizon Telescope Collaboration 2019 (M87*): shadow diameter ~42 μas at distance ~16.8 Mpc. Akiyama et al. 2022 (Sgr A*): ~52 μas at ~8.18 kpc. Angular resolution of EHT at 230 GHz, longest baseline (Earth diameter ~12,742 km): θ_res = λ/B ≈ 1.3mm/12742km ≈ 21 μas.</p>
+      <p>Event Horizon Telescope Collaboration 2019 (M87*): shadow diameter ~42 μas at distance ~16.8 Mpc. Akiyama et al. 2022 (Sgr A*): ~52 μas at ~8.18 kpc. Angular resolution of EHT at 230 GHz, longest baseline (Earth diameter ~12,742 km): θ_res = λ/B ≈ 1.3mm/12742km ≈ 20–25 μas depending on weighting; this tool uses 25 μas.</p>
       <h3>ω Cen IMBH shadow</h3>
-      <p>For M = 7,100 M☉ at d = 5.2 kpc: θ ≈ 5.2 × 6.674×10⁻¹¹ × 7100 × 1.989×10³⁰ / ((2.998×10⁸)² × 5.2 × 3.086×10¹⁹) ≈ 0.17 μas diameter. EHT resolution ≈ 25 μas → factor ~150 too small. No existing radio telescope can resolve this shadow.</p>
+      <p>For M = 7,096 M☉ at d = 5.49 kpc (SSOT: measurements.js OC_distance_pc): θ ≈ 5.196 × 6.674×10⁻¹¹ × 7096 × 1.989×10³⁰ / ((2.998×10⁸)² × 5.49 × 3.086×10¹⁹) ≈ 0.0663 μas radius → 0.133 μas diameter. EHT resolution ≈ 25 μas → factor ≈189× (25/0.133) too small. No existing radio telescope can resolve this shadow.</p>
       <div class="meta">Tool version 1.0 · 2026-06-10 · Code: MIT · Prose: CC BY 4.0 · Part of the Black Hole 101 workflow.</div>
     </div>
   </div>
@@ -245,7 +245,9 @@ function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h
 function wireArtifact(){}
 function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_shadow',tool_id:'shadow-imaging',tool_version:'1.2.0',generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_shadow_imaging_2026,\n  author   = {Swanson, Tim},\n  title    = {{Black Hole Shadow Imaging}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/shadow-imaging.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
 const G=6.674e-11, c=2.998e8, Msun=1.989e30, kpc=3.086e19;
-let state={lm:3.851, d_kpc:5.2};
+const OC_DIST_KPC_SSOT = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc / 1000) || 5.49; // SSOT: measurements.js OC_distance_pc
+let state={lm:3.851, d_kpc:OC_DIST_KPC_SSOT};
+function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, v)); }
 
 const TELESCOPES=[
   {name:'EHT (230 GHz)', res_uas:25},
@@ -310,14 +312,14 @@ function calculate(){
 function saveHash(){ history.replaceState(null,'','#lm='+state.lm.toFixed(3)+'&d='+state.d_kpc); }
 function loadHash(){
   const p=new URLSearchParams(location.hash.slice(1));
-  if(p.has('lm')){ state.lm=parseFloat(p.get('lm')); document.getElementById('sl-lm').value=state.lm; }
-  if(p.has('d')){ state.d_kpc=parseFloat(p.get('d')); document.getElementById('sl-d').value=state.d_kpc; }
+  if(p.has('lm')){ const v=parseFloat(p.get('lm')); if(!isNaN(v)) state.lm=clamp(v,0.477,10); document.getElementById('sl-lm').value=state.lm; }
+  if(p.has('d')){ const v=parseFloat(p.get('d')); if(!isNaN(v)) state.d_kpc=clamp(v,0.001,1000); document.getElementById('sl-d').value=state.d_kpc; }
   updLm(state.lm); updD(state.d_kpc);
 }
 
 window.OCS_APPLY_PREFILL = function(obj){
-  if(obj.mass_solar !== undefined){ state.lm=Math.log10(Math.max(3,obj.mass_solar)); document.getElementById('sl-lm').value=state.lm; updLm(state.lm); }
-  if(obj.distance_kpc !== undefined){ state.d_kpc=obj.distance_kpc; document.getElementById('sl-d').value=state.d_kpc; updD(state.d_kpc); }
+  if(obj.mass_solar !== undefined){ state.lm=clamp(Math.log10(Math.max(3,obj.mass_solar)),0.477,10); document.getElementById('sl-lm').value=state.lm; updLm(state.lm); }
+  if(obj.distance_kpc !== undefined){ state.d_kpc=clamp(obj.distance_kpc,0.001,1000); document.getElementById('sl-d').value=state.d_kpc; updD(state.d_kpc); }
   calculate();
 };
 window.OCS_RUN = calculate;

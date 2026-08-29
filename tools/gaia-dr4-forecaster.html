@@ -185,13 +185,13 @@ svg.forecast-chart{display:block;width:100%;height:auto;min-width:600px}
       <div class="slider-block">
         <label>OC DISTANCE (kpc)</label>
         <div class="slider-row">
-          <input type="range" id="sl-dist" min="5.0" max="6.0" step="0.01" value="5.43">
-          <span class="slider-val" id="v-dist">5.43 kpc</span>
+          <input type="range" id="sl-dist" min="5.0" max="6.0" step="0.01" value="5.49">
+          <span class="slider-val" id="v-dist">5.49 kpc</span>
         </div>
         <div class="preset-row">
           <button class="preset-btn" data-dist="5.20">5.20</button>
-          <button class="preset-btn" data-dist="5.43">5.43 (canonical)</button>
-          <button class="preset-btn" data-dist="5.49">5.49</button>
+          <button class="preset-btn" data-dist="5.43">5.43</button>
+          <button class="preset-btn" data-dist="5.49">5.49 (canonical)</button>
           <button class="preset-btn" data-dist="5.90">5.90</button>
         </div>
       </div>
@@ -382,7 +382,8 @@ const HABERLE_LOWER = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_
 const BANARES_UPPER = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;      // M☉, Bañares-Hernández et al. 2025 (3σ)
 
 // ─── State ────────────────────────────────────────────────────────────────────
-const state = { mass: 8200, dist: 5.43, crowding: 3.0, sigma0: 20.0 };
+const OC_DIST_KPC_SSOT = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.clusterParams && OCS_MEASUREMENTS.clusterParams.OC_distance_pc / 1000) || 5.49; // SSOT: measurements.js OC_distance_pc
+const state = { mass: 8200, dist: OC_DIST_KPC_SSOT, crowding: 3.0, sigma0: 20.0 };
 
 // ─── Hash helpers ─────────────────────────────────────────────────────────────
 function getHash() {

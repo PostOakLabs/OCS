@@ -262,6 +262,7 @@ const MILESTONES = [
 ];
 
 let state={energy_EJ:580, growth:2.0};
+function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, v)); }
 
 function kFromW(P){ return (Math.log10(P) - 6) / 10; }
 function wFromK(K){ return Math.pow(10, 10*K + 6); }
@@ -317,13 +318,13 @@ function calculate(){
 function saveHash(){ history.replaceState(null,'','#energy='+state.energy_EJ+'&growth='+state.growth); }
 function loadHash(){
   const p=new URLSearchParams(location.hash.slice(1));
-  if(p.has('energy')){ state.energy_EJ=parseFloat(p.get('energy')); document.getElementById('sl-energy').value=state.energy_EJ; document.getElementById('sv-energy').textContent=state.energy_EJ+' EJ'; }
-  if(p.has('growth')){ state.growth=parseFloat(p.get('growth')); document.getElementById('sl-growth').value=state.growth; document.getElementById('sv-growth').textContent=state.growth.toFixed(1)+' %/yr'; }
+  if(p.has('energy')){ const v=parseFloat(p.get('energy')); if(!isNaN(v)) state.energy_EJ=clamp(v,100,1200); document.getElementById('sl-energy').value=state.energy_EJ; document.getElementById('sv-energy').textContent=state.energy_EJ+' EJ'; }
+  if(p.has('growth')){ const v=parseFloat(p.get('growth')); if(!isNaN(v)) state.growth=clamp(v,0.1,10); document.getElementById('sl-growth').value=state.growth; document.getElementById('sv-growth').textContent=state.growth.toFixed(1)+' %/yr'; }
 }
 
 window.OCS_APPLY_PREFILL = function(obj){
-  if(obj.energy_EJ !== undefined){ state.energy_EJ=obj.energy_EJ; document.getElementById('sl-energy').value=state.energy_EJ; document.getElementById('sv-energy').textContent=state.energy_EJ+' EJ'; }
-  if(obj.growth_pct !== undefined){ state.growth=obj.growth_pct; document.getElementById('sl-growth').value=state.growth; document.getElementById('sv-growth').textContent=state.growth.toFixed(1)+' %/yr'; }
+  if(obj.energy_EJ !== undefined){ state.energy_EJ=clamp(obj.energy_EJ,100,1200); document.getElementById('sl-energy').value=state.energy_EJ; document.getElementById('sv-energy').textContent=state.energy_EJ+' EJ'; }
+  if(obj.growth_pct !== undefined){ state.growth=clamp(obj.growth_pct,0.1,10); document.getElementById('sl-growth').value=state.growth; document.getElementById('sv-growth').textContent=state.growth.toFixed(1)+' %/yr'; }
   calculate();
 };
 window.OCS_RUN = calculate;

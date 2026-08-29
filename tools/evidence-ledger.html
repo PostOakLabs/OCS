@@ -351,6 +351,13 @@ const EVIDENCE = [
   },
 ];
 
+// ─── Prior validation ─────────────────────────────────────────────────────────
+function clampPrior(v) {
+  const n = parseInt(v, 10);
+  if (isNaN(n)) return 0;
+  return Math.max(0, Math.min(100, n));
+}
+
 // ─── State ───────────────────────────────────────────────────────────────────
 let state = {
   prior: { imbh: 30, dc: 45, null: 25 },
@@ -443,7 +450,18 @@ function interpretBF(logBF) {
 function calculate() {
   const p = state.prior;
   const total_prior = p.imbh + p.dc + p.null;
-  if (total_prior === 0) return;
+  if (total_prior === 0) {
+    // Degenerate: no prior mass anywhere. Clear stale numbers instead of leaving
+    // the previous calculation's posteriors on screen.
+    ['post-imbh','post-dc','post-null'].forEach(id => document.getElementById(id).textContent = '—');
+    ['bar-imbh','bar-dc','bar-null'].forEach(id => document.getElementById(id).style.width = '0%');
+    document.getElementById('bf-vs-dc').textContent = '—';
+    document.getElementById('bf-dc-interp').textContent = 'all priors = 0 — undefined (no hypothesis has any prior mass)';
+    document.getElementById('bf-vs-null').textContent = '—';
+    document.getElementById('bf-null-interp').textContent = 'all priors = 0 — undefined (no hypothesis has any prior mass)';
+    document.getElementById('verdict-text').innerHTML = 'All priors are 0% — no hypothesis has any prior probability mass, so no posterior can be computed. Set at least one prior above 0%.';
+    return;
+  }
 
   // Sum log10 Bayes factors
   let sumR = 0, sumS = 0;
@@ -496,11 +514,21 @@ function calculate() {
   const logBF_ID = logW_IMBH - logW_DC;  // IMBH vs DC
   const logBF_MN = Math.log10((wI + wD) / wN * (p.null / (p.imbh + p.dc)));  // mass vs null (rough)
 
-  const bfIdText = logBF_ID >= 0
-    ? Math.pow(10, logBF_ID).toFixed(logBF_ID < 1 ? 2 : 1) + ':1'
-    : '1:' + Math.pow(10, -logBF_ID).toFixed(logBF_ID > -1 ? 2 : 1);
-  document.getElementById('bf-vs-dc').textContent = bfIdText;
-  document.getElementById('bf-dc-interp').textContent = interpretBF(logBF_ID);
+  if (p.imbh === 0 || p.dc === 0) {
+    // Degenerate: one side of this comparison has zero prior mass. The Bayes
+    // factor is formally infinite in one direction — display the degenerate
+    // condition explicitly instead of "1:Infinity" / "Infinity:1".
+    const excluded = p.imbh === 0 && p.dc === 0 ? 'both IMBH and DC' : p.imbh === 0 ? 'IMBH' : 'DC';
+    document.getElementById('bf-vs-dc').textContent = 'undefined';
+    document.getElementById('bf-dc-interp').textContent = `prior(${excluded}) = 0 — hypothesis excluded by assumption, not by evidence`;
+  } else {
+    const logBF_ID_finite = logBF_ID;
+    const bfIdText = logBF_ID_finite >= 0
+      ? Math.pow(10, logBF_ID_finite).toFixed(logBF_ID_finite < 1 ? 2 : 1) + ':1'
+      : '1:' + Math.pow(10, -logBF_ID_finite).toFixed(logBF_ID_finite > -1 ? 2 : 1);
+    document.getElementById('bf-vs-dc').textContent = bfIdText;
+    document.getElementById('bf-dc-interp').textContent = interpretBF(logBF_ID_finite);
+  }
 
   const logBF_null_raw = sumS;
   const bfNullText = logBF_null_raw >= 0
@@ -554,9 +582,9 @@ function loadHash() {
   const h = location.hash.slice(1);
   if (!h) return;
   const params = new URLSearchParams(h);
-  if (params.has('pi')) { state.prior.imbh = parseInt(params.get('pi')); document.getElementById('pr-imbh').value = state.prior.imbh; }
-  if (params.has('pd')) { state.prior.dc   = parseInt(params.get('pd')); document.getElementById('pr-dc').value   = state.prior.dc; }
-  if (params.has('pn')) { state.prior.null  = parseInt(params.get('pn')); document.getElementById('pr-null').value  = state.prior.null; }
+  if (params.has('pi')) { state.prior.imbh = clampPrior(params.get('pi')); document.getElementById('pr-imbh').value = state.prior.imbh; }
+  if (params.has('pd')) { state.prior.dc   = clampPrior(params.get('pd')); document.getElementById('pr-dc').value   = state.prior.dc; }
+  if (params.has('pn')) { state.prior.null  = clampPrior(params.get('pn')); document.getElementById('pr-null').value  = state.prior.null; }
   EVIDENCE.forEach(e => {
     if (params.has('r_'+e.id)) {
       state.ev[e.id].r = parseFloat(params.get('r_'+e.id));
@@ -578,9 +606,9 @@ function loadHash() {
 
 // OCS_APPLY_PREFILL hook for MCP / #in= deeplinks
 window.OCS_APPLY_PREFILL = function(obj) {
-  if (obj.prior_imbh !== undefined) { state.prior.imbh = obj.prior_imbh; document.getElementById('pr-imbh').value = obj.prior_imbh; }
-  if (obj.prior_dc   !== undefined) { state.prior.dc   = obj.prior_dc;   document.getElementById('pr-dc').value   = obj.prior_dc; }
-  if (obj.prior_null !== undefined) { state.prior.null  = obj.prior_null; document.getElementById('pr-null').value  = obj.prior_null; }
+  if (obj.prior_imbh !== undefined) { state.prior.imbh = clampPrior(obj.prior_imbh); document.getElementById('pr-imbh').value = state.prior.imbh; }
+  if (obj.prior_dc   !== undefined) { state.prior.dc   = clampPrior(obj.prior_dc);   document.getElementById('pr-dc').value   = state.prior.dc; }
+  if (obj.prior_null !== undefined) { state.prior.null  = clampPrior(obj.prior_null); document.getElementById('pr-null').value  = state.prior.null; }
   ['imbh','dc','null'].forEach(h => document.getElementById('pv-'+h).textContent = state.prior[h] + '%');
   calculate();
 };
