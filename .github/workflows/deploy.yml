@@ -158,6 +158,12 @@ jobs:
       - name: Filename-hygiene gate
         run: python3 scripts/check-filenames.py
 
+      # noopener gate (AUDIT-HY4-REPO §1.2): every target="_blank" anchor must
+      # carry rel="noopener" — otherwise the opened page holds a window.opener
+      # handle back into this site (reverse-tabnabbing).
+      - name: noopener gate
+        run: python3 scripts/check-noopener.py
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):

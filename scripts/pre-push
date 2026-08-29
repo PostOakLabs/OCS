@@ -25,7 +25,7 @@ echo "=== OCS pre-push validate ==="
 # The list is PARSED FROM deploy.yml rather than duplicated here. A second copy
 # would drift, and a drifted copy of a drift-detector is worse than none — it
 # would pass locally for exactly the files CI is about to fail on.
-echo "[1/9] Required-files gate (list read from deploy.yml)..."
+echo "[1/11] Required-files gate (list read from deploy.yml)..."
 WORKFLOW=".github/workflows/deploy.yml"
 if [ ! -f "$WORKFLOW" ]; then
   echo "::error::$WORKFLOW not found — cannot verify the required-files list."
@@ -59,32 +59,35 @@ if [ "$MISSING" -gt 0 ]; then
 fi
 echo "  all $COUNT required files present."
 
-echo "[2/10] Count-drift gate..."
+echo "[2/11] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[3/10] Broken-link gate..."
+echo "[3/11] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[4/10] Stranded-page gate..."
+echo "[4/11] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[5/10] Sitemap-coverage gate..."
+echo "[5/11] Sitemap-coverage gate..."
 python3 scripts/check-sitemap.py
 
-echo "[6/10] JS syntax check..."
+echo "[6/11] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[7/10] Forbidden-hash lint..."
+echo "[7/11] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[8/10] Schema validation..."
+echo "[8/11] Schema validation..."
 node scripts/schema-validate.mjs
 
-echo "[9/10] Copy-hallmarks gate (anti-AI-tell)..."
+echo "[9/11] Copy-hallmarks gate (anti-AI-tell)..."
 node scripts/check-copy-hallmarks.mjs
 
-echo "[10/10] Filename-hygiene gate..."
+echo "[10/11] Filename-hygiene gate..."
 python3 scripts/check-filenames.py
+
+echo "[11/11] noopener gate..."
+python3 scripts/check-noopener.py
 
 echo ""
 echo "✅ All gates passed — pushing."
