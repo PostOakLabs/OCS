@@ -27,6 +27,7 @@ import json
 import math
 import os
 import sys
+from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
 
@@ -853,6 +854,11 @@ FLAG_KEY = {"new_source": "n", "variable_candidate": "v", "low_counts": "l",
             "flux_ratio_flagged": "g", "outer_aperture": "o"}
 
 
+def _round_half_up(x, places=1):
+    q = Decimal(10) ** -places
+    return float(Decimal(str(x)).quantize(q, rounding=ROUND_HALF_UP))
+
+
 def latex_tables(targets, variability):
     rows = []
     for r in targets["candidates"][:targets["top_n_printed_in_paper"]]:
@@ -861,8 +867,8 @@ def latex_tables(targets, variability):
             fl = "c" + fl
         if r["box_anchor"]:
             fl = "a" + fl
-        rows.append("%d & %s & %.0f & $%+.2f$ & %.1f & %.3f & %.1f & %.3f & %s \\\\"
-                    % (r["rank"], r["id"], r["radius_arcsec"],
+        rows.append("%d & %s & %.1f & $%+.2f$ & %.1f & %.3f & %.1f & %.3f & %s \\\\"
+                    % (r["rank"], r["id"], _round_half_up(r["radius_arcsec"], 1),
                        r["colour_log_soft_hard"], r["flux_soft_1e-19_W_m2"],
                        r["p_member"], 1000.0 * r["p_chance_used_max"], r["score"],
                        (fl if fl else "--")))
