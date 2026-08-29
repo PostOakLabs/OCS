@@ -220,6 +220,56 @@ test('tier-c known-value — kernel-vendored compute() matches proven fixtures',
 // ---- Group 2: pure-formula fixtures (bekenstein-landauer, kardashev-meter, energy-translator) ----
 const PURE_FN_TOOLS = ['bekenstein-landauer', 'kardashev-meter', 'energy-translator'];
 
+// ---- Group 2b: FW-2 pure-formula fixtures, hand-derived from each page's own
+// stated closed-form physics (Bardeen shadow radius, virial+Gultekin M-sigma,
+// Einstein radius/Dominik-Sahu, 2/(3*sqrt(3)) LOS-max, Plummer profile) ----
+const FW2_PURE_FN_TOOLS = [
+  'velocity-dispersion', 'astrometric-microlensing', 'pulsar-accel-mapper', 'dark-cluster',
+];
+
+test('tier-c known-value — FW-2 independently-derived closed-form fixtures', async (t) => {
+  for (const toolId of FW2_PURE_FN_TOOLS) {
+    const fixturePath = resolve(FIXTURES_DIR, `${toolId}.fixtures.json`);
+    const fixture = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const sandbox = loadTool(toolId);
+
+    for (const c of fixture.cases) {
+      await t.test(`${toolId} / ${c.name}`, () => {
+        assert.equal(typeof sandbox[c.fn], 'function', `${toolId}: expected top-level function '${c.fn}'`);
+        const actual = sandbox[c.fn](...c.args);
+        const tol = c.tolerance ?? 1e-9;
+        assert.ok(Math.abs(actual - c.expected) <= tol * Math.max(1, Math.abs(c.expected)),
+          `${toolId}/${c.name}: ${c.fn}(${c.args.map((a) => JSON.stringify(a)).join(',')}) expected ${c.expected}, got ${actual}`);
+      });
+    }
+  }
+});
+
+// ---- Group 2c: shadow-imaging — no standalone pure fn (formula lives inside
+// calculate()), so this drives the tool exactly like the real page: set the
+// URL hash, call loadHash() (which triggers calculate() and populates
+// window._toolArtifactData), and assert on that payload. ----
+test('tier-c known-value — shadow-imaging hash-driven closed form', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'shadow-imaging.fixtures.json'), 'utf8'));
+  for (const c of fixture.cases) {
+    await t.test(`shadow-imaging / ${c.name}`, () => {
+      const sandbox = loadTool('shadow-imaging');
+      sandbox.location.hash = `#lm=${c.input.lm}&d=${c.input.d_kpc}`;
+      sandbox.loadHash();
+      const out = sandbox.window._toolArtifactData.output;
+      for (const [key, expectedVal] of Object.entries(c.expected)) {
+        if (typeof expectedVal === 'number') {
+          const tol = Math.max(1e-6, Math.abs(expectedVal) * 1e-6);
+          assert.ok(Math.abs(out[key] - expectedVal) <= tol,
+            `shadow-imaging/${c.name}: field '${key}' expected ~${expectedVal}, got ${out[key]}`);
+        } else {
+          assert.equal(out[key], expectedVal, `shadow-imaging/${c.name}: field '${key}' expected ${expectedVal}, got ${out[key]}`);
+        }
+      }
+    });
+  }
+});
+
 test('tier-c known-value — independently-derived closed-form fixtures', async (t) => {
   for (const toolId of PURE_FN_TOOLS) {
     const fixturePath = resolve(FIXTURES_DIR, `${toolId}.fixtures.json`);

@@ -1,0 +1,36 @@
+{
+  "_note": "OCS-FIXWAVE.md FW-2. Hand-derived from the page's own stated closed form (Bardeen 1973): theta_radius_rad = 5.196 * G * M_kg / (c^2 * d_m), diameter = 2 * radius, converted rad -> uas via *(180/pi)*3600*1e6. Case 1 reproduces the page's own worked example (M=10^3.851=7095.78 Msun, d=5.49 kpc SSOT -> 0.1326 uas diameter, matching the prose's quoted 0.133 uas). Case 2 uses round numbers (M=1e6 Msun, d=10 kpc) as an independent cross-check: G*M_kg=6.674e-11*1e6*1.989e30=1.32769e26; c^2=8.988e16; d_m=3.086e20; theta_rad(radius)=5.196*1.32769e26/(8.988e16*3.086e20)=2.4867e-11 rad; diameter=4.9734e-11 rad -> *206264.8*1e6 = 10.259 uas. Driven via loadHash() (sets state.lm=log10(M), state.d_kpc) then buildArtifact() reads window._toolArtifactData populated by calculate(). The 'artifact' key below is the tool's own live buildArtifact() output for case 1's inputs with execution_hash computed by the tool's own executionHash()/canonicalPreimage() (byte-identical to what the real page would produce), per gen-artifact-envelope.mjs's method (this tool has no compute()/named pure fn to drive that script directly, so the envelope was hand-assembled the same way and is not itself re-derivable by re-running gen-artifact-envelope.mjs).",
+  "cases": [
+    {
+      "name": "ssot-default-7096Msun-5.49kpc",
+      "input": { "lm": 3.851, "d_kpc": 5.49 },
+      "expected": { "theta_uas": 0.132590904567365, "eht_resolvable": false }
+    },
+    {
+      "name": "round-1e6Msun-10kpc",
+      "input": { "lm": 6, "d_kpc": 10 },
+      "expected": { "theta_uas": 10.25855232420968, "eht_resolvable": false }
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_shadow",
+    "tool_id": "shadow-imaging",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T00:00:00.000Z",
+    "execution_hash": "40884d0ae465de96c4191de439d3e5e5c6450c1ab24b8ed38d125de301b925da",
+    "chain": { "parent_hashes": [], "parent_tool_ids": [], "chain_depth": 0 },
+    "policy_parameters": { "d_kpc": 5.49, "mass_M_solar": 7095.777679633888 },
+    "output_payload": { "theta_uas": 0.132590904567365, "eht_resolvable": false, "eht_ratio": 0.0053036361826945995 },
+    "compliance_flags": ["register:peer-reviewed"],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "tool_citation_bibtex": "@software{OCS_shadow_imaging_2026,\n  author   = {Swanson, Tim},\n  title    = {{Black Hole Shadow Imaging}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/shadow-imaging.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}
