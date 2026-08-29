@@ -1,0 +1,30 @@
+{
+  "tool_id": "flyby-survival-simulator",
+  "note": "Not artifact-qualified (no buildArtifact()/execution_hash in the page). binResult() takes an rnd generator function and a remnant mass-function array as arguments, so it isn't callable through the generic {fn,args,expected} JSON harness the other pure-fn fixtures use -- it is exercised by a bespoke test block in tier-c-known-value.test.mjs (Group 4) that reconstructs rnd=makeRng(seed) and mf=remnantMF(fbh,mbhPert) exactly as this fixture records, then calls binResult with the same seed. This fixture asserts REPRODUCIBILITY of the fixed-seed Monte Carlo, not independent correctness (see flyby-survival.fixtures.json for the same caveat on the sibling tool's simpler version of this MC). Value-only fixture, out of schema-validate.mjs's hash-bound coverage gate (OCS-FIXWAVE.md FW-1).",
+  "cases": [
+    {
+      "name": "a1000au_impulsive",
+      "seed": 20260717,
+      "mf_args": { "fbh": 0.01, "mbhPertMsun": 31 },
+      "binResult_args": {
+        "mbhMsun": 20000, "sigmaKms": 18.2, "nstarPc3": 10000, "eCross": 0.5,
+        "aAU": 1000, "nTrials": 6000, "adiab": false
+      },
+      "expected": { "aAU": 1000, "tMed": 11050510.082248824, "tLo": 10086145.919699414, "tHi": 12014874.244798234, "pen": 0.021666666666666667 },
+      "tolerance": 1e-9,
+      "source": "Seed-frozen: rnd=makeRng(20260717), mf=remnantMF(0.01,31), binResult(20000,18.2,1e4,0.5,1000,6000,rnd,mf,false). f_BH=1% fiducial, 31 Msun perturber, matches the page's own default grid."
+    },
+    {
+      "name": "a100au_adiabatic",
+      "seed": 20260717,
+      "mf_args": { "fbh": 0.01, "mbhPertMsun": 31 },
+      "binResult_args": {
+        "mbhMsun": 20000, "sigmaKms": 18.2, "nstarPc3": 10000, "eCross": 0.5,
+        "aAU": 100, "nTrials": 6000, "adiab": true
+      },
+      "expected": { "aAU": 100, "tMed": 12000000000, "tLo": 12000000000, "tHi": 12000000000, "pen": 0.03183333333333333 },
+      "tolerance": 1e-9,
+      "source": "Same seed methodology (a fresh rnd=makeRng(20260717) instance, so this case is independent of the first) with adiab=true; tMed pinned at the TCAP ceiling (1.2e10 yr / TCAP/YR) because the adiabatic-corrected diffusion coefficient at 100 AU is far too small to reach eCross within the cap -- an expected saturation, not an error."
+    }
+  ]
+}

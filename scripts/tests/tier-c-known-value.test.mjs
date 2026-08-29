@@ -17,9 +17,30 @@
 //     are independently hand-derived from the published closed-form
 //     formula (Bekenstein 1973 / Landauer 1961 / Lloyd 2000 / Sagan 1973 /
 //     SI unit definitions), not generated from the tool's own code.
+//   - imbh-fuel-budget: pure calc() fn, fixture independently re-derives
+//     the page's own stated Bondi accretion closed form.
+//   - flyby-survival, flyby-survival-simulator: no buildArtifact(), and
+//     their compute paths (simulate() / binResult()) run an internal Monte
+//     Carlo. Both are fully deterministic at a fixed seed (20260717,
+//     hardcoded for flyby-survival; passed explicitly for the simulator),
+//     so their fixtures are SEED-FROZEN — they assert reproducibility of
+//     the fixed-seed output, not independent correctness of the MC terms
+//     (the closed-form terms in each output, e.g. lamYr/vorbKms/rinflAU,
+//     are independently checkable and documented as such in the fixture).
 //
-// Remaining 23 of 31 manifest tools have round-trip coverage only — a
-// follow-up WU per spec §6.
+// OCS-FIXWAVE.md FW-1 (2026-08) added the imbh-fuel-budget /
+// flyby-survival / flyby-survival-simulator groups — previously flagged
+// "harness-undriveable" only because none of the three emit a ChainGraph
+// artifact (no buildArtifact()), which made them invisible to
+// schema-validate.mjs's coverage gate. All three turned out to have a
+// directly-callable compute entrypoint once inspected, so known-value
+// coverage was still achievable; they remain outside schema-validate.mjs's
+// scope (that gate only tracks artifact-QUALIFIED tools) and stay
+// documented as value-only, non-hash-bound fixtures.
+//
+// Remaining 20 of 28 artifact-qualified manifest tools have round-trip
+// coverage only — OCS-FIXWAVE.md FW-2..FW-5, tracked by schema-validate.mjs's
+// ALLOWLIST (shrinks as each session lands).
 //
 // Run: node --test scripts/tests/tier-c-known-value.test.mjs
 
@@ -202,6 +223,76 @@ test('tier-c known-value — independently-derived closed-form fixtures', async 
           `${toolId}/${c.name}: ${c.fn}(${c.args.join(',')}) expected ${c.expected}, got ${actual}`);
       });
     }
+  }
+});
+
+// ---- Group 3b: harness-undriveable tools (no buildArtifact(), pure/seeded
+// compute entrypoints) — OCS-FIXWAVE.md FW-1 ----
+const PURE_FN_UNDRIVEABLE_TOOLS = ['imbh-fuel-budget'];
+
+test('tier-c known-value — undriveable-but-pure-fn tools', async (t) => {
+  for (const toolId of PURE_FN_UNDRIVEABLE_TOOLS) {
+    const fixturePath = resolve(FIXTURES_DIR, `${toolId}.fixtures.json`);
+    const fixture = JSON.parse(readFileSync(fixturePath, 'utf8'));
+    const sandbox = loadTool(toolId);
+    for (const c of fixture.cases) {
+      await t.test(`${toolId} / ${c.name}`, () => {
+        assert.equal(typeof sandbox[c.fn], 'function', `${toolId}: expected top-level function '${c.fn}'`);
+        const actual = sandbox[c.fn](...c.args);
+        for (const [key, expectedVal] of Object.entries(c.expected)) {
+          const actualVal = actual[key];
+          if (typeof expectedVal === 'number') {
+            const tol = Math.max(1e-6, Math.abs(expectedVal) * (c.tolerance ?? 1e-9));
+            assert.ok(Math.abs(actualVal - expectedVal) <= tol,
+              `${toolId}/${c.name}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+          } else {
+            assert.equal(actualVal, expectedVal, `${toolId}/${c.name}: field '${key}' expected ${JSON.stringify(expectedVal)}, got ${JSON.stringify(actualVal)}`);
+          }
+        }
+      });
+    }
+  }
+});
+
+// ---- Group 3c: flyby-survival — seed-frozen internal Monte Carlo (fixed
+// seed hardcoded in simulate(), reproducibility not independent correctness
+// for tDiffYr/pen; the other fields are closed-form) ----
+test('tier-c known-value — flyby-survival seed-frozen simulate()', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'flyby-survival.fixtures.json'), 'utf8'));
+  const sandbox = loadTool('flyby-survival');
+  assert.equal(typeof sandbox.simulate, 'function', 'flyby-survival: expected simulate()');
+  for (const c of fixture.cases) {
+    await t.test(`flyby-survival / ${c.name}`, () => {
+      const actual = sandbox.simulate(...c.args);
+      for (const [key, expectedVal] of Object.entries(c.expected)) {
+        const tol = Math.max(1e-6, Math.abs(expectedVal) * (c.tolerance ?? 1e-9));
+        assert.ok(Math.abs(actual[key] - expectedVal) <= tol,
+          `flyby-survival/${c.name}: field '${key}' expected ~${expectedVal}, got ${actual[key]}`);
+      }
+    });
+  }
+});
+
+// ---- Group 3d: flyby-survival-simulator — seed-frozen binResult() (rnd/mf
+// are non-JSON args, reconstructed here exactly as the fixture records) ----
+test('tier-c known-value — flyby-survival-simulator seed-frozen binResult()', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'flyby-survival-simulator.fixtures.json'), 'utf8'));
+  const sandbox = loadTool('flyby-survival-simulator');
+  assert.equal(typeof sandbox.binResult, 'function', 'flyby-survival-simulator: expected binResult()');
+  assert.equal(typeof sandbox.makeRng, 'function', 'flyby-survival-simulator: expected makeRng()');
+  assert.equal(typeof sandbox.remnantMF, 'function', 'flyby-survival-simulator: expected remnantMF()');
+  for (const c of fixture.cases) {
+    await t.test(`flyby-survival-simulator / ${c.name}`, () => {
+      const rnd = sandbox.makeRng(c.seed);
+      const mf = sandbox.remnantMF(c.mf_args.fbh, c.mf_args.mbhPertMsun);
+      const a = c.binResult_args;
+      const actual = sandbox.binResult(a.mbhMsun, a.sigmaKms, a.nstarPc3, a.eCross, a.aAU, a.nTrials, rnd, mf, a.adiab);
+      for (const [key, expectedVal] of Object.entries(c.expected)) {
+        const tol = Math.max(1e-6, Math.abs(expectedVal) * (c.tolerance ?? 1e-9));
+        assert.ok(Math.abs(actual[key] - expectedVal) <= tol,
+          `flyby-survival-simulator/${c.name}: field '${key}' expected ~${expectedVal}, got ${actual[key]}`);
+      }
+    });
   }
 });
 
