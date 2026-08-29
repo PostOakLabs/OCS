@@ -226,7 +226,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
     <div class="stage-body">
       <p class="stage-prose">An intermediate mass ratio inspiral (IMRI) — a neutron star or stellar BH spiraling into OC's IMBH — would produce gravitational waves in LISA's 0.1–100 mHz band. The waveform encodes both the IMBH mass and spin with exquisite precision: uncertainty δM/M ~ 10⁻³ and δa★/a★ ~ 10⁻⁴ after a few months of observation. LISA is the definitive resolver, but requires an IMRI event in the right frequency window.</p>
       <div class="inst-grid">
-        <div class="inst-card"><div class="inst-name" style="color:var(--s5)">IMRI detection distance</div><div class="inst-metric">OC at 5.43 kpc · S/N ~ 100+ for M_BH ~ 10⁴ M☉</div><div class="inst-verdict tag-yes">Easily detectable if IMRI occurs</div></div>
+        <div class="inst-card"><div class="inst-name" style="color:var(--s5)">IMRI detection distance</div><div class="inst-metric">OC at 5.49 kpc · S/N ~ 100+ for M_BH ~ 10⁴ M☉</div><div class="inst-verdict tag-yes">Easily detectable if IMRI occurs</div></div>
         <div class="inst-card"><div class="inst-name" style="color:var(--s5)">Event rate estimate</div><div class="inst-metric">~0.01–0.1 events/yr for OC's TDE rate</div><div class="inst-verdict tag-maybe">~1–10 events in LISA lifetime</div></div>
       </div>
       <p class="stage-prose" style="margin-top:12px">The mass precision from a single IMRI detection far exceeds all electromagnetic constraints combined. LISA will definitively answer both the mass question and the spin question — the latter being critical for MTH viability.</p>
@@ -261,7 +261,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 function toggleStage(n){document.getElementById('stage-'+n).classList.toggle('open');activateStep(n);}
 function activateStep(n){document.querySelectorAll('.flow-step').forEach((s,i)=>s.classList.toggle('active',i===n-1));}
 // Gaia calculation
-const sigma_gaia=0.015,sigma_roman=0.001,D_kpc=5.43;
+const sigma_gaia=0.015,sigma_roman=0.001,D_kpc=5.49; // SSOT (oMEGACat VI)
 function mu_bh(Mbh_solar){const sig=20,ms=0.5;const v=sig*Math.sqrt(ms/Mbh_solar);return v/(4.74*D_kpc)*1000;}
 const mu8200=mu_bh(8200),mu6000=mu_bh(6000);
 document.getElementById('gaia-kinematic').textContent=(mu8200>sigma_roman*1000?'✓ ':'')+
