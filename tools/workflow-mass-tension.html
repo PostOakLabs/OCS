@@ -391,7 +391,7 @@ function compute(){
   setText('s4-pulsar-lbl',Np_new+' new');
   const gaiaSens=0.015; // mas/yr floor
   const v8200_kms=20*Math.sqrt(0.5/8200);
-  const mu8200=v8200_kms/(4.74*5.43)*1000; // µas/yr
+  const mu8200=v8200_kms/(4.74*5.49)*1000; // µas/yr (SSOT 5.49 kpc, oMEGACat VI)
   const gaiaDetects=mu8200>gaiaSens*1000; // gaia in µas/yr
   setText('s4-gaia',gaiaDetects?'Likely detectable (μ~'+mu8200.toFixed(1)+' µas/yr)':'Marginal (μ~'+mu8200.toFixed(1)+' µas/yr vs. 15 µas/yr floor)');
   document.getElementById('s4-gaia-row').className='output-row'+(gaiaDetects?' verdict-ok':' verdict-warn');
