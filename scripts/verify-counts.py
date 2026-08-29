@@ -46,14 +46,31 @@ def derive_counts():
     calculators = tools_all - workflows - scenarios - hubs
     proposals = _n("proposal*.html")  # proposals.html + proposal_*.html at repo root
     manifest = json.load(open(os.path.join(REPO, "tools/data/tools-manifest.json"), encoding="utf-8"))
+    chaingraph = json.load(open(os.path.join(REPO, "tools/data/chaingraph.json"), encoding="utf-8"))
+    artifact_tools = sum(1 for t in chaingraph.get("tools", {}).values()
+                         if t.get("artifact_qualified"))
     return {
         "calculators": calculators,
         "workflows": workflows,
         "scenarios": scenarios,
         "hubs": hubs,
         "proposals": proposals,
+        # "catalog" layer: every tool/chain the tools-manifest.json SSOT lists
+        # (hash-param docs, searchable via the worker's list_ocs_tools tool).
         "mcp_tools": len(manifest.get("tools", {})),
         "mcp_chains": len(manifest.get("chains", {})),
+        # "artifact" layer: OpenChainGraph-qualified tools that emit a signed
+        # execution_hash artifact (tools/data/chaingraph.json artifact_qualified
+        # entries — AUDIT-HY4-REPO §1.3a; do not conflate with mcp_tools above).
+        "artifact_tools": artifact_tools,
+        # "worker-exposed" layer: what a live MCP client actually reaches at
+        # mcp.omegacentauri.me — list_ocs_tools searches the full mcp_tools
+        # catalog and build_ocs_workflow_links names all mcp_chains chains, so
+        # these currently equal the catalog numbers, but are tracked as a
+        # SEPARATE sentinel (never assume identity — re-verify against the live
+        # worker manifest on drift; AUDIT-HY4-REPO §1.3b).
+        "worker_tools": len(manifest.get("tools", {})),
+        "worker_chains": len(manifest.get("chains", {})),
     }
 
 
@@ -65,6 +82,19 @@ def derive_counts():
 JSON_SENTINELS = [
     ("tools/data/tools-manifest.json", "toolCount", "mcp_tools"),
     (".well-known/agent-card.json", "tool_count", "mcp_tools"),
+]
+
+# Prose regex sentinels in JSON description strings: (relative path, compiled
+# regex w/ ONE numeric group, count-key). Same anchored-regex mechanism as
+# LLMS_SENTINELS below, generalized across files. AUDIT-HY4-REPO §1.3: these
+# three files each embed a stale layer-conflated count in free text rather
+# than a clean field, so they need pattern sentinels, not JSON_SENTINELS.
+PROSE_SENTINELS = [
+    (".zenodo.json", re.compile(r"All (\d+) OpenChainGraph-enabled tools"), "artifact_tools"),
+    (".zenodo.json", re.compile(r"MCP-exposed at mcp\.omegacentauri\.me \((\d+) tools,"), "worker_tools"),
+    (".zenodo.json", re.compile(r"MCP-exposed at mcp\.omegacentauri\.me \(\d+ tools, (\d+) chains\)"), "worker_chains"),
+    ("chaingraph.json", re.compile(r"— (\d+) artifact-emitting tools across five mandate families"), "artifact_tools"),
+    ("tools/data/chaingraph.json", re.compile(r"All (\d+) artifact-export tools at v1\.2\.0"), "artifact_tools"),
 ]
 
 # HTML files scanned for data-count="KEY" markers (KEY must be a derive_counts key).
@@ -110,6 +140,34 @@ def run(fix=False):
                 fixed.append((rel, key, exp))
             else:
                 drift.append((rel, key, exp, got))
+
+    # Prose regex sentinels — grouped by file so each is read/written once
+    # even though a file can carry more than one sentinel (chaingraph.json has
+    # the same phrase twice: description + dct:description).
+    prose_by_file = {}
+    for rel, rx, key in PROSE_SENTINELS:
+        prose_by_file.setdefault(rel, []).append((rx, key))
+    for rel, entries in prose_by_file.items():
+        fp = os.path.join(REPO, rel)
+        src = open(fp, encoding="utf-8").read()
+        changed = False
+        for rx, key in entries:
+            exp = counts[key]
+            matches = list(rx.finditer(src))
+            if not matches:
+                drift.append((rel, key, exp, "MISSING")); continue
+            def repl(m, exp=exp, key=key):
+                nonlocal changed
+                got = int(m.group(1))
+                if got != exp:
+                    if fix:
+                        changed = True; fixed.append((rel, key, exp))
+                        return m.group(0)[:m.start(1) - m.start(0)] + str(exp) + m.group(0)[m.end(1) - m.start(0):]
+                    drift.append((rel, key, exp, got))
+                return m.group(0)
+            src = rx.sub(repl, src)
+        if fix and changed:
+            open(fp, "w", encoding="utf-8").write(src)
 
     # HTML data-count sentinels
     for rel in HTML_SENTINEL_FILES:

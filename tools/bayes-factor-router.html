@@ -105,10 +105,10 @@ a:hover { color: var(--teal-glow); }
 .result-category.null_h   { color: var(--red-bright); }
 .gate-token { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-dim); letter-spacing: 0.06em; margin-bottom: 16px; }
 .thresh-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 12px; }
-.thresh-table td { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
-.thresh-table td:first-child { color: var(--text-dim); width: 110px; }
-.thresh-table tr.active-row td { color: var(--teal-glow); background: rgba(29,186,144,0.05); }
-.thresh-table tr:last-child td { border-bottom: none; }
+.thresh-table td, .thresh-table th { padding: 5px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); text-align: left; font-weight: normal; }
+.thresh-table td:first-child, .thresh-table th:first-child { color: var(--text-dim); width: 110px; }
+.thresh-table tr.active-row td, .thresh-table tr.active-row th { color: var(--teal-glow); background: rgba(29,186,144,0.05); }
+.thresh-table tr:last-child td, .thresh-table tr:last-child th { border-bottom: none; }
 
 .about { border-top: 1px solid var(--border-subtle); padding-top: 24px; }
 .about-toggle { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 8px; }
@@ -424,9 +424,10 @@ function render() {
 
   const rows = state.mode === 'bf' ? THRESH_BF : THRESH_K;
   const activeLbl = TOKEN_TO_LABEL[cat] || '';
-  document.getElementById('thresh-table').innerHTML = rows.map(r =>
-    `<tr class="${r.label.startsWith(activeLbl) && activeLbl ? 'active-row':''}" ><td>${r.label}</td><td>${r.val}</td></tr>`
-  ).join('');
+  document.getElementById('thresh-table').innerHTML = rows.map((r, i) => {
+    const cell = i === 0 ? 'th scope="col"' : 'td';
+    return `<tr class="${r.label.startsWith(activeLbl) && activeLbl ? 'active-row':''}" ><${cell}>${r.label}</${cell.split(' ')[0]}><${cell}>${r.val}</${cell.split(' ')[0]}></tr>`;
+  }).join('');
 
   if (state.mode === 'bf') {
     document.getElementById('bf-display').textContent = 'BF = ' + bfValue().toExponential(0).replace('e+','e+').replace(/e\+?(\d+)/,(m,e)=>'10'+superscript(parseInt(e)));

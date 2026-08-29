@@ -47,7 +47,7 @@ a{color:var(--purple-glow);text-decoration:none;transition:color .15s}a:hover{co
 .otd-val{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:600;color:var(--purple-glow);min-width:180px}
 .otd-desc{font-family:'Crimson Pro',serif;font-style:italic;font-size:13px;color:var(--text-dim)}
 .section-header{background:rgba(26,16,64,.4)}
-.section-header td{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);padding:8px 14px;border-bottom:1px dashed var(--border-subtle)}
+.section-header td,.section-header th{font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);padding:8px 14px;border-bottom:1px dashed var(--border-subtle);text-align:left;font-weight:400}
 .quick-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
 .qp-btn{font-family:'Space Mono',monospace;font-size:10px;padding:5px 12px;border-radius:8px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
 .qp-btn:hover{border-color:var(--purple-mid);color:var(--text-secondary)}
@@ -143,7 +143,7 @@ function fmt(x){
 function supers(e){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(e).split('').map(c=>m[c]).join('');}
 
 function row(n,v,d){return `<tr><td class="otd-name">${n}</td><td class="otd-val">${v}</td><td class="otd-desc">${d}</td></tr>`;}
-function sect(t){return `<tr class="section-header"><td colspan="3">${t}</td></tr>`;}
+function sect(t){return `<tr class="section-header"><th scope="col" colspan="3">${t}</th></tr>`;}
 
 function calculate(){
   const mbh=+document.getElementById('in-mbh').value||2e4;
