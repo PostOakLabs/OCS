@@ -1,0 +1,42 @@
+{
+  "tool_id": "imbh-fuel-budget",
+  "note": "Not artifact-qualified (no buildArtifact()/execution_hash in the page) — reads window.OCS_MEASUREMENTS.clusterParams for its UI defaults but calc() itself is a pure function of its 7 explicit args, so it is directly known-value testable despite the clusterParams dependency. Value-only fixture, out of schema-validate.mjs's hash-bound coverage gate (OCS-FIXWAVE.md FW-1).",
+  "cases": [
+    {
+      "name": "ocs_defaults",
+      "fn": "calc",
+      "args": [20000, 0.23, 18.2, 10, 1, 1, 0.0001],
+      "expected": {
+        "mdotMsunYr": 7.246703703064622e-8,
+        "mdotGs": 4567076573319243000,
+        "eddRatio": 0.0001628924702749986,
+        "pW": 4.1048902509299654e+32,
+        "pLsun": 1072332.8764184862,
+        "pCeil": 10000,
+        "binds": "concealment (waste heat)",
+        "rBondiAU": 177467.72727272724,
+        "leddLsun": 658307210.031348
+      },
+      "tolerance": 1e-6,
+      "source": "Independently re-derived Bondi accretion formula from the page's own stated closed form (mdot = 4*pi*(GM)^2*rho/(sigma^2+c_s^2)^1.5, He-corrected rho=1.2*n_e*m_p, L=eta*mdot*c^2, concealment ceiling = L_lim/leak); args = (mbh_Msun, n_e_cm-3, sigma_kms, c_s_kms, eta, L_lim_Lsun, leak_frac) at OCS clusterParams defaults (mbh=2e4, n_e=0.23, sigma=18.2 -- Paper E's 21 km/s not used here, this is the site's own default). Verdict reproduces the page's stated finding that concealment binds by roughly two orders of magnitude (1.07e6 / 1e4 = 107x) over supply."
+    },
+    {
+      "name": "haberle_lower_bound",
+      "fn": "calc",
+      "args": [8200, 0.23, 18.2, 10, 1, 1, 0.0001],
+      "expected": {
+        "mdotMsunYr": 1.218170892485163e-8,
+        "mdotGs": 767725571974964900,
+        "eddRatio": 0.00006678591281274944,
+        "pW": 6.900320511813272e+31,
+        "pLsun": 180259.15652594753,
+        "pCeil": 10000,
+        "binds": "concealment (waste heat)",
+        "rBondiAU": 72761.76818181819,
+        "leddLsun": 269905956.1128527
+      },
+      "tolerance": 1e-6,
+      "source": "Same independently re-derived formula, at the Häberle et al. 2024 lower-bound mass (8200 Msun)."
+    }
+  ]
+}
