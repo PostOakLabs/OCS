@@ -151,6 +151,13 @@ jobs:
       - name: Copy-hallmarks gate (anti-AI-tell)
         run: node scripts/check-copy-hallmarks.mjs
 
+      # Filename-hygiene gate (AUDIT-HY4-REPO §1.1): rejects tracked filenames
+      # carrying quote/angle/pipe/star/question characters or C0/Private-Use-Area
+      # glyphs — the class that let a mangled `less`-help-screen capture ship
+      # as a tracked file with an unclosed-quote name.
+      - name: Filename-hygiene gate
+        run: python3 scripts/check-filenames.py
+
   # ───────────────────────────────────────────────────────────────────────────
   # Job 2 – Deploy
   # Steps (in order):

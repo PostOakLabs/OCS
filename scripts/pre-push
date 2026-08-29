@@ -59,29 +59,32 @@ if [ "$MISSING" -gt 0 ]; then
 fi
 echo "  all $COUNT required files present."
 
-echo "[2/9] Count-drift gate..."
+echo "[2/10] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[3/9] Broken-link gate..."
+echo "[3/10] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[4/9] Stranded-page gate..."
+echo "[4/10] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[5/9] Sitemap-coverage gate..."
+echo "[5/10] Sitemap-coverage gate..."
 python3 scripts/check-sitemap.py
 
-echo "[6/9] JS syntax check..."
+echo "[6/10] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[7/9] Forbidden-hash lint..."
+echo "[7/10] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[8/9] Schema validation..."
+echo "[8/10] Schema validation..."
 node scripts/schema-validate.mjs
 
-echo "[9/9] Copy-hallmarks gate (anti-AI-tell)..."
+echo "[9/10] Copy-hallmarks gate (anti-AI-tell)..."
 node scripts/check-copy-hallmarks.mjs
+
+echo "[10/10] Filename-hygiene gate..."
+python3 scripts/check-filenames.py
 
 echo ""
 echo "✅ All gates passed — pushing."
