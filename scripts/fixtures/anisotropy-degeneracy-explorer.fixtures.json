@@ -1,0 +1,88 @@
+{
+  "cases": [
+    {
+      "name": "defaults-mass8200",
+      "hash": "",
+      "expected": {
+        "sigma_los_central_km_s": 20.12,
+        "sigma_los_no_imbh_km_s": 19.07,
+        "delta_sigma_km_s": 1.05,
+        "detectability_sigma": 0.53,
+        "chi2_per_dof": 1.79,
+        "degeneracy_broken": false,
+        "verdict": "DEGENERATE — Δσ_los 1.1 km/s (0.5σ); no-IMBH model reproduces the central dispersion within measurement errors."
+      },
+      "note": "NOT hand-derivable in closed form: computeProfile() solves the anisotropic Jeans equation by backward trapezoidal quadrature on a 40-pt log-radius grid, then an Abel-transform line-of-sight projection by an 80-pt z-integral with linear interpolation between grid points -- there is no closed-form antiderivative for the tool own Plummer(cluster)+Plummer(remnant)+IMBH composite density used as the source term. Per OCS-FIXWAVE.md FW-1 guidance for MC tools (extended here to this deterministic-but-numerical-integration case): this fixture freezes the tool own live buildArtifact() output at a fixed input, asserting reproducibility of the grid/quadrature scheme, not independent closed-form correctness. The two boundary terms sigma_los_no_imbh_km_s (beta=0,mrem=0 case) and any input at mass=0 ARE independently checkable analytically as a sanity cross-check if a future session wants to tighten this."
+    },
+    {
+      "name": "mass20000-mrem0",
+      "hash": "mass=20000",
+      "expected": {
+        "sigma_los_central_km_s": 21.55,
+        "sigma_los_no_imbh_km_s": 19.07,
+        "delta_sigma_km_s": 2.48,
+        "detectability_sigma": 1.24,
+        "chi2_per_dof": 1.256,
+        "degeneracy_broken": false,
+        "verdict": "MARGINAL — Δσ_los 2.5 km/s (1.2σ); anisotropy or remnant mass adjustments could plausibly explain the signal."
+      },
+      "note": "NOT hand-derivable in closed form: computeProfile() solves the anisotropic Jeans equation by backward trapezoidal quadrature on a 40-pt log-radius grid, then an Abel-transform line-of-sight projection by an 80-pt z-integral with linear interpolation between grid points -- there is no closed-form antiderivative for the tool own Plummer(cluster)+Plummer(remnant)+IMBH composite density used as the source term. Per OCS-FIXWAVE.md FW-1 guidance for MC tools (extended here to this deterministic-but-numerical-integration case): this fixture freezes the tool own live buildArtifact() output at a fixed input, asserting reproducibility of the grid/quadrature scheme, not independent closed-form correctness. The two boundary terms sigma_los_no_imbh_km_s (beta=0,mrem=0 case) and any input at mass=0 ARE independently checkable analytically as a sanity cross-check if a future session wants to tighten this."
+    },
+    {
+      "name": "mass8200-beta0.3",
+      "hash": "mass=8200&beta=0.30",
+      "expected": {
+        "sigma_los_central_km_s": 29.31,
+        "sigma_los_no_imbh_km_s": 28.26,
+        "delta_sigma_km_s": 1.06,
+        "detectability_sigma": 0.53,
+        "chi2_per_dof": 2.299,
+        "degeneracy_broken": false,
+        "verdict": "DEGENERATE — Δσ_los 1.1 km/s (0.5σ); no-IMBH model reproduces the central dispersion within measurement errors."
+      },
+      "note": "NOT hand-derivable in closed form: computeProfile() solves the anisotropic Jeans equation by backward trapezoidal quadrature on a 40-pt log-radius grid, then an Abel-transform line-of-sight projection by an 80-pt z-integral with linear interpolation between grid points -- there is no closed-form antiderivative for the tool own Plummer(cluster)+Plummer(remnant)+IMBH composite density used as the source term. Per OCS-FIXWAVE.md FW-1 guidance for MC tools (extended here to this deterministic-but-numerical-integration case): this fixture freezes the tool own live buildArtifact() output at a fixed input, asserting reproducibility of the grid/quadrature scheme, not independent closed-form correctness. The two boundary terms sigma_los_no_imbh_km_s (beta=0,mrem=0 case) and any input at mass=0 ARE independently checkable analytically as a sanity cross-check if a future session wants to tighten this."
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/bh_kinematics",
+    "tool_id": "anisotropy-degeneracy-explorer",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T13:58:34.262Z",
+    "execution_hash": "e6206df9ef3d0d347d2fdfaae5530e54b6e3bb43f6bd3f628bdff9952da0f322",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "mass_M_solar": 8200,
+      "mrem_M_solar": 0,
+      "rrem_pc": 1,
+      "beta": 0,
+      "dist_kpc": 5.49
+    },
+    "output_payload": {
+      "sigma_los_central_km_s": 20.12,
+      "sigma_los_no_imbh_km_s": 19.07,
+      "delta_sigma_km_s": 1.05,
+      "detectability_sigma": 0.53,
+      "chi2_per_dof": 1.79,
+      "degeneracy_broken": false,
+      "verdict": "DEGENERATE — Δσ_los 1.1 km/s (0.5σ); no-IMBH model reproduces the central dispersion within measurement errors."
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/probe.html",
+      "tool_citation_bibtex": "@software{OCS_anisotropy_degeneracy_explorer_2026,\n  author   = {Swanson, Tim},\n  title    = {{Anisotropy Degeneracy Explorer}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/anisotropy-degeneracy-explorer.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society — omegacentauri.me}\n}"
+    }
+  }
+}

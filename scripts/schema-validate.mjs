@@ -49,9 +49,8 @@ const ALLOWLIST = new Set([
   // FW-4
   'detection-forecast', 'gaia-dr4-forecaster', 'ir-excess-checker',
   'observing-campaign-planner', 'radio-seti',
-  // FW-5
-  'anisotropy-degeneracy-explorer', 'drake-monte-carlo', 'evidence-ledger',
-  'great-filter', 'infall-survival',
+  // FW-5: landed (anisotropy-degeneracy-explorer, drake-monte-carlo,
+  // evidence-ledger, great-filter, infall-survival) — see scripts/fixtures/*.fixtures.json
 ]);
 
 function artifactQualifiedTools() {

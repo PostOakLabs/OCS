@@ -1,0 +1,100 @@
+{
+  "cases": [
+    {
+      "name": "sandberg2018-n1000-seed1",
+      "hash": "preset=sandberg2018&n=1000",
+      "expected": {
+        "p_alone": 0.047,
+        "p_less1": 0.311,
+        "median_log10N": 1.2119775213068351
+      },
+      "note": "SEED-FROZEN: mcSeed() derives a deterministic mulberry32 seed from xfnv1a(JSON.stringify({n,preset,ranges,seed:state.seed||1})), so the same {preset,n,priors,seed} always draws the same K samples and gives the same p_alone/p_less1/median_log10N. This fixture asserts reproducibility of that fixed-seed Monte Carlo draw, not independent correctness of the Drake-equation sampling itself (the log-uniform draw-and-sum method is the tool own documented approach, not re-derived here)."
+    },
+    {
+      "name": "pessimistic-n1000-seed1",
+      "hash": "preset=pessimistic&n=1000",
+      "expected": {
+        "p_alone": 1,
+        "p_less1": 1,
+        "median_log10N": -22.872958282008767
+      },
+      "note": "SEED-FROZEN: mcSeed() derives a deterministic mulberry32 seed from xfnv1a(JSON.stringify({n,preset,ranges,seed:state.seed||1})), so the same {preset,n,priors,seed} always draws the same K samples and gives the same p_alone/p_less1/median_log10N. This fixture asserts reproducibility of that fixed-seed Monte Carlo draw, not independent correctness of the Drake-equation sampling itself (the log-uniform draw-and-sum method is the tool own documented approach, not re-derived here)."
+    },
+    {
+      "name": "sandberg2018-n1000-custom-fl",
+      "hash": "preset=sandberg2018&n=1000&fl_lo=-6&fl_hi=-1",
+      "expected": {
+        "p_alone": 0.208,
+        "p_less1": 0.578,
+        "median_log10N": -0.6009904218371958
+      },
+      "note": "SEED-FROZEN: mcSeed() derives a deterministic mulberry32 seed from xfnv1a(JSON.stringify({n,preset,ranges,seed:state.seed||1})), so the same {preset,n,priors,seed} always draws the same K samples and gives the same p_alone/p_less1/median_log10N. This fixture asserts reproducibility of that fixed-seed Monte Carlo draw, not independent correctness of the Drake-equation sampling itself (the log-uniform draw-and-sum method is the tool own documented approach, not re-derived here)."
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/fermi_drake",
+    "tool_id": "drake-monte-carlo",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-29T13:58:34.283Z",
+    "execution_hash": "14d4913bcc86038b32537934bcbee49bb684e2adfb0e3c0582c164a284630e19",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "nSamples": 1000,
+      "preset": "sandberg2018",
+      "priors": {
+        "Rstar": [
+          0,
+          1.5
+        ],
+        "fp": [
+          -1,
+          0
+        ],
+        "ne": [
+          -1,
+          0
+        ],
+        "fl": [
+          -3,
+          0
+        ],
+        "fi": [
+          -3,
+          0
+        ],
+        "fc": [
+          -2,
+          0
+        ],
+        "L": [
+          2,
+          9
+        ]
+      },
+      "seed": 1
+    },
+    "output_payload": {
+      "p_alone": 0.047,
+      "p_less1": 0.311,
+      "median_log10N": 1.2119775213068351
+    },
+    "compliance_flags": [
+      "register:speculative"
+    ],
+    "audit_signature": {
+      "payloadType": "application/vnd.openchain.graph+json;version=0.2",
+      "payload": "",
+      "signatures": [],
+      "ocs_artifact_version": "1.0.0",
+      "permalink": "https://omegacentauri.me/tools/probe.html",
+      "tool_citation_bibtex": "@software{OCS_drake_monte_carlo_2026,\n  author   = {Swanson, Tim},\n  title    = {{Drake Equation Monte Carlo}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/drake-monte-carlo.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}"
+    }
+  }
+}

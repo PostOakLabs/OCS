@@ -439,6 +439,104 @@ test('tier-c known-value — cosmology-calculator (buildArtifact via hash + expl
   }
 });
 
+// ---- Group 5: FW-5 tools (OCS-FIXWAVE.md FW-5) ----
+// great-filter, infall-survival: hand-derived closed-form (log-sum arithmetic /
+// GR horizon formulas), independently reimplemented and cross-checked exactly
+// against the page in the FW-5 board session. Both set window._toolArtifactData
+// synchronously from render()/loadHash() and expose a sync buildArtifact() that
+// reads it back (execution_hash filled separately by renderArtifact() in the
+// live page) -- drive the same way here.
+const FW5_SYNC_ARTIFACT_TOOLS = ['great-filter', 'infall-survival'];
+
+test('tier-c known-value — FW-5 hand-derived closed-form (sync _toolArtifactData)', async (t) => {
+  for (const toolId of FW5_SYNC_ARTIFACT_TOOLS) {
+    const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, `${toolId}.fixtures.json`), 'utf8'));
+    for (const c of fixture.cases) {
+      await t.test(`${toolId} / ${c.name}`, () => {
+        const sandbox = loadTool(toolId);
+        sandbox.location.hash = '#' + c.hash;
+        sandbox.loadHash();
+        if (typeof sandbox.render === 'function') sandbox.render();
+        else if (typeof sandbox.calculate === 'function') sandbox.calculate();
+        const actual = JSON.parse(JSON.stringify(sandbox.window._toolArtifactData.output));
+        for (const [key, expectedVal] of Object.entries(c.expected)) {
+          const actualVal = actual[key];
+          if (typeof expectedVal === 'number') {
+            const tol = Math.max(1e-6, Math.abs(expectedVal) * 1e-6);
+            assert.ok(Math.abs(actualVal - expectedVal) <= tol,
+              `${toolId}/${c.name}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+          } else {
+            assert.equal(actualVal, expectedVal, `${toolId}/${c.name}: field '${key}' expected ${JSON.stringify(expectedVal)}, got ${JSON.stringify(actualVal)}`);
+          }
+        }
+      });
+    }
+  }
+});
+
+// evidence-ledger, anisotropy-degeneracy-explorer: both expose an async
+// buildArtifact() that recomputes entirely from `state` (no render() call
+// needed) -- drive via loadHash() + buildArtifact() directly, same pattern as
+// FW-3's cosmology-calculator/adaf-sed-modeler group above. evidence-ledger's
+// cases are hand-derived Bayesian log-odds; anisotropy-degeneracy-explorer's
+// are seed-independent but numerically-integrated (frozen, see fixture note).
+const FW5_ASYNC_BUILDARTIFACT_TOOLS = ['evidence-ledger', 'anisotropy-degeneracy-explorer'];
+
+test('tier-c known-value — FW-5 async buildArtifact() tools', async (t) => {
+  for (const toolId of FW5_ASYNC_BUILDARTIFACT_TOOLS) {
+    const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, `${toolId}.fixtures.json`), 'utf8'));
+    for (const c of fixture.cases) {
+      await t.test(`${toolId} / ${c.name}`, async () => {
+        const sandbox = loadTool(toolId);
+        sandbox.location.hash = '#' + c.hash;
+        sandbox.loadHash();
+        const artifact = await sandbox.buildArtifact();
+        const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+        for (const [key, expectedVal] of Object.entries(c.expected)) {
+          const actualVal = actualPayload[key];
+          if (typeof expectedVal === 'number') {
+            const tol = Math.max(1e-6, Math.abs(expectedVal) * 1e-6);
+            assert.ok(Math.abs(actualVal - expectedVal) <= tol,
+              `${toolId}/${c.name}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+          } else {
+            assert.equal(actualVal, expectedVal, `${toolId}/${c.name}: field '${key}' expected ${JSON.stringify(expectedVal)}, got ${JSON.stringify(actualVal)}`);
+          }
+        }
+      });
+    }
+  }
+});
+
+// drake-monte-carlo: SEED-FROZEN (see fixture note). schedule() wraps
+// runMC()/render/_toolArtifactData assignment in a setTimeout debounce; drive
+// the underlying calls directly and synchronously via glue sharing the page's
+// lexical scope (same technique as cosmology-calculator's __cgDrive above).
+test('tier-c known-value — drake-monte-carlo seed-frozen runMC()', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'drake-monte-carlo.fixtures.json'), 'utf8'));
+  const glue = `
+    window.__driveMC = function(hashStr) {
+      location.hash = '#' + hashStr;
+      loadHash();
+      runMC();
+      window._toolArtifactData = { policy: { nSamples: state.nSamples, preset: state.preset, priors: state.priors, seed: (state.seed || 1) }, output: { p_alone: state.meta?.pAlone || null, p_less1: state.meta?.pLess1 || null, median_log10N: state.meta?.median || null } };
+    };
+  `;
+  for (const c of fixture.cases) {
+    await t.test(`drake-monte-carlo / ${c.name}`, () => {
+      const sandbox = loadTool('drake-monte-carlo', glue);
+      assert.equal(typeof sandbox.__driveMC, 'function', 'drake-monte-carlo: glue driver failed to install');
+      sandbox.__driveMC(c.hash);
+      const actual = JSON.parse(JSON.stringify(sandbox.window._toolArtifactData.output));
+      for (const [key, expectedVal] of Object.entries(c.expected)) {
+        const actualVal = actual[key];
+        const tol = Math.max(1e-9, Math.abs(expectedVal) * 1e-9);
+        assert.ok(Math.abs(actualVal - expectedVal) <= tol,
+          `drake-monte-carlo/${c.name}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+      }
+    });
+  }
+});
+
 // ---- Group 3: constraint-stacker (existing ChainGraph artifact fixture) ----
 test('tier-c known-value — constraint-stacker matches existing artifact fixture', async () => {
   const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'constraint-stacker.artifact.json'), 'utf8'));
