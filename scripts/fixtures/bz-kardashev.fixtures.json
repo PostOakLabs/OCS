@@ -4,7 +4,7 @@
       "name": "inverse-8200-a0.9-P5e15",
       "hash": "mode=inverse&mass=8200&spin=0.9&power=5000000000000000&B=100",
       "expected": {
-        "bz_power_W": 5000000000000000,
+        "bz_power_W": "5.000000e+15",
         "kardashev_context": "Below Type I — current human-civilisation scale."
       }
     },
@@ -12,7 +12,7 @@
       "name": "inverse-100-a0.5-P1e9",
       "hash": "mode=inverse&mass=100&spin=0.5&power=1000000000&B=1",
       "expected": {
-        "bz_power_W": 1000000000,
+        "bz_power_W": "1.000000e+9",
         "kardashev_context": "Below Type I — current human-civilisation scale."
       }
     },
@@ -20,9 +20,18 @@
       "name": "forward-8200-a0.9-B1e-6",
       "hash": "mode=forward&mass=8200&spin=0.9&B=0.000001&power=1",
       "expected": {
-        "bz_power_W": 51153463480614.28,
+        "bz_power_W": "5.115346e+13",
         "kardashev_context": "Below Type I — current human-civilisation scale."
       }
+    },
+    {
+      "name": "forward-8200-a0.998-B1e4-realistic-superwidth-power",
+      "hash": "mode=forward&mass=8200&spin=0.998&B=10000&power=1",
+      "expected": {
+        "bz_power_W": "3.448658e+33",
+        "kardashev_context": "Between Type II and Type III — 8.6×10⁶× stellar, 8.62×10⁻⁵× galactic."
+      },
+      "note": "bz_power_W here (3.45e33 W) is far past the 2^53 IEEE-754 safe-integer bound (~9.007e15) that a raw JS number would fail assertIJson() on; asserts the string-serialized fix keeps this reachable, realistic-magnitude BZ power from degrading execution_hash to 'error'."
     }
   ],
   "artifact": {
@@ -33,7 +42,7 @@
     "tool_id": "bz-kardashev",
     "tool_version": "1.2.0",
     "generated_at": "2026-08-29T00:00:00.000Z",
-    "execution_hash": "a5e1ae89abbf08c29b64af5b31e6806d7feaaae6775573c9a2909bacaff31423",
+    "execution_hash": "8928cf68077d1f2ea60bd59fa209d2b8a2eec3d27384b7766ae4adb7643d844c",
     "chain": {
       "parent_hashes": [],
       "parent_tool_ids": [],
@@ -44,10 +53,10 @@
       "B_Tesla": 100,
       "M_M_solar": 8200,
       "mode": "inverse",
-      "P_W": 5000000000000000
+      "P_W": "5.000000e+15"
     },
     "output_payload": {
-      "bz_power_W": 5000000000000000,
+      "bz_power_W": "5.000000e+15",
       "kardashev_context": "Below Type I — current human-civilisation scale."
     },
     "compliance_flags": [
