@@ -576,7 +576,11 @@ function render(){
   else if (powerForKard < K3) ctx = `Between Type II and Type III — ${fmtSci(powerForKard/K2, 1)}× stellar, ${fmtSci(powerForKard/K3, 2)}× galactic.`;
   else ctx = `Above Type III — ${fmtSci(powerForKard/K3, 1)}× galactic.`;
   kardCtx.textContent = ctx;
-  window._toolArtifactData = { policy: { a_spin: state.a, B_Tesla: state.B, M_M_solar: state.M, mode: state.mode, P_W: state.P }, output: { bz_power_W: powerForKard, kardashev_context: ctx } };
+  // bz_power_W/P_W serialized as scientific-notation strings, not numbers: realistic BZ
+  // powers in W are integer-valued doubles that exceed 2^53 (RFC 7493 safe-integer bound),
+  // which trips assertIJson()'s I-JSON guard and degrades execution_hash to 'error'.
+  // Strings bypass the numeric safe-integer check entirely; display is unaffected.
+  window._toolArtifactData = { policy: { a_spin: state.a, B_Tesla: state.B, M_M_solar: state.M, mode: state.mode, P_W: state.P.toExponential(6) }, output: { bz_power_W: powerForKard.toExponential(6), kardashev_context: ctx } };
   if (window.invalidateArtifact) invalidateArtifact();
 }
 

@@ -259,7 +259,7 @@ canvas{display:block;width:100%}
   <p>Quasi-periodic oscillations (QPOs) are modulations in the X-ray flux of accreting black holes at frequencies associated with orbital motion near the innermost stable circular orbit (ISCO). Because the ISCO frequency depends on both mass and spin, a detected QPO frequency constrains the (M, a) parameter space.</p>
   <h3>QPO models implemented</h3>
   <p><strong>ISCO orbital frequency:</strong> The Keplerian orbital frequency at the ISCO is ν_ISCO = c³/(2πGM × x_ISCO^(3/2)), where x_ISCO = r_ISCO/r_g is computed from the Kerr metric (Bardeen et al. 1972). For a=0, x_ISCO = 6; for a=0.998, x_ISCO ≈ 1.24. A QPO at ν_obs interpreted as ν_ISCO directly gives a (M, a) constraint.</p>
-  <p><strong>3:2 epicyclic resonance (Török et al. 2011):</strong> Many QPO pairs are observed with frequency ratio 3:2. The parametric resonance condition occurs at r_res where Keplerian ν_K and radial epicyclic ν_r are in 3:2 ratio. For Schwarzschild: r_res at x=10.8 r_g. The upper QPO maps as M ≈ 912×10³ M_sun / (ν_U in mHz) (at a=0), and the lower as M ≈ 608×10³ M_sun / (ν_L in mHz). Both shift with spin.</p>
+  <p><strong>3:2 epicyclic resonance (Török et al. 2011):</strong> Many QPO pairs are observed with frequency ratio 3:2. The parametric resonance condition occurs at r_res where Keplerian ν_K and radial epicyclic ν_r are in 3:2 ratio. For Schwarzschild: r_res at x=10.8 r_g. The upper QPO maps as M ≈ 910×10³ M_sun / (ν_U in mHz) (at a=0), and the lower as M ≈ 607×10³ M_sun / (ν_L in mHz). Both shift with spin.</p>
   <p><strong>Nodal precession (Lense-Thirring):</strong> Frame-dragging causes a precession of the orbital plane at frequency ν_prec = 2GJ/(c²r³) = aGM/(πr³c). For M = 10,000 M☉ and a = 0.5, ν_prec at r = 5 r_g is ≈ 0.4 mHz. Useful for detecting very low-frequency QPOs.</p>
   <h3>Observational context</h3>
   <p>Bian et al. (2025, Nature Astronomy) reported an 85-second quasi-periodicity (ν = 11.76 mHz) from a TDE by a candidate IMBH, constraining the mass to 9,900–16,000 M☉ and spin to 0.26–0.36 using spectral plus timing analysis combined. This tool's 3:2 Keplerian resonance model alone gives M ≈ 77,000–95,000 M☉ for 11.76 mHz — a factor ~6–10 higher than the Bian 2025 result because the paper uses additional spectral constraints not captured by the Keplerian resonance formula alone.</p>
@@ -277,20 +277,20 @@ canvas{display:block;width:100%}
 
 <script src="data/measurements.js"></script>
 <script>
-const G=6.674e-11, c=3e8, M_sun=1.989e30;
+const G=6.674e-11, c=2.998e8, M_sun=1.989e30;
 // Canonical IMBH bounds — single source of truth is data/measurements.js (loaded above).
 const OCS_HABERLE = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='haberle2024')||{}).value) || 8200;
 const OCS_BANARES = (window.OCS_MEASUREMENTS && OCS_MEASUREMENTS.imbh && (OCS_MEASUREMENTS.imbh.find(m=>m.id==='banares2025')||{}).value) || 6000;
 // ISCO frequency constant for Schwarzschild: nu_isco_schw = c^3/(2pi*G*M*6^1.5) per solar mass
-// = (3e8)^3 / (2pi * 6.674e-11 * 1.989e30 * 14.697) = 2.7e25 / (1.225e21) ≈ 2203 Hz/M_sun
-const NU_SCHW = 2203; // Hz per M_sun, for ISCO (a=0)
+// = (2.998e8)^3 / (2pi * 6.674e-11 * 1.989e30 * 14.697) = 2.694e25 / (1.225e21) ≈ 2198 Hz/M_sun
+const NU_SCHW = 2198; // Hz per M_sun, for ISCO (a=0)
 // 3:2 resonance constants (Schwarzschild):
 // Resonance condition: nu_K/nu_r = 3/2 → x_res = 10.8 (Schwarzschild)
 // nu_K(x=10.8) = c^3 / (2pi * G * M_sun * 10.8^{3/2})
 //   = NU_SCHW * 6^{3/2} / 10.8^{3/2}   (NU_SCHW already includes 6^{3/2}; must undo it)
-//   = 2203 * 14.697 / 35.49 ≈ 912 Hz·M_sun (not 62.1, which double-counted 6^{3/2})
-const NU_32_UPPER = 2203 * Math.pow(6, 1.5) / Math.pow(10.8, 1.5); // ≈ 912 Hz·M_sun
-const NU_32_LOWER = NU_32_UPPER * 2/3; // ≈ 608 Hz·M_sun
+//   = 2198 * 14.697 / 35.49 ≈ 910 Hz·M_sun (not 62.1, which double-counted 6^{3/2})
+const NU_32_UPPER = 2198 * Math.pow(6, 1.5) / Math.pow(10.8, 1.5); // ≈ 910 Hz·M_sun
+const NU_32_LOWER = NU_32_UPPER * 2/3; // ≈ 607 Hz·M_sun
 
 const PRESETS = {
   '85s':  { lognu: 1.071 }, // 11.76 mHz = 1/85 Hz
