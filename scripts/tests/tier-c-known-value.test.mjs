@@ -115,13 +115,20 @@ function makeFakeEl() {
 }
 
 function makeSandbox() {
-  const location = { hash: '' };
+  const location = { hash: '', href: 'https://omegacentauri.me/tools/probe.html' };
   const history = { replaceState(_s, _t, url) {
     const h = String(url || ''); const i = h.indexOf('#');
     location.hash = i >= 0 ? h.slice(i) : h;
   } };
+  // id-cached elements: a real DOM returns the SAME node for repeated
+  // getElementById(id) calls, so a value one function writes (e.g.
+  // updateMetrics() setting #verdict-text.textContent) is visible to a
+  // later read (e.g. render() collecting it into _toolArtifactData). The
+  // groups above never touch the DOM, so a fresh-element-per-call stub was
+  // fine for them; FW-3's buildArtifact()-driven tools need the cache.
+  const elCache = new Map();
   const document = {
-    getElementById() { return makeFakeEl(); },
+    getElementById(id) { if (!elCache.has(id)) elCache.set(id, makeFakeEl()); return elCache.get(id); },
     querySelector() { return makeFakeEl(); },
     querySelectorAll() { return []; },
     createElement() { return makeFakeEl(); },
@@ -139,7 +146,7 @@ function makeSandbox() {
     requestAnimationFrame(fn) { return setTimeout(fn, 0); }, cancelAnimationFrame() {},
     console, setTimeout, clearTimeout, setInterval, clearInterval,
     URL, URLSearchParams, Blob, TextEncoder, TextDecoder, crypto: globalThis.crypto,
-    performance: { now: () => 0 }, screen: { width: 1280, height: 800 },
+    performance: { now: () => 0 }, screen: { width: 1280, height: 800 }, devicePixelRatio: 1,
   };
   sandbox.window = sandbox;
   sandbox.self = sandbox;
@@ -147,7 +154,7 @@ function makeSandbox() {
   return sandbox;
 }
 
-function loadTool(toolId) {
+function loadTool(toolId, extraCode = '') {
   const entry = manifest.tools[toolId];
   const abs = resolve(REPO, entry.path);
   const html = readFileSync(abs, 'utf8');
@@ -156,7 +163,12 @@ function loadTool(toolId) {
   const deps = externalScriptSources(html, dirname(entry.path));
   const code = (usesMeasurements ? MEASUREMENTS_SRC + '\n' : '')
     + (deps.length ? deps.join('\n;\n') + '\n;\n' : '')
-    + inlineScripts(html).join('\n;\n');
+    + inlineScripts(html).join('\n;\n')
+    // extraCode runs in the SAME vm.Script compilation as the page's inline
+    // scripts, so it shares their top-level `let`/`const` lexical scope
+    // (invisible from outside the script otherwise — a page's module-level
+    // `state` never becomes a sandbox/global property, as noted above).
+    + (extraCode ? '\n;\n' + extraCode : '');
   new vm.Script(code, { filename: entry.path }).runInContext(sandbox, { timeout: 5000 });
   return sandbox;
 }
@@ -292,6 +304,87 @@ test('tier-c known-value — flyby-survival-simulator seed-frozen binResult()', 
         assert.ok(Math.abs(actual[key] - expectedVal) <= tol,
           `flyby-survival-simulator/${c.name}: field '${key}' expected ~${expectedVal}, got ${actual[key]}`);
       }
+    });
+  }
+});
+
+// ---- Group 4: FW-3 buildArtifact()-driven tools (OCS-FIXWAVE.md FW-3) ----
+// Unlike constraint-stacker (module-level `const state` + a dedicated
+// loadStateFromHash()), these five tools drive their module-level `let
+// state` through the page's own hash-parsing entrypoint plus its normal
+// render()/compute() cycle — the same path a browser takes on page load.
+// Golden cases were hand-derived from each tool's own stated closed-form
+// physics (Bardeen-Press-Teukolsky ISCO, Blandford-Znajek split-monopole
+// power, flat/curved-w0 Friedmann-equation distances, chirp mass, ADAF SED
+// vs ωCen observational limits) — see scripts/fixtures/<tool>.fixtures.json
+// case comments in git history / OCS-FIXWAVE.md FW-3 board note for the
+// derivation. Two tools needed harness accommodations, both noted inline
+// at their call site below.
+const STATEFUL_ARTIFACT_TOOLS = [
+  { toolId: 'adaf-sed-modeler', extraSync: true },
+  { toolId: 'bz-kardashev', extraSync: false },
+  { toolId: 'gw-horizon-plotter', extraSync: true },
+  { toolId: 'qpo-mass-spin', extraSync: false, computeFn: 'compute' },
+];
+
+test('tier-c known-value — FW-3 stateful buildArtifact() tools', async (t) => {
+  for (const { toolId, extraSync, computeFn } of STATEFUL_ARTIFACT_TOOLS) {
+    const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, `${toolId}.fixtures.json`), 'utf8'));
+    for (const c of fixture.cases) {
+      await t.test(`${toolId} / ${c.name}`, async () => {
+        const sandbox = loadTool(toolId);
+        assert.equal(typeof sandbox.buildArtifact, 'function', `${toolId}: expected buildArtifact()`);
+        assert.equal(typeof sandbox.loadHash, 'function', `${toolId}: expected loadHash()`);
+        sandbox.location.hash = '#' + c.hash;
+        sandbox.loadHash();
+        if (extraSync && typeof sandbox.syncSliders === 'function') sandbox.syncSliders();
+        if (computeFn) sandbox[computeFn]();
+        else sandbox.render();
+        const artifact = await sandbox.buildArtifact();
+        const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+        for (const [key, expectedVal] of Object.entries(c.expected)) {
+          const actualVal = actualPayload[key];
+          if (typeof expectedVal === 'number') {
+            assert.ok(typeof actualVal === 'number' && Number.isFinite(actualVal) === Number.isFinite(expectedVal),
+              `${toolId}/${c.name}: field '${key}' expected number ~${expectedVal}, got ${JSON.stringify(actualVal)}`);
+            const tol = Math.max(1e-6, Math.abs(expectedVal) * 1e-6);
+            assert.ok(Math.abs(actualVal - expectedVal) <= tol || (actualVal === expectedVal),
+              `${toolId}/${c.name}: field '${key}' expected ~${expectedVal}, got ${actualVal}`);
+          } else {
+            assert.equal(actualVal, expectedVal, `${toolId}/${c.name}: field '${key}' expected ${JSON.stringify(expectedVal)}, got ${JSON.stringify(actualVal)}`);
+          }
+        }
+      });
+    }
+  }
+});
+
+// cosmology-calculator's loadHash() RETURNS a partial {z,H0,Om,OL,w} object
+// instead of mutating `state` itself (the real Object.assign(state,
+// fromHash) happens in the page's DOMContentLoaded handler, which never
+// fires in this harness). Reaching that assign requires code sharing the
+// same vm.Script lexical scope as the page's own top-level `let state` —
+// loadTool()'s extraCode param exists for exactly this.
+test('tier-c known-value — cosmology-calculator (buildArtifact via hash + explicit state assign)', async (t) => {
+  const fixture = JSON.parse(readFileSync(resolve(FIXTURES_DIR, 'cosmology-calculator.fixtures.json'), 'utf8'));
+  const glue = `
+    window.__cgDrive = function(hashStr) {
+      location.hash = '#' + hashStr;
+      const fromHash = loadHash();
+      if (fromHash) Object.assign(state, fromHash);
+      syncSliders();
+      render();
+    };
+  `;
+  for (const c of fixture.cases) {
+    await t.test(`cosmology-calculator / ${c.name}`, async () => {
+      const sandbox = loadTool('cosmology-calculator', glue);
+      assert.equal(typeof sandbox.__cgDrive, 'function', 'cosmology-calculator: glue driver failed to install');
+      sandbox.__cgDrive(c.hash);
+      const artifact = await sandbox.buildArtifact();
+      const actualPayload = JSON.parse(JSON.stringify(artifact.output_payload));
+      assert.deepEqual(actualPayload, c.expected,
+        `cosmology-calculator/${c.name}: output_payload does not match hand-derived fixture`);
     });
   }
 });

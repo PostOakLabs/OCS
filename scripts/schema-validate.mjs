@@ -45,9 +45,8 @@ const ALLOWLIST = new Set([
   // FW-2
   'shadow-imaging', 'velocity-dispersion', 'astrometric-microlensing',
   'pulsar-accel-mapper', 'dark-cluster',
-  // FW-3
-  'adaf-sed-modeler', 'bz-kardashev', 'cosmology-calculator',
-  'gw-horizon-plotter', 'qpo-mass-spin',
+  // FW-3: landed (adaf-sed-modeler, bz-kardashev, cosmology-calculator,
+  // gw-horizon-plotter, qpo-mass-spin) — see scripts/fixtures/*.fixtures.json
   // FW-4
   'detection-forecast', 'gaia-dr4-forecaster', 'ir-excess-checker',
   'observing-campaign-planner', 'radio-seti',
