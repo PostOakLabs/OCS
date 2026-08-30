@@ -1036,7 +1036,7 @@ function loadStateFromHash() {
   }
   if (p.rho) {
     const r = parseFloat(p.rho);
-    if (!isNaN(r) && r > 0) state.rhoInf = r;
+    if (!isNaN(r) && r > 0) state.rhoInf = Math.min(1e-19, Math.max(1e-25, r));
   }
   if (p.show) {
     const visible = new Set(p.show.split(','));
@@ -1760,7 +1760,7 @@ function init() {
 
 window.OCS_APPLY_PREFILL = function(obj) {
   if (obj.epsilon !== undefined) { var v = parseFloat(obj.epsilon); if (!isNaN(v) && v > 0) state.epsilon = v; }
-  if (obj.rho     !== undefined) { var v = parseFloat(obj.rho);     if (!isNaN(v) && v > 0) state.rhoInf = v; }
+  if (obj.rho     !== undefined) { var v = parseFloat(obj.rho);     if (!isNaN(v) && v > 0) state.rhoInf = Math.min(1e-19, Math.max(1e-25, v)); }
   if (obj.show    !== undefined) { var vis = new Set((obj.show+'').split(',')); for (var k in state.show) state.show[k] = vis.has(k); }
   if (obj.sel     !== undefined) state.selectedId = obj.sel;
   saveStateToHash(); renderChart(); renderStatus(); renderDetailCard(); renderToggles();

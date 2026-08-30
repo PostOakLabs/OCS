@@ -387,12 +387,12 @@ function loadHash() {
   if(!h) return;
   h.split('&').forEach(kv => {
     const [k,v] = kv.split('=');
-    if(k==='m') state.logM = parseFloat(v)||state.logM;
-    if(k==='s') state.logSV = parseFloat(v)||state.logSV;
+    if(k==='m') { const n=parseFloat(v); if(Number.isFinite(n)) state.logM = n; }
+    if(k==='s') { const n=parseFloat(v); if(Number.isFinite(n)) state.logSV = n; }
     if(k==='c' && ['bb','ww','tt','gg'].includes(v)) state.channel = v;
     if(k==='p' && ['cusp','core','min'].includes(v)) state.profile = v;
-    if(k==='a') state.angle = parseFloat(v)||state.angle;
-    if(k==='b') state.boost = parseFloat(v)||state.boost;
+    if(k==='a') { const n=parseFloat(v); if(Number.isFinite(n)) state.angle = n; }
+    if(k==='b') { const n=parseFloat(v); if(Number.isFinite(n)) state.boost = n; }
   });
 }
 loadHash();

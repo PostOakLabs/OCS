@@ -1,7 +1,7 @@
 {
   "protocolVersion": "1.0",
   "name": "Omega Centauri Society Science Suite",
-  "description": "MCP-accessible science suite for NGC 5139 (Omega Centauri): IMBH constraints, black-hole physics, Fermi Paradox analysis, SETI signal characterisation, Macro Transcension Hypothesis computation, and Kardashev-scale energy extraction. 23 client-side, zero-egress, single-file HTML calculators; each emits a OpenChainGraph-conformant artifact carrying a verifiable SHA-256 execution_hash (OpenChainGraph Standard v0.1).",
+  "description": "MCP-accessible science suite for NGC 5139 (Omega Centauri): IMBH constraints, black-hole physics, Fermi Paradox analysis, SETI signal characterisation, Macro Transcension Hypothesis computation, and Kardashev-scale energy extraction. 28 client-side, zero-egress, single-file HTML calculators emit an OpenChainGraph-conformant artifact carrying a verifiable SHA-256 execution_hash, per the OpenChainGraph conformance ladder (v0.4 overview); 11 of the site's 35-tool catalog are also live-callable over MCP.",
   "url": "https://mcp.omegacentauri.me/mcp",
   "preferredTransport": "JSONRPC",
   "version": "0.8.0",
@@ -17,17 +17,21 @@
     "extensions": [
       {
         "uri": "https://postoaklabs.github.io/chaingraph/ext/x-chaingraph/v0.1",
-        "description": "Emits OpenChainGraph verifiable decision artifacts (hash-anchored). See the OpenChainGraph Standard v0.1.",
+        "description": "Emits OpenChainGraph verifiable decision artifacts (hash-anchored), conformant to the OpenChainGraph conformance ladder (v0.4 overview: L1 Artifact-emitting / L2 Provenance-anchored / L3 Agent-callable / L4 Discoverable).",
         "required": false,
         "params": {
-          "spec_version": "0.8.0",
+          "spec_version": "0.4 (conformance ladder); artifact format per SPEC.md §4",
           "conformance_level": "L4",
           "graph_index": "https://omegacentauri.me/chaingraph.json",
           "internal_registry": "https://omegacentauri.me/tools/data/chaingraph.json",
           "verify_endpoint": "verify_execution_hash",
           "hash_alg": "sha256",
           "mandate_namespace": "me.omegacentauri",
-          "tool_count": 34,
+          "tool_count": {
+            "worker_callable": 11,
+            "artifact_emitting": 28,
+            "catalog": 35
+          },
           "mandate_families": [
             "bh-physics",
             "fermi",
@@ -40,7 +44,7 @@
             "speculative",
             "model-dependent"
           ],
-          "l2_runtime_chaining": true
+          "l2_provenance_anchored": true
         }
       }
     ]
@@ -133,5 +137,5 @@
     "prose": "CC BY 4.0",
     "data": "CC0"
   },
-  "updated": "2026-06-14"
+  "updated": "2026-08-30"
 }

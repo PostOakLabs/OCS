@@ -1,0 +1,110 @@
+{
+  "tool_id": "rubin-alert-throughput",
+  "cases": [
+    {
+      "name": "design_defaults",
+      "input": {},
+      "expected": {
+        "survey": "Vera C. Rubin Observatory — LSST (Legacy Survey of Space and Time)",
+        "status": "commissioning-2026",
+        "visits_per_night": 1000,
+        "alerts_per_visit": 10000,
+        "nights_per_year": 182,
+        "avg_alert_bytes": 82000,
+        "alerts_per_night": 10000000,
+        "alerts_per_year": 1820000000,
+        "nightly_data_rate_GB": 820,
+        "yearly_data_rate_TB": 149.24,
+        "throughput_note": "alerts_per_night = visits_per_night * alerts_per_visit. nightly_data_rate_GB = alerts_per_night * avg_alert_bytes / 1e9. Design parameters from Rubin LSST system design; measured values will differ once full science operations begin.",
+        "register": "speculative",
+        "register_note": "Rubin LSST is in commissioning as of 2026-07-04. Alert throughput figures are design estimates, not measured science-quality statistics. Treat as order-of-magnitude forecast.",
+        "citations": [
+          "Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview",
+          "Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design (~10^4 alerts/visit, ~82 KB/alert)",
+          "LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters"
+        ]
+      },
+      "source": "Hand-derived from tools/rubin-alert-throughput.html compute(): all four inputs finiteOr-default to design nominals (1000 visits/night, 10000 alerts/visit, 182 nights/yr, 82000 bytes/alert). alerts_per_night = 1000*10000 = 10,000,000. alerts_per_year = 10,000,000*182 = 1,820,000,000. nightly_data_rate_GB = 10,000,000*82000/1e9 = 820 (round(x*10)/10). yearly_data_rate_TB = 820*182/1000 = 149.24 (round(x*100)/100). Independently reimplemented and cross-checked exact."
+    },
+    {
+      "name": "reduced_custom",
+      "input": {
+        "visits_per_night": 500,
+        "alerts_per_visit": 5000,
+        "nights_per_year": 100,
+        "avg_alert_bytes": 50000
+      },
+      "expected": {
+        "survey": "Vera C. Rubin Observatory — LSST (Legacy Survey of Space and Time)",
+        "status": "commissioning-2026",
+        "visits_per_night": 500,
+        "alerts_per_visit": 5000,
+        "nights_per_year": 100,
+        "avg_alert_bytes": 50000,
+        "alerts_per_night": 2500000,
+        "alerts_per_year": 250000000,
+        "nightly_data_rate_GB": 125,
+        "yearly_data_rate_TB": 12.5,
+        "throughput_note": "alerts_per_night = visits_per_night * alerts_per_visit. nightly_data_rate_GB = alerts_per_night * avg_alert_bytes / 1e9. Design parameters from Rubin LSST system design; measured values will differ once full science operations begin.",
+        "register": "speculative",
+        "register_note": "Rubin LSST is in commissioning as of 2026-07-04. Alert throughput figures are design estimates, not measured science-quality statistics. Treat as order-of-magnitude forecast.",
+        "citations": [
+          "Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview",
+          "Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design (~10^4 alerts/visit, ~82 KB/alert)",
+          "LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters"
+        ]
+      },
+      "source": "Hand-derived from tools/rubin-alert-throughput.html compute() with explicit inputs. alerts_per_night = 500*5000 = 2,500,000. alerts_per_year = 2,500,000*100 = 250,000,000. nightly_data_rate_GB = 2,500,000*50000/1e9 = 125. yearly_data_rate_TB = 125*100/1000 = 12.5. Independently reimplemented and cross-checked exact."
+    }
+  ],
+  "artifact": {
+    "@context": "https://openchain.graph/spec/v0.3/context.jsonld",
+    "chaingraph_version": "0.4.0",
+    "buildType": "https://openchain.graph/spec/v0.2#WebCryptoSHA256",
+    "mandate_type": "me.omegacentauri/rubin_alert_throughput",
+    "tool_id": "rubin-alert-throughput",
+    "tool_version": "1.2.0",
+    "generated_at": "2026-08-30T11:14:35.040Z",
+    "execution_hash": "443965a30cf13ab563a94ed1b6f3550c2e9da20f7400950c950226207d6e135e",
+    "chain": {
+      "parent_hashes": [],
+      "parent_tool_ids": [],
+      "chain_depth": 0
+    },
+    "policy_parameters": {
+      "execution_backend": "js",
+      "input_parameters": {}
+    },
+    "output_payload": {
+      "survey": "Vera C. Rubin Observatory — LSST (Legacy Survey of Space and Time)",
+      "status": "commissioning-2026",
+      "visits_per_night": 1000,
+      "alerts_per_visit": 10000,
+      "nights_per_year": 182,
+      "avg_alert_bytes": 82000,
+      "alerts_per_night": 10000000,
+      "alerts_per_year": 1820000000,
+      "nightly_data_rate_GB": 820,
+      "yearly_data_rate_TB": 149.24,
+      "throughput_note": "alerts_per_night = visits_per_night * alerts_per_visit. nightly_data_rate_GB = alerts_per_night * avg_alert_bytes / 1e9. Design parameters from Rubin LSST system design; measured values will differ once full science operations begin.",
+      "register": "speculative",
+      "register_note": "Rubin LSST is in commissioning as of 2026-07-04. Alert throughput figures are design estimates, not measured science-quality statistics. Treat as order-of-magnitude forecast.",
+      "citations": [
+        "Ivezic et al. 2019, ApJ 873, 111 (arXiv:0805.2366) — LSST science design overview",
+        "Bellm et al. 2019, PASP 131, 995004 (arXiv:1902.02134) — LSST alert system design (~10^4 alerts/visit, ~82 KB/alert)",
+        "LSST Science Book 2009 (arXiv:0912.0201) — survey design parameters"
+      ]
+    },
+    "compliance_flags": [
+      "register:peer-reviewed"
+    ],
+    "audit_signature": {
+      "client_side_executed": true,
+      "zero_pii_verified": true,
+      "deterministic_run": true,
+      "ocs_artifact_version": "1.0.0",
+      "schema_version": "ocs-chaingraph-0.4.0",
+      "generation_note": "Envelope generated by scripts/gen-artifact-envelope.mjs from fixture case \"design_defaults\"; execution_hash computed with the tool's own executionHash()/canonicalPreimage(), output_payload is the tool's live compute() output for this input (matches the tier-c known-value fixture)."
+    }
+  }
+}
