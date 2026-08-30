@@ -172,7 +172,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">The Häberle et al. 2024 proper-motion result establishes a 3σ lower limit of ≥8,200 M☉. Bañares-Hernández et al. 2025 pulsar timing sets a 3σ upper limit of ≤6,000 M☉. These measurements are in tension at the 3σ level — both cannot be simultaneously correct under standard assumptions. <strong>Stage 2–4 show what each instrument needs to resolve this.</strong></p>
+      <p class="stage-prose">The Häberle et al. 2024 proper-motion result establishes a 3σ lower limit of ≥8,200 M☉. Bañares-Hernández et al. 2025 pulsar timing sets a 3σ upper limit of ≤6,000 M☉. These measurements are in tension at the 3σ level — both cannot be simultaneously correct under standard assumptions. (The Constraint Stacker's own default JWST accretion density anchors a separate, tighter upper bound of ~709 M☉, not used as the default here.) <strong>Stage 2–4 show what each instrument needs to resolve this.</strong></p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Inputs</div>
@@ -208,7 +208,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
             <div class="output-row" id="s1-tension-row"><span class="out-label" id="s1-tension-label">Tension indicator</span><span class="out-val" id="s1-tension-val">—</span></div>
             <div class="output-row"><span class="out-label">Lower bound M_lo</span><span><span class="out-val" id="s1-lo-disp">—</span><span class="out-sub">M☉</span></span></div>
             <div class="output-row"><span class="out-label">Upper bound M_hi</span><span><span class="out-val" id="s1-hi-disp">—</span><span class="out-sub">M☉</span></span></div>
-            <div class="output-row"><span class="out-label">Tension significance</span><span class="out-val" id="s1-sigma">—</span></div>
+            <div class="output-row"><span class="out-label">Tension heuristic (not a formal σ)</span><span class="out-val" id="s1-sigma">—</span></div>
           </div>
           <div class="verdict-row" id="s1-verdict">—</div>
         </div>
@@ -266,8 +266,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
             <div class="output-row primary"><span class="out-label">New upper limit (3σ)</span><span><span class="out-val big" id="s2-new-upper">—</span><span class="out-sub">M☉</span></span></div>
             <div class="output-row"><span class="out-label">Improvement factor</span><span class="out-val" id="s2-improvement">—</span></div>
             <div class="output-row"><span class="out-label">√(N×B) product</span><span class="out-val" id="s2-sqrt-nb">—</span></div>
-            <div class="output-row"><span class="out-label">Min baseline needed (at N=5)</span><span><span class="out-val" id="s2-min-bl">—</span><span class="out-sub">yr</span></span></div>
-            <div class="output-row"><span class="out-label">Min pulsars needed (5 yr)</span><span><span class="out-val" id="s2-min-n">—</span><span class="out-sub">psr</span></span></div>
+            <div class="output-row"><span class="out-label">Min baseline needed (at current N)</span><span><span class="out-val" id="s2-min-bl">—</span><span class="out-sub">yr</span></span></div>
+            <div class="output-row"><span class="out-label">Min pulsars needed (at current baseline)</span><span><span class="out-val" id="s2-min-n">—</span><span class="out-sub">psr</span></span></div>
           </div>
           <div class="verdict-row" id="s2-verdict">—</div>
         </div>
@@ -288,7 +288,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">Chen et al. 2025 placed an upper limit on IMBH accretion luminosity from JWST NIRCam/MIRI observations, which translates to a mass limit only under assumptions about the accretion efficiency ε. <strong>The constraint weakens for low ε</strong> — at ε = 10⁻³ the limit is ~6,000 M☉, consistent with Bañares, but at ε = 10⁻⁵ (radiatively inefficient flow) the limit weakens to ~60,000 M☉, compatible with any proposed mass. The ambient gas density sets the Bondi rate.</p>
+      <p class="stage-prose">Chen et al. 2025 placed an upper limit on IMBH accretion luminosity from JWST NIRCam/MIRI observations, which translates to a mass limit only under assumptions about the accretion efficiency ε. <strong>The constraint weakens for low ε</strong> — at ε = 10⁻³ the limit is ~6,000 M☉, consistent with Bañares, but at ε = 10⁻⁵ (radiatively inefficient flow) the limit weakens to ~60,000 M☉, compatible with any proposed mass. The ambient gas density sets the Bondi rate. Note that the "JWST mass upper limit" above is a hand-scaled anchor pinned to 6,000 M☉ at the nominal ε/n; the Bondi ṁ, luminosity, and Eddington-ratio figures below it are computed independently and evaluated at the Stage-1 lower bound, not solved for their own mass limit. The two are separate estimates on this page, not cross-validated to agree.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Inputs</div>
@@ -346,7 +346,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">If a stellar-mass black hole in OC spirals into the IMBH, LISA will measure the chirp mass to ~0.1% accuracy from the inspiral gravitational waveform. This translates to an IMBH mass posterior width that depends on the mass ratio q = m_stellar/M_IMBH and the signal-to-noise ratio. <strong>A single IMRI detection definitively closes the constraint window.</strong> The expected IMRI rate for a ~10,000 M☉ IMBH in a dense globular cluster is ~10⁻⁸ yr⁻¹ per cluster.</p>
+      <p class="stage-prose">If a stellar-mass black hole in OC spirals into the IMBH, LISA will measure the chirp mass via δM/M ≈ 1/(SNR × √N_cycles) from the inspiral gravitational waveform. This translates to an IMBH mass posterior width that depends on the mass ratio q = m_stellar/M_IMBH and the signal-to-noise ratio; at the fiducial defaults (SNR = 100, q = 10⁻³) this computes to ~0.0012% (not the ~0.1% a naive estimate might suggest). <strong>A single IMRI detection definitively closes the constraint window.</strong> The expected IMRI rate for a ~10,000 M☉ IMBH in a dense globular cluster is ~10⁻⁸ yr⁻¹ per cluster.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Inputs</div>
@@ -480,7 +480,7 @@ function compute(){
     setText('s1-tension-label', 'Tension indicator');
     setText('s1-tension-val', 'ACTIVE TENSION');
     const tensionFrac = tensionAmt / ((mlo + mhi) / 2);
-    setText('s1-sigma', (tensionFrac * 3 + 3).toFixed(1) + 'σ (approx)');
+    setText('s1-sigma', (tensionFrac * 3 + 3).toFixed(1) + ' (constructed scale, not a statistical σ)');
     const el = document.getElementById('s1-tension-row');
     el.className = 'output-row tension';
     document.getElementById('s1-tension-val').className = 'out-val tension-val';
@@ -510,10 +510,12 @@ function compute(){
   const newUpper = 6000 * Math.sqrt(5 / npsr) * Math.sqrt(5 / bl);
   const improvement = 6000 / newUpper;
   const sqrtNB = Math.sqrt(npsr * bl);
-  // min baseline at N=5 to get upper < mlo
-  const minBl = Math.pow(6000 * Math.sqrt(5) / mlo, 2) * 5;
-  // min N at baseline=5 to get upper < mlo
-  const minN = Math.pow(6000 * Math.sqrt(5) / mlo, 2) * 5;
+  // required N×B product to get upper < mlo (sqrt(NB) > 3.66 at mlo=8200)
+  const nbProduct = Math.pow(6000 * Math.sqrt(5) / mlo, 2) * 5;
+  // min baseline needed at the current N
+  const minBl = nbProduct / npsr;
+  // min N needed at the current baseline
+  const minN = nbProduct / bl;
   const s2resolved = newUpper < mlo;
   setText('s2-bounds-frozen', fmtM(mlo) + ' M☉ (lower) / ' + fmtM(mhi) + ' M☉ (upper)');
   setText('s2-npsr-lbl', npsr + ' pulsar' + (npsr > 1 ? 's' : ''));
@@ -529,7 +531,7 @@ function compute(){
     v2.className = 'verdict-row verdict-resolved';
     setText('s2-verdict', v2.textContent);
   } else {
-    v2.textContent = 'Still in tension — upper limit ' + Math.round(newUpper).toLocaleString() + ' M☉ still exceeds lower bound ' + Math.round(mlo).toLocaleString() + ' M☉. Need N×B > ' + (Math.pow(6000 * Math.sqrt(5) / mlo, 2) * 25).toFixed(1) + '.';
+    v2.textContent = 'Still in tension — upper limit ' + Math.round(newUpper).toLocaleString() + ' M☉ still exceeds lower bound ' + Math.round(mlo).toLocaleString() + ' M☉. Need N×B > ' + nbProduct.toFixed(2) + '.';
     v2.className = 'verdict-row verdict-tension';
   }
   setText('s2-summary', 'New upper: ' + Math.round(newUpper).toLocaleString() + ' M☉ (' + (s2resolved ? '✓ resolved' : '✗ tension') + ') · √(NB)=' + sqrtNB.toFixed(2));

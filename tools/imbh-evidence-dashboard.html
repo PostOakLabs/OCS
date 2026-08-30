@@ -132,7 +132,7 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
   <div class="hero-eyebrow">Live constraint board</div>
   <h1>IMBH Evidence Dashboard</h1>
   <p>Adjust mass, spin, and magnetic field to see how all major observational constraints update simultaneously. Each panel re-derives its key quantity in real time and links to the full tool for deeper exploration.</p>
-  <p class="hero-note">Canonical reference: M = 8,200 M☉ (Häberle 2024), d = 5,494 pc (Häberle 2025), a = 0.9 (assumed)</p>
+  <p class="hero-note">Canonical reference: M = 8,200 M☉ (Häberle 2024), d = 5,494 pc (oMEGACat VI, arXiv:2503.04903), a = 0.9 (assumed)</p>
 </section>
 
 <div class="params-wrap">
@@ -289,7 +289,7 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
       </div>
       <p class="card-body" id="spinup-body"></p>
       <div class="card-foot">
-        <span class="card-ref">ṁ = 10⁻³ M☉/yr (tidal capture est.) · OC age ~12 Gyr</span>
+        <span class="card-ref">ṁ = 10⁻³ M☉/yr (tidal capture est., this card's own assumption) · OC age ~12 Gyr. For scale, spin-economics.html's tidal-capture accretion assumes 2.50×10⁻⁴ M☉/yr and accretion-to-spin.html's Bondi rate is 6.86×10⁻⁹ M☉/yr; the three are independent estimates, not cross-validated.</span>
         <a class="card-link" id="spinup-link" href="spin-up-timeline.html">Open spin-up tool →</a>
       </div>
     </div>
@@ -304,7 +304,7 @@ footer{border-top:1px solid var(--border-subtle);padding:28px;text-align:center;
         <span class="card-number">6.4</span>
         <span class="card-unit">kpc · current Galactocentric distance</span>
       </div>
-      <p class="card-body">OC orbits with period ~370 Myr. Last pericentre at ~1.5 kpc (~0.3 Gyr ago) stripped ~3% of cluster mass per passage. Backward integration to formation suggests M₀ ≈ 5–10× current mass, consistent with a nuclear star cluster origin that could have seeded a central massive black hole.</p>
+      <p class="card-body">OC orbits with a period of roughly 90–180 Myr, not independently published here: a circular orbit at the quoted 6.4 kpc Galactocentric distance and V_c = 220 km/s gives T = 2πR/V ≈ 179 Myr, and the panel's own ~1.5 kpc pericentre (implying a semi-major axis of ~3.95 kpc if apocentre ≈ 6.4 kpc) scales that down to ~88 Myr. Last pericentre at ~1.5 kpc (~0.3 Gyr ago) stripped ~3% of cluster mass per passage. Backward integration to formation suggests M₀ ≈ 5–10× current mass, consistent with a nuclear star cluster origin that could have seeded a central massive black hole.</p>
       <div class="card-foot">
         <span class="card-ref">Vasiliev & Baumgardt 2021 Gaia EDR3 · V_c = 220 km/s</span>
         <a class="card-link" href="oc-orbit-simulator.html">Open orbit simulator →</a>
@@ -443,7 +443,7 @@ const M_SUN   = 1.989e30;
 const MU0     = 4*Math.PI*1e-7;
 const KAPPA   = 0.044;
 const PC_M    = 3.086e16;      // metres per parsec
-const D_PC    = 5494;          // canonical OC distance (Häberle 2025)
+const D_PC    = 5494;          // canonical OC distance (oMEGACat VI, arXiv:2503.04903)
 const OC_AGE  = 12e9;          // OC age in years (approx)
 
 // Canonical published bounds (not slider-controlled). Both survive as
