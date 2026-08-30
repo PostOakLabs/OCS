@@ -330,21 +330,25 @@ function compute(){
   const mdotB=4*Math.PI*G*G*Mb*Mb*MSUN*MSUN*rho/Math.pow(cs,3);
   const mdotB_solar=mdotB*YR_S/MSUN;
   const Ledd=1.26e31*Mb;
-  const lambda=mdotB_solar*0.03*0.1*MSUN/(YR_S*Ledd/(C*C))*C*C/Ledd;
+  const lambda=mdotB_solar*0.03*0.1*MSUN/YR_S*C*C/Ledd;
   const Lx_adaf=1e-3*lambda*lambda*Ledd;
   setText('s3-n-lbl',Math.pow(10,S.logn).toFixed(S.logn>=-1?3:4)+' cm⁻³');
   setText('s3-rgal-lbl',rgal.toFixed(1)+' kpc');
   setText('s3-mdot',fmtSci(mdotB_solar));setText('s3-lx',fmtSci(Lx_adaf));
   const dist_m=rgal*KPC_M;
-  const F_xray=Lx_adaf/(4*Math.PI*dist_m*dist_m);
-  const axisDetects=F_xray>1e-17; // AXIS ~10^-17 erg/cm^2/s ~ 10^-24 W/m^2
+  const F_xray=Lx_adaf/(4*Math.PI*dist_m*dist_m); // W/m^2
+  const axisDetects=F_xray>1e-20; // AXIS ~1e-17 erg/cm^2/s = 1e-20 W/m^2
   setText('s3-axis',axisDetects?'✓ Detectable at '+rgal.toFixed(1)+' kpc':'✗ Below AXIS limit at '+rgal.toFixed(1)+' kpc');
   document.getElementById('s3-axis-row').className='output-row'+(axisDetects?' ok':' warn');
-  // Roman microlensing: very rough event rate estimate
-  const tau_E=Math.sqrt(4*G*Mb*MSUN*10*KPC_M)/(C*C*C*365.25*86400); // Einstein crossing time in days
-  setText('s3-roman','Einstein crossing ~'+tau_E.toFixed(0)+' days (detectable if in bulge patrol)');
+  // Roman microlensing: Einstein radius at D_L=10 kpc (source at infinity), then
+  // crossing time at a typical bulge-relative transverse velocity of 200 km/s.
+  const R_E_m=Math.sqrt(4*G*Mb*MSUN*10*KPC_M)/C;
+  const R_E_AU=R_E_m/1.496e11;
+  const v_perp_ms=200e3; // typical microlensing transverse velocity
+  const tau_E=(R_E_m/v_perp_ms)/86400; // Einstein crossing time in days
+  setText('s3-roman','R_E ≈ '+R_E_AU.toFixed(0)+' AU · crossing ~'+tau_E.toFixed(0)+' days (detectable if in bulge patrol)');
   document.getElementById('s3-roman-row').className='output-row'+(tau_E>10&&tau_E<1000?' ok':' warn');
-  setText('exp-narrative','Omega Centauri dissolves in ~'+tdiss.toFixed(1)+' Gyr ('+f.toFixed(1)+'% tidal stripping / pericentre, t_rh = '+rh.toFixed(1)+' Gyr). When the cluster evaporates, its '+fmtM(Math.round(Mb))+' M☉ IMBH is released as a naked wandering black hole in the Milky Way halo — too massive to be ejected by stellar kicks. At dissolution, the IMBH carries a kick speed of ~'+vbh.toExponential(1)+' km/s (equipartition with the depleted cusp at σ = '+sig.toFixed(1)+' km/s). It will wander the halo for Hubble times. From a halo ISM density of '+Math.pow(10,S.logn).toExponential(1)+' cm⁻³, the Bondi rate is ~'+fmtSci(mdotB_solar)+' M☉/yr and predicted ADAF X-ray luminosity is '+(axisDetects?'potentially detectable by AXIS':'below AXIS sensitivity')+'. Roman Space Telescope microlensing could detect it if the wander trajectory crosses a dense stellar field (Einstein crossing time ~'+tau_E.toFixed(0)+' days).');
+  setText('exp-narrative','Omega Centauri dissolves in ~'+tdiss.toFixed(1)+' Gyr ('+f.toFixed(1)+'% tidal stripping / pericentre, t_rh = '+rh.toFixed(1)+' Gyr). When the cluster evaporates, its '+fmtM(Math.round(Mb))+' M☉ IMBH is released as a naked wandering black hole in the Milky Way halo — too massive to be ejected by stellar kicks. At dissolution, the IMBH carries a kick speed of ~'+vbh.toExponential(1)+' km/s (equipartition with the depleted cusp at σ = '+sig.toFixed(1)+' km/s). It will wander the halo for Hubble times. From a halo ISM density of '+Math.pow(10,S.logn).toExponential(1)+' cm⁻³, the Bondi rate is ~'+fmtSci(mdotB_solar)+' M☉/yr and predicted ADAF X-ray luminosity is '+(axisDetects?'potentially detectable by AXIS':'below AXIS sensitivity')+'. Roman Space Telescope microlensing could detect it if the wander trajectory crosses a dense stellar field (Einstein radius ~'+R_E_AU.toFixed(0)+' AU, crossing time ~'+tau_E.toFixed(0)+' days).');
 }
 function toggleStage(n){document.getElementById('stage-'+n).classList.toggle('open');activateStep(n);}
 function activateStep(n){document.querySelectorAll('.flow-step').forEach((s,i)=>s.classList.toggle('active',i===n-1));}

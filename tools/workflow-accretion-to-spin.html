@@ -380,9 +380,10 @@ function compute(){
   // Stage 2: spin-up
   function riscUnitless(a){return risco(a);}
   const ri_t=riscUnitless(at),ri_0=riscUnitless(a0);
-  // ΔM/M = 1 - sqrt(r_ISCO(target)/6) for Schwarzschild approx; use Kerr r_ISCO
-  const spinFrac=Math.max(1-Math.sqrt(ri_t/6),0.01);
+  // ΔM/M_i = g - 1, g = sqrt(r_ISCO(a0)/r_ISCO(at)) (Bardeen 1970), honors the a★₀ slider
+  const spinFrac=Math.max(Math.sqrt(ri_0/ri_t)-1,0.01);
   const dM_needed=Mb*spinFrac;
+  const Mf=Mb+dM_needed;
   const T_spinup=dM_needed/mdotAcc_solar; // years
   setText('s2-a0-lbl','a★₀ = '+a0.toFixed(2));setText('s2-at-lbl','a★ = '+at.toFixed(3));setText('s2-eps-lbl','ε = '+eps.toFixed(3));
   setText('s2-dM',dM_needed.toLocaleString(undefined,{maximumFractionDigits:0}));
@@ -391,8 +392,8 @@ function compute(){
   const verdict=T_spinup<diss_yr?'✓ Achievable before dissolution':'✗ Exceeds dissolution time — engineering assistance needed';
   const srow=document.getElementById('s2-verdict-row');srow.className='output-row'+(T_spinup<diss_yr?' ok':' bad');
   setText('s2-verdict',verdict);setText('s2-handoff-a',at.toFixed(3));setText('s2-handoff-T',fmtSci(T_spinup));
-  // Stage 3: BZ
-  const pbz=pBZ(Mb,at,B);const kard=Math.log10(pbz)/10-0.6;
+  // Stage 3: BZ (uses M_f from Stage 2, not M_b)
+  const pbz=pBZ(Mf,at,B);const kard=Math.log10(pbz)/10-0.6;
   setText('s3-B-lbl','10'+sup(S.logB.toFixed(0))+' T');
   setText('s3-pbz',fmtSci(pbz));setText('s3-kard','K = '+kard.toFixed(2));setText('s3-lsun',fmtSci(pbz/LSUN)+' L☉');
   setText('s3-handoff',fmtSci(pbz));setText('s3-handoff-K',kard.toFixed(2));
@@ -405,7 +406,7 @@ function compute(){
   setText('s4-yrs',(1/gam*1e9).toFixed(0));setText('s4-T',T_disp);
   // Export
   setText('exp-macc',fmtSci(mdotAcc_solar));setText('exp-T',fmtSci(T_spinup));setText('exp-pbz',fmtSci(pbz));setText('exp-gamma',gam.toFixed(3));
-  setText('exp-narrative','At the current Bondi accretion rate (ṁ_acc ≈ '+fmtSci(mdotAcc_solar)+' M☉/yr, λ ≈ '+fmtSci(lambda)+'), spinning OC\'s '+Math.round(Mb).toLocaleString()+' M☉ IMBH from a★ = '+a0.toFixed(2)+' to a★ = '+at.toFixed(3)+' requires accreting ~'+Math.round(dM_needed).toLocaleString()+' M☉ — taking ~'+fmtSci(T_spinup)+' years '+(T_spinup<diss_yr?'(within the cluster\'s dissolution window)':'(exceeding the cluster lifetime without engineering assistance)')+'. At the target spin with B = 10^'+S.logB.toFixed(0)+' T, BZ power reaches '+fmtSci(pbz)+' W (Kardashev K = '+kard.toFixed(2)+'). A computation substrate parked at r_ISCO = '+ri.toFixed(2)+' r_g experiences time dilation γ = '+gam.toFixed(3)+', delivering '+gam.toFixed(2)+'× more subjective computation time per external year — the core MTH efficiency argument.');
+  setText('exp-narrative','At the current Bondi accretion rate (ṁ_acc ≈ '+fmtSci(mdotAcc_solar)+' M☉/yr, λ ≈ '+fmtSci(lambda)+'), spinning OC\'s '+Math.round(Mb).toLocaleString()+' M☉ IMBH from a★ = '+a0.toFixed(2)+' to a★ = '+at.toFixed(3)+' requires accreting ~'+Math.round(dM_needed).toLocaleString()+' M☉ — taking ~'+fmtSci(T_spinup)+' years '+(T_spinup<diss_yr?'(within the cluster\'s dissolution window)':'(exceeding the cluster lifetime without engineering assistance)')+'. At the target spin with B = 10^'+S.logB.toFixed(0)+' T, BZ power reaches '+fmtSci(pbz)+' W (Kardashev K = '+kard.toFixed(2)+'). A computation substrate parked at r_ISCO = '+ri.toFixed(2)+' r_g experiences time dilation γ = '+gam.toFixed(3)+', delivering '+(1/gam).toFixed(3)+'× more subjective computation time per external year — the core MTH efficiency argument.');
 }
 function toggleStage(n){document.getElementById('stage-'+n).classList.toggle('open');activateStep(n);}
 function activateStep(n){document.querySelectorAll('.flow-step').forEach((s,i)=>s.classList.toggle('active',i===n-1));}

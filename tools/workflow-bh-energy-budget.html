@@ -238,12 +238,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
           <div class="slider-block">
             <label>Boson mass μ (eV) — log₁₀</label>
             <div class="slider-row">
-              <input type="range" id="s2-logMu" min="-17" max="-11" step="0.1" value="-14.2">
+              <input type="range" id="s2-logMu" min="-17" max="-11" step="0.1" value="-15.05">
               <span class="slider-value" id="s2-mu-lbl">10⁻¹⁴·² eV</span>
             </div>
             <div class="preset-row">
               <button class="preset-btn" onclick="setLogMu(-16)">10⁻¹⁶ eV</button>
-              <button class="preset-btn active" onclick="setLogMu(-14.2)">IMBH resonance</button>
+              <button class="preset-btn active" onclick="setLogMu(-15.05)">IMBH resonance</button>
               <button class="preset-btn" onclick="setLogMu(-12)">10⁻¹² eV</button>
             </div>
           </div>
@@ -370,7 +370,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
 'use strict';
 const G=6.674e-11,C=2.998e8,MSUN=1.989e30,MU0=4*Math.PI*1e-7,KAPPA=0.044;
 const KB=1.381e-23,HBAR=1.055e-34,LN2=Math.log(2),LSUN=3.828e26,YR_S=3.156e7,EV_J=1.602e-19;
-let S={M:30000,a:0.9,logB:6,logMu:-14.2,logT4:Math.log10(2.73)};
+let S={M:30000,a:0.9,logB:6,logMu:-15.05,logT4:Math.log10(2.73)};
 
 function sup(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};return String(n).split('').map(c=>m[c]||c).join('');}
 function fmtSci(x,dp=2){if(!isFinite(x)||x<=0)return'—';const e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);return m.toFixed(dp)+'×10'+sup(e);}

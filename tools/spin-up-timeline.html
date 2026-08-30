@@ -421,15 +421,15 @@ function riSCO(a){
 
 function rg_m(M_msun){ return G * M_msun * MSUN / (C*C); }
 
-// Fractional mass accreted: ΔM/M = 1 - sqrt(r_ISCO(af)/r_ISCO(a0))
-// This is the Thorne (1974) result relating ISCO binding energies.
+// Fractional mass accreted: ΔM/M_i = g - 1, g = sqrt(r_ISCO(a0)/r_ISCO(af))
+// Bardeen (1970) integrates to M_f/M_i = sqrt(r_ISCO(a0)/r_ISCO(af)) = g.
 function spinupFrac(a0, af){
   const r0 = riSCO(a0);
   const rf = riSCO(af);
   // Clamp: if a0 >= af, no spin-up needed
   if(af <= a0) return 0;
-  const frac = 1 - Math.sqrt(rf / r0);
-  return Math.max(0, frac);
+  const g = Math.sqrt(r0 / rf);
+  return Math.max(0, g - 1);
 }
 
 // BZ power (SI)
