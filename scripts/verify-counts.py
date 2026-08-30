@@ -55,6 +55,9 @@ def derive_counts():
         "scenarios": scenarios,
         "hubs": hubs,
         "proposals": proposals,
+        # total pages linked from tools/index.html (everything in tools/ except
+        # index.html itself) — the hero string's "NNN browser-only tools" claim.
+        "total_tool_pages": tools_all - 1,
         # "catalog" layer: every tool/chain the tools-manifest.json SSOT lists
         # (hash-param docs, searchable via the worker's list_ocs_tools tool).
         "mcp_tools": len(manifest.get("tools", {})),
