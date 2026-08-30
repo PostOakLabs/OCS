@@ -63,14 +63,22 @@ def derive_counts():
         # execution_hash artifact (tools/data/chaingraph.json artifact_qualified
         # entries — AUDIT-HY4-REPO §1.3a; do not conflate with mcp_tools above).
         "artifact_tools": artifact_tools,
-        # "worker-exposed" layer: what a live MCP client actually reaches at
-        # mcp.omegacentauri.me — list_ocs_tools searches the full mcp_tools
-        # catalog and build_ocs_workflow_links names all mcp_chains chains, so
-        # these currently equal the catalog numbers, but are tracked as a
-        # SEPARATE sentinel (never assume identity — re-verify against the live
-        # worker manifest on drift; AUDIT-HY4-REPO §1.3b).
-        "worker_tools": len(manifest.get("tools", {})),
-        "worker_chains": len(manifest.get("chains", {})),
+        # "callable" layer: the actual tools/list surface of a live MCP client
+        # session (mcp.omegacentauri.me/mcp) — 7 kernel-compute tools
+        # (constraint_stacker, bayes_factor_router, jwst_accretion_ledger,
+        # gwtc_remnant_classifier, roman_microlensing, apophis_flyby_geometry,
+        # rubin_alert_throughput) + 4 meta tools (list_ocs_tools,
+        # build_ocs_workflow_links, verify_execution_hash, run_chain). This is
+        # NOT mcp_tools/mcp_chains above — those are the tools-manifest.json
+        # CATALOG that list_ocs_tools searches and build_ocs_workflow_links
+        # names chains from, not what tools/list itself returns. Checked in as
+        # a constant (CI must not depend on network) rather than derived.
+        # Source: live 2025-06-18 initialize + tools/list against
+        # mcp.omegacentauri.me/mcp, verified 2026-08-29 (ZENODO-LAYER-FIX,
+        # correcting AUDIT-HY4-REPO's layer-conflated fix). Update this
+        # constant AND re-verify live whenever a kernel or meta tool is
+        # added/removed from the worker.
+        "worker_callable": 11,
     }
 
 
@@ -91,8 +99,9 @@ JSON_SENTINELS = [
 # than a clean field, so they need pattern sentinels, not JSON_SENTINELS.
 PROSE_SENTINELS = [
     (".zenodo.json", re.compile(r"All (\d+) OpenChainGraph-enabled tools"), "artifact_tools"),
-    (".zenodo.json", re.compile(r"MCP-exposed at mcp\.omegacentauri\.me \((\d+) tools,"), "worker_tools"),
-    (".zenodo.json", re.compile(r"MCP-exposed at mcp\.omegacentauri\.me \(\d+ tools, (\d+) chains\)"), "worker_chains"),
+    (".zenodo.json", re.compile(r"MCP server at mcp\.omegacentauri\.me exposes (\d+) callable tools"), "worker_callable"),
+    (".zenodo.json", re.compile(r"over a (\d+)-tool / \d+-chain catalog"), "mcp_tools"),
+    (".zenodo.json", re.compile(r"over a \d+-tool / (\d+)-chain catalog"), "mcp_chains"),
     ("chaingraph.json", re.compile(r"— (\d+) artifact-emitting tools across five mandate families"), "artifact_tools"),
     ("tools/data/chaingraph.json", re.compile(r"All (\d+) artifact-export tools at v1\.2\.0"), "artifact_tools"),
 ]
