@@ -250,7 +250,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">To actually <em>tune</em> a black hole's parameters at collapse (setting the physical constants of the child universe), a civilization would need to manipulate spacetime at Planck scales — Barrow's Level ω complexity. This requires engineering energy densities near the Planck density ρ_P = c⁵/(Gℏ) ≈ 5 × 10⁹⁶ kg/m³. No known mechanism makes this achievable, even in principle, at Kardashev III.</p>
+      <p class="stage-prose">To actually <em>tune</em> a black hole's parameters at collapse (setting the physical constants of the child universe), a civilization would need to manipulate spacetime at Planck scales — Barrow's Level ω complexity. This requires engineering energy densities near the Planck density ρ_P = c⁵/(ℏG²) ≈ 5 × 10⁹⁶ kg/m³. No known mechanism makes this achievable, even in principle, at Kardashev III.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Engineering requirements</div>
@@ -278,7 +278,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
           </div>
         </div>
       </div>
-      <div class="handoff"><span>→</span> Effective tuned BH rate: <strong><span id="s3-handoff">—</span></strong> per K-III civilization per cosmic lifetime</div>
+      <div class="handoff"><span>→</span> Effective tuned BH rate: <strong><span id="s3-handoff">—</span></strong> total, summed across all K-III civilizations over the cosmic lifetime</div>
     </div>
   </div>
 
@@ -293,7 +293,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">The reproduction coefficient R is the expected number of fertile child universes produced per parent universe per generation. In natural CNS, R ~ N_BH_total. With civilizational tuning, R_civ = R_nat + N_tuned_total. For natural selection to favor intelligence as a mechanism, we need R_civ &gt; R_nat, i.e., civilizations must produce more fertile BHs than stellar evolution alone.</p>
+      <p class="stage-prose">The reproduction coefficient R is the expected number of fertile child universes produced per parent universe per generation. In natural CNS, R ~ N_BH_total. With civilizational tuning, R_civ = R_nat + N_tuned·p_fertile·q. For natural selection to favor intelligence as a mechanism, we need R_civ &gt; R_nat, i.e., civilizations must produce more fertile BHs than stellar evolution alone.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Reproduction calculation</div>
@@ -395,7 +395,7 @@ function compute(){
   setText('s3-kiii-bar',kiii_achievable?'Plausible at K-III (computronium)':'Beyond K-III — requires Planck-density engineering');
   const N_tuned=N_civ*ptune;
   setText('s3-tuned',fmtSci(N_tuned)+' tuned BHs');
-  setText('s3-rho',fmtSci(rho_needed)+' J/m³');
+  setText('s3-rho',fmtSci(rho_needed)+' kg/m³');
   setText('s3-handoff',fmtSci(N_tuned));
   // Stage 4
   const Rnat=N_total_stellar*pf;

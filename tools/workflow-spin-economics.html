@@ -530,10 +530,10 @@ function compute(){
   // Mdot ≈ 2.5e-4 × (M/8200)^(2/3) × (ρ/1000)^1.0 × (22/σ)^3 M☉/yr
   const mdot_s1=2.5e-4*Math.pow(Mimbh/OCS_HABERLE,2/3)*(rho/1000)*Math.pow(22/sigma,3);
   const tdouble_yr=Mimbh/mdot_s1;
-  // spin-up mass needed for af=0.95 from a0=0: dM = M*(1 - sqrt(r_ISCO(af)/r_ISCO(a0)))
+  // spin-up mass needed: ΔM/M_i = g - 1, g = sqrt(r_ISCO(a0)/r_ISCO(af)) (Bardeen 1970)
   const risc_af=riscUnitless(af);
   const risc_a0=riscUnitless(Math.max(a0,0.001));
-  const spinFrac=1-Math.sqrt(risc_af/risc_a0);
+  const spinFrac=Math.sqrt(risc_a0/risc_af)-1;
   const spinMass_s1=Mimbh*spinFrac; // using stage 1 M
   const tgather_gyr=(spinMass_s1/mdot_s1)/1e9;
 
@@ -551,7 +551,7 @@ function compute(){
 
   // ---- Stage 2: Spin-up time ----
   const mdot_used=(S.logMdotOv===AUTO_SENTINEL)?mdot_s1:Math.pow(10,S.logMdotOv);
-  const dM_frac=1-Math.sqrt(risc_af/risc_a0);
+  const dM_frac=Math.sqrt(risc_a0/risc_af)-1;
   const dM=Mimbh*dM_frac;
   const Mfinal=Mimbh+dM;
   const tspinup_yr=dM/mdot_used;
@@ -608,19 +608,18 @@ function compute(){
   // ---- Stage 5: Time dilation at ISCO ----
   // r_over_rg = r_ISCO(af) in units of rg
   const r_ov=riscUnitless(af);
-  // γ_ISCO: for circular prograde Kerr orbit at ISCO
-  // dτ/dt = sqrt(1 - 3/r_ov + 2*af/r_ov^(3/2)) -- Bardeen et al. 1972 specific energy
-  const r32=Math.pow(r_ov,1.5);
-  const under=1-3/r_ov+2*af/r32;
-  const gamma_ISCO=(under>0)?1/Math.sqrt(under):Infinity;
-  const ops_eff=ops_land*gamma_ISCO;
+  // γ_ISCO = u^t for circular prograde Kerr orbit at ISCO (Bardeen, Press & Teukolsky 1972)
+  const disc=Math.pow(r_ov,1.5)-3*Math.sqrt(r_ov)+2*af;
+  const gamma_ISCO=(disc>0)?(Math.pow(r_ov,1.5)+af)/(Math.pow(r_ov,0.75)*Math.sqrt(disc)):Infinity;
+  // proper time per unit cosmic time = 1/γ
+  const ops_eff=ops_land/gamma_ISCO;
   // Earth's total compute ~10^22 FLOPS/yr, convert to ops/s
   const earth_ops_s=1e22/YR_S;
 
   setText('s5-frozen',fmtM(Math.round(Mfinal))+' M☉ · a★='+af.toFixed(3));
   setText('s5-risc',r_ov.toFixed(3)+' r_g');
   setText('s5-gamma',isFinite(gamma_ISCO)?gamma_ISCO.toFixed(2):'∞');
-  setText('s5-interp',isFinite(gamma_ISCO)?'For every 1 s cosmic time: '+gamma_ISCO.toFixed(2)+' s ISCO subjective':'Near-horizon — extreme dilation');
+  setText('s5-interp',isFinite(gamma_ISCO)?'For every 1 s cosmic time: '+(1/gamma_ISCO).toFixed(3)+' s ISCO subjective':'Near-horizon — extreme dilation');
   setText('s5-ops-eff',fmtSci(ops_eff));
   setText('s5-vs-brain',fmtSci(ops_eff/brain_ops)+'× brain');
   setText('s5-vs-earth',fmtSci(ops_eff/earth_ops_s)+'× Earth compute');
@@ -647,7 +646,7 @@ function compute(){
   setText('exp-effops',fmtSci(ops_eff));
   setText('exp-bottleneck',bottleneck);
 
-  const narrative=`Starting from an IMBH of ${fmtM(Math.round(Mimbh))} M☉ in a stellar core of density 10^${S.logRho.toFixed(1)} M☉/pc³ with velocity dispersion σ = ${sigma} km/s, the estimated tidal capture rate is Ṁ ≈ ${fmtSci(mdot_s1)} M☉/yr. Using Ṁ = ${fmtSci(mdot_used)} M☉/yr (${S.logMdotOv===AUTO_SENTINEL?'auto from Stage 1':'manual override'}), spin-up from a₀ = ${a0.toFixed(2)} to a★ = ${af.toFixed(3)} requires ΔM = ${fmtM(Math.round(dM))} M☉ (${(dM_frac*100).toFixed(1)}% of initial mass) and takes t_spinup ≈ ${tspinup_gyr.toFixed(2)} Gyr (${(fracOC*100).toFixed(0)}% of OC's age). The final IMBH of ${fmtM(Math.round(Mfinal))} M☉ at a★ = ${af.toFixed(3)} drives BZ power P_BZ = ${fmtSci(pbz)} W (Kardashev K = ${kard.toFixed(2)}). At operating temperature T = ${Tops<1e4?Tops.toPrecision(3):fmtSci(Tops)} K, the Landauer compute rate is ${fmtSci(ops_land)} ops/s (Lloyd absolute: ${fmtSci(ops_lloyd)} ops/s), equivalent to ${fmtSci(ops_land/brain_ops)}× a human brain. Time dilation at the ISCO (r_ISCO = ${r_ov.toFixed(2)} r_g, γ = ${isFinite(gamma_ISCO)?gamma_ISCO.toFixed(2):'∞'}) boosts the effective rate to ${fmtSci(ops_eff)} subjective ops/s per cosmic second. Bottleneck: ${bottleneck}.`;
+  const narrative=`Starting from an IMBH of ${fmtM(Math.round(Mimbh))} M☉ in a stellar core of density 10^${S.logRho.toFixed(1)} M☉/pc³ with velocity dispersion σ = ${sigma} km/s, the estimated tidal capture rate is Ṁ ≈ ${fmtSci(mdot_s1)} M☉/yr. Using Ṁ = ${fmtSci(mdot_used)} M☉/yr (${S.logMdotOv===AUTO_SENTINEL?'auto from Stage 1':'manual override'}), spin-up from a₀ = ${a0.toFixed(2)} to a★ = ${af.toFixed(3)} requires ΔM = ${fmtM(Math.round(dM))} M☉ (${(dM_frac*100).toFixed(1)}% of initial mass) and takes t_spinup ≈ ${tspinup_gyr.toFixed(2)} Gyr (${(fracOC*100).toFixed(0)}% of OC's age). The final IMBH of ${fmtM(Math.round(Mfinal))} M☉ at a★ = ${af.toFixed(3)} drives BZ power P_BZ = ${fmtSci(pbz)} W (Kardashev K = ${kard.toFixed(2)}). At operating temperature T = ${Tops<1e4?Tops.toPrecision(3):fmtSci(Tops)} K, the Landauer compute rate is ${fmtSci(ops_land)} ops/s (Lloyd absolute: ${fmtSci(ops_lloyd)} ops/s), equivalent to ${fmtSci(ops_land/brain_ops)}× a human brain. Time dilation at the ISCO (r_ISCO = ${r_ov.toFixed(2)} r_g, γ = ${isFinite(gamma_ISCO)?gamma_ISCO.toFixed(2):'∞'}) dilates the effective rate to ${fmtSci(ops_eff)} subjective ops per cosmic second. Bottleneck: ${bottleneck}.`;
   setText('exp-narrative',narrative);
 }
 

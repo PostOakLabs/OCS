@@ -205,7 +205,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
           <div class="col-title">Stage 1 outputs</div>
           <div class="output-grid">
             <div class="output-row primary"><span class="out-label">Pericentre passages in 10 Gyr</span><span class="out-val big" id="s1-nperi10">—</span></div>
-            <div class="output-row primary"><span class="out-label">Future passages (12.1 Gyr remaining)</span><span class="out-val big" id="s1-nfuture">—</span></div>
+            <div class="output-row primary"><span class="out-label">Future passages (over the next 12.1 Gyr, OC's current age used as a projection horizon, not a remaining lifetime)</span><span class="out-val big" id="s1-nfuture">—</span></div>
             <div class="output-row"><span class="out-label">Current pericentre</span><span><span class="out-val" id="s1-rperi-out">—</span><span class="out-sub">kpc</span></span></div>
             <div class="output-row"><span class="out-label">Orbital period</span><span><span class="out-val" id="s1-torb-out">—</span><span class="out-sub">Myr</span></span></div>
           </div>
@@ -340,7 +340,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">How much BZ energy is available over the cluster's remaining engineerable lifetime? The power increases as spin-up proceeds, then decreases as the cluster loses fuel. <strong>This stage assumes spin-up is completed</strong> and computes an upper-bound on total extractable energy over T_diss years at the final spin. BZ power scales steeply: <em>P ∝ B² M² a²/(1+√(1−a²))²</em>.</p>
+      <p class="stage-prose">How much BZ energy is available over the cluster's remaining engineerable lifetime? The power increases as spin-up proceeds, then decreases as the cluster loses fuel. <strong>This stage assumes spin-up is completed</strong> and computes an upper-bound on total extractable energy over T_diss years at the final spin. BZ power scales steeply: <em>P ∝ B² M² a²(1+√(1−a²))²</em>.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Inputs (M_f, T_diss from prior stages)</div>
@@ -517,7 +517,9 @@ function compute(){
   const Torb_yr=Torb*1e6;
   const q=(1-f)*(1-f);
   const geomSum=(1-Math.pow(q,Nfuture))/(1-q);
-  const dM_accreted=Mdot0*Torb_yr*geomSum;
+  const dM_accreted_raw=Mdot0*Torb_yr*geomSum;
+  const accretionExceedsCluster=dM_accreted_raw>Mremain;
+  const dM_accreted=Math.min(dM_accreted_raw,Mremain); // capped: cannot accrete more than the cluster's remaining mass
   const Mf=Mimbh+dM_accreted;
   // Spin-up mass fraction: ΔM/M ≈ 1 - sqrt(r_ISCO(0.95)/6)
   // r_ISCO for a=0.95 (Bardeen formula, prograde): Z1 = 1+(1-a²)^{1/3}*[(1+a)^{1/3}+(1-a)^{1/3}]
@@ -528,13 +530,14 @@ function compute(){
     return 3+Z2-Math.sqrt((3-Z1)*(3+Z1+2*Z2));
   }
   const r095=riscUnitless(0.95);
-  const spinFrac=1-Math.sqrt(r095/6);
+  const g_spinup=Math.sqrt(6/r095);
+  const spinFrac=g_spinup-1;
   const dM_needed=Mimbh*spinFrac;
 
   setText('s3-frozen',fmtM(Mremain)+' M☉ · '+Tdiss_gyr.toFixed(2)+' Gyr');
   setText('s3-Mdot-lbl','10'+sup(S.logMdot.toFixed(1))+' M☉/yr');
   setText('s3-Mimbh-lbl',fmtM(Mimbh)+' M☉');
-  setText('s3-dM',fmtM(Math.round(dM_accreted)));
+  setText('s3-dM',fmtM(Math.round(dM_accreted))+(accretionExceedsCluster?' (capped: unconstrained rate implied '+(dM_accreted_raw/Mremain*100).toFixed(0)+'% of remaining cluster mass)':''));
   setText('s3-Mf',fmtM(Math.round(Mf)));
   setText('s3-needed',fmtM(Math.round(dM_needed)));
   const vr3=document.getElementById('s3-verdict-row');
