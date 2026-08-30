@@ -73,7 +73,9 @@
   //   lower               M > value. Bounds lo.
   //   noEvidence          consistent with zero. Epistemically distinct from
   //                       a numerical upper limit — carries no number and so
-  //                       bounds nothing. (Baumgardt 2017 is the type case.)
+  //                       bounds nothing. (Baumgardt et al. 2019 is the type
+  //                       case; not to be confused with Baumgardt 2017, an
+  //                       earlier detection by the same group it superseded.)
   //   parameterDependent  the limit is a curve, not a scalar; it is only
   //                       realized once the caller supplies the nuisance
   //                       parameters. (Chen 2025 JWST: depends on ADAF

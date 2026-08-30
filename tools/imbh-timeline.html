@@ -238,7 +238,7 @@ function saveState(){setHashParams({filter: state.filter, sel: state.selectedId|
 
 // ----- Number / formatting -----
 function fmtMass(M){if(M===null||M===undefined||isNaN(M))return'—'; if(M>=1e6)return(M/1e6).toFixed(2)+'×10⁶'; if(M>=1e4)return(M/1e3).toFixed(1)+'×10³'; if(M>=1000)return Math.round(M).toLocaleString(); return Math.round(M).toString()}
-function fmtSigma(s){if(s==null)return''; if(s===3)return'3σ'; if(s===1.65)return'90% CL'; return s+'σ'}
+function fmtSigma(s){if(s==null)return''; if(s===3)return'3σ'; if(s===1.28)return'90% CL'; return s+'σ'}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function supDigits(n){const m={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}; return String(n).split('').map(c=>m[c]||c).join('')}
 

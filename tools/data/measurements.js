@@ -6,7 +6,7 @@
   Curated data tables: CC0 1.0 Universal
   Author: The Omega Centauri Society (Tim Swanson)
   Schema version: 1.0
-  Last updated: 2026-06-04
+  Last updated: 2026-08-30
 
   This file is the single source of truth for IMBH mass measurements,
   globular cluster properties, and Omega Centauri pulsar timing data
@@ -51,8 +51,8 @@ window.OCS_MEASUREMENTS = {
       year: 2008,
       authors: "Noyola, Gebhardt & Bergmann",
       value: 4e4,
-      uncertaintyLo: 1e4,
-      uncertaintyHi: 1e4,
+      uncertaintyLo: 1.0e4,
+      uncertaintyHi: 0.75e4,
       limitType: "detection",
       method: "kinematics",
       methodLabel: "Stellar kinematics (Gemini/GMOS integral-field)",
@@ -64,26 +64,38 @@ window.OCS_MEASUREMENTS = {
       id: "vandermarel2010",
       year: 2010,
       authors: "van der Marel & Anderson",
-      value: 1.2e4,
+      value: 1.8e4,
       limitType: "upper",
       sigma: 3,
       method: "kinematics",
       methodLabel: "Stellar kinematics (HST proper motions)",
       journal: "ApJ 710:1063",
       doi: "10.1088/0004-637X/710/2/1063",
-      notes: "Re-analysis with an improved kinematic centre placed a 3σ upper limit, contradicting the Noyola detection. The first major challenge to the IMBH hypothesis for OC."
+      notes: "Re-analysis with an improved kinematic centre placed a ≲1.8×10⁴ M☉ upper limit at 3σ (≲1.2×10⁴ M☉ at 1σ), contradicting the Noyola detection. The first major challenge to the IMBH hypothesis for OC."
     },
     {
       id: "baumgardt2017",
       year: 2017,
       authors: "Baumgardt",
-      value: null,
-      limitType: "noEvidence",
+      value: 4.0e4,
+      limitType: "detection",
       method: "nbody",
       methodLabel: "N-body modelling",
       journal: "MNRAS 464:2174",
       doi: "10.1093/mnras/stw2488",
-      notes: "Best-fit N-body models without an IMBH match observations as well as those with one. This is 'consistent with zero' — epistemically distinct from a numerical upper limit."
+      notes: "N-body models favor a ~40,000 M☉ IMBH over no-IMBH models (χ² 1.71 vs 2.72). Superseded by Baumgardt et al. 2019 (same group), which rules the IMBH out using a proper-motion catalog absent when this fit was made — see baumgardt2019."
+    },
+    {
+      id: "baumgardt2019",
+      year: 2019,
+      authors: "Baumgardt et al.",
+      value: null,
+      limitType: "noEvidence",
+      method: "nbody",
+      methodLabel: "N-body modelling (HST/ACS proper motions)",
+      journal: "MNRAS 488:5340",
+      doi: "10.1093/mnras/stz2060",
+      notes: "A ~45,000 M☉ IMBH predicts ~20 fast-moving (v>60 km/s) stars in the HST/ACS proper-motion catalog of Bellini et al. (2017); none are observed, ruling out a massive IMBH. All data fit a model with 4.6% of the cluster mass in stellar-mass black holes instead. Supersedes the Baumgardt 2017 detection (baumgardt2017) with the same group's own later data."
     },
     {
       id: "haberle2024",
@@ -157,7 +169,7 @@ window.OCS_MEASUREMENTS = {
       authors: "TRAPUM (Colom i Bernadich et al.)",
       value: 1e5,
       limitType: "upper",
-      sigma: 1.65,
+      sigma: 1.28,  // one-sided 90% CL (the paper's stated convention); 1.65 would be two-sided 90% / one-sided 95%
       confidenceLevel: 0.90,
       method: "timing",
       methodLabel: "Pulsar timing (MeerKAT + Parkes, 2021–2025)",
@@ -217,7 +229,7 @@ window.OCS_MEASUREMENTS = {
       halfLightRadius: 7.0,  // parsecs, Baumgardt & Hilker 2018 half-mass radius ~6.9 pc; Harris r_h ~5.0′ = ~8 pc at 5.49 kpc (different convention)
       ageGyr: 12.1,  // oMEGACat IV mean (Häberle et al. 2024); individual populations span ~11–14 Gyr
       isOmegaCentauri: true,
-      imbhRefs: ["noyola2008", "vandermarel2010", "baumgardt2017",
+      imbhRefs: ["noyola2008", "vandermarel2010", "baumgardt2017", "baumgardt2019",
                  "haberle2024", "banares2025", "chen2025jwst",
                  "trapum2026", "omegacat6_2025"],
       imbhSummary: {
@@ -473,13 +485,14 @@ window.OCS_MEASUREMENTS = {
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-07-16",
+    lastUpdated: "2026-08-30",
     schemaVersion: "1.0",
     sources: [
       "10.3847/2041-8213/ae7a5c",
       "10.1086/529002",
       "10.1088/0004-637X/710/2/1063",
       "10.1093/mnras/stw2488",
+      "10.1093/mnras/stz2060",
       "10.1038/s41586-024-07511-z",
       "10.1051/0004-6361/202451763",
       "10.3847/1538-4357/adbe67",
