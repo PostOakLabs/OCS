@@ -246,7 +246,7 @@ function applyMobile(){document.body.classList.toggle('is-mobile', isNarrow())}
 window.addEventListener('resize', applyMobile);
 
 const state = { epsilon:1e-3, rho:1e-21, cs:1e4 };
-function loadHash(){const p=getHash();if(p.eps){const v=parseFloat(p.eps);if(!isNaN(v)&&v>0)state.epsilon=v;} if(p.rho){const v=parseFloat(p.rho);if(!isNaN(v)&&v>0)state.rho=v;} if(p.cs){const v=parseFloat(p.cs);if(!isNaN(v)&&v>0)state.cs=v;}}
+function loadHash(){const p=getHash();if(p.eps){const v=parseFloat(p.eps);if(!isNaN(v)&&v>0)state.epsilon=v;} if(p.rho){const v=parseFloat(p.rho);if(!isNaN(v)&&v>0)state.rho=Math.min(1e-19,Math.max(1e-25,v));} if(p.cs){const v=parseFloat(p.cs);if(!isNaN(v)&&v>0)state.cs=v;}}
 function saveHash(){setHash({eps:state.epsilon.toExponential(3),rho:state.rho.toExponential(3),cs:state.cs.toExponential(3)})}
 
 const MSUN_KG = 1.989e30;

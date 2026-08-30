@@ -89,7 +89,12 @@ def derive_counts():
 # (no full re-serialize / reformat).
 JSON_SENTINELS = [
     ("tools/data/tools-manifest.json", "toolCount", "mcp_tools"),
-    (".well-known/agent-card.json", "tool_count", "mcp_tools"),
+    # agent-card's tool_count is now a layer-explicit object (SITE-MCP-FIX-1
+    # M-7d — a single scalar conflated layers); each subfield is its own
+    # sentinel against the matching derive_counts() key.
+    (".well-known/agent-card.json", "catalog", "mcp_tools"),
+    (".well-known/agent-card.json", "artifact_emitting", "artifact_tools"),
+    (".well-known/agent-card.json", "worker_callable", "worker_callable"),
 ]
 
 # Prose regex sentinels in JSON description strings: (relative path, compiled
@@ -104,6 +109,9 @@ PROSE_SENTINELS = [
     (".zenodo.json", re.compile(r"over a \d+-tool / (\d+)-chain catalog"), "mcp_chains"),
     ("chaingraph.json", re.compile(r"— (\d+) artifact-emitting tools across five mandate families"), "artifact_tools"),
     ("tools/data/chaingraph.json", re.compile(r"All (\d+) artifact-export tools at v1\.2\.0"), "artifact_tools"),
+    (".well-known/agent-card.json", re.compile(r"(\d+) client-side, zero-egress, single-file HTML calculators"), "artifact_tools"),
+    (".well-known/agent-card.json", re.compile(r"(\d+) of the site's \d+-tool catalog are also live-callable"), "worker_callable"),
+    (".well-known/agent-card.json", re.compile(r"\d+ of the site's (\d+)-tool catalog are also live-callable"), "mcp_tools"),
 ]
 
 # HTML files scanned for data-count="KEY" markers (KEY must be a derive_counts key).

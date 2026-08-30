@@ -271,10 +271,10 @@ function loadHash() {
   if(!h) return;
   h.split('&').forEach(kv=>{
     const [k,v]=kv.split('=');
-    if(k==='m') state.logMBH=parseFloat(v)||state.logMBH;
-    if(k==='r') state.logRho=parseFloat(v)||state.logRho;
-    if(k==='s') state.sigma=parseFloat(v)||state.sigma;
-    if(k==='a') state.age=parseFloat(v)||state.age;
+    if(k==='m') { const n=parseFloat(v); if(Number.isFinite(n)) state.logMBH=n; }
+    if(k==='r') { const n=parseFloat(v); if(Number.isFinite(n)) state.logRho=n; }
+    if(k==='s') { const n=parseFloat(v); if(Number.isFinite(n)) state.sigma=n; }
+    if(k==='a') { const n=parseFloat(v); if(Number.isFinite(n)) state.age=n; }
   });
 }
 loadHash();
