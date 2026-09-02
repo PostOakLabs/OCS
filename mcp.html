@@ -221,7 +221,7 @@ footer a:hover{text-decoration:underline}
 
 <h1>MCP Connector</h1>
 <p class="lede">Connect Claude — and any MCP-compatible AI assistant — directly to the OCS interactive science tools via the Model Context Protocol.</p>
-<p class="meta">omegacentauri.me &nbsp;·&nbsp; Live endpoint · Updated 2026-06-10</p>
+<p class="meta">omegacentauri.me &nbsp;·&nbsp; Live endpoint · Updated 2026-09-02</p>
 
 <h2>Endpoint</h2>
 <div class="endpoint-box">
@@ -358,7 +358,7 @@ STEP 1 — BASELINE CONSTRAINT CHAIN
 Call OCS constraint_stacker with the canonical measurements:
   • Stellar kinematics (Häberle et al. 2024): M_IMBH = 8,200 M☉, σ = 0.3 dex
   • Pulsar timing upper limit (TRAPUM 2026): M_IMBH < 1×10⁵ M☉ at 90% CL
-  • Velocity dispersion (Baumgardt & Hilker 2018): σ₀ = 16.8 km/s
+  • Velocity dispersion: σ₀ = 18.2 km/s (OCS tools fiducial; the papers set uses 21 km/s and Baumgardt & Hilker 2018 report 16.8 km/s; the offset between these three values is documented, not harmonized)
 Record the output as your baseline posterior.
 
 STEP 2 — LITERATURE SCAN (NASA ADS)
@@ -474,14 +474,17 @@ Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluste
 </div>
 
 <h2>Available tools</h2>
+<p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:1rem">The worker exposes 11 callable tools: 4 meta tools (search/deep-link/verify/execute) and 7 server-side compute kernels. Live-verified against <code>mcp.omegacentauri.me/mcp</code> <code>tools/list</code>.</p>
+
+<h3>Meta tools</h3>
 
 <div class="tool-card">
   <div class="tool-name">list_ocs_tools</div>
-  <div class="tool-desc">Search the OCS interactive calculator suite. Returns deep-links to client-side browser tools. The 10 flagship tools are prefill-enabled: the returned URL includes an <code>#in=</code> fragment that opens the tool pre-filled with your values.</div>
+  <div class="tool-desc">Search the OCS interactive calculator suite. Returns deep-links to client-side browser tools. 22 of the 35 catalog tools are prefill-enabled: the returned URL includes an <code>#in=</code> fragment that opens the tool pre-filled with your values.</div>
   <div class="params-label">Parameters (all optional)</div>
   <ul class="param-list">
     <li><span class="param-name">query</span> <span class="param-opt">string</span> — free-text search against title and description</li>
-    <li><span class="param-name">category</span> <span class="param-opt">string</span> — filter: <code>imbh-evidence</code> · <code>fermi-paradox</code> · <code>fermi-seti</code> · <code>mth</code></li>
+    <li><span class="param-name">category</span> <span class="param-opt">string</span> — filter: <code>imbh-evidence</code> · <code>bh-physics</code> · <code>fermi-paradox</code> · <code>fermi-seti</code> · <code>mth</code> · <code>kardashev</code></li>
     <li><span class="param-name">register</span> <span class="param-opt">string</span> — filter: <code>peer-reviewed</code> · <code>speculative</code></li>
     <li><span class="param-name">limit</span> <span class="param-opt">number</span> — max results (default 20)</li>
   </ul>
@@ -489,15 +492,73 @@ Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluste
 
 <div class="tool-card">
   <div class="tool-name">build_ocs_workflow_links</div>
-  <div class="tool-desc">Constructs an ordered set of ready-to-use deep-links for a named OCS scenario or workflow chain, or an ad-hoc sequence of tools. Pass <code>fields</code> per step to receive pre-filled URLs via the <code>#in=</code> fragment convention.</div>
+  <div class="tool-desc">Constructs an ordered set of ready-to-use deep-links for a named OCS scenario or workflow chain, or an ad-hoc sequence of tools. Pass <code>fields</code> per step to receive pre-filled URLs via the <code>#in=</code> fragment convention. These are narrative reading paths for a human or agent to follow, not server-executed pipelines; use <code>run_chain</code> for a server-executed pipeline instead.</div>
   <div class="params-label">Parameters</div>
   <ul class="param-list">
-    <li><span class="param-name">chain</span> <span class="param-opt">string, exclusive with steps</span> — name of a pre-defined chain (36 available, see below)</li>
+    <li><span class="param-name">chain</span> <span class="param-opt">string, exclusive with steps</span> — name of a pre-defined chain (42 available, see below)</li>
     <li><span class="param-name">steps</span> <span class="param-opt">array, exclusive with chain</span> — ad-hoc list of <code>{tool, fields?}</code> objects</li>
   </ul>
 </div>
 
-<h3>Named chains (36)</h3>
+<div class="tool-card">
+  <div class="tool-name">verify_execution_hash</div>
+  <div class="tool-desc">Independently verifies a ChainGraph artifact (ChainGraph Standard §4 JCS). Recomputes SHA-256 over the canonical (RFC 8785 JCS, sorted-key, whitespace-stripped) JSON of <code>{policy_parameters, output_payload}</code> and compares it to the claimed <code>execution_hash</code>. Works on artifacts from any ChainGraph-conformant source, not only OCS tools.</div>
+  <div class="params-label">Parameters</div>
+  <ul class="param-list">
+    <li><span class="param-name">artifact</span> <span class="param-opt">object, or the three fields below</span>: a full ChainGraph artifact</li>
+    <li><span class="param-name">policy_parameters</span> / <span class="param-name">output_payload</span> / <span class="param-name">claimed_hash</span>: alternative to <code>artifact</code></li>
+  </ul>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">run_chain</div>
+  <div class="tool-desc">Executes a ChainGraph chain server-side (OCG Standard §21), running the actual compute kernels (<code>constraint-stacker</code>, <code>bayes-factor-router</code>, <code>jwst-accretion-ledger</code>, <code>gwtc-remnant-classifier</code>, <code>roman-microlensing</code>) in sequence, not deep-links. Supports §21.4 decision gates: an RFC 6901 pointer into a step's <code>output_payload</code> is matched against ordered rules (<code>eq</code>/<code>neq</code>/<code>gt</code>/<code>gte</code>/<code>lt</code>/<code>lte</code>/<code>in</code>/<code>present</code>/<code>absent</code>) to route to the next step.</div>
+  <div class="params-label">Parameters</div>
+  <ul class="param-list">
+    <li><span class="param-name">chain</span> <span class="param-opt">string, exclusive with steps</span>: one of 3 machine-executable chains: <code>imbh-evidence-window</code> (default) · <code>evidence-threshold-routing</code> · <code>accretion-eligibility-fastfail</code></li>
+    <li><span class="param-name">steps</span> <span class="param-opt">array, exclusive with chain</span>: ad-hoc ordered list of <code>{tool_id, fields?, gate?}</code> objects</li>
+  </ul>
+</div>
+
+<h3>Compute kernels (7)</h3>
+<p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:.8rem">Each returns a hash-anchored OCS ChainGraph artifact JSON; each mirrors a client-side browser tool but also runs server-side for chaining via <code>run_chain</code>.</p>
+
+<div class="tool-card">
+  <div class="tool-name">constraint_stacker</div>
+  <div class="tool-desc">Computes the currently allowed IMBH mass window for NGC 5139 given active observational constraints. Mirrors omegacentauri.me/tools/constraint-stacker.html. Häberle 2024 lower bound (8,200 M☉) exceeds Bañares-Hernández 2025 upper limit (6,000 M☉), irreconcilable under default settings; the tool reports the resulting tension rather than collapsing it.</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">bayes_factor_router</div>
+  <div class="tool-desc">Classifies a Bayes factor (BF or 2·lnBF) into a categorical evidence-strength token using the Jeffreys (1961) / Kass &amp; Raftery (1995, JASA 90:773) scale: <code>supports_null · weak · substantial · strong · decisive</code>. Used as a §21.4 decision gate for model-selection chains.</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">jwst_accretion_ledger</div>
+  <div class="tool-desc">Computes the IMBH mass above which predicted ADAF/Bondi accretion luminosity would exceed the JWST NIRCam/MIRI bolometric upper limit for NGC 5139 (Chen et al. 2025, arXiv:2511.20945), given an assumed radiative efficiency ε and ambient gas density at the Bondi radius. Model-dependent: this is a conditional accretion constraint, not a direct mass measurement.</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">gwtc_remnant_classifier</div>
+  <div class="tool-desc">Classifies a compact-binary merger (GWTC-style component masses m1, m2, optional aligned spins) by chirp mass, total mass, mass ratio, remnant mass, final spin, pair-instability mass-gap membership (~60–130 M☉, model-dependent edges), and an IMBH-remnant classification token for chain routing. Uses Jiménez-Forteza et al. 2017 (PRD 95, 064024) fits.</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">roman_microlensing</div>
+  <div class="tool-desc">Computes Einstein radius (θ<sub>E</sub>, mas) and Einstein crossing timescale (t<sub>E</sub>, days) for a gravitational microlensing event observable by the Nancy Grace Roman Space Telescope, using the Gould (2000, ApJ 542, 785) formalism, plus a yield-scaled stellar event estimate from Penny et al. (2019, arXiv:1808.02490).</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">apophis_flyby_geometry</div>
+  <div class="tool-desc">Computes close-approach geometry for the 2029-04-13 flyby of asteroid 99942 Apophis (perigee ~38,017 km from Earth's centre): tidal acceleration differential across the asteroid, perigee speed via vis-viva, and GEO-ring crossing status.</div>
+</div>
+
+<div class="tool-card">
+  <div class="tool-name">rubin_alert_throughput</div>
+  <div class="tool-desc">Estimates nightly transient-alert count and data-rate budget for the Vera C. Rubin Observatory LSST. Default parameters from Ivezić et al. (2019, ApJ 873, 111): ~1,000 visits/night, ~10,000 alerts/visit.</div>
+</div>
+
+<h3>Named chains (42)</h3>
 <p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:.8rem">Pass any of these as the <code>chain</code> parameter to <code>build_ocs_workflow_links</code>.</p>
 <div class="chain-grid">
   <span class="chain-tag">scenario-breaking-degeneracy</span>
@@ -536,10 +597,16 @@ Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluste
   <span class="chain-tag">workflow-accretion-to-spin</span>
   <span class="chain-tag">workflow-multimessenger-campaign</span>
   <span class="chain-tag">workflow-cns-reproduction</span>
+  <span class="chain-tag">workflow-settle-imbh-question</span>
+  <span class="chain-tag">workflow-black-hole-101</span>
+  <span class="chain-tag">workflow-kardashev-ladder</span>
+  <span class="chain-tag">scenario-paper-e-feasibility</span>
+  <span class="chain-tag">scenario-migrate-or-stay</span>
+  <span class="chain-tag">scenario-background-free</span>
 </div>
 
 <h2>Prefill-enabled tools</h2>
-<p>The following 10 flagship tools accept <code>#in=&lt;base64url(JSON)&gt;</code> URL fragments. Pass values as a <code>fields</code> object in <code>build_ocs_workflow_links</code> steps to receive a pre-filled URL.</p>
+<p>22 of the 35 catalog tools accept <code>#in=&lt;base64url(JSON)&gt;</code> URL fragments (verified against <code>OCS_APPLY_PREFILL</code> usage in the tool source, matching <code>tools-manifest.json</code>'s <code>_meta</code> field). Pass values as a <code>fields</code> object in <code>build_ocs_workflow_links</code> steps to receive a pre-filled URL.</p>
 
 <div class="note">
   <strong>Log10 param warning:</strong> <code>radio-seti</code> — all 6 params (<code>eirp</code>, <code>dist</code>, <code>aeff</code>, <code>tsys</code>, <code>tau</code>, <code>bw</code>) are log₁₀. <code>qpo-mass-spin</code> — <code>lognu</code> is log₁₀(Hz). <code>bz-kardashev</code> — hash keys are <code>spin</code> (not <code>a</code>) and <code>power</code> (not <code>P</code>). Do not pass linear values to log₁₀ parameters.
@@ -556,6 +623,18 @@ Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluste
   <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">radio-seti</span>
   <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">bekenstein-landauer</span>
   <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">bz-kardashev</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">evidence-ledger</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">detection-forecast</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">observing-campaign-planner</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">bh-scale-comparator</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">infall-survival</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">shadow-imaging</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">kardashev-meter</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">energy-translator</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">scifi-tech-auditor</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">flyby-survival</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">flyby-survival-simulator</span>
+  <span class="chain-tag" style="border-color:var(--border-teal);color:var(--teal-bright)">imbh-fuel-budget</span>
 </div>
 
 <h2>Technical details</h2>
