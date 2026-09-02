@@ -119,9 +119,18 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
   </ol>
 </div>
 
+<div class="objectives">
+  <div class="obj-label">Adopted values (used throughout PS 1–4)</div>
+  <ol>
+    <li>Distance to OC: d = 5.49 kpc = 17,900 ly (oMEGACat VI, arXiv:2503.04903). The survey depths δ below are quoted in light years and are measured from that distance.</li>
+    <li>Milky Way scale in the Civiletti model: R<sub>MW</sub> = 52,000 ly.</li>
+    <li>Prior on a transmitter existing, where not otherwise stated: P₀ = 0.5 (log₁₀ P₀ = −0.301).</li>
+  </ol>
+</div>
+
 <h2>Background</h2>
 
-<p>A null result in a SETI survey is not "no result" — it is evidence. The strength of that evidence depends on how likely we would have been to detect a signal <em>if</em> one existed. Civiletti (2025) provides a geometric model for the single-transmitter detection probability P<sub>detect</sub> that accounts for the fraction of sky covered, the fraction of frequency space searched, and the maximum geometric depth of the survey.</p>
+<p>A null result in a SETI survey carries information. Its strength depends on how likely a detection would have been if a signal existed. Civiletti (2025) provides a geometric model for the single-transmitter detection probability P<sub>detect</sub> that accounts for the fraction of sky covered, the fraction of frequency space searched, and the maximum geometric depth of the survey.</p>
 
 <div class="eq">Single-transmitter detection probability (Civiletti 2025):
 
@@ -166,7 +175,7 @@ Null-result significance in Gaussian σ:
       <li>Now use the OCS Null-Result workflow (VLA/COSMIC preset) to verify your answer. Do the numbers agree? If they differ by more than 5%, explain why. <span class="marks">[3 marks]</span></li>
       <li>Is a σ<sub>null</sub> &lt; 1 result strong evidence against the existence of an EIRP = 10<sup>14</sup> W transmitter in OC? Why or why not? <span class="marks">[4 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#logN=1&logDelta=3&fSky=0.75&fFreq=0.10&logP0=-0.301" target="_blank" rel="noopener">
+    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#in=logN=1&logDelta=3&fSky=0.75&fFreq=0.10&logP0=-0.301" target="_blank" rel="noopener">
       ↗ Null-Result Workflow — VLA/COSMIC preset (N=10, δ=1000 ly, f_sky=0.75, f_freq=0.10)
     </a>
     <details class="solution">
@@ -180,19 +189,14 @@ P_single = f_sky · f_freq · min(1, 0.6 · δ / R_MW)
          = 0.075 × 0.01154
          = 8.65 × 10⁻⁴
 
-P_detect = 1 − (1 − 8.65×10⁻⁴)¹⁰
-         ≈ 1 − (0.999135)¹⁰
-         ≈ 1 − 0.99135  (using (1−x)^n ≈ 1−nx for small x)
-         = 0.00865  or ~0.87%
+P_detect = 1 − (1 − 8.654×10⁻⁴)¹⁰
+         = 1 − exp(10 × ln(0.9991346))
+         = 1 − exp(−8.658×10⁻³)
+         = 1 − 0.991380
+         = 0.00862   or 0.86%
 
-σ_null = Φ⁻¹(0.00865) ≈ −2.38σ
-
-Wait — the convention in the OCS tool is σ_null = Φ⁻¹(P_detect) measuring
-the significance of the expected detection as a positive number.
-For P_detect = 0.87%, Φ⁻¹(0.0087) ≈ −2.38, meaning the survey is
-~2.4σ below the threshold where we'd expect to see a signal.
-This is a <em>weak</em> null result — if there's a transmitter, we'd
-have a &lt;1% chance of seeing it anyway.</span>
+σ_null = Φ⁻¹(P_detect) = Φ⁻¹(0.00862) = −2.38</span>
+        Sign convention: σ_null is the probit of P_detect, not of 1 − P_detect, so a survey with a low chance of detection returns a negative value. A σ_null of −2.38 means P_detect sits 2.38 Gaussian σ <em>below</em> the median, that is, far below the coverage at which a non-detection would carry weight. A survey that would have detected the signal half the time returns σ_null = 0, and only surveys with P_detect &gt; 0.5 return positive values. This is a weak null result: with a transmitter present, the survey had under a 1% chance of seeing it.
         <br>
         <strong>Part (b):</strong> The workflow should agree to within rounding. Any discrepancy &gt;5% likely reflects a different convention for the probit function or a rounding of logN = log₁₀(10) = 1.0 exactly.
         <br><br>
@@ -212,7 +216,7 @@ have a &lt;1% chance of seeing it anyway.</span>
     <ul style="padding-left:20px;color:var(--text-secondary);font-size:16px;margin:8px 0 12px">
       <li>f<sub>sky</sub> = 0.95 (near-complete sky coverage with commensal mode)</li>
       <li>f<sub>freq</sub> = 0.40 (broad 350 MHz – 14 GHz coverage)</li>
-      <li>δ = 10,000 ly (improved EIRP sensitivity)</li>
+      <li>δ = 10,000 ly (improved EIRP sensitivity). Note: the deeplink below sets log₁₀ δ = 4 explicitly. The tool'"'"'s built-in <em>SKA Projection</em> preset button uses δ = 1,000 ly and will not reproduce these answers.</li>
       <li>N = 100 (log₁₀ N = 2; optimistic Drake estimate)</li>
     </ul>
     <ol type="a">
@@ -220,8 +224,8 @@ have a &lt;1% chance of seeing it anyway.</span>
       <li>Compare the Bayes factor K for the SKA projection vs. VLA/COSMIC. By what factor does the SKA non-detection more strongly update the prior? <span class="marks">[4 marks]</span></li>
       <li>What survey f<sub>freq</sub> would be needed to achieve σ<sub>null</sub> ≥ 2.0, holding all other SKA parameters fixed? Solve analytically. <span class="marks">[5 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#logN=2&logDelta=4&fSky=0.95&fFreq=0.40&logP0=-0.301" target="_blank" rel="noopener">
-      ↗ Null-Result Workflow — SKA projection preset (N=100, δ=10,000 ly)
+    <a class="tool-link" href="https://omegacentauri.me/tools/workflow-null-result.html#in=logN=2&logDelta=4&fSky=0.95&fFreq=0.40&logP0=-0.301" target="_blank" rel="noopener">
+      ↗ Null-Result Workflow — SKA projection (N=100, δ=10,000 ly)
     </a>
     <details class="solution">
       <summary>Show solution</summary>
@@ -285,7 +289,7 @@ P₀ = 0.01:
          = 1.13×10⁻⁴ / (1.13×10⁻⁴ + 0.99)
          = 1.13×10⁻⁴ / 0.99011 ≈ 1.14×10⁻⁴  → barely changed from 1%</span>
         <br>
-        <strong>Part (b):</strong> When P₀ ≪ 1, the denominator is dominated by (1 − P₀) ≈ 1. So P_post ≈ K · P₀ / 1 = K · P₀. This means the posterior is simply K times the prior. With K = 0.011 and P₀ = 0.01, P_post ≈ 0.011 × 0.01 = 1.1 × 10⁻⁴ — a factor of ~90 reduction. But since the <em>absolute</em> value is so small (0.01% → 0.01%), a skeptic measuring percentage change would say "it went from 1% to 0.01%, which is a tiny absolute change." The real lesson is that the ratio P_post/P₀ = K does not depend on P₀; what changes is the absolute posterior, which is tiny when the prior is tiny. A Bayesian analysis cannot make a hypothesis plausible if the prior is very small — it can only confirm or refute existing probability.
+        <strong>Part (b):</strong> When P₀ ≪ 1, the denominator is dominated by (1 − P₀) ≈ 1. So P_post ≈ K · P₀ / 1 = K · P₀. This means the posterior is simply K times the prior. With K = 0.0113 and P₀ = 0.01, P_post ≈ 0.0113 × 0.01 = 1.13 × 10⁻⁴, a factor of 88 reduction. The skeptic's complaint measures the change in absolute probability, which is 0.0100 − 0.00011 = 0.0099, or one percentage point, and by that measure nothing much happened. The ratio tells a different story: P_post/P₀ = K = 0.0113, an 88-fold reduction, and that ratio is independent of P₀. The two descriptions are of the same update, and which one sounds impressive depends only on whether the prior was large enough for a large ratio to move a large absolute quantity. A Bayesian analysis cannot make a hypothesis plausible when the prior is very small; it can only multiply whatever probability was already there.
       </div>
     </details>
   </div>
@@ -294,7 +298,7 @@ P₀ = 0.01:
 <h2>References</h2>
 <ul class="refs">
   <li>Civiletti, M.J. (2025). A geometric model for technosignature survey completeness. arXiv:2505.00062</li>
-  <li>Acklam, P.J. (2010). An algorithm for computing the inverse normal cumulative distribution function. <em>Statistics and Probability Letters</em>.</li>
+  <li>Acklam, P.J. (2003, rev. 2010). An algorithm for computing the inverse normal cumulative distribution function. Unpublished algorithm note, circulated on the author's web page; not a journal article. The rational-approximation coefficients used by the OCS tool are from this note.</li>
   <li>Lebofsky, M. et al. (2019). The Breakthrough Listen search for intelligent life: public data, formats, reduction, and archiving. <em>PASP</em> 131, 124505.</li>
   <li>Price, D.C. et al. (COSMIC/VLA, 2024). The VLA COSMIC survey. <em>ApJ</em>.</li>
 </ul>

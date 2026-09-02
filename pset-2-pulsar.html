@@ -124,16 +124,33 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
   </ol>
 </div>
 
+<div class="objectives">
+  <div class="obj-label">Adopted values (used throughout PS 1–4)</div>
+  <ol>
+    <li>Distance to OC: d = 5.49 kpc (oMEGACat VI, arXiv:2503.04903). 1 pc subtends 37.57″, so 1″ = 0.02662 pc and 1′ = 1.597 pc.</li>
+    <li>Central velocity dispersion: σ<sub>0</sub> = 18.2 km/s (van de Ven et al. 2006). Baumgardt &amp; Hilker (2018) catalogue ~16.8 km/s globally; the two are reported side by side rather than merged.</li>
+    <li>Core radius: r<sub>c</sub> = 2.37′ = 3.79 pc (Harris 1996, 2010 edition, scaled to d = 5.49 kpc).</li>
+    <li>Häberle mass: M ≥ 8,200 M<sub>☉</sub>, a lower bound. Baumgardt: M &lt; 3,000 M<sub>☉</sub>, a 3σ upper limit. TRAPUM 2026: M &lt; 10<sup>5</sup> M<sub>☉</sub> at 90% CL.</li>
+  </ol>
+</div>
+
 <h2>Background</h2>
 
-<p>The TRAPUM survey (Transferring Astronomical Precision to Radio Astrometry and Pulsars with MeerKAT) reported new pulsar timing results for Omega Centauri in 2026 (arXiv:2603.21845), placing an upper limit of M<sub>IMBH</sub> &lt; 10<sup>5</sup> M<sub>☉</sub> at 90% confidence. This limit comes from the absence of large line-of-sight acceleration residuals in the timing of eight millisecond pulsars in the cluster.</p>
+<p>The TRAPUM survey (TRAnsients And PUlsars with MeerKAT) reported new pulsar timing results for Omega Centauri in 2026 (arXiv:2603.21845), placing an upper limit of M<sub>IMBH</sub> &lt; 10<sup>5</sup> M<sub>☉</sub> at 90% confidence. This limit comes from the absence of large line-of-sight acceleration residuals in the timing of the eight OC millisecond pulsars that have published timing solutions, out of 19 known.</p>
 
 <p>The line-of-sight acceleration a<sub>los</sub> of a pulsar at projected radius R from a central mass M is bounded above by (point-mass approximation):</p>
 
-<div class="eq">a_max(R) = G M / R²
+<div class="eq">a_los(R, z) = G M z / (R² + z²)^(3/2)
 
-This maximum occurs when the pulsar lies in the plane of the sky
-(no projection correction needed for the upper bound).
+Maximised over the unknown line-of-sight offset z at z = R/√2:
+
+  a_max(R) = (2 / 3√3) × G M / R²   ,   2/3√3 = 0.3849
+
+The pulsar's true 3D radius is unknown, so only its projected R is
+observable; the coefficient 2/3√3 is the largest line-of-sight
+component any z can produce at that R. (A pulsar exactly in the plane
+of the sky has z = 0 and contributes no line-of-sight acceleration
+at all, so the sky-plane case is the minimum, not the maximum.)
 
 Observed: a_los = (Ṗ_obs - Ṗ_int - Ṗ_Shk) / P × c
 
@@ -142,18 +159,22 @@ where Ṗ_int is the intrinsic spin-down, Ṗ_Shk the Shklovskii
 
 <p>The OCS Pulsar Acceleration Mapper takes a central mass M and mass model (point, Plummer, or hybrid) and computes the maximum a<sub>los</sub> at the projected positions of OC's eight timed pulsars, comparing against the measured period derivatives to identify which masses are allowed.</p>
 
-<p>Reported TRAPUM 2026 pulsar sample (illustrative; see paper for full values):</p>
+<p>The eight OC millisecond pulsars with published timing solutions are listed below. Periods and angular offsets are the values carried in the OCS measurement compilation (Dai et al. 2020 for A–E, Chen et al. 2023 for G, TRAPUM 2026 for H and K); |a<sub>los</sub>| is computed from them as |Ṗ|/P × c, projected radii at d = 5.49 kpc.</p>
 
 <table class="data-table">
-<thead><tr><th>Pulsar</th><th>R (arcmin)</th><th>R (pc)</th><th>|ȧ_los| (m/s²)</th></tr></thead>
+<thead><tr><th>Pulsar</th><th>θ (arcmin)</th><th>R (pc)</th><th>P (ms)</th><th>Ṗ (s/s)</th><th>|a_los| = |Ṗ|/P × c (m/s²)</th></tr></thead>
 <tbody>
-<tr><td>OC-MSP-A</td><td>0.15</td><td>0.24</td><td>&lt; 8.5 × 10⁻⁶</td></tr>
-<tr><td>OC-MSP-B</td><td>0.31</td><td>0.49</td><td>&lt; 4.1 × 10⁻⁶</td></tr>
-<tr><td>OC-MSP-C</td><td>0.55</td><td>0.87</td><td>&lt; 2.3 × 10⁻⁶</td></tr>
-<tr><td>OC-MSP-D</td><td>0.80</td><td>1.27</td><td>&lt; 1.5 × 10⁻⁶</td></tr>
+<tr><td>PSR J1326−4728H</td><td>0.56</td><td>0.894</td><td>2.520</td><td>+3.99 × 10⁻²⁰</td><td>4.75 × 10⁻⁹</td></tr>
+<tr><td>PSR J1326−4728B</td><td>0.76</td><td>1.214</td><td>4.792</td><td>−5.43 × 10⁻²⁰</td><td>3.40 × 10⁻⁹</td></tr>
+<tr><td>PSR J1326−4728E</td><td>1.58</td><td>2.523</td><td>4.208</td><td>+1.63 × 10⁻²⁰</td><td>1.16 × 10⁻⁹</td></tr>
+<tr><td>PSR J1326−4728K</td><td>1.89</td><td>3.018</td><td>4.716</td><td>−9.10 × 10⁻²¹</td><td>5.79 × 10⁻¹⁰</td></tr>
+<tr><td>PSR J1326−4728A</td><td>1.93</td><td>3.082</td><td>4.109</td><td>+2.73 × 10⁻²⁰</td><td>1.99 × 10⁻⁹</td></tr>
+<tr><td>PSR J1326−4728G</td><td>1.96</td><td>3.130</td><td>3.304</td><td>+2.77 × 10⁻²⁰</td><td>2.51 × 10⁻⁹</td></tr>
+<tr><td>PSR J1326−4728C</td><td>1.98</td><td>3.162</td><td>6.868</td><td>+1.01 × 10⁻²⁰</td><td>4.41 × 10⁻¹⁰</td></tr>
+<tr><td>PSR J1326−4728D</td><td>2.50</td><td>3.992</td><td>4.579</td><td>−4.12 × 10⁻²⁰</td><td>2.70 × 10⁻⁹</td></tr>
 </tbody>
 </table>
-<p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">Note: Projected radii computed at d = 5.43 kpc. Values are illustrative; use the tool for precise model-dependent limits.</p>
+<p style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim)">Sign convention: positive Ṗ is net spin-down, negative Ṗ an apparent spin-up produced by line-of-sight acceleration toward the observer. Treating the full |Ṗ|/P as gravitational, as Problem 1 does, assigns to the central mass an acceleration that in reality also contains the pulsar's unknown intrinsic spin-down and the cluster's own mean-field pull. Eleven further OC pulsars have no published Ṗ and cannot enter this calculation.</p>
 
 <h2>Problems</h2>
 
@@ -163,37 +184,41 @@ where Ṗ_int is the intrinsic spin-down, Ṗ_Shk the Shklovskii
     <span class="problem-title">Point-mass acceleration limit</span>
   </div>
   <div class="problem-body">
-    <p>Using the point-mass formula above and OC-MSP-A at R = 0.24 pc:</p>
+    <p>Using the point-mass formula above and the innermost timed pulsar, PSR J1326−4728H at R = 0.894 pc:</p>
     <ol type="a">
-      <li>What is the maximum central mass M consistent with a<sub>max</sub>(0.24 pc) ≤ 8.5 × 10<sup>−6</sup> m/s²? Express in M<sub>☉</sub>. <span class="marks">[6 marks]</span></li>
-      <li>Repeat for OC-MSP-C at R = 0.87 pc and a<sub>max</sub> ≤ 2.3 × 10<sup>−6</sup> m/s². Which pulsar places the stronger constraint and why? <span class="marks">[5 marks]</span></li>
-      <li>The Häberle (2024) detection mass is 8,200 M<sub>☉</sub>. Is this mass ruled out by either pulsar above? Show your calculation. <span class="marks">[4 marks]</span></li>
+      <li>What is the maximum central point mass M consistent with a<sub>max</sub>(0.894 pc) ≤ 4.75 × 10<sup>−9</sup> m/s²? Use the 2/3√3 form above, which is what the tool implements. Express in M<sub>☉</sub>. <span class="marks">[6 marks]</span></li>
+      <li>Repeat for PSR J1326−4728A at R = 3.082 pc with a<sub>max</sub> ≤ 1.99 × 10<sup>−9</sup> m/s². Which pulsar places the stronger constraint and why? <span class="marks">[5 marks]</span></li>
+      <li>The Häberle (2024) lower bound is M ≥ 8,200 M<sub>☉</sub>. Is that mass excluded by either pulsar? Show the calculation, then explain why your answer to (a) is not the published TRAPUM limit of 10<sup>5</sup> M<sub>☉</sub>. <span class="marks">[4 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/pulsar-accel-mapper.html#mass=50000&model=point&rc=0.8&dist=5.43" target="_blank" rel="noopener">
-      ↗ Pulsar Acceleration Mapper — pre-filled M = 50,000 M☉, point model
+    <a class="tool-link" href="https://omegacentauri.me/tools/pulsar-accel-mapper.html#mass=50000&model=point&rc=0.8&dist=5.49" target="_blank" rel="noopener">
+      ↗ Pulsar Acceleration Mapper — pre-filled M = 50,000 M☉, point model, d = 5.49 kpc
     </a>
     <details class="solution">
       <summary>Show solution</summary>
       <div class="solution-body">
         <strong>Part (a):</strong>
         <span class="eq-inner">
-M_max = a_max × R² / G
-R = 0.24 pc = 0.24 × 3.086×10¹⁶ = 7.41×10¹⁵ m
-M_max = 8.5×10⁻⁶ × (7.41×10¹⁵)² / 6.674×10⁻¹¹
-      = 8.5×10⁻⁶ × 5.49×10³¹ / 6.674×10⁻¹¹
-      = 7.00×10²¹ kg
-      = 7.00×10²¹ / 1.989×10³⁰ M☉
-      ≈ 3,520 M☉</span>
+M_max = a_max × R² / (0.3849 G)
+R = 0.894 pc = 0.894 × 3.086×10¹⁶ = 2.760×10¹⁶ m
+R² = 7.617×10³² m²
+M_max = 4.75×10⁻⁹ × 7.617×10³² / (0.3849 × 6.674×10⁻¹¹)
+      = 3.618×10²⁴ / 2.569×10⁻¹¹
+      = 1.408×10³⁵ kg
+      = 1.408×10³⁵ / 1.989×10³⁰ M☉
+      ≈ 7.08×10⁴ M☉</span>
         <br>
         <strong>Part (b):</strong>
         <span class="eq-inner">
-R = 0.87 pc = 0.87 × 3.086×10¹⁶ = 2.685×10¹⁶ m
-M_max = 2.3×10⁻⁶ × (2.685×10¹⁶)² / 6.674×10⁻¹¹
-      = 2.3×10⁻⁶ × 7.21×10³² / 6.674×10⁻¹¹
-      = 2.48×10²² kg ≈ 12,500 M☉</span>
-        OC-MSP-A (closer to center) gives a stronger constraint (3,520 M☉) because the acceleration falls as R⁻², so inner pulsars constrain much tighter even for the same measured limit.
+R = 3.082 pc = 3.082 × 3.086×10¹⁶ = 9.511×10¹⁶ m
+R² = 9.046×10³³ m²
+M_max = 1.99×10⁻⁹ × 9.046×10³³ / (0.3849 × 6.674×10⁻¹¹)
+      = 1.800×10²⁵ / 2.569×10⁻¹¹
+      = 7.007×10³⁵ kg ≈ 3.52×10⁵ M☉</span>
+        PSR H places the stronger constraint, 7.08 × 10<sup>4</sup> M<sub>☉</sub> against 3.52 × 10<sup>5</sup> M<sub>☉</sub>, even though the two acceleration limits differ by only a factor 2.4. The projected radii differ by 3.4×, and a<sub>max</sub> ∝ R⁻², so the R² term supplies a factor of 12 in the mass limit against the factor 2.4 from a<sub>los</sub>. Inner pulsars dominate the constraint, which is why the survey strategy is to find pulsars close to the centre rather than to time distant ones better.
         <br><br>
-        <strong>Part (c):</strong> OC-MSP-A gives M_max ≈ 3,520 M☉ — below the Häberle value of 8,200 M☉. Under the point-mass model, OC-MSP-A <em>does</em> nominally rule out 8,200 M☉. However, this illustrative table uses round numbers; the actual TRAPUM limit at 90% CL is M &lt; 10⁵ M☉, suggesting the real pulsars are at somewhat larger R and/or the constraint on a_los is less tight. The key point: inner pulsars can, in principle, reach the Häberle mass scale.
+        <strong>Part (c):</strong> The tightest limit above is 7.08 × 10<sup>4</sup> M<sub>☉</sub>, more than eight times the Häberle bound of 8,200 M<sub>☉</sub>, so neither pulsar excludes it. Nor does the published survey: TRAPUM's 90% CL limit of 10<sup>5</sup> M<sub>☉</sub> sits an order of magnitude above the Häberle scale, and the pulsar constraint and the fast-star measurement are not in conflict.
+        <br><br>
+        Part (a) lands within 30% of the published 10<sup>5</sup> M<sub>☉</sub>, which is closer than the calculation deserves. It assigns the whole of the observed Ṗ to a single central point mass, and three effects each loosen the real limit. The measured Ṗ contains the pulsar's intrinsic magnetic-dipole spin-down, unknown per pulsar and not subtractable without a population model. It also contains the cluster's own mean-field acceleration, which at 0.9 pc from the centre of a 4 × 10<sup>6</sup> M<sub>☉</sub> cluster exceeds anything an 8,200 M<sub>☉</sub> black hole contributes. And a point mass is the most concentrated model available, converting a given acceleration into the smallest allowed mass, whereas the published limit marginalises over extended models too. The agreement to 30% reflects those effects partly cancelling against the 90% CL threshold, not a validated single-pulsar limit.
       </div>
     </details>
   </div>
@@ -207,21 +232,28 @@ M_max = 2.3×10⁻⁶ × (2.685×10¹⁶)² / 6.674×10⁻¹¹
   <div class="problem-body">
     <p>The pulsar timing constraint depends on the assumed mass model. A point mass gives the maximum possible acceleration at any radius; a Plummer model (with scale radius r<sub>c</sub>) gives a lower acceleration at small R.</p>
     <ol type="a">
-      <li>In the Pulsar Acceleration Mapper, change the model from <em>point</em> to <em>plummer</em> with r<sub>c</sub> = 0.8 pc and M = 50,000 M<sub>☉</sub>. How does the maximum a<sub>los</sub> for the innermost pulsar change? Express as a ratio (Plummer / point). <span class="marks">[6 marks]</span></li>
+      <li>In the Pulsar Acceleration Mapper, change the model from point to plummer with r<sub>c</sub> = 0.8 pc and M = 50,000 M<sub>☉</sub>. How does the maximum a<sub>los</sub> for the innermost pulsar (PSR H, R = 0.894 pc) change? Express as a ratio (Plummer / point). <span class="marks">[6 marks]</span></li>
       <li>Qualitatively explain why the Plummer model gives a less stringent constraint for pulsars at R &lt; r<sub>c</sub>. What physical scenario does this represent? <span class="marks">[5 marks]</span></li>
       <li>Why does the point-mass model give a conservative (strong) upper limit on M when used to constrain a single compact object, while the Plummer model is appropriate for a distributed mass (dark cluster)? <span class="marks">[4 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/pulsar-accel-mapper.html#mass=50000&model=plummer&rc=0.8&dist=5.43" target="_blank" rel="noopener">
+    <a class="tool-link" href="https://omegacentauri.me/tools/pulsar-accel-mapper.html#mass=50000&model=plummer&rc=0.8&dist=5.49" target="_blank" rel="noopener">
       ↗ Pulsar Acceleration Mapper — pre-filled M = 50,000 M☉, Plummer model, r<sub>c</sub> = 0.8 pc
     </a>
     <details class="solution">
       <summary>Show solution</summary>
       <div class="solution-body">
-        <strong>Part (a):</strong> For a Plummer model, the enclosed mass at R is M(<R) = M_total × R³ / (R² + r_c²)^(3/2). At R ≪ r_c, M(<R) ≈ M_total × (R/r_c)³. The acceleration a = G M(<R) / R² ≈ G M_total R / r_c³, which grows as R rather than falling as 1/R². At R = 0.24 pc and r_c = 0.8 pc, M(<R)/M_total ≈ (0.24)³/(0.24² + 0.8²)^(3/2) ≈ 0.0138/0.550 ≈ 0.025. So the Plummer a is ~2.5% of the point-mass a, a ratio of ~0.025 — or about 40× weaker constraint per unit total mass.
+        <strong>Part (a):</strong> The tool implements the Plummer case as a softened point mass, a_max = (2/3√3) G M / (R² + r_c²), so the ratio to the point model is R² / (R² + r_c²).
+        <span class="eq-inner">
+At R = 0.894 pc, r_c = 0.8 pc:
+  R² = 0.7992 pc²,  r_c² = 0.6400 pc²
+  ratio = 0.7992 / (0.7992 + 0.6400)
+        = 0.7992 / 1.4392
+        = 0.555</span>
+        The Plummer acceleration is 55% of the point-mass value, so the same measured a<sub>los</sub> permits 1.8× more total mass. The suppression is mild here only because PSR H sits just outside r<sub>c</sub>; at R = 0.24 pc the same expression gives 0.0826, a 12× weaker constraint. Two things are worth noting. The suppression is controlled entirely by R/r<sub>c</sub>, and the softened form is not the same model as a true Plummer sphere, whose enclosed mass M(&lt;R) = M R³/(R² + r_c²)<sup>3/2</sup> would give 0.414 at PSR H instead of 0.555. The softened form is the conservative choice for setting an upper limit, since it suppresses the acceleration less.
         <br><br>
-        <strong>Part (b):</strong> When R &lt; r_c, most of the extended Plummer mass lies <em>outside</em> R. By the shell theorem, only the enclosed mass contributes to the gravitational acceleration at R. This physically represents a scenario where the central mass is not a point source but is distributed — e.g. a cluster of stellar-mass black holes with a Plummer density profile. Pulsars inside the core of the distribution feel only a fraction of the total mass.
+        <strong>Part (b):</strong> When R &lt; r_c, most of the extended Plummer mass lies <em>outside</em> R. By the shell theorem, only the enclosed mass contributes to the gravitational acceleration at R. This physically represents a scenario where the central mass is distributed rather than pointlike, such as a cluster of stellar-mass black holes with a Plummer density profile. Pulsars inside the core of the distribution feel only a fraction of the total mass.
         <br><br>
-        <strong>Part (c):</strong> A point mass concentrates all M at R = 0, so any pulsar at projected radius R feels the full gravitational pull. This is the maximum possible acceleration for a given total M, giving the tightest (most conservative) upper limit on M from a non-detection. A Plummer model distributes M, so pulsars inside the core feel less acceleration — the same observed limit allows a much larger total M. The choice of model has real physical content: IMBH hypothesis → point model; dark cluster hypothesis → Plummer model.
+        <strong>Part (c):</strong> A point mass concentrates all M at R = 0, so any pulsar at projected radius R feels the full gravitational pull. This is the maximum possible acceleration for a given total M, giving the tightest (most conservative) upper limit on M from a non-detection. A Plummer model distributes M, so pulsars inside the core feel less acceleration, and the same observed limit allows a much larger total M. The choice of model has real physical content: IMBH hypothesis → point model; dark cluster hypothesis → Plummer model.
       </div>
     </details>
   </div>
@@ -233,41 +265,45 @@ M_max = 2.3×10⁻⁶ × (2.685×10¹⁶)² / 6.674×10⁻¹¹
     <span class="problem-title">SKA observation design</span>
   </div>
   <div class="problem-body">
-    <p>The TRAPUM 2026 limit (M &lt; 10<sup>5</sup> M<sub>☉</sub>) is two orders of magnitude above the Häberle detection of 8,200 M<sub>☉</sub>. Reaching the Häberle mass scale with pulsar timing requires either (a) discovering inner pulsars at R &lt; 0.1 pc or (b) achieving a much tighter a<sub>los</sub> limit for known pulsars.</p>
+    <p>The TRAPUM 2026 limit (M &lt; 10<sup>5</sup> M<sub>☉</sub>) sits a factor of 12 above the Häberle lower bound of 8,200 M<sub>☉</sub>. Reaching that mass scale with pulsar timing requires either a pulsar at smaller projected radius than any now timed, or a much tighter a<sub>los</sub> limit on one already known. This problem quantifies both.</p>
     <ol type="a">
-      <li>At what projected radius R would a pulsar need to lie for a point-mass 8,200 M<sub>☉</sub> IMBH to produce a<sub>max</sub> = 1 × 10<sup>−7</sup> m/s² (a plausible SKA timing precision target)? Express in pc and arcsec at d = 5.43 kpc. <span class="marks">[5 marks]</span></li>
-      <li>OC's core radius is ~1.4 pc. Is the radius you computed in (a) inside the core? What does this imply for pulsar discovery rates with MeerKAT vs. SKA? <span class="marks">[5 marks]</span></li>
+      <li>The best current a<sub>los</sub> limit in the table is 4.75 × 10<sup>−9</sup> m/s² (PSR H). Suppose SKA-era timing tightens that to 1 × 10<sup>−9</sup> m/s². At what projected radius R would a pulsar have to lie for a point-mass 8,200 M<sub>☉</sub> IMBH to produce a<sub>max</sub> = 1 × 10<sup>−9</sup> m/s²? Express in pc and arcsec at d = 5.49 kpc. <span class="marks">[5 marks]</span></li>
+      <li>Compare that radius with OC's core radius (r<sub>c</sub> = 3.79 pc) and with the projected radii of the eight timed pulsars. State the two routes to the Häberle mass scale and which of them PSR J1326−4728H already satisfies. <span class="marks">[5 marks]</span></li>
     </ol>
     <details class="solution">
       <summary>Show solution</summary>
       <div class="solution-body">
         <strong>Part (a):</strong>
         <span class="eq-inner">
-R = sqrt(G M / a_max)
-M = 8200 × 1.989×10³⁰ = 1.631×10³⁴ kg
-R = sqrt(6.674×10⁻¹¹ × 1.631×10³⁴ / 1×10⁻⁷)
-  = sqrt(1.088×10³⁷)
-  = 1.043×10¹⁸·⁵ ... let's compute:
-  = sqrt(1.088e37) = 3.298×10¹⁸ m
+R = sqrt(0.3849 G M / a_max)
 
-Convert: R = 3.298×10¹⁸ / 3.086×10¹⁶ = 106.9 pc
+G M = 6.674×10⁻¹¹ × 8200 × 1.989×10³⁰
+    = 6.674×10⁻¹¹ × 1.6310×10³⁴
+    = 1.0885×10²⁴ m³/s²
 
-Wait — this seems too large. Let me recheck with a_max = 1e-7 m/s²:
-R = sqrt(6.674e-11 × 1.631e34 / 1e-7)
-  = sqrt(1.088e38) ... = 1.043e19 m
+0.3849 G M = 4.1897×10²³
 
-Hmm, let me redo:
-G M = 6.674e-11 × 1.631e34 = 1.089e24 m³/s²
-R = sqrt(1.089e24 / 1e-7) = sqrt(1.089e31) = 1.044e15·⁵
+R = sqrt(4.1897×10²³ / 1×10⁻⁹)
+  = sqrt(4.1897×10³²)
+  = 2.047×10¹⁶ m
 
-Actually: sqrt(1.089e31) = sqrt(10.89e30) = 3.30e15·⁵
-Let me be precise: 1.089×10³¹; sqrt = 3.300×10¹⁵·⁵
-= 10^(31/2) × sqrt(1.089) = 10^15.5 × 1.044 = 3.162×10¹⁵ × 1.044 = 3.30×10¹⁵ m
+R = 2.047×10¹⁶ / 3.086×10¹⁶ = 0.663 pc
 
-Convert to pc: 3.30×10¹⁵ / 3.086×10¹⁶ = 0.107 pc ≈ 0.11 pc</span>
-        Converting to arcsec: 0.107 pc / 5.43 kpc × (180/π × 3600) arcsec/rad = 0.107 / 5430 × 206,265 = 4.1 arcsec.
+In arcsec at d = 5.49 kpc:
+  0.663 / 5490 × 206265 = 24.9 arcsec</span>
+        <br>
+        <strong>Part (b):</strong> R = 0.66 pc (25″) is deep inside the 3.79 pc core, and inside every one of the eight timed pulsars: the innermost, PSR H, is at 0.894 pc. So a 10<sup>−9</sup> m/s² limit alone does not reach the Häberle scale with the current sample. There are two routes.
+        <span class="eq-inner">
+Route 1 — find a pulsar inside 0.66 pc (25 arcsec) and time it to 1e-9 m/s².
+
+Route 2 — keep PSR H at R = 0.894 pc and tighten its limit.
+  Required: a_max(8200 M☉, 0.894 pc)
+          = 0.3849 × 1.0885e24 / 7.617e32
+          = 5.50e-10 m/s²
+  Current:  4.75e-9 m/s²   →   factor 8.6 improvement needed.</span>
+        PSR H already satisfies the radius half of route 2; what it lacks is the timing precision. For an acceleration inferred from a spin-period derivative the sensitivity improves roughly as T<sup>−3/2</sup> in the timing baseline, so a factor 8.6 is a plausible decade-scale gain even before SKA collecting area is counted. SKA's separate contribution is the eleven OC pulsars with no timing solution at all, plus the discovery depth to reach inside 1 pc, where stellar crowding and scintillation limit MeerKAT.
         <br><br>
-        <strong>Part (b):</strong> The required R ≈ 0.11 pc is well inside the core radius of 1.4 pc — deep in the crowded central region. MeerKAT has found pulsars at R ~ 0.2–1 pc in OC; the innermost ≲0.1 pc is heavily confused by stellar crowding. SKA's higher sensitivity and resolution (~3× improvement in sensitivity per beam) could reveal pulsars at R ~ 0.1 pc that MeerKAT misses due to scintillation and crowding. However, the discovery rate scales roughly with survey depth; the probability of finding a pulsar at exactly the right radius depends on the cluster's pulsar density profile, which peaks in the core but is not well constrained inside 0.05 pc.
+        Both routes inherit the difficulty identified in Problem 1(c): a tighter a<sub>los</sub> only tightens the mass limit once the intrinsic spin-down and the cluster mean field are separated from it, and at these radii the cluster's own field dominates.
       </div>
     </details>
   </div>
@@ -276,7 +312,9 @@ Convert to pc: 3.30×10¹⁵ / 3.086×10¹⁶ = 0.107 pc ≈ 0.11 pc</span>
 <h2>References</h2>
 <ul class="refs">
   <li>Colom i Bernadich, M. et al. (TRAPUM 2026). Constraining an IMBH in ωCen via pulsar timing. arXiv:2603.21845</li>
-  <li>Chen, J. et al. (2023). Radio pulsars in Omega Centauri. <em>MNRAS</em> 520, 3847.</li>
+  <li>Chen, W. et al. (2023). Thirteen new pulsars in ω Centauri discovered with MeerKAT. <em>MNRAS</em> 520, 3847. doi:10.1093/mnras/stad029</li>
+  <li>Dai, S. et al. (2020). Discovery of millisecond pulsars in ω Centauri with Parkes. <em>ApJL</em> 888, L18. doi:10.3847/2041-8213/ab621a</li>
+  <li>Harris, W.E. (1996, 2010 edition). A catalog of parameters for Milky Way globular clusters. <em>AJ</em> 112, 1487. arXiv:1012.3224</li>
   <li>Bañares-Hernández, A. et al. (2025). Ruling out an IMBH in ωCen using a dark cluster of stellar remnants. <em>A&amp;A</em> 693, A104.</li>
   <li>Häberle, M. et al. (2024). Fast-moving stars around an intermediate-mass black hole in Omega Centauri. <em>Nature</em> 631, 285–288.</li>
 </ul>
