@@ -119,6 +119,16 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
   </ol>
 </div>
 
+<div class="objectives">
+  <div class="obj-label">Adopted values (used throughout PS 1–4)</div>
+  <ol>
+    <li>Distance to OC: d = 5.49 kpc = 1.694 × 10<sup>20</sup> m (oMEGACat VI, arXiv:2503.04903).</li>
+    <li>Häberle mass: M ≥ 8,200 M<sub>☉</sub>, a lower bound on the enclosed mass. Baumgardt: M &lt; 3,000 M<sub>☉</sub>, a 3σ upper limit. Problems 1–3 treat 8,200 M<sub>☉</sub> as a working value, and a larger mass moves every frequency below down in proportion.</li>
+    <li>LISA band: 0.1 mHz to 100 mHz, peak sensitivity near 3 mHz (Robson, Cornish &amp; Liu 2019). Nominal mission T<sub>obs</sub> = 4 yr.</li>
+    <li>Constants: G = 6.674 × 10<sup>−11</sup>, c = 2.998 × 10<sup>8</sup> m/s, M<sub>☉</sub> = 1.989 × 10<sup>30</sup> kg, 1 yr = 3.156 × 10<sup>7</sup> s.</li>
+  </ol>
+</div>
+
 <h2>Background</h2>
 
 <p>An <strong>extreme mass-ratio inspiral</strong> (EMRI) occurs when a stellar-mass compact object (neutron star or black hole, m₂ ~ 1–30 M<sub>☉</sub>) slowly spirals into a massive black hole (M₁ ≫ m₂) due to gravitational wave emission. EMRIs are a primary science target for LISA (Laser Interferometer Space Antenna), sensitive in the mHz frequency band.</p>
@@ -130,26 +140,38 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
 
 ISCO orbital frequency:
   f_orb = c³ / (6^(3/2) · 2π · G M)
-        ≈ 2.20 × 10⁻² Hz × (M☉ / M)
+        = 2.198 × 10³ Hz × (M☉ / M)
 
 GW frequency (l=m=2 dominant mode):
   f_GW = 2 × f_orb
 
 For Kerr (spin a), the prograde ISCO shrinks:
-  r_ISCO(a) → r_s = 2 G M / c²  as  a → 1  (maximally spinning)
-  f_GW increases by up to a factor ~6 at a = 0.998 vs a = 0
+  r_ISCO(a) → G M / c²  as  a → 1  (maximally spinning)
+    i.e. from 6 GM/c² at a = 0 down to 1 GM/c²
+
+The ISCO frequency is NOT (r_ISCO)^(-3/2) in Kerr. The correct
+orbital frequency, in units where r is measured in r_g = GM/c², is
+
+  Ω(a) = (c³ / G M) / (r_ISCO^(3/2) + a)     (prograde)
+
+so the frequency gain from spin must be read off that expression,
+not from a radius ratio. It is a factor 3.31 at a = 0.9 and 6.19
+at a = 0.998, relative to a = 0.
 
 Characteristic strain (Cutler & Flanagan 1994):
   h_c = h_0 × sqrt(N_cycles)
 
-  h_0 ≈ (4/√5) × (G μ / c²) × (G M / c²)^(1/3) × (π f_GW)^(2/3) / D_L
+  h_0 ≈ (4/√5) × (G μ / c²) × (G M / c²)^(1/3) × (π f_GW / c)^(2/3) / D_L
 
   μ = m₁ m₂ / (m₁ + m₂)  (reduced mass, ≈ m₂ for EMRI)
   D_L = luminosity distance
   N_cycles ≈ f_GW × T_obs  (number of GW cycles in T_obs)
 
-LISA sensitivity band:  ~0.1 mHz  to  ~0.1 Hz (peak ~3 mHz)
-OC distance: D = 5.43 kpc = 1.675 × 10²² m</div>
+  (The 1/c inside the (π f_GW / c)^(2/3) factor is what makes h_0
+   dimensionless; dropping it changes the answer by ~13 orders.)
+
+LISA sensitivity band:  ~0.1 mHz  to  ~100 mHz (peak ~3 mHz)
+OC distance: D = 5.49 kpc = 1.694 × 10²⁰ m</div>
 
 <h2>Problems</h2>
 
@@ -159,14 +181,14 @@ OC distance: D = 5.43 kpc = 1.675 × 10²² m</div>
     <span class="problem-title">ISCO frequency and LISA band placement</span>
   </div>
   <div class="problem-body">
-    <p>Consider an EMRI with primary M = 8,200 M<sub>☉</sub> (Häberle 2024), secondary m₂ = 10 M<sub>☉</sub>, at OC distance D = 5.43 kpc.</p>
+    <p>Consider an EMRI with primary M = 8,200 M<sub>☉</sub> (the Häberle 2024 lower bound, used here as a working value), secondary m₂ = 10 M<sub>☉</sub>, at OC distance D = 5.49 kpc.</p>
     <ol type="a">
       <li>Compute f<sub>GW</sub> at the Schwarzschild ISCO (a = 0). Is this frequency within the LISA sensitivity band (0.1 mHz – 100 mHz)? <span class="marks">[6 marks]</span></li>
-      <li>For a rapidly spinning IMBH with a = 0.9 (as assumed in the OCS GW Horizon Plotter), the prograde ISCO radius shrinks to approximately 2.3 r<sub>s</sub>. By what factor does f<sub>GW</sub> increase relative to the Schwarzschild case? Is the new frequency still within the LISA band? <span class="marks">[5 marks]</span></li>
+      <li>For a rapidly spinning IMBH with a = 0.9, the prograde ISCO radius shrinks to 2.32 GM/c² (from 6 GM/c² at a = 0). Using the exact Kerr orbital frequency in the Background, by what factor does f<sub>GW</sub> increase relative to the Schwarzschild case? Why is that factor not (6/2.32)<sup>3/2</sup>? <span class="marks">[5 marks]</span></li>
       <li>Use the GW Horizon Plotter (pre-filled link below) to verify your f<sub>GW</sub> estimate. Does the tool's LISA sensitivity curve overlap the computed peak frequency? <span class="marks">[4 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=8200&m2=10&dist=5.43&spin=0.9" target="_blank" rel="noopener">
-      ↗ GW Horizon Plotter — M = 8,200 M☉ · m₂ = 10 M☉ · d = 5.43 kpc · a = 0.9
+    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=8200&m2=10&dist=5.49&spin=0.9" target="_blank" rel="noopener">
+      ↗ GW Horizon Plotter — M = 8,200 M☉ · m₂ = 10 M☉ · d = 5.49 kpc · a = 0.9
     </a>
     <details class="solution">
       <summary>Show solution</summary>
@@ -176,23 +198,30 @@ OC distance: D = 5.43 kpc = 1.675 × 10²² m</div>
 f_GW(Schw) = 2 × f_orb = 2 × c³ / (6^(3/2) · 2π · G M)
 
 Constants: G = 6.674×10⁻¹¹, c = 2.998×10⁸ m/s, M☉ = 1.989×10³⁰ kg
-M = 8200 × 1.989×10³⁰ = 1.631×10³⁴ kg
+M = 8200 × 1.989×10³⁰ = 1.6310×10³⁴ kg
+G M = 1.0885×10²⁴ m³/s²
 
-f_orb = (2.998×10⁸)³ / (6^1.5 × 2π × 6.674×10⁻¹¹ × 1.631×10³⁴)
-      = 2.694×10²⁵ / (14.697 × 2π × 1.088×10²⁴)
-      = 2.694×10²⁵ / (9.997×10²⁵)
-      = 0.02695 Hz
+f_orb = (2.998×10⁸)³ / (6^1.5 × 2π × 1.0885×10²⁴)
+      = 2.6946×10²⁵ / (14.697 × 6.2832 × 1.0885×10²⁴)
+      = 2.6946×10²⁵ / 1.0052×10²⁶
+      = 0.2681 Hz
 
-f_GW = 2 × 0.02695 = 0.0539 Hz ≈ 54 mHz</span>
-        54 mHz is at the high-frequency end of the LISA band (0.1–100 mHz). LISA's peak sensitivity is at ~3 mHz; at 54 mHz LISA's noise floor rises steeply. The signal is <em>technically</em> within the nominal band but near its upper edge.
+f_GW = 2 × 0.2681 = 0.5362 Hz = 536 mHz</span>
+        Check against the constant in the Background: 2,198 Hz / 8,200 = 0.2681 Hz, the same number.
         <br><br>
-        <strong>Part (b):</strong> At a = 0.9, r_ISCO ≈ 2.3 r_s (the tool uses the exact Kerr formula). Since f_orb ∝ 1/r_ISCO^(3/2) and r_ISCO shrinks from 6 r_s to 2.3 r_s:
+        536 mHz is above the LISA band, whose upper edge is 100 mHz, by a factor of 5.4. An 8,200 M<sub>☉</sub> black hole is light enough that its ISCO frequency sits past LISA's high-frequency cutoff, where the noise floor is already rising as f². That does not put the source out of reach: the ISCO marks the end of the inspiral, and the system radiates at every lower frequency on its way there. The signal crosses the whole LISA band before merging. Only the final, loudest part of the waveform lies above it.
+        <br><br>
+        <strong>Part (b):</strong> The naive answer, (6/2.32)<sup>3/2</sup> = 4.16, applies to a Newtonian or Schwarzschild orbit where Ω ∝ r<sup>−3/2</sup>. In Kerr the prograde orbital frequency carries the frame-dragging term in the denominator:
         <span class="eq-inner">
-f_GW(a=0.9) / f_GW(a=0) = (r_ISCO,0 / r_ISCO,a)^(3/2)
-                         = (6/2.3)^1.5 = (2.609)^1.5 = 4.21</span>
-        So f_GW ≈ 54 × 4.21 ≈ 227 mHz. This is outside the LISA band. A non-spinning 8,200 M☉ IMBH produces EMRI signals near LISA's upper edge; a rapidly spinning one pushes the peak frequency above the band.
+Ω(a) = (c³/GM) / (r_ISCO^(3/2) + a)      [r in units of GM/c²]
+
+a = 0:     r = 6.000,  r^1.5 + a = 14.697 + 0     = 14.697
+a = 0.9:   r = 2.321,  r^1.5 + a =  3.536 + 0.9   =  4.436
+
+f_GW(a=0.9) / f_GW(a=0) = 14.697 / 4.436 = 3.31</span>
+        So f<sub>GW</sub> ≈ 536 × 3.31 = 1,776 mHz = 1.78 Hz, further above the LISA band still. The same expression at a = 0.998 gives r = 1.237 and a ratio of 6.19, which is where the "factor ~6" in the Background comes from. The radius-ratio shortcut overstates the a = 0.9 gain by 26 per cent because it ignores the +a term.
         <br><br>
-        <strong>Part (c):</strong> The tool should show the characteristic strain curve peaking near ~50–200 mHz for these parameters, straddling the LISA noise floor. Students should note whether the peak exceeds the LISA sensitivity curve at 1 yr integration.
+        <strong>Part (c):</strong> The tool reports f_ISCO = 0.535 Hz at a = 0 and 1.774 Hz at a = 0.9. The small offset from the hand values (0.536 and 1.776 Hz) is because the tool uses the total mass m₁ + m₂ = 8,210 M<sub>☉</sub> rather than the primary alone. Its LISA sensitivity curve stops at 100 mHz and the strain track continues past it to the ISCO tick, so the peak does not overlap the LISA curve at all; the detectable portion of the track is the segment below 100 mHz, in the inspiral rather than at the ISCO.
       </div>
     </details>
   </div>
@@ -204,13 +233,13 @@ f_GW(a=0.9) / f_GW(a=0) = (r_ISCO,0 / r_ISCO,a)^(3/2)
     <span class="problem-title">Characteristic strain and SNR</span>
   </div>
   <div class="problem-body">
-    <p>Use the parameters M = 8,200 M<sub>☉</sub>, m₂ = 10 M<sub>☉</sub>, D = 5.43 kpc, a = 0, and T<sub>obs</sub> = 4 yr (LISA nominal mission lifetime).</p>
+    <p>Use the parameters M = 8,200 M<sub>☉</sub>, m₂ = 10 M<sub>☉</sub>, D = 5.49 kpc, a = 0, and T<sub>obs</sub> = 1 yr.</p>
     <ol type="a">
-      <li>Estimate N<sub>cycles</sub> of GW radiation during the last year of inspiral (when the orbit is roughly at the ISCO). Note: at 54 mHz, N_cycles ≈ f_GW × T_obs_1yr. <span class="marks">[4 marks]</span></li>
-      <li>A rough SNR estimate for LISA detection is SNR ~ h<sub>c</sub> / S<sub>n</sub>(f)^{1/2}, where S<sub>n</sub> at 54 mHz is approximately 10<sup>−20.5</sup> Hz<sup>−1/2</sup>. Using the characteristic strain formula, estimate whether the OC EMRI is detectable with SNR &gt; 8 (standard LISA threshold). Assume h₀ ≈ 10<sup>−22</sup> as an approximation and compute h<sub>c</sub>. <span class="marks">[6 marks]</span></li>
-      <li>How does the detectability change if M = 3,000 M<sub>☉</sub> (Baumgardt limit)? Compute the ISCO frequency and comment on detectability qualitatively. <span class="marks">[5 marks]</span></li>
+      <li>Estimate N<sub>cycles</sub> of GW radiation during the last year of inspiral, when the orbit is close to the ISCO: N_cycles ≈ f_GW × T_obs. <span class="marks">[4 marks]</span></li>
+      <li>Compute h₀ from the Background formula, then h<sub>c</sub> = h₀ √N. A monochromatic-source SNR estimate is SNR ≈ h<sub>c</sub> / (S<sub>n</sub>(f)<sup>1/2</sup> × f<sup>1/2</sup>). At 536 mHz the Robson, Cornish &amp; Liu (2019) LISA fit gives S<sub>n</sub><sup>1/2</sup> = 2.42 × 10<sup>−19</sup> Hz<sup>−1/2</sup>. Is the OC EMRI detectable at SNR &gt; 8? <span class="marks">[6 marks]</span></li>
+      <li>How does this change if M = 3,000 M<sub>☉</sub> (Baumgardt limit)? Compute the ISCO frequency and comment on detectability. <span class="marks">[5 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=3000&m2=10&dist=5.43&spin=0" target="_blank" rel="noopener">
+    <a class="tool-link" href="https://omegacentauri.me/tools/gw-horizon-plotter.html#m1=3000&m2=10&dist=5.49&spin=0" target="_blank" rel="noopener">
       ↗ GW Horizon Plotter — M = 3,000 M☉ · a = 0 (Baumgardt limit comparison)
     </a>
     <details class="solution">
@@ -218,28 +247,39 @@ f_GW(a=0.9) / f_GW(a=0) = (r_ISCO,0 / r_ISCO,a)^(3/2)
       <div class="solution-body">
         <strong>Part (a):</strong>
         <span class="eq-inner">
-N_cycles = f_GW × T_1yr = 0.054 Hz × 3.156×10⁷ s = 1.70×10⁶ cycles</span>
-        ~1.7 million GW cycles accumulated in 1 year at the ISCO. This is a monochromatic signal in LISA terms — the frequency evolution (chirp) is slow because the mass ratio is extreme (m₂/M = 10/8200 ≈ 1.2×10⁻³).
+N_cycles = f_GW × T_1yr = 0.5362 Hz × 3.156×10⁷ s = 1.692×10⁷ cycles</span>
+        About 17 million GW cycles in one year at the ISCO. The signal is nearly monochromatic over the observation: the frequency evolution is slow because the mass ratio is extreme (m₂/M = 10/8200 = 1.2 × 10⁻³).
         <br><br>
         <strong>Part (b):</strong>
         <span class="eq-inner">
-h_c = h_0 × sqrt(N_cycles) ≈ 10⁻²² × sqrt(1.7×10⁶)
-    = 10⁻²² × 1304
-    ≈ 1.3×10⁻¹⁹
+μ ≈ m₂ = 10 M☉ = 1.989×10³¹ kg
+G μ / c²   = 1.3275×10²¹ / 8.988×10¹⁶ = 1.4769×10⁴ m
+G M / c²   = 1.0885×10²⁴ / 8.988×10¹⁶ = 1.2111×10⁷ m
+(G M/c²)^(1/3)                        = 229.6 m
+(π f_GW / c)^(2/3) = (1.6846 / 2.998×10⁸)^(2/3)
+                   = (5.619×10⁻⁹)^(2/3) = 3.162×10⁻⁶ m^(−2/3)
+4/√5 = 1.7889
+D_L = 5.49 kpc = 1.6942×10²⁰ m
 
-S_n^(1/2) at 54 mHz ≈ 10⁻²⁰·⁵ = 3.16×10⁻²¹ Hz^(−1/2)
+h_0 = 1.7889 × 1.4769×10⁴ × 229.6 × 3.162×10⁻⁶ / 1.6942×10²⁰
+    = 19.18 / 1.6942×10²⁰
+    = 1.13×10⁻¹⁹
 
-For matched-filter SNR we need h_c and the noise spectral density.
-A rough SNR: SNR ≈ h_c / (S_n^(1/2) × f^(1/2))
-           ≈ 1.3×10⁻¹⁹ / (3.16×10⁻²¹ × sqrt(0.054))
-           ≈ 1.3×10⁻¹⁹ / (3.16×10⁻²¹ × 0.232)
-           ≈ 1.3×10⁻¹⁹ / 7.34×10⁻²² ≈ 177</span>
-        SNR ≈ 177 ≫ 8. Under this rough estimate, the OC EMRI is highly detectable by LISA. However, h₀ ~ 10⁻²² is a generous approximation; students should flag that the actual h₀ depends on the orbital parameters and inclination. The GW Horizon Plotter gives a more precise estimate.
+h_c = h_0 × sqrt(N) = 1.13×10⁻¹⁹ × sqrt(1.692×10⁷)
+    = 1.13×10⁻¹⁹ × 4114
+    = 4.66×10⁻¹⁶
+
+SNR ≈ h_c / (S_n^(1/2) × f^(1/2))
+    = 4.66×10⁻¹⁶ / (2.42×10⁻¹⁹ × sqrt(0.5362))
+    = 4.66×10⁻¹⁶ / (2.42×10⁻¹⁹ × 0.7323)
+    = 4.66×10⁻¹⁶ / 1.772×10⁻¹⁹
+    ≈ 2.6×10³</span>
+        SNR ≈ 2,600, far above the threshold of 8, and that is after paying the noise penalty for sitting at 536 mHz, where S<sub>n</sub><sup>1/2</sup> is roughly 80× worse than at LISA's 3 mHz minimum. The reason is distance: OC is five orders of magnitude closer than a cosmological EMRI host (Problem 3c), and h₀ ∝ 1/D<sub>L</sub>. Two caveats belong on this number. It assumes a full year of coherent integration on a source whose ISCO frequency is above the band LISA is specified for, so the practical SNR is set by the part of the inspiral track that falls below 100 mHz rather than by the ISCO value used here. And the h₀ expression is a sky- and inclination-averaged leading-order estimate; a real analysis carries orbital eccentricity, inclination and the detector response.
         <br><br>
         <strong>Part (c):</strong> For M = 3,000 M☉:
         <span class="eq-inner">
-f_GW(3000 M☉) = 0.0539 × (8200/3000) = 0.147 Hz</span>
-        147 mHz is above the nominal LISA band. At this frequency, the LISA noise floor rises rapidly (dominated by laser phase noise). A 3,000 M☉ IMBH would produce an EMRI signal that is marginally above the LISA band, making detection significantly harder. This is an important discriminator: if the IMBH mass is &lt;4,000 M☉, LISA will not detect an EMRI unless spin is modest (a &lt; 0.5). The Häberle mass (8,200 M☉) is actually more favorable for LISA than the Baumgardt upper limit.
+f_GW(3000 M☉) = 0.5362 × (8200/3000) = 1.466 Hz</span>
+        A lighter black hole has a smaller ISCO radius and therefore a higher ISCO frequency: 1.47 Hz, nearly 15× above the LISA band edge, against 5.4× for the 8,200 M<sub>☉</sub> case. At that frequency S<sub>n</sub><sup>1/2</sup> has risen to 6.6 × 10⁻¹⁹ Hz<sup>−1/2</sup>, another factor of 2.7 worse. The inspiral still passes through the LISA band on its way up, so the source is not lost, but a larger fraction of the loud final phase falls outside the instrument. The mass dependence runs the same way throughout: heavier central masses put more of the waveform inside the LISA band, so the Häberle lower bound is the more favourable of the two hypotheses for LISA, and a mass well above 8,200 M<sub>☉</sub> would be better still.
       </div>
     </details>
   </div>
@@ -261,7 +301,7 @@ where:
     <ol type="a">
       <li>Estimate Γ<sub>EMRI</sub> for OC using M = 8,200 M<sub>☉</sub>. Over LISA's 4-year mission lifetime, how many EMRIs from OC would you expect? <span class="marks">[5 marks]</span></li>
       <li>The order-of-magnitude uncertainty on A means the true rate could be 10× higher or lower. What range of expected EMRIs does this imply? Is OC a reliable LISA source or a long shot? <span class="marks">[5 marks]</span></li>
-      <li>OC is at D = 5.43 kpc, while typical LISA EMRI science targets are galaxies at D ~ 1 Gpc. By what factor does OC's proximity increase the characteristic strain h₀ relative to a Gpc source? <span class="marks">[5 marks]</span></li>
+      <li>OC is at D = 5.49 kpc, while typical LISA EMRI science targets are galaxies at D ~ 1 Gpc. By what factor does OC's proximity increase the characteristic strain h₀ of the <em>same intrinsic source</em> relative to a Gpc distance? <span class="marks">[5 marks]</span></li>
     </ol>
     <details class="solution">
       <summary>Show solution</summary>
@@ -273,18 +313,18 @@ where:
         ≈ 0.082 events/yr
 
 Over 4 yr: N_expected = 0.082 × 4 ≈ 0.33 events</span>
-        So we expect roughly 1 event per 3 missions. In a single 4-year LISA mission, there is about a 33% chance of detecting one OC EMRI.
+        So we expect roughly 1 event per 3 missions. For a Poisson process with mean 0.33, the probability of at least one event in a single 4-year mission is P(≥1) = 1 − e<sup>−0.33</sup> = 0.28, or 28%. (The expected number and the probability of at least one differ once the mean is not small; quoting 33% for both conflates them.)
         <br><br>
-        <strong>Part (b):</strong> With ±1 dex uncertainty: N_expected ranges from ~0.033 to ~3.3 events over 4 yr. In the optimistic case (&gt;3 events), OC is a strong guaranteed LISA source. In the pessimistic case, it's a ~3% probability per mission. The expected value (~0.3 events/mission) puts OC in the "long shot but not negligible" category — comparable to the detection probability of M31-type IMBH sources at ~700 kpc. However, if an EMRI is detected, OC's distance means the SNR would be enormous (see Problem 2c).
+        <strong>Part (b):</strong> With ±1 dex uncertainty, N_expected ranges from 0.033 to 3.3 events over 4 yr, so P(≥1) runs from 1 − e<sup>−0.033</sup> = 3.2% to 1 − e<sup>−3.3</sup> = 96%. The optimistic end makes OC a near-certain source; the pessimistic end makes it a 3% shot. The central value of ~0.33 events per mission, at 28%, is a long shot rather than a guaranteed source, and the dominant uncertainty is the rate normalisation A rather than anything about OC. If an EMRI is detected, its SNR would be very large (Problem 2b).
         <br><br>
         <strong>Part (c):</strong> Characteristic strain h₀ ∝ 1/D_L. Ratio:
         <span class="eq-inner">
-D_Gpc / D_OC = 1,000 Mpc / (5.43 kpc)
-             = 1,000 × 10³ kpc / 5.43 kpc
-             = 1.84 × 10⁵
+D_Gpc / D_OC = 1 Gpc / 5.49 kpc
+             = 1×10⁹ pc / 5.49×10³ pc
+             = 1.82 × 10⁵
 
-h₀(OC) / h₀(Gpc) = D_Gpc / D_OC ≈ 1.84 × 10⁵</span>
-        OC's proximity makes any EMRI ~2 × 10⁵ times stronger in strain than a typical cosmological EMRI source. An OC EMRI that would be marginally detectable at 1 Gpc would have SNR ~ 10⁵ × 8 ~ 10⁶ at OC's distance — far exceeding LISA's dynamic range. This would require special signal-processing techniques but would be the most precisely measured IMBH mass in history.
+h₀(OC) / h₀(Gpc) = D_Gpc / D_OC = 1.82 × 10⁵</span>
+        Moving one and the same source from 1 Gpc to OC's distance multiplies its strain by 1.8 × 10<sup>5</sup>. A source at SNR 8 at 1 Gpc would reach SNR ≈ 1.5 × 10<sup>6</sup> at 5.49 kpc. The comparison is a scaling exercise rather than a like-for-like one: LISA's cosmological EMRI targets are ~10<sup>6</sup> M<sub>☉</sub> massive black holes whose ISCO frequencies fall near the band centre, whereas the OC primary is 10<sup>2</sup>–10<sup>3</sup> times lighter and radiates above the band at merger, which is why the SNR computed in Problem 2b is ~2.6 × 10<sup>3</sup> rather than 10<sup>6</sup>. What survives the caveat is the direction of the effect: proximity is by far the largest single factor working in OC's favour as a LISA target.
       </div>
     </details>
   </div>
@@ -297,6 +337,7 @@ h₀(OC) / h₀(Gpc) = D_Gpc / D_OC ≈ 1.84 × 10⁵</span>
   <li>Amaro-Seoane, P. (2018). Relativistic dynamics and extreme mass ratio inspirals. <em>Living Rev. Rel.</em> 21, 4.</li>
   <li>Hopman, C. &amp; Alexander, T. (2005). The orbital statistics of stellar inspiral and relaxation near a massive black hole. <em>ApJ</em> 629, 362.</li>
   <li>Häberle, M. et al. (2024). Fast-moving stars around an intermediate-mass black hole in Omega Centauri. <em>Nature</em> 631, 285–288.</li>
+  <li>oMEGACat VI (2025). The kinematic distance to ω Centauri. arXiv:2503.04903</li>
   <li>Bardeen, J.M., Press, W.H. &amp; Teukolsky, S.A. (1972). Rotating black holes: locally non-rotating frames, energy extraction, and scalar synchrotron radiation. <em>ApJ</em> 178, 347.</li>
 </ul>
 

@@ -135,9 +135,26 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
 
 <h2>Background</h2>
 
-<p>Omega Centauri (NGC 5139) hosts the strongest current evidence for an intermediate-mass black hole (IMBH) in any globular cluster. Häberle et al. (2024) identified seven stars within 0.08 pc of the cluster center with velocities implying a central dark mass of <strong>M = 8,200 M<sub>☉</sub></strong>, while Baumgardt (2017) placed a 3σ upper limit of <strong>M &lt; 3,000 M<sub>☉</sub></strong> from N-body modeling of the velocity dispersion profile. This tension is the central unresolved issue in the field.</p>
+<p>Omega Centauri (NGC 5139) hosts the strongest current evidence for an intermediate-mass black hole (IMBH) in any globular cluster. Häberle et al. (2024) identified seven stars within 0.08 pc of the cluster center whose velocities require a central dark mass of <strong>M ≥ 8,200 M<sub>☉</sub></strong>. That figure is a lower bound on the enclosed mass rather than a point estimate: the fast movers set a floor, and nothing in the measurement caps the mass from above. Baumgardt (2017) placed a 3σ upper limit of <strong>M &lt; 3,000 M<sub>☉</sub></strong> from N-body modeling of the velocity dispersion profile. The two results do not overlap, and that tension is the central unresolved issue in the field.</p>
 
-<p>The M–σ relation for globular clusters relates IMBH mass M to the cluster's global velocity dispersion σ. In OC, Baumgardt &amp; Hilker (2018) measured σ<sub>0</sub> = 16.8 km/s from HST proper motions.</p>
+<p>The M–σ relation ties black hole mass to the host system's velocity dispersion. The calibration used throughout this set is Gültekin et al. (2009), Table 3, E sample, which is also what the OCS Velocity Dispersion tool implements:</p>
+
+<div class="eq">M_BH = 10^8.12 M☉ × (σ / 200 km/s)^4.24
+
+Inverted for σ:
+  σ(M) = 200 km/s × (M / 10^8.12 M☉)^(1/4.24)</div>
+
+<p>The relation was calibrated on galactic-nucleus black holes of 10<sup>6</sup>–10<sup>10</sup> M<sub>☉</sub>, three to six decades above a globular-cluster IMBH, with ~0.3 dex intrinsic scatter in M<sub>BH</sub> at fixed σ. Extrapolating it to cluster scales is an open question rather than an established result, and Problem 1 is partly about how far that extrapolation can be pushed.</p>
+
+<div class="objectives">
+  <div class="obj-label">Adopted values (used throughout PS 1–4)</div>
+  <ol>
+    <li>Distance to OC: d = 5.49 kpc (oMEGACat VI, arXiv:2503.04903; kinematic distance 5,494 ± 61 pc). 1 pc subtends 37.57″ at this distance.</li>
+    <li>Central velocity dispersion: σ<sub>0</sub> = 18.2 km/s (van de Ven et al. 2006, A&amp;A 445:513). Two other figures circulate and are not merged into this one: Baumgardt &amp; Hilker (2018) catalogue ~16.8 km/s for the global dispersion, and the OCS Jeans-model tools produce ~19–21 km/s in the central region depending on radius. Where an answer depends on σ<sub>0</sub>, the alternative is given alongside.</li>
+    <li>Cluster mass and half-mass radius: M<sub>cl</sub> = 4.0 × 10<sup>6</sup> M<sub>☉</sub>, r<sub>h</sub> = 7.0 pc (Harris/dynamical mass; Baumgardt &amp; Hilker 2018 half-mass radius). The symbol r<sub>h</sub> is reserved for this radius; a black hole influence radius is written r<sub>infl</sub>.</li>
+    <li>Häberle mass: M ≥ 8,200 M<sub>☉</sub>, a lower bound. Baumgardt: M &lt; 3,000 M<sub>☉</sub>, a 3σ upper limit.</li>
+  </ol>
+</div>
 
 <p>The Keplerian velocity at projected radius R from a point mass M is:</p>
 <div class="eq">v_K(R) = sqrt(G M / R)
@@ -156,26 +173,46 @@ G = 6.674 × 10⁻¹¹ m³ kg⁻¹ s⁻²
     <span class="problem-title">M–σ prediction at two mass hypotheses</span>
   </div>
   <div class="problem-body">
-    <p>The M–σ relation for intermediate-mass black holes in globular clusters is calibrated at:</p>
-    <div class="eq">σ_pred ≈ σ_ref × (M / M_ref)^(1/4)
-
-σ_ref = 16.8 km/s at M_ref = 8,200 M☉  [Baumgardt & Hilker 2018]</div>
+    <p>The OCS Velocity Dispersion tool composes two published results: the virial theorem (σ² ≈ G M<sub>cl</sub> / r<sub>h</sub>, from the cluster's total mass and half-mass radius) and the Gültekin et al. (2009) M–σ relation quoted in the Background. It takes a cluster mass as input and returns a predicted black hole mass. It does not accept an IMBH mass as input, so parts (b) and (c) run the relation backwards by hand and then use the tool's σ-override slider to confirm.</p>
     <ol type="a">
-      <li>Using the OCS Velocity Dispersion tool (pre-filled link below), record σ_pred for M = 8,200 M<sub>☉</sub>. Does the tool's prediction agree with the Baumgardt &amp; Hilker (2018) measurement of 16.8 km/s? <span class="marks">[5 marks]</span></li>
-      <li>Repeat for M = 3,000 M<sub>☉</sub> (Baumgardt 2017 N-body upper limit). What predicted σ do you get? By how many km/s does this differ from the M = 8,200 M<sub>☉</sub> prediction? <span class="marks">[5 marks]</span></li>
-      <li>Given that HST proper-motion surveys achieve σ measurement precision of roughly ±0.5 km/s, is the σ difference between the two mass hypotheses observationally distinguishable at present? Explain. <span class="marks">[5 marks]</span></li>
+      <li>Open the pre-filled link below (M<sub>cl</sub> = 4.0 × 10<sup>6</sup> M<sub>☉</sub>, r<sub>h</sub> = 7.0 pc, σ override off). Record the virial σ and the M–σ predicted black hole mass. Compare the virial σ with the adopted σ<sub>0</sub> = 18.2 km/s, and the predicted mass with the Häberle bound. Why does the virial route fail here? <span class="marks">[5 marks]</span></li>
+      <li>Invert the Gültekin relation by hand for M = 8,200 M<sub>☉</sub> and for M = 3,000 M<sub>☉</sub>. What σ does each mass require, and by how many km/s do they differ? Then set the tool's σ-override slider (0.5 km/s steps) and find the half-km/s interval that brackets each mass. <span class="marks">[5 marks]</span></li>
+      <li>HST proper-motion surveys measure σ to roughly ±0.5 km/s. Is the σ difference between the two mass hypotheses distinguishable at that precision? Before answering yes, account for the 0.3 dex intrinsic scatter of the M–σ relation. <span class="marks">[5 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/velocity-dispersion.html#mass=8200&rh=4.8&sig=0" target="_blank" rel="noopener">
-      ↗ Velocity Dispersion tool — pre-filled M = 8,200 M☉, r<sub>h</sub> = 4.8 pc
+    <a class="tool-link" href="https://omegacentauri.me/tools/velocity-dispersion.html#mass=4.0e6&rh=7.0&sig=0" target="_blank" rel="noopener">
+      ↗ Velocity Dispersion tool — pre-filled M<sub>cl</sub> = 4.0 × 10⁶ M☉, r<sub>h</sub> = 7.0 pc, virial σ
     </a>
     <details class="solution">
       <summary>Show solution</summary>
       <div class="solution-body">
-        <strong>Part (a):</strong> The tool should return σ_pred ≈ 16.8 km/s for M = 8,200 M☉, consistent with the Baumgardt &amp; Hilker (2018) value of 16.8 km/s. This is essentially exact because the tool is calibrated to that reference point.
+        <strong>Part (a):</strong>
+        <span class="eq-inner">
+σ_virial = sqrt(G M_cl / r_h)
+         = sqrt(6.674×10⁻¹¹ × 4.0×10⁶ × 1.989×10³⁰ / (7.0 × 3.086×10¹⁶))
+         = sqrt(5.310×10²⁶ / 2.160×10¹⁷)
+         = sqrt(2.458×10⁹) = 4.96×10⁴ m/s = 49.6 km/s
+
+M_BH = 10^8.12 × (49.6 / 200)^4.24
+     = 10^(8.12 + 4.24 × log₁₀ 0.248)
+     = 10^(8.12 − 2.568) = 10^5.552 = 3.6×10⁵ M☉</span>
+        The virial σ of 49.6 km/s is 2.7× the measured σ<sub>0</sub> = 18.2 km/s, and the predicted 3.6 × 10<sup>5</sup> M<sub>☉</sub> is 44× the Häberle bound and an order of magnitude above the highest claimed detection. The virial estimate is inflated because σ² ≈ G M / r<sub>h</sub> drops the structure-dependent virial coefficient (of order 0.4 for a Plummer sphere), and because it returns a mass-weighted global dispersion rather than the line-of-sight dispersion HST measures in the core. Feeding that σ into an exponent of 4.24 turns a factor of 2.7 into a factor of 2.7<sup>4.24</sup> ≈ 47.
         <br><br>
-        <strong>Part (b):</strong> For M = 3,000 M☉, the (M/M_ref)<sup>1/4</sup> factor is (3000/8200)<sup>0.25</sup> ≈ 0.757. So σ_pred ≈ 16.8 × 0.757 ≈ 12.7 km/s. The difference is ~4.1 km/s.
+        <strong>Part (b):</strong>
+        <span class="eq-inner">
+σ(M) = 200 × (M / 1.3183×10⁸)^(1/4.24)
+
+M = 8,200 M☉:  8200 / 1.3183×10⁸ = 6.220×10⁻⁵
+                 log₁₀ = −4.2063;  /4.24 = −0.9920
+                 σ = 200 × 10^(−0.9920) = 200 × 0.10186 = 20.4 km/s
+
+M = 3,000 M☉:  3000 / 1.3183×10⁸ = 2.276×10⁻⁵
+                 log₁₀ = −4.6428;  /4.24 = −1.0950
+                 σ = 200 × 10^(−1.0950) = 200 × 0.08034 = 16.1 km/s
+
+Δσ = 20.4 − 16.1 = 4.3 km/s</span>
+        Tool check with the σ-override slider: σ = 20.0 km/s returns 7,586 M☉ and σ = 20.5 km/s returns 8,423 M☉, so 8,200 M☉ falls in the 20.0–20.5 km/s interval. σ = 16.0 km/s returns 2,945 M☉ and σ = 16.5 km/s returns 3,356 M☉, bracketing 3,000 M☉. Both agree with the hand inversion.
         <br><br>
-        <strong>Part (c):</strong> A 4.1 km/s difference far exceeds the ±0.5 km/s precision of HST proper-motion surveys. In principle the two mass hypotheses are distinguishable from the global σ profile. However, the Baumgardt (2017) N-body analysis <em>did</em> use this measurement and still preferred low mass — the discrepancy arises because the N-body fit uses the full radial profile, not just the central σ value. The global σ predicted by M–σ is not directly falsifying either model without higher-resolution central measurements.
+        <strong>Part (c):</strong> The 4.3 km/s separation is roughly 9× the ±0.5 km/s measurement precision, so the measurement is not the limiting factor. The relation is. A scatter of 0.3 dex in M<sub>BH</sub> at fixed σ is a factor of 2.0 in mass, which propagates to 0.3/4.24 = 0.071 dex in σ, or ±17 per cent, about ±3.4 km/s at 20 km/s. That scatter alone nearly spans the gap between the two hypotheses, and it is a floor derived from galactic-nucleus calibration data, before any question of whether the relation extends down to cluster masses at all. Baumgardt (2017) reached a low-mass conclusion from the full radial dispersion profile in N-body models rather than from a single global σ, which is the discriminating measurement M–σ cannot supply.
       </div>
     </details>
   </div>
@@ -209,7 +246,7 @@ v_K(R₂) = sqrt(6.674e-11 × 1.631e34 / 2.469e15)
          = sqrt(4.411e8) ≈ 21,000 m/s ≈ 21.0 km/s</span>
         So: ~30 km/s at 0.04 pc, ~21 km/s at 0.08 pc.
         <br><br>
-        <strong>Part (b):</strong> The Keplerian circular-orbit speed at 0.04 pc is ~30 km/s. The reported ~50 km/s is for the <em>3D</em> space velocity; for a circular orbit seen at some inclination angle, the projected velocity can differ. A 50 km/s 3D speed at 0.04 pc requires M ~ (50/v_K)² × 8200 ≈ 2.8 × 8200 ≈ 23,000 M☉ for a purely circular orbit — more than the Häberle point estimate. However, for eccentric orbits, stars can reach higher velocities near periapsis than a circular orbit of the same semi-major axis, so 50 km/s 3D velocities are consistent with M ≈ 8,200 M☉ on eccentric orbits at small periapsis.
+        <strong>Part (b):</strong> The Keplerian circular-orbit speed at 0.04 pc is ~30 km/s. The reported ~50 km/s is for the <em>3D</em> space velocity; for a circular orbit seen at some inclination angle, the projected velocity can differ. A 50 km/s 3D speed at 0.04 pc requires M ~ (50/v_K)² × 8200 ≈ 2.8 × 8200 ≈ 23,000 M☉ for a purely circular orbit, above the Häberle lower bound (which the bound permits, since it caps nothing from above). However, for eccentric orbits, stars can reach higher velocities near periapsis than a circular orbit of the same semi-major axis, so 50 km/s 3D velocities are consistent with M ≈ 8,200 M☉ on eccentric orbits at small periapsis.
         <br><br>
         <strong>Part (c):</strong> For M = 3,000 M☉:
         <span class="eq-inner">v_K(0.04 pc) = 29.7 × sqrt(3000/8200) ≈ 29.7 × 0.605 ≈ 18.0 km/s</span>
@@ -227,18 +264,26 @@ v_K(R₂) = sqrt(6.674e-11 × 1.631e34 / 2.469e15)
   <div class="problem-body">
     <p>A centrally-concentrated population of stellar-mass black holes, or radial velocity anisotropy (β > 0), can produce a central σ cusp that mimics an IMBH. Use the OCS Anisotropy Degeneracy Explorer.</p>
     <ol type="a">
-      <li>Set M<sub>IMBH</sub> = 0 and M<sub>rem</sub> = 0. Increase β from 0 to 0.4 in steps of 0.1. At what β does the predicted central σ approach the value produced by M<sub>IMBH</sub> = 8,200 M<sub>☉</sub> with β = 0? <span class="marks">[5 marks]</span></li>
-      <li>The IMBH hypothesis predicts a Keplerian σ ∝ R<sup>−1/2</sup> cusp inside the IMBH sphere of influence (r<sub>h</sub> = G M / σ<sub>0</sub>²). Anisotropy produces a much shallower or flat central profile. What observational signature would most cleanly distinguish the two cases? <span class="marks">[5 marks]</span></li>
+      <li>The tool always draws two curves: the current model (solid) and a no-IMBH model with the same β and M<sub>rem</sub> (dashed). Load the link below and read the solid curve's σ at the innermost plotted radius, R = 0.05 pc, for M<sub>IMBH</sub> = 8,200 M<sub>☉</sub> at β = 0. Then raise β in steps of 0.01 and read the dashed no-IMBH curve until it reaches that same σ. What β is required? <span class="marks">[5 marks]</span></li>
+      <li>The IMBH hypothesis predicts a Keplerian σ ∝ R<sup>−1/2</sup> cusp inside the influence radius r<sub>infl</sub> = G M / σ<sub>0</sub><sup>2</sup>. Compute r<sub>infl</sub> for M = 8,200 M<sub>☉</sub>. Anisotropy produces a much shallower central profile. What observational signature would most cleanly distinguish the two cases? <span class="marks">[5 marks]</span></li>
     </ol>
-    <a class="tool-link" href="https://omegacentauri.me/tools/anisotropy-degeneracy-explorer.html#mass=0&mrem=0&rrem=1.0&beta=0&dist=5.43" target="_blank" rel="noopener">
-      ↗ Anisotropy Degeneracy Explorer — pre-filled M = 0, β = 0
+    <a class="tool-link" href="https://omegacentauri.me/tools/anisotropy-degeneracy-explorer.html#mass=8200&mrem=0&rrem=1.0&beta=0&dist=5.49" target="_blank" rel="noopener">
+      ↗ Anisotropy Degeneracy Explorer — pre-filled M = 8,200 M☉, M<sub>rem</sub> = 0, β = 0, d = 5.49 kpc
     </a>
     <details class="solution">
       <summary>Show solution</summary>
       <div class="solution-body">
-        <strong>Part (a):</strong> The exact answer depends on the model implementation, but typically β ≈ 0.3–0.4 is needed to reproduce the central σ enhancement that an 8,200 M☉ IMBH produces at isotropic β = 0. Students should report the value they read from the tool and note that this β value is physically plausible (many globular clusters show mild radial anisotropy).
+        <strong>Part (a):</strong> With the tool's shipped cluster model (Plummer, M<sub>cl</sub> = 4.0 × 10<sup>6</sup> M<sub>☉</sub>, scale radius 7.0 pc) the isotropic no-IMBH curve sits at σ = 19.07 km/s at R = 0.05 pc, and adding an 8,200 M<sub>☉</sub> point mass lifts it to 20.12 km/s. Raising β on the no-IMBH curve gives 19.86 km/s at β = 0.04, 20.07 at β = 0.05 and 20.29 at β = 0.06, so β ≈ 0.05 reproduces the IMBH signal. Two things are worth noticing. The required β is small and entirely ordinary for a globular cluster, so the degeneracy does not live in an exotic corner of parameter space. And the whole IMBH signal is 1.05 km/s, roughly twice the ±0.5 km/s precision of the measurement it has to be extracted from.
         <br><br>
-        <strong>Part (b):</strong> The clearest distinguishing signature is the <em>radial profile of σ</em> in the innermost 0.05 pc. An IMBH produces a σ ∝ R<sup>−1/2</sup> cusp (Keplerian rise) only within its sphere of influence r<sub>h</sub> = G M / σ<sub>0</sub>² ≈ G × 8200 M☉ / (16.8 km/s)² ≈ 1.8 pc. Anisotropy flattens the profile outside the innermost ~0.01 pc. Individual star proper motions at R &lt; 0.05 pc (achievable with ELT/MICADO) would show a tangential-to-radial velocity ratio consistent with isotropic Keplerian motion for the IMBH case, but radially-biased anisotropy for the no-IMBH case.
+        <strong>Part (b):</strong>
+        <span class="eq-inner">
+r_infl = G M / σ₀²
+       = 6.674×10⁻¹¹ × 8200 × 1.989×10³⁰ / (1.82×10⁴)²
+       = 1.0885×10²⁴ / 3.3124×10⁸
+       = 3.286×10¹⁵ m = 0.106 pc   (4.0″ at 5.49 kpc)</span>
+        At the Baumgardt &amp; Hilker σ<sub>0</sub> = 16.8 km/s the same expression gives 0.125 pc. Neither value is anywhere near 1 pc, so the discriminating region is small.
+        <br><br>
+        The clearest distinguishing signature is the shape of the σ profile inside r<sub>infl</sub>. An IMBH produces a Keplerian σ ∝ R<sup>−1/2</sup> rise there and nothing outside it; radial anisotropy raises σ across a decade or more in radius with no characteristic scale at 0.1 pc. The tool's own curves show why the innermost plotted radius is not enough: at R = 0.05 pc the β = 0.05 and IMBH models agree to 0.05 km/s, and they still agree to within 0.3 km/s out to 0.3 pc. Discriminating requires resolved kinematics inside r<sub>infl</sub>, at R &lt; 0.05 pc (~2″), which is ELT/MICADO territory. There the two hypotheses separate a second way as well: the IMBH case predicts isotropic orbits with a Keplerian velocity distribution, while the anisotropy case predicts a measurably radially-biased tangential-to-radial velocity ratio.
       </div>
     </details>
   </div>
@@ -250,6 +295,9 @@ v_K(R₂) = sqrt(6.674e-11 × 1.631e34 / 2.469e15)
   <li>Baumgardt, H. (2017). N-body modelling of globular clusters: masses, mass-to-light ratios and intermediate-mass black holes. <em>MNRAS</em> 474, 1695–1718.</li>
   <li>Baumgardt, H. &amp; Hilker, M. (2018). A catalogue of masses, structural parameters, and velocity dispersion profiles of 112 Milky Way globular clusters. <em>MNRAS</em> 478, 1520–1557.</li>
   <li>Bañares-Hernández, A. et al. (2025). Ruling out an IMBH in ωCen using a dark cluster of stellar remnants. <em>A&amp;A</em> 693, A104. doi:10.1051/0004-6361/202451357</li>
+  <li>Gültekin, K. et al. (2009). The M–σ and M–L relations in galactic bulges, and determinations of their intrinsic scatter. <em>ApJ</em> 698, 198. doi:10.1088/0004-637X/698/1/198</li>
+  <li>van de Ven, G. et al. (2006). The dynamical distance and intrinsic structure of the globular cluster ω Centauri. <em>A&amp;A</em> 445, 513. doi:10.1051/0004-6361:20053061</li>
+  <li>oMEGACat VI (2025). The kinematic distance to ω Centauri. arXiv:2503.04903</li>
 </ul>
 
 </div><!-- /wrap -->
