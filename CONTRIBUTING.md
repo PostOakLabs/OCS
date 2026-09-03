@@ -22,7 +22,8 @@ tool — they all read from this shared sibling file.
 2. Find the `imbh:` array (for IMBH measurements) or `clusters:` /
    `pulsars:` for the others.
 3. Append a new object following the existing schema. For IMBH measurements
-   the schema is (see §8 Tool 3 of `ocs-tools-spec-v1.1.md`):
+   the schema is (match the fields already used by the other entries in the
+   `imbh:` array):
 
 ```javascript
 {
@@ -65,9 +66,10 @@ the M-σ relation):
 1. Edit the value in the relevant tool file.
 2. Add a comment immediately above noting the source: `// from <citation>, year`.
 3. Update the file's `Last updated:` line in its header comment block.
-4. If the constant is shared across multiple tools (e.g., the ergosphere
-   ops/sec calculation duplicated in Tools 4 and 6 per spec §11), update **all**
-   consumer tools in the same PR. Spec §11 requires character-identical copies.
+4. If the constant is shared across multiple tools (e.g., a calculation
+   duplicated character-for-character across several tool files — `grep` the
+   function or constant name across `tools/*.html` to find every consumer),
+   update **all** consumer tools in the same PR.
 5. Open the PR with a one-line explanation and the source citation.
 
 ## Adding a new language
@@ -76,8 +78,9 @@ Tools launch in English only. The path to add a second language is intentionally
 made cheap:
 
 1. Find the `const STRINGS = { ... }` object near the top of each tool file
-   (mandated by spec §5.5 — "all user-facing string literals stored in a single
-   JS object").
+   (the site-wide convention: every tool stores its user-facing string
+   literals in a single JS object, so a translation only ever touches that
+   object).
 2. Add a new key for the language code (e.g., `STRINGS.zh = { ... }` for
    Chinese) with translated values matching the existing English keys.
 3. Wire a language toggle (see how the main `index.html` handles the `lang-zh`
@@ -92,18 +95,21 @@ made cheap:
 - **Vanilla JavaScript only.** No npm, no build step, no transpilation, no
   TypeScript, no React. The whole site is statically served.
 - **Inline everything.** Each tool is a single self-contained HTML file. The
-  one exception is `tools/data/measurements.js` (see spec §6.7).
+  one exception is `tools/data/measurements.js`, the shared reference-data
+  file (see "What goes in `tools/data/measurements.js`" below).
 - **No network calls at runtime.** No `fetch`, no XHR, no dynamic import over
   the network. Google Fonts is the only exception (already used by the rest of
   the site). Tools must work when opened directly from disk on `file://`.
 - **No PII.** Forms that submit data, identity localStorage, cookies, and
   analytics are not allowed. Non-identity localStorage (e.g., "About panel
   collapsed/expanded") is permitted.
-- **CSS palette and typography:** copy the variable block from spec §5.2
-  verbatim into every tool. Do not invent new color values.
+- **CSS palette and typography:** copy the `:root` CSS-variable block verbatim
+  from an existing tool (e.g. `tools/velocity-dispersion.html`) into every new
+  tool. Do not invent new color values.
 - **URL hash state:** every interactive tool must serialize its current state
   to the URL hash on every interaction and restore from the hash on page load.
-  Use the helper functions in spec §11.
+  Copy the `loadHash()`/`saveHash()` pattern already implemented in an
+  existing tool rather than writing a new one.
 
 ## Local validation hook
 
@@ -123,16 +129,18 @@ the command above. To bypass in an emergency: `git push --no-verify`.
 Before opening a PR, confirm:
 
 - [ ] Any physics is verified against a cited primary source.
-- [ ] Epistemic tier badge(s) are present and correct per spec §6.1.
+- [ ] Epistemic tier badge(s) are present and correct (🔬 established physics /
+      ⚠ observationally debated / ⚠ theoretical / ✦ engineering fiction — copy
+      the badge markup from an existing tool).
 - [ ] URL hash state is implemented (read on load, write on every interaction).
-- [ ] File-header comment block at the top of the file is current per spec §6.4
-      (version bumped, "Last updated" matches the commit date, license trio
-      declared, data sources listed).
+- [ ] File-header comment block at the top of the file is current (version
+      bumped, "Last updated" matches the commit date, license trio declared,
+      data sources listed — copy the block layout from an existing tool file).
 - [ ] Tested in Chrome and Firefox at desktop width and at 720 px.
 - [ ] A new tool page has a card in `tools/index.html`, and any new page is
       linked from a hub — `python3 scripts/check-orphans.py` passes.
-- [ ] If a shared utility function (spec §11) was modified, all consumer tools
-      updated in the same PR.
+- [ ] If a shared utility function was modified, all consumer tools updated
+      in the same PR.
 - [ ] If a hardcoded measurement was modified, the change has been migrated to
       `tools/data/measurements.js` instead, and consumer tools updated to read
       from there.
@@ -141,9 +149,10 @@ Before opening a PR, confirm:
 
 That file is the single source of truth for **curated reference tables only** —
 IMBH measurements, cluster properties, OC pulsar inventory. It is loaded via a
-single `<script src>` tag from tools that need it. Adding new schema sections
-(e.g., a "compute substrate calibration" table) requires updating the spec
-first (`ocs-tools-spec-v1.1.md` §6.7) — open an issue rather than a direct PR.
+single `<script src>` tag from tools that need it. Adding a new schema section
+(e.g., a "compute substrate calibration" table) changes a contract that every
+consumer tool relies on — open an issue proposing the new section's shape
+before sending a direct PR.
 
 ## Reporting an error
 
