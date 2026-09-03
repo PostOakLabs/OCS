@@ -17,8 +17,9 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 ## What's on the site
 
 - **Observational proposals** — instrument proposals spanning JWST, HST, MeerKAT, LIGO/Auger, IceCube, KM3NeT, Fermi/CTA, ELT/MICADO, and radio SETI
-- **Interactive science tools** — browser-based calculators and simulators covering stellar dynamics, black hole physics, gravitational waves, cosmology, and SETI, plus multi-stage workflow chains. Current counts drift as tools ship — see `llms.txt` or run `python3 scripts/verify-counts.py`, never trust a hardcoded number here
-- **Membership & advisors** — society structure, advisory board, and how to get involved
+- **Interactive science tools** — browser-based calculators and simulators covering stellar dynamics, black hole physics, gravitational waves, cosmology, and SETI, plus multi-stage workflow and scenario chains. Current counts drift as tools ship — see `llms.txt` or run `python3 scripts/verify-counts.py`, never trust a hardcoded number here
+- **Nine research papers:** full-text preprints (Papers A–H plus the AXI methods note) linked from `paper.html`, with mirrored LaTeX source under `papers/`
+- **Worked problem sets:** `psets.html` and four pset pages that chain the tools into solved exercises
 - **FAQ** — foundational questions about Omega Centauri and the society's mission
 
 ---
@@ -41,10 +42,20 @@ The format is [OpenChainGraph](https://github.com/PostOakLabs/chaingraph), an op
 OCS/
 ├── index.html                      ← Homepage
 ├── faq.html                        ← Frequently asked questions
-├── advisors.html                   ← Advisory board
 ├── proposals.html                  ← Proposals index
 ├── proposal_*.html                 ← Individual instrument proposals
-├── tools/                          ← Interactive science tools + workflow chains (see llms.txt for counts)
+├── paper.html                      ← Research papers hub
+├── macro-transcension-hypothesis.html, omega-centauri-*.html, engineered-imbh-systems.html, inward-migration-*.html
+│                                    ← Individual paper full-text pages (see llms.txt for the current list)
+├── papers/                         ← Mirrored LaTeX source + figures for each paper
+├── psets.html, pset-*.html         ← Worked problem sets built on the tools
+├── tools/                          ← Interactive science tools + workflow/scenario chains (see llms.txt for counts)
+│   └── data/chaingraph.json        ← Per-tool OpenChainGraph registry (parameter schemas, chains)
+├── chaingraph.json                 ← Root-level OpenChainGraph graph index
+├── manifest.json                   ← Web app manifest
+├── mcp.html                        ← Human-facing MCP server documentation
+├── .well-known/                    ← agent-card.json, MCP server-card.json
+├── scripts/                        ← Count/link/copy verification scripts (no build step)
 ├── sitemap.xml                     ← XML sitemap
 ├── robots.txt                      ← Crawler directives
 ├── llms.txt                        ← LLM-readable site summary
@@ -54,6 +65,9 @@ OCS/
 ├── LICENSE-code.md                 ← Code license
 ├── LICENSE-content.md              ← Content license
 ├── LICENSE-data.md                 ← Data license
+├── CITATION.cff                    ← Citation metadata
+├── .zenodo.json                    ← Zenodo deposit metadata
+├── AGENTS.md                       ← Agent/LLM contributor notes
 ├── CONTRIBUTING.md                 ← Contribution guidelines
 └── .github/workflows/deploy.yml   ← CI/CD deploy pipeline
 ```
