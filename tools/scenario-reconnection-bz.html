@@ -173,7 +173,7 @@ a:hover{color:var(--teal-glow)}
         <p class="step-prose">The Blandford-Znajek mechanism and magnetic reconnection both operate in or near the ergosphere &mdash; the region outside the event horizon where spacetime rotation is compulsory. At <strong>a&#9733; = 0.95</strong>, the ergosphere at the equator extends to 1.63 r<sub>g</sub> vs the event horizon at 1.31 r<sub>g</sub>. The reconnection layer forms at the ergosphere boundary itself, driven by the differential rotation of field lines. At <strong>a&#9733; = 0.7</strong>, the ergosphere shrinks to &asymp;1.86 r<sub>g</sub> and the event horizon sits at 1.71 r<sub>g</sub> &mdash; a much thinner ergospheric shell, with correspondingly weaker differential rotation. <em>The geometry of the ergosphere is the first variable in the energy budget.</em></p>
         <div class="step-meta">
           <a class="step-cta" data-tool="kerr" href="kerr-geometry.html">Open Kerr Geometry Viewer &rarr;</a>
-          <span class="step-params" id="p1">a=0.95 &middot; M = 8,200 M&#9857;</span>
+          <span class="step-params" id="p1">a=0.95 &middot; M = 8,200 M&#8857;</span>
           <span class="tier-mini tier-e">GR exact</span>
         </div>
         <div class="payoff"><div class="payoff-title">Step payoff</div>
@@ -186,14 +186,14 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">Step 2 &middot; BZ Jet Power</div>
         <div class="step-title">The Blandford-Znajek Baseline</div>
-        <p class="step-prose">The BZ mechanism extracts rotational energy via the interaction of magnetic field lines threading the horizon with the frame-dragging of the Kerr spacetime. Power scales as <code>P_BZ &prop; a&#9733;&sup2; &times; B&sup2; &times; M&sup2;</code>. At a&#9733; = 0.95 and B = 10&sup6; T: <strong>P_BZ &asymp; 3.8&times;10&sup3;&#8309; W</strong> (Scenario A). At a&#9733; = 0.7: <strong>P_BZ &asymp; 9.2&times;10&sup3;&#8308; W</strong> (Scenario B). This is the baseline all other channels are compared against. <em>The BZ power is the dominant channel at all spin values &mdash; reconnection adds fractionally on top of it.</em> The power ratio between the two spin values is approximately 4:1, reflecting the a&#9733;&sup2; dependence.</p>
+        <p class="step-prose">The BZ mechanism extracts rotational energy via the interaction of magnetic field lines threading the horizon with the frame-dragging of the Kerr spacetime. The split-monopole power is <code>P_BZ = (&kappa;/4&pi;&mu;<sub>0</sub>) B&sup2; r<sub>+</sub><sup>4</sup> &Omega;<sub>H</sub>&sup2; / c</code> with &kappa; &asymp; 0.044, which reduces to <code>P_BZ &prop; a&#9733;&sup2; r<sub>+</sub>&sup2; B&sup2;</code>. At a&#9733; = 0.95 and B = 10<sup>6</sup> T: <strong>P_BZ &asymp; 4.8&times;10<sup>37</sup> W</strong> (Scenario A). At a&#9733; = 0.7: <strong>P_BZ &asymp; 4.4&times;10<sup>37</sup> W</strong> (Scenario B). This is the baseline all other channels are compared against, and the BZ term dominates at every spin value here. The two scenarios differ by only 8%, because the horizon radius r<sub>+</sub> shrinks as spin rises and largely cancels the a&#9733;&sup2; growth. The same cancellation makes P_BZ peak near a&#9733; &asymp; 0.9 and fall again toward a&#9733; &rarr; 1.</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="bz" href="bz-kardashev.html">Open BZ Calculator &rarr;</a>
           <span class="step-params" id="p2">mass=8,200 M☉ &middot; spin=0.95 &middot; B=10⁶ T</span>
           <span class="tier-mini tier-e">Blandford-Znajek 1977</span>
         </div>
         <div class="payoff"><div class="payoff-title">Step payoff</div>
-        <div class="payoff-body">The BZ mechanism provides the dominant power floor. The reconnection channel is the correction term &mdash; but at near-maximal spin, it is a correction term that cannot be ignored in precision energy budgets.</div></div>
+        <div class="payoff-body">The BZ mechanism provides the dominant power floor, and the reconnection channel is a correction on top of it that reaches roughly a fifth of the BZ figure at near-maximal spin.</div></div>
       </div>
     </article>
 
@@ -202,15 +202,15 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">Step 3 &middot; Reconnection Channel</div>
         <div class="step-title">When Plasmoids Add Power</div>
-        <p class="step-prose">Meringolo, Camilloni &amp; Rezzolla (2025, ApJL 992, L8) ran GRPIC simulations of Kerr magnetospheres and found that plasmoid instabilities in the ergosphere drive a second extraction channel. At a&#9733; = 0.95, reconnection adds <strong>~18% to total BZ power</strong> (P<sub>rec</sub> &asymp; 6.8&times;10&sup3;&#8308; W). At a&#9733; = 0.7, the contribution drops to <strong>~4%</strong>. The reconnection layer is physically distinct from the BZ circuit &mdash; it operates at the ergosphere boundary, not the horizon. <em>The reconnection efficiency &eta;<sub>rec</sub> is calibrated to GRPIC simulation results</em> at &eta;<sub>rec</sub> = 0.15. A key result from the simulations: reconnection power scales more steeply with spin than BZ, approximately as a&#9733;&sup3;, meaning the gap between the two channels narrows rapidly as spin approaches unity.</p>
+        <p class="step-prose">Meringolo, Camilloni &amp; Rezzolla (2025, ApJL 992, L8) ran GRPIC simulations of Kerr magnetospheres and found that plasmoid instabilities in the ergosphere drive a second extraction channel. The tool implements <code>P_rec = 1.646 &eta;<sub>rec</sub> a&#9733;&sup2; P_BZ</code>. At a&#9733; = 0.95 that adds <strong>~22% of the BZ power</strong> (P<sub>rec</sub> &asymp; 1.1&times;10<sup>37</sup> W). At a&#9733; = 0.7 the contribution falls to <strong>~12%</strong> (&asymp; 5.3&times;10<sup>36</sup> W). The reconnection layer is physically distinct from the BZ circuit &mdash; it operates at the ergosphere boundary, not the horizon. <em>The reconnection efficiency &eta;<sub>rec</sub> is calibrated to GRPIC simulation results</em> at &eta;<sub>rec</sub> = 0.15. Reconnection power carries two more powers of spin than the BZ term in this parameterisation (P_rec &prop; a&#9733;<sup>4</sup> r<sub>+</sub>&sup2; B&sup2;), so the reconnection share of the total climbs with spin even where the BZ term itself is flattening.</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="rec" href="magnetic-reconnection.html">Open Reconnection Calculator &rarr;</a>
-          <span class="step-params" id="p3">&eta;<sub>rec</sub> = 0.15 &middot; B = 10&sup6; T &middot; M = 8,200 M&#9857;</span>
+          <span class="step-params" id="p3">&eta;<sub>rec</sub> = 0.15 &middot; B = 10<sup>6</sup> T &middot; M = 8,200 M&#8857;</span>
           <span class="tier-mini tier-t">Meringolo 2025</span>
           <span class="tier-mini tier-d">GRPIC</span>
         </div>
         <div class="payoff"><div class="payoff-title">Step payoff</div>
-        <div class="payoff-body">The reconnection channel is not a rounding error at near-maximal spin. It adds ~18% to total power in Scenario A &mdash; and because it scales as a&#9733;&sup3;, spinning the IMBH from 0.7 to 0.95 triples the reconnection contribution while only doubling the BZ baseline.</div></div>
+        <div class="payoff-body">The reconnection channel is not a rounding error at near-maximal spin. It adds ~22% of the BZ power in Scenario A. Spinning the IMBH from 0.7 to 0.95 doubles the reconnection term (5.3&times;10<sup>36</sup> &rarr; 1.1&times;10<sup>37</sup> W) while the BZ baseline moves only 8%.</div></div>
       </div>
     </article>
 
@@ -219,8 +219,8 @@ a:hover{color:var(--teal-glow)}
   <section class="synthesis">
     <div class="synth-title">&#9878; Combined Channel Budget</div>
     <div class="synth-prose">
-      <p>At a&#9733; = 0.95 (Scenario A), the combined BZ + reconnection power is <strong>P<sub>total</sub> &asymp; 4.5&times;10&sup3;&#8309; W</strong> &mdash; Kardashev K &asymp; 2.45. Reconnection contributes ~18% but cannot be ignored in precision energy budgets. The critical insight: reconnection power scales more steeply with spin than BZ (P<sub>rec</sub> &prop; a&#9733;&sup3; approximately), so near-maximal spin is dramatically more efficient.</p>
-      <p>Spinning the IMBH from a&#9733; = 0.7 to 0.95 roughly doubles BZ power but triples total extraction power. This is the physical argument for why Phase 1 targets near-maximal spin rather than stopping at a&#9733; = 0.7: the final 35% of the spin-up journey delivers a disproportionate energy payoff, with reconnection accounting for an increasing share.</p>
+      <p>At a&#9733; = 0.95 (Scenario A), the combined BZ + reconnection power is <strong>P<sub>total</sub> &asymp; 5.8&times;10<sup>37</sup> W</strong>, which on the tool's scale K = log<sub>10</sub>(P)/10 &minus; 0.6 is Kardashev K &asymp; 3.18. Reconnection supplies ~18% of that total. Its steeper spin dependence (P<sub>rec</sub> &prop; a&#9733;<sup>4</sup> r<sub>+</sub>&sup2;) means the reconnection share grows with spin, but it grows against a BZ baseline that is already near its own maximum.</p>
+      <p>Spinning the IMBH from a&#9733; = 0.7 to 0.95 raises the BZ term by 8% and the combined total from 4.9&times;10<sup>37</sup> to 5.8&times;10<sup>37</sup> W, a gain of 18%, worth 0.008 in K. The energy case for pushing past a&#9733; = 0.7 is therefore weak on its own: the last stretch of spin-up buys a fifth more power for a large fraction of the accreted mass, and the reconnection channel supplies most of what it does buy. The stronger arguments for near-maximal spin lie elsewhere, in ISCO efficiency and in the total reservoir of extractable rotational energy.</p>
       <p>For the spin-up timeline that quantifies how long Phase 1 takes, see <a href="scenario-spin-up-economics.html">Demo &mdash; Spin-Up Economics</a>. For the full MTH energy extraction sequence from capture to Kardashev II, see the <a href="workflow-bh-energy-budget.html">BH Energy Budget Workflow</a>.</p>
     </div>
   </section>
