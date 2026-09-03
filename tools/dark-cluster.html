@@ -155,11 +155,11 @@ a:hover{color:var(--teal-glow)}
       <div class="slider-block">
         <label>Total dark-remnant mass M_dark (M<sub>&#9737;</sub>) &mdash; log slider</label>
         <div class="slider-row">
-          <input type="range" id="mdark-slider" min="2" max="5" step="0.01" value="3.477">
-          <span class="slider-value" id="mdark-val">3,000 M&#9737;</span>
+          <input type="range" id="mdark-slider" min="2" max="5.5" step="0.01" value="5.398">
+          <span class="slider-value" id="mdark-val">2.5&times;10&#8309; M&#9737;</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-mdark="3000">Ba&ntilde;ares 2025 (~3,000)</button>
+          <button class="preset-btn" data-preset-mdark="250000">Ba&ntilde;ares 2025 (~2&ndash;3&times;10&#8309;)</button>
           <button class="preset-btn" data-preset-mdark="8200">H&auml;berle equiv. (8,200)</button>
           <button class="preset-btn" data-preset-mdark="40000">Noyola equiv. (4&times;10&#8308;)</button>
         </div>
@@ -363,7 +363,7 @@ function getHash(){return Object.fromEntries(window.location.hash.replace('#',''
 function setHash(p){const s=Object.entries(p).filter(([k,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');history.replaceState(null,'','#'+s)}
 
 // State
-const state = { Mdark: 3000, Mmean: 10, aPlum: 0.1, beta: 0, MBH: 8200 };
+const state = { Mdark: 250000, Mmean: 10, aPlum: 0.1, beta: 0, MBH: 8200 };
 
 function loadHash(){
   const p = getHash();

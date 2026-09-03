@@ -303,7 +303,7 @@ a:hover{color:var(--teal-glow)}
 //     r (arcsec), precision (us), baseline (yr)
 //   lisa-emri                 : MIXED — M and d are LOG10; m2, T, e are LINEAR
 //     M = log10(M_BH / M_sun)   e.g. 3.914 -> 8,200 M_sun
-//     d = log10(D_L / kpc)      e.g. 0.72  -> 5.25 kpc  (OC distance preset)
+//     d = log10(D_L / kpc)      e.g. 0.74  -> 5.49 kpc  (OC distance preset)
 //     m2 (M_sun), T (yr), e (eccentricity) all LINEAR
 //   falsification-hub         : static anchor page, no hash params;
 //                               link hardcoded to #imbh for all scenarios
@@ -318,13 +318,13 @@ var SCENARIOS = {
     accretion:{eps:'1.00e-3', rho:'1.00e-21', cs:'1.00e3'},
     // pulsar-timing: current TRAPUM configuration
     pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
-    // lisa-emri: M=log10(8200)=3.914, d=log10(5.25)=0.72, oc-stellar preset
-    lisa:     {M:'3.914', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'oc-stellar'},
+    // lisa-emri: M=log10(8200)=3.914, d=log10(5.49)=0.74, oc-stellar preset
+    lisa:     {M:'3.914', m2:'10.00', d:'0.74', T:'4.0', e:'0.10', preset:'oc-stellar'},
     summary: {
       lens:     'M_L=8,200 M☉ (point mass) \xb7 centroid shift ≫ 30 µas floor',
       accretion:'ε=1×10⁻³ (ADAF) \xb7 ρ=10⁻²¹ kg/m³ \xb7 c_s=10³ m/s',
       pulsar:   'r=10 arcsec \xb7 1 µs precision \xb7 10 yr baseline (current TRAPUM)',
-      lisa:     'log₁₀(M)=3.914 → 8,200 M☉ \xb7 m₂=10 M☉ \xb7 D=5.25 kpc \xb7 T=4 yr'
+      lisa:     'log₁₀(M)=3.914 → 8,200 M☉ \xb7 m₂=10 M☉ \xb7 D=5.49 kpc \xb7 T=4 yr'
     }
   },
   banares: {
@@ -337,7 +337,7 @@ var SCENARIOS = {
     pulsar:   {r:'10.0', precision:'1.0', baseline:'10.0'},
     // lisa-emri: Banares upper-limit 6,000 M_sun — probes worst-case residual IMBH
     // M=log10(6000)=3.778, using built-in banares preset
-    lisa:     {M:'3.778', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'banares'},
+    lisa:     {M:'3.778', m2:'10.00', d:'0.74', T:'4.0', e:'0.10', preset:'banares'},
     summary: {
       lens:     'M_L=10 M☉ (single remnant) \xb7 centroid shift ≪ 30 µas → Gaia DR4 null',
       accretion:'ε=1×10⁻³ \xb7 ρ=10⁻²³ kg/m³ (sparse gas) \xb7 below JWST floor',
@@ -354,7 +354,7 @@ var SCENARIOS = {
     // pulsar-timing: extended baseline as needed to approach 4,000 M_sun sensitivity
     pulsar:   {r:'10.0', precision:'1.0', baseline:'15.0'},
     // lisa-emri: M=log10(4000)=3.602; no matching preset, custom
-    lisa:     {M:'3.602', m2:'10.00', d:'0.72', T:'4.0', e:'0.10', preset:'custom'},
+    lisa:     {M:'3.602', m2:'10.00', d:'0.74', T:'4.0', e:'0.10', preset:'custom'},
     summary: {
       lens:     'M_L=4,000 M☉ \xb7 centroid shift ≈ √(4000/8200) × Häberle signal',
       accretion:'ε=1×10⁻³ \xb7 ρ=10⁻²² kg/m³ (marginal) \xb7 near JWST threshold',
