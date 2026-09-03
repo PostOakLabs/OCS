@@ -186,8 +186,8 @@ canvas{display:block;width:100%;height:auto;border-radius:6px;background:#020108
       <div class="slider-block">
         <label>Distance d (kpc, log slider)</label>
         <div class="slider-row">
-          <input type="range" id="d-slider" min="0" max="5" step="0.05" value="0.72">
-          <span class="slider-value" id="d-val">5.2 kpc (OC)</span>
+          <input type="range" id="d-slider" min="0" max="5" step="0.05" value="0.74">
+          <span class="slider-value" id="d-val">5.49 kpc (OC)</span>
         </div>
       </div>
       <div class="slider-block">
@@ -316,16 +316,16 @@ const YR_S = 3.156e7;
 const PI = Math.PI;
 
 const PRESETS = {
-  "oc-stellar":{ logM: 3.914, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"OC IMBH (8200 M☉) + stellar BH" },
-  "oc-ns":     { logM: 3.914, m2:1.4, logD: 0.72, tobs:4, e:0.1, label:"OC IMBH + NS" },
-  "banares":   { logM: 3.778, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"Bañares limit (6000 M☉) + stellar BH" },
-  "noyola":    { logM: 4.602, m2:10,  logD: 0.72, tobs:4, e:0.1, label:"Noyola detection (4×10⁴) + stellar BH" },
+  "oc-stellar":{ logM: 3.914, m2:10,  logD: 0.74, tobs:4, e:0.1, label:"OC IMBH (8200 M☉) + stellar BH" },
+  "oc-ns":     { logM: 3.914, m2:1.4, logD: 0.74, tobs:4, e:0.1, label:"OC IMBH + NS" },
+  "banares":   { logM: 3.778, m2:10,  logD: 0.74, tobs:4, e:0.1, label:"Bañares limit (6000 M☉) + stellar BH" },
+  "noyola":    { logM: 4.602, m2:10,  logD: 0.74, tobs:4, e:0.1, label:"Noyola detection (4×10⁴) + stellar BH" },
   "smbh-emri": { logM: 6.60,  m2:10,  logD: 0.94, tobs:4, e:0.1, label:"Sgr A* (4×10⁶ M☉) at GC" }
 };
 
 const state = {
   preset:"oc-stellar",
-  logM:3.914, m2:10, logD:0.72, tobs:4, e:0.1
+  logM:3.914, m2:10, logD:0.74, tobs:4, e:0.1
 };
 
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}

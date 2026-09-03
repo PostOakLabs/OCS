@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Scenario - Paper E Feasibility &middot; OCS</title>
-<meta name="description" content="Four chained tools walk Paper E's argument in order: a Monte Carlo envelope sweep against stellar flybys, a single-point drill-down at a chosen radius, the Bondi-vs-waste-heat fuel ordering, and the Bayes-factor adjudication that returns ln K = -0.29 for today's data.">
+<meta name="description" content="Four chained tools walk Paper E's argument in order: a Monte Carlo envelope sweep against stellar flybys, a single-point drill-down at a chosen radius, the Bondi-vs-waste-heat fuel ordering, and the Bayes-factor adjudication that returns ln K = -0.474 for the mid-infrared channel (framework total -0.501 with the mass channel scored) for today's data.">
 <link rel="canonical" href="https://omegacentauri.me/tools/scenario-paper-e-feasibility.html">
 <meta name="theme-color" content="#0d0a24">
 <meta name="color-scheme" content="dark">
@@ -155,7 +155,7 @@ a:hover{color:var(--teal-glow)}
 
   <section class="scenario" id="scenario">
     <div class="scenario-title">&#9881; Pick where in the envelope the swarm sits</div>
-    <p class="scenario-help">Both options share the same flyby-hazard sweep, the same fuel budget, and the same evidence adjudication &mdash; only the drill-down radius in Step 2 changes. That is itself a finding of Paper E &sect;2.5: the fuel supply and today&rsquo;s Bayesian evidence do not depend on where within the surviving envelope a hypothetical installation sits.</p>
+    <p class="scenario-help">Both options share the same flyby-hazard sweep, the same fuel budget, and the same evidence adjudication &mdash; only the drill-down radius in Step 2 changes. That is a finding of Paper E &sect;2.5: the fuel supply and today&rsquo;s Bayesian evidence do not depend on where within the surviving envelope a hypothetical installation sits.</p>
     <div class="scenario-row" role="radiogroup">
       <button class="scenario-btn active" data-scenario="deep">
         <span class="name">Deep swarm (thermodynamically favored)</span>
@@ -175,7 +175,7 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">flyby-survival-simulator &middot; Paper E &sect;2.4 &middot; Monte Carlo envelope sweep</div>
         <div class="step-title">Do stellar flybys ever bind the envelope?</div>
-        <p class="step-prose">This sweep runs the impulsive-diffusion Monte Carlo across the full radius range at once: impact parameters from the gravitationally focused encounter rate, velocities from a Maxwellian at dispersion &sigma;, masses from the perturber mass function, and survival defined as eccentricity walking to the orbit-crossing threshold. The mass function carries a mass-segregated heavy-remnant tail (10 M&#9737; stellar BHs at the fiducial 1% number fraction, the <code>fbh</code> deeplink here), and that tail sets the floor: the median survival time is <strong>&asymp;3&times;10&#8310; yr</strong>, roughly flat from 10&#8315;&sup3; to 4&times;10&sup3; AU, because the per-encounter kick variance and the encounter rate scale inversely with radius and their product cancels. This supersedes the stars-only &asymp;3&times;10&#8313; yr floor Paper E first reported (recover it with <code>fbh=0</code>). The floor stays well above the 10&#8310; yr passive-safety criterion, so flybys still never set the outer boundary; they are a trim budget, not a survival requirement.</p>
+        <p class="step-prose">This sweep runs the impulsive-diffusion Monte Carlo across the full radius range at once: impact parameters from the gravitationally focused encounter rate, velocities from a Maxwellian at dispersion &sigma;, masses from the perturber mass function, and survival defined as eccentricity walking to the orbit-crossing threshold. The mass function carries a mass-segregated heavy-remnant tail (31 M&#9737; black holes &mdash; the mean mass of holes inspiraling into the IMBH in the Gonz&aacute;lez Prieto et al. 2025 &omega;&nbsp;Cen models &mdash; at the fiducial 1% number fraction, the <code>fbh</code> deeplink here), and that tail sets the floor: the median survival time is <strong>&asymp;6&times;10&#8311; yr</strong> impulsive (adiabatically corrected, it stays above &asymp;3&times;10&#8312; yr at the envelope edge), roughly flat across the swept radius range, because the per-encounter kick variance and the encounter rate scale inversely with radius and their product cancels. This supersedes the stars-only &asymp;1.79&times;10&#8313; yr floor Paper E first reported (recover it with <code>fbh=0</code>). The floor stays well above the 10&#8310; yr passive-safety criterion, so flybys still never set the outer boundary; they are a trim budget, not a survival requirement.</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="sweep" href="flyby-survival-simulator.html">Open Flyby Survival Simulator &rarr;</a>
           <span class="step-params" id="p1"></span>
@@ -209,7 +209,7 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">imbh-fuel-budget &middot; Paper E &sect;2.7 &amp; &sect;3.1 &middot; Bondi supply vs. waste-heat ceiling</div>
         <div class="step-title">Which constraint actually binds: fuel or heat?</div>
-        <p class="step-prose">Bondi accretion from an intracluster medium adopted by analogy with 47 Tucanae (n<sub>e</sub> &asymp; 0.23 cm&#8315;&sup3;, since &omega;&nbsp;Cen has no direct ionized-gas density measurement of its own) funds an extractable power roughly two orders of magnitude above the waste-heat ceiling: the entropy-transport floor of Appendix A.3, adopted here at 1&minus;f<sub>sink</sub> &asymp; 10&#8315;&#8308;, caps the computation an installation can run without its own radiated heat exceeding the JWST mid-infrared point-source limit. The ordering is the paper&rsquo;s central engineering result: for a fiducial 2&times;10&#8308;&nbsp;M&#9737; hole, supply never binds and thermal concealment does. That ordering reverses for stellar-mass holes in the same environment, which is itself part of why the hypothesis family selects IMBHs.</p>
+        <p class="step-prose">Bondi accretion from an intracluster medium adopted by analogy with 47 Tucanae (n<sub>e</sub> &asymp; 0.23 cm&#8315;&sup3;, since &omega;&nbsp;Cen has no direct ionized-gas density measurement of its own) funds an extractable power roughly two orders of magnitude above the waste-heat ceiling: the entropy-transport floor of Appendix A.3, adopted here at 1&minus;f<sub>sink</sub> &asymp; 10&#8315;&#8308;, caps the computation an installation can run without its own radiated heat exceeding the JWST mid-infrared point-source limit. The ordering is the paper&rsquo;s central engineering result: for a fiducial 2&times;10&#8308;&nbsp;M&#9737; hole, supply never binds and thermal concealment does. That ordering reverses for stellar-mass holes in the same environment, which is part of why the hypothesis family selects IMBHs.</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="fuel" href="imbh-fuel-budget.html">Open IMBH Fuel Budget &rarr;</a>
           <span class="step-params" id="p3"></span>
@@ -226,7 +226,7 @@ a:hover{color:var(--teal-glow)}
       <div class="step-body">
         <div class="step-kicker">bayes-factor-router &middot; Paper E &sect;5 &middot; adjudication on 2026 data</div>
         <div class="step-title">Today's verdict, and what would move it</div>
-        <p class="step-prose">Feeding the hierarchical Bayesian framework&rsquo;s per-channel result into the same router used across the ChainGraph evidence chains gives the paper&rsquo;s headline number directly: <strong>ln K = &minus;0.29</strong> (2&middot;ln K = &minus;0.58) for the engineered hypothesis against the best astrophysical null, on the pre-registered Jeffreys/Kass&ndash;Raftery action bands. That routes to <em>supports null hypothesis</em> &mdash; waste heat is presently the only live evidence channel, and the current silence mildly favors the quiescent-IMBH null. Deeper mid-infrared photometry tightens the P<sub>comp</sub> ceiling linearly (&sect;3.1); the regulation-signature and relic-drainage channels are conditional and forecastable, not yet live (&sect;3.2&ndash;3.4).</p>
+        <p class="step-prose">Feeding the hierarchical Bayesian framework&rsquo;s per-channel results into the same router used across the ChainGraph evidence chains gives the paper&rsquo;s headline number directly: the mid-infrared waste-heat channel alone gives <strong>ln K<sub>MIR</sub> = &minus;0.474</strong>, and with the mass channel now also scored (ln K<sub>mass</sub> = &minus;0.027) the framework total across both live channels is <strong>ln K = &minus;0.501</strong> (2&middot;ln K = &minus;1.002) for the engineered hypothesis against the best astrophysical null, on the pre-registered Jeffreys/Kass&ndash;Raftery action bands. That routes to <em>supports null hypothesis</em> &mdash; the current data mildly favor the quiescent-IMBH null. Deeper mid-infrared photometry tightens the P<sub>comp</sub> ceiling linearly (&sect;3.1); the regulation-signature and relic-drainage channels are conditional and forecastable, not yet live (&sect;3.2&ndash;3.4).</p>
         <div class="step-meta">
           <a class="step-cta" data-tool="router" href="bayes-factor-router.html">Open Bayes Factor Router &rarr;</a>
           <span class="step-params" id="p4"></span>
@@ -243,7 +243,7 @@ a:hover{color:var(--teal-glow)}
     <div class="synth-title">&#9878; Why these four tools are the paper's spine</div>
     <div class="synth-prose">
       <p>Paper E runs in one direction: constraints on where infrastructure could persist (&sect;2) produce forward-modeled observables (&sect;3) that feed an adjudication engine (&sect;4) exercised on real data (&sect;5). The four tools chained here are exactly that direction, in order: the envelope sweep and the single-point drill-down are &sect;2, the fuel-budget ordering bridges &sect;2.7 into the waste-heat floor of &sect;3.1, and the router is &sect;5&rsquo;s adjudication in miniature.</p>
-      <p>What the chain does not show is more informative than what it does: neither radius choice changes the fuel ordering or the adjudicated verdict, because those two results are properties of the ambient medium and of today&rsquo;s data, not of the hypothesized architecture. That separation is itself one of Paper E&rsquo;s findings &mdash; the feasibility envelope is a prior on where a system could sit, and the evidence is a likelihood that does not care where inside that prior it sits.</p>
+      <p>What the chain does not show is more informative than what it does: neither radius choice changes the fuel ordering or the adjudicated verdict, because those two results are properties of the ambient medium and of today&rsquo;s data, not of the hypothesized architecture. That separation is one of Paper E&rsquo;s findings &mdash; the feasibility envelope is a prior on where a system could sit, and the evidence is a likelihood that does not care where inside that prior it sits.</p>
       <p>For the full derivation, including the Appendix A.3 transport-floor accounting and the &sect;6.1 limitations on the drainage-timescale estimate, see <a href="/engineered-imbh-systems.html">Paper E: Engineered Intermediate-Mass Black Hole Systems</a> (<a href="/papers/engineered-imbh-systems.pdf">PDF</a>). For the campaign this paper's adjudication framework serves, see the companion chain <a href="scenario-fermi-five-ways.html">Scenario &mdash; Five Ways to Look for ET</a>.</p>
     </div>
   </section>
@@ -290,12 +290,12 @@ var SCENARIOS = {
     sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', fbh:'1', ecross:'0.5', bins:'32', trials:'6000'},
     drill: {mbh:'20000', a:'0.02', sigma:'18.2', nstar:'10000', ecross:'0.5'},
     fuel:  {mbh:'20000', ne:'0.23', sigma:'18.2', cs:'10', eta:'1.0', llim:'1.0', leak:'0.0001'},
-    router:{mode:'k', k:'-0.80'},
+    router:{mode:'k', k:'-1.002'},
     summary: {
       sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · f_BH=1% (remnant MF) · e_cross=0.5 · sweep full envelope',
       drill:  'a=0.02 AU (≈10² r_g, fueled inner boundary, §2.2)',
       fuel:   'n_e=0.23 cm⁻³ · η=1.0 · L_lim=1.0 L☉ · 1−f_sink=10⁻⁴',
-      router: '2·ln K = −0.58 (ln K = −0.29, Paper E §5 headline) → supports null hypothesis'
+      router: '2·ln K = −1.002 (ln K = −0.501 framework total; ln K_MIR = −0.474 mid-infrared channel alone) → supports null hypothesis'
     }
   },
   outer: {
@@ -303,12 +303,12 @@ var SCENARIOS = {
     sweep: {mbh:'20000', sigma:'18.2', nstar:'10000', fbh:'1', ecross:'0.5', bins:'32', trials:'6000'},
     drill: {mbh:'20000', a:'4000', sigma:'18.2', nstar:'10000', ecross:'0.5'},
     fuel:  {mbh:'20000', ne:'0.23', sigma:'18.2', cs:'10', eta:'1.0', llim:'1.0', leak:'0.0001'},
-    router:{mode:'k', k:'-0.80'},
+    router:{mode:'k', k:'-1.002'},
     summary: {
       sweep:  'M_BH=2×10⁴ M☉ · σ=18.2 km/s · n★=10⁴ pc⁻³ · f_BH=1% (remnant MF) · e_cross=0.5 · sweep full envelope',
       drill:  'a=4,000 AU (≈0.1 r_infl, cluster stripping radius, §2.3)',
       fuel:   'n_e=0.23 cm⁻³ · η=1.0 · L_lim=1.0 L☉ · 1−f_sink=10⁻⁴ (unchanged — ambient supply, not architecture)',
-      router: '2·ln K = −0.58 (ln K = −0.29, Paper E §5 headline) → supports null hypothesis (unchanged — today\'s evidence, not architecture)'
+      router: '2·ln K = −1.002 (ln K = −0.501 framework total; ln K_MIR = −0.474 mid-infrared channel alone) → supports null hypothesis (unchanged — today\'s evidence, not architecture)'
     }
   }
 };
