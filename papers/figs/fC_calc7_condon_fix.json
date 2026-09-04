@@ -1,0 +1,66 @@
+{
+ "meta": {
+  "wu": "R7-CALC-FIN",
+  "part": "S2 item 1 \u2014 Condon primary-read addendum",
+  "date": "2026-08-24",
+  "additive_to": "fC_calc7_confusion.py/.json (untouched)"
+ },
+ "primary_read": {
+  "criterion": "S_c = q sigma_c, self-consistent",
+  "operational_form": "sigma_c = [k Omega_e q^(3-gamma)/(3-gamma)]^(1/(gamma-1))",
+  "q": 5.0,
+  "q_source": "Condon 2007 (reliable detection), as quoted in Rahman 2016 eq. 3",
+  "framework": "Condon 1974, ApJ 188, 279 (P(D) formalism; scan-only, framework cross-verified via Bond et al. quoting Condon's effective-solid-angle definition)",
+  "misattribution_found": "C1's 'q = 23.6 beams per source' column implemented N Omega = 23.6 sources per beam as the cutoff depth \u2014 not a Condon convention",
+  "nvss_anchor": "0.45 mJy at 45 arcsec is the NVSS rms noise (Condon et al. 1998), not its confusion limit; corrected 45-arcsec confusion under the same law/criterion is ~0.19 mJy, so NVSS is noise-limited",
+  "vernstrom_xcheck": {
+   "claimed_uJy": 1.2,
+   "note": "Vernstrom et al. 2014 abstract: rms confusion ~1.2 uJy/beam at 3 GHz, 8 arcsec",
+   "this_law_uJy": 2.82,
+   "note2": "Condon-2007 faint counts (gamma=1.9, k=1000, 1.4 GHz, q=5) give ~2.8 uJy at 8 arcsec; the factor ~2 gap to the Vernstrom 3-GHz value is the count-normalization uncertainty C1 already flagged"
+  }
+ },
+ "bands": [
+  {
+   "band": "L",
+   "nu_ghz": 1.4,
+   "theta_as": 6.0,
+   "classical_uJy": 0.346194444443206,
+   "condon_q5_uJy": 3.4619444444320604,
+   "thermal_uJy": 0.4116979380160456
+  },
+  {
+   "band": "S",
+   "nu_ghz": 3.0,
+   "theta_as": 6.0,
+   "classical_uJy": 0.346194444443206,
+   "condon_q5_uJy": 2.030602146468765,
+   "thermal_uJy": null
+  },
+  {
+   "band": "UHF",
+   "nu_ghz": 0.8,
+   "theta_as": 8.0,
+   "classical_uJy": 0.615456790121255,
+   "condon_q5_uJy": 9.105927779911662,
+   "thermal_uJy": null
+  },
+  {
+   "band": "L uniform",
+   "nu_ghz": 1.4,
+   "theta_as": 4.0,
+   "classical_uJy": 0.15386419753031375,
+   "condon_q5_uJy": 1.5386419753031375,
+   "thermal_uJy": null
+  }
+ ],
+ "verdict": {
+  "corrected_spread_L6_uJy": [
+   0.35,
+   3.46
+  ],
+  "printed_claim": "~1-2 uJy beam^-1 at ~6 arcsec (:252)",
+  "printed_inside_corrected_spread": true,
+  "ordering_at_6arcsec": "confusion-dominated under the corrected Condon reading (3.5 vs thermal 0.41); classical still reads thermal-dominated (0.35 vs 0.41) \u2014 ordering remains formalism-dependent, spread narrows from 0.35-8 to 0.35-3.5"
+ }
+}
