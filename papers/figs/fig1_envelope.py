@@ -31,7 +31,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from common import (GM, RG, AU, YR, MSUN, V_REL, SIGMA, N_STAR, M_BH, R_INFL,
+from common import (GM, RG, AU, YR, MSUN, V_REL, SIGMA, N_STAR, n_star, M_BH, R_INFL,
                     MF_MASSES, MF_WEIGHTS, remnant_mf, F_BH_GRID, F_BH_FID,
                     M_BH_PERT, M_BH_PERT_OLD, adiabatic_factor, v_orb, STYLE,
                     GAMMA_STAR, GAMMA_NS, GAMMA_BH, M_DARK_FID, M_DARK_LO, M_DARK_HI,
@@ -65,12 +65,17 @@ def sample_encounters(rng, a, n, masses, weights):
     m = rng.choice(masses, p=weights, size=n)
     return b, m, v
 
-def total_rate(a):
-    """Gamma(<30a) with focusing at the mean relative velocity."""
-    b_max = B_MAX_FACTOR * a
-    return N_STAR * np.pi * b_max**2 * V_REL * (1 + 2 * GM / (b_max * V_REL**2))
+def total_rate(a, n_star_tot=None):
+    """Gamma(<30a) with focusing at the mean relative velocity.
 
-def run_mc(masses, weights, adiabatic=False, seed=SEED):
+    n_star_tot is the branch number density at fixed observed core MASS density
+    (R9 E-R9-07); it defaults to the remnant-free baseline."""
+    if n_star_tot is None:
+        n_star_tot = N_STAR
+    b_max = B_MAX_FACTOR * a
+    return n_star_tot * np.pi * b_max**2 * V_REL * (1 + 2 * GM / (b_max * V_REL**2))
+
+def run_mc(masses, weights, adiabatic=False, seed=SEED, n_star_tot=None):
     """Run the full radius grid for one mass function; return per-bin results.
 
     adiabatic=False reproduces the conservative impulsive estimate quoted in the
@@ -83,7 +88,7 @@ def run_mc(masses, weights, adiabatic=False, seed=SEED):
            "p_dis": [], "kick_var": [], "rate_per_yr": [], "x_ad_pen": []}
     for a in a_grid:
         b, m, v = sample_encounters(rng, a, N_ENC_SAMPLE, masses, weights)
-        lam = total_rate(a)                                  # encounters / s
+        lam = total_rate(a, n_star_tot)                      # encounters / s
         # impulsive tidal kick, saturated for penetrating passages (b <= a).
         geom = np.minimum(1.0, (a / b) ** 2)
         delta = 2 * (m / M_BH) * geom * (v_orb(a) / v)
@@ -99,8 +104,8 @@ def run_mc(masses, weights, adiabatic=False, seed=SEED):
         if mu > 0:
             # encounters needed to random-walk to e = E_CROSS, with CLT scatter on the
             # kick-variance sum and Poisson scatter on the arrival times
-            n_star = E_CROSS**2 / mu
-            n_draw = np.maximum(rng.normal(n_star, (sd / mu) * np.sqrt(max(n_star, 1.0)), size=N_HIST), 1.0)
+            n_enc_needed = E_CROSS**2 / mu
+            n_draw = np.maximum(rng.normal(n_enc_needed, (sd / mu) * np.sqrt(max(n_enc_needed, 1.0)), size=N_HIST), 1.0)
             t_diff = n_draw / lam * (1 + rng.normal(0, 1 / np.sqrt(n_draw), N_HIST))
             t_diff = np.maximum(t_diff, 0)
         else:
@@ -125,17 +130,21 @@ T_1E8 = 1.0e8 * YR
 def bound_shell_counts(a, f_bh, m_bh_msun):
     """Expected shell count lambda_s(a) = N_s(<sqrt2 a) - N_s(<a/sqrt2) per species (D1.2.3)."""
     species = species_table(f_bh, m_bh_msun=m_bh_msun)
+    n_tot = n_star(f_bh, m_bh=m_bh_msun)
     lam = {}
     for name, m_kg, gamma_s, f_s in species:
-        lam[name] = float(N_enclosed(SQRT2 * a, gamma_s, f_s) - N_enclosed(a / SQRT2, gamma_s, f_s))
+        lam[name] = float(N_enclosed(SQRT2 * a, gamma_s, f_s, n_tot)
+                          - N_enclosed(a / SQRT2, gamma_s, f_s, n_tot))
     return lam, species
 
-def run_mc_bound(f_bh, m_bh_msun, apply_kernel=True, seed=SEED, n_enc=N_ENC_SAMPLE, n_hist=N_HIST):
+def run_mc_bound(f_bh, m_bh_msun, apply_kernel=True, seed=SEED, n_enc=N_ENC_SAMPLE,
+                 n_hist=N_HIST, norm_mode="mass"):
     """Bound-member diffusion channel (D1.1-D1.2): Poisson-granular perturber
     counts per history, impulsive kernel with the adiabatic correction applied
     (unless apply_kernel=False, the D1.2.4 diagnostic-only comparison run)."""
     rng = np.random.default_rng(seed)
     species = species_table(f_bh, m_bh_msun=m_bh_msun)
+    n_tot = n_star(f_bh, m_bh=m_bh_msun, mode=norm_mode)
     out = {"a_AU": [], "t_med": [], "t_lo": [], "t_hi": [], "p_bh_present": [],
            "f_cap": [], "p_surv_1e8": []}
     for a in a_grid:
@@ -144,7 +153,8 @@ def run_mc_bound(f_bh, m_bh_msun, apply_kernel=True, seed=SEED, n_enc=N_ENC_SAMP
         vc = v_orb(a)
         lam_s, gam_tot, mu_s, mean_v_s = {}, {}, {}, {}
         for name, m_kg, gamma_s, f_s in species:
-            lam_s[name] = float(N_enclosed(SQRT2 * a, gamma_s, f_s) - N_enclosed(a / SQRT2, gamma_s, f_s))
+            lam_s[name] = float(N_enclosed(SQRT2 * a, gamma_s, f_s, n_tot)
+                                - N_enclosed(a / SQRT2, gamma_s, f_s, n_tot))
             s_rel = np.sqrt(2 * GM / ((1.0 + gamma_s) * a))       # D1.2.1
             mean_v_s[name] = np.sqrt(8.0 / np.pi) * s_rel          # Maxwellian mean
             v = s_rel * np.sqrt(rng.chisquare(3, size=n_enc))      # Maxwell(s_rel) draws
@@ -162,8 +172,11 @@ def run_mc_bound(f_bh, m_bh_msun, apply_kernel=True, seed=SEED, n_enc=N_ENC_SAMP
 
         Gam_tot = np.zeros(n_hist)
         weighted_mu = np.zeros(n_hist)
+        n_bh_draw = np.zeros(n_hist, dtype=int)
         for name, m_kg, gamma_s, f_s in species:
             n_draw = rng.poisson(lam_s[name], size=n_hist)
+            if name == "bh":
+                n_bh_draw = n_draw
             Gam_s = (n_draw / V_shell) * np.pi * b_max ** 2 * mean_v_s[name]
             Gam_tot += Gam_s
             weighted_mu += Gam_s * mu_s[name]
@@ -172,16 +185,27 @@ def run_mc_bound(f_bh, m_bh_msun, apply_kernel=True, seed=SEED, n_enc=N_ENC_SAMP
         mu_eff = np.full(n_hist, np.nan)
         mu_eff[active] = weighted_mu[active] / Gam_tot[active]
 
-        n_star = np.where(active, E_CROSS ** 2 / np.where(mu_eff > 0, mu_eff, np.nan), np.inf)
-        n_star = np.maximum(n_star, 1.0)
+        n_enc_needed = np.where(active, E_CROSS ** 2 / np.where(mu_eff > 0, mu_eff, np.nan), np.inf)
+        n_enc_needed = np.maximum(n_enc_needed, 1.0)
         n_draw_walk = np.where(active,
-                                np.maximum(rng.normal(n_star, np.sqrt(np.maximum(n_star, 1.0)), size=n_hist), 1.0),
+                                np.maximum(rng.normal(n_enc_needed, np.sqrt(np.maximum(n_enc_needed, 1.0)), size=n_hist), 1.0),
                                 np.inf)
         t_diff = np.where(active, n_draw_walk / np.where(active, Gam_tot, 1.0), np.inf)
         t_diff = np.where(active, t_diff * (1 + rng.normal(0, 1 / np.sqrt(np.maximum(n_draw_walk, 1.0)), n_hist)), t_diff)
         t_diff = np.maximum(t_diff, 0)
 
         t = np.minimum(t_diff, T_CAP)
+        # Conditional-on-presence statistics (R9-E-1): earlier drafts reported the
+        # UNCONDITIONAL median under the label "conditional on presence", which
+        # coincided only while p_BH,present exceeded one half.  Both are reported
+        # now, each labelled.  The BH-present subset is identified by re-drawing
+        # the same Poisson count used for the shell above.
+        has_bh = n_bh_draw > 0
+        t_cond = t[has_bh]
+        out.setdefault("t_med_cond", []).append(
+            float(np.median(t_cond) / YR) if t_cond.size else float("nan"))
+        out.setdefault("t_lo_cond", []).append(
+            float(np.percentile(t_cond, 16) / YR) if t_cond.size else float("nan"))
         out["a_AU"].append(a / AU)
         out["t_med"].append(float(np.median(t) / YR))
         out["t_lo"].append(float(np.percentile(t, 16) / YR))
@@ -198,6 +222,7 @@ def run_secular(f_bh, m_bh_msun, r_p=R_P_FID, seed=SEED, n_hist=N_HIST):
     applied by the caller)."""
     rng = np.random.default_rng(seed)
     species = species_table(f_bh, m_bh_msun=m_bh_msun)
+    n_tot = n_star(f_bh, m_bh=m_bh_msun)
     light_species = [s for s in species if s[0] != "bh"]
     m_pert_kg = m_bh_msun * MSUN
     out = {"a_AU": [], "t_sec_yr": [], "t_gr_yr": [], "t_mass_yr": [], "kozai_active_frac": []}
@@ -208,7 +233,7 @@ def run_secular(f_bh, m_bh_msun, r_p=R_P_FID, seed=SEED, n_hist=N_HIST):
 
         M_enc = np.zeros(n_hist)
         for name, m_kg, gamma_s, f_s in light_species:
-            lam = float(N_enclosed(a, gamma_s, f_s))
+            lam = float(N_enclosed(a, gamma_s, f_s, n_tot))
             M_enc += rng.poisson(lam, size=n_hist) * m_kg
         t_mass = np.where(M_enc > 0, (M_BH / np.where(M_enc > 0, M_enc, 1.0)) * Porb, np.inf)
 
@@ -229,19 +254,22 @@ def interp_t(res, a_q):
 # --- run all configurations (unbound/impulsive channel, panel a) ---
 # Each configuration gets its own seed offset so the curves are independent of
 # the order in which they are run.
-configs = {"stars_only": (MF_MASSES, MF_WEIGHTS, False)}
+# Every configuration carries its own number density at fixed observed core
+# MASS density (R9 E-R9-07): n_star = rho0 / <m(f_BH)>, not a fixed 1e4 pc^-3.
+configs = {"stars_only": (MF_MASSES, MF_WEIGHTS, False, n_star())}
 for f_bh in F_BH_GRID:
     m, w = remnant_mf(f_bh)
-    configs[f"fbh_{f_bh:g}"] = (m, w, False)
+    configs[f"fbh_{f_bh:g}"] = (m, w, False, n_star(f_bh))
 # pre-R5 perturber mass, retained so the 10 -> 31 Msun step is auditable
 m10, w10 = remnant_mf(F_BH_FID, m_bh=M_BH_PERT_OLD)
-configs[f"fbh_{F_BH_FID:g}_m10"] = (m10, w10, False)
+configs[f"fbh_{F_BH_FID:g}_m10"] = (m10, w10, False,
+                                    n_star(F_BH_FID, m_bh=M_BH_PERT_OLD))
 # physical (adiabatically corrected) run at the fiducial mass function
 mf, wf = remnant_mf(F_BH_FID)
-configs[f"fbh_{F_BH_FID:g}_adiabatic"] = (mf, wf, True)
+configs[f"fbh_{F_BH_FID:g}_adiabatic"] = (mf, wf, True, n_star(F_BH_FID))
 
-all_res = {name: run_mc(m, w, adiabatic=ad, seed=SEED + 17 * i)
-           for i, (name, (m, w, ad)) in enumerate(configs.items())}
+all_res = {name: run_mc(m, w, adiabatic=ad, seed=SEED + 17 * i, n_star_tot=ns)
+           for i, (name, (m, w, ad, ns)) in enumerate(configs.items())}
 base = all_res["stars_only"]
 fid = all_res[f"fbh_{F_BH_FID:g}"]
 adia = all_res[f"fbh_{F_BH_FID:g}_adiabatic"]
@@ -262,6 +290,10 @@ bound_configs = {
 }
 bound_res = {name: run_mc_bound(f_bh, m_bh, apply_kernel=ker, seed=SEED + 251 * i)
              for i, (name, (f_bh, m_bh, ker)) in enumerate(bound_configs.items())}
+# E-R9-07 sensitivity: the same fiducial under the pre-R9 fixed-NUMBER
+# convention, so the price of the normalization choice is visible, not implied.
+bound_res["bound_fid_fixednumber"] = run_mc_bound(
+    F_BH_BOUND_FID, M_BH_PERT, apply_kernel=True, seed=SEED, norm_mode="number")
 bound_fid = bound_res["bound_fid"]
 
 secular = run_secular(F_BH_BOUND_FID, M_BH_PERT, seed=SEED + 999)
@@ -405,7 +437,9 @@ print(json.dumps(summary, indent=1))
 spread = {}
 for f_bh in F_BH_GRID:
     m, w = remnant_mf(f_bh)
-    mins = [float(np.min(run_mc(m, w, seed=SEED + 1000 * k)["t_med"])) for k in range(5)]
+    ns = n_star(f_bh)
+    mins = [float(np.min(run_mc(m, w, seed=SEED + 1000 * k, n_star_tot=ns)["t_med"]))
+            for k in range(5)]
     spread[f"fbh_{f_bh:g}"] = {"min_yr": mins,
                                "lo": min(mins), "hi": max(mins),
                                "frac_spread": (max(mins) - min(mins)) / np.mean(mins)}
@@ -415,7 +449,8 @@ print("adiabatic parameter x at b=a (first, mid, last bin):",
       [f"{v:.3g}" for v in (fid["x_ad_pen"][0], fid["x_ad_pen"][20], fid["x_ad_pen"][-1])])
 
 # D1.1.2 consistency check
-n_bh_infl = float(N_enclosed(R_INFL, GAMMA_BH, F_BH_BOUND_FID))
+n_bh_infl = float(N_enclosed(R_INFL, GAMMA_BH, F_BH_BOUND_FID,
+                             n_star(F_BH_BOUND_FID)))
 n_bh_cluster = M_DARK_FID / M_BH_PERT
 print(f"D1.1.2 check: N_BH(<r_infl)={n_bh_infl:.3g} of cluster-wide N_BH={n_bh_cluster:.3g} "
       f"-> {100*n_bh_infl/n_bh_cluster:.3g}% of black holes inside r_infl")

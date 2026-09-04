@@ -19,9 +19,12 @@ GM      = G * M_BH
 RG      = GM / C**2                      # 3.0e9 cm = 3.0e7 m
 SIGMA   = 21e3                           # m/s, 1-D dispersion near centre
 V_REL   = np.sqrt(2.0) * SIGMA           # typical relative velocity
-N_STAR  = 1.0e4 / PC**3                  # stars m^-3 (rho0 ~ 3e3 Msun/pc^3, <m> ~ 0.3)
+RHO0    = 3.0e3 * MSUN / PC**3           # kg m^-3, adopted core MASS density
 R_INFL  = GM / SIGMA**2                  # ~0.2 pc
-N_E     = 0.23e6                         # electrons m^-3 (oMEGACat VII)
+N_E     = 0.23e6                         # electrons m^-3; 47 Tuc analogy value
+                                         # (Abbate 2018), NOT oMEGACat VII, whose
+                                         # own omega Cen figure is 1.94 cm^-3 and
+                                         # is a foreground-dominated upper limit
 RHO_GAS = 1.2 * N_E * MP                 # kg m^-3, He-corrected
 CS_GAS  = 1.0e4                          # m/s sound speed (1e4 K ionized)
 
@@ -52,6 +55,53 @@ def remnant_mf(f_bh, f_ns=F_NS, m_bh=M_BH_PERT):
     weights = np.concatenate([MF_WEIGHTS * (1.0 - f_bh - f_ns),
                               np.array([f_ns, f_bh])])
     return masses, weights / weights.sum()
+
+# --- number density normalized on the observed MASS density (R9 E-R9-07) ------
+# The observable is rho0 ~ 3e3 Msun/pc^3, not a number density.  Earlier drafts
+# fixed n_star = 1e4 pc^-3 and then added remnants at fixed total NUMBER, which
+# raises the implied mass density with f_BH: 4.75e3 / 7.50e3 / 1.36e4 Msun/pc^3
+# at f_BH = 0.001 / 0.01 / 0.03 against an adopted 3e3.  The 1e4 figure assumed
+# <m> = 0.3, which is not the mean of the mass function this Monte Carlo draws
+# from (0.425 with no remnants).  We now renormalize per branch,
+# n_star = rho0 / <m(f_BH)>, so every branch reproduces the observed mass
+# density; the encounter rate Gamma ~ n_star falls correspondingly, by 1.42x on
+# the remnant-free baseline and 1.58 / 2.50 / 4.54x across the f_BH grid, and
+# the lifetimes rise by the same factors.  Adopting <m> = 0.3 instead returns
+# n_star = 1e4 and the pre-R9 numbers; the whole discrepancy is the <m>
+# convention, and it is stated here rather than buried in a comment.
+
+def mean_mass(f_bh=None, m_bh=M_BH_PERT):
+    """Number-weighted mean perturber mass in kg, per f_BH branch."""
+    if f_bh is None:
+        masses, weights = MF_MASSES, MF_WEIGHTS
+    else:
+        masses, weights = remnant_mf(f_bh, m_bh=m_bh)
+    return float((masses * weights).sum() / weights.sum())
+
+N_STAR_FIXED_NUMBER = 1.0e4 / PC**3   # the pre-R9 convention, retained as a switch
+
+def n_star(f_bh=None, m_bh=M_BH_PERT, mode="mass"):
+    """Total perturber number density (m^-3) in the core.
+
+    mode="mass"   : renormalize per branch so every branch reproduces the
+                    observed core MASS density, n = rho0 / <m(f_BH)>.  Primary.
+    mode="number" : the pre-R9 convention, a fixed 1e4 pc^-3 regardless of the
+                    mass function.  Retained so the change is auditable and so
+                    the sensitivity can be quoted.
+
+    Which is right turns on whether the adopted rho0 is the TOTAL dynamical mass
+    density (then "mass" is self-consistent) or a luminous-only density with the
+    remnant tail sitting on top of it (then "number" is closer).  Paper E adopts
+    "mass" and reports "number" as the stated alternative; the bound-cusp
+    remnant abundance is the quantity most sensitive to the choice.
+    """
+    if mode == "number":
+        return N_STAR_FIXED_NUMBER
+    if mode != "mass":
+        raise ValueError("mode must be 'mass' or 'number'")
+    return RHO0 / mean_mass(f_bh, m_bh)
+
+N_STAR = n_star()      # remnant-free baseline, 7.06e3 pc^-3
 
 # --- adiabatic suppression of impulsive kicks (referee M5 / R5-O2) --------------
 # For a bound orbit of semi-major axis a perturbed by a star passing at impact
@@ -146,10 +196,16 @@ def species_table(f_bh, m_bh_msun=M_BH_PERT, f_ns=F_NS):
         ("bh", m_bh_msun * MSUN, GAMMA_BH, f_bh),
     ]
 
-def N_enclosed(r_m, gamma_s, f_s):
+def N_enclosed(r_m, gamma_s, f_s, n_star_tot=None):
     """N_s(<r) for a species of density power law gamma_s and density
-    fraction f_s of N_STAR at r_infl (D1.1)."""
-    n_s0 = f_s * N_STAR
+    fraction f_s of the total number density at r_infl (D1.1).
+
+    n_star_tot defaults to the remnant-free baseline; the bound-cusp runs pass
+    the branch value n_star(f_bh) so every branch reproduces the observed core
+    MASS density rather than a fixed number density (R9 E-R9-07)."""
+    if n_star_tot is None:
+        n_star_tot = N_STAR
+    n_s0 = f_s * n_star_tot
     return (4 * np.pi * n_s0 * R_INFL ** 3 / (3.0 - gamma_s)) * (r_m / R_INFL) ** (3.0 - gamma_s)
 
 def sigma_loc(r_m, gamma_s):
