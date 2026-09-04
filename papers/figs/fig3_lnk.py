@@ -116,12 +116,24 @@ ap.add_argument("--split-floor-dex", type=float, default=-3.0)
 ap.add_argument("--split-ceiling", type=float, default=0.999)
 ap.add_argument("--soft-threshold", type=float, default=0.0)
 ap.add_argument("--crowding-factor", type=float, default=3.0)
+# E-R9-06: the fuel ceiling is not a constant. It carries eta(a*) and the
+# outflow-suppression state, and the fiducial 7.6e5 Lsun is the value at
+# a* ~ 0.99 with suppression itself suppressed -- i.e. the prior silently
+# conditions H_eng on the engineered, near-extremal, unsuppressed corner. With
+# this flag the ceiling is drawn per sample from a stated mixture over the
+# spin-architecture fork of Sec. 4.4 and over the suppression state, instead.
+ap.add_argument("--fuel-mixture", action="store_true")
+ap.add_argument("--w-thindisc", type=float, default=0.5,
+                help="mixture weight on the thin-disc (near-extremal) branch")
+ap.add_argument("--w-unsuppressed", type=float, default=0.5,
+                help="mixture weight on the engineered-unsuppressed outflow state")
 args = ap.parse_args()
 LEAK_FLOOR_DEX = args.leak_floor_dex
 IS_DEFAULT = (LEAK_FLOOR_DEX == -4.0 and args.pcomp_floor_dex == 0.0
               and args.pcomp_ceiling == P_FUEL and args.r_range == [2e-2, 4e3]
               and args.split_floor_dex == -3.0 and args.split_ceiling == 0.999
-              and args.soft_threshold == 0.0 and args.crowding_factor == 3.0)
+              and args.soft_threshold == 0.0 and args.crowding_factor == 3.0
+              and not args.fuel_mixture)
 
 plt.rcParams.update(STYLE)
 rng = np.random.default_rng(20260717)
@@ -145,7 +157,22 @@ def p_quiet_given_active():
     numbers. Per-filter flux is accumulated in a loop over the 9 filters to
     keep peak memory at O(N) rather than O(N x n_filters).
     """
-    logP = rng.uniform(args.pcomp_floor_dex, np.log10(args.pcomp_ceiling), N)
+    if args.fuel_mixture:
+        # spin: thin-disc branch at a* = 0.998, or MAD equilibrium a* ~ U(0.1, 0.3)
+        thin = rng.random(N) < args.w_thindisc
+        a_star = np.where(thin, 0.998, rng.uniform(0.10, 0.30, N))
+        # eta(a*) falls roughly as a*^2 from its a* = 0.99 value (Sec. 4.2)
+        eta_rel = (a_star / 0.99) ** 2
+        # outflow suppression: engineered-unsuppressed, or naturally suppressed
+        # by a factor log-uniform over the 1e2-500 range Appendix C quotes
+        unsupp = rng.random(N) < args.w_unsuppressed
+        supp_factor = np.where(unsupp, 1.0,
+                               10 ** rng.uniform(2.0, np.log10(500.0), N))
+        ceil_draw = P_FUEL * eta_rel / supp_factor
+        ceil_draw = np.maximum(ceil_draw, 10 ** args.pcomp_floor_dex * 1.0001)
+        logP = args.pcomp_floor_dex + (np.log10(ceil_draw) - args.pcomp_floor_dex) * rng.random(N)
+    else:
+        logP = rng.uniform(args.pcomp_floor_dex, np.log10(args.pcomp_ceiling), N)
     logleak = rng.uniform(LEAK_FLOOR_DEX, 0, N)
     logr = rng.uniform(np.log10(R_MIN_AU), np.log10(R_MAX_AU), N)
     logsplit = rng.uniform(args.split_floor_dex, np.log10(args.split_ceiling), N)
@@ -185,18 +212,36 @@ lnK_c = lnK_mir(0.5, p_qa)
 lo = lnK_mir(0.1, p_qa)   # least dormant -> most exposed -> most negative
 hi = lnK_mir(0.9, p_qa)
 
-channels = ["MIR waste heat", "radio continuum", "$R$ statistic", "spin", "kinematics", "MSP timing"]
-vals     = [lnK_c, 0.0, 0.0, 0.0, 0.0, 0.0]
-los      = [lo, 0, 0, 0, 0, 0]
-his      = [hi, 0, 0, 0, 0, 0]
+# Mass channel (E-R9-03): scored in fE_mass_channel.py rather than asserted.
+# Values are read from that script's JSON so the two cannot drift apart.
+with open(os.path.join(_HERE, "fE_mass_channel.json")) as _fh:
+    _MASS = json.load(_fh)
+LNK_MASS = _MASS["range"]["w=0.5"]["lnK"]
+# w = 0.9 is the most negative end (more late-spin-up prior volume above the
+# ceiling), w = 0.1 the least; LO/HI here mean low/high on the lnK axis.
+LNK_MASS_LO = _MASS["range"]["w=0.9"]["lnK"]
+LNK_MASS_HI = _MASS["range"]["w=0.1"]["lnK"]
+
+channels = ["MIR waste heat", "engineered mass", "radio continuum", "$R$ statistic",
+            "spin", "kinematics"]
+vals     = [lnK_c, LNK_MASS, 0.0, 0.0, 0.0, 0.0]
+los      = [lo, LNK_MASS_LO, 0, 0, 0, 0]
+his      = [hi, LNK_MASS_HI, 0, 0, 0, 0]
 
 fig, ax = plt.subplots(figsize=(6.0, 3.4))
 y = np.arange(len(channels))[::-1]
-ax.barh(y, vals, color=["#3b4d8f"] + ["0.7"] * 5, height=0.55)
-ax.errorbar([lnK_c], [y[0]], xerr=[[lnK_c - lo], [hi - lnK_c]],
+ax.barh(y, vals, color=["#3b4d8f", "#7a86b8"] + ["0.7"] * 4, height=0.55)
+ax.errorbar([lnK_c, LNK_MASS], [y[0], y[1]],
+            xerr=[[lnK_c - lo, LNK_MASS - LNK_MASS_LO],
+                  [hi - lnK_c, LNK_MASS_HI - LNK_MASS]],
             fmt="none", ecolor="0.2", capsize=3, lw=1)
 for yi, v, ch in zip(y, vals, channels):
-    note = "" if ch == "MIR waste heat" else "  (inactive / degenerate: 0)"
+    if ch == "MIR waste heat":
+        note = ""
+    elif ch == "engineered mass":
+        note = "  (scored, branch prior)"
+    else:
+        note = "  (inactive / degenerate: 0)"
     ax.text(0.04, yi, ch + note, va="center", fontsize=8.5)
 ax.axvline(0, color="0.2", lw=1)
 ax.set_yticks([]); ax.set_ylim(-1.9, len(channels) - 0.4)
@@ -221,3 +266,7 @@ print(f"  lnK_MIR central {lnK_c:+.3f}  band [{lo:+.3f}, {hi:+.3f}]")
 print(f"  channel capacity ln f_d = {cap:+.3f} nats; spent {lnK_c/cap:.0%}, "
       f"headroom {cap-lnK_c:+.3f}")
 print(f"  P_fuel {P_FUEL:.2e} Lsun")
+print(f"  lnK_mass (scored, w=0.5, range prior) {LNK_MASS:+.3f} "
+      f"[{LNK_MASS_LO:+.3f}, {LNK_MASS_HI:+.3f}]")
+print(f"  TOTAL lnK = {total:+.3f}  (MIR {lnK_c:+.3f} + mass {LNK_MASS:+.3f}); "
+      f"the MIR channel value is unchanged by the mass channel")
