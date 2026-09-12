@@ -350,128 +350,18 @@ footer a:hover{text-decoration:underline}
   <button class="copy-btn" onclick="copyCode('w5-three-server',this)" style="position:absolute;top:.5rem;right:.5rem">Copy</button>
 </div>
 
-<p style="color:var(--text-secondary);margin:1.2rem 0 .5rem"><strong>W5 master prompt</strong> — paste into your AI assistant with all three servers connected:</p>
-<div>
-<div class="prompt-block" id="w5-master-prompt">You have access to three MCP servers: the Omega Centauri Society tools (OCS), NASA ADS, and arXiv. Run the following agentic literature loop:
+<p style="color:var(--text-secondary);margin:1.2rem 0 .5rem"><strong>Agentic loop prompt</strong>: the copy-paste prompt now lives in the <a href="/prompts.html" style="color:var(--teal-glow)">Example Prompts Library</a> as <a href="/prompts.html#agentic-literature-loop" style="color:var(--teal-glow)">agentic-literature-loop</a>. Connect the three servers above, open the library card, and copy the prompt from there; the library version is the maintained one.</p>
 
-STEP 1 — BASELINE CONSTRAINT CHAIN
-Call OCS constraint_stacker with the canonical measurements:
-  • Stellar kinematics (Häberle et al. 2024): M_IMBH = 8,200 M☉, σ = 0.3 dex
-  • Pulsar timing upper limit (TRAPUM 2026): M_IMBH < 1×10⁵ M☉ at 90% CL
-  • Velocity dispersion: σ₀ = 18.2 km/s (OCS tools fiducial; the papers set uses 21 km/s and Baumgardt & Hilker 2018 report 16.8 km/s; the offset between these three values is documented, not harmonized)
-Record the output as your baseline posterior.
+<h2>Example prompts</h2>
+<p style="color:var(--text-secondary);margin-bottom:1rem">Copy-paste agent prompts for common OCS research tasks now live in the <a href="/prompts.html" style="color:var(--teal-glow)">Example Prompts Library</a>: 30 prompts rendered from a machine-readable SSOT, each ending at a surface you can verify without trusting us. The recipes that used to sit on this page are superseded by these library cards:</p>
 
-STEP 2 — LITERATURE SCAN (NASA ADS)
-Search for papers published in the last 12 months:
-  query: "NGC 5139 OR Omega Centauri AND (IMBH OR black hole OR mass)"
-  sort: date descending, limit: 20
-For each result extract: title, authors, date, bibcode, and any IMBH mass measurement or limit.
-
-STEP 3 — PREPRINT SCAN (arXiv)
-Search the last 6 months for:
-  "Omega Centauri IMBH" OR "NGC 5139 black hole mass"
-Extract new mass measurements or constraints from abstracts.
-
-STEP 4 — UPDATE CONSTRAINT CHAIN
-If any new measurements differ from baseline by >0.15 dex, re-run constraint_stacker with updated values. Note which measurements changed.
-
-STEP 5 — WORKFLOW DEEPLINKS
-Call OCS build_ocs_workflow_links for the mass-tension workflow, pre-loaded with the best current values.
-
-RETURN a structured report:
-  1. New papers found (title, date, key measurement)
-  2. Constraint update: baseline vs. updated posterior
-  3. Mass-tension workflow permalink
-  4. Recommended next observation to most tighten the remaining uncertainty</div>
-  <button class="copy-btn" onclick="copyEl('w5-master-prompt',this)" style="margin-top:.5rem">Copy prompt</button>
-</div>
-
-<p style="color:var(--text-secondary);margin:1.2rem 0 .5rem"><strong>OCS-only variant</strong> (no external MCPs needed):</p>
-<div>
-<div class="prompt-block" id="w5-ocs-only">Using the Omega Centauri Society MCP tools, run a constraint chain analysis:
-
-1. Call list_ocs_tools with category="imbh-evidence" to survey available tools.
-2. Call constraint_stacker with the current best-fit measurements: Häberle (2024) M_IMBH = 8,200 M☉; TRAPUM (2026) upper limit M_IMBH < 10⁵ M☉ at 90% CL.
-3. Call build_ocs_workflow_links to get the mass-tension workflow permalink at those values.
-4. Summarize the constraint chain: which measurement currently dominates the posterior, which channel would most tighten it, and what would constitute a 95% CL null result.</div>
-  <button class="copy-btn" onclick="copyEl('w5-ocs-only',this)" style="margin-top:.5rem">Copy prompt</button>
-</div>
-
-<h2>Workflow recipes</h2>
-<p style="color:var(--text-secondary);margin-bottom:1.4rem">Copy-paste agent prompts for common OCS research tasks. Each uses the OCS MCP to navigate the tool suite and generate shareable deeplinks.</p>
-
-<div class="recipe-card">
-  <div class="recipe-title">Mass–tension constraint chain</div>
-  <div class="recipe-meta"><span class="chain-badge">constraint_stacker</span><span class="chain-badge">build_ocs_workflow_links</span>IMBH evidence · pulsar timing · tidal disruption</div>
-  <div class="recipe-body">Propagates pulsar timing and stellar kinematics measurements through the tidal disruption rate tension; outputs a shareable workflow permalink.</div>
-<div class="prompt-block" id="recipe-prompt-1">Using OCS tools, compute the mass–tidal disruption rate tension for Omega Centauri:
-1. Call constraint_stacker with the TRAPUM 2026 upper limit (M_IMBH < 10⁵ M☉ at 90% CL) and the Häberle 2024 best fit (8,200 M☉, σ=0.3 dex).
-2. Call build_ocs_workflow_links to get the mass-tension workflow permalink pre-loaded with those values.
-3. Report: current tension in sigma, which measurement most constrains the posterior, and the permalink.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-1',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
-
-<div class="recipe-card">
-  <div class="recipe-title">Multi-channel evidence ledger</div>
-  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">constraint_stacker</span>IMBH evidence · multi-channel synthesis</div>
-  <div class="recipe-body">Builds a structured table of all observational evidence for the OC IMBH, one row per channel, with detection status and constraint strength.</div>
-<div class="prompt-block" id="recipe-prompt-2">Using OCS tools, build a multi-channel IMBH evidence ledger for Omega Centauri:
-1. Call list_ocs_tools with category="imbh-evidence" to get all IMBH-relevant tools.
-2. For each tool, extract: channel, instrument, key reference, current constraint, detection status (detection / upper limit / non-detection).
-3. Return a markdown table: Channel | Instrument | Reference | Constraint | Status.
-4. Below the table, give the combined mass posterior range at 68% and 90% CL implied by the listed constraints.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-2',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
-
-<div class="recipe-card">
-  <div class="recipe-title">Multi-messenger campaign brief</div>
-  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>multi-messenger · campaign planning</div>
-  <div class="recipe-body">Identifies the three highest-impact observational channels and generates tool deeplinks for each, formatted as a campaign brief.</div>
-<div class="prompt-block" id="recipe-prompt-3">Using OCS tools, design an observational campaign to test the Omega Centauri IMBH hypothesis:
-1. Call list_ocs_tools to survey all available channels.
-2. Rank the top three channels by constraint leverage: which channel's null detection would most shrink the 90% CL mass range?
-3. For each of the top three, call build_ocs_workflow_links with conservative detection-threshold parameters.
-4. Return a campaign brief: Objective, Top 3 channels with deeplinks, estimated constraint improvement per channel, and what would constitute a 95% CL falsification.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-3',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
-
-<div class="recipe-card">
-  <div class="recipe-title">Null-result Bayesian update</div>
-  <div class="recipe-meta"><span class="chain-badge">constraint_stacker</span><span class="chain-badge">build_ocs_workflow_links</span>Bayesian updating · null result · falsification</div>
-  <div class="recipe-body">Given a null detection in a specified channel, computes the Bayesian posterior update to the IMBH mass constraint and evaluates falsification significance.</div>
-<div class="prompt-block" id="recipe-prompt-4">Using OCS tools, compute a Bayesian null-result update for Omega Centauri.
-Scenario: a new MeerKAT observation found no pulsars within 0.1 pc of the cluster center, setting a timing upper limit of M_IMBH < 5,000 M☉ at 90% CL — in tension with the Häberle (2024) best fit of 8,200 M☉.
-
-1. Call constraint_stacker with the Häberle prior (8,200 M☉, σ=0.3 dex) updated by the MeerKAT upper limit as a hard constraint.
-2. Report: posterior mean, 68% CL, 90% CL, and the Bayes factor against the IMBH hypothesis.
-3. Call build_ocs_workflow_links with the updated parameters and return the permalink.
-4. State whether this constitutes a falsification at 95% CL under the OCS framework.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-4',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
-
-<div class="recipe-card">
-  <div class="recipe-title">Fermi / MTH crossover timeline</div>
-  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>Fermi Paradox · Macro Transcension · crossover</div>
-  <div class="recipe-body">Evaluates where Omega Centauri falls on the Fermi–MTH crossover curve given its age, metallicity, and candidate IMBH mass; returns the workflow permalink at current best-fit values.</div>
-<div class="prompt-block" id="recipe-prompt-5">Using OCS tools, evaluate the Fermi / MTH crossover for Omega Centauri:
-1. Call list_ocs_tools with category="fermi-paradox" to find crossover and Grabby Aliens tools.
-2. Call build_ocs_workflow_links for the Fermi–MTH crossover workflow. Use: OC age = 12.5 Gyr, [Fe/H] = −1.53, IMBH mass = 8,200 M☉, stellar population N = 10⁷.
-3. Report: crossover timescale τ_cross, probability OC has already crossed the MTH threshold, and how the IMBH mass anchor shifts τ_cross relative to a no-IMBH baseline.
-4. Return the full deeplink to the crossover workflow.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-5',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
-
-<div class="recipe-card">
-  <div class="recipe-title">MTH compute budget</div>
-  <div class="recipe-meta"><span class="chain-badge">list_ocs_tools</span><span class="chain-badge">build_ocs_workflow_links</span>Macro Transcension · compute budget · Landauer limit</div>
-  <div class="recipe-body">Estimates the total compute budget available to a Macro Transcension civilization in OC, anchored on the IMBH mass as the energy reservoir, from Landauer limit to Bekenstein bound.</div>
-<div class="prompt-block" id="recipe-prompt-6">Using OCS tools, estimate the MTH compute budget for Omega Centauri:
-1. Call list_ocs_tools with category="mth" to find the MTH compute budget and related tools.
-2. Call build_ocs_workflow_links for the MTH compute budget workflow. Use: IMBH mass = 8,200 M☉, spin a* = 0.9, background T = 2.725 K (CMB), time horizon = 10¹¹ yr.
-3. Report: available energy (joules), Landauer-limit compute operations (bits flipped), Bekenstein-bound information capacity (bits), and the parameter that most sensitively affects the total budget.
-4. Return the workflow deeplink.</div>
-  <button class="copy-btn" onclick="copyEl('recipe-prompt-6',this)" style="margin-top:.4rem">Copy prompt</button>
-</div>
+<ul style="list-style:none;padding:0;line-height:2.4">
+  <li><span class="chain-badge">E2</span> <a href="/prompts.html#find-the-right-tool" style="color:var(--teal-glow)">find-the-right-tool</a> · survey the catalog, run one tool, mint a deeplink that reproduces the run</li>
+  <li><span class="chain-badge">S2</span> <a href="/prompts.html#run-the-evidence-window" style="color:var(--teal-glow)">run-the-evidence-window</a> · the machine chain that turns ten published measurements into the allowed IMBH mass window, then breaks it</li>
+  <li><span class="chain-badge">V1</span> <a href="/prompts.html#stack-the-constraints" style="color:var(--teal-glow)">stack-the-constraints</a> · all ten constraint channels with floor/ceiling provenance and page-versus-worker parity</li>
+  <li><span class="chain-badge">G1</span> <a href="/prompts.html#agentic-literature-loop" style="color:var(--teal-glow)">agentic-literature-loop</a> · the OCS + NASA ADS + arXiv loop (successor to the W5 block above)</li>
+</ul>
+<p style="color:var(--text-secondary);margin-top:.8rem">The library also carries everyday tasks, by-domain briefs, education tracks, and all 42 catalog chains as reading paths. The former content-audit recipe is retired.</p>
 
 <h2>Available tools</h2>
 <p style="color:var(--text-secondary);font-size:.93rem;margin-bottom:1rem">The worker exposes 11 callable tools: 4 meta tools (search/deep-link/verify/execute) and 7 server-side compute kernels. Live-verified against <code>mcp.omegacentauri.me/mcp</code> <code>tools/list</code>.</p>

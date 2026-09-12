@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<!--
+  Example Prompts Library
+  Rendered by scripts/gen-prompts-page.mjs from tools/data/showcase-prompts.json
+  and tools/data/tools-manifest.json. Edit the JSON, then re-run the generator.
+  The Omega Centauri Society · omegacentauri.me
+  Prose CC BY 4.0 · Code MIT
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Example Prompts Library · OCS</title>
+<meta name="description" content="Thirty copy-paste verification prompts for the Omega Centauri Society estate: run the tools, check the hashes, verify without trusting us. Plus all 42 catalog chains as reading paths.">
+<link rel="canonical" href="https://omegacentauri.me/prompts.html">
+<meta name="theme-color" content="#0d0a24">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#03020a;--nebula:#0d0a24;
+  --teal-bright:#1dba90;--teal-glow:#4de8c0;--teal-dark:#042a24;
+  --amber-glow:#ffc840;--purple-glow:#a080f0;--purple-bright:#7055d4;
+  --text-primary:#e8e4ff;--text-secondary:#9890c0;--text-dim:#504870;
+  --border-subtle:rgba(112,85,212,0.2);--border-teal:rgba(29,186,144,0.25)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.8;min-height:100vh;background-image:radial-gradient(ellipse at 30% 0%,rgba(112,85,212,.08),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(29,186,144,.05),transparent 50%)}
+a{color:var(--purple-glow);text-decoration:none}a:hover{color:var(--teal-glow)}
+.nav{border-bottom:1px solid var(--border-subtle);background:rgba(7,5,21,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:860px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nav-brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.12em;color:var(--text-primary)}.nav-brand:hover{color:var(--amber-glow)}
+.nav-cur{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-secondary);margin-right:auto}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}.nav-link:hover{color:var(--teal-glow)}
+.wrap{max-width:860px;margin:0 auto;padding:50px 24px 90px}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:10px}
+h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:30px;line-height:1.1;margin-bottom:12px;background:linear-gradient(120deg,#e8e4ff 0%,var(--purple-glow) 55%,var(--teal-glow) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:var(--text-secondary);font-size:18px;max-width:700px;margin-bottom:22px;line-height:1.65}
+.info-bar{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.07em}
+.info-tag{padding:3px 10px;border-radius:20px;border:1px solid currentColor}
+h2{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:600;letter-spacing:.04em;margin:52px 0 8px;color:var(--text-primary)}
+h2:first-of-type{margin-top:36px}
+.section-note{color:var(--text-dim);font-size:14px;margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:.03em}
+h3.sub{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-glow);margin:30px 0 14px}
+.legend{background:rgba(112,85,212,.05);border:1px solid var(--border-subtle);border-radius:8px;padding:14px 18px;margin:0 0 10px;color:var(--text-secondary);font-size:14px;line-height:2.1}
+.legend .badge{vertical-align:middle}
+.card{background:rgba(13,10,36,.7);border:1px solid var(--border-subtle);border-radius:10px;padding:22px 22px 16px;margin-bottom:22px;transition:border-color .18s}
+.card:hover{border-color:var(--purple-bright)}
+.card:target{border-color:var(--amber-glow)}
+.card-eyebrow{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-glow);margin-bottom:8px}
+.card h3{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:600;letter-spacing:.03em;line-height:1.4;margin-bottom:8px}
+.one-line{color:var(--text-secondary);font-size:15px;line-height:1.6;margin-bottom:12px}
+.badges{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:10px;font-family:'Space Mono',monospace;font-size:10px}
+.badge{display:inline-block;padding:1px 7px;border-radius:9px;border:1px solid var(--border-teal);color:var(--teal-bright);background:rgba(29,186,144,.06);font-size:9px;letter-spacing:.08em}
+.requires{color:var(--text-dim);letter-spacing:.05em}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{display:inline-block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;padding:2px 9px;border-radius:10px;border:1px solid var(--border-subtle);color:var(--text-secondary)}
+.chip:hover{border-color:var(--teal-glow);color:var(--teal-glow)}
+.chip-worker{border-color:var(--border-teal);color:var(--teal-bright)}
+.body-wrap{position:relative;margin-bottom:12px}
+.prompt-body{background:rgba(26,16,64,.35);border:1px solid rgba(112,85,212,.3);border-radius:5px;padding:1rem 1.2rem;font-family:'Crimson Pro',serif;font-size:.95rem;color:var(--text-secondary);white-space:pre-wrap;margin:0;line-height:1.65;overflow-x:auto}
+.copy-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:6px 14px;border-radius:6px;border:1px solid var(--border-teal);color:var(--teal-glow);background:rgba(29,186,144,.06);cursor:pointer;margin-top:10px}
+.copy-btn:hover{background:rgba(29,186,144,.18)}
+.card-verify{color:var(--text-dim);font-size:13px;font-family:'Space Mono',monospace;letter-spacing:.03em;line-height:1.9}
+.deeplink{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:4px 12px;border-radius:6px;border:1px solid var(--border-subtle);color:var(--purple-glow);margin-left:10px}
+.deeplink:hover{border-color:var(--amber-glow);color:var(--amber-glow)}
+.machine-strip{list-style:none;padding:0}
+.machine-strip li{background:rgba(4,42,36,.4);border:1px solid var(--border-teal);border-radius:8px;padding:12px 16px;margin-bottom:10px;color:var(--text-secondary);font-size:15px;line-height:1.7}
+.machine-strip code{font-family:'Space Mono',monospace;font-size:12px;color:var(--teal-glow)}
+.machine-strip a{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;margin-left:8px;white-space:nowrap}
+.chain-list{list-style:none;padding:0;columns:1}
+@media(min-width:700px){.chain-list{columns:2;column-gap:28px}}
+.chain-list li{break-inside:avoid;margin-bottom:9px;font-size:15px;line-height:1.55;color:var(--text-secondary)}
+.register{display:inline-block;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border-subtle);border-radius:8px;padding:0 6px;margin-left:6px;vertical-align:1px}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border-subtle);font-family:'Space Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:.05em;text-align:center;line-height:1.9}
+footer a{color:var(--text-secondary)}footer a:hover{color:var(--teal-glow)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">&#9658; OCS</a>
+    <span class="nav-cur">Example Prompts Library</span>
+    <a href="/" class="nav-link">&larr; Main portal</a>
+    <a href="/tools/" class="nav-link">Tools</a>
+    <a href="/mcp.html" class="nav-link">MCP</a>
+    <a href="/paper.html" class="nav-link">Papers</a>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="hero-eyebrow">Verification-first copy-paste prompts</div>
+  <h1>Example Prompts Library</h1>
+  <p class="lede">Thirty prompts that run this estate's tools and check its claims. Each one ends at a surface you can verify without trusting us: your own hash recompute, an independent verifier, or the primary literature. Paste one into any capable assistant, or work it by hand.</p>
+  <div class="info-bar">
+    <span class="info-tag">30 prompts</span>
+    <span class="info-tag">7 groups</span>
+    <span class="info-tag">42 reading chains</span>
+    <span class="info-tag">3 machine chains</span>
+    <span class="info-tag">SSOT: tools/data/showcase-prompts.json</span>
+  </div>
+  <div class="legend">
+    <span class="badge">R</span> hosted MCP worker (mcp.omegacentauri.me/mcp) &nbsp;·&nbsp; <span class="badge">P</span> tool page with hash-state deeplink &nbsp;·&nbsp; <span class="badge">Z</span> zkVM compute proof (risc0 groth16 receipt) &nbsp;·&nbsp; <span class="badge">A</span> anchored evidence (RFC3161 + OpenTimestamps) &nbsp;·&nbsp; <span class="badge">C</span> machine-executable worker chain via run_chain &nbsp;·&nbsp; <span class="badge">N</span> narrative chain or scenario page &nbsp;·&nbsp; <span class="badge">F</span> shipped fixtures and paper JSON &nbsp;·&nbsp; <span class="badge">X</span> external data or MCP
+  </div>
+
+  <h2>Showcase</h2>
+  <p class="section-note">The flagship computations, proven end to end.</p>
+    <article class="card" id="same-physics-three-doorways">
+      <div class="card-eyebrow">Showcase · P→R→Z→A</div>
+      <h3>Prove this site's flagship computation gives the same answer in the page, at the edge, and inside a zkVM</h3>
+      <p class="one-line">Run constraint_stacker in the page and on the MCP worker, recompute the execution_hash yourself, verify the groth16 receipt with an independent BN254 verifier, and check the timestamp anchors.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="zkVM compute proof (risc0 groth16 receipt)">Z</span> <span class="badge" title="anchored evidence (RFC3161 + OpenTimestamps)">A</span></span>
+        <span class="requires">Requires: P · R · Z · A</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip chip-worker" href="/mcp.html">verify_execution_hash</a>
+      <a class="chip" href="/tools/constraint-stacker.html">constraint-stacker</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-same-physics-three-doorways">Prove that the site's flagship computation gives the same answer from three different doors: the browser page, the hosted MCP worker, and a signed zero-knowledge receipt.
+
+1. Open https://omegacentauri.me/tools/constraint-stacker.html and run it with its default published inputs. Download the artifact JSON and record its execution_hash.
+2. Call constraint_stacker on mcp.omegacentauri.me/mcp with the same inputs. Record its execution_hash and compare with the page's, character by character.
+3. Recompute the hash yourself: take the artifact's {policy_parameters, output_payload}, serialize as canonical JSON, and SHA-256 it. State whether your hash matches both.
+4. Call verify_execution_hash on the worker with the artifact as claimed_hash. State pass/fail.
+5. Fetch kernels/receipts/constraint-stacker.computeproof.json from github.com/PostOakLabs/ocs-mcp-worker. Record system (risc0), receiptFormat (groth16-bn254), imageId, and journal.kernel_digest. Run the groth16 seal through a BN254 verifier that is NOT ours and state pass/fail and which library you used.
+6. Fetch https://omegacentauri.me/tools/data/anchored-evidence.json and check the RFC3161 (freetsa.org) and OpenTimestamps anchors that cover the golden execution_hash cd220168…. State what the anchors prove (the artifact existed by those times) and what they do not (that the physics is right).
+7. Close with two lists: what you verified independently, and what you took on trust.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-same-physics-three-doorways',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: your own SHA-256 recompute + groth16 verifier + OTS/RFC3161 on cd220168…
+      <a class="deeplink" href="/tools/constraint-stacker.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="run-the-evidence-window">
+      <div class="card-eyebrow">Showcase · R→P</div>
+      <h3>Run the machine chain that turns ten published measurements into an allowed IMBH mass window, then break it</h3>
+      <p class="one-line">Execute the imbh-evidence-window machine chain, read its gate rules and tension flag, then move one input and watch the window respond.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: R · C</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">run_chain</a>
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip chip-worker" href="/mcp.html">bayes_factor_router</a>
+      <a class="chip chip-worker" href="/mcp.html">build_ocs_workflow_links</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-run-the-evidence-window">Run the machine-executable chain that turns ten published measurements into an allowed IMBH mass window, then break the window on purpose.
+
+1. Call run_chain on mcp.omegacentauri.me/mcp with chain_id imbh-evidence-window. Record the allowed window, the active constraint lanes, whether tension_detected fired, and the gate rules that fired.
+2. Call constraint_stacker directly. The artifact names its sources: state which published measurement sets the floor and which sets the ceiling.
+3. The headline bounds are the Häberle 2024 fast-star floor at ≥8,200 M☉ and upper limits of 709 M☉ (Chen 2025 JWST fiducial curve) and 6,000 M☉ (Bañares 2025 pulsar timing). State why the chain reports a tension instead of collapsing the bounds to one number.
+4. Change one input (epsilon or rho_inf) on constraint_stacker and re-run. State which bound moved and why.
+5. Call build_ocs_workflow_links to mint a deeplink for the page state you used. Open it and confirm the inputs restored.
+6. Call verify_execution_hash on the chain result and record the execution_hash.
+7. Close with: what you verified (hashes, gate rules) versus what you took on trust (the ten published measurements).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-run-the-evidence-window',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: gate rules in the chain result + verify_execution_hash</div>
+    </article>
+    <article class="card" id="paper-in-your-hands">
+      <div class="card-eyebrow">Showcase · F→N→P→R</div>
+      <h3>Reproduce Paper E's headline ln K from the shipped JSON, then walk its scenario with live tools</h3>
+      <p class="one-line">Re-derive Paper E's two headline numbers (ln K = −0.474 mid-infrared channel, −0.501 framework total) from shipped files, then route on the total with bayes_factor_router.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="shipped fixtures and paper JSON">F</span> <span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: F · R</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">bayes_factor_router</a>
+      <a class="chip" href="/tools/scenario-paper-e-feasibility.html">scenario-paper-e-feasibility</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-paper-in-your-hands">Reproduce Paper E's headline Bayes factor from the shipped figure data, then walk its scenario with live tools.
+
+1. Fetch https://omegacentauri.me/papers/figs/fE_calc7_windows.json and read p10_framings.fiducial.lnK. State the mid-infrared channel's ln K to three decimals (the paper quotes −0.474).
+2. Fetch https://omegacentauri.me/papers/figs/fig3_lnk.py and read how the framework total is assembled from per-channel values. State the total the paper reports (−0.501) and which channel carries most of the evidence budget.
+3. Feed the framework total to bayes_factor_router on mcp.omegacentauri.me/mcp. The router takes k = 2·ln K, so send k = −1.002. Record the action band and the prescribed action.
+4. Check the band boundaries against the published Jeffreys/Kass–Raftery conventions yourself and state whether the router's bands match them.
+5. Open https://omegacentauri.me/tools/scenario-paper-e-feasibility.html and walk the scenario. Note where its numbers match the JSON and where it defers to the paper.
+6. Close with: the two numbers you reproduced, the one you routed on, and anything you could not source to a shipped file.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-paper-in-your-hands',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: shipped JSON recompute; −0.474 MIR / −0.501 total two-number rule
+      <a class="deeplink" href="/tools/scenario-paper-e-feasibility.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="fastfail-eligibility-gate">
+      <div class="card-eyebrow">Showcase · R</div>
+      <h3>Give the accretion fast-fail chain a candidate cluster and watch it refuse politely, with receipts</h3>
+      <p class="one-line">Run the accretion-eligibility-fastfail chain on a synthetic candidate, read the gate refusals in order, and verify the execution hashes.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R · C · Z</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">run_chain</a>
+      <a class="chip chip-worker" href="/mcp.html">jwst_accretion_ledger</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-fastfail-eligibility-gate">Give the accretion fast-fail chain a candidate cluster and watch it refuse politely, with receipts.
+
+1. Call run_chain on mcp.omegacentauri.me/mcp with chain_id accretion-eligibility-fastfail and a synthetic candidate (mass, radius, and density of your invention, kept physically sane for a globular cluster).
+2. Read the result's gate.rules: state which checks passed and which refused, in order.
+3. Re-run with a candidate just inside the boundary. State which gate flipped.
+4. Call jwst_accretion_ledger with the same candidate's epsilon and rho_inf. Compare its verdict with the chain's.
+5. Record the execution_hash of each run and confirm each with verify_execution_hash.
+6. State what the refusals prove and what they do not: the gates encode the site's published policy, not a law of nature.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-fastfail-eligibility-gate',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: chain gate.rules + execution_hashes</div>
+    </article>
+    <article class="card" id="apophis-2029-live">
+      <div class="card-eyebrow">Showcase · R→P→A</div>
+      <h3>Compute the 2029 Apophis flyby geometry three ways and anchor the agreement</h3>
+      <p class="one-line">Compute the April 2029 Apophis close approach on the worker, in the page, and from the shipped fixture, then cross-check against JPL Horizons and the groth16 receipt.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="anchored evidence (RFC3161 + OpenTimestamps)">A</span></span>
+        <span class="requires">Requires: R · P · Z · X</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">apophis_flyby_geometry</a>
+      <a class="chip" href="/tools/apophis-flyby-geometry.html">apophis-flyby-geometry</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-apophis-2029-live">Compute the 2029 Apophis flyby geometry three ways and anchor the agreement.
+
+1. Call apophis_flyby_geometry on mcp.omegacentauri.me/mcp for the 2029 close approach. Record the geometry outputs and the execution_hash.
+2. Open https://omegacentauri.me/tools/apophis-flyby-geometry.html, enter the same inputs, and download the page artifact. Compare the two execution_hashes character by character.
+3. Fetch the tool's fixture from github.com/PostOakLabs/ocs-mcp-worker (kernels/fixtures/) and replay it. State whether the fixture output matches both runs.
+4. Cross-check the flyby distance and date against an independent ephemeris (JPL Horizons) and state the agreement at the precision the tool claims.
+5. Fetch kernels/receipts/ for this tool's receipt and verify the groth16 seal (system risc0) with a BN254 verifier that is not ours.
+6. State what you verified independently (your Horizons lookup, your hash comparison) versus what you took on trust (the tool's internal model).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-apophis-2029-live',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: fixture replay + groth16 receipt + your ephemeris cross-check (JPL Horizons)
+      <a class="deeplink" href="/tools/apophis-flyby-geometry.html">Open tool page &#8599;</a></div>
+    </article>
+
+  <h2>Deep dives</h2>
+  <p class="section-note">Long-form adversarial tours for researchers who want to break something.</p>
+    <article class="card" id="trust-nothing-verify-the-verifier">
+      <div class="card-eyebrow">Deep dive · R→Z→P→A</div>
+      <h3>Verify the estate's claims from primary bytes: kernel digest, risc0 image id, groth16 seal, anchored golden, page-vs-worker parity</h3>
+      <p class="one-line">A no-trust tour of the estate: kernel digest, risc0 image id, groth16 seal, anchored golden, and page-versus-worker parity, each checked from primary bytes.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="zkVM compute proof (risc0 groth16 receipt)">Z</span> <span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="anchored evidence (RFC3161 + OpenTimestamps)">A</span></span>
+        <span class="requires">Requires: R · Z · A · P</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">verify_execution_hash</a>
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-trust-nothing-verify-the-verifier">Do not take this site's word for anything. Verify its claims from primary bytes, then use it for one real computation.
+
+1. Fetch https://mcp.omegacentauri.me/mcp with a tools/list call. Record the 11 tool names. Cross-check against https://omegacentauri.me/.well-known/agent-card.json (tool_count should read worker_callable 11, artifact_emitting 28, catalog 35).
+2. Fetch the compute-proof receipt for constraint-stacker from the public worker repo: github.com/PostOakLabs/ocs-mcp-worker, kernels/receipts/constraint-stacker.computeproof.json. Record system (risc0), receiptFormat (groth16-bn254), imageId, and journal.kernel_digest.
+3. Fetch kernels/constraint-stacker.kernel.mjs from the same repo. Hash it yourself (SHA-256). State whether it equals journal.kernel_digest. If not, stop and say so.
+4. Verify the Groth16 seal with a BN254 verifier that is NOT ours. State pass/fail and which library you used.
+5. Call constraint_stacker on mcp.omegacentauri.me with its default published inputs. Record execution_hash. Recompute it yourself: canonical JSON of the artifact's {policy_parameters, output_payload}, SHA-256. State equality, then confirm with verify_execution_hash.
+6. Open https://omegacentauri.me/tools/constraint-stacker.html, run the same inputs in-page, download the artifact, and compare all three hashes (worker, page, your recompute).
+7. Fetch https://omegacentauri.me/tools/data/anchored-evidence.json. For the execution_hash cd220168…, verify the RFC3161 timestamp against the issuing TSA's chain and the OpenTimestamps proof against the Bitcoin calendar. State what the anchors prove (the artifact existed by those times) and what they do not (that the physics is right).
+8. Write the shortest possible statement of what you verified independently versus what you took on trust. Name every point where trust was still required.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-trust-nothing-verify-the-verifier',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: independent BN254 verifier + freetsa/OTS + own SHA-256</div>
+    </article>
+    <article class="card" id="adjudicate-the-imbh-yourself">
+      <div class="card-eyebrow">Deep dive · R→P→N→F</div>
+      <h3>Hold both published answers at once (≥8,200 vs ≤6,000 M☉), run every evidence channel, and refuse to collapse the tension</h3>
+      <p class="one-line">Hold the ≥8,200 and ≤6,000 M☉ results side by side, run every evidence channel on the live worker, and deliver a referee's summary that refuses to collapse the tension.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: R · C · F · X</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">run_chain</a>
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip chip-worker" href="/mcp.html">bayes_factor_router</a>
+      <a class="chip chip-worker" href="/mcp.html">gwtc_remnant_classifier</a>
+      <a class="chip" href="/tools/scenario-imbh-evidence.html">scenario-imbh-evidence</a>
+      <a class="chip" href="/omega-centauri-mass-tension.html">omega-centauri-mass-tension</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-adjudicate-the-imbh-yourself">Omega Centauri has two published central-mass answers that cannot both be complete: fast-star kinematics imply a dark mass ≥ 8,200 M☉ (Häberle et al. 2024, Nature 631, 285), while joint kinematics + pulsar-timing modeling caps any point mass at ≤ 6,000 M☉ 3σ and favors an extended ~2–3×10⁵ M☉ remnant component (Bañares-Hernández et al. 2025, A&amp;A 693, A104). Do not collapse this tension. Adjudicate it.
+
+1. Read both abstracts at the primaries. State each result in one sentence with its method and its blind spot.
+2. Call run_chain with chain_id imbh-evidence-window on mcp.omegacentauri.me. Report the allowed window, which constraint lanes are active, whether tension_detected fired, and the gate rules that fired.
+3. Call constraint_stacker directly and identify which single published measurement sets the floor and which sets the ceiling (the artifact names its sources). For each, state what would have to be wrong for that bound to move.
+4. Feed the framework's own evidence total to bayes_factor_router (Paper E quotes ln K = −0.474 for the mid-infrared channel and −0.501 for the framework total; the router takes k = 2·ln K). Report the action band each lands in and what the pre-registered routing prescribes.
+5. Call gwtc_remnant_classifier on a synthetic merger remnant in the contested 6,000–8,200 M☉ gap; state whether any GWTC event to date constrains this cluster.
+6. Read https://omegacentauri.me/omega-centauri-mass-tension.html (Paper H). Quote its pre-registered verdict verbatim (the data cannot yet decide) and its stated reasons per data type. Check its headline numbers against the shipped fit JSONs in /papers/figs/ where they exist.
+7. Deliver a referee's summary: the two results, why both survive, the three observations Paper H says would decide it, and in which order. Flag anything the site claimed that you could not source to a primary or a shipped computation.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-adjudicate-the-imbh-yourself',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: primary literature (Häberle 2024 Nature; Bañares-Hernández 2025 A&amp;A) + shipped paper JSON</div>
+    </article>
+    <article class="card" id="teach-the-tension">
+      <div class="card-eyebrow">Deep dive · P→F→R</div>
+      <h3>Run problem set 2 against the live tools, grade yourself, then reproduce one paper figure from its shipped script</h3>
+      <p class="one-line">Work pulsar problem set 2 by hand, grade against the revealed solutions, and regenerate one paper figure from its shipped script.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="shipped fixtures and paper JSON">F</span> <span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: P · F</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">list_ocs_tools</a>
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip" href="/pset-2-pulsar.html">pset-2-pulsar</a>
+      <a class="chip" href="/tools/pulsar-accel-mapper.html">pulsar-accel-mapper</a>
+      <a class="chip" href="/paper.html">paper</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-teach-the-tension">Learn the ω Cen mass problem by doing it, then check yourself against the site's own machinery.
+
+1. Open https://omegacentauri.me/pset-2-pulsar.html. Work Problem 1 by hand: the maximum line-of-sight acceleration a point mass M can produce at projected radius R is (2/(3√3))·GM/R². Invert it for the two pulsars given.
+2. Reveal the solutions (?solutions=1) and grade yourself. The printed answers reproduce from the printed givens; if yours differ, find your slip.
+3. The pset's acceleration table comes from real pulsars in measurements.js. Open https://omegacentauri.me/tools/pulsar-accel-mapper.html and confirm the |Ṗ|/P × c values the pset used.
+4. Ask list_ocs_tools (category imbh-evidence) what else bears on the central mass. Run constraint_stacker once and read which of your pset numbers show up as a constraint lane.
+5. Pick one of the nine papers from https://omegacentauri.me/paper.html. Fetch one figure script + JSON from /papers/figs/ (public source mirror) and regenerate the figure. State whether it matches the served PDF.
+6. Close with three sentences a classmate would understand: what the pulsars can bound, what they cannot, and why more pulsars beat better timing (Paper H: the nearest-neighbour jerk floor is 1-stable and does not average away).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-teach-the-tension',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: pset solutions re-derived + figure JSON regenerated</div>
+    </article>
+    <article class="card" id="plan-a-null-result-worth-publishing">
+      <div class="card-eyebrow">Deep dive · P→N→R</div>
+      <h3>Design a SETI campaign whose silence means something: Drake priors → null-result significance → observing plan → proposal</h3>
+      <p class="one-line">Turn silence into a publishable quantity: Drake priors, a null-result significance you can state, an observing plan, and reproduce-me deeplinks for every number.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: P · R · N</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">rubin_alert_throughput</a>
+      <a class="chip chip-worker" href="/mcp.html">build_ocs_workflow_links</a>
+      <a class="chip" href="/tools/drake-monte-carlo.html">drake-monte-carlo</a>
+      <a class="chip" href="/tools/passive-seti.html">passive-seti</a>
+      <a class="chip" href="/tools/observing-campaign-planner.html">observing-campaign-planner</a>
+      <a class="chip" href="/proposal_radio_seti.html">proposal_radio_seti</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-plan-a-null-result-worth-publishing">Design a search whose silence is publishable. Every number must be re-derivable from the page state you link.
+
+1. Open https://omegacentauri.me/tools/drake-monte-carlo.html. Run the 1961 preset (documented output N≈3,162) and then your own prior set. Quote medians and the 5–95 band, not point values.
+2. Feed your pessimistic tail to https://omegacentauri.me/tools/passive-seti.html (the scenario walk-through is scenario-null-result-significance.html): with detection cross-section δ and N surveyed systems, P = 1−(1−0.6δ/R)^N. Find the N at which your null clears 50% and 95%.
+3. Plan the observation with https://omegacentauri.me/tools/observing-campaign-planner.html for ω Cen; then call rubin_alert_throughput on mcp.omegacentauri.me to check whether alert-stream volume is a binding constraint for your cadence. Record the execution_hash.
+4. Call build_ocs_workflow_links for every page you used so each exact state is one link. Verify one link round-trips (open it, confirm the inputs restored).
+5. Read https://omegacentauri.me/proposal_radio_seti.html and steal its structure: instrument, sensitivity chain, integration time, and the dated correction boxes (this site fixes its own numbers in public; check the EIRP chain yourself).
+6. Deliver a one-page observing case: priors, the null-result significance your survey buys, the campaign plan, your reproduce-me links, and the single sentence you could publish if you hear nothing.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-plan-a-null-result-worth-publishing',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: every quoted number re-derived on-page; deeplinks reproduce your exact run</div>
+    </article>
+
+  <h2>Everyday</h2>
+  <p class="section-note">Short tasks a first-time reader can run in minutes.</p>
+    <article class="card" id="is-this-receipt-real">
+      <div class="card-eyebrow">Everyday · R</div>
+      <h3>Someone sent me an OCS artifact JSON. Did this site really compute it?</h3>
+      <p class="one-line">Recompute an artifact's execution_hash yourself, confirm it with the worker, and check whether timestamp anchors cover it.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">verify_execution_hash</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-is-this-receipt-real">Someone hands you an OCS artifact JSON and asks: did this site really compute this?
+
+1. Recompute the artifact's execution_hash yourself: canonical JSON of {policy_parameters, output_payload}, SHA-256. State whether it matches the claimed hash.
+2. Call verify_execution_hash on mcp.omegacentauri.me/mcp with the artifact as claimed_hash. State pass/fail.
+3. Fetch https://omegacentauri.me/tools/data/anchored-evidence.json and check whether the hash (or the golden cd220168…) carries RFC3161 or OpenTimestamps anchors. State what the anchors prove (existence by a time) and what they do not (that the physics is right).
+4. State what you verified versus what you took on trust.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-is-this-receipt-real',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: hash recompute (canonical JSON + SHA-256)</div>
+    </article>
+    <article class="card" id="find-the-right-tool">
+      <div class="card-eyebrow">Everyday · R→P</div>
+      <h3>I want to check X about ω Cen. Find the tool, run it once, hand me a link that reproduces it</h3>
+      <p class="one-line">Find the right tool with list_ocs_tools, run it once, and mint a deeplink that reproduces your exact run.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: R · P</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">list_ocs_tools</a>
+      <a class="chip chip-worker" href="/mcp.html">build_ocs_workflow_links</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-find-the-right-tool">You want to check one thing about Omega Centauri. Find the tool, run it once, and hand back a link that reproduces the run.
+
+1. Call list_ocs_tools on mcp.omegacentauri.me/mcp with a category filter (imbh-evidence, bh-physics, fermi-paradox, fermi-seti, mth, or kardashev) and pick the tool for your question.
+2. Call that tool once with inputs you choose. Record the execution_hash.
+3. Call build_ocs_workflow_links with the tool, its page, and your exact inputs. It returns a deeplink URL.
+4. Open the deeplink in a browser and confirm the page restores your exact state.
+5. Hand off the link plus one sentence on what the run showed. Anyone with the link can re-verify the answer without trusting you.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-find-the-right-tool',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: deeplink reproduces the state</div>
+    </article>
+    <article class="card" id="route-my-evidence">
+      <div class="card-eyebrow">Everyday · R</div>
+      <h3>I have a Bayes factor from my own analysis. What action does the pre-registered routing say?</h3>
+      <p class="one-line">Convert your ln K to the router's k = 2·ln K convention, get the pre-registered action band, and check the bands against the published definitions.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">bayes_factor_router</a>
+      <a class="chip" href="/tools/bayes-factor-router.html">bayes-factor-router</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-route-my-evidence">You have a Bayes factor from your own analysis. What does the site's pre-registered routing say you should do?
+
+1. Convert your natural-log Bayes factor to the router's convention: k = 2·ln K (Kass–Raftery).
+2. Call bayes_factor_router on mcp.omegacentauri.me/mcp with that k. Record the band and the prescribed action.
+3. Check the band boundaries against the published Jeffreys/Kass–Raftery definitions yourself and state whether the router's bands match them.
+4. Open https://omegacentauri.me/tools/bayes-factor-router.html with your k and confirm the page agrees with the worker.
+5. State the action you would take and why. If the band is indecisive, say so and stop.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-route-my-evidence',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: router bands vs the published band definitions
+      <a class="deeplink" href="/tools/bayes-factor-router.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="gw-event-triage">
+      <div class="card-eyebrow">Everyday · R→P</div>
+      <h3>An O5 alert dropped. Classify the remnant and check whether ω Cen-mass IMBHs are in range</h3>
+      <p class="one-line">Classify a synthetic remnant in the contested 6,000–8,200 M☉ gap and check the detection horizon against the cluster's distance.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: R · Z · X</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">gwtc_remnant_classifier</a>
+      <a class="chip" href="/tools/gw-horizon-plotter.html">gw-horizon-plotter</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-gw-event-triage">An O5 gravitational-wave alert dropped. Classify the remnant and check whether an omega Cen-mass IMBH is in range.
+
+1. Call gwtc_remnant_classifier on mcp.omegacentauri.me/mcp with a synthetic merger remnant in the 6,000–8,200 M☉ gap (the contested omega Cen range). Record the classification and the execution_hash.
+2. Open https://omegacentauri.me/tools/gw-horizon-plotter.html and check whether current detectors could see such a remnant at omega Cen's distance (the campaign paper uses d = 5.49 kpc).
+3. Cross-check against the public GWTC catalog (gwosc.org): state whether any event to date has a remnant mass in that range.
+4. Call verify_execution_hash on the classification artifact.
+5. State what you verified versus what you took on trust.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-gw-event-triage',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: GWTC catalog cross-check
+      <a class="deeplink" href="/tools/gw-horizon-plotter.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="roman-or-rubin">
+      <div class="card-eyebrow">Everyday · R</div>
+      <h3>Which survey catches an 8,200 M☉ lens first? Microlensing forecast vs alert throughput</h3>
+      <p class="one-line">Compare a Roman microlensing forecast for an 8,200 M☉ lens against Rubin alert throughput, with both hashes verified.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R · Z</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">roman_microlensing</a>
+      <a class="chip chip-worker" href="/mcp.html">rubin_alert_throughput</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-roman-or-rubin">Which survey catches an 8,200 M☉ microlensing event first: Roman's blank-sky survey or Rubin's alert stream?
+
+1. Call roman_microlensing on mcp.omegacentauri.me/mcp with an 8,200 M☉ lens toward the bulge. Record the event timescale, the expected yield band, and the execution_hash.
+2. Call rubin_alert_throughput for the same field and cadence. Record whether alert-stream volume is a binding constraint.
+3. Compare the two answers and state which program detects the lens first under its own assumptions.
+4. Verify both execution_hashes with verify_execution_hash and confirm page parity for each tool's page artifact.
+5. State the assumptions that most move the answer (lens distance, blending, cadence).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-roman-or-rubin',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: both execution_hashes + page parity</div>
+    </article>
+    <article class="card" id="two-agents-one-hash">
+      <div class="card-eyebrow">Everyday · R</div>
+      <h3>Run the same kernel from two different agent hosts and prove they agree</h3>
+      <p class="one-line">Run one kernel from two agent hosts and prove byte-identical, hash-anchored agreement.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip chip-worker" href="/mcp.html">verify_execution_hash</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-two-agents-one-hash">Run the same computation from two different agent hosts and prove the estate gives identical, hash-anchored answers.
+
+1. From host A, call constraint_stacker on mcp.omegacentauri.me/mcp with its default published inputs. Record execution_hash_A.
+2. From host B (a different machine, account, or agent framework), call the same tool with the same inputs. Record execution_hash_B.
+3. Compare the two hashes character by character and state whether they match.
+4. Recompute the hash yourself from each artifact: canonical JSON of {policy_parameters, output_payload}, SHA-256.
+5. Call verify_execution_hash on each artifact and state pass/fail for both.
+6. If the hashes diverge, stop and report: determinism is the estate's contract, and a divergence is a finding worth publishing.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-two-agents-one-hash',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: identical execution_hash from both hosts</div>
+    </article>
+    <article class="card" id="nightly-golden-watch">
+      <div class="card-eyebrow">Everyday · R→A</div>
+      <h3>Every night, re-verify the anchored golden and tell me if the site's flagship number ever changes</h3>
+      <p class="one-line">A nightly cron that re-verifies the anchored golden and alerts on any change to the flagship number or its anchors.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="anchored evidence (RFC3161 + OpenTimestamps)">A</span></span>
+        <span class="requires">Requires: R · A</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">verify_execution_hash</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-nightly-golden-watch">Set up a nightly cron that re-verifies the site's anchored golden artifact and alerts if the flagship number ever changes.
+
+1. Fetch https://omegacentauri.me/tools/data/anchored-evidence.json and record the golden execution_hash (cd220168…) with its RFC3161 and OpenTimestamps anchor bindings.
+2. Call verify_execution_hash on mcp.omegacentauri.me/mcp with that hash as claimed_hash. Record pass/fail and the timestamp.
+3. Verify the RFC3161 timestamp against the freetsa.org chain and the OpenTimestamps proof against the Bitcoin calendar. State the earliest date the artifact provably existed.
+4. Schedule steps 1–3 daily. Alert on any change in the hash, the verdict, the anchor bindings, or a failed verification.
+5. Write down what a change would mean: the site re-derived its flagship computation, and your watch is what makes that visible instead of silent.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-nightly-golden-watch',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: OTS/RFC3161 bindings unchanged</div>
+    </article>
+
+  <h2>By domain</h2>
+  <h3 class="sub">IMBH evidence</h3>
+    <article class="card" id="stack-the-constraints">
+      <div class="card-eyebrow">By domain · IMBH evidence · R→P</div>
+      <h3>Stack all ten published constraint channels and tell me what mass window survives</h3>
+      <p class="one-line">Run the ten-lane constraint stacker, name the floor and ceiling measurements, and trace one lane back to its primary.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: R · Z</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip" href="/tools/constraint-stacker.html">constraint-stacker</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-stack-the-constraints">Stack all ten published constraint channels and see what mass window survives.
+
+1. Call constraint_stacker on mcp.omegacentauri.me/mcp with default inputs. The artifact names every source it used.
+2. State the allowed window, which lane sets the floor (Häberle 2024 fast stars, ≥8,200 M☉) and which sets the ceiling (Chen 2025 JWST fiducial curve at 709 M☉, with Bañares 2025's ≤6,000 M☉ pulsar-timing limit next).
+3. Open https://omegacentauri.me/tools/constraint-stacker.html, run the same inputs, download the artifact, and compare execution_hashes with the worker's.
+4. Trace one constraint lane back to its primary: open the measurements.js citation named in the artifact (https://omegacentauri.me/tools/data/measurements.js) and read the cited paper's abstract. State what the lane assumes.
+5. Verify the run's execution_hash, and check kernels/receipts/ in the worker repo for this tool's groth16 receipt.
+6. State which single published measurement, if wrong, would most change the window, and what would have to be wrong for that bound to move.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-stack-the-constraints',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: measurements.js citations → primaries
+      <a class="deeplink" href="/tools/constraint-stacker.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="threshold-routing-drill">
+      <div class="card-eyebrow">By domain · IMBH evidence · R</div>
+      <h3>Feed the evidence-threshold chain three synthetic ln K values and map every gate branch</h3>
+      <p class="one-line">Drive the evidence-threshold-routing chain through all three gate branches with synthetic inputs and reconcile it with the router's bands.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span></span>
+        <span class="requires">Requires: R · C</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">run_chain</a>
+      <a class="chip chip-worker" href="/mcp.html">bayes_factor_router</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-threshold-routing-drill">Feed the evidence-threshold chain three synthetic ln K values and map every gate branch.
+
+1. Call run_chain on mcp.omegacentauri.me/mcp with chain_id evidence-threshold-routing and a strongly negative synthetic ln K (decisive for the null). Record the gate.rules that fire and the prescribed action.
+2. Re-run with a near-zero ln K (indecisive). Record the different branch.
+3. Re-run with a strongly positive ln K (decisive for the candidate). Record the branch.
+4. Call bayes_factor_router with k = 2·ln K for each of the three values and confirm the chain's routing matches the router's bands.
+5. Verify all three execution_hashes with verify_execution_hash.
+6. State the full routing table you observed: value range, band, action.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-threshold-routing-drill',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: gate.rules in the result</div>
+    </article>
+    <article class="card" id="jwst-fuel-ledger">
+      <div class="card-eyebrow">By domain · IMBH evidence · R→N</div>
+      <h3>Is a quiet IMBH even allowed to be this quiet? Run the accretion ledger at the published limits</h3>
+      <p class="one-line">Run the JWST accretion ledger at the published limits and check Paper F's 78/85/99 per cent exclusion figures against the paper itself.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="narrative chain or scenario page">N</span></span>
+        <span class="requires">Requires: R · Z · F</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">jwst_accretion_ledger</a>
+      <a class="chip" href="/tools/workflow-naked-imbh.html">workflow-naked-imbh</a>
+      <a class="chip" href="/omega-centauri-accretion-limit.html">omega-centauri-accretion-limit</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-jwst-fuel-ledger">Is a quiet IMBH even allowed to be this quiet? Run the accretion ledger at the published limits and check the exclusion probabilities.
+
+1. Call jwst_accretion_ledger on mcp.omegacentauri.me/mcp at the published JWST limit (Chen 2025) with the defaults epsilon = 0.001 and rho_inf = 1e-21 kg/m³. Record the verdict and the execution_hash.
+2. Open https://omegacentauri.me/tools/workflow-naked-imbh.html and walk the naked-IMBH scenario. Note where it quotes Paper F's exclusion figures.
+3. Check those figures against the paper: https://omegacentauri.me/omega-centauri-accretion-limit.html states the data reject 78 per cent (pulsar-timing cap) and 85 per cent (fast-star anchor) of natural-flow draws under the RIAF family, 99 per cent at 4×10⁴ M☉, falling to 20/28/76 per cent with the radio leg removed. State what those numbers mean and what they do not (they exclude natural flow; they do not detect an IMBH).
+4. Lower epsilon by a decade and re-run the ledger. State how the limit responds and why.
+5. Confirm the execution_hash with verify_execution_hash.
+6. State what you verified versus what you took on trust (the published limits).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-jwst-fuel-ledger',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: Paper F's shipped fF_v4_results.json (P_excl 0.78/0.85/0.99)</div>
+    </article>
+    <article class="card" id="astrometry-reality-check">
+      <div class="card-eyebrow">By domain · IMBH evidence · P→F</div>
+      <h3>The fast stars: how long until acceleration is detectable?</h3>
+      <p class="one-line">Recompute the 7.75 sigma_mu/T sensitivity chain and the 0.21 sigma verdict on direct acceleration detection, from the catalogue's own precision.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: P · F · X</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/astrometric-microlensing.html">astrometric-microlensing</a>
+      <a class="chip" href="/tools/pulsar-accel-mapper.html">pulsar-accel-mapper</a>
+      <a class="chip" href="/omega-centauri-technosignature-campaign.html">omega-centauri-technosignature-campaign</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-astrometry-reality-check">The fast stars: how long until their acceleration is directly detectable? Work it from the shipped analysis chain.
+
+1. Open https://omegacentauri.me/tools/astrometric-microlensing.html and https://omegacentauri.me/tools/pulsar-accel-mapper.html. Note what each takes as input and what it returns.
+2. Read the sensitivity chain in Paper C (https://omegacentauri.me/omega-centauri-technosignature-campaign.html): sigma_a = 7.75·sigma_mu/T, with the oMEGACat catalogue's own proper-motion precision sigma_mu = 6.6 microarcsec/yr inside r &lt; 1.5 arcmin (oMEGACat II, arXiv:2404.03722).
+3. Recompute the headline: at T = 20 yr the chain gives sigma_a ≈ 2.6×10⁻³ mas/yr², so direct acceleration detection on the fast stars stands at 0.21σ today. Confirm the arithmetic yourself.
+4. Read the crossing statement: the nominal signal stays below 1σ before about 2040 (T ≈ 38 yr). State why the paper routes the astrometry program through photocentric wander and reference-frame measurements instead of direct detection.
+5. Check the anchor: read the oMEGACat II abstract at arXiv:2404.03722 and confirm the 6.6 microarcsec/yr value and the region it covers.
+6. State what would have to improve, and by how much, for direct detection to work this decade.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-astrometry-reality-check',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: arXiv:2404.03722 abstract; recompute the 0.21σ</div>
+    </article>
+    <article class="card" id="dark-cluster-or-point-mass">
+      <div class="card-eyebrow">By domain · IMBH evidence · P→N→F</div>
+      <h3>Fit both dark-mass shapes to the same kinematics and show why the data cannot yet decide</h3>
+      <p class="one-line">Fit point-mass and extended dark-mass shapes to the same kinematics and state exactly why the data cannot yet choose.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: P · F</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/dark-cluster.html">dark-cluster</a>
+      <a class="chip" href="/tools/anisotropy-degeneracy-explorer.html">anisotropy-degeneracy-explorer</a>
+      <a class="chip" href="/tools/scenario-breaking-degeneracy.html">scenario-breaking-degeneracy</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-dark-cluster-or-point-mass">Fit both dark-mass shapes to the same kinematics and show why the data cannot yet decide.
+
+1. Open https://omegacentauri.me/tools/dark-cluster.html and fit an extended dark cluster to omega Cen's inner kinematics. Record your best-fit mass and scale radius.
+2. Open https://omegacentauri.me/tools/anisotropy-degeneracy-explorer.html and show how anisotropy mimics or masks a central point mass. Record the degeneracy direction.
+3. Open https://omegacentauri.me/tools/scenario-breaking-degeneracy.html and walk the scenario. State which observable it says breaks the degeneracy.
+4. Compare with Paper H's shipped fit results (https://omegacentauri.me/papers/figs/ has the fast-star and pulsar JSONs) and the paper's own pre-registered verdict: the data cannot yet decide between a compact and an extended central dark mass, and it says why per data type.
+5. State which fit Paper H's analysis favors, and under which conditions that preference holds (it is conditional on the tracer cusp and the pulsar reduction).</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-dark-cluster-or-point-mass',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: Paper H v2.1 shipped fit results</div>
+    </article>
+  <h3 class="sub">Fermi / SETI</h3>
+    <article class="card" id="drake-with-error-bars">
+      <div class="card-eyebrow">By domain · Fermi / SETI · P</div>
+      <h3>Run the Drake equation as a Monte Carlo, not a slogan; quote distributions</h3>
+      <p class="one-line">Run the Drake equation as a Monte Carlo with the 1961 preset (documented output N≈3,162) and your own priors, quoting bands instead of point values.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: P</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/drake-monte-carlo.html">drake-monte-carlo</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-drake-with-error-bars">Run the Drake equation as a Monte Carlo and quote distributions, not slogans.
+
+1. Open https://omegacentauri.me/tools/drake-monte-carlo.html and load the Drake 1961 preset. The page documents its output as N≈3,162 (not the historical point estimate of about 10).
+2. Run it and quote the median and the 5–95 band. Then sum the preset's log10 ranges yourself and confirm the median sits at 10^3.5.
+3. Load the Sandberg-Drexler-Ord default and re-run. Quote P(N &lt; 1) and compare with the paper's headline result.
+4. Build your own prior set, run it, and mint the deeplink so your exact run is reproducible by anyone.
+5. Reload the deeplink and confirm the page restores your state and reproduces your numbers.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-drake-with-error-bars',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: on-page MC + deeplink
+      <a class="deeplink" href="/tools/drake-monte-carlo.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="silence-as-data">
+      <div class="card-eyebrow">By domain · Fermi / SETI · P→N</div>
+      <h3>Quantify what six decades of quiet actually rule out</h3>
+      <p class="one-line">Turn a null result into a number: the civilisation count your silence excludes at 50 and 95 per cent, under stated assumptions.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="narrative chain or scenario page">N</span></span>
+        <span class="requires">Requires: P</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/passive-seti.html">passive-seti</a>
+      <a class="chip" href="/tools/great-filter.html">great-filter</a>
+      <a class="chip" href="/tools/scenario-null-result-significance.html">scenario-null-result-significance</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-silence-as-data">Quantify what decades of quiet in the radio searches actually rule out.
+
+1. Open https://omegacentauri.me/tools/passive-seti.html. Read its model: per civilisation, p₁ = 0.6·δ/R (δ = detection cross-section, R = galaxy radius in light-years); over N independent civilisations, P(≥1) = 1 − (1 − p₁)^N.
+2. Choose δ and R, then solve for the N at which your survey's null clears 50 per cent and 95 per cent. Show the arithmetic.
+3. Open https://omegacentauri.me/tools/great-filter.html and place your result on the filter steps: state which steps a null constrains and which it cannot.
+4. Open https://omegacentauri.me/tools/scenario-null-result-significance.html and check your numbers against the scenario walk-through.
+5. Write the one sentence your silence buys: what N your null excludes, at what confidence, under which assumptions.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-silence-as-data',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: P=1−(1−0.6δ/R)^N recompute</div>
+    </article>
+    <article class="card" id="kardashev-engineering-audit">
+      <div class="card-eyebrow">By domain · Fermi / SETI · P→N</div>
+      <h3>Could a civilisation actually run on an 8,200 M☉ black hole? Price it</h3>
+      <p class="one-line">Price an 8,200 M☉ black-hole power plant: BZ output near 5.1×10³⁷ W, its compute value, its waste heat, and the spin-up bill.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="narrative chain or scenario page">N</span></span>
+        <span class="requires">Requires: P</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/bz-kardashev.html">bz-kardashev</a>
+      <a class="chip" href="/tools/bekenstein-landauer.html">bekenstein-landauer</a>
+      <a class="chip" href="/tools/waste-heat-plane.html">waste-heat-plane</a>
+      <a class="chip" href="/tools/scenario-spin-up-economics.html">scenario-spin-up-economics</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-kardashev-engineering-audit">Could a civilisation actually run on an 8,200 M☉ black hole? Price it.
+
+1. Open https://omegacentauri.me/tools/bz-kardashev.html. Set M = 8,200 M☉, a = 0.9, B = 10⁶ T. The tool returns the Blandford-Znajek power P_BZ = (κ/4πμ₀)·B²·r₊⁴·Ω_H²/c with κ = 0.044 (Tchekhovskoy 2010).
+2. Recompute it by hand from the formula and confirm the tool's ≈5.1×10³⁷ W.
+3. Open https://omegacentauri.me/tools/bekenstein-landauer.html and convert that power into a computation rate. State the entropy cost per bit.
+4. Open https://omegacentauri.me/tools/waste-heat-plane.html and check where such a system lands against the JWST mid-infrared limits.
+5. Open https://omegacentauri.me/tools/scenario-spin-up-economics.html and read the spin-up economics. State the binding constraint (fuel, heat, or time) and why.
+6. Mark every number you computed yourself versus took from a page.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-kardashev-engineering-audit',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: BZ formula recompute (5.12×10³⁷ W @10⁶ T, a=0.9)</div>
+    </article>
+    <article class="card" id="mth-falsification-map">
+      <div class="card-eyebrow">By domain · Fermi / SETI · N→P→F</div>
+      <h3>What observation would kill the Macro Transcension Hypothesis? Walk the falsification schedule</h3>
+      <p class="one-line">Walk the pre-registered falsification schedule and check each row's instrument, threshold, and date gate against reality.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: N · F</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/tools/falsification-hub.html">falsification-hub</a>
+      <a class="chip" href="/tools/imbh-evidence-dashboard.html">imbh-evidence-dashboard</a>
+      <a class="chip" href="/paper.html">paper</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-mth-falsification-map">What observation would kill the Macro Transcension Hypothesis? Walk the falsification schedule.
+
+1. Open https://omegacentauri.me/tools/falsification-hub.html. List the scheduled observations, each with its instrument, threshold, and date gate.
+2. Open https://omegacentauri.me/tools/imbh-evidence-dashboard.html and state which rows are live today versus awaiting future instruments.
+3. Pick one row and trace it to Paper A's Table 7 (linked from https://omegacentauri.me/paper.html). Quote the pre-registered threshold.
+4. Check the row's cited instrument against its public status (launched, delayed, or not funded). State whether the date gate is realistic.
+5. Write the two-sentence version: what result by what date would falsify the hypothesis, and what result would merely extend it.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-mth-falsification-map',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: each row's cited instrument + date gate</div>
+    </article>
+  <h3 class="sub">Education</h3>
+    <article class="card" id="pset-speedrun">
+      <div class="card-eyebrow">By domain · Education · P→F</div>
+      <h3>Four problem sets, live tools, self-graded</h3>
+      <p class="one-line">Work all four problem sets against the live tools and grade yourself from the printed solutions.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="tool page with hash-state deeplink">P</span> <span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: P · F</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/psets.html">psets</a>
+      <a class="chip" href="/pset-2-pulsar.html">pset-2-pulsar</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-pset-speedrun">Four problem sets, live tools, self-graded.
+
+1. Open https://omegacentauri.me/psets.html and pick a set. Work it by hand first; the printed answers reproduce from the printed givens.
+2. Reveal the solutions (?solutions=1 on each pset URL) and grade yourself. If an answer differs, find your slip before moving on.
+3. Where a problem cites a measurement, open the linked tool page from the pset and confirm the number the problem used.
+4. Regenerate one quantitative step with its tool: pset 2's acceleration bound uses a_max = (2/(3√3))·GM/R²; confirm the constant (2/(3√3) = 0.3849) on https://omegacentauri.me/pset-2-pulsar.html and recompute one case.
+5. State which problems you could not reproduce, if any. A pset erratum is a finding; the site fixes its own numbers in public.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-pset-speedrun',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: printed solutions re-derived (every one reproduces from its givens)</div>
+    </article>
+    <article class="card" id="one-paper-one-notebook">
+      <div class="card-eyebrow">By domain · Education · F</div>
+      <h3>Pick any of the nine papers and regenerate one figure from the public source mirror</h3>
+      <p class="one-line">Regenerate one published figure from the public source mirror, unmodified first, then with one input changed.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="shipped fixtures and paper JSON">F</span></span>
+        <span class="requires">Requires: F</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/paper.html">paper</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-one-paper-one-notebook">Pick any of the nine papers and regenerate one figure from the public source mirror.
+
+1. Open https://omegacentauri.me/paper.html and pick a paper.
+2. Fetch its figure scripts and JSON outputs from https://omegacentauri.me/papers/figs/ (the public source mirror; each .py script sits next to its .json outputs).
+3. Run one script unmodified. State whether it regenerates the figure as served in the paper's PDF.
+4. Change one input in the script, re-run, and state what moved. This is the fastest way to learn which assumptions the figure depends on.
+5. If a script does not run or does not reproduce, stop and report it: the mirror is supposed to be complete, and a broken script is a finding the site wants.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-one-paper-one-notebook',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: figure regenerates from shipped script
+      <a class="deeplink" href="/paper.html">Open tool page &#8599;</a></div>
+    </article>
+    <article class="card" id="explain-the-two-answers">
+      <div class="card-eyebrow">By domain · Education · N→P</div>
+      <h3>Explain to a smart 15-year-old why one team says ≥8,200 M☉ and another says ≤6,000 M☉ and both might be right about their data</h3>
+      <p class="one-line">Build a tension-preserving explanation of the two published omega Cen mass answers that a 15-year-old could follow.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="narrative chain or scenario page">N</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: N</span>
+      </div>
+      <div class="chips">
+      <a class="chip" href="/omega-centauri-mass-tension.html">omega-centauri-mass-tension</a>
+      <a class="chip" href="/tools/scenario-imbh-evidence.html">scenario-imbh-evidence</a>
+      <a class="chip" href="/tools/mass-tension-explorer.html">mass-tension-explorer</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-explain-the-two-answers">Explain to a smart 15-year-old why one team says the dark mass is at least 8,200 solar masses, another says it is at most 6,000, and both might be right about their own data.
+
+1. Read https://omegacentauri.me/omega-centauri-mass-tension.html (Paper H) up to the verdict. State the two answers, their methods, and why the paper says the data cannot yet decide (its quotable reasons, S1 through S4).
+2. Open https://omegacentauri.me/tools/scenario-imbh-evidence.html and walk the evidence scenario. Note which measurement favors which answer.
+3. Open https://omegacentauri.me/tools/mass-tension-explorer.html and move one input to show how each bound responds.
+4. Write the explanation in three sentences without numbers, then add exactly two numbers you can source from the page.
+5. Test it: hand the explanation to someone else (or another agent) and ask what they now think. If they conclude one team must be wrong, your explanation collapsed the tension; fix it.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-explain-the-two-answers',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: Paper H's own quotable set S1–S4</div>
+    </article>
+  <h3 class="sub">Agentic and meta</h3>
+    <article class="card" id="agentic-literature-loop">
+      <div class="card-eyebrow">By domain · Agentic and meta · R→X</div>
+      <h3>Combine the OCS MCP with NASA ADS + arXiv MCPs: new paper lands → re-stack constraints → tell me if the window moved</h3>
+      <p class="one-line">Wire the OCS MCP into an ADS/arXiv loop that re-stacks the constraints whenever a new omega Cen paper lands.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="external data or MCP">X</span></span>
+        <span class="requires">Requires: R · X</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">constraint_stacker</a>
+      <a class="chip chip-worker" href="/mcp.html">list_ocs_tools</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-agentic-literature-loop">Combine the OCS MCP with NASA ADS and arXiv MCPs: when a new omega Cen paper lands, re-stack the constraints and report whether the window moved.
+
+1. Call constraint_stacker on mcp.omegacentauri.me/mcp with defaults. Record the window, the active lanes, and the named sources. This is your baseline.
+2. Query an external literature MCP (NASA ADS or arXiv) for new papers citing Häberle 2024 (Nature 631, 285) or Bañares-Hernández 2025 (A&amp;A 693, A104).
+3. For each new primary, compare its claimed bound with the citation the baseline carries in measurements.js (https://omegacentauri.me/tools/data/measurements.js).
+4. If a bound changed: re-run constraint_stacker with the updated value and state the new window. Verify the execution_hash.
+5. If nothing changed: say so, and record the run. A no-op with a hash is still an auditable result.
+6. Report: baseline hash, papers checked, deltas if any.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-agentic-literature-loop',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: new primary vs measurements.js citation set</div>
+    </article>
+    <article class="card" id="read-the-agent-card-first">
+      <div class="card-eyebrow">By domain · Agentic and meta · R→P</div>
+      <h3>Cold-start an agent on this estate from machine-readable surfaces alone; report what it could and couldn't learn</h3>
+      <p class="one-line">Cold-start an agent from agent-card.json, llms.txt, chaingraph.json, and tools-manifest.json alone, then report what the machine-readable estate taught it.</p>
+      <div class="badges">
+        <span class="badge-row"><span class="badge" title="hosted MCP worker (mcp.omegacentauri.me/mcp)">R</span> <span class="badge" title="tool page with hash-state deeplink">P</span></span>
+        <span class="requires">Requires: R</span>
+      </div>
+      <div class="chips">
+      <a class="chip chip-worker" href="/mcp.html">run_chain</a>
+      <a class="chip chip-worker" href="/mcp.html">list_ocs_tools</a>
+      </div>
+      <div class="body-wrap">
+        <pre class="prompt-body" id="body-read-the-agent-card-first">Cold-start an agent on this estate from machine-readable surfaces alone, then report what it could and could not learn.
+
+1. Fetch https://omegacentauri.me/.well-known/agent-card.json. Record tool_count (worker_callable 11, artifact_emitting 28, catalog 35) and the skill families.
+2. Fetch https://omegacentauri.me/llms.txt, https://omegacentauri.me/chaingraph.json, and https://omegacentauri.me/tools/data/tools-manifest.json. Record the manifest version and the chainsNote (42 narrative chains; the 3 machine-executable chains run via run_chain).
+3. Call list_ocs_tools on mcp.omegacentauri.me/mcp and confirm the live worker count matches the card's worker_callable.
+4. Run one machine chain (run_chain, chain_id imbh-evidence-window) using only what the machine-readable surfaces told you. Record the execution_hash.
+5. Re-derive the counts yourself: worker tools from a live tools/list, catalog entries from the manifest, chains from the manifest's chains object. State any count that does not reconcile.
+6. Write the cold-start report: what an agent could learn with zero human help, and what it still could not.</pre>
+        <button class="copy-btn" onclick="copyPrompt('body-read-the-agent-card-first',this)">Copy prompt</button>
+      </div>
+      <div class="card-verify">Verify: every count re-derivable from verify-counts.py outputs</div>
+    </article>
+
+  <h2>Machine chains</h2>
+  <p class="section-note">Three worker chains are machine-executable via <code>run_chain</code> on mcp.omegacentauri.me/mcp, with structured inputs and gate rules in the result. These are the only runnable chains; everything below them is a reading path.</p>
+  <ul class="machine-strip">
+      <li><code>run_chain</code> &#8594; <code>imbh-evidence-window</code> · Turns the ten published constraint measurements into the allowed IMBH mass window, with tension detection and gate rules in the result. <a href="/prompts.html#run-the-evidence-window">Drill: run-the-evidence-window</a></li>
+      <li><code>run_chain</code> &#8594; <code>evidence-threshold-routing</code> · Routes a ln K evidence value through the pre-registered gate branches and prescribes the action. <a href="/prompts.html#threshold-routing-drill">Drill: threshold-routing-drill</a></li>
+      <li><code>run_chain</code> &#8594; <code>accretion-eligibility-fastfail</code> · Fast-fail eligibility gates for an accretion candidate, with gate rules and execution hashes in the result. <a href="/prompts.html#fastfail-eligibility-gate">Drill: fastfail-eligibility-gate</a></li>
+  </ul>
+
+  <h2>Catalog chains (reading paths)</h2>
+  <p class="section-note">42 narrative chains from tools-manifest.json. A human reader (or an agent reading prose) follows them page by page; they are not runnable pipelines.</p>
+  <ul class="chain-list">
+      <li><a href="/tools/scenario-breaking-degeneracy.html">Breaking the IMBH/Dark-Cluster Degeneracy</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-imbh-evidence.html">IMBH Evidence Chain</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-fermi-honest.html">Fermi Paradox · Honest Numbers</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-fermi-mth-crossover.html">Fermi/MTH Crossover</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-dark-cluster-alt.html">Dark Cluster Alternative</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-bh-physics.html">Black Hole Physics Suite</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-bh-tap.html">BH Tap · Energy Extraction</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-decision-tree.html">Observational Decision Tree</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-fermi-five-ways.html">Five Ways to Look for ET</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-dvali-signal.html">Dvali Signal</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-dwarf-inheritance.html">Dwarf Galaxy Inheritance</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-every-way-it-eats.html">Every Way It Eats</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-kardashev-two.html">Kardashev II via Dyson + BZ</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-lisas-shot.html">LISA's Shot</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-oc-vs-gc.html">OC vs Other Globular Clusters</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-proposal-bridge.html">Proposal Bridge</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-reconnection-bz.html">Reconnection → BZ Power</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-spin-up-economics.html">Spin-Up Economics</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-spin-up-tap.html">Spin-Up via Penrose / BZ</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-wait-compute.html">Wait or Compute?</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-cosmology-browser.html">Cosmology Browser</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-mth-compute-budget.html">MTH Compute Budget</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-fermi-mth-crossover.html">Fermi / MTH Crossover</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-bh-energy-budget.html">Black Hole Energy Budget</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-wait-or-act.html">Wait or Act?</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-constraint-window.html">Closing the Constraint Window</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-survivability.html">OC Survivability Budget</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-spin-economics.html">Spin Economics End to End</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-evodevouniverse.html">EvoDeVo Universe</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-tde-detection.html">TDE Detection Chain</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-grabby-fermi.html">Grabby Fermi Chain</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-mass-tension.html">Mass Tension Workflow</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-naked-imbh.html">Naked IMBH</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-accretion-to-spin.html">Accretion to Spin</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-multimessenger-campaign.html">Multi-Messenger Campaign</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-cns-reproduction.html">CNS Reproduction Coefficient</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-settle-imbh-question.html">Settle the IMBH Question</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-black-hole-101.html">Black Hole 101</a> <span class="register">peer-reviewed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/workflow-kardashev-ladder.html">Kardashev Ladder</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-paper-e-feasibility.html">Paper E, Walked: Envelope to Adjudication</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-migrate-or-stay.html">Migrate or Stay: The Discount-Rate Verdict</a> <span class="register">speculative</span> <span class="register">reading path, not runnable</span></li>
+      <li><a href="/tools/scenario-background-free.html">Background-Free: From Multiplet to Campaign</a> <span class="register">mixed</span> <span class="register">reading path, not runnable</span></li>
+  </ul>
+</div>
+<footer>
+  &#9658; THE OMEGA CENTAURI SOCIETY &nbsp;&middot;&nbsp;
+  <a href="/">omegacentauri.me</a> &nbsp;&middot;&nbsp;
+  <a href="/tools/">Tools</a> &nbsp;&middot;&nbsp;
+  <a href="/mcp.html">MCP Connector</a> &nbsp;&middot;&nbsp;
+  <a href="/paper.html">Papers</a>
+  <br>
+  Prompt text is data: <a href="/tools/data/showcase-prompts.json">tools/data/showcase-prompts.json</a> is the single source of truth, and this page is generated from it.
+</footer>
+<script>
+function copyPrompt(id,btn){var el=document.getElementById(id);if(!el)return;var t=el.textContent;
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(btn)},function(){fallback(t,btn)})}else{fallback(t,btn)}}
+function fallback(t,btn){var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}document.body.removeChild(ta);done(btn)}
+function done(btn){var old=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=old},1400)}
+</script>
+</body>
+</html>
