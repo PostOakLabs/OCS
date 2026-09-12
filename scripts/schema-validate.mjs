@@ -187,6 +187,62 @@ const stale = [...ALLOWLIST].filter((id) => !qualified.includes(id) || allFixtur
 if (stale.length) console.error(`! ALLOWLIST has ${stale.length} stale entr${stale.length === 1 ? 'y' : 'ies'} (already covered or no longer artifact-qualified) — shrink it: ${stale.join(', ')}`);
 console.log(`\n${covered}/${qualified.length} covered, ${allowlisted} allowlisted, ${uncovered} gap(s) not allowlisted.`);
 
+// ---- showcase-prompts.json structural lint (PROMPTS-JSON-1) ----
+// Well-formed JSON, all 9 fields on every entry, unique ids, legend enums,
+// no em-dashes in card copy. Count drift (prompts=30) is verify-counts.py's
+// sentinel + claim pin, not this lint's job.
+const PROMPT_FIELDS = ['id', 'title', 'one_line', 'doorways', 'body', 'verify_surface', 'group', 'requires', 'tools'];
+const PROMPT_GROUPS = new Set(['showcase', 'persona', 'everyday', 'imbh-evidence', 'fermi-seti', 'education', 'agentic']);
+const PROMPT_REQUIRES = new Set(['R', 'P', 'Z', 'A', 'C', 'N', 'F', 'X']);
+const PROMPTS_PATH = join(REPO, 'tools', 'data', 'showcase-prompts.json');
+console.log(`\nshowcase-prompts lint · ${rel(PROMPTS_PATH)}`);
+if (!existsSync(PROMPTS_PATH)) {
+  failed++;
+  console.error('  ✗ file missing — the prompts library is a claimed surface (PROMPTS-JSON-1)');
+} else {
+  let sp;
+  try {
+    sp = JSON.parse(readFileSync(PROMPTS_PATH, 'utf8'));
+    console.log('  ✓ well-formed JSON');
+  } catch (e) {
+    console.error(`  ✗ not well-formed: ${e.message}`);
+    sp = null;
+    failed++;
+  }
+  if (sp) {
+    const prompts = Array.isArray(sp.prompts) ? sp.prompts : [];
+    if (!Array.isArray(sp.prompts)) { failed++; console.error('  ✗ top-level "prompts" array missing'); }
+    const seen = new Set();
+    for (const e of prompts) {
+      const where = `prompt ${e && e.id ? e.id : '(no id)'}`;
+      const missing = PROMPT_FIELDS.filter((f) => !(f in (e ?? {})));
+      if (missing.length) { failed++; console.error(`  ✗ ${where}: missing field(s) ${missing.join(', ')}`); }
+      if (e && e.id) {
+        if (seen.has(e.id)) { failed++; console.error(`  ✗ ${where}: duplicate id`); }
+        seen.add(e.id);
+      }
+      if (e && e.group && !PROMPT_GROUPS.has(e.group)) { failed++; console.error(`  ✗ ${where}: group "${e.group}" not in legend`); }
+      for (const r of (e && e.requires) || []) {
+        if (!PROMPT_REQUIRES.has(r)) { failed++; console.error(`  ✗ ${where}: requires "${r}" not in legend`); }
+      }
+      for (const f of ['title', 'one_line']) {
+        const t = String((e ?? {})[f] ?? '');
+        if (/—|‒|―/.test(t)) { failed++; console.error(`  ✗ ${where}: em-dash in ${f} (anti-AI-tell ban, STANDING-ORDERS 5)`); }
+      }
+    }
+    const byGroup = {};
+    for (const e of prompts) byGroup[e.group] = (byGroup[e.group] || 0) + 1;
+    const claimed = sp._meta && sp._meta.counts ? sp._meta.counts : null;
+    if (claimed && claimed.total !== prompts.length) { failed++; console.error(`  ✗ _meta.counts.total ${claimed.total} != ${prompts.length} entries`); }
+    if (claimed && claimed.by_group) {
+      for (const [g, n] of Object.entries(claimed.by_group)) {
+        if (byGroup[g] !== n) { failed++; console.error(`  ✗ _meta.counts.by_group.${g} claims ${n}, file has ${byGroup[g] || 0}`); }
+      }
+    }
+    console.log(`  ${prompts.length} entries across ${Object.keys(byGroup).length} groups (${JSON.stringify(byGroup)}).`);
+  }
+}
+
 function rel(p) { return p ? p.replace(resolve(HERE, '..'), '.') : p; }
 console.log(`\n${checked} checked, ${failed} failed.`);
 process.exit(failed ? 1 : 0);
