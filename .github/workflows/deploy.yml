@@ -470,19 +470,22 @@ jobs:
             /tmp/ocs-mcp-worker
 
           cp tools/data/tools-manifest.json /tmp/ocs-mcp-worker/data/tools-manifest.json
+          # PROMPTS-MCP-1: the example-prompts SSOT rides the same sync path
+          # so the worker's prompts/* surface always matches what the site serves.
+          cp tools/data/showcase-prompts.json /tmp/ocs-mcp-worker/data/showcase-prompts.json
 
           cd /tmp/ocs-mcp-worker
           git config user.email "ci@omegacentauri.me"
           git config user.name "OCS Deploy Bot"
-          git add data/tools-manifest.json
+          git add data/tools-manifest.json data/showcase-prompts.json
 
           if git diff --quiet --cached; then
-            echo "Manifest unchanged — no commit. Cloudflare deploy not triggered."
+            echo "Manifest + prompts unchanged — no commit. Cloudflare deploy not triggered."
           else
             UPDATED=$(date -u +%Y-%m-%d)
-            git commit -m "auto: sync manifest from site deploy ${UPDATED} (${{ github.sha }})"
+            git commit -m "auto: sync manifest + showcase-prompts from site deploy ${UPDATED} (${{ github.sha }})"
             git push
-            echo "Manifest synced and pushed — Cloudflare deploy triggered."
+            echo "Manifest + prompts synced and pushed — Cloudflare deploy triggered."
           fi
 
       - name: Sync summary
@@ -495,6 +498,6 @@ jobs:
             echo "|---|---|"
             echo "| Worker repo | \`PostOakLabs/ocs-mcp-worker\` |"
             echo "| Branch | \`master\` |"
-            echo "| Source manifest | \`tools/data/tools-manifest.json\` |"
+            echo "| Source manifest | \`tools/data/tools-manifest.json\` + \`tools/data/showcase-prompts.json\` |"
             echo "| Cloudflare deploy | auto-triggered on push (GitHub App) |"
           } >> "$GITHUB_STEP_SUMMARY"
