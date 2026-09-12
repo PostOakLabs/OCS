@@ -28,6 +28,9 @@ import json, re, sys, glob, os
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Claim pin for the example-prompts library (see derive_counts "prompts").
+PROMPTS_EXPECTED = 30
+
 # Hub/dashboard pages in tools/ that are NOT calculators.
 HUBS = ["index.html", "falsification-hub.html", "imbh-evidence-dashboard.html",
         "imbh-narrative.html", "pathways.html"]
@@ -49,6 +52,7 @@ def derive_counts():
     chaingraph = json.load(open(os.path.join(REPO, "tools/data/chaingraph.json"), encoding="utf-8"))
     artifact_tools = sum(1 for t in chaingraph.get("tools", {}).values()
                          if t.get("artifact_qualified"))
+    showcase_prompts = json.load(open(os.path.join(REPO, "tools/data/showcase-prompts.json"), encoding="utf-8"))
     return {
         "calculators": calculators,
         "workflows": workflows,
@@ -82,6 +86,12 @@ def derive_counts():
         # constant AND re-verify live whenever a kernel or meta tool is
         # added/removed from the worker.
         "worker_callable": 11,
+        # Example-prompts library (PROMPTS-JSON-1): entries in the showcase-prompts
+        # SSOT that prompts.html + worker prompts/list build from. The master list
+        # (OCS-EXAMPLE-PROMPTS-MASTER_2026-09-10.md) claims 30; PROMPTS_EXPECTED
+        # pins that claim so a silent add/drop goes red here — bump the constant
+        # AND the master/board claim together when the library intentionally grows.
+        "prompts": len(showcase_prompts.get("prompts", [])),
     }
 
 
@@ -92,6 +102,7 @@ def derive_counts():
 # (no full re-serialize / reformat).
 JSON_SENTINELS = [
     ("tools/data/tools-manifest.json", "toolCount", "mcp_tools"),
+    ("tools/data/showcase-prompts.json", "total", "prompts"),
     # agent-card's tool_count is now a layer-explicit object (SITE-MCP-FIX-1
     # M-7d — a single scalar conflated layers); each subfield is its own
     # sentinel against the matching derive_counts() key.
@@ -144,6 +155,13 @@ def run(fix=False):
     counts = derive_counts()
     drift = []   # (file, key, expected, got)
     fixed = []   # (file, key, newval)
+
+    # Claim pin: the prompts library is 30 by master-doc claim (PROMPTS-JSON-1).
+    # Unlike the sentinels below this cannot --fix; growing the library is a
+    # conscious claim change (master doc + board + this constant together).
+    if counts["prompts"] != PROMPTS_EXPECTED:
+        drift.append(("tools/data/showcase-prompts.json", "prompts (claim pin)",
+                      PROMPTS_EXPECTED, counts["prompts"]))
 
     # JSON field sentinels — surgical text replace, no reformat
     for rel, field, key in JSON_SENTINELS:
