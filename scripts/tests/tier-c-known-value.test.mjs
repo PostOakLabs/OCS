@@ -168,7 +168,10 @@ function makeSandbox(presetIds) {
 }
 
 function loadTool(toolId, extraCode = '', presetIds = null) {
-  const entry = manifest.tools[toolId];
+  // P0-CALC-1: four site-only tools (not MCP-manifest tools) get known-value
+  // coverage for their repaired physics; they are resolved by conventional
+  // path when absent from the manifest.
+  const entry = manifest.tools[toolId] ?? { path: `tools/${toolId}.html` };
   const abs = resolve(REPO, entry.path);
   const html = readFileSync(abs, 'utf8');
   const sandbox = makeSandbox(presetIds);
@@ -715,4 +718,108 @@ test('tier-c known-value — FW-4 observing-campaign-planner (sync buildArtifact
         deepFieldEqual(actualPayload[key], expectedVal, 'observing-campaign-planner', c.name, key);
     });
   }
+});
+
+// ---- Group: P0-CALC-1 repaired site-only tools (2026-09-24) ----
+// Four non-manifest tool pages whose physics this WU repaired. Fixtures are
+// hand-derived from the documented conversion chains, not from the tools'
+// own code:
+//   - multi-messenger-alert: 10 TeV = 1e13 eV x 1.602e-12 erg/eV = 16.02 erg
+//     (the old code divided by 1e6); LISA SNR refused outside the
+//     Amaro-Seoane+2017 PSD fit's stated band (~1e-4..1e-1 Hz).
+//   - accretion-state: Paper F limits 1.1 uJy @ 5.2 kpc -> L_nu = 4 pi d^2
+//     S_nu = 3.56e9 W/Hz; 1.6e30 erg/s -> 1.6e23 W; Merloni+2003 plane
+//     re-derived from their eq. 1 cgs form to the page's W / W-per-Hz units.
+//   - joint-accretion-bound-explorer: v0.4 anchors (85.0% / 78.5% / 99.3%)
+//     read from the generated data/fF_v4_embed.js; numeric pins live in
+//     scripts/check-p0calc-parity.py (python, also CI-wired).
+//   - mass-tension-explorer: region values + cell counts merge from
+//     data/fH_plane_embed.js; assert the merge landed in the page's readout.
+
+test('tier-c known-value — P0-CALC-1 multi-messenger-alert energy conversion + LISA band gate', async (t) => {
+  const sandbox = loadTool('multi-messenger-alert');
+  assert.equal(typeof sandbox.km3NetEvents, 'function', 'expected top-level km3NetEvents()');
+  assert.equal(typeof sandbox.lisaSNR, 'function', 'expected top-level lisaSNR()');
+
+  await t.test('10 TeV = 16.02 erg (event count at defaults, hand-derived)', () => {
+    // logP=38 -> 1e45 erg/s; nu_frac 0.15; D = 1.694e22 cm;
+    // flux = 1e45*0.15 / (4*pi*(1.694e22)^2 * 16.02) = 2.5966e-3 /cm2/s
+    // events = flux * 2e8 cm^2 (Aeff) * 100 s (dt) = 5.1932e7
+    const events = sandbox.km3NetEvents(38, 2);
+    const expected = (1e45 * 0.15) / (4 * Math.PI * Math.pow(1.694e22, 2) * 16.02) * 2e8 * 100;
+    assert.ok(Math.abs(events - expected) <= 1e-9 * expected,
+      `km3NetEvents(38,2) expected ~${expected}, got ${events}`);
+    assert.ok(Math.abs(events - 5.1932e7) / 5.1932e7 < 1e-3,
+      `hand-derived 5.1932e7 events, got ${events}`);
+  });
+
+  await t.test('LISA out-of-band gate at 8,200 M_sun (f_peak ~ 0.54 Hz)', () => {
+    const r = sandbox.lisaSNR(Math.log10(8200), 1.4, 5, 0.3);
+    assert.equal(r.inBand, false, 'default mass must be flagged out-of-band');
+    assert.equal(r.snr, null, 'no SNR may be quoted out of band');
+    assert.ok(r.f_peak > 0.1, `f_peak ${r.f_peak} should exceed the 0.1 Hz ceiling`);
+  });
+
+  await t.test('LISA in-band at 50,000 M_sun (f_peak ~ 0.09 Hz) yields finite SNR', () => {
+    const r = sandbox.lisaSNR(Math.log10(50000), 1.4, 5, 0.3);
+    assert.equal(r.inBand, true, '50,000 M_sun should sit inside the band');
+    assert.ok(Number.isFinite(r.snr) && r.snr > 0, `expected finite SNR, got ${r.snr}`);
+  });
+});
+
+test('tier-c known-value — P0-CALC-1 accretion-state Paper F limits + Merloni plane', async (t) => {
+  const sandbox = loadTool('accretion-state');
+  assert.equal(typeof sandbox.radioLimitNu, 'function', 'expected radioLimitNu()');
+  assert.equal(typeof sandbox.xrayLimitW, 'function', 'expected xrayLimitW()');
+  assert.equal(typeof sandbox.merloniLogLnu, 'function', 'expected merloniLogLnu()');
+
+  await t.test('1.1 uJy at 5.2 kpc -> 3.56e9 W/Hz', () => {
+    const v = sandbox.radioLimitNu(1.1, 5.2);
+    const expected = 4 * Math.PI * Math.pow(5.2 * 3.086e19, 2) * 1.1e-32;
+    assert.ok(Math.abs(v - expected) <= 1e-9 * expected, `expected ~${expected}, got ${v}`);
+    assert.ok(Math.abs(v - 3.559e9) / 3.559e9 < 1e-3, `hand-derived 3.559e9 W/Hz, got ${v}`);
+  });
+
+  await t.test('1.6e30 erg/s -> 1.6e23 W', () => {
+    assert.ok(Math.abs(sandbox.xrayLimitW(1.6e30) - 1.6e23) <= 1e-12 * 1.6e23);
+  });
+
+  await t.test('Merloni plane round-trips to the cgs eq.-1 value', () => {
+    // page convention: log10(L_nu/W Hz^-1) = 0.6 log10(L_X/W) + 0.78 log10(M)
+    // - 5.17. Converting back (add log10(5e9 Hz), add 7 for erg/s) must
+    // reproduce Merloni eq. 1: 0.6 log10(L_X/erg s^-1) + 0.78 log10(M) + 7.33.
+    const logLxW = 23.2, mSun = 8200;
+    const page = sandbox.merloniLogLnu(logLxW, Math.log10(mSun));
+    const backToCgs = page + Math.log10(5e9) + 7;
+    const merloni = 0.6 * (logLxW + 7) + 0.78 * Math.log10(mSun) + 7.33;
+    assert.ok(Math.abs(backToCgs - merloni) <= 5e-3,
+      `page plane + unit chain = ${backToCgs}, Merloni eq.1 = ${merloni}`);
+  });
+
+  await t.test('defaults carry the Paper F limits', () => {
+    sandbox.compute(); // re-render at S defaults
+    assert.match(sandbox.document.getElementById('lbl-lr').textContent, /3\.5[0-9]?×10⁹|3\.6×10⁹/);
+    assert.match(sandbox.document.getElementById('lbl-lx').textContent, /1\.60×10²³/);
+  });
+});
+
+test('tier-c known-value — P0-CALC-1 joint-accretion-bound-explorer v0.4 anchors', async (t) => {
+  const sandbox = loadTool('joint-accretion-bound-explorer');
+  // default state: 8,200 M_sun, RIAF family, radio leg on
+  assert.equal(sandbox.document.getElementById('exclfrac-out').textContent, '85.0%',
+    'default exclusion fraction must read the v0.4 85.0% anchor');
+  sandbox.setFamily('jet');
+  // The readout interpolates the shipped 41-point v0.4 curve; the exact MC
+  // anchor at 8,200 is 78.46% (pinned in check-p0calc-parity.py), a rounding
+  // hair off the curve interpolation the page quotes.
+  assert.equal(sandbox.document.getElementById('exclfrac-out').textContent, '78.4%',
+    'jet family at 8,200 M_sun must read the v0.4 curve interpolation');
+});
+
+test('tier-c known-value — P0-CALC-1 mass-tension-explorer shipped cell counts', async (t) => {
+  const sandbox = loadTool('mass-tension-explorer');
+  // default configuration nolegprof_plummer_5200: shipped HPD90 = 49 of 1,891
+  assert.equal(sandbox.document.getElementById('hpd-cells-out').textContent,
+    '49 of 1891 grid cells', 'HPD90 cell count must come from the shipped embed');
+  assert.match(sandbox.document.getElementById('hpd-a-out').textContent, /pc/);
 });

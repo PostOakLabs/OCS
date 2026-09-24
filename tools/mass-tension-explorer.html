@@ -169,12 +169,13 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
   </div>
 
   <div class="panel">
-    <div class="panel-title">Posterior plane  -  M vs. extension parameter a (fiducial bracket, 90%)</div>
+    <div class="panel-title">Posterior plane  -  M vs. extension parameter a in pc (fiducial bracket, 90%)</div>
     <div class="plot-wrap"><canvas id="plane-canvas" width="860" height="300"></canvas></div>
-    <div class="plot-axis-label">M (M☉, x-axis) vs. a (dimensionless extension parameter, y-axis, as defined on the paper's shipped result grid)</div>
+    <div class="plot-axis-label">M (M☉, x-axis) vs. a (parsecs, y-axis; Paper H's extension scale with fiducial a_dark = 10⁻⁴ pc)</div>
+    <p class="plot-axis-label" id="plane-caption">The boxes are the shipped MARGINAL INTERVALS (M_lo–M_hi × 0–a_hi) drawn verbatim. The paper's actual 90% regions are irregular subsets of the 1,891-cell (M, a) grid (cell counts shown in the readout) and cannot be recovered from marginal intervals, so the box interior is not the region shape.</p>
     <div class="legend">
-      <span><span class="sw" style="background:#4de8c0"></span>HPD90 (primary, r_a marginalised)</span>
-      <span><span class="sw" style="background:#f0a020"></span>PL90 (secondary, r_a profiled)</span>
+      <span><span class="sw" style="background:#4de8c0"></span>HPD90 interval box (primary, r_a marginalised)</span>
+      <span><span class="sw" style="background:#f0a020"></span>PL90 interval box (secondary, r_a profiled)</span>
     </div>
   </div>
 
@@ -183,9 +184,11 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
     <div class="result-block">
       <div class="result-grid">
         <div class="result-item"><div class="k">HPD90 M range</div><div class="v" id="hpd-m-out">n/a</div></div>
-        <div class="result-item"><div class="k">HPD90 a upper bound</div><div class="v" id="hpd-a-out">n/a</div></div>
+        <div class="result-item"><div class="k">HPD90 a upper bound (pc)</div><div class="v" id="hpd-a-out">n/a</div></div>
+        <div class="result-item"><div class="k">HPD90 shipped cells</div><div class="v" id="hpd-cells-out">n/a</div></div>
         <div class="result-item"><div class="k">PL90 M range</div><div class="v" id="pl-m-out">n/a</div></div>
-        <div class="result-item"><div class="k">PL90 a upper bound</div><div class="v" id="pl-a-out">n/a</div></div>
+        <div class="result-item"><div class="k">PL90 a upper bound (pc)</div><div class="v" id="pl-a-out">n/a</div></div>
+        <div class="result-item"><div class="k">PL90 shipped cells</div><div class="v" id="pl-cells-out">n/a</div></div>
       </div>
     </div>
   </div>
@@ -215,7 +218,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
     </button>
     <div class="about-body" id="about-this-tool">
       <h3>What this tool shows</h3>
-      <p>Paper H ran a joint fit of ω Cen's central dark mass against four tracer-profile / assumed-distance configurations (Plummer or αβγ tracer profile, at 5,200 pc or 5,494 pc), reporting each configuration's 90% HPD (highest posterior density, r_a marginalised) and 90% profile-likelihood (r_a profiled) region in the (M, a) plane, and a 16-row ln K sensitivity ladder spanning the same four configurations plus knot-prior and error-model variants. This tool renders that shipped output directly (<code>fH_posterior_plane.json</code>, <code>fH_lnk_ladder.json</code>, <code>fH_g3_overlay.json</code>)  -  it recomputes nothing.</p>
+      <p>Paper H ran a joint fit of ω Cen's central dark mass against four tracer-profile / assumed-distance configurations (Plummer or αβγ tracer profile, at 5,200 pc or 5,494 pc), reporting each configuration's 90% HPD (highest posterior density, r_a marginalised) and 90% profile-likelihood (r_a profiled) region in the (M, a) plane, and a 16-row ln K sensitivity ladder spanning the same four configurations plus knot-prior and error-model variants. The region values and shipped cell counts on this page are embedded verbatim from the paper's <code>fH_posterior_plane.json</code> (via the generated <code>data/fH_plane_embed.js</code>, see <code>scripts/gen-p0calc-embeds.py</code>), and the ladder from <code>fH_lnk_ladder.json</code>. The page recomputes nothing  -  but note the plane draws the shipped marginal intervals as boxes, and a marginal-interval box is not the paper's region shape: the shipped 90% regions are irregular cell sets (49 of 1,891 grid cells for HPD90 in the default configuration) whose full masks are not part of the shipped JSON.</p>
       <h3>Reading the ln K ladder</h3>
       <p>Rows marked <span class="notice-label" style="display:inline">error-model sensitivity row</span> use a profiled error-model leg (<code>use_profile: true</code>); this is the paper's own row label, kept verbatim here. Rows without that tag use the mandatory no-profile-leg companion setup. The ladder's spread across knot-prior variants (τ=0.5, 1.0, 2.0) is itself part of the paper's reported sensitivity  -  not a single point estimate.</p>
       <h3>What this tool deliberately does not do</h3>
@@ -230,7 +233,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
         <li><a href="/papers/omega-centauri-mass-tension.pdf">Paper H  -  PDF</a></li>
         <li><a href="/omega-centauri-axi-note.html">AXI methods note</a></li>
       </ul>
-      <div class="meta-line">Tool v1.0  -  2026-08-20 · content revised as the underlying paper's fit output is revised.</div>
+      <div class="meta-line">Tool v1.1  -  2026-09-24 · region values + cell counts embedded from fH_posterior_plane.json via data/fH_plane_embed.js (generated by scripts/gen-p0calc-embeds.py, pinned by scripts/check-p0calc-parity.py). This page does not auto-track the paper.</div>
     </div>
   </div>
 </div>
@@ -239,31 +242,29 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
   Mass Tension Explorer · Omega Centauri Society · <a href="/tools/">All tools</a> · omegacentauri.me
 </footer>
 
+<script src="data/fH_plane_embed.js"></script>
 <script>
-// ---------- Shipped data (fH_posterior_plane.json H-1, fH_lnk_ladder.json H-2, fH_g3_overlay.json H-6) ----------
+// ---------- Shipped data (fH_lnk_ladder.json H-2 + fH_g3_overlay.json H-6 inline;
+// region values + cell counts from fH_posterior_plane.json via the generated
+// data/fH_plane_embed.js — scripts/gen-p0calc-embeds.py, pinned by
+// scripts/check-p0calc-parity.py) ----------
 const CONFIGS = {
-  nolegprof_plummer_5200: {
-    label: 'Plummer, 5,200 pc', tracer: 'Plummer', dist: 5200,
-    hpd: { M_lo: 17782.794100389227, M_hi: 25118.864315095823, a_hi: 0.012283531735409992 },
-    pl:  { M_lo: 17782.794100389227, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 }
-  },
-  nolegprof_plummer_5494: {
-    label: 'Plummer, 5,494 pc', tracer: 'Plummer', dist: 5494,
-    hpd: { M_lo: 22387.21138568338, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 },
-    pl:  { M_lo: 19952.62314968879, M_hi: 31622.776601683792, a_hi: 0.017320508075688777 }
-  },
-  nolegprof_abg_5200: {
-    label: 'αβγ, 5,200 pc', tracer: 'αβγ', dist: 5200,
-    hpd: { M_lo: 17782.794100389227, M_hi: 22387.21138568338, a_hi: 0.012283531735409992 },
-    pl:  { M_lo: 15848.93192461114, M_hi: 25118.864315095823, a_hi: 0.017320508075688777 }
-  },
-  nolegprof_abg_5494: {
-    label: 'αβγ, 5,494 pc', tracer: 'αβγ', dist: 5494,
-    hpd: { M_lo: 19952.62314968879, M_hi: 25118.864315095823, a_hi: 0.008711358306319453 },
-    pl:  { M_lo: 19952.62314968879, M_hi: 28183.82931264455, a_hi: 0.017320508075688777 }
-  }
+  nolegprof_plummer_5200: { label: 'Plummer, 5,200 pc', tracer: 'Plummer', dist: 5200 },
+  nolegprof_plummer_5494: { label: 'Plummer, 5,494 pc', tracer: 'Plummer', dist: 5494 },
+  nolegprof_abg_5200:     { label: 'αβγ, 5,200 pc',    tracer: 'αβγ',    dist: 5200 },
+  nolegprof_abg_5494:     { label: 'αβγ, 5,494 pc',    tracer: 'αβγ',    dist: 5494 }
 };
 const CONFIG_KEYS = Object.keys(CONFIGS);
+
+// Region values and shipped cell counts come verbatim from the paper's JSON;
+// throw loudly on a page/embed key mismatch rather than silently rendering
+// stale inline numbers (the P0-08/P0-09 lesson).
+CONFIG_KEYS.forEach(k => {
+  const c = FH_PLANE.configurations[k];
+  if (!c) throw new Error('fH_plane_embed.js is missing configuration ' + k);
+  CONFIGS[k].hpd = c.hpd;
+  CONFIGS[k].pl = c.pl;
+});
 
 const LADDER = [
   { label: 'nolegprof_abg_5200', visible: 'abg', distance: 5200, tau: 1.0, use_profile: false, n_cells: 8, lnK_full: 10.738988582200626, lnK_min: 10.738988582200626, lnK_max: 11.83565624403744 },
@@ -332,9 +333,11 @@ function render() {
 
   const cfg = CONFIGS[state.config];
   document.getElementById('hpd-m-out').textContent = fmtM(cfg.hpd.M_lo) + ' – ' + fmtM(cfg.hpd.M_hi);
-  document.getElementById('hpd-a-out').textContent = cfg.hpd.a_hi.toFixed(4) + ' (upper bound; region touches a=0)';
+  document.getElementById('hpd-a-out').textContent = cfg.hpd.a_hi.toFixed(4) + ' pc (upper bound; a=0 at the bottom edge)';
+  document.getElementById('hpd-cells-out').textContent = cfg.hpd.n_cells + ' of ' + cfg.hpd.n_grid + ' grid cells';
   document.getElementById('pl-m-out').textContent = fmtM(cfg.pl.M_lo) + ' – ' + fmtM(cfg.pl.M_hi);
-  document.getElementById('pl-a-out').textContent = cfg.pl.a_hi.toFixed(4) + ' (upper bound; region touches a=0)';
+  document.getElementById('pl-a-out').textContent = cfg.pl.a_hi.toFixed(4) + ' pc (upper bound; a=0 at the bottom edge)';
+  document.getElementById('pl-cells-out').textContent = cfg.pl.n_cells + ' of ' + cfg.pl.n_grid + ' grid cells';
 
   const [visible, dist] = [cfg.tracer === 'Plummer' ? 'plummer' : 'abg', cfg.dist];
   const tbody = document.getElementById('ladder-body');
