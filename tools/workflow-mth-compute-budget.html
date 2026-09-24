@@ -14,7 +14,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MTH Compute Budget Workflow — Omega Centauri Society</title>
-<meta name="description" content="Four-stage workflow: pick an allowed IMBH mass → BZ power extraction → Bekenstein-Landauer-Lloyd compute limits → gravitational time dilation speedup. The complete Macro Transcension Hypothesis argument in one browser session.">
+<meta name="description" content="Four-stage workflow: pick an allowed IMBH mass → BZ power extraction → Bekenstein-Landauer-Lloyd compute limits → gravitational time dilation accounted per frame. The complete Macro Transcension Hypothesis argument in one browser session.">
 <link rel="canonical" href="https://omegacentauri.me/tools/workflow-mth-compute-budget.html">
 <meta name="theme-color" content="#0d0a24">
 <meta name="color-scheme" content="dark">
@@ -412,7 +412,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
       </div>
       <div class="handoff">
         <span class="handoff-arrow">→</span>
-        <span>Passes to Stage 4: &nbsp;<strong>M = <span id="s3-handoff-m">—</span></strong> for Schwarzschild radius · binding ops/sec for subjective rate comparison</span>
+        <span>Passes to Stage 4: &nbsp;<strong>M = <span id="s3-handoff-m">—</span></strong> for Schwarzschild radius · binding ops/sec, the frame-invariant proper rate</span>
       </div>
     </div>
   </div>
@@ -423,13 +423,13 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
       <div class="stage-num">04</div>
       <div class="stage-header-text">
         <div class="stage-kicker">Gravitational Time Dilation</div>
-        <div class="stage-title">Subjective Compute Speedup</div>
-        <div class="stage-summary" id="s4-summary">Time near the horizon runs slower — subjective ops/sec multiply</div>
+        <div class="stage-title">Compute Budget Across Frames</div>
+        <div class="stage-summary" id="s4-summary">Time near the horizon runs slower: ops per external year drop with dτ/dt, and the wait benefit grows</div>
       </div>
       <span class="stage-chevron">▶</span>
     </div>
     <div class="stage-body">
-      <p class="stage-prose">A clock at radius r near a Schwarzschild black hole ticks at rate √(1 − r_s/r) relative to a clock at infinity. An observer sitting at 1.5 r_s computes at the same physical ops/sec as computed in Stage 3 — but from the perspective of the outside universe, <em>their computation runs faster by a factor of 1/√(1 − r_s/r)</em>. The MTH argument: the ergosphere civilisation exploits this dilation to perform an astronomically larger number of computations per external year.</p>
+      <p class="stage-prose">A clock at radius r near a Schwarzschild black hole ticks at dτ/dt = √(1 − r_s/r) relative to a clock at infinity, so hardware sitting at 1.5 r_s completes <em>fewer</em> operations per external year than an identical rig farther out, dwindling toward zero as r → r_s. Per subjective (proper) year the rate is unchanged: binding ops/sec × 3.16e7 s/yr, frame-invariant. What the dilation actually buys is the wait: one subjective year at 1.5 r_s corresponds to 1.73 exterior years, so a civilisation parked deep in the potential well reaches the far future of the universe while aging slowly. The MTH computation claim therefore rests on the time-skip benefit, not on any increase in compute rate.</p>
       <div class="stage-cols">
         <div>
           <div class="col-title">Inputs (M and r_s from Stage 1)</div>
@@ -462,19 +462,19 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
           <div class="col-title">Stage 4 outputs</div>
           <div class="output-grid">
             <div class="output-row primary">
-              <span class="out-label">Dilation factor (local/infinity)</span>
+              <span class="out-label">Clock rate dτ/dt (hardware r · observer r_obs)</span>
               <span><span class="out-val big" id="s4-out-factor">—</span></span>
             </div>
             <div class="output-row">
-              <span class="out-label">1 external year = N subjective years</span>
+              <span class="out-label">Hardware ops per external year (rate × dτ/dt at r)</span>
               <span><span class="out-val" id="s4-out-subj">—</span></span>
             </div>
             <div class="output-row" style="border-color:rgba(208,64,64,.3)">
-              <span class="out-label">Subjective ops per external year</span>
+              <span class="out-label">Ops per subjective year (frame-invariant)</span>
               <span><span class="out-val" id="s4-out-subj-ops">—</span></span>
             </div>
             <div class="output-row">
-              <span class="out-label">vs. exterior binding ops/yr</span>
+              <span class="out-label">Ops/ext-yr vs. exterior observer (1.00× at equal radii)</span>
               <span><span class="out-val" id="s4-out-dil-ratio" style="font-size:13px">—</span></span>
             </div>
           </div>
@@ -490,7 +490,7 @@ input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;cur
       <div class="export-cell"><div class="export-cell-label">IMBH mass</div><div class="export-cell-val" id="exp-mass">—</div><div class="export-cell-unit">M☉</div></div>
       <div class="export-cell"><div class="export-cell-label">BZ power output</div><div class="export-cell-val" id="exp-pbz">—</div><div class="export-cell-unit">watts</div></div>
       <div class="export-cell"><div class="export-cell-label">Binding ops/sec</div><div class="export-cell-val" id="exp-ops">—</div><div class="export-cell-unit">ops/s (Landauer or Lloyd)</div></div>
-      <div class="export-cell"><div class="export-cell-label">Subjective ops / ext. year</div><div class="export-cell-val" id="exp-subj">—</div><div class="export-cell-unit">dilated by time factor</div></div>
+      <div class="export-cell"><div class="export-cell-label">Hardware ops / ext. year</div><div class="export-cell-val" id="exp-subj">—</div><div class="export-cell-unit">binding rate × dτ/dt at r</div></div>
     </div>
     <p class="export-narrative" id="exp-narrative">—</p>
     <button class="copy-btn" id="copy-btn" onclick="copyReport()">Copy full report</button>
@@ -617,31 +617,40 @@ function compute(){
   setText('s3-handoff-m',M.toLocaleString()+' M☉');
   setText('s3-summary','Landauer = '+fmtSci(land)+' · Lloyd = '+fmtSci(lloyd)+' · binding: '+bindName);
 
-  // Stage 4
-  const dilFar=dilationFactor(S.rObs);
-  const dilNear=dilationFactor(S.r);
-  const speedup=dilFar/dilNear; // how many near-horizon seconds per far observer second
-  const subjOpsPerYear=binding*YSEC*speedup;
-  const extOpsPerYear=binding*YSEC;
+  // Stage 4 — gravitational time dilation, per frame.
+  // dτ/dt = sqrt(1-1/r) is the LOCAL proper clock rate relative to infinity:
+  // it is < 1 near the horizon and → 0 as r → r_s. Hardware on that clock
+  // performs `binding` ops per PROPER second, so per EXTERNAL year it
+  // completes rate × dτ/dt operations — FEWER than an exterior rig, never
+  // more. Ops per subjective (proper) year are frame-invariant at rate ×
+  // YSEC. (The old speedup = dilFar/dilNear multiplied the frames the wrong
+  // way and inflated the near-horizon numbers; what dilation actually buys
+  // is the wait: 1/dτ/dt exterior years pass per subjective year at r.)
+  const dilObs=dilationFactor(S.rObs);          // dτ/dt at the external observer
+  const dilNear=dilationFactor(S.r);            // dτ/dt at the hardware radius
+  const opsPerSubjYear=binding*YSEC;            // frame-invariant proper rate
+  const opsExtYearNear=binding*YSEC*dilNear;    // hardware ops per external year
+  const opsExtYearObs=binding*YSEC*dilObs;      // same quantity at the observer
+  const frameRatio=opsExtYearNear/opsExtYearObs;// 1.00× at equal radii; → 0 as r → r_s
   setText('s4-r-lbl',S.r.toFixed(2)+' r_s');
   setText('s4-robs-lbl',S.rObs+' r_s');
   setText('s4-rs-display', rsAU.toPrecision(3)+' AU = '+rsVal.toExponential(2)+' m');
-  setText('s4-out-factor', speedup.toPrecision(3)+'×');
-  setText('s4-out-subj', speedup.toPrecision(3)+' subjective years');
-  setText('s4-out-subj-ops', fmtSci(subjOpsPerYear));
-  setText('s4-out-dil-ratio', fmtSci(subjOpsPerYear/extOpsPerYear)+'× relative to exterior');
-  setText('s4-summary','Dilation: '+speedup.toFixed(2)+'× · Subj. ops/yr: '+fmtSci(subjOpsPerYear));
+  setText('s4-out-factor', dilNear.toPrecision(3)+' (r) · '+dilObs.toPrecision(3)+' (r_obs)');
+  setText('s4-out-subj', fmtSci(opsExtYearNear));
+  setText('s4-out-subj-ops', fmtSci(opsPerSubjYear));
+  setText('s4-out-dil-ratio', fmtSci(frameRatio)+'× relative to exterior observer');
+  setText('s4-summary','dτ/dt at r: '+dilNear.toFixed(3)+' · ops/ext-yr: '+fmtSci(opsExtYearNear)+' · wait: '+(1/dilNear).toPrecision(3)+' exterior yr per subjective yr');
 
   // Store for export
-  D={M,pbz,land,lloyd,binding,bindName,speedup,subjOpsPerYear,extOpsPerYear,kard,T,ratioSilicon,window_label};
+  D={M,pbz,land,lloyd,binding,bindName,dilNear,dilObs,opsPerSubjYear,opsExtYearNear,frameRatio,kard,T,ratioSilicon,window_label};
 
   // Update export
   setText('exp-mass',M.toLocaleString());
   setText('exp-pbz',fmtSci(pbz));
   setText('exp-ops',fmtSci(binding)+' ('+bindName+')');
-  setText('exp-subj',fmtSci(subjOpsPerYear));
+  setText('exp-subj',fmtSci(opsExtYearNear));
 
-  const narrative=`An IMBH of ${M.toLocaleString()} M☉ (${window_label}) spinning at a* = ${a.toFixed(2)} with a ${fmtSci(Math.pow(10,S.logB))} T horizon field drives a BZ jet of ${fmtSci(pbz)} W — Kardashev K = ${kard.toFixed(2)}, ${fmtSci(lsunRatio)}× solar luminosity. The ${bindName} limit caps this at ${fmtSci(binding)} ops/s at ${T<10?T.toPrecision(2):T.toPrecision(3)} K. An observer at ${S.r.toFixed(2)} r_s subjectively computes ${fmtSci(subjOpsPerYear)} ops per external year — ${fmtSci(speedup.toPrecision(3))}× the exterior rate — by exploiting gravitational time dilation. That is ${fmtSci(ratioSilicon)}× Earth's best current silicon.`;
+  const narrative=`An IMBH of ${M.toLocaleString()} M☉ (${window_label}) spinning at a* = ${a.toFixed(2)} with a ${fmtSci(Math.pow(10,S.logB))} T horizon field drives a BZ jet of ${fmtSci(pbz)} W — Kardashev K = ${kard.toFixed(2)}, ${fmtSci(lsunRatio)}× solar luminosity. The ${bindName} limit caps this at ${fmtSci(binding)} ops/s at ${T<10?T.toPrecision(2):T.toPrecision(3)} K. Hardware at ${S.r.toFixed(2)} r_s completes ${fmtSci(opsExtYearNear)} ops per external year (${fmtSci(frameRatio.toPrecision(3))}× the exterior observer's rate): proper-time computation does not speed up near the horizon, it slows with the clock. What the dilation buys is the wait: ${(1/dilNear).toPrecision(3)} exterior years pass per subjective year at r, so a civilisation parked deep in the potential well reaches the universe's far future while aging slowly. Ops per subjective year stay at ${fmtSci(opsPerSubjYear)}, frame-invariant. That is ${fmtSci(ratioSilicon)}× Earth's best current silicon.`;
   setText('exp-narrative',narrative);
 }
 
@@ -652,7 +661,7 @@ function copyReport(){
     'Stage 1 — IMBH mass: '+D.M.toLocaleString()+' M☉ ('+D.window_label+')',
     'Stage 2 — BZ power:  '+fmtSci(D.pbz)+' W  (Kardashev K = '+D.kard.toFixed(2)+')',
     'Stage 3 — '+D.bindName+' ops/s: '+fmtSci(D.binding)+'  ('+fmtSci(D.ratioSilicon)+'× Earth silicon)',
-    'Stage 4 — Subjective ops/yr: '+fmtSci(D.subjOpsPerYear)+'  ('+D.speedup.toPrecision(3)+'× dilation)',
+    'Stage 4 — ops/ext-yr at r: '+fmtSci(D.opsExtYearNear)+'  (dτ/dt = '+D.dilNear.toFixed(3)+'; ops per subjective year '+fmtSci(D.opsPerSubjYear)+', frame-invariant)',
     '',
     document.getElementById('exp-narrative').textContent,
     '',

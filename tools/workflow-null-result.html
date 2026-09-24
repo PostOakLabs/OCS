@@ -489,7 +489,7 @@ function compute() {
   setText('s1-summary', 'f_sky = ' + (fSky*100).toFixed(0) + '% · f_freq = ' + (fFreq*100).toFixed(0) + '%');
   setText('s2-summary', 'N = ' + fmtN(N) + ' · δ = ' + fmtDelta(delta));
   setText('s3-summary', 'P₀ = ' + fmtPct(P0, P0 < 0.01 ? 3 : 1));
-  setText('s4-summary', 'P_detect = ' + fmtPct(P_detect) + ' · ' + sigma.toFixed(1) + 'σ null');
+  setText('s4-summary', 'P_detect = ' + fmtPct(P_detect) + ' · ' + (sigma < 0 ? 'below the significance threshold (uninformative null)' : sigma.toFixed(1) + 'σ null'));
 
   // --- Stage 1 inline outputs ---
   setText('out-geom',    geom < 0.001 ? geom.toExponential(3) : geom.toFixed(4));
@@ -507,7 +507,7 @@ function compute() {
   setText('out-K',       K < 1e-4 ? K.toExponential(3) : K.toFixed(5));
   setText('out-Ppost',   fmtPct(P_post, P_post < 0.01 ? 3 : 1));
   setText('out-P0',      fmtPct(P0,     P0     < 0.01 ? 3 : 1));
-  setText('out-sigma',   sigma.toFixed(2) + 'σ');
+  setText('out-sigma',   sigma < 0 ? '< 0σ (uninformative)' : sigma.toFixed(2) + 'σ');
   setText('out-Kdb',     K_db.toFixed(1) + ' dB');
 
   // --- Verdict ---
@@ -544,7 +544,7 @@ function compute() {
     'P(detect | ETI) = ' + fmtPct(P_detect) + '. ' +
     'Bayes factor K = ' + K.toExponential(3) + ' (' + K_db.toFixed(1) + ' dB). ' +
     'Prior P₀ = ' + fmtPct(P0, P0 < 0.01 ? 3 : 1) + ' → Posterior P(ETI | null) = ' + fmtPct(P_post, P_post < 0.01 ? 3 : 1) + '. ' +
-    'Null significance: Φ⁻¹(P_detect) = ' + sigma.toFixed(2) + 'σ. ' +
+    'Null significance: Φ⁻¹(P_detect) = ' + sigma.toFixed(2) + 'σ' + (sigma < 0 ? ' (below the 0σ threshold: an uninformative null under the disclosed model). ' : '. ') +
     'Civiletti (2025) geometric model, R_MW = 52,000 ly. [Omega Centauri Society — omegacentauri.me]';
 
   setText('exp-N',       fmtN(N));
@@ -555,7 +555,7 @@ function compute() {
   setText('exp-K',       K < 1e-4 ? K.toExponential(3) : K.toFixed(5));
   setText('exp-P0',      fmtPct(P0, P0 < 0.01 ? 3 : 1));
   setText('exp-Ppost',   fmtPct(P_post, P_post < 0.01 ? 3 : 1));
-  setText('exp-sigma',   sigma.toFixed(2) + 'σ');
+  setText('exp-sigma',   sigma < 0 ? '< 0σ (uninformative)' : sigma.toFixed(2) + 'σ');
   setText('exp-narrative', narrative);
 }
 
