@@ -102,6 +102,14 @@ jobs:
       - name: Count-drift gate
         run: python3 scripts/verify-counts.py
 
+      # Truncation gate (P0-01): byte-level check that every non-archive HTML
+      # page contains </html>, balances <script>/</script>, and ends with
+      # </html>. Exists because syntax-check.mjs skips unclosed script blocks,
+      # which is how three truncated pages shipped green. Byte counts only —
+      # never grep (workspace grep is ugrep and returns silent 0s).
+      - name: Tag-balance gate
+        run: python3 scripts/check-tag-balance.py
+
       # Broken-asset gate (strict-zero): fails if any href/src points at a missing
       # local file/dir. Catches the ../data/ 404 class of bug before it deploys.
       - name: Broken-link gate
