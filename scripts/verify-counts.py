@@ -20,9 +20,13 @@ Usage (from repo root):
 Zero dependencies (stdlib only). Runs on the ubuntu-latest python3 in CI.
 
 Coverage: global counts (calculators/workflows/scenarios/hubs/proposals/mcp_tools/
-mcp_chains) via JSON/HTML/llms sentinels, AND per-section card-count consistency in
+mcp_chains) via JSON/HTML/llms sentinels, per-section card-count consistency in
 tools/index.html (each section's displayed count == tool-cards rendered in it;
-scenarios/workflows card counts must also equal the filesystem file count).
+scenarios/workflows card counts must also equal the filesystem file count), the
+.well-known/mcp/server-card.json layer counts (SERVERCARD-1: callable/catalog/
+chains/artifact — the card had no coverage and rotted), and pinned version
+literals for .well-known/mcp.json + server-card schema_version (VERSION_PINS,
+re-verify against live /health before bumping).
 """
 import json, re, sys, glob, os
 
@@ -30,6 +34,16 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Claim pin for the example-prompts library (see derive_counts "prompts").
 PROMPTS_EXPECTED = 30
+
+# Version pins (SERVERCARD-1): version strings cannot be derived from the
+# repo, so they are pinned as literals against the live worker health
+# observation — https://mcp.omegacentauri.me/health reports "version": "0.3.0"
+# (fetched 2026-09-24). Re-verify live on claim, then bump pin + files
+# together, deliberately. Field name must be UNIQUE in the file.
+VERSION_PINS = [
+    (".well-known/mcp.json", "version", "0.3.0"),
+    (".well-known/mcp/server-card.json", "schema_version", "0.3.0"),
+]
 
 # Hub/dashboard pages in tools/ that are NOT calculators.
 HUBS = ["index.html", "falsification-hub.html", "imbh-evidence-dashboard.html",
@@ -109,6 +123,14 @@ JSON_SENTINELS = [
     (".well-known/agent-card.json", "catalog", "mcp_tools"),
     (".well-known/agent-card.json", "artifact_emitting", "artifact_tools"),
     (".well-known/agent-card.json", "worker_callable", "worker_callable"),
+    # server-card.json (SERVERCARD-1, 2026-09-24): the card had NO sentinel
+    # coverage and rotted (callable 4 vs live 11, catalog 31 vs 35, chains 41
+    # vs 42). Fields are unique in the file; "count" matches only
+    # chains.count because the JSON sentinel regex anchors on the exact
+    # quoted key name ("callable_count" does not contain '"count"').
+    (".well-known/mcp/server-card.json", "callable_count", "worker_callable"),
+    (".well-known/mcp/server-card.json", "catalog_count", "mcp_tools"),
+    (".well-known/mcp/server-card.json", "count", "mcp_chains"),
 ]
 
 # Prose regex sentinels in JSON description strings: (relative path, compiled
@@ -126,6 +148,9 @@ PROSE_SENTINELS = [
     (".well-known/agent-card.json", re.compile(r"(\d+) client-side, zero-egress, single-file HTML calculators"), "artifact_tools"),
     (".well-known/agent-card.json", re.compile(r"(\d+) of the site's \d+-tool catalog are also live-callable"), "worker_callable"),
     (".well-known/agent-card.json", re.compile(r"\d+ of the site's (\d+)-tool catalog are also live-callable"), "mcp_tools"),
+    # server-card description prose carries the artifact count in free text
+    # (SERVERCARD-1); same mechanism as the agent-card prose sentinels above.
+    (".well-known/mcp/server-card.json", re.compile(r"(\d+) artifact-emitting tools across"), "artifact_tools"),
 ]
 
 # HTML files scanned for data-count="KEY" markers (KEY must be a derive_counts key).
@@ -162,6 +187,21 @@ def run(fix=False):
     if counts["prompts"] != PROMPTS_EXPECTED:
         drift.append(("tools/data/showcase-prompts.json", "prompts (claim pin)",
                       PROMPTS_EXPECTED, counts["prompts"]))
+
+    # Version pins (SERVERCARD-1) — literal strings, --fix rewrites surgically.
+    for rel, field, expected in VERSION_PINS:
+        fp = os.path.join(REPO, rel)
+        text = open(fp, encoding="utf-8").read()
+        m = re.search(r'("%s"\s*:\s*")([^"]*)(")' % re.escape(field), text)
+        if m is None:
+            drift.append((rel, f"{field} (version pin)", expected, "MISSING")); continue
+        if m.group(2) != expected:
+            if fix:
+                text = text[:m.start()] + m.group(1) + expected + m.group(3) + text[m.end():]
+                open(fp, "w", encoding="utf-8").write(text)
+                fixed.append((rel, f"{field} (version pin)", expected))
+            else:
+                drift.append((rel, f"{field} (version pin)", expected, m.group(2)))
 
     # JSON field sentinels — surgical text replace, no reformat
     for rel, field, key in JSON_SENTINELS:
