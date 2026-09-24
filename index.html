@@ -213,7 +213,7 @@ nav {
 .nav-inner {
   max-width: 1200px; margin: 0 auto;
   display: flex; align-items: center; justify-content: space-between;
-  height: 64px;
+  min-height: 64px;
 }
 .nav-logo {
   font-family: 'Orbitron', sans-serif;
@@ -228,8 +228,15 @@ nav {
   font-size: 0.72rem; letter-spacing: 0.1em;
   color: var(--text-secondary); text-decoration: none;
   text-transform: uppercase; transition: color 0.2s;
+  white-space: nowrap;
 }
 .nav-links a:hover { color: var(--teal-glow); }
+/* Desktop nav: a label never breaks mid-label (nowrap above); if the list
+   cannot fit on one line it wraps BETWEEN items instead of compressing
+   them, and .nav-inner (min-height) grows to hold the extra row. */
+@media (min-width: 769px) {
+  .nav-links { flex-wrap: wrap; gap: 0.4rem 1.5rem; justify-content: flex-end; }
+}
 .nav-mobile-btn {
   display: none; background: none; border: none;
   color: var(--text-secondary); font-size: 1.4rem; cursor: pointer;
