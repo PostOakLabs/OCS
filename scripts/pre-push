@@ -17,7 +17,7 @@ cd "$(git rev-parse --show-toplevel)"
 
 echo "=== OCS pre-push validate ==="
 
-# ── [1/9] Required files ─────────────────────────────────────────────────────
+# ── [1/13] Required files ───────────────────────────────────────────────────
 # Job 1's first step checks a hardcoded list of files that must exist. PR #20
 # removed advisors.html while deploy.yml still listed it as required: the six
 # gates below all passed locally, the push went out, and main went red.
@@ -59,37 +59,40 @@ if [ "$MISSING" -gt 0 ]; then
 fi
 echo "  all $COUNT required files present."
 
-echo "[2/12] Count-drift gate..."
+echo "[2/13] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[3/12] Broken-link gate..."
+echo "[3/13] Tag-balance gate (truncation, byte-level)..."
+python3 scripts/check-tag-balance.py
+
+echo "[4/13] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[4/12] Stranded-page gate..."
+echo "[5/13] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[5/12] Sitemap-coverage gate..."
+echo "[6/13] Sitemap-coverage gate..."
 python3 scripts/check-sitemap.py
 
-echo "[6/12] JS syntax check..."
+echo "[7/13] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[7/12] Forbidden-hash lint..."
+echo "[8/13] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[8/12] Schema validation..."
+echo "[9/13] Schema validation..."
 node scripts/schema-validate.mjs
 
-echo "[9/12] Copy-hallmarks gate (anti-AI-tell)..."
+echo "[10/13] Copy-hallmarks gate (anti-AI-tell)..."
 node scripts/check-copy-hallmarks.mjs
 
-echo "[10/12] Filename-hygiene gate..."
+echo "[11/13] Filename-hygiene gate..."
 python3 scripts/check-filenames.py
 
-echo "[11/12] noopener gate..."
+echo "[12/13] noopener gate..."
 python3 scripts/check-noopener.py
 
-echo "[12/12] Paper-mirror drift gate (local-only, see script header)..."
+echo "[13/13] Paper-mirror drift gate (local-only, see script header)..."
 python3 scripts/check-paper-mirror.py
 
 echo ""

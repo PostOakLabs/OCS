@@ -1646,4 +1646,28 @@ a:hover{color:var(--teal-glow)}
       if(matched === 0) noT.textContent = q;
     } else {
       cnt.textContent = '';
-      clr.
+      clr.style.display = 'none';
+      noR.classList.remove('visible');
+    }
+  }
+
+  inp.addEventListener('input', function(){ filter(inp.value); });
+
+  clr.addEventListener('click', function(){
+    inp.value = '';
+    inp.focus();
+    filter('');
+  });
+
+  // Restore search term from URL hash (#search=keyword)
+  var hash = location.hash;
+  if(hash && hash.indexOf('#search=') === 0){
+    var term = decodeURIComponent(hash.slice(8));
+    inp.value = term;
+    filter(term);
+  }
+})();
+</script>
+
+</body>
+</html>
