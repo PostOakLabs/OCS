@@ -84,6 +84,7 @@ input[type=range]{width:100%;accent-color:var(--purple-bright);cursor:pointer}
 .det-card.marginal{border-color:var(--amber-bright);background:rgba(42,30,0,.3)}
 .det-card.undetected{border-color:var(--red-mid)}
 .det-card.disabled{opacity:.4}
+.det-card.flagged{border-color:var(--amber-bright);background:rgba(42,30,0,.45)}
 
 .det-instrument{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px}
 .det-metric{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;line-height:1;margin-bottom:4px}
@@ -97,6 +98,8 @@ input[type=range]{width:100%;accent-color:var(--purple-bright);cursor:pointer}
 .det-status.marginal{background:rgba(196,120,0,.15);color:var(--amber-glow);border:1px solid var(--amber-mid)}
 .det-status.undetected{background:rgba(138,32,32,.15);color:var(--red-bright);border:1px solid var(--red-mid)}
 .det-status.disabled{background:transparent;color:var(--text-dim);border:1px solid var(--text-dim)}
+.det-status.flagged{background:rgba(196,120,0,.2);color:var(--amber-glow);border:1px solid var(--amber-bright)}
+.det-metric.flagged{color:var(--amber-glow)}
 
 /* Coincidence panel */
 .coinc-panel{background:linear-gradient(180deg,rgba(26,16,64,.5),rgba(7,5,21,.85));border:1px solid var(--purple-mid);border-radius:14px;padding:20px;margin-bottom:20px}
@@ -206,7 +209,7 @@ canvas{width:100%;display:block;border-radius:10px;background:rgba(7,5,21,.6);bo
             <label class="ch-item"><input type="checkbox" id="ch-fermi" checked> <span class="ch-label active" id="cl-fermi">Fermi-LAT γ-ray (≥100 MeV)</span></label>
             <label class="ch-item"><input type="checkbox" id="ch-cta" checked> <span class="ch-label active" id="cl-cta">CTA γ-ray (≥30 GeV)</span></label>
             <label class="ch-item"><input type="checkbox" id="ch-km3" checked> <span class="ch-label active" id="cl-km3">KM3NeT neutrino (≥10 TeV)</span></label>
-            <label class="ch-item"><input type="checkbox" id="ch-hess"> <span class="ch-label" id="cl-hess">H.E.S.S. γ-ray (≥1 TeV)</span></label>
+            <span class="ch-item" style="opacity:.45;font-size:10px">H.E.S.S. γ-ray is not modelled on this page and takes no part in the coincidence score.</span>
           </div>
         </div>
       </div>
@@ -298,7 +301,7 @@ const state = {
   e:    0.30,    // eccentricity
   logP: 38,      // log10 source power / W
   logDt: 2,      // log10 burst duration / s
-  channels: { lisa: true, fermi: true, cta: true, km3: true, hess: false }
+  channels: { lisa: true, fermi: true, cta: true, km3: true }
 };
 
 // ---- Hash ----
@@ -312,11 +315,28 @@ function loadHash(){
   if(h.e){const v=parseFloat(h.e);if(!isNaN(v))state.e=Math.min(0.9,Math.max(0,v));}
   if(h.P){const v=parseFloat(h.P);if(!isNaN(v))state.logP=Math.min(48,Math.max(32,v));}
   if(h.dt){const v=parseFloat(h.dt);if(!isNaN(v))state.logDt=Math.min(6,Math.max(0,v));}
+  // channel state rides the hash too (P0-06): ch=a comma list of enabled
+  // channels; unknown names are ignored, absent key leaves the defaults.
+  if(h.ch!==undefined){
+    const on = h.ch.split(',').filter(Boolean);
+    Object.keys(state.channels).forEach(k=>{state.channels[k]=on.includes(k);});
+  }
 }
-function saveHash(){setHash({M:state.logM.toFixed(3),m2:state.m2.toFixed(2),T:state.tobs.toFixed(1),e:state.e.toFixed(2),P:state.logP.toFixed(1),dt:state.logDt.toFixed(1)})}
+function saveHash(){
+  const ch=Object.keys(state.channels).filter(k=>state.channels[k]).join(',');
+  setHash({M:state.logM.toFixed(3),m2:state.m2.toFixed(2),T:state.tobs.toFixed(1),e:state.e.toFixed(2),P:state.logP.toFixed(1),dt:state.logDt.toFixed(1),ch});
+}
 
 // ---- Physics ----
 function chirpMass(M1, M2){ return Math.pow(M1*M2,3/5)/Math.pow(M1+M2,1/5); }
+
+// LISA band validity (P0-06): the analytic PSD fit below is the Amaro-Seoane
+// et al. 2017 approximation, stated over roughly 1e-4..1e-1 Hz, and the
+// transfer-frequency roll-off f* = c/(2L) with a 2.5 Gm arm sits at 0.06 Hz.
+// An 8,200 M☉ merger peaks at f_GW ≈ 4.4 kHz / (M/M☉) ≈ 0.54 Hz — far above
+// the fit's ceiling — so evaluating SNR there with this PSD would be fiction.
+const LISA_FMIN = 1e-4;   // Hz, low edge of the fit's stated validity
+const LISA_FMAX = 1e-1;   // Hz, high edge (f* = c/2L ≈ 0.06 Hz inside this)
 
 function lisaSNR(logM, m2, tobs, e){
   const M1 = Math.pow(10, logM);      // M☉
@@ -328,6 +348,10 @@ function lisaSNR(logM, m2, tobs, e){
   const r_isco = 6 * rg;
   const f_isco = Math.sqrt(G * M1 * MSUN / r_isco) / (2*Math.PI*r_isco); // Hz
   const f_peak = 2 * f_isco;  // quadrupole
+  if (f_peak < LISA_FMIN || f_peak > LISA_FMAX) {
+    // out of the PSD model's stated band: refuse to quote an SNR
+    return { snr: null, f_peak, h0: null, Mc, inBand: false };
+  }
   // Strain amplitude (sky-averaged, circular)
   // h = 4*(G*Mc/c²)^(5/3) * (π*f)^(2/3) / (c^(2/3) * d)  [correct exponent: c^(2/3) not c^1; ~670× correction]
   const h0 = (4*Math.sqrt(2/5)) * Math.pow(G*Mc_kg/(C*C), 5/3) * Math.pow(Math.PI*f_peak, 2/3) / (Math.pow(C, 2/3) * D_m);
@@ -343,7 +367,7 @@ function lisaSNR(logM, m2, tobs, e){
   const T_eff = Math.min(tobs * 3.156e7, t_remain);  // cap at merger time
   const h_eff = h0 * Math.sqrt(T_eff) * eFactor;  // strain × sqrt(coherent integration time)
   const snr = h_eff / Math.sqrt(Sn);
-  return { snr, f_peak, h0, Mc };
+  return { snr, f_peak, h0, Mc, inBand: true };
 }
 
 function transientFluxCGS(logP_W, logDt_s, fraction_gamma){
@@ -364,7 +388,10 @@ function km3NetEvents(logP_W, logDt_s){
   const P_W = Math.pow(10, logP_W);
   const P_erg = P_W * 1e7;
   const dt = Math.pow(10, logDt_s);
-  const E_nu_erg = 1e4 * 1.602e-9;  // 10 TeV in erg
+  // 10 TeV in erg: 10 TeV = 1e13 eV and 1 eV = 1.602e-12 erg → 16.02 erg.
+  // (The old 1e4 * 1.602e-9 = 1.602e-5 erg overstated event counts by 1e6;
+  // audit P0-06.)
+  const E_nu_erg = 16.02;
   // Neutrino fraction of total power (democratic Hawking: ~1/6 per flavour × 3 = 0.5 total; use 0.15 for realistic)
   const nu_frac = 0.15;
   const nu_flux = P_erg * nu_frac / (4 * Math.PI * D_OC * D_OC * E_nu_erg); // nu/cm²/s
@@ -375,7 +402,6 @@ function km3NetEvents(logP_W, logDt_s){
 // ---- Thresholds ----
 const FERMI_THRESH  = 8e-12;  // erg/cm²/s  (100 MeV, 10-yr, point source)
 const CTA_THRESH    = 5e-13;  // erg/cm²/s  (30 GeV, 50-hr pointing)
-const HESS_THRESH   = 1e-12;  // erg/cm²/s  (1 TeV, 50-hr)
 const KM3_THRESH    = 3;       // events in burst window (≥3 for trigger)
 const LISA_SNR_THRESH = 8;     // SNR threshold for confident detection
 
@@ -405,43 +431,48 @@ function fmtSnr(snr){return snr>=1000?'>1000':snr>=10?Math.round(snr).toString()
 // ---- Render ----
 function render(){
   const M = Math.pow(10, state.logM);
-  const { snr, f_peak, h0, Mc } = lisaSNR(state.logM, state.m2, state.tobs, state.e);
+  const lisa = lisaSNR(state.logM, state.m2, state.tobs, state.e);
+  const snr = lisa.snr, f_peak = lisa.f_peak, h0 = lisa.h0, Mc = lisa.Mc;
   const gammaFluxFermi  = transientFluxCGS(state.logP, state.logDt, 0.20);
   const gammaFluxCTA    = transientFluxCGS(state.logP, state.logDt, 0.10);
-  const gammaFluxHESS   = transientFluxCGS(state.logP, state.logDt, 0.08);
   const km3Ev           = km3NetEvents(state.logP, state.logDt);
 
   const fermiRatio = gammaFluxFermi / FERMI_THRESH;
   const ctaRatio   = gammaFluxCTA   / CTA_THRESH;
-  const hessRatio  = gammaFluxHESS  / HESS_THRESH;
 
   // Channel enables
   const lisaOn  = state.channels.lisa;
   const fermiOn = state.channels.fermi;
   const ctaOn   = state.channels.cta;
   const km3On   = state.channels.km3;
-  const hessOn  = state.channels.hess;
 
-  // Classify
-  const lisaSt  = lisaOn  ? (snr >= LISA_SNR_THRESH*2 ? 'detected' : snr >= LISA_SNR_THRESH ? 'marginal' : 'undetected') : 'disabled';
+  // Classify. LISA gets a third state beyond detected/undetected: OUT OF
+  // BAND — the merger frequency leaves the PSD model's stated validity, so
+  // no SNR is quoted at all (P0-06).
+  const lisaOut = lisaOn && !lisa.inBand;
+  const lisaSt  = !lisaOn ? 'disabled' : lisaOut ? 'flagged'
+                : snr >= LISA_SNR_THRESH*2 ? 'detected' : snr >= LISA_SNR_THRESH ? 'marginal' : 'undetected';
   const fermiSt = fermiOn ? classify(fermiRatio, 1, false) : 'disabled';
-  const ctaSt   = ctaOn   ? classify(ctaRatio,   1, false) : 'disabled';
-  const km3St   = km3On   ? classify(km3Ev, KM3_THRESH, true) : 'disabled';
+  const ctaSt   = ctaOn ? classify(ctaRatio,   1, false) : 'disabled';
+  const km3St   = km3On ? classify(km3Ev, KM3_THRESH, true) : 'disabled';
 
   function updateCard(id, status, metric, label, detail){
     const card = document.getElementById('card-'+id);
     card.className = 'det-card ' + status;
     const metricEl = document.getElementById(id === 'lisa' ? 'snr-lisa' : id === 'km3' ? 'rate-km3' : 'flux-'+id);
-    metricEl.className = 'det-metric ' + (status==='detected'?'go':status==='marginal'?'warn':status==='undetected'?'no':'off');
+    metricEl.className = 'det-metric ' + (status==='detected'?'go':status==='marginal'||status==='flagged'?'warn':status==='undetected'?'no':'off');
     metricEl.textContent = status === 'disabled' ? '—' : metric;
-    document.getElementById('stat-'+id).textContent = status.toUpperCase();
+    document.getElementById('stat-'+id).textContent = status === 'flagged' ? 'OUT OF BAND' : status.toUpperCase();
     document.getElementById('stat-'+id).className = 'det-status ' + status;
     document.getElementById('detail-'+id).textContent = detail;
   }
 
-  updateCard('lisa',  lisaSt,  'SNR ' + fmtSnr(snr),
+  updateCard('lisa',  lisaSt,
+    lisaOut ? 'not evaluated' : 'SNR ' + fmtSnr(snr),
     `f_GW = ${(f_peak*1000).toFixed(2)} mHz · M_c = ${Math.round(Mc)} M☉`,
-    lisaOn ? `h₀ = ${fmtSci(h0,1)} · Threshold SNR: ${LISA_SNR_THRESH}` : 'Channel disabled');
+    !lisaOn ? 'Channel disabled'
+      : lisaOut ? `f_GW = ${(f_peak*1000).toFixed(0)} mHz is above the Amaro-Seoane+2017 PSD fit's stated validity (≤ 0.1 Hz; roll-off f* = c/2L ≈ 0.06 Hz). SNR not evaluated: this mass needs a source-appropriate model.`
+      : `h₀ = ${fmtSci(h0,1)} · Threshold SNR: ${LISA_SNR_THRESH}`);
 
   updateCard('fermi', fermiSt, fermiOn ? fmtSci(fermiRatio, 1)+'×' : '—',
     fermiOn ? 'Flux / Fermi-LAT threshold' : '—',
@@ -455,16 +486,17 @@ function render(){
     km3On ? `Expected events in burst window` : '—',
     km3On ? `Background ~0.01 ev/100s · Threshold: ${KM3_THRESH} events` : 'Channel disabled');
 
-  // Coincidence score
+  // Coincidence score. H.E.S.S. is deliberately absent: it is not modelled
+  // on this page. A channel that is OUT OF BAND scores nothing but is also
+  // excluded from the denominator — "no model" is not a non-detection.
   const scores = [
-    lisaOn && lisaSt !== 'undetected' ? (lisaSt === 'detected' ? 1 : 0.5) : 0,
+    lisaOn && lisa.inBand && lisaSt !== 'undetected' ? (lisaSt === 'detected' ? 1 : 0.5) : 0,
     fermiOn && fermiSt !== 'undetected' ? (fermiSt === 'detected' ? 1 : 0.5) : 0,
     ctaOn && ctaSt !== 'undetected' ? (ctaSt === 'detected' ? 1 : 0.5) : 0,
-    km3On && km3St !== 'undetected' ? (km3St === 'detected' ? 1 : 0.5) : 0,
-    hessOn ? 0 : 0  // H.E.S.S. not fully modelled
+    km3On && km3St !== 'undetected' ? (km3St === 'detected' ? 1 : 0.5) : 0
   ];
   const totalScore = scores.reduce((a,b)=>a+b,0);
-  const maxScore = [lisaOn,fermiOn,ctaOn,km3On,hessOn].filter(Boolean).length;
+  const maxScore = [lisaOn && lisa.inBand, fermiOn, ctaOn, km3On].filter(Boolean).length;
   const pct = maxScore > 0 ? (totalScore/maxScore)*100 : 0;
 
   document.getElementById('coinc-score').textContent = totalScore.toFixed(1) + ' / ' + maxScore;
@@ -501,7 +533,7 @@ function renderChart(snrCurr, frCurr, fctaCurr, km3Curr){
   const N = 120;
   const logMs = Array.from({length:N},(_,i)=>3.7+i*1.0/(N-1));
 
-  const snrArr  = logMs.map(lm=>{ const {snr}=lisaSNR(lm,state.m2,state.tobs,state.e); return snr;});
+  const snrArr  = logMs.map(lm=>{ const r = lisaSNR(lm,state.m2,state.tobs,state.e); return r.inBand ? r.snr : null;});
   const fermiArr= logMs.map(()=>fermiRatio2(state.logP));
   const km3Arr  = logMs.map(()=>km3Ratio(state.logP, state.logDt));
 
@@ -539,10 +571,17 @@ function renderChart(snrCurr, frCurr, fctaCurr, km3Curr){
   ctx.fillStyle='rgba(240,160,32,0.6)'; ctx.fillText('Detection threshold (×1)',padL+4,yUnity-3);
   ctx.setLineDash([]);
 
-  // LISA SNR curve
-  if(state.channels.lisa){
+  // LISA SNR curve — drawn only over the mass range where f_peak stays
+  // inside the PSD fit's stated band (out-of-band points are null: the fit
+  // does not describe the instrument there, so nothing is drawn).
+  if(state.channels.lisa && snrArr.some(v=>v!==null)){
     ctx.strokeStyle='#a080f0'; ctx.lineWidth=2.2; ctx.beginPath();
-    logMs.forEach((lm,i)=>{ const y=yCoord(snrArr[i]); i===0?ctx.moveTo(xCoord(lm),y):ctx.lineTo(xCoord(lm),y);});
+    let pen = false;
+    logMs.forEach((lm,i)=>{
+      if(snrArr[i]===null){ pen=false; return; }
+      const y=yCoord(snrArr[i]);
+      if(!pen){ ctx.moveTo(xCoord(lm),y); pen=true; } else ctx.lineTo(xCoord(lm),y);
+    });
     ctx.stroke();
   }
   // Fermi ratio (flat across mass — depends on power, not mass)
@@ -629,8 +668,9 @@ function wire(){
   document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{state.logP=parseFloat(b.dataset.p);psl.value=state.logP;update();}));
   document.querySelectorAll('[data-dt]').forEach(b=>b.addEventListener('click',()=>{state.logDt=parseFloat(b.dataset.dt);dtsl.value=state.logDt;update();}));
 
-  ['lisa','fermi','cta','km3','hess'].forEach(ch=>{
+  ['lisa','fermi','cta','km3'].forEach(ch=>{
     const cb = document.getElementById('ch-'+ch);
+    if(!cb) return;
     cb.checked = state.channels[ch];
     cb.addEventListener('change',()=>{
       state.channels[ch]=cb.checked;

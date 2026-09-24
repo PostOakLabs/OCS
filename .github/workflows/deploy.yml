@@ -110,6 +110,14 @@ jobs:
       - name: Tag-balance gate
         run: python3 scripts/check-tag-balance.py
 
+      # Embedded-data parity gate (P0-CALC-1): the two explorer pages' arrays
+      # are generated from the paper's own outputs (outer repo, workspace
+      # step = scripts/gen-p0calc-embeds.py). This gate reads NO outer file —
+      # it pins the values of record (85.0/78.5/99.3 anchors ±0.5 pp; fH
+      # intervals + cell counts) so a stale or detached embed fails CI.
+      - name: Embedded-data parity gate
+        run: python3 scripts/check-p0calc-parity.py
+
       # Broken-asset gate (strict-zero): fails if any href/src points at a missing
       # local file/dir. Catches the ../data/ 404 class of bug before it deploys.
       - name: Broken-link gate

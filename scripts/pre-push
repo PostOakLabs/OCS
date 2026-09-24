@@ -17,7 +17,7 @@ cd "$(git rev-parse --show-toplevel)"
 
 echo "=== OCS pre-push validate ==="
 
-# ── [1/13] Required files ───────────────────────────────────────────────────
+# ── [1/14] Required files ───────────────────────────────────────────────────
 # Job 1's first step checks a hardcoded list of files that must exist. PR #20
 # removed advisors.html while deploy.yml still listed it as required: the six
 # gates below all passed locally, the push went out, and main went red.
@@ -25,7 +25,7 @@ echo "=== OCS pre-push validate ==="
 # The list is PARSED FROM deploy.yml rather than duplicated here. A second copy
 # would drift, and a drifted copy of a drift-detector is worse than none — it
 # would pass locally for exactly the files CI is about to fail on.
-echo "[1/12] Required-files gate (list read from deploy.yml)..."
+echo "[1/14] Required-files gate (list read from deploy.yml)..."
 WORKFLOW=".github/workflows/deploy.yml"
 if [ ! -f "$WORKFLOW" ]; then
   echo "::error::$WORKFLOW not found — cannot verify the required-files list."
@@ -59,40 +59,43 @@ if [ "$MISSING" -gt 0 ]; then
 fi
 echo "  all $COUNT required files present."
 
-echo "[2/13] Count-drift gate..."
+echo "[2/14] Count-drift gate..."
 python3 scripts/verify-counts.py
 
-echo "[3/13] Tag-balance gate (truncation, byte-level)..."
+echo "[3/14] Tag-balance gate (truncation, byte-level)..."
 python3 scripts/check-tag-balance.py
 
-echo "[4/13] Broken-link gate..."
+echo "[4/14] Embedded-data parity gate (P0-CALC-1)..."
+python3 scripts/check-p0calc-parity.py
+
+echo "[5/14] Broken-link gate..."
 python3 scripts/check-links.py
 
-echo "[5/13] Stranded-page gate..."
+echo "[6/14] Stranded-page gate..."
 python3 scripts/check-orphans.py
 
-echo "[6/13] Sitemap-coverage gate..."
+echo "[7/14] Sitemap-coverage gate..."
 python3 scripts/check-sitemap.py
 
-echo "[7/13] JS syntax check..."
+echo "[8/14] JS syntax check..."
 node scripts/syntax-check.mjs
 
-echo "[8/13] Forbidden-hash lint..."
+echo "[9/14] Forbidden-hash lint..."
 node scripts/lint-forbidden-hash.mjs
 
-echo "[9/13] Schema validation..."
+echo "[10/14] Schema validation..."
 node scripts/schema-validate.mjs
 
-echo "[10/13] Copy-hallmarks gate (anti-AI-tell)..."
+echo "[11/14] Copy-hallmarks gate (anti-AI-tell)..."
 node scripts/check-copy-hallmarks.mjs
 
-echo "[11/13] Filename-hygiene gate..."
+echo "[12/14] Filename-hygiene gate..."
 python3 scripts/check-filenames.py
 
-echo "[12/13] noopener gate..."
+echo "[13/14] noopener gate..."
 python3 scripts/check-noopener.py
 
-echo "[13/13] Paper-mirror drift gate (local-only, see script header)..."
+echo "[14/14] Paper-mirror drift gate (local-only, see script header)..."
 python3 scripts/check-paper-mirror.py
 
 echo ""

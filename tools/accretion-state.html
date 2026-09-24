@@ -4,7 +4,7 @@
   Omega Centauri Society — omegacentauri.me
   Code: MIT · Prose: CC BY 4.0
   Author: The Omega Centauri Society (Tim Swanson)
-  Version: 1.0 · Last updated: 2026-06-03
+  Version: 1.1 · Last updated: 2026-09-24 (P0-07: Paper F limits, Merloni intercept re-derived, limit register)
   Refs: Mahida et al. 2025 (ApJ 996:122, arXiv:2512.09649), Narayan & Yi 1994 (ApJ 428:L13),
         Merloni et al. 2003 (MNRAS 345:1057), Bondi 1952 (MNRAS 112:195)
 -->
@@ -60,6 +60,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .mode-table td{font-family:'Space Mono',monospace;font-size:10px;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
 .mode-table tr:last-child td{border-bottom:none}
 .tag-ok{color:var(--teal-bright);background:rgba(29,186,144,.1);border:1px solid rgba(29,186,144,.25);padding:2px 7px;border-radius:6px;font-size:9px;white-space:nowrap}
+.tag-warn{color:var(--amber-bright);background:rgba(240,160,32,.1);border:1px solid rgba(240,160,32,.25);padding:2px 7px;border-radius:6px;font-size:9px;white-space:nowrap}
 .tag-bad{color:var(--red-bright);background:rgba(208,64,64,.1);border:1px solid rgba(208,64,64,.25);padding:2px 7px;border-radius:6px;font-size:9px;white-space:nowrap}
 .out-grid{display:flex;flex-direction:column;gap:5px}
 .out-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 10px;border-radius:6px;background:rgba(7,5,21,.45);border:1px solid rgba(255,255,255,.04)}
@@ -159,21 +160,21 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       </div>
       <div>
         <div class="slider-block">
-          <label>Radio upper limit log₁₀(L<sub>R</sub>) (W/Hz)</label>
-          <div class="slider-row"><input type="range" id="sl-lr" min="-11" max="-5" step="0.1" value="-8"><span class="slval" id="lbl-lr">10⁻⁸ W/Hz</span></div>
+          <label>Radio upper limit log₁₀(L<sub>ν</sub>) (W/Hz)</label>
+          <div class="slider-row"><input type="range" id="sl-lr" min="-11" max="11" step="0.05" value="9.55"><span class="slval" id="lbl-lr">10⁻⁸ W/Hz</span></div>
           <div class="preset-row">
-            <button class="preset-btn" data-lr="-9">−9 deep</button>
-            <button class="preset-btn" data-lr="-8">−8 VLA</button>
-            <button class="preset-btn" data-lr="-7">−7 shallow</button>
+            <button class="preset-btn" data-lr="9.55">Paper F: 1.1 µJy (3.6×10⁹)</button>
+            <button class="preset-btn" data-lr="7">10⁷ shallow</button>
+            <button class="preset-btn" data-lr="11">10¹¹ very deep</button>
           </div>
         </div>
         <div class="slider-block">
           <label>X-ray upper limit log₁₀(L<sub>X</sub>) (W)</label>
-          <div class="slider-row"><input type="range" id="sl-lx" min="26" max="32" step="0.2" value="29"><span class="slval" id="lbl-lx">10²⁹ W</span></div>
+          <div class="slider-row"><input type="range" id="sl-lx" min="20" max="32" step="0.05" value="23.2"><span class="slval" id="lbl-lx">10²⁹ W</span></div>
           <div class="preset-row">
-            <button class="preset-btn" data-lx="28">10²⁸ W</button>
-            <button class="preset-btn" data-lx="29">10²⁹ W (Chandra)</button>
-            <button class="preset-btn" data-lx="30">10³⁰ W</button>
+            <button class="preset-btn" data-lx="23.2">Paper F: 1.6×10³⁰ erg/s</button>
+            <button class="preset-btn" data-lx="26">10²⁶ W</button>
+            <button class="preset-btn" data-lx="29">10²⁹ W (catalogue-scale)</button>
           </div>
         </div>
         <div style="margin-top:18px">
@@ -245,13 +246,15 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       <p><strong>ADAF</strong> (advection-dominated accretion flow, Narayan &amp; Yi 1994): at λ ≪ 0.01, the accretion flow is radiatively very inefficient. L_X ≈ 10⁻³ × λ² × L_Edd (from ADAF cooling function scaling). Radio emission from the ADAF corona follows the fundamental plane (Merloni et al. 2003).</p>
       <p><strong>Jet-dominated</strong>: low-power jet with mechanical efficiency η_jet ≈ 10⁻⁵. Radio luminosity L_R = η_jet × ṁ_acc × c²; X-ray from the jet base ≈ 10× L_R.</p>
       <p><strong>Thin disc</strong> (Shakura–Sunyaev): valid at λ > 0.01. Radiative efficiency η = 0.1. L_bol = η × ṁ_acc × c². X-ray = 20% of bolometric; radio much weaker.</p>
-      <h3>Current observational limits</h3>
-      <p>Mahida et al. 2025 (ApJ 996:122, arXiv:2512.09649): ATCA 7.25 GHz observations of OC's IMBH candidate. No radio counterpart detected. Headline constraint: accretion efficiency ε ≲ 4×10⁻³ (3σ). (Note: González Prieto is the lead author of a separate N-body growth paper also in measurements.js; the two should not be conflated.)</p>
+      <h3>Current observational limits (defaults)</h3>
+      <p>Mahida et al. 2025 (ApJ 996:122, arXiv:2512.09649): ATCA 7.25 GHz observations of OC's IMBH candidate. No radio counterpart detected. Headline constraint: accretion efficiency ε ≲ 4×10⁻³ (3σ). The default limits are Paper F's (Bañares-Hernández et al. 2025): radio 1.1 µJy rms at 5.2 kpc, converted to a spectral luminosity as L<sub>ν</sub> = 4πd²S<sub>ν</sub> = 3.6×10⁹ W/Hz; X-ray 1.6×10³⁰ erg/s = 1.6×10²³ W (1 erg/s = 10⁻⁷ W). (Note: González Prieto is the lead author of a separate N-body growth paper also in measurements.js; the two should not be conflated.)</p>
+      <h3>How to read the tags</h3>
+      <p>Every tag compares a mode's predicted flux with the stated upper limit on a log10 scale. NOT CONSTRAINED: the prediction sits below the limit, which simply does not bind at these parameters. EVIDENCE AGAINST: the prediction exceeds the limit by less than 2 dex, a likelihood-level tension rather than a clean exclusion. EXCLUDED: the prediction exceeds the limit by 2 dex or more. An upper limit alone never yields a detection.</p>
       <h3>References</h3>
       <p>Mahida et al. 2025 (ApJ 996:122, arXiv:2512.09649) · Bondi 1952 (MNRAS 112:195) · Narayan &amp; Yi 1994 (ApJ 428:L13) · Merloni et al. 2003 (MNRAS 345:1057) · Xie &amp; Yuan 2012 (MNRAS 427:1580)</p>
     </div>
   </section>
-  <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.0 · 2026-06-03</footer>
+  <footer class="footer">The Omega Centauri Society · <a href="https://omegacentauri.me/">omegacentauri.me</a> · <a href="/tools/">All tools</a> · Code: MIT · Prose: CC BY 4.0 · v1.1 · 2026-09-24</footer>
 </div>
 <script>
 'use strict';
@@ -263,17 +266,53 @@ function setHTML(id,v){const el=document.getElementById(id);if(el)el.innerHTML=v
 function getHash(){return Object.fromEntries(window.location.hash.replace('#','').split('&').filter(Boolean).map(p=>p.split('=').map(decodeURIComponent)))}
 function saveHash(){history.replaceState(null,'','#Mb='+S.Mb.toFixed(3)+'&n='+S.logn.toFixed(1)+'&cs='+S.cs+'&fb='+S.fb.toFixed(3)+'&lr='+S.lr.toFixed(1)+'&lx='+S.lx.toFixed(1))}
 
-const S={Mb:Math.log10(8200),logn:0,cs:12,fb:0.03,lr:-8,lx:29};
+// ---- Observational limits, with the conversion chains written out (P0-07) ----
+// Paper F (Bañares-Hernández et al. 2025, A&A 693, A104) / Mahida et al. 2025
+// (ApJ 996:122) non-detections at ω Cen:
+function radioLimitNu(rmsUJy, distKpc){
+  // Flux DENSITY → spectral luminosity: L_ν = 4π d² S_ν.
+  //   S_ν = 1.1 µJy = 1.1e-6 Jy = 1.1e-6 × 1e-26 W m⁻² Hz⁻¹ = 1.1e-32 W m⁻² Hz⁻¹
+  //   d   = 5.2 kpc = 5.2 × 3.086e19 m = 1.6047e20 m
+  //   L_ν = 4π (1.6047e20)² × 1.1e-32 = 3.56e9 W/Hz
+  const d_m = distKpc * 3.086e19;
+  const S_nu = rmsUJy * 1e-32; // W m⁻² Hz⁻¹ per µJy
+  return 4 * Math.PI * d_m * d_m * S_nu;
+}
+function xrayLimitW(ergPerS){
+  // 1 erg/s = 1e-7 W, so Paper F's 1.6e30 erg/s → 1.6e23 W.
+  return ergPerS * 1e-7;
+}
 
-function statusTag(predicted,limit,higherIsBad){
-  // higherIsBad: if predicted > limit, it's ruled out
-  const ratio=Math.log10(predicted)-limit;
-  if(higherIsBad){
-    if(ratio>0)return '<span class="tag-bad">RULED OUT</span>';
-    if(ratio>-1)return '<span class="tag-ok">Marginal</span>';
-    return '<span class="tag-ok">Consistent</span>';
-  }
-  return '<span class="tag-ok">Consistent</span>';
+const S={Mb:Math.log10(8200),logn:0,cs:12,fb:0.03,
+         lr:Math.log10(radioLimitNu(1.1,5.2)),   // Paper F radio: 1.1 µJy rms at 5.2 kpc
+         lx:Math.log10(xrayLimitW(1.6e30))};     // Paper F X-ray: 1.6e30 erg/s
+
+// P0-07 register: an upper limit is not an exclusion. Comparison on the
+// log10 ratio of prediction to limit:
+//   prediction below the limit              -> NOT CONSTRAINED (limit non-binding)
+//   prediction above the limit by < 2 dex   -> EVIDENCE AGAINST (likelihood-level tension)
+//   prediction at/above the limit by >= 2 dex -> EXCLUDED (hard, at stated confidence)
+function registerTag(logPred, logLim){
+  const ratio = logPred - logLim;
+  if (ratio >= 2) return '<span class="tag-bad">EXCLUDED</span>';
+  if (ratio > 0)  return '<span class="tag-warn">EVIDENCE AGAINST</span>';
+  return '<span class="tag-ok">NOT CONSTRAINED</span>';
+}
+
+// ---- Merloni fundamental plane, in this page's units (P0-07 re-derivation) ----
+// Source: Merloni et al. 2003 (MNRAS 345, 1057) eq. (1), with L_R = νL_ν at
+// 5 GHz and L_X in the 2–10 keV band:
+//   log10(L_R/erg s⁻¹) = 0.60 log10(L_X/erg s⁻¹) + 0.78 log10(M/M☉) + 7.33
+// Conversion to this page's declared units (L_X in W, L_ν in W/Hz, flat
+// spectrum α=0 so νL_ν = 5 GHz × L_ν):
+//   erg/s → W shifts both sides 7 dex: log10(νL_ν/W) = 0.60 log10(L_X/W)
+//   + 0.78 log10(M/M☉) + 4.53;  dividing by ν(5 GHz) removes 9.70 dex:
+//   log10(L_ν/W Hz⁻¹) = 0.60 log10(L_X/W) + 0.78 log10(M/M☉) - 5.17
+// (The old '-2.3' intercept matched no unit convention; audit P0-07. The
+// radio limit is measured at 7.25 GHz (ATCA); a flat spectrum makes
+// L_ν(5 GHz) ≈ L_ν(7.25 GHz) to within this model's accuracy.)
+function merloniLogLnu(logLxW, logMsun){
+  return 0.6*logLxW + 0.78*logMsun - 5.17;
 }
 
 function compute(){
@@ -302,8 +341,8 @@ function compute(){
   setText('lbl-n',(Math.pow(10,S.logn)).toFixed(S.logn>=0?1:2)+' cm⁻³');
   setText('lbl-cs',S.cs+' km/s');
   setText('lbl-fb',S.fb.toFixed(3));
-  setText('lbl-lr','10'+sup(S.lr.toFixed(0))+' W/Hz');
-  setText('lbl-lx','10'+sup(S.lx.toFixed(0))+' W');
+  setText('lbl-lr',fmtSci(Math.pow(10,S.lr))+' W/Hz');
+  setText('lbl-lx',fmtSci(Math.pow(10,S.lx))+' W');
 
   setText('out-mdot',fmtSci(mdotB_solar));
   setText('out-rB',rB_pc.toExponential(2));
@@ -314,9 +353,8 @@ function compute(){
 
   // ADAF mode predictions
   const Lx_adaf=1e-3*lambda*lambda*Ledd; // Narayan & Yi scaling: L_X ~ 0.001 ṁ^2 L_Edd
-  // Radio via simplified fundamental plane (log in W, W/Hz)
-  // log(L_R [W/Hz]) ≈ 0.6 log(L_X [W]) + 0.78 log(M_BH/1e8 M_sun) - 2.3  (Merloni et al. 2003; mass term is +0.78, not -0.78)
-  const logLr_adaf=0.6*Math.log10(Math.max(Lx_adaf,1e20))+0.78*Math.log10(Math.max(Mbh/MSUN/1e8,1e-5))-2.3;
+  // Radio via the Merloni fundamental plane (derivation above; audit P0-07)
+  const logLr_adaf=merloniLogLnu(Math.log10(Math.max(Lx_adaf,1e20)),Math.log10(Math.max(Mbh/MSUN,1)));
   const Lr_adaf=Math.pow(10,logLr_adaf);
 
   // Jet mode
@@ -331,44 +369,49 @@ function compute(){
 
   const Lrlim=Math.pow(10,S.lr); // W/Hz
   const Lxlim=Math.pow(10,S.lx); // W
+  const logLrlim=S.lr, logLxlim=S.lx;
 
   setText('adaf-valid',lambda<0.01?'λ<0.01 ✓':'λ>0.01 (marginal)');
   setText('adaf-lx',fmtSci(Lx_adaf)+' W');
-  setHTML('adaf-lx-tag',Lx_adaf>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('adaf-lx-tag',registerTag(Math.log10(Math.max(Lx_adaf,1e-300)),logLxlim));
   setText('adaf-lr',fmtSci(Lr_adaf)+' W/Hz');
-  setHTML('adaf-lr-tag',Lr_adaf>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('adaf-lr-tag',registerTag(logLr_adaf,logLrlim));
 
   setText('jet-valid','any λ (low-power)');
   setText('jet-lx',fmtSci(Lx_jet)+' W');
-  setHTML('jet-lx-tag',Lx_jet>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('jet-lx-tag',registerTag(Math.log10(Math.max(Lx_jet,1e-300)),logLxlim));
   setText('jet-lr',fmtSci(Lr_jet)+' W/Hz');
-  setHTML('jet-lr-tag',Lr_jet>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('jet-lr-tag',registerTag(Math.log10(Math.max(Lr_jet,1e-300)),logLrlim));
 
   setText('disc-valid',lambda>0.01?'λ>0.01 ✓':'λ<0.01 (not applicable)');
   setText('disc-lx',fmtSci(Lx_disc)+' W');
-  setHTML('disc-lx-tag',Lx_disc>Lxlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('disc-lx-tag',registerTag(Math.log10(Math.max(Lx_disc,1e-300)),logLxlim));
   setText('disc-lr',fmtSci(Lr_disc)+' W/Hz');
-  setHTML('disc-lr-tag',Lr_disc>Lrlim?'<span class="tag-bad">RULED OUT</span>':'<span class="tag-ok">Consistent</span>');
+  setHTML('disc-lr-tag',registerTag(Math.log10(Math.max(Lr_disc,1e-300)),logLrlim));
 
-  // Verdict
-  const adaf_ok=(Lx_adaf<=Lxlim)&&(Lr_adaf<=Lrlim);
-  const jet_ok=(Lx_jet<=Lxlim)&&(Lr_jet<=Lrlim);
-  const disc_ok=(Lx_disc<=Lxlim)&&(Lr_disc<=Lrlim);
-  const survivors=[];
-  if(adaf_ok)survivors.push('ADAF');
-  if(jet_ok)survivors.push('jet-dominated');
-  if(disc_ok)survivors.push('thin disc');
+  // Verdict: a mode survives only if NO channel excludes it; EVIDENCE AGAINST
+  // channels constrain it without excluding (P0-07 register).
+  const adaf_excluded=(Lx_adaf>=Lxlim*100)||(Lr_adaf>=Lrlim*100);
+  const jet_excluded=(Lx_jet>=Lxlim*100)||(Lr_jet>=Lrlim*100);
+  const disc_excluded=(Lx_disc>=Lxlim*100)||(Lr_disc>=Lrlim*100);
+  const survivors=[],constrained=[];
+  if(!adaf_excluded)survivors.push('ADAF');
+  if(!jet_excluded)survivors.push('jet-dominated');
+  if(!disc_excluded)survivors.push('thin disc');
+  if(adaf_excluded)constrained.push('ADAF');
+  if(jet_excluded)constrained.push('jet-dominated');
+  if(disc_excluded)constrained.push('thin disc');
 
   const vc=document.getElementById('verdict-card');
   const vt=document.getElementById('verdict-title');
   const vtx=document.getElementById('verdict-text');
-  if(survivors.length===3){vc.className='verdict-card ok';vt.textContent='All modes consistent';}
+  if(survivors.length===3){vc.className='verdict-card ok';vt.textContent='No mode excluded';}
   else if(survivors.length>0){vc.className='verdict-card warn';vt.textContent='Partial constraints';}
-  else{vc.className='verdict-card bad';vt.textContent='All modes ruled out — parameters inconsistent with upper limits';}
+  else{vc.className='verdict-card bad';vt.textContent='All modes excluded at these limits';}
 
   vtx.textContent=survivors.length>0?
-    'Modes surviving all constraints: '+survivors.join(', ')+'. Eddington fraction λ = '+lambda.toExponential(2)+'. Bondi radius r_B = '+rB_pc.toExponential(2)+' pc.':
-    'No standard accretion mode survives all constraints. Try lower gas density or higher Bondi fraction.';
+    'Modes not excluded: '+survivors.join(', ')+(constrained.length>0?'. Excluded at these limits: '+constrained.join(', ')+'.':'')+' Eddington fraction λ = '+lambda.toExponential(2)+'. Bondi radius r_B = '+rB_pc.toExponential(2)+' pc. Register: EXCLUDED = prediction ≥ 2 dex above the stated upper limit; EVIDENCE AGAINST = above the limit by < 2 dex; NOT CONSTRAINED = below it.':
+    'At these limits no standard accretion mode survives: every mode predicts a radio and/or X-ray flux ≥ 2 dex above a stated upper limit (register: EXCLUDED = ≥2 dex above the limit). Try lower gas density or a different mass before reading this as a physical conclusion.';
 }
 
 // Wire sliders
