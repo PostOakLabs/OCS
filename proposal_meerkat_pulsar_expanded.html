@@ -171,14 +171,37 @@
 <p>MeerKAT's timing precision for OC MSPs (flux densities ~10–100 µJy; integration ~1 hr each):</p>
 <div class="formula">
 Timing precision (ToA): ~1–3 µs per 1-hr session (bright MSPs)
-Acceleration sensitivity: δa_los = c × δṖ/P = c × (δσ_ToA) / (P × T²)
-After T = 5 years, σ_ToA = 2 µs:
-  δa_los ≈ (3×10⁸ m/s × 2×10⁻⁶ s) / (3×10⁻³ s × (5×3.15×10⁷ s)²)
-  δa_los ≈ 8×10⁻¹² m/s² per bright MSP  [corrected: 6×10²/(3×10⁻³×2.48×10¹⁶) = 8×10⁻¹²]
+
+Acceleration sensitivity from the quadratic-fit spin-down term
+  [corrected 2026-09-25, P0-15.6: the previous line, δa = c·δσ_ToA/(P·T²),
+   carried a spurious division by the spin period P]:
+  δa_los = c · σ_ToA · k / T²,  with k = 2√(180/N) = √(720/N)
+  (quadratic-fit coefficient uncertainty for N uniform ToAs; the
+  linear-fit factor √(12/N) does NOT apply, because spin-down is quadratic)
+
+Bi-weekly cadence over T = 5 yr → N ≈ 130 ToAs per pulsar → k ≈ 2.35:
+  δa_los ≈ (3×10⁸ m/s × 2×10⁻⁶ s × 2.35) / (1.575×10⁸ s)²
+         ≈ 5.7×10⁻¹⁴ m/s² per pulsar (ToA-noise-limited only)
+
+But ToA noise is not the limiting term. The measured ṗ is the sum of
+intrinsic spin-down, cluster acceleration, and Shklovskii drift, and the
+intrinsic term is unknown per pulsar at the ~10⁻²⁰ s/s level, which maps
+to an acceleration uncertainty c×10⁻²⁰/P ≈ 10⁻⁹ m/s² (P = 3 ms). The
+usable sensitivity is therefore ~10⁻⁹–10⁻¹⁰ m/s², four orders of
+magnitude above the ToA-noise floor.
 
 Expected acceleration from 30,000 M☉ IMBH at r = 0.3 pc:
   a_los ≈ GM/r² × cos(i) ≈ 4×10⁻⁸ m/s² (mean projection)
-  Detection significance: 4×10⁻⁸ / 8×10⁻¹² ≈ 5,000σ — highly decisive (conclusion unchanged)
+
+Significance, stated honestly: against the ToA-noise floor alone the
+formal single-pulsar significance would be ~7×10⁵σ, a meaningless
+number. Against the intrinsic-Ṗ cap the usable ratio is at most
+~40–130× per pulsar (P = 3–10 ms), and Paper H's own analysis (verified verbatim:
+"The pulsar accelerations are nearly uninformative.",
+omega-centauri-mass-tension.html) shows the set is a weak mass
+discriminator even at that sensitivity, because the intrinsic terms are
+unknown and the bounds are one-sided. The ensemble radial-profile test,
+not any single-pulsar detection, is the program's real deliverable.
 </div>
 
 <h3>1.2 Model Discrimination Power</h3>
@@ -205,7 +228,7 @@ Expected acceleration from 30,000 M☉ IMBH at r = 0.3 pc:
   <tbody>
     <tr><td>Cadence</td><td>Bi-weekly (26 sessions/year); sessions ~5 hr each (cluster transit)</td></tr>
     <tr><td>Pulsars targeted</td><td>All 18+ confirmed OC MSPs; priority on &lt;0.5 pc projected separation</td></tr>
-    <tr><td>Integration per pulsar</td><td>1 hr per session (group observations; parallelised with sub-array)</td></tr>
+    <tr><td>Integration per pulsar</td><td>1 hr per session via sub-arraying: the ~20+ targets are observed in parallel sub-arrays within each 5-hr cluster transit. Assumption and cost (stated 2026-09-25, P0-15.6): splitting MeerKAT's 64 dishes into ~4 sub-arrays degrades each sub-array's SEFD ~4× relative to the full array, so per-ToA precision for a given pulsar is ~4× worse than a full-array hour at equal integration; the 26 × 1 hr/yr cadence per pulsar partially compensates through baseline, and the ToA figures quoted above (1–3 µs) are for these sub-array integrations</td></tr>
     <tr><td>Frequency bands</td><td>L-band (1.28 GHz) + UHF (816 MHz); dual-band for DM corrections</td></tr>
     <tr><td>New MSP discoveries</td><td>Commensal deep search expected to find 5–10 additional MSPs</td></tr>
     <tr><td>SKA-MID transition</td><td>Program continues on SKA-MID (~2030+) for 5× timing precision improvement</td></tr>

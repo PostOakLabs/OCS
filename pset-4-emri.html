@@ -291,16 +291,16 @@ f_GW(3000 M☉) = 0.5362 × (8200/3000) = 1.466 Hz</span>
     <span class="problem-title">EMRI rate in Omega Centauri</span>
   </div>
   <div class="problem-body">
-    <p>The EMRI rate in a globular cluster scales roughly as:</p>
+    <p>The EMRI rate onto an IMBH in a globular cluster scales roughly as:</p>
     <div class="eq">Γ_EMRI ≈ A × (M_IMBH / 10⁴ M☉) × (n_* / 10⁵ pc⁻³)
 
 where:
-  A ≈ 0.1 events/yr  (normalization; uncertain to ~1 dex)
-  n_* = stellar density in the loss cone ≈ 10⁵ pc⁻³ for OC's core
-  (Hopman & Alexander 2005; Amaro-Seoane 2018)</div>
+  A ≈ 10⁻⁸ events/yr (order-of-magnitude normalisation; literature
+      bracket ~10⁻⁹–10⁻⁷ events/yr per cluster, see note)
+  n_* = stellar density in the loss cone ≈ 10⁵ pc⁻³ for OC's core</div>
     <ol type="a">
       <li>Estimate Γ<sub>EMRI</sub> for OC using M = 8,200 M<sub>☉</sub>. Over LISA's 4-year mission lifetime, how many EMRIs from OC would you expect? <span class="marks">[5 marks]</span></li>
-      <li>The order-of-magnitude uncertainty on A means the true rate could be 10× higher or lower. What range of expected EMRIs does this imply? Is OC a reliable LISA source or a long shot? <span class="marks">[5 marks]</span></li>
+      <li>The bracket on A spans ~2 dex (10⁻⁹–10⁻⁷/yr). What range of expected EMRIs does this imply? Is OC a reliable LISA source or a long shot? <span class="marks">[5 marks]</span></li>
       <li>OC is at D = 5.49 kpc, while typical LISA EMRI science targets are galaxies at D ~ 1 Gpc. By what factor does OC's proximity increase the characteristic strain h₀ of the <em>same intrinsic source</em> relative to a Gpc distance? <span class="marks">[5 marks]</span></li>
     </ol>
     <details class="solution">
@@ -308,14 +308,14 @@ where:
       <div class="solution-body">
         <strong>Part (a):</strong>
         <span class="eq-inner">
-Γ_EMRI ≈ 0.1 × (8200 / 10000) × (10⁵ / 10⁵)
-        = 0.1 × 0.82 × 1.0
-        ≈ 0.082 events/yr
+Γ_EMRI ≈ 10⁻⁸ × (8200 / 10000) × (10⁵ / 10⁵)
+        = 10⁻⁸ × 0.82 × 1.0
+        ≈ 8.2×10⁻⁹ events/yr
 
-Over 4 yr: N_expected = 0.082 × 4 ≈ 0.33 events</span>
-        So we expect roughly 1 event per 3 missions. For a Poisson process with mean 0.33, the probability of at least one event in a single 4-year mission is P(≥1) = 1 − e<sup>−0.33</sup> = 0.28, or 28%. (The expected number and the probability of at least one differ once the mean is not small; quoting 33% for both conflates them.)
+Over 4 yr: N_expected = 8.2×10⁻⁹ × 4 ≈ 3.3×10⁻⁸ events</span>
+        The expected number of OC EMRIs over a LISA mission is ~3×10⁻⁸: a probability of order one in thirty million that even one event occurs. (A previous version of this problem used A ≈ 0.1/yr, a value ~10⁶–10⁷ above any defensible published rate; the Hopman &amp; Alexander 2005 and Amaro-Seoane 2018 rates are Galactic-nucleus EMRIs onto a 4×10⁶ M☉ black hole, a different regime.)
         <br><br>
-        <strong>Part (b):</strong> With ±1 dex uncertainty, N_expected ranges from 0.033 to 3.3 events over 4 yr, so P(≥1) runs from 1 − e<sup>−0.033</sup> = 3.2% to 1 − e<sup>−3.3</sup> = 96%. The optimistic end makes OC a near-certain source; the pessimistic end makes it a 3% shot. The central value of ~0.33 events per mission, at 28%, is a long shot rather than a guaranteed source, and the dominant uncertainty is the rate normalisation A rather than anything about OC. If an EMRI is detected, its SNR would be very large (Problem 2b).
+        <strong>Part (b):</strong> Over the 10⁻⁹–10⁻⁷/yr bracket, N_expected(4 yr) ranges from ~3×10⁻⁹ to ~3×10⁻⁷, so P(≥1) is at best ~3×10⁻⁷ per mission. Even the optimistic end of the literature bracket leaves OC EMRIs unobservable in practice: OC is not a LISA EMRI target at all, and the earlier "long shot" framing (28% per mission) was an artefact of the inflated normalisation. The exercise is retained because the machinery (scaling, Poisson expectation, strain gain in part c) is the same one would apply to a genuine candidate. If an EMRI were ever detected from OC, its SNR would be very large (Problem 2b) and the detection claim would need extraordinary scrutiny.
         <br><br>
         <strong>Part (c):</strong> Characteristic strain h₀ ∝ 1/D_L. Ratio:
         <span class="eq-inner">
@@ -334,8 +334,9 @@ h₀(OC) / h₀(Gpc) = D_Gpc / D_OC = 1.82 × 10⁵</span>
 <ul class="refs">
   <li>Robson, T., Cornish, N.J., &amp; Liu, C. (2019). The construction and use of LISA sensitivity curves. <em>Class. Quantum Grav.</em> 36, 105011.</li>
   <li>Cutler, C. &amp; Flanagan, É.É. (1994). Gravitational waves from merging compact binaries. <em>PRD</em> 49, 2658.</li>
-  <li>Amaro-Seoane, P. (2018). Relativistic dynamics and extreme mass ratio inspirals. <em>Living Rev. Rel.</em> 21, 4.</li>
-  <li>Hopman, C. &amp; Alexander, T. (2005). The orbital statistics of stellar inspiral and relaxation near a massive black hole. <em>ApJ</em> 629, 362.</li>
+  <li>Amaro-Seoane, P. (2018). Relativistic dynamics and extreme mass ratio inspirals. <em>Living Rev. Rel.</em> 21, 4. (Galactic-nucleus EMRI physics; previously mis-cited as the source of the OC normalisation)</li>
+  <li>Hopman, C. &amp; Alexander, T. (2005). The orbital statistics of stellar inspiral and relaxation near a massive black hole. <em>ApJ</em> 629, 362. (Galactic-centre rates onto a 4×10⁶ M☉ black hole; previously mis-cited as the source of the OC normalisation)</li>
+  <li>EMRI rate normalisation for IMBHs in globular clusters: order 10⁻⁹–10⁻⁷ events/yr per cluster from capture-rate scaling estimates in the literature (e.g. the IMBH-EMRI discussion in Gair et al. 2010, Class. Quantum Grav. 27, 173001); the A = 10⁻⁸/yr used here is an OCS order-of-magnitude choice inside that bracket.</li>
   <li>Häberle, M. et al. (2024). Fast-moving stars around an intermediate-mass black hole in Omega Centauri. <em>Nature</em> 631, 285–288.</li>
   <li>oMEGACat VI (2025). The kinematic distance to ω Centauri. arXiv:2503.04903</li>
   <li>Bardeen, J.M., Press, W.H. &amp; Teukolsky, S.A. (1972). Rotating black holes: locally non-rotating frames, energy extraction, and scalar synchrotron radiation. <em>ApJ</em> 178, 347.</li>
