@@ -105,7 +105,7 @@ canvas{width:100%;display:block}
   <div class="tool-header">
     <div>
       <h1>Tidal Capture Rate</h1>
-      <p class="tool-subtitle">Disruption and capture rates for stars and compact objects around ωCen's IMBH — main-sequence TDEs, white dwarf partial disruptions, neutron star captures, and gravitational-wave inspiral signatures.</p>
+      <p class="tool-subtitle">Gravitational-focusing encounter rates between stars or compact objects and ωCen's IMBH, with the tidal-radius/Hills geometry that decides whether an encounter disrupts, captures, or swallows. Stage-specific TDE/EMRI rates are deliberately not claimed.</p>
     </div>
     <div class="tier-stack">
       <span class="tier-badge tier-phys">🔬 Stellar Physics</span>
@@ -178,7 +178,7 @@ canvas{width:100%;display:block}
   <!-- SUMMARY -->
   <div class="summary-grid">
     <div class="sum-card">
-      <div class="sum-label">MS TDE Rate</div>
+      <div class="sum-label">MS encounter rate</div>
       <div class="sum-value" id="svMS">—</div>
       <div class="sum-sub">events / Myr</div>
     </div>
@@ -188,7 +188,7 @@ canvas{width:100%;display:block}
       <div class="sum-sub">events / Myr</div>
     </div>
     <div class="sum-card">
-      <div class="sum-label">NS EMRI Rate</div>
+      <div class="sum-label">NS encounter rate</div>
       <div class="sum-value" id="svNS">—</div>
       <div class="sum-sub">events / Myr (GW)</div>
     </div>
@@ -234,9 +234,9 @@ canvas{width:100%;display:block}
     </button>
     <div class="about-body" id="aboutBody">
       <p>The <strong>tidal disruption radius</strong> for a star of mass M_* and radius R_* is r_T = R_* (M_BH/M_*)^(1/3). A tidal disruption event (TDE) occurs when a star's orbit brings it within r_T. For compact objects (white dwarfs, neutron stars), r_T is much smaller — a WD can survive inside a main-sequence TDE radius and instead be tidally captured into a tight, circularizing orbit.</p>
-      <p>The <strong>capture rate</strong> is computed here using the gravitational-focusing collision rate: Γ ≈ n × π r_T² × (1 + v_esc²/σ²) × σ, where n is the stellar number density and v_esc is the escape speed from r_T. <em>Note: this is the geometric encounter rate, not the loss-cone filling rate</em> — the relaxation-driven loss-cone rate is computed separately in the TDE Rate Calculator tool and will give different values. Compact object capture rates are modified by the fact that WDs/NSs must approach more closely (smaller r_T), with gravitational-wave emission enabling EMRI formation on the final orbit. NS/WD EMRIs (Extreme Mass Ratio Inspirals) are GW-driven and have rates that scale steeply with M_BH.</p>
+      <p>The rate computed on this page is the <strong>gravitational-focusing encounter rate</strong>: Γ ≈ n × π r_T² × (1 + v_esc²/σ²) × σ, where n is the stellar number density and v_esc is the escape speed at r_T. It is an <em>encounter</em> rate only — the relaxation-driven loss-cone flux, the disruption/capture decision, gravitational-wave capture and the inspiral stage all have their own physics and efficiencies that this page does not model (a previous version mislabelled it and per-stage "rates" derived from it by bare factors; removed 2026-09-24, audit P0-13). The tidal-radius grid above carries the real geometric decisions: r_T compared with r_S (swallow) and the Hills mass per object type.</p>
       <p>The <strong>Hills mass</strong> M_Hills ≈ 10^8 (R_*/R_☉)^(3/2) (M_*/M_☉)^(-1/2) M_☉ is the IMBH mass above which main-sequence stars are swallowed whole (tidal radius inside the Schwarzschild radius). For ωCen's IMBH at 6,000–8,200 M_☉, we are well below the Hills mass for main-sequence stars, but a solar-type star's tidal radius is only ~10–20 Schwarzschild radii — partial disruptions are likely. For white dwarfs, the tidal radius is comparable to the Schwarzschild radius for M_BH ≳ 10^5 M_☉, so WDs are viable targets for ωCen's IMBH.</p>
-      <p><strong>X-ray signatures:</strong> a main-sequence TDE produces a flare with L_peak ~ L_Edd for weeks to months. WD tidal captures produce quasi-periodic eruptions (QPEs) as the partial debris stream impacts the accretion disk. NS inspirals are quiet until the final coalescence, which could produce a short gamma-ray burst and detectable gravitational waves in future space GW detectors (LISA, TianQin).</p>
+      <p><strong>X-ray / GW signatures</strong> of the distinct downstream stages (MS TDE flares with L_peak ~ L_Edd and t^-5/3 decay, WD capture QPEs, NS EMRI chirps and possible short GRBs) are real astrophysics but are not predicted by this page's encounter rate — see the TDE Rate Calculator for a loss-cone treatment.</p>
     </div>
   </div>
 
@@ -304,10 +304,13 @@ function tidalRadius_cm(MBH_msun, Mstar_msun, Rstar_rsun) {
   return Rstar_rsun * Rsun_cgs * Math.pow(MBH_msun / Mstar_msun, 1/3);
 }
 
-// Loss-cone TDE rate (simplified rate from Rees 1988, Fragione 2018)
-// Γ ≈ (4π/3) × ρ_core × (G M_BH)^(1/3) / σ × (r_T)^(2/3) × ln(Λ) / (ln Λ_orb)
-// Here we use a simplified power-law form calibrated to N-body results
-function tdeRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mstar_msun, Rstar_rsun) {
+// Gravitational-encounter rate (P0-13 rename): this is the geometric
+// gravitational-focusing rate n · π r_T² (1 + v_esc²/σ²) · σ evaluated at the
+// tidal radius. It is NOT a TDE rate, NOT a capture rate and NOT an EMRI
+// rate: loss-cone entry, disruption, Hills capture, GW capture and inspiral
+// are distinct stages with their own efficiencies, which this page does not
+// model. See the signatures table note.
+function encounterRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mstar_msun, Rstar_rsun) {
   const MBH = MBH_msun;
   const rho = rho_msun_pc3;
   const sigma = sigma_kms;
@@ -343,22 +346,36 @@ function tdeRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mstar_msun, Rstar_rsu
 
 // GW capture rate for compact objects (Mapelli 2012, Fragione 2018)
 // EMRI rate ~ Γ_TDE × (M_BH/10^6)^(-1/3) × correction for compact object
-function emriRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mobj_msun, Robj_rsun, f_pop) {
-  const base = tdeRate_perMyr(MBH_msun, rho_msun_pc3, sigma_kms, Mobj_msun, Robj_rsun);
-  // GW emission allows capture even for objects that aren't tidally disrupted
-  // WD: partial disruption + GW; NS: mostly GW inspiral
-  // Rough correction: GW capture adds ~30% for WDs, ~50% for NS (more compact → closer approach needed → GW more important)
-  return base * f_pop;
-}
+// (The former emriRate_perMyr with its ×1.2/×2.0 'GW capture' factors was
+// removed in P0-13: the factors contradicted their own comments and no loss-
+// cone or GW-capture stage is modelled on this page.)
 
 function computeAllRates(MBH, rho, sigma) {
+  // Population-weighted gravitational-encounter rates (P0-13). The 0.7/0.15/0.05
+  // factors are honest population WEIGHTS (fraction of stars of each type),
+  // not stage efficiencies. No TDE/capture/EMRI stage modelling is claimed.
   // Main sequence: solar-type star (1 M☉, 1 R☉), ~70% of stars
-  const rMS = tdeRate_perMyr(MBH, rho, sigma, 1.0, 1.0) * 0.7;
+  const rMS = encounterRate_perMyr(MBH, rho, sigma, 1.0, 1.0) * 0.7;
   // White dwarf: 0.6 M☉, 0.01 R☉, ~15% of evolved cluster stars
-  const rWD = emriRate_perMyr(MBH, rho, sigma, 0.6, 0.01, 1.2) * 0.15;
+  const rWD = encounterRate_perMyr(MBH, rho, sigma, 0.6, 0.01, 0.15) * 0.15;
   // Neutron star: 1.4 M☉, 10km = 1.4e-5 R☉, ~5% of evolved stars
-  const rNS = emriRate_perMyr(MBH, rho, sigma, 1.4, 1.44e-5, 2.0) * 0.05;
+  const rNS = encounterRate_perMyr(MBH, rho, sigma, 1.4, 1.44e-5, 0.05) * 0.05;
   return { rMS, rWD, rNS };
+}
+
+// Hills mass: the BH mass above which r_T < r_S (the object is swallowed
+// whole, no disruption visible). Setting R⋆(M/M⋆)^{1/3} = 2GM/c² and solving
+// for M: M = [ R⋆ c² / (2 G M⋆^{1/3}) ]^{3/2}.
+function hillsMass_msun(Mstar_msun, Rstar_rsun) {
+  const Rstar_m = Rstar_rsun * 6.957e8;
+  const c = 2.998e8, G = 6.674e-11;
+  const m_kg = Math.pow(Rstar_m * c * c / (2 * G), 1.5) / Math.sqrt(Mstar_msun * 1.989e30);
+  return m_kg / 1.989e30;
+}
+function fmtMsunHills(Mstar_msun, Rstar_rsun) {
+  const m = hillsMass_msun(Mstar_msun, Rstar_rsun);
+  const e = Math.floor(Math.log10(m));
+  return '≈' + (m / Math.pow(10, e)).toFixed(1) + '×10' + e + ' M☉';
 }
 
 // ── UI Sync ──────────────────────────────────────────────────────────────────
@@ -402,8 +419,8 @@ function update() {
     { label: 'White Dwarf r_T', val: toAU(rT_WD).toExponential(2)+' AU', sub: (ratio(rT_WD,rs)).toFixed(1)+'× r_Schwarz', color: 'var(--teal-glow)' },
     { label: 'Neutron Star r_T', val: toAU(rT_NS).toExponential(2)+' AU', sub: (ratio(rT_NS,rs)).toFixed(2)+'× r_Schwarz', color: 'var(--purple-glow)' },
     { label: 'Schwarzschild r_S', val: toAU(rs).toExponential(2)+' AU', sub: (rs/6.957e10).toFixed(1)+' R_sun', color: 'var(--text-secondary)' },
-    { label: 'Hills Mass', val: '>10⁸ M_sun', sub: 'MS swallow intact above', color: 'var(--text-dim)' },
-    { label: 'WD Hills Mass', val: '~10⁵ M_sun', sub: 'WD safe at ωCen IMBH mass', color: 'var(--text-dim)' },
+    { label: 'MS Hills Mass', val: fmtMsunHills(1.0, 1.0), sub: 'MS star swallowed whole above', color: 'var(--text-dim)' },
+    { label: 'WD Hills Mass', val: fmtMsunHills(0.6, 0.01), sub: 'WD swallowed whole above', color: 'var(--text-dim)' },
   ];
   tidalGrid.innerHTML = items.map(it => `
     <div style="background:rgba(7,5,21,.5);border:1px solid var(--border-subtle);border-radius:8px;padding:12px 14px">
@@ -419,13 +436,15 @@ function update() {
   const cumulativeNS = rNS * state.age * 1e3;
   const L_Edd = 1.26e38 * MBH; // erg/s
 
+  // P0-13: the old per-stage rows (full/partial TDE, WD capture vs EMRI,
+  // NS merger + sGRB) multiplied the encounter rate by unsupported factors
+  // (0.3/0.5/0.2 — which also contradicted their own comments). Only the
+  // geometric encounter rate is modelled here; stage-specific rates need
+  // loss-cone, Hills-capture and GW-capture physics this page does not claim.
   const sigs = [
-    { type:'MS TDE (full)', rate:rMS, cum:cumulativeMS, time:'weeks–months', band:'Soft X-ray / UV', lum:fmt(L_Edd), sig:'Flare + t⁻⁵/³ decay', cls:'sig-ms' },
-    { type:'MS TDE (partial)', rate:rMS*0.3, cum:cumulativeMS*0.3, time:'days–weeks', band:'UV / optical', lum:fmt(L_Edd*0.1), sig:'Repeating, QPE-like', cls:'sig-ms' },
-    { type:'WD tidal capture', rate:rWD, cum:cumulativeWD, time:'hours', band:'Hard X-ray', lum:fmt(L_Edd*5), sig:'Super-Eddington burst', cls:'sig-wd' },
-    { type:'WD EMRI (GW)', rate:rWD*0.5, cum:cumulativeWD*0.5, time:'years (inspiral)', band:'Millihertz GW', lum:'—', sig:'LISA / TianQin band', cls:'sig-wd' },
-    { type:'NS EMRI (GW)', rate:rNS, cum:cumulativeNS, time:'years (inspiral)', band:'Millihertz GW', lum:'—', sig:'Chirp + merger burst', cls:'sig-ns' },
-    { type:'NS merger + IMBH', rate:rNS*0.2, cum:cumulativeNS*0.2, time:'~ms coalescence', band:'GW + sGRB', lum:fmt(1e51), sig:'Short GRB candidate', cls:'sig-ns' },
+    { type:'MS encounter rate', rate:rMS, cum:cumulativeMS, time:'—', band:'—', lum:'—', sig:'An encounter is a necessary condition for a TDE, not the event rate', cls:'sig-ms' },
+    { type:'WD encounter rate', rate:rWD, cum:cumulativeWD, time:'—', band:'—', lum:'—', sig:'r_T vs r_S (grid above) decides disruption vs whole swallow', cls:'sig-wd' },
+    { type:'NS encounter rate', rate:rNS, cum:cumulativeNS, time:'—', band:'—', lum:'—', sig:'GW-capture and EMRI stages not modelled here', cls:'sig-ns' },
   ];
   tbody.innerHTML = sigs.map(s => `
     <tr>
@@ -485,9 +504,9 @@ function drawChart() {
   const sigma = state.sigma;
 
   const series = [
-    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rMS; }, color:'rgba(240,160,32,0.85)', label:'MS TDE' },
+    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rMS; }, color:'rgba(240,160,32,0.85)', label:'MS enc.' },
     { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rWD; }, color:'rgba(29,186,144,0.85)', label:'WD Capture' },
-    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rNS; }, color:'rgba(160,128,240,0.85)', label:'NS EMRI' },
+    { fn: M => { const r=computeAllRates(M,rho,sigma); return r.rNS; }, color:'rgba(160,128,240,0.85)', label:'NS enc.' },
   ];
 
   series.forEach(({fn, color}) => {

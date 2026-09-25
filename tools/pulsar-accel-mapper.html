@@ -187,8 +187,10 @@ details[open] .about-toggle summary::before{content:'▼ '}
 
       <hr style="border:none;border-top:1px solid var(--border);margin:.5rem 0">
       <div style="font-size:.75rem;color:var(--text-dim);line-height:1.5">
-        <b style="color:var(--text-sec)">Tension threshold:</b> model over-predicts when
-        a<sub>max</sub> &gt; 2 × a<sub>obs</sub>.<br>
+        <b style="color:var(--text-sec)">Exclusion rule:</b> the mass is excluded for a
+        pulsar when a<sub>max</sub> &lt; |a<sub>obs</sub>| (the model cannot supply the
+        observed acceleration); a<sub>max</sub> well above a<sub>obs</sub> is the
+        compatible case. Judged on the intrinsic-&#7522;&#807;-corrected a<sub>obs</sub>.<br>
         <b style="color:var(--text-sec)">TRAPUM 90% CL:</b> &lt;10⁵ M☉ (formal likelihood
         analysis; more stringent than ratio-2 cutoff here).
       </div>
@@ -209,9 +211,14 @@ details[open] .about-toggle summary::before{content:'▼ '}
         measured spin-period derivative (including intrinsic spin-down, cluster mean field,
         and IMBH contribution combined). Negative ṗ indicates the cluster is accelerating
         the pulsar toward the observer.</p>
-        <p><b>Tension flag</b> (a_max / a_obs &gt; 2): the model predicts a maximum
-        acceleration more than twice observed — geometrically improbable unless the IMBH
-        exerts no force along that line of sight, which is unlikely for all pulsars simultaneously.</p>
+        <p><b>Verdict rule (fixed 2026-09-24, audit P0-11; the previous
+        a_max/a_obs &gt; 2 "tension" mapping was inverted):</b> the mass is
+        excluded for a pulsar when a_max &lt; |a_obs| — the model cannot produce
+        the observed line-of-sight acceleration even at the LOS maximum; a_max above the
+        observation is the compatible case. Comparisons use the intrinsic-Ṗ-corrected
+        a_obs: the measured ṗ is total (intrinsic + cluster + Shklovskii), the intrinsic
+        term is unknown at ~10⁻²⁰ s/s, so a_obs_corr = max(|ṗ| − 10⁻²⁰, 0)/P × c. That
+        unknown caps usable sensitivity at ~10⁻⁹–10⁻¹⁰ m/s² (Paper H pulsar-leg floor).</p>
         <div class="ref">
           Data: Colom i Bernadich et al. 2026 (TRAPUM), <a href="https://arxiv.org/abs/2603.21845" target="_blank" rel="noopener">arXiv:2603.21845</a><br>
           Pulsar timing: Chen et al. 2023, MNRAS 520:3847, <a href="https://doi.org/10.1093/mnras/stad029" target="_blank" rel="noopener">doi:10.1093/mnras/stad029</a><br>
@@ -313,7 +320,11 @@ function aMaxPoint(M_sun, r_m) {
   return C_COEFF * G * M_sun * M_SUN / (r_m * r_m);
 }
 
-// Max LOS acceleration (m/s²) from Plummer-softened mass
+// Max LOS acceleration (m/s²) of an explicit Plummer field: along a sight
+// line at impact parameter R, a_los(ζ) = GM ζ/(R²+ζ²+r_c²)^{3/2}, maximized
+// at ζ = √((R²+r_c²)/2), which gives EXACTLY (2/(3√3))·GM/(R²+r_c²) — the
+// same C_COEFF as the point-mass LOS maximum. (Documented P0-11: this is not
+// ad hoc softening; it is the analytic LOS maximum of the Plummer field.)
 function aMaxPlummer(M_sun, rc_pc, r_m) {
   const rc_m = rc_pc * PC_M;
   return C_COEFF * G * M_sun * M_SUN / (r_m * r_m + rc_m * rc_m);
@@ -323,13 +334,25 @@ function aMaxPlummer(M_sun, rc_pc, r_m) {
 function aMax(M_sun, rc_pc, model, r_m) {
   if (model === 'point')   return aMaxPoint(M_sun, r_m);
   if (model === 'plummer') return aMaxPlummer(M_sun, rc_pc, r_m);
-  // hybrid: 50/50 split between point IMBH and Plummer dark cluster
+  // hybrid: constructed 50/50 mixture of point + Plummer — NOT a physical
+  // potential; it brackets a point IMBH plus an extended remnant component.
   return 0.5 * aMaxPoint(M_sun, r_m) + 0.5 * aMaxPlummer(M_sun, rc_pc, r_m);
 }
 
-// Observed LOS acceleration from spin-period derivative (m/s²)
+// Observed LOS acceleration from spin-period derivative (m/s²).
+// P0-11: measurements.js documents pdot_s as TOTAL — intrinsic spin-down
+// plus cluster acceleration (plus Shklovskii). The intrinsic term is unknown
+// per pulsar at the ~1e-20 s/s level (the Paper H pulsar-leg floor), which
+// caps usable acceleration sensitivity at ~1e-9–1e-10 m/s² regardless of
+// timing precision. Exclusion claims are therefore judged on the CORRECTED
+// acceleration: total minus a one-sided intrinsic allowance.
+const PDOT_INTRINSIC_MAX = 1e-20; // s/s, one-sided intrinsic spin-down allowance
 function aObs(pulsar) {
   return Math.abs(pulsar.pdot_s / (pulsar.period_ms * 1e-3)) * C_LIGHT;
+}
+function aObsCorrected(pulsar) {
+  const aIntr = PDOT_INTRINSIC_MAX / (pulsar.period_ms * 1e-3) * C_LIGHT;
+  return Math.max(aObs(pulsar) - aIntr, 0);
 }
 
 // ── State ─────────────────────────────────────────────────────────────────
@@ -371,17 +394,26 @@ function render() {
   // ── Per-pulsar rows ──
   const rows = pulsars.map(p => {
     const r_m   = rPerp_m(p.theta_arcmin, state.dist);
-    const aO    = aObs(p) * 1e9;          // nm/s²
+    const aO    = aObs(p) * 1e9;          // nm/s², TOTAL (raw ṗ)
+    const aOc   = aObsCorrected(p) * 1e9; // nm/s², intrinsic-Ṗ-corrected
     const aM    = aMax(state.mass, state.rc, state.model, r_m) * 1e9; // nm/s²
-    const ratio = aM / aO;
+    // P0-11 fixed semantics: exclusion ⟺ a_max < |a_obs| — the model cannot
+    // produce the observed line-of-sight acceleration even at its LOS
+    // maximum. ratio > 1 (model max above observed) is the COMPATIBLE case:
+    // the true LOS geometry supplies less than the maximum. Judged on the
+    // intrinsic-Ṗ-CORRECTED acceleration (conservative direction):
+    //   ratio < 0.5  EXCLUDED (model max under half the corrected floor)
+    //   0.5 – 1      MARGINAL (borderline exclusion)
+    //   ≥ 1          COMPATIBLE
+    const ratio = aM / aOc;
     let status, sClass;
-    if      (ratio > 2)   { status = 'TENSION'; sClass = 'status-tension'; }
-    else if (ratio >= 0.5){ status = 'OK';      sClass = 'status-ok'; }
-    else                  { status = 'FLOOR';   sClass = 'status-floor'; }
-    return { p, r_m, aO, aM, ratio, status, sClass };
+    if      (ratio < 0.5) { status = 'EXCLUDED';   sClass = 'status-tension'; }
+    else if (ratio < 1)   { status = 'MARGINAL';   sClass = 'status-floor'; }
+    else                  { status = 'COMPATIBLE'; sClass = 'status-ok'; }
+    return { p, r_m, aO, aOc, aM, ratio, status, sClass };
   });
 
-  const nTension = rows.filter(r => r.status === 'TENSION').length;
+  const nExcluded = rows.filter(r => r.status === 'EXCLUDED').length;
 
   // ── SVG ──
   let svg = '';
@@ -432,8 +464,8 @@ function render() {
     }
   }
 
-  // Tension band (ratio > 2 means dot above curve × 2, or below curve / 2)
-  // Draw 2× curve in muted red as an upper-warning line
+  // Exclusion floor: observations above HALF the model maximum begin to
+  // exclude it (full exclusion at the curve itself); drawn as a muted line
   const warnPts = [];
   for (let i = 0; i <= 120; i++) {
     const theta = 0.04 + i * (4.5 - 0.04) / 120;
@@ -445,12 +477,12 @@ function render() {
   }
   if (warnPts.length > 1) {
     svg += `<polyline points="${warnPts.join(' ')}" fill="none" stroke="#d04040" stroke-width="1" stroke-dasharray="3,3" opacity=".45"/>`;
-    svg += `<text x="${xPx(0.7)+4}" y="${yPx(aMax(state.mass, state.rc, state.model, rPerp_m(0.7, state.dist)) * 1e9 / 2)-4}" fill="#d04040" font-size="8.5" opacity=".55">÷2 tension</text>`;
+    svg += `<text x="${xPx(0.7)+4}" y="${yPx(aMax(state.mass, state.rc, state.model, rPerp_m(0.7, state.dist)) * 1e9 / 2)-4}" fill="#d04040" font-size="8.5" opacity=".55">½ a_max floor</text>`;
   }
 
   // Pulsar data points
-  const COLORS = { TENSION: '#d04040', OK: '#1dba90', FLOOR: '#5a6070' };
-  const DOT_R  = { TENSION: 6, OK: 5.5, FLOOR: 4.5 };
+  const COLORS = { EXCLUDED: '#d04040', MARGINAL: '#5a6070', COMPATIBLE: '#1dba90' };
+  const DOT_R  = { EXCLUDED: 6, COMPATIBLE: 5.5, MARGINAL: 4.5 };
   rows.forEach(row => {
     const p = row.p;
     const cx = xPx(p.theta_arcmin);
@@ -475,11 +507,11 @@ function render() {
   svg += `<rect x="${lx0}" y="${ly0}" width="9" height="9" rx="2" fill="#4090d0" fill-opacity=".2" stroke="#4090d0" stroke-width="1.5"/>`;
   svg += `<text x="${lx0+13}" y="${ly0+8}" fill="#8890a0" font-size="9">a_max curve</text>`;
   svg += `<circle cx="${lx0+4.5}" cy="${ly0+22}" r="4.5" fill="#1dba90" fill-opacity=".22" stroke="#1dba90" stroke-width="1.5"/>`;
-  svg += `<text x="${lx0+13}" y="${ly0+26}" fill="#8890a0" font-size="9">Compatible</text>`;
+  svg += `<text x="${lx0+13}" y="${ly0+26}" fill="#8890a0" font-size="9">Compatible (a_max &ge; a_obs)</text>`;
   svg += `<circle cx="${lx0+4.5}" cy="${ly0+37}" r="5" fill="#d04040" fill-opacity=".22" stroke="#d04040" stroke-width="1.5"/>`;
-  svg += `<text x="${lx0+13}" y="${ly0+41}" fill="#8890a0" font-size="9">Tension (ratio &gt; 2)</text>`;
+  svg += `<text x="${lx0+13}" y="${ly0+41}" fill="#8890a0" font-size="9">Excluded (a_max &lt; a_obs)</text>`;
   svg += `<circle cx="${lx0+4.5}" cy="${ly0+52}" r="4" fill="#5a6070" fill-opacity=".22" stroke="#5a6070" stroke-width="1.5"/>`;
-  svg += `<text x="${lx0+13}" y="${ly0+56}" fill="#8890a0" font-size="9">Sub-dominant</text>`;
+  svg += `<text x="${lx0+13}" y="${ly0+56}" fill="#8890a0" font-size="9">Marginal (0.5&ndash;1&times;)</text>`;
 
   document.getElementById('chart-content').innerHTML = svg;
 
@@ -495,6 +527,7 @@ function render() {
       <td class="td-dim">${p.period_ms.toFixed(3)}</td>
       <td class="td-dim">${pdotLabel}</td>
       <td>${row.aO.toFixed(3)}</td>
+      <td>${row.aOc.toFixed(3)}</td>
       <td>${row.aM.toFixed(3)}</td>
       <td>${row.ratio.toFixed(2)}×</td>
       <td><span class="status-chip ${row.sClass}">${row.status}</span></td>
@@ -507,11 +540,11 @@ function render() {
                   : state.mass >= 1e3 ? Math.round(state.mass).toLocaleString()
                   : state.mass.toFixed(0);
   document.getElementById('met-mass').textContent = massLabel + ' M☉';
-  document.getElementById('met-tension').textContent = nTension + ' / ' + rows.length;
+  document.getElementById('met-tension').textContent = nExcluded + ' / ' + rows.length;
 
   let constraintText, constraintColor;
-  if (nTension >= 2) { constraintText = 'LIKELY EXCLUDED'; constraintColor = 'var(--red)'; }
-  else if (nTension === 1) { constraintText = 'MARGINAL'; constraintColor = 'var(--amber)'; }
+  if (nExcluded >= 2) { constraintText = 'MASS LIKELY EXCLUDED'; constraintColor = 'var(--red)'; }
+  else if (nExcluded === 1) { constraintText = 'MARGINAL'; constraintColor = 'var(--amber)'; }
   else { constraintText = 'CONSISTENT'; constraintColor = 'var(--teal)'; }
   const cEl = document.getElementById('met-constraint');
   cEl.textContent = constraintText;
@@ -522,11 +555,11 @@ function render() {
   const vDet = document.getElementById('verdict-detail');
   vEl.textContent  = constraintText;
   vEl.style.color  = constraintColor;
-  if (nTension >= 2) {
-    vDet.textContent = nTension + ' pulsars simultaneously over-predicted — geometrically unlikely for a central point mass.';
-  } else if (nTension === 1) {
-    const tname = rows.find(r => r.status === 'TENSION').p.name.replace('PSR J1326-4728', '');
-    vDet.textContent = `PSR ${tname} over-predicted (ratio > 2). Marginal tension; does not exclude alone.`;
+  if (nExcluded >= 2) {
+    vDet.textContent = nExcluded + ' pulsars observe more line-of-sight acceleration (after the intrinsic-Ṗ correction) than this mass can supply even at its LOS maximum — the mass is too small. A larger mass raises a_max and can restore compatibility.';
+  } else if (nExcluded === 1) {
+    const tname = rows.find(r => r.status === 'EXCLUDED').p.name.replace('PSR J1326-4728', '');
+    vDet.textContent = `PSR ${tname} sits below half the model maximum. Marginal exclusion; does not exclude the mass alone.`;
   } else {
     const most = rows.reduce((a, b) => b.ratio > a.ratio ? b : a);
     const ltr = most.p.name.replace('PSR J1326-4728', '');
@@ -627,20 +660,22 @@ async function buildArtifact() {
   const rows = pulsars.map(p => {
     const r_m   = rPerp_m(p.theta_arcmin, state.dist);
     const aO    = aObs(p) * 1e9;
+    const aOc   = aObsCorrected(p) * 1e9;
     const aM    = aMax(state.mass, state.rc, state.model, r_m) * 1e9;
-    const ratio = aM / aO;
-    const status = ratio > 2 ? 'TENSION' : ratio >= 0.5 ? 'OK' : 'FLOOR';
-    return { name: p.name, aO_nm_s2: +aO.toFixed(4), aM_nm_s2: +aM.toFixed(4), ratio: +ratio.toFixed(4), status };
+    // P0-11 fixed semantics: exclusion ⟺ a_max < |a_obs| (intrinsic-Ṗ-corrected)
+    const ratio = aM / aOc;
+    const status = ratio < 0.5 ? 'EXCLUDED' : ratio < 1 ? 'MARGINAL' : 'COMPATIBLE';
+    return { name: p.name, aO_nm_s2: +aO.toFixed(4), aO_corr_nm_s2: +aOc.toFixed(4), aM_nm_s2: +aM.toFixed(4), ratio: +ratio.toFixed(4), status };
   });
-  const nTension = rows.filter(r => r.status === 'TENSION').length;
-  const nOk     = rows.filter(r => r.status === 'OK').length;
-  const nFloor  = rows.filter(r => r.status === 'FLOOR').length;
-  const maxRow  = rows.reduce((a, b) => b.ratio > a.ratio ? b : a);
+  const nExcluded = rows.filter(r => r.status === 'EXCLUDED').length;
+  const nCompat   = rows.filter(r => r.status === 'COMPATIBLE').length;
+  const nMarginal = rows.filter(r => r.status === 'MARGINAL').length;
+  const minRow  = rows.reduce((a, b) => b.ratio < a.ratio ? b : a);
 
   let verdict;
-  if (nTension >= 2) verdict = 'LIKELY EXCLUDED — ' + nTension + ' pulsars simultaneously over-predicted';
-  else if (nTension === 1) verdict = 'MARGINAL — 1 pulsar over-predicted (ratio > 2)';
-  else verdict = 'CONSISTENT — all pulsars within acceleration envelope';
+  if (nExcluded >= 2) verdict = 'MASS LIKELY EXCLUDED — ' + nExcluded + ' pulsars observe accelerations this mass cannot supply';
+  else if (nExcluded === 1) verdict = 'MARGINAL — 1 pulsar below the exclusion floor';
+  else verdict = 'CONSISTENT — no pulsar accelerations exceed the model LOS maximum';
 
   const policyParameters = {
     dist_kpc:     state.dist,
@@ -649,13 +684,14 @@ async function buildArtifact() {
     rc_pc:        state.rc
   };
   const outputPayload = {
-    max_ratio:        maxRow.ratio,
-    max_ratio_pulsar: maxRow.name,
-    n_floor:          nFloor,
-    n_ok:             nOk,
-    n_pulsars:        rows.length,
-    n_tension:        nTension,
-    pulsar_rows:      rows,
+    min_ratio:         minRow.ratio,
+    min_ratio_pulsar:  minRow.name,
+    n_compatible:      nCompat,
+    n_marginal:        nMarginal,
+    n_excluded:        nExcluded,
+    n_pulsars:         rows.length,
+    pdot_intrinsic_max_s_s: PDOT_INTRINSIC_MAX,
+    pulsar_rows:       rows,
     verdict
   };
 
