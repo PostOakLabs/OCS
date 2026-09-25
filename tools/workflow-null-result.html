@@ -3,7 +3,7 @@
   Workflow — Null-Result Significance
   Omega Centauri Society — omegacentauri.me
   Bayesian null-result significance: P(detection|ETI) → Bayes factor K → posterior P(ETI|null).
-  Implements the Civiletti (2025) geometric probability framework (arXiv:2505.00062).
+  Implements the Civiletti (2025) geometric probability framework (Open J. Astrophysics, DOI 10.33232/001c.154771; arXiv:2505.00062) with OCS survey-fraction extensions (f_sky, f_freq).
   Code: MIT  ·  Prose: CC BY 4.0
   Author: The Omega Centauri Society (Tim Swanson)
   Version: 1.0  ·  2026-06-14
@@ -162,17 +162,17 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;cur
   <h1>Null-Result Significance</h1>
   <p class="hero-sub">Sixty years of SETI silence is only evidence against ETI when P(detection&nbsp;|&nbsp;ETI) is high enough that detecting nothing is surprising. This workflow computes that probability, the Bayes factor K, and the updated posterior P(ETI&nbsp;|&nbsp;null) from your survey parameters.</p>
   <div class="hero-meta">
-    <span class="tier-badge tier-e">🔬 Civiletti et al. (2025) geometric model</span>
+    <span class="tier-badge tier-e">🔬 Civiletti (2025) geometric model</span>
     <span class="tier-badge tier-s">✦ Bayesian inference</span>
     &nbsp;&middot;&nbsp; No backend &middot; hash-addressable state &middot; v1.0 &middot; 2026-06-14
   </div>
 </header>
 
 <div class="science-brief">
-  <div class="eyebrow">Framework — Civiletti et al. (2025, arXiv:2505.00062)</div>
+  <div class="eyebrow">Framework — Civiletti (2025), Open J. Astrophysics, arXiv:2505.00062 (DOI 10.33232/001c.154771). Core result: P ≈ 0.6·δ/R_MW; the survey-fraction factors below are OCS extensions</div>
   <strong>A null result is informative only when P(detection&nbsp;|&nbsp;ETI) is high.</strong> If our survey would have missed most broadcasts anyway, the great silence constrains nothing. The geometric probability that at least one signal from N civilizations — each broadcasting for δ years — passes through Earth's sky is:<br>
   <span class="eq">P(≥1 detect) = 1 − (1 − f<sub>sky</sub> · f<sub>freq</sub> · min(1, 0.6δ / R<sub>MW</sub>))^N</span><br>
-  where R<sub>MW</sub>&nbsp;≈&nbsp;52,000 ly (Milky Way radius; factor 0.6 from spherical geometry). The Bayes factor is K&nbsp;=&nbsp;1&nbsp;−&nbsp;P(detect&nbsp;|&nbsp;ETI). Bayes' theorem then gives P(ETI&nbsp;|&nbsp;null)&nbsp;=&nbsp;K·P₀&nbsp;/&nbsp;[K·P₀&nbsp;+&nbsp;(1−P₀)]. For Omega Centauri SETI programs specifically: the VLA/COSMIC survey at 17,900 ly had EIRP floors of 10¹¹–10¹⁶ W, which feeds into your f<sub>freq</sub> and f<sub>sky</sub> estimates below.
+  where R<sub>MW</sub>&nbsp;≈&nbsp;52,000 ly (Milky Way radius; factor 0.6 from spherical geometry). The Bayes factor is K&nbsp;=&nbsp;1&nbsp;−&nbsp;P(detect&nbsp;|&nbsp;ETI). Bayes' theorem then gives P(ETI&nbsp;|&nbsp;null)&nbsp;=&nbsp;K·P₀&nbsp;/&nbsp;[K·P₀&nbsp;+&nbsp;(1−P₀)]. For Omega Centauri SETI programs specifically: an EIRP floor set by the observing system's sensitivity (SEFD and integration time) feeds into your f<sub>freq</sub> and f<sub>sky</sub> estimates below. (A previous version of this note quoted specific VLA/COSMIC floor values and a specific OC survey; no published program with those numbers was verifiable, so they are withdrawn; see pset-3 for a fully labelled hypothetical.)
 </div>
 
 <div class="preset-bar">

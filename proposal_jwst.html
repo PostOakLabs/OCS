@@ -190,13 +190,13 @@
 </div>
 
 <h3>1.3 Why JWST NIRSpec/IFU</h3>
-<p>JWST's NIRSpec Integral Field Unit provides simultaneous spatial and spectral coverage over 3″ × 3″ with R ≈ 1,000–2,700 (medium resolution) or R ≈ 2,700–5,000 (high resolution). At OC's distance of 5.49 kpc, 3″ corresponds to ~0.08 pc — precisely the scale of the innermost region containing the seven fast-moving Häberle stars. This allows spatially resolved spectroscopy of individual stars and diffuse emission from the ISM within the core radius simultaneously.</p>
+<p>JWST's NIRSpec Integral Field Unit provides simultaneous spatial and spectral coverage over 3″ × 3″ at R ≈ 100 (PRISM) or R ≈ 1,000–2,700 (medium-resolution gratings). At OC's distance of 5.49 kpc, 3″ corresponds to ~0.08 pc. Spatial scope restated 2026-09-25 (P0-15.5): a single pointing covers the innermost ~0.08 pc containing the fast-moving Häberle stars, and the 5×5 mosaic extends coverage to ≈0.5 pc as a filled square aperture, not a radial profile along a preferred axis. Radial comparisons at 0.2–0.5 pc are mosaic-by-annulus comparisons across that square footprint, with fewer independent samples at large radii than an earlier version of this text implied.</p>
 
 <h2>2. Observation Strategy</h2>
 <h3>2.1 Phase 1: Archival Data Mining</h3>
 <p>Chen et al. (2025) have already observed OC with NIRCam and MIRI. JWST's multi-cycle GO programs have generated significant OC archival data. <strong>Phase 1 requires no new observing time</strong> — it is a systematic reanalysis of all existing JWST data for OC:</p>
 <ul>
-  <li>Extract NIRSpec spectra of all resolved sources in the inner 0.5 pc</li>
+  <li>Extract NIRSpec spectra of all resolved sources in archival 3″ pointings sampling the inner ≈0.5 pc</li>
   <li>Map line-of-sight velocity dispersion and chemical abundances from Ca II, Mg I, Fe I, and Li I features</li>
   <li>Construct a gas-to-dust map from NIRCam + MIRI photometry (F150W, F277W, F1800W bands)</li>
   <li>Compare abundance ratios against stellar evolution models for 12 Gyr, [Fe/H] = −1.5 populations</li>
@@ -206,10 +206,11 @@
 <table>
   <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
   <tbody>
-    <tr><td>Mode</td><td>NIRSpec IFU, PRISM/CLEAR (R ≈ 100, 0.6–5.3 µm) for continuum mapping; G140M/F100LP (R ≈ 1,000) for Li I, Ca II features</td></tr>
+    <tr><td>Mode</td><td>NIRSpec IFU, PRISM/CLEAR (R ≈ 100, 0.6–5.3 µm) as the workhorse: covers Li I λ1.048 µm, Fe I λ1.189 µm, the Ca II triplet λλ0.85 µm, Hα λ0.656 µm and Paα λ1.875 µm simultaneously. G140M/F070LP (R ≈ 1,000, 0.90–1.27 µm) added for Li I/Fe I depletion ratios on the brightest giants [config corrected 2026-09-25, P0-15.5: the previous G140M/F100LP pairing is invalid, because G140M pairs with F070LP and its 0.90–1.27 µm range excludes the Ca II triplet and Hα, which only the PRISM covers]</td></tr>
     <tr><td>Field of view</td><td>3″ × 3″ per IFU pointing; mosaic of 5×5 pointings to cover inner 0.5 pc (15″ diameter)</td></tr>
     <tr><td>Proposed exposure</td><td>5h per pointing × 25 pointings = ~125h total JWST time</td></tr>
-    <tr><td>Line targets</td><td>Li I λ1.048µm (NIR), Ca II triplet λ0.85µm, Fe I λ1.189µm, Hα λ0.656µm (diffuse gas), Paα λ1.875µm (ionised gas)</td></tr>
+    <tr><td>Line targets</td><td>Li I λ1.048 µm, Fe I λ1.189 µm, Ca II triplet λλ0.85 µm, Hα λ0.656 µm (diffuse gas), Paα λ1.875 µm (ionised gas) — all inside the PRISM range; Li I/Fe I also inside G140M/F070LP</td></tr>
+    <tr><td>Resolution cost (stated)</td><td>The PRISM's R ≈ 100 degrades abundance/depletion precision relative to a medium-resolution grating; accepted to keep the full optical+near-IR line set in one setup</td></tr>
     <tr><td>Continuum targets</td><td>Broadband SED of diffuse ISM; compare F150W/F277W/F444W flux ratio against model</td></tr>
   </tbody>
 </table>

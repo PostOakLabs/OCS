@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PS 3: Bayesian Null-Result Analysis · OCS Grad Seminar</title>
-<meta name="description" content="Grad-seminar problem set on Bayesian null-result inference, the Civiletti (2025) geometric detection model, and Bayes factors applied to SETI non-detections at Omega Centauri.">
+<meta name="description" content="Grad-seminar problem set on Bayesian null-result inference, the Civiletti (2025) geometric detection model (with OCS survey-fraction extensions), and Bayes factors applied to SETI non-detections at Omega Centauri.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
@@ -112,7 +112,7 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
 <div class="objectives">
   <div class="obj-label">Learning objectives</div>
   <ol>
-    <li>Derive single-transmitter detection probability from the Civiletti (2025) geometric sky fraction model</li>
+    <li>Derive single-transmitter detection probability from the Civiletti (2025) geometric model, extended with OCS survey-fraction factors</li>
     <li>Compute the Bayes factor K and posterior update from a null SETI result</li>
     <li>Convert a detection probability to a null-result significance in Gaussian σ units using the probit function</li>
     <li>Compare the inferential strength of different survey architectures (VLA/COSMIC vs. SKA projection)</li>
@@ -130,9 +130,9 @@ footer{margin-top:4rem;padding-top:1rem;border-top:1px solid var(--border-subtle
 
 <h2>Background</h2>
 
-<p>A null result in a SETI survey carries information. Its strength depends on how likely a detection would have been if a signal existed. Civiletti (2025) provides a geometric model for the single-transmitter detection probability P<sub>detect</sub> that accounts for the fraction of sky covered, the fraction of frequency space searched, and the maximum geometric depth of the survey.</p>
+<p>A null result in a SETI survey carries information. Its strength depends on how likely a detection would have been if a signal existed. Civiletti (2025) provides a geometric model for the single-transmitter detection probability: a survey of depth δ out of a Galaxy of radius R<sub>MW</sub> catches a passing signal with probability ≈ 0.6·δ/R<sub>MW</sub> (averaged over galactic geometries). Source ruling (2026-09-25): the published paper (M. Civiletti, "Quantifying the Fermi paradox via passive SETI: a general framework", Open J. Astrophysics, DOI 10.33232/001c.154771, arXiv:2505.00062) contributes the 0.6·δ/R core and its pairing with the Drake-style N = 𝒩δ/c; the survey-fraction factors f<sub>sky</sub> and f<sub>freq</sub> used throughout this problem set are OCS extensions, not part of the published model, and are labelled as such below.</p>
 
-<div class="eq">Single-transmitter detection probability (Civiletti 2025):
+<div class="eq">Single-transmitter detection probability (Civiletti 2025 core 0.6·δ/R; f_sky, f_freq = OCS extensions):
 
 P_single = f_sky · f_freq · min(1, 0.6 · δ / R_MW)
 
@@ -160,10 +160,10 @@ Null-result significance in Gaussian σ:
 <div class="problem">
   <div class="problem-header">
     <span class="problem-num">1.</span>
-    <span class="problem-title">VLA/COSMIC null result: detection probability</span>
+    <span class="problem-title">Hypothetical VLA/COSMIC-style null result: detection probability</span>
   </div>
   <div class="problem-body">
-    <p>The VLA/COSMIC 2025 survey (VLA Sky Survey with the Commensal Open-Source Multimode Interferometer Cluster) monitored Omega Centauri with the following parameters:</p>
+    <p>Hypothetical exercise. No published 2025 VLA/COSMIC survey of Omega Centauri with these parameters exists; the numbers below define a worked example (chosen to resemble a commensal VLA + COSMIC-style observation of the cluster) so you can practise the machinery. Parameters:</p>
     <ul style="padding-left:20px;color:var(--text-secondary);font-size:16px;margin:8px 0 12px">
       <li>f<sub>sky</sub> = 0.75 (fraction of OC's angular area within primary beams)</li>
       <li>f<sub>freq</sub> = 0.10 (L and S band combined, relative to full radio spectrum)</li>
@@ -200,7 +200,7 @@ P_detect = 1 − (1 − 8.654×10⁻⁴)¹⁰
         <br>
         <strong>Part (b):</strong> The workflow should agree to within rounding. Any discrepancy &gt;5% likely reflects a different convention for the probit function or a rounding of logN = log₁₀(10) = 1.0 exactly.
         <br><br>
-        <strong>Part (c):</strong> No. A P_detect of &lt;1% means that even if a 10¹⁴ W transmitter exists in OC, the VLA/COSMIC survey had only a 0.87% chance of detecting it. Not detecting it therefore provides very little Bayesian evidence against the transmitter hypothesis. The posterior probability barely changes from the prior. Only surveys that would have high P_detect (say &gt;50%) if a transmitter existed can strongly constrain the hypothesis.
+        <strong>Part (c):</strong> No. A P_detect of &lt;1% means that even if a 10¹⁴ W transmitter exists in OC, this hypothetical survey had only a 0.87% chance of detecting it. Not detecting it therefore provides very little Bayesian evidence against the transmitter hypothesis. The posterior probability barely changes from the prior. Only surveys that would have high P_detect (say &gt;50%) if a transmitter existed can strongly constrain the hypothesis.
       </div>
     </details>
   </div>
