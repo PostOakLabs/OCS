@@ -130,7 +130,7 @@ select:focus{border-color:var(--purple-mid)}
   <header class="tool-header">
     <div>
       <h1>Observing Campaign Planner</h1>
-      <p class="tool-subtitle">Convert a target mass resolution into a concrete observing budget: required astrometric precision, number of epochs, telescope-hours, and cadence. Feeds directly into the proposal templates.</p>
+      <p class="tool-subtitle">Forecast the direct astrometric acceleration test on ω Cen's fast stars: the GM/r² signal versus the least-squares curvature sensitivity of Paper C §5.3, per facility and baseline. The honest answer today is 0.21σ; this page quantifies when (and whether) that changes.</p>
     </div>
     <span class="tier-badge">⚠ Model-dependent projections</span>
   </header>
@@ -139,8 +139,9 @@ select:focus{border-color:var(--purple-mid)}
     <div class="card">
       <div class="card-title">Target &amp; Instrument</div>
       <div class="select-wrap">
-        <label>Primary instrument</label>
+        <label>Primary instrument / data</label>
         <select id="sel-instr" onchange="calculate()">
+          <option value="omegacat">oMEGACat HST archive (existing, σ_μ = 6.6 μas/yr)</option>
           <option value="roman">Roman Space Telescope (2027+)</option>
           <option value="elt">ELT-MICADO (2028+)</option>
           <option value="gaia">Gaia DR4 extended (2026+)</option>
@@ -148,33 +149,33 @@ select:focus{border-color:var(--purple-mid)}
         </select>
       </div>
       <div class="select-wrap">
-        <label>Science goal</label>
+        <label>Acceleration signal &amp; significance</label>
         <select id="sel-goal" onchange="calculate()">
-          <option value="tension">Resolve the 6,000–8,200 M☉ tension (3σ)</option>
-          <option value="confirm">Confirm any central mass (3σ)</option>
-          <option value="discovery">Discovery-level IMBH detection (5σ)</option>
-          <option value="rule_out">Rule out IMBH above 4,000 M☉ (3σ)</option>
+          <option value="nominal_1">Nominal 2×10⁴ M☉ at 1σ</option>
+          <option value="nominal_5">Nominal 2×10⁴ M☉ at 5σ</option>
+          <option value="heavy_3">Heavy 5×10⁴ M☉ at 3σ</option>
+          <option value="heavy_5">Heavy 5×10⁴ M☉ at 5σ</option>
         </select>
       </div>
       <div class="slider-block" id="custom-prec-block" style="display:none">
-        <label>Custom single-epoch precision (μas)</label>
+        <label>Custom proper-motion precision (μas/yr, catalogue mode)</label>
         <div class="slider-row">
-          <input type="range" id="sl-prec" min="1" max="200" value="20" oninput="updPrec(this.value)">
-          <span class="sl-val" id="sv-prec">20 μas</span>
+          <input type="range" id="sl-prec" min="0.5" max="50" step="0.1" value="6.6" oninput="updSmu(this.value)">
+          <span class="sl-val" id="sv-prec">6.6 μas/yr</span>
         </div>
       </div>
       <div class="slider-block">
-        <label>Available time per semester (hours)</label>
+        <label>Astrometric baseline T (years)</label>
         <div class="slider-row">
-          <input type="range" id="sl-time" min="1" max="200" value="40" oninput="updTime(this.value)">
-          <span class="sl-val" id="sv-time">40 h</span>
+          <input type="range" id="sl-time" min="1" max="60" step="1" value="20" oninput="updTime(this.value)">
+          <span class="sl-val" id="sv-time">20 yr</span>
         </div>
       </div>
       <div class="slider-block">
-        <label>Number of stars in astrometric sample</label>
+        <label>Projected radius of the target star (pc)</label>
         <div class="slider-row">
-          <input type="range" id="sl-stars" min="10" max="5000" step="10" value="500" oninput="updStars(this.value)">
-          <span class="sl-val" id="sv-stars">500</span>
+          <input type="range" id="sl-stars" min="0.01" max="0.5" step="0.01" value="0.08" oninput="updR(this.value)">
+          <span class="sl-val" id="sv-stars">0.08 pc</span>
         </div>
       </div>
     </div>
@@ -188,24 +189,24 @@ select:focus{border-color:var(--purple-mid)}
 
   <div class="budget-grid">
     <div class="budget-cell" id="bc-prec">
-      <div class="bc-label">Required precision</div>
+      <div class="bc-label">Acceleration signal</div>
       <div class="bc-val neutral" id="bv-prec">—</div>
-      <div class="bc-unit">μas / epoch</div>
+      <div class="bc-unit">mas/yr² (GM/r²)</div>
     </div>
     <div class="budget-cell" id="bc-epochs">
-      <div class="bc-label">Epochs needed</div>
+      <div class="bc-label">Sensitivity σ_a</div>
       <div class="bc-val neutral" id="bv-epochs">—</div>
-      <div class="bc-unit">visits</div>
+      <div class="bc-unit">mas/yr² (curvature)</div>
     </div>
     <div class="budget-cell" id="bc-hours">
-      <div class="bc-label">Total telescope-hours</div>
+      <div class="bc-label">Significance</div>
       <div class="bc-val neutral" id="bv-hours">—</div>
-      <div class="bc-unit">hours</div>
+      <div class="bc-unit">signal / σ_a</div>
     </div>
     <div class="budget-cell" id="bc-semesters">
-      <div class="bc-label">At your time allocation</div>
+      <div class="bc-label">Goal baseline</div>
       <div class="bc-val neutral" id="bv-semesters">—</div>
-      <div class="bc-unit">semesters</div>
+      <div class="bc-unit">S/N ∝ T^2.5</div>
     </div>
   </div>
 
@@ -254,14 +255,13 @@ select:focus{border-color:var(--purple-mid)}
     </button>
     <div class="about-body">
       <h3>Resource Estimation Model</h3>
-      <p>Required precision is derived from the target mass resolution via the virial mass estimator: σ² ∝ M/r, so ΔM/M ≈ 2Δσ/σ. Converting to astrometric precision: Δσ (km/s) → Δμ (μas/yr) via proper-motion dispersion at the cluster distance. The number of epochs needed is set by requiring that the cumulative proper-motion baseline √(N_epochs × T_epoch²) reaches the required precision per star, then divided by √(N_stars) for ensemble averaging.</p>
-      <p>Exposure time per field is instrument-dependent. Roman: ~15 min per field to reach S/N > 100 on G ≈ 18 stars. ELT-MICADO: ~30 min per AO-corrected field. Gaia: fixed by mission cadence.</p>
-      <h3>Instrument Defaults</h3>
-      <p><strong>Roman:</strong> single-epoch precision 15 μas (inner-field crowded-field estimate), 15 min/epoch, 10,000 usable stars in core mosaic.</p>
-      <p><strong>ELT-MICADO:</strong> single-epoch precision 80 μas (crowded-field AO astrometry), 30 min/epoch, 2,000 resolvable stars in inner core.</p>
-      <p><strong>Gaia DR4:</strong> single-epoch precision 40 μas (bright stars, G~15, degraded for crowding), fixed cadence, 5-year baseline included.</p>
+      <p>This is a direct port of the astrometric estimator of Paper C §5.3 (Campaign paper), which supersedes this page's original mass-resolution model. The signal is the quadrupole-beam acceleration a = GM/r² of a central mass at the target star's projected radius, expressed in mas/yr² at the cluster distance (mean projection factors of order unity absorbed). The sensitivity is one least-squares chain: for existing catalogues the catalogue's own proper-motion precision fixes the curvature term through σ_a = 7.75 σ_μ/T (Paper C eq. 3, third form), with archive extension scaled as T^-2.5; for facilities without a catalogue the uniform-cadence chain σ_a = 26.83 σ_pos/(√N T²) at 2 epochs/yr applies. Both give S/N ∝ T^2.5, which is how the goal-baseline extrapolation works.</p>
+      <p>The per-star coherent acceleration problem is not reduced by averaging many stars: the old √N_stars ensemble claim is gone, as is the epoch-count "feasible in 3 epochs" verdict. Paper C's calibrated conclusion stands: the nominal 2×10⁴ M☉ signal measures 0.21σ on the oMEGACat catalogue (σ_μ = 6.6 μas/yr at T = 20 yr) and crosses 1σ only at T ≈ 38 yr, around 2040, which is why the campaign's decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead.</p>
+      <h3>Instrument Modes</h3>
+      <p>oMEGACat: existing catalogue, σ_μ = 6.6 μas/yr inside r &lt; 1.5′ on a 20-yr baseline (Haberle et al. 2024, oMEGACat II); chain form, no assumed cadence.</p>
+      <p>Roman: 15 μas/epoch forward forecast. ELT-MICADO: 80 μas/epoch. Gaia DR4: 40 μas/epoch. Custom: state either a catalogue proper-motion precision (chain form) or a per-epoch precision (forward form).</p>
       <div class="meta">
-        Tool version 1.0 · 2026-06-10 · Code: MIT · Prose: CC BY 4.0<br>
+        Tool version 2.0 · 2026-09-24 · Code: MIT · Prose: CC BY 4.0 · Estimator: Paper C §5.3 (campaign-paper.tex), re-derivation in paper/figs/fC_r9_checks.py<br>
         Part of the <em>settle-the-imbh-question</em> workflow: <a href="workflow-settle-imbh-question.html">workflow-settle-imbh-question.html</a><br>
         Feeds: <a href="../proposals.html">Observational proposals</a>
       </div>
@@ -296,25 +296,37 @@ function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h
 function wireArtifact(){}
 function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_campaign',tool_id:'observing-campaign-planner',tool_version:'1.2.0',generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_observing_campaign_planner_2026,\n  author   = {Swanson, Tim},\n  title    = {{Observing Campaign Planner}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/observing-campaign-planner.html},\n  version  = {1.2.0},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
 const INSTRUMENTS = {
-  roman:  { name:'Roman Space Telescope', prec_uas:15,  min_per_epoch:15,  max_stars:10000, status:'planned 2027' },
-  elt:    { name:'ELT-MICADO',            prec_uas:80,  min_per_epoch:30,  max_stars:2000,  status:'planned 2028' },
-  gaia:   { name:'Gaia DR4',              prec_uas:40,  min_per_epoch:null, max_stars:8000, status:'planned 2026' },
-  custom: { name:'Custom',                prec_uas:20,  min_per_epoch:30,  max_stars:1000,  status:'' },
+  // mode 'catalogue': the facility's EXISTING catalogue reports a proper-motion
+  // precision sigma_mu on a calibration baseline; the third form of Paper C's
+  // eq. (3) (sigma_a = 7.75 sigma_mu / T) applies, with the archive extension
+  // scaled as T^-2.5 (Paper C's empirically calibrated HST chain).
+  // mode 'forward': no catalogue exists; the uniform-cadence least-squares
+  // chain sigma_a = 26.83 sigma_pos / (sqrt(N) T^2) with N = 2T epochs
+  // (Paper C's stated cadence convention) applies.
+  omegacat: { name:'oMEGACat (HST archive)', mode:'catalogue', sigma_mu:6.6,  t_cal:20, min_per_epoch:0,  status:'exists' },
+  roman:    { name:'Roman Space Telescope',  mode:'forward',  sigma_pos:15,  min_per_epoch:15, status:'planned 2027' },
+  elt:      { name:'ELT-MICADO',             mode:'forward',  sigma_pos:80,  min_per_epoch:30, status:'planned 2028' },
+  gaia:     { name:'Gaia DR4 extended',      mode:'forward',  sigma_pos:40,  min_per_epoch:0,  status:'planned 2026' },
+  custom:   { name:'Custom',                 mode:'forward',  sigma_pos:20,  min_per_epoch:30, status:'' },
 };
 
-// Science goal parameters
+// Goals: detect the acceleration signal of a named central mass at the
+// fiducial radius with a stated significance. Paper C's two signal masses:
+// the nominal 2e4 M_sun reference of eq. (2) and the heavy Gonzalez Prieto
+// et al. 2025 ~5e4 M_sun in-situ value.
 const GOALS = {
-  tension:    { label:'Resolve 6k–8.2k M☉ tension (3σ)', target_M:1100, sigma:3 },
-  confirm:    { label:'Confirm any central mass (3σ)',    target_M:2000, sigma:3 },
-  discovery:  { label:'Discovery-level detection (5σ)',   target_M:1640, sigma:5 },
-  rule_out:   { label:'Rule out IMBH > 4,000 M☉ (3σ)',   target_M:4000/3, sigma:3 },
+  nominal_1: { label:'Nominal 2×10⁴ M☉ signal at 1σ',  target_M:20000, sigma:1 },
+  nominal_5: { label:'Nominal 2×10⁴ M☉ signal at 5σ',  target_M:20000, sigma:5 },
+  heavy_3:   { label:'Heavy 5×10⁴ M☉ signal at 3σ',    target_M:50000, sigma:3 },
+  heavy_5:   { label:'Heavy 5×10⁴ M☉ signal at 5σ',    target_M:50000, sigma:5 },
 };
 
-let state = { instr:'roman', goal:'tension', time_h:40, stars:500, custom_prec:20 };
+let state = { instr:'omegacat', goal:'nominal_1', time_h:20, r_pc:0.08, smu:6.6, custom_prec:20 };
 
-function updPrec(v){ state.custom_prec=parseFloat(v); document.getElementById('sv-prec').textContent=v+' μas'; calculate(); }
-function updTime(v){ state.time_h=parseFloat(v); document.getElementById('sv-time').textContent=v+' h'; calculate(); }
-function updStars(v){ state.stars=parseInt(v); document.getElementById('sv-stars').textContent=parseInt(v).toLocaleString(); calculate(); }
+// time_h now carries the BASELINE in years (hash key kept for deeplink stability)
+function updTime(v){ state.time_h=parseFloat(v); document.getElementById('sv-time').textContent=v+' yr'; calculate(); }
+function updR(v){ state.r_pc=parseFloat(v); document.getElementById('sv-stars').textContent=parseFloat(v).toFixed(2)+' pc'; calculate(); }
+function updSmu(v){ state.smu=parseFloat(v); document.getElementById('sv-prec').textContent=v+' μas/yr'; calculate(); }
 
 function calculate(){
   const instr_key = document.getElementById('sel-instr').value;
@@ -326,64 +338,64 @@ function calculate(){
 
   // Show/hide custom precision
   document.getElementById('custom-prec-block').style.display = instr_key==='custom' ? 'block' : 'none';
-  const prec = instr_key==='custom' ? state.custom_prec : instr.prec_uas;
+  const T = Math.max(1, state.time_h); // baseline in years (was: hours/semester)
 
-  // Required precision: mass resolution → velocity dispersion → proper motion
-  // ΔM/M ≈ 2Δσ/σ; σ ≈ 20 km/s, M ≈ 7000 M☉ (midpoint), Δμ [μas/yr] = Δσ [km/s] / (4.74 × d_kpc)
-  const M_ref = 7000; // M☉ midpoint
-  const sigma_v = 20; // km/s velocity dispersion at core
-  const d_kpc = 5.2;
-  const dM = goal.target_M; // required mass resolution in M☉
-  const dSigma_kms = sigma_v * dM / (2 * M_ref); // Δσ in km/s
-  const req_prec_uas = dSigma_kms / (4.74 * d_kpc) * 1000; // μas/yr, with baseline correction below
+  // SSOT distance from measurements.js; constants local.
+  const MEAS = window.OCS_MEASUREMENTS;
+  const d_pc = (MEAS && MEAS.clusterParams && MEAS.clusterParams.OC_distance_pc) || 5490;
+  const d_m = d_pc * 3.086e16;
+  const Gc = 6.674e-11, MSUN = 1.989e30, YR = 3.156e7, MAS_PER_RAD = 206265e3;
 
-  // Epochs: require N epochs so ensemble precision = req_prec_uas
-  // Ensemble per-epoch precision: prec / sqrt(N_stars)
-  // Over N epochs with baseline T=0.5yr each: total baseline = N×0.5yr
-  // Proper-motion precision ≈ per_epoch_prec / (sqrt(N_epochs) × sqrt(N_stars))
-  const eff_stars = Math.min(state.stars, instr.max_stars || state.stars);
-  const per_epoch_eff = prec / Math.sqrt(eff_stars); // μas per epoch for ensemble
-  // Need N epochs such that per_epoch_eff / sqrt(N) ≤ req_prec_uas
-  const n_epochs_raw = Math.pow(per_epoch_eff / req_prec_uas, 2);
-  const n_epochs = Math.max(3, Math.ceil(n_epochs_raw));
+  // Signal (Paper C eq. 2): a = GM/r², mean projection factors of order unity
+  // absorbed, exactly as the paper does.
+  const r_m = state.r_pc * 3.086e16;
+  const a_ms2 = Gc * goal.target_M * MSUN / (r_m * r_m);       // m/s²
+  const a_mas = a_ms2 * YR * YR / d_m * MAS_PER_RAD;            // mas/yr²
 
-  // Telescope hours
-  let hours_total;
-  if (instr_key === 'gaia') {
-    hours_total = null; // fixed by mission
+  // Sensitivity (Paper C eq. 3 least-squares chain — dimensions distinct:
+  // μas/epoch or catalogue μas/yr in; mas/yr² curvature uncertainty out).
+  let sigma_a_mas, sigma_mu_txt;
+  if (instr.mode === 'catalogue') {
+    const sigma_mu0 = instr_key==='custom' ? state.smu : instr.sigma_mu;
+    const t_cal = instr.t_cal || 20;
+    // archive extension: the catalogue's own mu precision degrades as
+    // (T/t_cal)^-1.5, so the curvature term scales as T^-2.5 overall —
+    // Paper C's calibrated HST chain (0.21σ at 20 yr, 0.40σ at 26 yr).
+    const sigma_mu_T = sigma_mu0 * Math.pow(T / t_cal, -1.5); // μas/yr
+    sigma_a_mas = 7.75 * sigma_mu_T / T / 1000;               // mas/yr²
+    sigma_mu_txt = sigma_mu_T.toFixed(2) + ' μas/yr (catalogue ' + sigma_mu0 + ' at ' + t_cal + ' yr)';
   } else {
-    hours_total = n_epochs * (instr.min_per_epoch / 60);
+    const sigma_pos = instr_key==='custom' ? state.custom_prec : instr.sigma_pos;
+    const N = Math.max(2, 2 * T); // uniform cadence: 2 epochs/yr (Paper C)
+    sigma_a_mas = 26.83 * sigma_pos / (Math.sqrt(N) * T * T) / 1000; // mas/yr²
+    sigma_mu_txt = sigma_pos + ' μas/epoch × ' + N + ' epochs (2/yr)';
   }
 
-  // Semesters at user's allocation
-  const semesters = hours_total ? Math.ceil(hours_total / state.time_h) : null;
+  const snr = a_mas / sigma_a_mas;
+  // Baseline for the goal significance (both chains: S/N ∝ T^2.5).
+  const T_goal = snr >= goal.sigma ? T : T * Math.pow(goal.sigma / snr, 1 / 2.5);
 
-  // Feasibility
   let color, verdict_text, detail_text;
-  if (prec <= req_prec_uas * Math.sqrt(eff_stars)) {
+  if (snr >= goal.sigma) {
     color = 'green';
-    verdict_text = 'Feasible — instrument precision is sufficient';
-    detail_text = `${instr.name} can reach the required ensemble astrometric precision. With ${eff_stars.toLocaleString()} stars and ${n_epochs} epochs, the campaign closes the mass gap at ${goal.sigma}σ.`;
-  } else if (prec <= req_prec_uas * Math.sqrt(eff_stars) * 3) {
+    verdict_text = 'Reachable at this baseline: signal at ' + snr.toFixed(2) + 'σ';
+    detail_text = `At T = ${T} yr the ${goal.target_M.toLocaleString()} M☉ signal at r = ${state.r_pc} pc is measured at ${snr.toFixed(2)}σ (goal ${goal.sigma}σ). Acceleration-chain forecast per Paper C §5.3: correlated-error realistic, not an epoch-count promise.`;
+  } else if (T_goal <= 60) {
     color = 'amber';
-    verdict_text = 'Marginal — extended campaign or larger sample needed';
-    detail_text = `${instr.name} is near but below the required precision. Increasing the stellar sample, extending the time baseline, or combining with complementary data (e.g. pulsar timing) may achieve the goal.`;
+    verdict_text = 'Below threshold: goal significance needs T ≈ ' + T_goal.toFixed(0) + ' yr';
+    detail_text = `At T = ${T} yr the signal stands at ${snr.toFixed(2)}σ against the ${goal.sigma}σ goal; both chains scale as T^-2.5, so it arrives near T ≈ ${T_goal.toFixed(0)} yr. Paper C's calibrated read: the nominal signal is 0.21σ today and crosses 1σ only at T ≈ 38 yr (~2040).`;
   } else {
     color = 'red';
-    verdict_text = 'Not feasible with this instrument for this goal';
-    detail_text = `${instr.name}'s single-epoch precision of ${prec} μas is insufficient to reach the required ${req_prec_uas.toFixed(1)} μas/yr ensemble level, even with a large stellar sample. Consider the combination of multiple instruments or a higher-performance facility.`;
+    verdict_text = 'Not reachable on any plausible baseline';
+    detail_text = `At T = ${T} yr the signal stands at ${snr.toFixed(2)}σ; ${goal.sigma}σ needs T ≈ ${T_goal.toFixed(0)} yr, beyond any plausible baseline. Direct curvature detection on the known fast stars is not decision-grade here; Paper C routes astrometry through photocentric-wander and reference-frame channels instead.`;
   }
 
-  // Update budget cells
-  setCell('bc-prec', 'bv-prec', req_prec_uas.toFixed(1)+' μas', color);
-  setCell('bc-epochs', 'bv-epochs', n_epochs, n_epochs <= 10 ? 'green' : n_epochs <= 30 ? 'amber' : 'red');
-  if (hours_total) {
-    setCell('bc-hours', 'bv-hours', hours_total.toFixed(0), hours_total <= 100 ? 'green' : hours_total <= 300 ? 'amber' : 'red');
-    setCell('bc-semesters', 'bv-semesters', semesters, semesters <= 4 ? 'green' : semesters <= 8 ? 'amber' : 'red');
-  } else {
-    setCell('bc-hours', 'bv-hours', 'Mission', 'neutral');
-    setCell('bc-semesters', 'bv-semesters', 'Fixed', 'neutral');
-  }
+  // Budget cells — dimensions distinct: signal, curvature uncertainty,
+  // significance, and the baseline the goal needs.
+  setCell('bc-prec', 'bv-prec', a_mas.toExponential(2), 'neutral');
+  setCell('bc-epochs', 'bv-epochs', sigma_a_mas.toExponential(2), 'neutral');
+  setCell('bc-hours', 'bv-hours', snr.toFixed(2) + 'σ', snr >= goal.sigma ? 'green' : snr >= 0.5 * goal.sigma ? 'amber' : 'red');
+  setCell('bc-semesters', 'bv-semesters', T_goal >= T ? '≈ ' + T_goal.toFixed(0) + ' yr' : 'now', snr >= goal.sigma ? 'green' : 'amber');
 
   // Feasibility card
   ['green','amber','red'].forEach(c => {
@@ -395,21 +407,20 @@ function calculate(){
   document.getElementById('fc-text').textContent = verdict_text;
   document.getElementById('fc-detail').textContent = detail_text;
 
-  // Cadence table
-  const cadence_interval_months = instr_key==='gaia' ? 1 : Math.max(1, Math.round(12/Math.min(4,n_epochs)));
+  // Chain table — every input and output of the estimator, dimensions labelled
   document.getElementById('cadence-body').innerHTML = [
-    ['Instrument', instr.name + (instr.status ? ' · '+instr.status : ''), ''],
-    ['Single-epoch precision', prec+' μas', 'Per star, per epoch'],
-    ['Required ensemble prec.', req_prec_uas.toFixed(2)+' μas/yr', 'At the stellar core (0.08 pc)'],
-    ['Stars in sample', eff_stars.toLocaleString(), `Of ${state.stars} requested; capped at instrument FOV limit`],
-    ['Minimum epochs', n_epochs, 'Assumes 0.5 yr epoch spacing'],
-    ['Cadence', instr_key==='gaia' ? 'Mission cadence (~1 mo)' : cadence_interval_months+' months between epochs', 'To maximize proper-motion baseline'],
-    ['Time per epoch', instr_key==='gaia' ? 'N/A' : instr.min_per_epoch+' min', 'Per field, target S/N > 100'],
-    ['Total telescope-hours', hours_total ? hours_total.toFixed(1)+' h' : 'Mission-fixed', ''],
-    ['Campaign duration', n_epochs*6 >= 12 ? Math.ceil(n_epochs/2)+' years' : '< 1 year', 'At recommended cadence'],
+    ['Instrument', instr.name + (instr.status ? ' · '+instr.status : ''), instr.mode === 'catalogue' ? 'Existing catalogue: chain form σ_a = 7.75 σ_μ/T' : 'Forward forecast: σ_a = 26.83 σ_pos/(√N T²)'],
+    ['Baseline T', T + ' yr', 'The design variable; both chains scale as T^-2.5'],
+    ['Proper-motion precision', sigma_mu_txt, instr.mode === 'catalogue' ? 'Catalogue-reported' : 'Derived from per-epoch precision'],
+    ['Target mass', goal.target_M.toLocaleString() + ' M☉', goal.target_M === 20000 ? 'Paper C nominal signal mass' : 'González Prieto et al. 2025 heavy mass'],
+    ['Projected radius r', state.r_pc + ' pc', 'Signal ∝ r^-2'],
+    ['Signal a = GM/r²', a_ms2.toExponential(2) + ' m/s² = ' + a_mas.toExponential(2) + ' mas/yr²', 'At d = ' + (d_pc/1000).toFixed(2) + ' kpc (measurements.js)'],
+    ['Sensitivity σ_a', sigma_a_mas.toExponential(2) + ' mas/yr²', 'Curvature-term uncertainty'],
+    ['Significance', snr.toFixed(2) + 'σ', 'Signal / σ_a; goal ' + goal.sigma + 'σ'],
+    ['Goal baseline', T_goal >= T ? '≈ ' + T_goal.toFixed(0) + ' yr' : 'met at current baseline', 'S/N ∝ T^2.5 extrapolation'],
   ].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td style="color:var(--text-dim);font-size:10px">${r[2]}</td></tr>`).join('');
 
-  window._toolArtifactData = { policy: { custom_prec: state.custom_prec, goal: state.goal, instr: state.instr, stars: state.stars, time_h: state.time_h }, output: { feasibility_verdict: verdict_text, required_precision_uas: req_prec_uas, effective_stars: eff_stars, min_epochs: n_epochs } };
+  window._toolArtifactData = { policy: { instr: state.instr, goal: state.goal, baseline_yr: T, r_pc: state.r_pc, sigma_mu_uas_per_yr: instr.mode === 'catalogue' ? (instr_key==='custom' ? state.smu : instr.sigma_mu) : null, sigma_pos_uas: instr.mode === 'forward' ? (instr_key==='custom' ? state.custom_prec : instr.sigma_pos) : null }, output: { verdict: verdict_text, signal_a_ms2: a_ms2, signal_a_mas_per_yr2: a_mas, sigma_a_mas_per_yr2: sigma_a_mas, snr: snr, goal_sigma: goal.sigma, goal_baseline_yr: T_goal, distance_pc: d_pc } };
   if (window.invalidateArtifact) invalidateArtifact();
   saveHash();
 }
@@ -423,7 +434,7 @@ function setCell(cellId, valId, val, color){
 }
 
 function saveHash(){
-  const h = `instr=${state.instr}&goal=${state.goal}&time=${state.time_h}&stars=${state.stars}&cprec=${state.custom_prec}`;
+  const h = `instr=${state.instr}&goal=${state.goal}&time=${state.time_h}&r=${state.r_pc}&smu=${state.smu}&cprec=${state.custom_prec}`;
   history.replaceState(null,'','#'+h);
 }
 function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, v)); }
@@ -432,9 +443,10 @@ function loadHash(){
   const p = new URLSearchParams(h);
   if(p.has('instr')){ document.getElementById('sel-instr').value=p.get('instr'); state.instr=p.get('instr'); }
   if(p.has('goal')){ document.getElementById('sel-goal').value=p.get('goal'); state.goal=p.get('goal'); }
-  if(p.has('time')){ const v=parseFloat(p.get('time')); if(!isNaN(v)) state.time_h=clamp(v,1,200); document.getElementById('sl-time').value=state.time_h; document.getElementById('sv-time').textContent=state.time_h+' h'; }
-  if(p.has('stars')){ const v=parseInt(p.get('stars')); if(!isNaN(v)) state.stars=clamp(v,10,5000); document.getElementById('sl-stars').value=state.stars; document.getElementById('sv-stars').textContent=state.stars.toLocaleString(); }
-  if(p.has('cprec')){ const v=parseFloat(p.get('cprec')); if(!isNaN(v)) state.custom_prec=clamp(v,1,200); document.getElementById('sl-prec').value=state.custom_prec; document.getElementById('sv-prec').textContent=state.custom_prec+' μas'; }
+  if(p.has('time')){ const v=parseFloat(p.get('time')); if(!isNaN(v)) state.time_h=clamp(v,1,60); document.getElementById('sl-time').value=state.time_h; document.getElementById('sv-time').textContent=state.time_h+' yr'; }
+  if(p.has('r')){ const v=parseFloat(p.get('r')); if(!isNaN(v)) state.r_pc=clamp(v,0.01,0.5); document.getElementById('sl-stars').value=state.r_pc; document.getElementById('sv-stars').textContent=state.r_pc.toFixed(2)+' pc'; }
+  if(p.has('smu')){ const v=parseFloat(p.get('smu')); if(!isNaN(v)) state.smu=clamp(v,0.5,50); document.getElementById('sl-prec').value=state.smu; document.getElementById('sv-prec').textContent=state.smu+' μas/yr'; }
+  if(p.has('cprec')){ const v=parseFloat(p.get('cprec')); if(!isNaN(v)) state.custom_prec=clamp(v,1,200); }
 }
 
 window.OCS_APPLY_PREFILL = function(obj){

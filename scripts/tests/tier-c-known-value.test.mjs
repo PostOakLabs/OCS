@@ -695,8 +695,8 @@ test('tier-c known-value — FW-4 radio-seti (render()-populated window._toolArt
 // for exactly this.
 function loadObservingCampaignPlanner() {
   const sandbox = loadTool('observing-campaign-planner', '', {
-    'sel-instr': 'roman',
-    'sel-goal': 'tension',
+    'sel-instr': 'omegacat',
+    'sel-goal': 'nominal_1',
   });
   return sandbox;
 }
@@ -822,4 +822,81 @@ test('tier-c known-value — P0-CALC-1 mass-tension-explorer shipped cell counts
   assert.equal(sandbox.document.getElementById('hpd-cells-out').textContent,
     '49 of 1891 grid cells', 'HPD90 cell count must come from the shipped embed');
   assert.match(sandbox.document.getElementById('hpd-a-out').textContent, /pc/);
+});
+
+// ---- Group: P0-CALC-2 repaired site-only tools (2026-09-24) ----
+//   - seed-formation: core-collapse law re-calibrated to the literature
+//     standard t_cc = 0.15 t_rh (Spitzer 1987; Portegies Zwart et al. 2010
+//     review; the previously coded 0.015 factor appears nowhere in the cited
+//     PZ&M 2002). Regression: omega Cen preset relaxation time ~8.6 Gyr ->
+//     t_core ~1.29 Gyr -> 'merger' channel; monotone in t_rh.
+//   - tidal-capture: Hills masses hand-derived from r_T = R_star (M/M_star)^(1/3)
+//     set equal to r_S = 2GM/c^2 -> M = (R_star c^2 / 2G)^(3/2) M_star^(-1/2):
+//     solar-type ~1.14e8 M_sun, WD (0.6/0.01) ~1.48e5 M_sun.
+test('tier-c known-value — P0-CALC-2 seed-formation collapse law + omega Cen regression', async (t) => {
+  const sandbox = loadTool('seed-formation');
+  assert.equal(typeof sandbox.calcRelaxationTime, 'function');
+  assert.equal(typeof sandbox.calcCoreCollapse, 'function');
+  assert.equal(typeof sandbox.determineChannel, 'function');
+
+  await t.test('omega Cen preset: t_rh ~ 8.6 Gyr, t_core ~ 1.29 Gyr, merger channel', () => {
+    const t_rh = sandbox.calcRelaxationTime(4e6, 7.0);
+    assert.ok(Math.abs(t_rh - 8.586) / 8.586 < 0.01, `t_rh expected ~8.586 Gyr, got ${t_rh}`);
+    const t_core = sandbox.calcCoreCollapse(t_rh);
+    assert.ok(Math.abs(t_core - 0.15 * t_rh) < 1e-12, 'collapse law must be 0.15 x t_rh');
+    assert.equal(sandbox.determineChannel(t_core, 0.50), 'merger',
+      'present-day omega Cen structure must read the merger channel under the corrected law');
+  });
+
+  await t.test('core-collapse time monotone in t_rh', () => {
+    let prev = -1;
+    for (const t_rh of [0.01, 0.1, 1, 10, 100]) {
+      const v = sandbox.calcCoreCollapse(t_rh);
+      assert.ok(v > prev, `not monotone at t_rh=${t_rh}`);
+      prev = v;
+    }
+  });
+
+  await t.test('runaway channel still reachable for compact young low-Z cluster', () => {
+    // M=1e7, r_h=0.05 pc -> t_rh ~ 7.7 Myr -> t_core = 1.16 Myr < 3 Myr, Z=0.05
+    const t_rh = sandbox.calcRelaxationTime(1e7, 0.05);
+    const t_core = sandbox.calcCoreCollapse(t_rh);
+    assert.equal(sandbox.determineChannel(t_core, 0.05), 'runaway');
+  });
+});
+
+test('tier-c known-value — P0-CALC-2 tidal-capture Hills masses + tidal-radius scaling', async (t) => {
+  const sandbox = loadTool('tidal-capture');
+  assert.equal(typeof sandbox.hillsMass_msun, 'function');
+  assert.equal(typeof sandbox.encounterRate_perMyr, 'function',
+    'encounter rate must be renamed away from TDE wording');
+
+  await t.test('solar-type Hills mass ~1.14e8 M_sun', () => {
+    const m = sandbox.hillsMass_msun(1.0, 1.0);
+    assert.ok(Math.abs(m - 1.1429e8) / 1.1429e8 < 1e-3, `expected ~1.1429e8, got ${m}`);
+  });
+
+  await t.test('WD (0.6 M_sun, 0.01 R_sun) Hills mass ~1.48e5 M_sun', () => {
+    const m = sandbox.hillsMass_msun(0.6, 0.01);
+    assert.ok(Math.abs(m - 1.4758e5) / 1.4758e5 < 1e-3, `expected ~1.4758e5, got ${m}`);
+  });
+
+  await t.test('tidal radius scales as R_star (M/M_star)^(1/3)', () => {
+    const r1 = sandbox.tidalRadius_cm(40000, 1.0, 1.0);
+    const r2 = sandbox.tidalRadius_cm(40000, 1.0, 2.0);   // 2x star radius
+    const r3 = sandbox.tidalRadius_cm(320000, 1.0, 1.0);  // 8x BH mass
+    assert.ok(Math.abs(r2 / r1 - 2) < 1e-9, 'r_T must scale linearly in R_star');
+    assert.ok(Math.abs(r3 / r1 - 2) < 1e-9, 'r_T must scale as M_BH^(1/3)');
+  });
+
+  await t.test('swallow case: at the Hills mass r_T == r_S; above it r_T < r_S', () => {
+    const G = 6.674e-11, c = 2.998e8, MSUN = 1.989e30;
+    const rS_cm = (m_kg) => 2 * G * m_kg / (c * c) * 100;
+    const mH = sandbox.hillsMass_msun(1.0, 1.0);
+    const rT_at = sandbox.tidalRadius_cm(mH, 1.0, 1.0);
+    assert.ok(Math.abs(rT_at - rS_cm(mH * MSUN)) / rS_cm(mH * MSUN) < 1e-6,
+      'r_T must equal r_S at the Hills mass');
+    const rT_above = sandbox.tidalRadius_cm(mH * 4, 1.0, 1.0);
+    assert.ok(rT_above < rS_cm(mH * 4 * MSUN), 'above the Hills mass the object is swallowed whole');
+  });
 });
