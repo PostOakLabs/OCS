@@ -900,3 +900,39 @@ test('tier-c known-value — P0-CALC-2 tidal-capture Hills masses + tidal-radius
     assert.ok(rT_above < rS_cm(mH * 4 * MSUN), 'above the Hills mass the object is swallowed whole');
   });
 });
+
+// ---- Group: P0-PAGES-1 astrometric-microlensing physics (2026-09-25) ----
+// Hand-derived from the page's own documented formulas (Dominik & Sahu 2000;
+// Paczynski 1986): theta_E = sqrt(4GM(D_S-D_L)/(c^2 D_L D_S));
+// delta_theta_max = theta_E/(2 sqrt 2) at u = sqrt 2.
+//   theta_E(8200 M_sun, 5.49, 8.0 kpc) = 61.7801 mas
+//   delta_max = 21842.57 uas ; A(u=1) = sqrt(5)/sqrt(9)... = 1.3416
+test('tier-c known-value — P0-PAGES-1 astrometric-microlensing lensing geometry', async (t) => {
+  const sandbox = loadTool('astrometric-microlensing');
+  assert.equal(typeof sandbox.einsteinThetaRad, 'function');
+  assert.equal(typeof sandbox.centroidShift, 'function');
+  assert.equal(typeof sandbox.magnification, 'function');
+
+  await t.test('Einstein radius at the omega Cen default geometry', () => {
+    const th_mas = sandbox.einsteinThetaRad(8200, 5.49, 8.0) * 206264.806e3;
+    const expected = Math.sqrt(4 * 6.674e-11 * 8200 * 1.989e30 * ((8.0 - 5.49) * 3.086e19) /
+      (Math.pow(2.998e8, 2) * 5.49 * 3.086e19 * 8.0 * 3.086e19)) * 206264.806e3;
+    assert.ok(Math.abs(th_mas - expected) <= 1e-9 * expected, `expected ~${expected} mas, got ${th_mas}`);
+    assert.ok(Math.abs(th_mas - 61.7801) / 61.7801 < 1e-4, `hand-derived 61.7801 mas, got ${th_mas}`);
+  });
+
+  await t.test('centroid shift peaks at theta_E / (2 sqrt 2) for u = sqrt 2', () => {
+    const th = 61.7801;
+    const d = sandbox.centroidShift(Math.SQRT2, th) * 1000; // uas
+    assert.ok(Math.abs(d - th * 1000 / (2 * Math.SQRT2)) < 1e-6);
+    // far u: shift = u/(u^2+2) th = (th/u)/(1+2/u^2), slightly under th/u
+    const far = sandbox.centroidShift(100, th);
+    assert.ok(Math.abs(far - 100 / (100 * 100 + 2) * th) < 1e-9);
+  });
+
+  await t.test('magnification matches Paczynski 1986 at u = 1', () => {
+    const A = sandbox.magnification(1.0);
+    // A(1) = (1+2)/(1*sqrt(1+4)) = 3/sqrt(5)
+    assert.ok(Math.abs(A - 3 / Math.sqrt(5)) < 1e-12, `A(1) expected 3/sqrt(5), got ${A}`);
+  });
+});

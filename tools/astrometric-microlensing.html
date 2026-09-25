@@ -12,7 +12,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Astrometric Microlensing Predictor — Omega Centauri Society</title>
-<meta name="description" content="What astrometric microlensing signature would a central IMBH in Omega Centauri produce against bulge stars — and would Gaia DR4 (≈ Dec 2026) or Roman see it?">
+<meta name="description" content="What astrometric microlensing signature would a compact lens produce for an explicitly chosen background population — and would Gaia DR4 (Dec 2026) or Roman detect it? Defaults to Omega Centauri's actual halo sightline.">
 <link rel="canonical" href="https://omegacentauri.me/tools/astrometric-microlensing.html">
 <meta name="theme-color" content="#0d0a24">
 <meta name="color-scheme" content="dark">
@@ -130,7 +130,7 @@ a:hover{color:var(--teal-glow)}
   <header class="tool-header">
     <div>
       <h1>Astrometric Microlensing Predictor — Gaia DR4 + Roman</h1>
-      <p class="tool-subtitle">Gravity-only test for a central IMBH (or compact dark mass) in Omega Centauri. As background stars drift behind the lens, their apparent positions shift. Gaia DR4 (≈ Dec 2026) and Roman (≈ 2028 onward) will either see it or rule it out.</p>
+      <p class="tool-subtitle">Gravity-only single-lens calculator: the centroid shift, Einstein timescale, and expected event count for a compact lens in front of an explicitly chosen background source population. The default background is Ω Cen's actual halo sightline, and it is sparse; the verdict reports exactly that.</p>
     </div>
     <div class="tier-badges">
       <span class="tier-badge estab">🔬 Established physics</span>
@@ -139,8 +139,8 @@ a:hover{color:var(--teal-glow)}
   </header>
 
   <div class="warning-banner">
-    <strong>Astrometric microlensing is one of the cleanest near-term tests of a central IMBH in ω Centauri.</strong>
-    Unlike accretion-based constraints (<a href="jwst-accretion.html">Tool 13</a>), it doesn't depend on ambient gas density or radiative efficiency assumptions — just gravity. Gaia DR4 (~ December 2026) and Roman (launch as early as fall 2026; bulge microlensing survey starting ~ 2028) will deliver verdicts on a known schedule.
+    <strong>Astrometric microlensing is a clean gravity-only probe of a central IMBH in ω Centauri, but the sky position decides whether it delivers.</strong>
+    Unlike accretion-based constraints (<a href="jwst-accretion.html">Tool 13</a>), it depends on no gas-density or radiative-efficiency assumptions. Gaia DR4 (December 2026) and Roman (launched 2026-08-30; first images expected early 2027) are real and flying. The catch is geometry: Ω Cen sits ≈53° from the Galactic bulge, so its sightline carries no bulge source population. The default below uses the sparse halo field behind the cluster, and the expected event count carries that consequence.
   </div>
 
   <div class="cols">
@@ -180,9 +180,8 @@ a:hover{color:var(--teal-glow)}
           <span class="slider-value" id="ds-val">8.0 kpc</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-ds="8">Behind OC (8)</button>
-          <button class="preset-btn" data-preset-ds="8.2">Galactic centre (8.2)</button>
-          <button class="preset-btn" data-preset-ds="10">Bulge far side (10)</button>
+          <button class="preset-btn" data-preset-ds="8">Halo field behind OC (8)</button>
+          <button class="preset-btn" data-preset-ds="10">Halo field, farther (10)</button>
         </div>
       </div>
 
@@ -194,7 +193,7 @@ a:hover{color:var(--teal-glow)}
         </div>
         <div class="preset-row">
           <button class="preset-btn" data-preset-g="15">Bright halo giant (15)</button>
-          <button class="preset-btn" data-preset-g="17">Typical bulge (17)</button>
+          <button class="preset-btn" data-preset-g="17">Typical halo giant (17)</button>
           <button class="preset-btn" data-preset-g="20">Faint (20)</button>
         </div>
       </div>
@@ -206,20 +205,21 @@ a:hover{color:var(--teal-glow)}
           <span class="slider-value" id="mu-val">5.0 mas/yr</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-mu="5">OC-bulge typical (5)</button>
+          <button class="preset-btn" data-preset-mu="5">Typical relative (5)</button>
           <button class="preset-btn" data-preset-mu="1">Slow encounter (1)</button>
           <button class="preset-btn" data-preset-mu="20">High-velocity (20)</button>
         </div>
       </div>
 
       <div class="slider-block">
-        <label>Source surface density Σ_bg  (stars/arcsec²)</label>
+        <label>Background source density Σ_bg  (stars/arcsec², log scale)</label>
         <div class="slider-row">
-          <input type="range" id="sig-slider" min="0.1" max="10" step="0.05" value="2">
-          <span class="slider-value" id="sig-val">2.0 /arcsec²</span>
+          <input type="range" id="sig-slider" min="-13" max="0.7" step="0.1" value="-12">
+          <span class="slider-value" id="sig-val">1×10⁻¹² /arcsec²</span>
         </div>
         <div class="preset-row">
-          <button class="preset-btn" data-preset-sig="2">Bulge at OC sightline (~2)</button>
+          <button class="preset-btn" data-preset-sig="1e-12">Ω Cen halo sightline (illustrative ~10⁻¹²)</button>
+          <button class="preset-btn" data-preset-sig="2">Bulge-like field (~2) — hypothetical, not Ω Cen's sky</button>
         </div>
       </div>
     </section>
@@ -269,7 +269,7 @@ a:hover{color:var(--teal-glow)}
         <div class="row-value" id="gaiaN-val">—</div>
       </div>
       <div class="row">
-        <div class="row-label">Expected events in 5-yr Roman BTDS</div>
+        <div class="row-label">Expected events in 5-yr Roman survey (hypothetical here; BTDS targets the bulge)</div>
         <div class="row-value purple" id="romanN-val">—</div>
       </div>
     </section>
@@ -288,9 +288,9 @@ a:hover{color:var(--teal-glow)}
         <div class="cc-label">Telescope sensitivity floors</div>
         <div class="observed-list">
           <div class="obs-item"><span class="obs-author">Gaia DR4 (Dec 2026)</span><span class="obs-value">~30 μas</span></div>
-          <div class="obs-item"><span class="obs-author">Roman BTDS (≥ 2028)</span><span class="obs-value">~10 μas</span></div>
+          <div class="obs-item"><span class="obs-author">Roman (launched 2026-08-30)</span><span class="obs-value">~10 μas</span></div>
           <div class="obs-item"><span class="obs-author">Gaia mission baseline</span><span class="obs-value">~5 yr</span></div>
-          <div class="obs-item"><span class="obs-author">Roman BTDS baseline</span><span class="obs-value">~5 yr</span></div>
+          <div class="obs-item"><span class="obs-author">Roman survey baseline</span><span class="obs-value">~5 yr</span></div>
         </div>
       </div>
     </div>
@@ -324,11 +324,11 @@ a:hover{color:var(--teal-glow)}
       <h3>What astrometric microlensing actually measures</h3>
       <p>When a compact mass passes near our line-of-sight to a background star, the star's light is gravitationally deflected. The star's <em>apparent position</em> shifts on the sky by a fraction of the Einstein radius — at peak alignment, δθ_max ≈ θ_E / (2√2). This is the <em>astrometric</em> signal. It is distinct from the <em>photometric</em> magnification (the brightness bump that OGLE, MOA, and KMTNet hunt for in bulge surveys). Astrometric shifts persist on time scales of years and survive even for "dark" lenses (isolated stellar-mass black holes, neutron stars, IMBHs) that produce no light themselves.</p>
 
-      <h3>Why Gaia DR4 is the near-term breakthrough</h3>
-      <p>Gaia DR4 (≈ December 2026) releases the full astrometric time series for each Gaia source for the first time — the per-epoch positions, beyond the 5-parameter fit. Pipelines like <strong>Wyrzykowski et al. 2025</strong> (A&amp;A) have been waiting for this data specifically to look for transient astrometric microlensing events caused by isolated compact objects. ω Centauri's sightline crosses dense bulge regions, so every IMBH-mass body in OC has a non-negligible lensing cross-section against bulge stars. With a per-source astrometric noise floor of order <code>~30 μas</code> at G ≲ 19, DR4 should detect — or strongly constrain — any IMBH that produces centroid shifts above this floor on year-to-decade timescales.</p>
+      <h3>Why the background population is the whole answer here</h3>
+      <p>Gaia DR4 (planned December 2026) releases the full astrometric time series for each Gaia source, including the per-epoch positions beyond the 5-parameter fit, and pipelines like Wyrzykowski et al. 2025 (A&amp;A) are built to search it for transient astrometric microlensing from isolated compact objects. But a lens only lenses sources behind it on the same sightline. Ω Centauri sits at (l, b) ≈ (309.1°, +15.0°), about 53° from the Galactic centre: its sightline points into the Galactic halo, not through the bulge, so the background population behind the cluster is sparse. The default Σ_bg in the sliders reflects that, and the expected event count, not the centroid-shift amplitude, is what decides the test. A dense-field configuration stays on the slider as a labelled hypothetical for comparison with published bulge-survey predictions.</p>
 
-      <h3>Why Roman is the medium-term breakthrough</h3>
-      <p>NASA's Roman Space Telescope (launch as early as fall 2026; nominal May 2027) carries a Galactic Bulge Time Domain Survey designed to find isolated stellar-mass black holes by astrometric microlensing across millions of bulge stars — see <strong>Penny et al. 2019</strong> (ApJS 241:3). ω Cen sits in front of one of Roman's calibration fields. Sensitivity reaches <code>~10 μas</code>, roughly 3× better than Gaia. Roman is therefore the medium-term test: if Gaia DR4 doesn't detect an IMBH signature in OC but the mass is real, Roman should still catch the smaller-shift, fainter-source events that Gaia misses.</p>
+      <h3>Roman status and footprint (corrected 2026-09-25)</h3>
+      <p>Roman launched 2026-08-30 on a Falcon Heavy from LC-39A; the Wide Field Instrument was activated, NASA reported commissioning underway on 2026-09-15, and first images are expected by early 2027. Its Galactic Bulge Time Domain Survey, designed to find isolated stellar-mass black holes by astrometric microlensing across millions of bulge stars (Penny et al. 2019, ApJS 241:3), observes the Galactic bulge at (l ≈ 0.5°, b ≈ −1.4°) plus a Galactic-Centre field. That footprint does not contain ω Cen: the cluster's sightline lies ≈53° away, and Roman's on-orbit calibration "touchstone" fields are confined to the continuous-viewing zone at the ecliptic poles (Williams et al. 2025, NTRS 20250003012), also nowhere near the cluster. Ω Cen is a historic HST calibration field, the likely source of the earlier confusion on this page. The tool therefore treats Roman as a sensitivity reference for a bulge-field configuration that Ω Cen's own sky position does not provide.</p>
 
       <h3>The IMBH vs. dark-cluster discriminator</h3>
       <p>A <em>single</em> IMBH produces rare but large-amplitude events: one mass × big θ_E × moderate event rate. A <em>dark cluster</em> of many smaller masses (stellar-mass BHs, neutron stars) produces frequent but smaller-amplitude events: many masses × small θ_E × high event rate. The two scenarios give numerically distinct distributions of (δθ_max, t_E) across detected events — which Gaia DR4 and Roman together will be able to discriminate. <a href="dark-cluster.html">Compare to the alternative-hypothesis tool</a> to see the signature difference.</p>
@@ -340,9 +340,9 @@ a:hover{color:var(--teal-glow)}
       <p>The event rate estimate <code>Γ ≈ 2 θ_E σ_bg μ_rel</code> is a back-of-envelope cross-section calculation; it assumes a uniform background density and ignores blending, finite-source effects, parallax, and binary-lens complications. The "detectable" verdicts use simple step-function thresholds (30 μas for Gaia, 10 μas for Roman) — real pipelines use full likelihood fits and can squeeze 2–3× more out of marginal events. The Einstein radius formula assumes a point lens; an IMBH is effectively a point at these scales, but a dark cluster is not.</p>
 
       <h3>Sources</h3>
-      <p><strong>Gaia DR4 release schedule</strong> — ESA/DPAC, planned ≈ December 2026 (cosmos.esa.int/gaia/release). <strong>Roman launch</strong> — NASA, fall 2026 – May 2027 (roman.gsfc.nasa.gov). <strong>Penny et al. 2019</strong> (ApJS 241:3) — Roman microlensing survey simulations. <strong>Wyrzykowski et al. 2025</strong> (A&amp;A) — astrometric-only microlensing pipeline targeting DR4. <strong>Dominik &amp; Sahu 2000</strong> (ApJ 534:213) — astrometric microlensing of dark compact objects, including the δθ(u) = u θ_E / (u² + 2) result used here. <strong>Paczyński 1986</strong> (ApJ 304:1) — original photometric microlensing paper; the A(u) = (u² + 2) / (u √(u² + 4)) magnification formula used in this tool.</p>
+      <p>Gaia DR4 release schedule: ESA/DPAC, planned December 2026 (cosmos.esa.int/gaia/release). Roman launch and commissioning: NASA news release, launch 2026-08-30, WFI activation announced 2026-09-15, first images early 2027 (nasa.gov; roman.gsfc.nasa.gov). Roman GBTDS footprint: STScI Roman Community Defined Surveys documentation (roman-docs.stsci.edu), five bulge fields near (l, b) ≈ (0.5°, −1.4°) plus a Galactic-Centre field. Calibration touchstone fields: Williams et al. 2025 (NTRS 20250003012), ecliptic-pole continuous-viewing zone. Ω Cen position: (l, b) ≈ (309.1°, +15.0°), ≈53° from the bulge fields. Penny et al. 2019 (ApJS 241:3), Roman microlensing survey simulations. Wyrzykowski et al. 2025 (A&amp;A), astrometric-only microlensing pipeline targeting DR4. Dominik &amp; Sahu 2000 (ApJ 534:213), the δθ(u) = u θ_E / (u² + 2) result used here. Paczyński 1986 (ApJ 304:1), the A(u) magnification formula used in this tool.</p>
 
-      <p class="meta-line">v1.0 — 2026-05-26 · Code MIT · Prose CC BY 4.0 · Sources as above</p>
+      <p class="meta-line">v1.3 — 2026-09-25 · Code MIT · Prose CC BY 4.0 · P0-14: false Roman-footprint and bulge-sightline premises removed; verdict gated on expected events · Sources as above</p>
     </div>
   </section>
 </div>
@@ -390,8 +390,8 @@ function _buildChainBlock(ps){if(!ps||!ps.length)return{parent_hashes:[],parent_
 function _updateCgStatus(ps){const el=document.getElementById('cg-parent-status');if(!el)return;if(!ps.length){el.textContent='';el.className='cg-parent-status';return;}const bad=ps.filter(p=>!CG_DECLARED_CONSUMES.includes(p.tool_id));if(bad.length){el.textContent='⚠ unexpected tool_id: '+bad.map(p=>p.tool_id).join(', ')+' — recorded anyway';el.className='cg-parent-status warn';}else{el.textContent='✓ '+ps.length+' parent'+(ps.length>1?'s':'')+' accepted · chain_depth → '+(Math.max(...ps.map(p=>p.chain_depth))+1);el.className='cg-parent-status ok';}}
 function _wireCgParent(){const h=location.hash.slice(1),sp=new URLSearchParams(h);if(sp.has('cg')){try{const b=sp.get('cg').replace(/-/g,'+').replace(/_/g,'/');const pad=b+'==='.slice((b.length%4)||4);const ta=document.getElementById('cg-parent-ta');if(ta)ta.value=atob(pad);}catch(e){}}const ta=document.getElementById('cg-parent-ta');if(!ta)return;const go=()=>{_cgParents=_parseCgParents(ta.value);_updateCgStatus(_cgParents);if(typeof invalidateArtifact==='function')invalidateArtifact();};ta.addEventListener('input',go);if(ta.value)go();}
 function wireArtifact(){}
-function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};const TOOL_VERSION='1.2.0';return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_microlensing',tool_id:'astrometric-microlensing',tool_version:TOOL_VERSION,generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_astrometric_microlensing_2026,\n  author   = {Swanson, Tim},\n  title    = {{Astrometric Microlensing Predictor}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/astrometric-microlensing.html},\n  version  = {'+TOOL_VERSION+'},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
-const state = { ML: 8200, DL: 5.49, DS: 8, G: 17, mu: 5, Sigma: 2 }; // SSOT: measurements.js OC_distance_pc
+function buildArtifact(){const d=window._toolArtifactData||{policy:{},output:{}};const TOOL_VERSION='1.3.0';return{'@context':'https://openchain.graph/spec/v0.3/context.jsonld',chaingraph_version:'0.4.0',buildType:'https://openchain.graph/spec/v0.2#WebCryptoSHA256',mandate_type:'me.omegacentauri/bh_microlensing',tool_id:'astrometric-microlensing',tool_version:TOOL_VERSION,generated_at:new Date().toISOString(),execution_hash:'',chain:_buildChainBlock(_cgParents),policy_parameters:d.policy,output_payload:d.output,compliance_flags:['register:peer-reviewed'],audit_signature:{payloadType:'application/vnd.openchain.graph+json;version=0.2',payload:'',signatures:[],ocs_artifact_version:'1.0.0',permalink:window.location.href,tool_citation_bibtex:'@software{OCS_astrometric_microlensing_2026,\n  author   = {Swanson, Tim},\n  title    = {{Astrometric Microlensing Predictor}},\n  year     = {2026},\n  url      = {https://omegacentauri.me/tools/astrometric-microlensing.html},\n  version  = {'+TOOL_VERSION+'},\n  note     = {The Omega Centauri Society -- omegacentauri.me}\n}'}};}
+const state = { ML: 8200, DL: 5.49, DS: 8, G: 17, mu: 5, Sigma: 1e-12 }; // SSOT: measurements.js OC_distance_pc; Sigma default = halo sightline (see About)
 function loadHash(){
   const p = getHash();
   if (p.ML)    { const v = parseFloat(p.ML);    if (!isNaN(v) && v > 0)   state.ML = v; }
@@ -441,7 +441,8 @@ function render() {
   document.getElementById('ds-val').textContent = state.DS.toFixed(2) + ' kpc';
   document.getElementById('g-val').textContent  = 'G = ' + state.G.toFixed(1);
   document.getElementById('mu-val').textContent = state.mu.toFixed(1) + ' mas/yr';
-  document.getElementById('sig-val').textContent = state.Sigma.toFixed(2) + ' /arcsec²';
+  const sigLbl = state.Sigma >= 0.01 ? state.Sigma.toFixed(2) + ' /arcsec²' : fmtSci(state.Sigma, 1) + ' /arcsec²';
+  document.getElementById('sig-val').textContent = sigLbl;
 
   // Reduced distance (kpc)
   const D_rel = (state.DS > state.DL) ? (state.DS - state.DL) * state.DL / state.DS : 0;
@@ -498,27 +499,33 @@ function render() {
   document.getElementById('gaiaN-val').innerHTML    = fmtNum(N_GAIA, 3) + ' <span class="unit">events</span>';
   document.getElementById('romanN-val').innerHTML   = fmtNum(N_ROMAN, 3) + ' <span class="unit">events</span>';
 
-  // Verdict
+  // Verdict — gated FIRST on expected events (P0-14): a centroid shift above
+  // a sensitivity floor means nothing if the survey expects fewer than one
+  // event on its baseline. N stays displayed in every branch.
   const cell = document.getElementById('verdict-cell');
   const head = document.getElementById('verdict-headline');
   const note = document.getElementById('verdict-note');
   cell.classList.remove('tension', 'ok', 'roman');
-  const xGaia = N_GAIA.toFixed(2);
-  const xRoman = N_ROMAN.toFixed(2);
-  if (gaiaDetect) {
+  const xGaia = N_GAIA.toExponential(2);
+  const xRoman = N_ROMAN.toExponential(2);
+  if (N_GAIA < 1 && N_ROMAN < 1) {
+    cell.classList.add('tension');
+    head.textContent = 'Expected < 1 event — survey cannot decide this scenario';
+    note.textContent = `Expected ≈ ${xGaia} events in 5 yr (Gaia) and ≈ ${xRoman} (Roman survey) at the chosen background density Σ_bg = ${sigLbl}. No detection or exclusion claim is possible: the centroid-shift physics above is real, but no event will occur to measure. A bulge-like field (~2 stars/arcsec²) would change this — that is a hypothetical, not Ω Cen's sky.`;
+  } else if (gaiaDetect && N_GAIA >= 1) {
     cell.classList.add('ok');
-    head.textContent = 'Gaia DR4 (≈ Dec 2026) will see this';
-    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas exceeds the ~30 μas DR4 floor. Expected ≈ ${xGaia} events over the 5-year baseline. Roman would later catch ≈ ${xRoman}. Either DR4 detects or this scenario is ruled out.`;
-  } else if (romanDetect) {
+    head.textContent = 'Gaia DR4 should see this';
+    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas exceeds the ~30 μas DR4 floor, and ≈ ${xGaia} events are expected over the 5-year baseline. Roman would later catch ≈ ${xRoman}.`;
+  } else if (romanDetect && N_ROMAN >= 1) {
     cell.classList.add('roman');
-    head.textContent = 'Roman will resolve this (Gaia probably won\'t)';
-    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas sits below Gaia's ~30 μas floor but above Roman's ~10 μas. Expected ≈ ${xRoman} events in a 5-year BTDS. Verdict by ≈ 2033.`;
+    head.textContent = 'Roman should resolve this (Gaia probably won\'t)';
+    note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas sits below Gaia's ~30 μas floor but above Roman's ~10 μas, with ≈ ${xRoman} events expected in a 5-year survey.`;
   } else {
     cell.classList.add('tension');
     head.textContent = 'Below both telescopes\' floors at these parameters';
     note.textContent = `Max centroid shift ${dthetaMax_uas.toFixed(1)} μas is below the Roman floor (~10 μas). Either the lens is too low-mass, the geometry is unfavourable, the source is too faint (G = ${state.G.toFixed(1)}), or t_E (${tE_yr.toFixed(2)} yr) is outside the survey-friendly window. Try a heavier lens or a brighter background star.`;
   }
-  window._toolArtifactData = { policy: { DL_kpc: state.DL, DS_kpc: state.DS, G_mag: state.G, ML_M_solar: state.ML, mu_rel_mas_yr: state.mu, Sigma_bg_per_arcsec2: state.Sigma }, output: { gaia_detectable: gaiaDetect, roman_detectable: romanDetect, theta_max_uas: dthetaMax_uas, tE_yr: tE_yr, expected_events_5yr: N_GAIA } };
+  window._toolArtifactData = { policy: { DL_kpc: state.DL, DS_kpc: state.DS, G_mag: state.G, ML_M_solar: state.ML, mu_rel_mas_yr: state.mu, Sigma_bg_per_arcsec2: state.Sigma }, output: { gaia_detectable: gaiaDetect && N_GAIA >= 1, roman_detectable: romanDetect && N_ROMAN >= 1, n_gate_cannot_decide: (N_GAIA < 1 && N_ROMAN < 1), theta_max_uas: dthetaMax_uas, tE_yr: tE_yr, expected_events_5yr_gaia: N_GAIA, expected_events_5yr_roman: N_ROMAN } };
   if (window.invalidateArtifact) invalidateArtifact();
 }
 
@@ -535,14 +542,14 @@ function wire() {
   ds.value = state.DS.toFixed(2);
   g.value  = state.G.toFixed(1);
   mu.value = state.mu.toFixed(1);
-  sg.value = state.Sigma.toFixed(2);
+  sg.value = Math.log10(Math.max(state.Sigma, 1e-13)).toFixed(2);
 
   ml.addEventListener('input', () => { state.ML = Math.pow(10, parseFloat(ml.value)); saveHash(); render(); });
   dl.addEventListener('input', () => { state.DL = parseFloat(dl.value); saveHash(); render(); });
   ds.addEventListener('input', () => { state.DS = parseFloat(ds.value); saveHash(); render(); });
   g.addEventListener('input',  () => { state.G  = parseFloat(g.value);  saveHash(); render(); });
   mu.addEventListener('input', () => { state.mu = parseFloat(mu.value); saveHash(); render(); });
-  sg.addEventListener('input', () => { state.Sigma = parseFloat(sg.value); saveHash(); render(); });
+  sg.addEventListener('input', () => { state.Sigma = Math.pow(10, parseFloat(sg.value)); saveHash(); render(); });
 
   document.querySelectorAll('[data-preset-ml]').forEach(b => b.addEventListener('click', () => {
     state.ML = parseFloat(b.dataset.presetMl); ml.value = Math.log10(state.ML).toFixed(3); saveHash(); render();
