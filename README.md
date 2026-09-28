@@ -26,7 +26,7 @@ Citable: see [`CITATION.cff`](CITATION.cff) or the per-tool BibTeX entries at [o
 
 ## Verifiable results
 
-Every tool emits a hash-canonical artifact carrying a verifiable `execution_hash`, indexed in [`chaingraph.json`](chaingraph.json). That file declares OpenChainGraph spec `0.8.0` at conformance level **L4** across 28 tools. Recompute the hash from the same inputs and you get the same value; if a number moved, you find out rather than guess.
+Every tool emits a hash-canonical artifact carrying a verifiable `execution_hash`, indexed in [`chaingraph.json`](chaingraph.json). That file declares catalog format `chaingraph_version` 0.8.0 (artifact format per SPEC.md §4) at conformance level **L4** across 29 tools. Recompute the hash from the same inputs and you get the same value; if a number moved, you find out rather than guess.
 
 That matters more here than in most science tooling. A calculator that quietly changes its constants between the day you ran it and the day a referee checks it is worse than no calculator. The artifact pins inputs to canon version to output.
 
