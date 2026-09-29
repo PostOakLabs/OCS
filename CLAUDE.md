@@ -33,6 +33,9 @@ Never read: `og-image.png` (204 KB), `apple-touch-icon.png`, `favicon.ico`.
 
 ## Critical gotchas
 
+### Gate scripts print ASCII only
+Non-ASCII characters (arrows, fancy dashes) in gate-script `print()` strings exit 1 via UnicodeEncodeError on Windows cp1252 consoles while CI (UTF-8) stays green — the failure is console-dependent and invisible in CI logs. Keep gate output ASCII (P0-RESIDUE-1, 2026-09-25).
+
 ### IMBH mass tension
 Two irreconcilable bounds, both current and valid — **never collapse to one number**:
 - Häberle et al. 2024 (*Nature*): **≥ 8,200 M☉** (lower limit, stellar kinematics)
