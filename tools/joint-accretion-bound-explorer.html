@@ -8,18 +8,18 @@
   Curated data tables: CC0 1.0
   Author: The Omega Centauri Society (Tim Swanson)
 
-  Version: 1.0
-  Last updated: 2026-08-20
+  Version: 1.1
+  Last updated: 2026-09-24 (P0-08: v0.4 embeds via gen-p0calc-embeds.py)
 
   Interactive companion to Paper F (Joint X-ray/IR/Radio Accretion Bound on the
   omega Cen IMBH). Interpolates the paper's shipped fixed-seed Monte Carlo output
-  (fF_expand_exclcurve.json, fF_v3_results.json v0.3, N_MC=40000, seed=42). No
+  (tools/data/fF_v4_embed.js, generated from Paper F v0.4 by gen-p0calc-embeds.py). No
   physics re-implementation: every number on this page is a log-log interpolation
   of the paper's own result grid.
 
   Data sources:
     - Paper F, "A Joint X-ray/IR/Radio Accretion Bound on the omega Cen IMBH" (Omega Centauri Society)
-    - fF_expand_exclcurve.json / fF_v3_results.json (OCS-F-DATA-1 pipeline, v0.3)
+    - tools/data/fF_v4_embed.js (generated from Paper F v0.4 outputs by scripts/gen-p0calc-embeds.py; pinned by scripts/check-p0calc-parity.py)
 
   Site section: #science
   Epistemic tier(s): 🔬 Established physics (Bondi/ADAF/jet accretion models) / ⚠ Observationally debated (n_e prior, radiative efficiency)
@@ -218,7 +218,7 @@ footer { border-top: 1px solid var(--border-subtle); padding: 20px 24px; font-fa
     </button>
     <div class="about-body" id="about-this-tool">
       <h3>What this tool does</h3>
-      <p>Paper F ran a fixed-seed Monte Carlo (N=40,000, seed=42) over ambient electron density n_e, sound speed c_s, and density-slope priors for three accretion-family assumptions (RIAF, jet, RIAF-with-no-radio-leg), and recorded, for a grid of 40 IMBH masses from 1,000 to 100,000 M☉, what fraction of MC draws the joint X-ray/IR/radio non-detection would have excluded. This tool log-log interpolates that shipped grid (<code>fF_expand_exclcurve.json</code>, <code>fF_v3_results.json</code>) for an arbitrary mass on a slider  -  it does not re-run the Monte Carlo.</p>
+      <p>Paper F ran a fixed-seed Monte Carlo (N=40,000, seed=42) over ambient electron density n_e, sound speed c_s, and density-slope priors for three accretion-family assumptions (RIAF, jet, RIAF-with-no-radio-leg), and recorded, for a grid of 40 IMBH masses from 1,000 to 100,000 M☉, what fraction of MC draws the joint X-ray/IR/radio non-detection would have excluded. This tool log-log interpolates that shipped grid (<code>tools/data/fF_v4_embed.js</code>, generated from Paper F v0.4 outputs) for an arbitrary mass on a slider  -  it does not re-run the Monte Carlo.</p>
       <h3>epsilon_95</h3>
       <p>epsilon_95 is the 95th-percentile radiative-efficiency threshold from the paper's grid at each mass and family  -  read directly off the shipped <code>eps95_*</code> arrays, log-log interpolated in mass. Lower epsilon_95 at a given mass means the non-detection excludes that mass more easily under the assumed accretion physics.</p>
       <h3>Crossings</h3>

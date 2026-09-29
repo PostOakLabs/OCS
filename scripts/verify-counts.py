@@ -335,7 +335,7 @@ def run(fix=False):
             for f, k, v in fixed:
                 print(f"  {f}: {k} -> {v}")
         else:
-            print("No sentinels needed fixing — already in sync.")
+            print("No sentinels needed fixing -- already in sync.")
         return 0
     if drift:
         print(f"[FAIL] COUNT DRIFT -- {len(drift)} stale sentinel(s):")
