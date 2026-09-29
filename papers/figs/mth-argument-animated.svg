@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" width="960" height="720" role="img" aria-labelledby="mthTitle mthDesc" preserveAspectRatio="xMidYMid meet">
+  <title id="mthTitle">The Macro Transcension Hypothesis in five steps</title>
+  <desc id="mthDesc">An animated summary of Paper A. It moves from the hypothesis that some computation-optimizing civilizations migrate toward dense, rapidly spinning massive black holes, through the established physical advantages of energy extraction, entropy disposal, storage, and clock-rate control, to the predicted observable residues, the six falsification tests, and the unresolved current state of Omega Centauri. Current data preserve a kinematic lower bound of at least 8,200 solar masses and a pulsar-timing upper bound of about 6,000 solar masses. Electromagnetic silence is consistent with both the hypothesis and gas starvation. No detection is claimed.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#03020a"/>
+      <stop offset="0.55" stop-color="#0d0a24"/>
+      <stop offset="1" stop-color="#050417"/>
+    </linearGradient>
+    <radialGradient id="clusterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#4de8c0" stop-opacity="0.20"/>
+      <stop offset="0.5" stop-color="#7F77DD" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#03020a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bhCore" cx="38%" cy="34%" r="68%">
+      <stop offset="0" stop-color="#0a0718"/>
+      <stop offset="0.7" stop-color="#03020a"/>
+      <stop offset="1" stop-color="#000"/>
+    </radialGradient>
+    <linearGradient id="accentLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7F77DD"/>
+      <stop offset="0.5" stop-color="#4de8c0"/>
+      <stop offset="1" stop-color="#EF9F27"/>
+    </linearGradient>
+    <pattern id="starfield" width="120" height="96" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="18" r="0.9" fill="#EEEDFE" opacity="0.40"/>
+      <circle cx="67" cy="12" r="0.6" fill="#AFA9EC" opacity="0.32"/>
+      <circle cx="104" cy="36" r="1.1" fill="#4de8c0" opacity="0.22"/>
+      <circle cx="34" cy="58" r="0.7" fill="#EEEDFE" opacity="0.28"/>
+      <circle cx="86" cy="76" r="0.8" fill="#FAC775" opacity="0.22"/>
+      <circle cx="115" cy="90" r="0.5" fill="#EEEDFE" opacity="0.22"/>
+    </pattern>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrowTeal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4de8c0"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#AFA9EC"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EF9F27"/>
+    </marker>
+    <style>
+      text { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .mono { font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+      .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2.1px; fill: #EF9F27; }
+      .title { font-size: 30px; font-weight: 700; fill: #EEEDFE; }
+      .subtitle { font-size: 12.5px; fill: #bdb8e6; }
+      .panel-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; fill: #AFA9EC; }
+      .micro { font-size: 10px; fill: #bdb8e6; }
+      .note { font-size: 9.5px; fill: #bdb8e6; }
+      .viz-label { font-size: 11.5px; font-weight: 650; fill: #EEEDFE; }
+      .viz-sub { font-size: 10.5px; fill: #bdb8e6; }
+      .strip { font-size: 11.5px; fill: #bdb8e6; }
+      .strip-key { font-size: 11.5px; font-weight: 700; fill: #EEEDFE; }
+      .stage-title { font-size: 18px; font-weight: 700; fill: #EEEDFE; }
+      .card { fill: #0d0a24; stroke: #312a63; stroke-width: 1.2; }
+      .box { fill: #0b0822; stroke-width: 1; }
+      .box-h { font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; }
+      .card-accent { fill: url(#accentLine); }
+      .card-num { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; }
+      .card-title { font-size: 17px; font-weight: 700; fill: #EEEDFE; }
+      .card-body { font-size: 11.5px; fill: #bdb8e6; }
+      .card-tag { font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; }
+      .beat { opacity: 0.45; transform-box: fill-box; transform-origin: center; animation: beatCycle 32s ease-in-out infinite; }
+      .beat-1 { opacity: 1; }
+      .beat-2 { animation-delay: 6.4s; }
+      .beat-3 { animation-delay: 12.8s; }
+      .beat-4 { animation-delay: 19.2s; }
+      .beat-5 { animation-delay: 25.6s; }
+      .stage { opacity: 0; animation: stageCycle 32s linear infinite; }
+      .stage-1 { animation-delay: 0s; }
+      .stage-2 { animation-delay: 6.4s; }
+      .stage-3 { animation-delay: 12.8s; }
+      .stage-4 { animation-delay: 19.2s; }
+      .stage-5 { animation-delay: 25.6s; }
+      .viz-layer { opacity: 0; animation: layerCycle 32s ease-in-out infinite; }
+      .viz-1 { opacity: 1; }
+      .viz-2 { animation-delay: 6.4s; }
+      .viz-3 { animation-delay: 12.8s; }
+      .viz-4 { animation-delay: 19.2s; }
+      .viz-5 { animation-delay: 25.6s; }
+      .rotor { transform-box: fill-box; transform-origin: center; animation: rotate 26s linear infinite; }
+      .rotor-reverse { animation-direction: reverse; animation-duration: 34s; }
+      .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 3.2s ease-in-out infinite; }
+      .dash { animation: dash 2.4s linear infinite; }
+      .sail { animation: sail 6.4s ease-in-out infinite; }
+      .progress { stroke-dasharray: 920; stroke-dashoffset: 920; animation: progressFill 32s linear infinite; }
+      .static-label { display: none; }
+      @keyframes beatCycle {
+        0%, 17% { opacity: 1; transform: translateY(-4px); }
+        21%, 100% { opacity: 0.45; transform: translateY(0); }
+      }
+      @keyframes stageCycle {
+        0%, 17% { opacity: 1; }
+        19%, 100% { opacity: 0; }
+      }
+      @keyframes layerCycle {
+        0%, 17% { opacity: 1; }
+        21%, 100% { opacity: 0; }
+      }
+      @keyframes rotate { to { transform: rotate(360deg); } }
+      @keyframes pulse { 0%, 100% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.07); opacity: 1; } }
+      @keyframes dash { to { stroke-dashoffset: -44; } }
+      @keyframes sail { 0% { transform: translateX(-26px); opacity: 0; } 18% { opacity: 1; } 82% { opacity: 1; } 100% { transform: translateX(46px); opacity: 0; } }
+      @keyframes progressFill { to { stroke-dashoffset: 0; } }
+      @media (max-width: 620px) {
+        .title { font-size: 33px; }
+        .subtitle, .note, .card-body { display: none; }
+        .card-title { font-size: 21px; }
+        .card-tag { font-size: 11px; }
+        .beat { opacity: 0.7; }
+        .beat-1 { opacity: 1; }
+        .stage { animation: none; opacity: 0; }
+        .stage-1 { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+        .beat { opacity: 0.72; transform: none !important; }
+        .beat-1 { opacity: 1; }
+        .stage { opacity: 0; }
+        .stage-1 { opacity: 1; }
+        .viz-layer { opacity: 0; }
+        .viz-1 { opacity: 1; }
+        .static-label { display: block; }
+        .motion-label { display: none; }
+        .progress { stroke-dashoffset: 0; }
+      }
+    </style>
+  </defs>
+
+  <rect width="960" height="720" fill="url(#bg)"/>
+  <rect width="960" height="720" fill="url(#starfield)"/>
+  <circle cx="480" cy="296" r="230" fill="url(#clusterGlow)"/>
+
+  <g aria-label="Header">
+    <text x="22" y="25" class="eyebrow">PAPER A · ANIMATED ARGUMENT</text>
+    <text x="22" y="58" class="title">The Macro Transcension Hypothesis</text>
+    <text x="22" y="81" class="subtitle">A falsifiable selection theory built from black-hole physics. No detection of extraterrestrial technology is claimed.</text>
+    <rect x="770" y="18" width="168" height="27" rx="13" fill="#2a1e08" stroke="#EF9F27" stroke-opacity="0.6"/>
+    <text x="854" y="35" text-anchor="middle" class="card-tag" fill="#FAC775">SPECULATIVE HYPOTHESIS</text>
+    <text x="938" y="82" text-anchor="end" class="micro motion-label">32-second loop</text>
+    <text x="938" y="82" text-anchor="end" class="micro static-label">static summary</text>
+  </g>
+
+  <rect x="20" y="100" width="920" height="376" rx="16" fill="#07051a" stroke="#312a63"/>
+  <text x="36" y="126" class="panel-title">OMEGA CENTAURI · NGC 5139 · 5.49 kpc</text>
+  <text x="924" y="126" text-anchor="end" class="micro">12.08 Gyr mean age · stripped dwarf nucleus</text>
+
+  <g class="stage stage-1" aria-label="Stage one, hypothesis">
+    <text x="480" y="156" text-anchor="middle" class="stage-title">1 · Hypothesis</text>
+    <text x="480" y="175" text-anchor="middle" class="viz-sub">Some computation-optimizing lineages migrate inward.</text>
+  </g>
+  <g class="stage stage-2" aria-label="Stage two, physical chain">
+    <text x="480" y="156" text-anchor="middle" class="stage-title">2 · Physical chain</text>
+    <text x="480" y="175" text-anchor="middle" class="viz-sub">Established physics supports the comparison.</text>
+  </g>
+  <g class="stage stage-3" aria-label="Stage three, observable residues">
+    <text x="480" y="156" text-anchor="middle" class="stage-title">3 · Observable residues</text>
+    <text x="480" y="175" text-anchor="middle" class="viz-sub">Quiet operation still leaves a short list of traces.</text>
+  </g>
+  <g class="stage stage-4" aria-label="Stage four, falsification tests">
+    <text x="480" y="156" text-anchor="middle" class="stage-title">4 · Falsification program</text>
+    <text x="480" y="175" text-anchor="middle" class="viz-sub">T3 and T5 decide, T4 demotes, the rest constrain.</text>
+  </g>
+  <g class="stage stage-5" aria-label="Stage five, current data">
+    <text x="480" y="156" text-anchor="middle" class="stage-title">5 · What current data decide</text>
+    <text x="480" y="175" text-anchor="middle" class="viz-sub">They do not separate the MTH from gas starvation.</text>
+  </g>
+
+  <g aria-label="Omega Centauri cluster and candidate black hole">
+    <ellipse cx="480" cy="296" rx="100" ry="62" fill="none" stroke="#7F77DD" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3 8"/>
+    <ellipse cx="480" cy="296" rx="78" ry="48" fill="none" stroke="#4de8c0" stroke-opacity="0.14" stroke-width="1" stroke-dasharray="2 7"/>
+    <g class="rotor" opacity="0.9">
+      <circle cx="484" cy="228" r="2" fill="#EEEDFE"/>
+      <circle cx="530" cy="248" r="1.7" fill="#4de8c0"/>
+      <circle cx="556" cy="292" r="2.2" fill="#EEEDFE"/>
+      <circle cx="536" cy="342" r="1.6" fill="#FAC775"/>
+      <circle cx="490" cy="366" r="2" fill="#EEEDFE"/>
+      <circle cx="432" cy="344" r="1.5" fill="#AFA9EC"/>
+      <circle cx="404" cy="300" r="2.1" fill="#4de8c0"/>
+      <circle cx="418" cy="250" r="1.7" fill="#EEEDFE"/>
+      <circle cx="452" cy="232" r="1.4" fill="#FAC775"/>
+    </g>
+    <g class="rotor rotor-reverse" opacity="0.6">
+      <circle cx="466" cy="240" r="1.2" fill="#EEEDFE"/>
+      <circle cx="516" cy="262" r="1.3" fill="#EEEDFE"/>
+      <circle cx="544" cy="318" r="1.1" fill="#AFA9EC"/>
+      <circle cx="504" cy="352" r="1.4" fill="#4de8c0"/>
+      <circle cx="444" cy="326" r="1.1" fill="#EEEDFE"/>
+      <circle cx="420" cy="268" r="1.3" fill="#FAC775"/>
+    </g>
+    <ellipse class="rotor" cx="480" cy="296" rx="66" ry="20" fill="none" stroke="#EF9F27" stroke-width="2.8" stroke-opacity="0.7" stroke-dasharray="18 7"/>
+    <ellipse class="rotor rotor-reverse" cx="480" cy="296" rx="48" ry="13" fill="none" stroke="#4de8c0" stroke-width="1.5" stroke-opacity="0.5" stroke-dasharray="8 5"/>
+    <circle class="pulse" cx="480" cy="296" r="19" fill="none" stroke="#4de8c0" stroke-width="2" filter="url(#softGlow)"/>
+    <circle cx="480" cy="296" r="15" fill="url(#bhCore)" stroke="#000" stroke-width="2"/>
+    <circle cx="475" cy="291" r="3.4" fill="#AFA9EC" opacity="0.22"/>
+    <text x="480" y="390" text-anchor="middle" class="viz-label">candidate IMBH</text>
+    <text x="480" y="405" text-anchor="middle" class="viz-sub mono">a★ unknown · central mass contested</text>
+  </g>
+
+  <g class="viz-layer viz-1" aria-label="Hypothesis and architecture">
+    <g>
+      <rect class="box" x="36" y="190" width="260" height="250" rx="10" stroke="#7F77DD" stroke-opacity="0.6"/>
+      <text x="50" y="213" class="box-h" fill="#AFA9EC">P1-P4 · THE HYPOTHESIS</text>
+      <circle cx="54" cy="238" r="3.4" fill="#AFA9EC"/>
+      <text x="66" y="242" class="viz-sub">P1  a non-empty subset of long-lived</text>
+      <text x="66" y="256" class="viz-sub">    civilizations maximizes computation</text>
+      <circle cx="54" cy="278" r="3.4" fill="#AFA9EC"/>
+      <text x="66" y="282" class="viz-sub">P2  the gradient's optima are rapidly</text>
+      <text x="66" y="296" class="viz-sub">    spinning holes in dense old clusters</text>
+      <circle cx="54" cy="318" r="3.4" fill="#AFA9EC"/>
+      <text x="66" y="322" class="viz-sub">P3  migration and mature operation</text>
+      <text x="66" y="336" class="viz-sub">    stay electromagnetically quiet</text>
+      <circle cx="54" cy="358" r="3.4" fill="#AFA9EC"/>
+      <text x="66" y="362" class="viz-sub">P4  the endpoint leaves four</text>
+      <text x="66" y="376" class="viz-sub">    candidate residues</text>
+      <line x1="50" y1="392" x2="282" y2="392" stroke="#312a63"/>
+      <text x="50" y="412" class="note">P1-P4 are the hypothesis under test.</text>
+      <text x="50" y="428" class="note">Sections 4 and 5 are physics.</text>
+    </g>
+    <g>
+      <rect class="box" x="664" y="190" width="260" height="250" rx="10" stroke="#7F77DD" stroke-opacity="0.45"/>
+      <text x="678" y="213" class="box-h" fill="#AFA9EC">§6 · FIVE-PHASE ARCHITECTURE</text>
+      <text x="678" y="236" class="viz-label">1  Scouts</text>
+      <text x="678" y="250" class="note">beamed-sail probes, no external signature</text>
+      <text x="678" y="270" class="viz-label">2  Self-replicating industry</text>
+      <text x="678" y="284" class="note">seed factories, in-situ material</text>
+      <text x="678" y="304" class="viz-label">3  Compute swarm</text>
+      <text x="678" y="318" class="note">thin sub-Eddington disk, BZ begins</text>
+      <text x="678" y="338" class="viz-label">4  Spin-up</text>
+      <text x="678" y="352" class="note">star feeding to a★ = 0.998</text>
+      <text x="678" y="372" class="viz-label">5  Endpoint</text>
+      <text x="678" y="386" class="note">entropy across the horizon</text>
+      <line x1="678" y1="400" x2="910" y2="400" stroke="#312a63"/>
+      <text x="678" y="418" class="note">Speculative throughout, and conditional</text>
+      <text x="678" y="432" class="note">on goal stability over 10⁸ yr.</text>
+    </g>
+    <circle cx="330" cy="296" r="11" fill="#1b3a55" stroke="#4de8c0" stroke-width="1.4"/>
+    <path d="M 312 284 Q 330 274 348 284" fill="#2a6f86" opacity="0.6"/>
+    <text x="330" y="272" text-anchor="middle" class="note">planet</text>
+    <path d="M 344 296 L 372 296" fill="none" stroke="#4de8c0" stroke-width="1.8" stroke-dasharray="6 5" marker-end="url(#arrowTeal)"/>
+    <g class="sail">
+      <path d="M 348 288 L 362 288 L 368 296 L 362 304 L 348 304 Z" fill="#EEEDFE" opacity="0.85"/>
+      <circle cx="370" cy="296" r="2.6" fill="#4de8c0" filter="url(#softGlow)"/>
+    </g>
+    <text x="480" y="430" text-anchor="middle" class="strip">Beamed-sail transit at 0.1-0.2 c, roughly 10<sup>5</sup> years to 5.49 kpc.</text>
+    <text x="480" y="446" text-anchor="middle" class="strip">Section 3 ranks candidate systems; ω Cen satisfies the P2 criteria.</text>
+  </g>
+
+  <g class="viz-layer viz-2" aria-label="Established physical advantages">
+    <g>
+      <rect class="box" x="36" y="190" width="260" height="250" rx="10" stroke="#4de8c0" stroke-opacity="0.5"/>
+      <text x="50" y="213" class="box-h" fill="#4de8c0">ESTABLISHED PHYSICS</text>
+      <text x="50" y="238" class="viz-label">Thin-disk efficiency</text>
+      <text x="50" y="255" class="viz-sub mono">η = 5.7-30% reachable</text>
+      <text x="50" y="271" class="viz-sub mono">formal cap 42% at a★ → 1</text>
+      <text x="50" y="287" class="viz-sub mono">hydrogen fusion 0.71%</text>
+      <line x1="50" y1="300" x2="282" y2="300" stroke="#312a63"/>
+      <text x="50" y="322" class="viz-label">Power at 2×10⁴ M☉</text>
+      <text x="50" y="339" class="viz-sub mono">L_Edd = 2.5×10³⁵ W</text>
+      <line x1="50" y1="352" x2="282" y2="352" stroke="#312a63"/>
+      <text x="50" y="374" class="viz-label">Radiative spin cap</text>
+      <text x="50" y="391" class="viz-sub mono">a★ = 0.998 (Thorne 1974)</text>
+      <text x="50" y="415" class="note">Standard physics. Cited in full.</text>
+    </g>
+    <g>
+      <rect class="box" x="664" y="190" width="260" height="250" rx="10" stroke="#AFA9EC" stroke-opacity="0.5"/>
+      <text x="678" y="213" class="box-h" fill="#AFA9EC">BLACK-HOLE THERMODYNAMICS</text>
+      <text x="678" y="238" class="viz-label">Horizon as entropy sink</text>
+      <text x="678" y="255" class="viz-sub mono">T_H ≈ 3×10⁻¹² K</text>
+      <text x="678" y="271" class="viz-sub mono">3×10⁻³⁵ J per bit erased</text>
+      <text x="678" y="287" class="viz-sub mono">realized gain 10⁶-10⁹</text>
+      <line x1="678" y1="300" x2="910" y2="300" stroke="#312a63"/>
+      <text x="678" y="322" class="viz-label">Archive density</text>
+      <text x="678" y="339" class="viz-sub mono">≈3×10⁸⁵ bits at a★ = 0.998</text>
+      <line x1="678" y1="352" x2="910" y2="352" stroke="#312a63"/>
+      <text x="678" y="374" class="viz-label">Clock control</text>
+      <text x="678" y="391" class="viz-sub mono">dτ/dt ≈ 0.093 · about 11:1</text>
+      <text x="678" y="415" class="note">The floor-to-floor ratio of 10¹² is</text>
+      <text x="678" y="429" class="note">not the realized gain. Section 4.2.</text>
+    </g>
+    <path d="M 424 264 A 74 74 0 0 1 536 264" fill="none" stroke="#4de8c0" stroke-width="2.6" stroke-dasharray="14 6" class="dash" marker-end="url(#arrowTeal)"/>
+    <text x="480" y="256" text-anchor="middle" class="note">energy out</text>
+    <path d="M 536 336 A 74 74 0 0 1 424 336" fill="none" stroke="#AFA9EC" stroke-width="2.2" stroke-dasharray="9 6" class="dash" marker-end="url(#arrowPurple)"/>
+    <text x="480" y="352" text-anchor="middle" class="note">entropy in</text>
+    <text x="480" y="430" text-anchor="middle" class="strip">The four P2 quantities: energy per fuel mass, sink depth,</text>
+    <text x="480" y="446" text-anchor="middle" class="strip">storage density, clock rate. Section 4 claims nothing about life.</text>
+  </g>
+
+  <g class="viz-layer viz-3" aria-label="Predicted observable residues">
+    <g>
+      <rect class="box" x="36" y="190" width="260" height="250" rx="10" stroke="#EF9F27" stroke-opacity="0.5"/>
+      <text x="50" y="213" class="box-h" fill="#EF9F27">P4 · THE FOUR RESIDUES</text>
+      <circle cx="54" cy="238" r="3.4" fill="#EF9F27"/>
+      <text x="66" y="242" class="viz-label">(a)  Anomalously high spin</text>
+      <circle cx="54" cy="268" r="3.4" fill="#EF9F27"/>
+      <text x="66" y="272" class="viz-label">(b)  Suppressed accretion</text>
+      <circle cx="54" cy="298" r="3.4" fill="#EF9F27"/>
+      <text x="66" y="302" class="viz-label">(c)  Central stellar depletion</text>
+      <circle cx="54" cy="328" r="3.4" fill="#EF9F27"/>
+      <text x="66" y="332" class="viz-label">(d)  Optional ν bursts</text>
+      <line x1="50" y1="348" x2="282" y2="348" stroke="#312a63"/>
+      <text x="50" y="370" class="note">(d) applies only if micro-black-hole</text>
+      <text x="50" y="384" class="note">computation is used (Dvali &amp;</text>
+      <text x="50" y="398" class="note">Osmanov 2023). The MTH does not</text>
+      <text x="50" y="412" class="note">depend on it.</text>
+    </g>
+    <g>
+      <rect class="box" x="664" y="190" width="260" height="250" rx="10" stroke="#EF9F27" stroke-opacity="0.42"/>
+      <text x="678" y="213" class="box-h" fill="#EF9F27">READING THE TRACES</text>
+      <text x="678" y="238" class="viz-label">Spin</text>
+      <text x="678" y="254" class="note">Under coherent disk growth, a★ ≳ 0.9 is</text>
+      <text x="678" y="268" class="note">expected on the null too. Spin alone</text>
+      <text x="678" y="282" class="note">is not a residue.</text>
+      <line x1="678" y1="294" x2="910" y2="294" stroke="#312a63"/>
+      <text x="678" y="316" class="viz-label">Depletion</text>
+      <text x="678" y="332" class="note">Low-mass stellar mass-function slope</text>
+      <text x="678" y="346" class="note">in the central ~0.1 pc, beyond the</text>
+      <text x="678" y="360" class="note">collisional N-body envelope.</text>
+      <line x1="678" y1="372" x2="910" y2="372" stroke="#312a63"/>
+      <text x="678" y="392" class="note">The conjunction is the target.</text>
+      <text x="678" y="412" class="note">Only Phase 3 is conventionally</text>
+      <text x="678" y="426" class="note">luminous in the whole sequence.</text>
+    </g>
+    <path d="M 546 268 L 528 284" fill="none" stroke="#EF9F27" stroke-width="1.6" marker-end="url(#arrowAmber)"/>
+    <text x="550" y="264" class="viz-label mono">a★</text>
+    <path d="M 414 300 L 404 300" fill="none" stroke="#EF9F27" stroke-width="1.6" marker-end="url(#arrowAmber)"/>
+    <text x="410" y="286" text-anchor="end" class="viz-label mono">L_acc</text>
+    <path d="M 424 336 L 414 326" fill="none" stroke="#EF9F27" stroke-width="1.6" marker-end="url(#arrowAmber)"/>
+    <text x="420" y="352" text-anchor="end" class="viz-label mono">ν</text>
+    <text x="480" y="430" text-anchor="middle" class="strip">The permanent observables are dynamical rather than radiative,</text>
+    <text x="480" y="446" text-anchor="middle" class="strip">which is why the gravitational-wave spin test carries the weight.</text>
+  </g>
+
+  <g class="viz-layer viz-4" aria-label="Six falsification tests">
+    <g>
+      <rect class="box" x="36" y="190" width="260" height="250" rx="10" stroke="#E24B4A" stroke-opacity="0.45"/>
+      <text x="50" y="213" class="box-h" fill="#E24B4A">TABLE 4 · SIX TESTS</text>
+      <text x="50" y="238" class="viz-label" fill="#E24B4A">T3, T5  decisive</text>
+      <text x="50" y="254" class="note">T3  waveform inconsistent with a single</text>
+      <text x="50" y="268" class="note">       point mass, so no IMBH</text>
+      <text x="50" y="282" class="note">T5  spin below 0.1, so no reservoir</text>
+      <line x1="50" y1="294" x2="282" y2="294" stroke="#312a63"/>
+      <text x="50" y="316" class="viz-label">T4  demotion</text>
+      <text x="50" y="332" class="note">EMRI point mass below 8.2×10³ M☉</text>
+      <text x="50" y="346" class="note">at 3σ drops ω Cen out of the P2</text>
+      <text x="50" y="360" class="note">ranking without excluding H₂</text>
+      <line x1="50" y1="372" x2="282" y2="372" stroke="#312a63"/>
+      <text x="50" y="392" class="viz-label">T1, T2, T6  constraints</text>
+      <text x="50" y="412" class="note">Deeper nulls lower a throughput</text>
+      <text x="50" y="426" class="note">ceiling. No null retires a phase.</text>
+    </g>
+    <g>
+      <rect class="box" x="664" y="190" width="260" height="250" rx="10" stroke="#4de8c0" stroke-opacity="0.45"/>
+      <text x="678" y="213" class="box-h" fill="#4de8c0">INSTRUMENTS AND WINDOWS</text>
+      <g transform="translate(678 226)">
+        <rect width="108" height="26" rx="5" fill="#10233a" stroke="#4de8c0" stroke-opacity="0.7"/>
+        <text x="54" y="17" text-anchor="middle" class="card-tag" fill="#4de8c0">JWST MIRI</text>
+      </g>
+      <g transform="translate(796 226)">
+        <rect width="114" height="26" rx="5" fill="#10233a" stroke="#4de8c0" stroke-opacity="0.7"/>
+        <text x="57" y="17" text-anchor="middle" class="card-tag" fill="#4de8c0">ATCA / CHANDRA</text>
+      </g>
+      <g transform="translate(678 262)">
+        <rect width="108" height="26" rx="5" fill="#151038" stroke="#AFA9EC" stroke-opacity="0.7"/>
+        <text x="54" y="17" text-anchor="middle" class="card-tag" fill="#AFA9EC">LISA</text>
+      </g>
+      <g transform="translate(796 262)">
+        <rect width="114" height="26" rx="5" fill="#151038" stroke="#AFA9EC" stroke-opacity="0.7"/>
+        <text x="57" y="17" text-anchor="middle" class="card-tag" fill="#AFA9EC">KM3NeT</text>
+      </g>
+      <line x1="678" y1="300" x2="910" y2="300" stroke="#312a63"/>
+      <text x="678" y="322" class="viz-label">Contingency</text>
+      <text x="678" y="338" class="note">T3, T4 and T5 need a compact-object</text>
+      <text x="678" y="352" class="note">inspiral in LISA band during the</text>
+      <text x="678" y="366" class="note">mission. LISA silence is inconclusive.</text>
+      <line x1="678" y1="378" x2="910" y2="378" stroke="#312a63"/>
+      <text x="678" y="398" class="note">No accumulation of electromagnetic</text>
+      <text x="678" y="412" class="note">non-detections falsifies the MTH.</text>
+      <text x="678" y="430" class="note">T6 a detection, not a proof.</text>
+    </g>
+    <path d="M 372 240 C 420 252, 440 264, 456 278" fill="none" stroke="#4de8c0" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrowTeal)"/>
+    <path d="M 372 352 C 420 340, 440 328, 456 314" fill="none" stroke="#4de8c0" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrowTeal)"/>
+    <path d="M 588 240 C 540 252, 520 264, 504 278" fill="none" stroke="#AFA9EC" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrowPurple)"/>
+    <path d="M 588 352 C 540 340, 520 328, 504 314" fill="none" stroke="#AFA9EC" stroke-width="1.6" stroke-dasharray="6 5" marker-end="url(#arrowPurple)"/>
+    <text x="480" y="430" text-anchor="middle" class="strip">The MTH cannot survive a confirmed remnant swarm or a</text>
+    <text x="480" y="446" text-anchor="middle" class="strip">non-spinning hole, except as speculation about other systems.</text>
+  </g>
+
+  <g class="viz-layer viz-5" aria-label="Current data and unresolved decision">
+    <g>
+      <rect class="box" x="36" y="190" width="260" height="250" rx="10" stroke="#EF9F27" stroke-opacity="0.5"/>
+      <text x="50" y="213" class="box-h" fill="#EF9F27">THE MASS TENSION, UNRESOLVED</text>
+      <text x="50" y="240" class="viz-label mono">≥ 8,200 M☉</text>
+      <text x="282" y="240" text-anchor="end" class="viz-label mono">≲ 6,000 M☉</text>
+      <line x1="50" y1="286" x2="282" y2="286" stroke="#7a739f" stroke-width="2"/>
+      <line x1="50" y1="256" x2="50" y2="316" stroke="#4de8c0" stroke-width="4"/>
+      <line x1="232" y1="256" x2="232" y2="316" stroke="#E24B4A" stroke-width="4"/>
+      <rect x="50" y="256" width="182" height="60" fill="#E24B4A" opacity="0.07"/>
+      <text x="50" y="334" class="note">Häberle 2024 · kinematic lower bound</text>
+      <text x="50" y="348" class="note">Bañares-Hernández 2025 · 3σ</text>
+      <line x1="50" y1="360" x2="282" y2="360" stroke="#312a63"/>
+      <text x="50" y="378" class="note">Colom i Bernadich 2026 finds its timing</text>
+      <text x="50" y="392" class="note">insensitive at 10³-10⁴ M☉, and places a</text>
+      <text x="50" y="406" class="note">90 per cent limit below 10⁵ M☉, a bound</text>
+      <text x="50" y="420" class="note">compatible with both camps.</text>
+      <text x="50" y="436" class="note">This paper takes no side.</text>
+    </g>
+    <g>
+      <rect class="box" x="664" y="190" width="260" height="112" rx="10" stroke="#7a739f" stroke-opacity="0.55"/>
+      <text x="678" y="213" class="box-h" fill="#bdb8e6">H₀ · GAS STARVATION</text>
+      <text x="678" y="234" class="note">A relaxed, gas-poor 12-Gyr cluster supplies</text>
+      <text x="678" y="248" class="note">nothing to accrete. The default today,</text>
+      <text x="678" y="262" class="note">favoured by parsimony.</text>
+      <text x="678" y="286" class="viz-sub">Adopted as the null throughout.</text>
+      <rect class="box" x="664" y="316" width="260" height="124" rx="10" stroke="#AFA9EC" stroke-opacity="0.55"/>
+      <text x="678" y="339" class="box-h" fill="#AFA9EC">H₂ · MTH RESIDUES</text>
+      <text x="678" y="360" class="note">An IMBH exists and is, or has been,</text>
+      <text x="678" y="374" class="note">the substrate of a migrated civilization.</text>
+      <text x="678" y="398" class="note">H₀ and H₂ predict identical</text>
+      <text x="678" y="412" class="note">electromagnetic appearances today, by</text>
+      <text x="678" y="426" class="note">design, so silence cannot separate them.</text>
+    </g>
+    <text x="480" y="250" text-anchor="middle" class="note">identical electromagnetic appearance today</text>
+    <path d="M 480 296 C 462 322, 436 340, 410 348" fill="none" stroke="#7a739f" stroke-width="1.8" stroke-dasharray="5 6" marker-end="url(#arrowPurple)"/>
+    <path d="M 480 296 C 498 322, 524 340, 550 348" fill="none" stroke="#7a739f" stroke-width="1.8" stroke-dasharray="5 6" marker-end="url(#arrowPurple)"/>
+    <text x="404" y="366" text-anchor="end" class="viz-label">H₀</text>
+    <text x="556" y="366" class="viz-label">H₂</text>
+    <text x="480" y="430" text-anchor="middle" class="strip">No electromagnetic null can confirm the MTH, and a confirmed</text>
+    <text x="480" y="446" text-anchor="middle" class="strip">remnant swarm would falsify the ω Cen application outright.</text>
+  </g>
+
+  <g aria-label="Animation progress">
+    <line x1="20" y1="492" x2="940" y2="492" stroke="#241d4d" stroke-width="4" stroke-linecap="round"/>
+    <line class="progress" x1="20" y1="492" x2="940" y2="492" stroke="url(#accentLine)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g aria-label="Five argument steps">
+    <g transform="translate(20 508)">
+      <g class="beat beat-1">
+      <rect class="card" width="172" height="184" rx="12"/>
+      <rect class="card-accent" width="172" height="4" rx="2"/>
+      <text x="14" y="28" class="card-num" fill="#AFA9EC">01 · HYPOTHESIS</text>
+      <text x="14" y="55" class="card-title">Migration inward</text>
+      <text x="14" y="79" class="card-body">Computation optimizers</text>
+      <text x="14" y="96" class="card-body">may move toward dense,</text>
+      <text x="14" y="113" class="card-body">old, rapidly spinning</text>
+      <text x="14" y="130" class="card-body">massive holes.</text>
+      <text x="14" y="155" class="card-body">P1-P4 in Section 3.</text>
+      <text x="14" y="176" class="card-tag" fill="#AFA9EC">SPECULATIVE</text>
+      </g>
+    </g>
+
+    <g transform="translate(208 508)">
+      <g class="beat beat-2">
+      <rect class="card" width="172" height="184" rx="12"/>
+      <rect class="card-accent" width="172" height="4" rx="2"/>
+      <text x="14" y="28" class="card-num" fill="#4de8c0">02 · PHYSICS</text>
+      <text x="14" y="55" class="card-title">Why the hole</text>
+      <text x="14" y="79" class="card-body">Energy: η = 5.7-30%</text>
+      <text x="14" y="96" class="card-body">Sink: 10⁶-10⁹ realized</text>
+      <text x="14" y="113" class="card-body">Archive: ≈3×10⁸⁵ bits</text>
+      <text x="14" y="130" class="card-body">Clock: about 11:1</text>
+      <text x="14" y="155" class="card-body">Holds without migration.</text>
+      <text x="14" y="176" class="card-tag" fill="#4de8c0">SECTION 4</text>
+      </g>
+    </g>
+
+    <g transform="translate(396 508)">
+      <g class="beat beat-3">
+      <rect class="card" width="172" height="184" rx="12"/>
+      <rect class="card-accent" width="172" height="4" rx="2"/>
+      <text x="14" y="28" class="card-num" fill="#EF9F27">03 · RESIDUES</text>
+      <text x="14" y="55" class="card-title">Quiet traces</text>
+      <text x="14" y="79" class="card-body">High spin</text>
+      <text x="14" y="96" class="card-body">Suppressed accretion</text>
+      <text x="14" y="113" class="card-body">Central depletion</text>
+      <text x="14" y="130" class="card-body">Optional ν bursts</text>
+      <text x="14" y="155" class="card-body">No single trace alone.</text>
+      <text x="14" y="176" class="card-tag" fill="#EF9F27">P4 RESIDUES</text>
+      </g>
+    </g>
+
+    <g transform="translate(584 508)">
+      <g class="beat beat-4">
+      <rect class="card" width="172" height="184" rx="12"/>
+      <rect class="card-accent" width="172" height="4" rx="2"/>
+      <text x="14" y="28" class="card-num" fill="#E24B4A">04 · TESTS</text>
+      <text x="14" y="55" class="card-title">What can kill it</text>
+      <text x="14" y="79" class="card-body">T3 and T5 decide</text>
+      <text x="14" y="96" class="card-body">T4 demotes</text>
+      <text x="14" y="113" class="card-body">T1, T2, T6 constrain</text>
+      <text x="14" y="138" class="card-body">All three GW tests need</text>
+      <text x="14" y="155" class="card-body">an inspiral in band.</text>
+      <text x="14" y="176" class="card-tag" fill="#E24B4A">FALSIFIABLE</text>
+      </g>
+    </g>
+
+    <g transform="translate(772 508)">
+      <g class="beat beat-5">
+      <rect class="card" width="168" height="184" rx="12"/>
+      <rect class="card-accent" width="168" height="4" rx="2"/>
+      <text x="14" y="28" class="card-num" fill="#FAC775">05 · NOW</text>
+      <text x="14" y="55" class="card-title">Not decided</text>
+      <text x="14" y="79" class="card-body">≥8,200 M☉ floor</text>
+      <text x="14" y="96" class="card-body">≲6,000 M☉ ceiling</text>
+      <text x="14" y="120" class="card-body">Silence fits H₀ and H₂.</text>
+      <text x="14" y="137" class="card-body">Tension stays open.</text>
+      <text x="14" y="161" class="card-body">The six tests decide.</text>
+      <text x="14" y="176" class="card-tag" fill="#FAC775">NO DETECTION</text>
+      </g>
+    </g>
+  </g>
+</svg>
