@@ -118,20 +118,12 @@
         .card-tag { font-size: 11px; }
         .beat { opacity: 0.7; }
         .beat-1 { opacity: 1; }
-        .stage { animation: none; opacity: 0; }
-        .stage-1 { opacity: 1; }
       }
       @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; }
-        .beat { opacity: 0.72; transform: none !important; }
-        .beat-1 { opacity: 1; }
-        .stage { opacity: 0; }
-        .stage-1 { opacity: 1; }
-        .viz-layer { opacity: 0; }
-        .viz-1 { opacity: 1; }
+        *, *::before, *::after { animation-play-state: paused !important; }
+        .progress { animation: none; stroke-dashoffset: 0; }
         .static-label { display: block; }
         .motion-label { display: none; }
-        .progress { stroke-dashoffset: 0; }
       }
     </style>
   </defs>
