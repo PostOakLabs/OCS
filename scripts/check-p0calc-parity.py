@@ -128,16 +128,16 @@ def main():
             bad.append("%s no longer references %s" % (page, needle))
 
     if bad:
-        print("[FAIL] embedded-data parity — %d drift(s):" % len(bad))
+        print("[FAIL] embedded-data parity -- %d drift(s):" % len(bad))
         for b in bad:
             print("  " + b)
         print("\nRegenerate with scripts/gen-p0calc-embeds.py (workspace step; "
-              "needs ../paper/figs) ONLY when the paper's own outputs moved — "
+              "needs ../paper/figs) ONLY when the paper's own outputs moved -- "
               "then update the pins here in the same commit.")
         return 1
-    print("[OK] embedded-data parity: fF_v4 anchors (85.0/78.5/99.3 ±0.5 pp), "
+    print("[OK] embedded-data parity: fF_v4 anchors (85.0/78.5/99.3 +/-0.5 pp), "
           "41-pt curves, finite crossings, fH intervals + cell counts, and both "
-          "page→embed references all match the pins.")
+          "page->embed references all match the pins.")
     return 0
 
 
