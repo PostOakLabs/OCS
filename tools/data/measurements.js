@@ -479,13 +479,22 @@ window.OCS_MEASUREMENTS = {
     OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (A&A 445:513)
     OC_ne_cm3:      0.23,   // cm^-3; central ionized intracluster-medium density, oMEGACat VII (arXiv:2510.00330), method precedent Freire et al. 2001 (47 Tuc MSP dispersion)
     OC_rho0_msun_pc3: 3.0e3,// M☉/pc^3; core mass density (Chandra study ApJ 697:224 / Baumgardt & Vasiliev 2021 compilation)
+    // Galactic orbit (faq.html#oc-fate). Gaia EDR3 orbit: Vasiliev & Baumgardt 2021 (MNRAS 505, 5978), Baumgardt GC database orbits_table.txt, NGC_5139 row
+    OC_pmra_masyr:   -3.236, // ±0.011 mas/yr
+    OC_pmdec_masyr:  -6.731, // ±0.011 mas/yr
+    OC_Rperi_kpc:     1.47,  // ±0.04 kpc, Galactocentric pericentre
+    OC_Rapo_kpc:      6.95,  // ±0.03 kpc, Galactocentric apocentre
+    // Pre-Gaia: Dinescu, Girard & van Altena 1999 (AJ 117, 1792), Table 5 p. 1802. P = period of revolution about the z-axis (not radial), 120±1 Myr (JSH95 potential) / 123±1 Myr (P90); Rp 1.2, Ra 6.2/6.4 kpc
+    OC_Paz_Myr:       [120, 123],
+    // Dinescu et al. 1999 §6: dynamical-friction orbital decay time ~80 Gyr (B&T 1987 eq. 7-26, M = 2.6e6 M☉)
+    OC_tdf_Gyr:       80,
   },
 
   /* ================================================================
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-08-30",
+    lastUpdated: "2026-10-15",
     schemaVersion: "1.0",
     sources: [
       "10.3847/2041-8213/ae7a5c",
