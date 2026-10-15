@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -556,12 +556,12 @@
 </script>
 <style>
 :root {
-  --void:#03020a; --deep:#070515; --nebula:#0d0a24;
-  --purple-dark:#1a1040; --purple-mid:#3d2d8a; --purple-bright:#7055d4; --purple-glow:#a080f0;
-  --teal-dark:#042a24; --teal-mid:#0d6e58; --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --amber-mid:#c47800; --amber-bright:#f0a020; --amber-glow:#ffc840;
-  --text-primary:#e8e4ff; --text-secondary:#9890c0; --text-dim:#504870;
-  --border-subtle:rgba(112,85,212,0.2); --border-teal:rgba(29,186,144,0.25);
+  --void:rgb(var(--k03020a)); --deep:rgb(var(--k070515)); --nebula:rgb(var(--k0d0a24));
+  --purple-dark:rgb(var(--k1a1040)); --purple-mid:rgb(var(--k3d2d8a)); --purple-bright:rgb(var(--k7055d4)); --purple-glow:rgb(var(--ka080f0));
+  --teal-dark:rgb(var(--k042a24)); --teal-mid:rgb(var(--k0d6e58)); --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --amber-mid:rgb(var(--kc47800)); --amber-bright:rgb(var(--kf0a020)); --amber-glow:rgb(var(--kffc840));
+  --text-primary:rgb(var(--ke8e4ff)); --text-secondary:rgb(var(--k9890c0)); --text-dim:rgb(var(--k504870));
+  --border-subtle:rgb(var(--k7055d4) / 0.2); --border-teal:rgb(var(--k1dba90) / 0.25);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -569,7 +569,7 @@ body{background:var(--void);color:var(--text-primary);font-family:Georgia,serif;
 
 /* ── LAYOUT ── */
 .page-wrap{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:rgba(7,5,21,0.95);border-right:1px solid var(--border-subtle);padding:1.5rem 1.2rem;scrollbar-width:thin;scrollbar-color:var(--purple-mid) transparent}
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;background:rgb(var(--k070515) / 0.95);border-right:1px solid var(--border-subtle);padding:1.5rem 1.2rem;scrollbar-width:thin;scrollbar-color:var(--purple-mid) transparent}
 .main-col{padding:3rem 4rem 6rem 3.5rem;max-width:860px}
 @media(max-width:900px){
   .page-wrap{grid-template-columns:minmax(0,1fr)}
@@ -585,9 +585,9 @@ body{background:var(--void);color:var(--text-primary);font-family:Georgia,serif;
 .toc-section{margin-bottom:1.2rem}
 .toc-cat{font-family:'Courier New',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--text-dim);margin-bottom:.4rem;padding-left:.2rem;text-transform:uppercase}
 .toc-link{display:block;font-size:.78rem;color:var(--text-secondary);text-decoration:none;padding:.22rem .4rem;border-radius:3px;transition:all .15s;line-height:1.4;margin-bottom:.05rem}
-.toc-link:hover,.toc-link.active{color:var(--teal-glow);background:rgba(29,186,144,.08)}
+.toc-link:hover,.toc-link.active{color:var(--teal-glow);background:rgb(var(--k1dba90) / .08)}
 .toc-sep{height:1px;background:var(--border-subtle);margin:.6rem 0}
-.sidebar-search{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-subtle);border-radius:4px;color:var(--text-primary);font-size:.8rem;padding:.5rem .7rem;margin-bottom:1.1rem;font-family:Georgia,serif}
+.sidebar-search{width:100%;background:rgb(var(--kffffff) / .04);border:1px solid var(--border-subtle);border-radius:4px;color:var(--text-primary);font-size:.8rem;padding:.5rem .7rem;margin-bottom:1.1rem;font-family:Georgia,serif}
 .sidebar-search::placeholder{color:var(--text-dim)}
 .sidebar-search:focus{outline:none;border-color:var(--teal-mid)}
 
@@ -609,7 +609,7 @@ body{background:var(--void);color:var(--text-primary);font-family:Georgia,serif;
 .cat-count{font-family:'Courier New',monospace;font-size:.62rem;color:var(--text-dim);margin-left:auto}
 
 /* ── FAQ ITEMS ── */
-.faq-item{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.faq-item{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid rgb(var(--kffffff) / .04)}
 .faq-item:last-child{border-bottom:none}
 .faq-anchor{display:block;position:relative;top:-80px;visibility:hidden}
 .faq-q{font-size:1.05rem;font-weight:bold;color:var(--text-primary);margin-bottom:.9rem;cursor:default;line-height:1.4}
@@ -622,12 +622,12 @@ body{background:var(--void);color:var(--text-primary);font-family:Georgia,serif;
 .faq-a a{color:var(--teal-glow)}
 .faq-a ul,.faq-a ol{padding-left:1.5rem;margin-bottom:.8rem}
 .faq-a li{margin-bottom:.3rem}
-.inline-note{background:rgba(29,186,144,.06);border-left:2px solid var(--teal-mid);padding:.6rem 1rem;margin:.8rem 0;font-size:.85rem;color:var(--teal-glow);border-radius:0 3px 3px 0}
-.badge-physics{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3);padding:2px 6px;border-radius:999px;font-size:.7rem}
-.badge-debate{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3);padding:2px 6px;border-radius:999px;font-size:.7rem}
-.badge-speculative{background:rgba(112,85,212,.18);color:#b09af8;border:1px solid rgba(112,85,212,.35);padding:2px 6px;border-radius:999px;font-size:.7rem}
-.spec-tag{display:inline-block;font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.08em;background:rgba(240,160,32,.12);color:var(--amber-glow);border:1px solid rgba(240,160,32,.25);border-radius:2px;padding:.1rem .35rem;vertical-align:middle;margin-left:.3rem}
-.formula-box{font-family:'Courier New',monospace;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;color:var(--text-secondary);overflow-x:auto}
+.inline-note{background:rgb(var(--k1dba90) / .06);border-left:2px solid var(--teal-mid);padding:.6rem 1rem;margin:.8rem 0;font-size:.85rem;color:var(--teal-glow);border-radius:0 3px 3px 0}
+.badge-physics{background:rgb(var(--k10b981) / .15);color:rgb(var(--k10b981));border:1px solid rgb(var(--k10b981) / .3);padding:2px 6px;border-radius:999px;font-size:.7rem}
+.badge-debate{background:rgb(var(--kf59e0b) / .15);color:rgb(var(--kf59e0b));border:1px solid rgb(var(--kf59e0b) / .3);padding:2px 6px;border-radius:999px;font-size:.7rem}
+.badge-speculative{background:rgb(var(--k7055d4) / .18);color:rgb(var(--kb09af8));border:1px solid rgb(var(--k7055d4) / .35);padding:2px 6px;border-radius:999px;font-size:.7rem}
+.spec-tag{display:inline-block;font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.08em;background:rgb(var(--kf0a020) / .12);color:var(--amber-glow);border:1px solid rgb(var(--kf0a020) / .25);border-radius:2px;padding:.1rem .35rem;vertical-align:middle;margin-left:.3rem}
+.formula-box{font-family:'Courier New',monospace;background:rgb(var(--kffffff) / .04);border:1px solid rgb(var(--kffffff) / .08);border-radius:4px;padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;color:var(--text-secondary);overflow-x:auto}
 .back-link{font-family:'Courier New',monospace;font-size:.72rem;color:var(--text-dim);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;margin-bottom:.4rem}
 .back-link:hover{color:var(--teal-glow)}
 
@@ -636,7 +636,7 @@ body{background:var(--void);color:var(--text-primary);font-family:Georgia,serif;
 .fig-cap{font-family:'Courier New',monospace;font-size:.68rem;color:var(--text-dim);margin-top:.6rem;letter-spacing:.03em}
 
 /* ── SEARCH HIGHLIGHT ── */
-mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
+mark{background:rgb(var(--k4de8c0) / .2);color:var(--teal-glow);border-radius:2px}
 
 /* ── MOBILE PILL NAV ── */
 .mobile-cats{display:none;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
@@ -647,8 +647,106 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:var(--purple-dark);border-radius:3px}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+[fill="#000"]{fill:rgb(var(--k000000))}
+[fill="#03020a"]{fill:rgb(var(--k03020a))}
+[fill="#4de8c0"]{fill:rgb(var(--k4de8c0))}
+[fill="#504870"]{fill:rgb(var(--k504870))}
+[fill="#7055d4"]{fill:rgb(var(--k7055d4))}
+[fill="#7a7690"]{fill:rgb(var(--k7a7690))}
+[fill="#9890c0"]{fill:rgb(var(--k9890c0))}
+[fill="#a080f0"]{fill:rgb(var(--ka080f0))}
+[fill="#d04040"]{fill:rgb(var(--kd04040))}
+[fill="#f0a020"]{fill:rgb(var(--kf0a020))}
+[fill="#ffc840"]{fill:rgb(var(--kffc840))}
+[stop-color="#000000"]{stop-color:rgb(var(--k000000))}
+[stop-color="#03020a"]{stop-color:rgb(var(--k03020a))}
+[stop-color="#070515"]{stop-color:rgb(var(--k070515))}
+[stop-color="#1dba90"]{stop-color:rgb(var(--k1dba90))}
+[stop-color="#4de8c0"]{stop-color:rgb(var(--k4de8c0))}
+[stop-color="#7055d4"]{stop-color:rgb(var(--k7055d4))}
+[stop-color="#a080f0"]{stop-color:rgb(var(--ka080f0))}
+[stop-color="#d04040"]{stop-color:rgb(var(--kd04040))}
+[stop-color="#f0a020"]{stop-color:rgb(var(--kf0a020))}
+[stroke="#1dba90"]{stroke:rgb(var(--k1dba90))}
+[stroke="#4de8c0"]{stroke:rgb(var(--k4de8c0))}
+[stroke="#504870"]{stroke:rgb(var(--k504870))}
+[stroke="#7055d4"]{stroke:rgb(var(--k7055d4))}
+[stroke="#a080f0"]{stroke:rgb(var(--ka080f0))}
+[stroke="#d04040"]{stroke:rgb(var(--kd04040))}
+[stroke="#f0a020"]{stroke:rgb(var(--kf0a020))}
+[stroke="#ffc840"]{stroke:rgb(var(--kffc840))}
+
+html[data-theme="light"]{color-scheme:light;--k000000:247 245 240;--k03020a:245 243 238;--k042a24:238 236 231;--k070515:242 240 235;--k0d0a24:238 236 231;--k0d6e58:12 103 83;--k10b981:9 105 73;--k1a1040:232 230 225;--k1dba90:12 98 80;--k3d2d8a:55 68 130;--k4de8c0:12 98 80;--k504870:92 97 110;--k7055d4:55 68 130;--k7a7690:99 96 118;--k9890c0:70 76 94;--ka080f0:55 68 130;--kb09af8:88 42 241;--kc47800:128 82 6;--kd04040:165 30 30;--ke8e4ff:29 34 51;--kf0a020:128 82 6;--kf59e0b:126 81 5;--kffc840:128 82 6;--kffffff:29 34 51;}
+html[data-theme="dark"]{color-scheme:dark;--k000000:0 0 0;--k03020a:3 2 10;--k042a24:4 42 36;--k070515:7 5 21;--k0d0a24:13 10 36;--k0d6e58:13 110 88;--k10b981:16 185 129;--k1a1040:26 16 64;--k1dba90:29 186 144;--k3d2d8a:61 45 138;--k4de8c0:77 232 192;--k504870:80 72 112;--k7055d4:112 85 212;--k7a7690:122 118 144;--k9890c0:152 144 192;--ka080f0:160 128 240;--kb09af8:176 154 248;--kc47800:196 120 0;--kd04040:208 64 64;--ke8e4ff:232 228 255;--kf0a020:240 160 32;--kf59e0b:245 158 11;--kffc840:255 200 64;--kffffff:255 255 255;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: anywhere; }
+}
+html[data-theme="light"] .badge-speculative{color:rgb(55 30 170);}
+/* /palette-fix-v1 */
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo">&#9673; OCS</a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
 <div class="page-wrap">
 
@@ -759,7 +857,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
   <p class="page-tag">◉ COMPREHENSIVE REFERENCE</p>
   <h1 class="page-title">Omega Centauri Society FAQ</h1>
   <p class="page-lead">Expanded answers, derivations, and diagrams for every question. The inline FAQ on the main page gives concise summaries; this page contains the full treatment. Use the sidebar or search to jump to any topic.</p>
-  <p style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-dim);letter-spacing:0.06em;margin-bottom:1.5rem">Last updated: 2026-10-15</p>
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--text-dim);letter-spacing:0.06em;margin-bottom:1.5rem">Last updated: 2026-10-15</p>
 
   <!-- Mobile category pills -->
   <nav class="mobile-cats" aria-label="FAQ categories">
@@ -788,7 +886,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
       <p>A black hole is a region of spacetime where gravity is so strong that <strong>nothing — not even light — can escape once it crosses the event horizon</strong>, the spherical boundary of no return. General relativity predicts that when mass is compressed beyond a critical density, spacetime itself curves inward so severely that all future-pointing paths lead only deeper inward.</p>
 
       <div class="fig-wrap">
-        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;background:rgba(7,5,21,0.6);border-radius:6px;border:1px solid rgba(112,85,212,0.2)">
+        <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;width:100%;background:rgb(var(--k070515) / 0.6);border-radius:6px;border:1px solid rgb(var(--k7055d4) / 0.2)">
           <defs>
             <radialGradient id="bhGrad" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#000000"/>
@@ -862,7 +960,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
 
       <!-- Constraint diagram SVG -->
       <div class="fig-wrap">
-        <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgba(7,5,21,0.6);border-radius:6px;border:1px solid rgba(112,85,212,0.2)">
+        <svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgb(var(--k070515) / 0.6);border-radius:6px;border:1px solid rgb(var(--k7055d4) / 0.2)">
           <defs>
             <linearGradient id="imBhGrad" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stop-color="#1dba90" stop-opacity="0.3"/>
@@ -1042,7 +1140,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
     <div class="faq-a">
       <p>Black holes span roughly eleven orders of magnitude in mass, and their properties, including size, temperature, and accretion dynamics, and gravitational effects, scale dramatically across that range.</p>
       <div class="fig-wrap">
-        <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgba(7,5,21,0.6);border-radius:6px;border:1px solid rgba(112,85,212,0.2)">
+        <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgb(var(--k070515) / 0.6);border-radius:6px;border:1px solid rgb(var(--k7055d4) / 0.2)">
           <!-- Log scale bar from 1 M☉ to 10^10 M☉ -->
           <!-- x = 40 + (log10(m)/10) * 560 -->
           <line x1="40" y1="90" x2="600" y2="90" stroke="#504870" stroke-width="1.5"/>
@@ -1136,7 +1234,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
 
       <!-- BZ mechanism SVG -->
       <div class="fig-wrap">
-        <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgba(7,5,21,0.6);border-radius:6px;border:1px solid rgba(112,85,212,0.2)">
+        <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;width:100%;background:rgb(var(--k070515) / 0.6);border-radius:6px;border:1px solid rgb(var(--k7055d4) / 0.2)">
           <defs>
             <radialGradient id="bzErgGrad" cx="50%" cy="55%" r="30%">
               <stop offset="0%" stop-color="#a080f0" stop-opacity="0.15"/>
@@ -1226,7 +1324,7 @@ mark{background:rgba(77,232,192,.2);color:var(--teal-glow);border-radius:2px}
 
       <!-- ISCO diagram -->
       <div class="fig-wrap">
-        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:rgba(7,5,21,0.6);border-radius:6px;border:1px solid rgba(112,85,212,0.2)">
+        <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="max-width:620px;width:100%;background:rgb(var(--k070515) / 0.6);border-radius:6px;border:1px solid rgb(var(--k7055d4) / 0.2)">
           <!-- Left: Schwarzschild (a*=0) -->
           <!-- BH -->
           <circle cx="130" cy="100" r="22" fill="#000"/>
@@ -1395,11 +1493,11 @@ CMB temperature: T_CMB = 2.725 K</div>
       <p>Working from known physics, here is a concrete Phase 3 operational picture around a 20,000 M☉ IMBH at a★ ≈ 0.1. <strong>Scale:</strong> The ISCO sits at ~177,000 km from center, roughly 45 Earth-radii. An initial 10,000-node deployment, each node refrigerator-sized (~300 kg of superconducting reversible logic, photonic interconnects, and micro-thruster package), totals ~3,000 tonnes, bootstrappable from a handful of rocky asteroids in OC's halo via von Neumann self-replication. <strong>Energy harvest:</strong> BZ jet collectors fly inclined polar orbits (45–70°) to stay out of the equatorial disk while intercepting the electromagnetic Poynting flux from the jet. Each node converts this to electrical power for computation and beams surplus via infrared laser to adjacent nodes. Even at low spin (~6% radiative efficiency), available power is astronomical. <strong>Synchronization:</strong> ISCO nodes orbit with a period of ~minutes. Autonomous optical inter-satellite links maintain formation to sub-centimeter precision; micro-ion thrusters handle continuous station-keeping. Round-trip latency between diametrically opposite nodes is ~1.2 seconds. <strong>Hazards and mitigation:</strong> (1) <em>X-ray/gamma flux</em>: The accretion disk reaches 10⁷–10⁹ K during feeding, emitting lethal radiation. Nodes hide behind tungsten/boron-carbide shields. TDEs — spontaneous or externally triggered stellar disruptions — are a primary hazard: their initial super-Eddington infall generates lethal radiation outbursts. The swarm evacuates to safe inclined orbits at 10–100× ISCO distance whenever disk luminosity spikes above safe threshold, returning when the disk drains (typically weeks to months). Engineered star-lifting is the deliberate feeding method to avoid triggering TDE-like super-Eddington bursts. <em>Engineering caveat:</em> Even sub-Eddington controlled accretion carries risks of radiative feedback, accretion-disk winds, and gravitational scattering of infalling material that could destabilise the swarm or disrupt cluster dynamics. The OCS framework treats these as Phase 3 engineering problems requiring active mitigation, not solved problems. (2) <em>Polar jets</em>: Collectors harvest the jet flux; nodes off-axis must stay outside the jet opening angle (~5–15°). (3) <em>Magnetic reconnection bursts</em> (Meringolo et al. 2025): Episodic plasmoid bursts from the equatorial current sheet are now understood to be periodic operational events. The swarm magnetometer network detects reconnection signatures minutes in advance, triggering automatic dispersal. (4) <em>Tidal forces</em>: At the ISCO of a 20,000 M☉ IMBH (~177,000 km), the differential acceleration across a 1-meter object is approximately 1 m/s² (~0.1 g per metre of length) — well within the tolerance of structural materials and a modest engineering constraint. Spaghettification is not a concern at this mass scale; node structural design must account for the persistent ~0.1 g/m shear gradient, but it is far below the failure threshold of steel or advanced composites. (5) <em>Collisional cascades</em>: 10,000 nodes at ISCO density is sparse; each node runs active collision-avoidance radar. The key operational insight: the swarm is not a fixed structure but an adaptive system, it concentrates near the ISCO during quiet periods and disperses during feeding events.</p>
       <p><strong>Back-of-envelope power budget</strong> (speculative, order-of-magnitude):</p>
       <table style="font-size:0.8rem;margin:0.6rem 0;border-collapse:collapse;width:100%;color:var(--text-secondary)">
-          <tr style="border-bottom:1px solid rgba(112,85,212,0.2)"><th scope="col" style="padding:0.2rem 0.5rem">BZ total output (~10³⁷ W at a★≈0.998)</th><th scope="col" style="text-align:right;padding:0.2rem 0.5rem;color:var(--teal-glow)">100%</th></tr>
-          <tr style="border-bottom:1px solid rgba(112,85,212,0.1)"><td style="padding:0.2rem 0.5rem">Computation (primary mission)</td><td style="text-align:right;padding:0.2rem 0.5rem">~90%</td></tr>
-          <tr style="border-bottom:1px solid rgba(112,85,212,0.1)"><td style="padding:0.2rem 0.5rem">Station-keeping &amp; orbital maintenance</td><td style="text-align:right;padding:0.2rem 0.5rem">~3%</td></tr>
-          <tr style="border-bottom:1px solid rgba(112,85,212,0.1)"><td style="padding:0.2rem 0.5rem">Active cryocooling (inner ISCO nodes)</td><td style="text-align:right;padding:0.2rem 0.5rem">~4%</td></tr>
-          <tr style="border-bottom:1px solid rgba(112,85,212,0.1)"><td style="padding:0.2rem 0.5rem">Error correction overhead (radiation floor)</td><td style="text-align:right;padding:0.2rem 0.5rem">~2%</td></tr>
+          <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.2)"><th scope="col" style="padding:0.2rem 0.5rem">BZ total output (~10³⁷ W at a★≈0.998)</th><th scope="col" style="text-align:right;padding:0.2rem 0.5rem;color:var(--teal-glow)">100%</th></tr>
+          <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.1)"><td style="padding:0.2rem 0.5rem">Computation (primary mission)</td><td style="text-align:right;padding:0.2rem 0.5rem">~90%</td></tr>
+          <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.1)"><td style="padding:0.2rem 0.5rem">Station-keeping &amp; orbital maintenance</td><td style="text-align:right;padding:0.2rem 0.5rem">~3%</td></tr>
+          <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.1)"><td style="padding:0.2rem 0.5rem">Active cryocooling (inner ISCO nodes)</td><td style="text-align:right;padding:0.2rem 0.5rem">~4%</td></tr>
+          <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.1)"><td style="padding:0.2rem 0.5rem">Error correction overhead (radiation floor)</td><td style="text-align:right;padding:0.2rem 0.5rem">~2%</td></tr>
           <tr><td style="padding:0.2rem 0.5rem">Communication, ISRU, self-repair</td><td style="text-align:right;padding:0.2rem 0.5rem">~1%</td></tr>
         </table>
       <p>Even at ~10% overhead, ~10³⁶ W remains available for computation — power-positive by a wide margin.
@@ -1538,17 +1636,17 @@ CMB temperature: T_CMB = 2.725 K</div>
       <div style="overflow-x:auto;margin:18px 0 12px 0;">
         <table style="width:100%;border-collapse:collapse;font-size:0.85rem;font-family:'Crimson Pro',serif;">
           <thead>
-            <tr style="background:rgba(112,85,212,0.10);">
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Framework</th>
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Core claim</th>
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Key paper</th>
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Supporting evidence</th>
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Falsifying evidence</th>
-              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgba(112,85,212,0.4);font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">MTH compatibility</th>
+            <tr style="background:rgb(var(--k7055d4) / 0.10);">
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Framework</th>
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Core claim</th>
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Key paper</th>
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Supporting evidence</th>
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">Falsifying evidence</th>
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid rgb(var(--k7055d4) / 0.4);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-primary);">MTH compatibility</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Rare Earth</strong></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">The combination of conditions that produced complex life on Earth (plate tectonics, large stabilising moon, low impact rate, etc.) is so rare that complex life is essentially unique to Earth in the observable universe.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Ward &amp; Brownlee 2000 (book); subsequent: Lineweaver 2001 (<em>Icarus</em> 151:307).</td>
@@ -1556,7 +1654,7 @@ CMB temperature: T_CMB = 2.725 K</div>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Discovery of a microbial second-genesis (Mars, Europa, exoplanet biosignature) shifts the prior sharply against — at least the "Rare microbial life" version. Complex-life-rarity variants are harder to falsify.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);"><strong>Independent.</strong> If Rare Earth is right, the MTH is moot (no civilisations to compress). The two are not in conflict; they answer different parts of the chain.</td>
             </tr>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);background:rgba(7,5,21,0.4);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);background:rgb(var(--k070515) / 0.4);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Great Filter — early</strong></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">The Fermi silence is explained by a low-probability step <em>behind</em> us — abiogenesis, prokaryote-to-eukaryote, or some other early biological transition. Future humanity is probably fine; we got lucky.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Hanson 1998 (online essay; widely cited); Aldous review 2012.</td>
@@ -1564,7 +1662,7 @@ CMB temperature: T_CMB = 2.725 K</div>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Detection of independent abiogenesis elsewhere in the solar system or as an exoplanet biosignature. Each "second life" finding moves probability toward "filter ahead."</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);"><strong>Compatible but redundant.</strong> If the filter is behind us and N is small, the MTH still explains why the rare civilisations we'd expect are unobservable, but the framework isn't <em>needed</em> for the silence — early-filter does the work alone.</td>
             </tr>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Great Filter — late</strong></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">The low-probability step lies <em>ahead</em> of us — civilisations consistently self-destruct (nuclear, AI, biotech) or hit some hard physical limit on expansion. The silence is what awaits us.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Hanson 1998; Bostrom 2008 (<em>MIT Tech Review</em>).</td>
@@ -1572,7 +1670,7 @@ CMB temperature: T_CMB = 2.725 K</div>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">A successful transition through the next ~1,000 years without civilisational collapse. Detection of an interstellar-scale civilisation elsewhere.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);"><strong>Direct competitor.</strong> Late-filter and MTH are rival explanations for the same observation (silent universe). MTH proposes "compressed inward," late-filter proposes "died." Distinguishing requires direct technosignature evidence at IMBH-class objects.</td>
             </tr>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);background:rgba(7,5,21,0.4);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);background:rgb(var(--k070515) / 0.4);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Dark Forest</strong> <span style="color:var(--amber-glow);font-size:0.7rem;">⚠</span></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Civilisations are intentionally silent because broadcasting reveals their location to potentially hostile predator civilisations; the rational strategy is to listen, never transmit.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Liu Cixin 2008 novel (<em>The Dark Forest</em>); not formally peer-reviewed in astrobiology literature. <strong>Minimal published academic support.</strong></td>
@@ -1580,7 +1678,7 @@ CMB temperature: T_CMB = 2.725 K</div>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Detection of any sustained transmitter from any source. Continued exposure of Earth's leakage radiation without consequence weakens the predator-civilisation premise.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);"><strong>Compatible but unnecessary.</strong> Both predict silence. Dark Forest invokes adversarial intent; MTH invokes thermodynamic preference. Both are speculative; neither is the parsimony winner.</td>
             </tr>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Zoo / Planetarium</strong></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Advanced civilisations exist and are aware of Earth, but choose not to interact with us — either out of ethical principle (zoo) or by maintaining a perfect deception (planetarium). The silence is intentional.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Ball 1973 (<em>Icarus</em> 19:347); Baxter 2001 (<em>JBIS</em> 54:210).</td>
@@ -1588,7 +1686,7 @@ CMB temperature: T_CMB = 2.725 K</div>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Detection of any inadvertent leakage, infrastructure, or deviation from astrophysical expectations near Earth that would imply a maintained boundary.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);"><strong>Tangential.</strong> Zoo answers "why don't they contact us" assuming they exist; MTH answers "why don't we see them" assuming they exist. Both can be simultaneously true.</td>
             </tr>
-            <tr style="border-bottom:1px solid rgba(112,85,212,0.18);background:rgba(7,5,21,0.4);">
+            <tr style="border-bottom:1px solid rgb(var(--k7055d4) / 0.18);background:rgb(var(--k070515) / 0.4);">
               <td style="padding:12px;vertical-align:top;color:var(--text-primary);"><strong>Transcension / MTH</strong></td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Advanced civilisations compress inward to small, dense, computationally-optimal substrates (the MTH variant proposes specifically black-hole ergospheres of IMBHs in dense clusters like OC). The silence is the thermodynamically preferred state.</td>
               <td style="padding:12px;vertical-align:top;color:var(--text-secondary);">Smart 2012 (<em>Acta Astronautica</em> 78:55); Vidal 2014 (<em>The Beginning and the End</em>); Dvali &amp; Osmanov 2023 (<em>Int J Astrobio</em> 22:353).</td>
@@ -2086,6 +2184,13 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { rootMargin: '-80px 0px -70% 0px' });
 anchors.forEach(a => observer.observe(a));
+</script>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
 </script>
 </body>
 </html>
