@@ -1425,6 +1425,37 @@ html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
 .home-wrap .section-title{font-size:clamp(1.5rem,2.6vw,2rem);margin-bottom:.8rem;}
 .home-wrap .divider{margin-bottom:1rem;}
 .home-wrap{padding-top:2.5rem;padding-bottom:2.5rem;}
+/* identity: journal index, ink + ochre, star chart */
+.starchart{display:block;width:min(360px,90%);margin:0 auto 1.6rem;color:var(--text-dim);overflow:visible;}
+.starchart .sc-grid path{stroke:currentColor;stroke-width:.5;opacity:.35;fill:none;}
+.starchart .sc-labels text{font:7px var(--font-mono);fill:currentColor;opacity:.8;}
+.starchart .sc-stars circle{fill:currentColor;opacity:.6;}
+.starchart .sc-target{stroke:rgb(150 96 10);stroke-width:1;fill:none;}
+.starchart .sc-target circle:last-child{fill:rgb(150 96 10);stroke:none;}
+.starchart .sc-name{font:600 10px var(--font-display);fill:rgb(150 96 10);}
+.starchart .sc-coord{font:7px var(--font-mono);fill:currentColor;}
+html[data-theme="dark"] .starchart .sc-target{stroke:#e0a640;}
+html[data-theme="dark"] .starchart .sc-target circle:last-child{fill:#e0a640;}
+html[data-theme="dark"] .starchart .sc-name{fill:#e0a640;}
+/* journal-style index replaces boxed cards */
+.explore{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 3rem;}
+.explore a{display:grid;grid-template-columns:11rem 1fr;gap:1rem;align-items:baseline;padding:.95rem 0;border:0;border-top:1px solid var(--border-subtle);border-radius:0;background:none;}
+.explore a:hover{border-color:var(--border-subtle);}
+.explore a:hover b{color:rgb(150 96 10);}
+.explore b{font-size:1.05rem;margin:0;}
+.explore span{font-size:.95rem;}
+.explore small{display:none;}
+@media(max-width:760px){.explore{grid-template-columns:1fr;}.explore a{grid-template-columns:1fr;gap:.2rem;}}
+/* ink + ochre accents on the homepage */
+html[data-theme="light"] .hero-compact .hero-cta{background:rgb(29 34 51);border:1px solid rgb(29 34 51);color:#f7f5f0;box-shadow:none;}
+html[data-theme="light"] .hero-compact .hero-cta-alt{background:transparent;color:rgb(29 34 51);border:1px solid rgb(29 34 51 / .35);}
+html[data-theme="light"] .hero-compact .hero-cta:hover{border-color:rgb(150 96 10);}
+html[data-theme="light"] .home-wrap .section-tag{color:rgb(128 82 6);}
+html[data-theme="light"] .home-wrap .divider{background:rgb(150 96 10);opacity:.6;}
+html[data-theme="light"] .pillar{border-top-color:rgb(29 34 51);}
+html[data-theme="light"] .pillar.spec{border-top-color:rgb(55 68 130);}
+html[data-theme="light"] .pillar.test{border-top-color:rgb(150 96 10);}
+html[data-theme="light"] .pillar a{color:rgb(29 34 51);text-decoration:underline;text-decoration-color:rgb(150 96 10);text-underline-offset:3px;}
 /* /palette-fix-v1 */
 </style>
 <script>(function(){var m={"about":"omega-centauri.html","science":"hypothesis.html","imbh":"hypothesis.html","fbh0":"hypothesis.html","fbh1":"hypothesis.html","fbh2":"hypothesis.html","fstar1":"hypothesis.html","fstarBD":"hypothesis.html","fjet0u":"hypothesis.html","fjet0d":"hypothesis.html","fjet2u":"hypothesis.html","fjet2d":"hypothesis.html","fdisk":"hypothesis.html","fdisk2":"hypothesis.html","fedd":"hypothesis.html","farr":"hypothesis.html","farrA":"hypothesis.html","thermodynamic-framework":"hypothesis.html","phases":"hypothesis.html","p1oc":"hypothesis.html","p1bh":"hypothesis.html","p2body":"hypothesis.html","p2star":"hypothesis.html","ar2":"hypothesis.html","p3bh":"hypothesis.html","p3bd":"hypothesis.html","p3jetu":"hypothesis.html","p3jetd":"hypothesis.html","p3dk":"hypothesis.html","p4bh":"hypothesis.html","p4jetu":"hypothesis.html","p4jetd":"hypothesis.html","p4dk":"hypothesis.html","p5bh":"hypothesis.html","p5hz":"hypothesis.html","p5kg":"hypothesis.html","p5jetu":"hypothesis.html","p5jetd":"hypothesis.html","p5dk":"hypothesis.html","kardashev-mth":"hypothesis.html","kardGlow":"hypothesis.html","mthGlow":"hypothesis.html","bhGrad":"hypothesis.html","arrowOut":"hypothesis.html","arrowIn":"hypothesis.html","compute":"hypothesis.html","dg1spin":"hypothesis.html","dg1isco":"hypothesis.html","dg1arr":"hypothesis.html","dg1arr2":"hypothesis.html","dg2bh":"hypothesis.html","dg2ergo":"hypothesis.html","dg2diskL":"hypothesis.html","dg2jetU":"hypothesis.html","dg2jetD":"hypothesis.html","dg3line":"hypothesis.html","fermi":"fermi.html","roadmap":"roadmap.html","falsification":"roadmap.html","null-hypotheses":"roadmap.html","falsification-thresholds":"roadmap.html","observational-roadmap-table":"roadmap.html","research-proposals":"roadmap.html","academic-refs":"references.html","glossary":"references.html","glossarySearch":"references.html","alphaBar":"references.html","glossaryBody":"references.html","footnotes":"references.html","fn-distance":"references.html","fn-age":"references.html","fn-stars":"references.html","fn-mass":"references.html","fn-diameter":"references.html","fn-coredensity":"references.html","fn-dyson07":"references.html","fn-timedil":"references.html","fn-strippednucleus":"references.html","fn-imbhhaberle":"references.html","fn-dvali-inline":"references.html","fn-dyson-swarm-inline":"references.html","fn-ibata-inline":"references.html","references":"references.html","faq":"faq.html","faqToggle":"faq.html","faqBody":"faq.html"};function go(){var h=location.hash.slice(1);if(h&&m[h])location.replace("/"+m[h]+"#"+h);}go();addEventListener("hashchange",go);})();</script>
@@ -1530,6 +1561,20 @@ html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
 <main>
 <section id="hero" class="hero-compact">
   <div class="hero-content">
+    <svg class="starchart" viewBox="0 0 360 120" role="img" aria-label="Star-chart position of Omega Centauri: RA 13h 26m 47s, Dec minus 47 degrees 29 arcminutes">
+      <g class="sc-grid">
+        <path d="M0 30H360M0 60H360M0 90H360"/>
+        <path d="M60 0V120M120 0V120M180 0V120M240 0V120M300 0V120"/>
+      </g>
+      <g class="sc-labels">
+        <text x="62" y="116">14h 00m</text><text x="122" y="116">13h 40m</text><text x="182" y="116">13h 20m</text><text x="242" y="116">13h 00m</text>
+        <text x="3" y="27">&minus;46&deg;</text><text x="3" y="57">&minus;47&deg;</text><text x="3" y="87">&minus;48&deg;</text>
+      </g>
+      <g class="sc-stars"><circle cx="34" cy="18" r="1.1"/><circle cx="96" cy="74" r="0.9"/><circle cx="132" cy="40" r="1.3"/><circle cx="214" cy="98" r="0.8"/><circle cx="268" cy="22" r="1"/><circle cx="318" cy="70" r="1.2"/><circle cx="340" cy="104" r="0.8"/><circle cx="78" cy="102" r="0.7"/></g>
+      <g class="sc-target"><circle cx="160" cy="74" r="9"/><circle cx="160" cy="74" r="2.4"/><path d="M160 58V66M160 82V90M144 74H152M168 74H176"/></g>
+      <text class="sc-name" x="180" y="70">NGC 5139</text>
+      <text class="sc-coord" x="180" y="82">13h 26m 47s &middot; &minus;47&deg; 29&prime;</text>
+    </svg>
     <h1 class="hero-title">The Omega <span>Centauri</span> Society</h1>
     <p class="hero-desc">A research site on Omega Centauri (NGC 5139), its candidate intermediate-mass black hole, and what the cluster could tell us about the Fermi paradox. Measurements carry their citations; the Macro Transcension Hypothesis is labeled as speculation wherever it appears.</p>
     <a href="/omega-centauri.html" class="hero-cta">Start with the cluster &rarr;</a>
