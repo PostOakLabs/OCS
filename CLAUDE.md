@@ -12,8 +12,9 @@ Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, M
 
 | File | Size | Use instead |
 |---|---|---|
-| `index.html` | ~700 KB / ~4,800 lines | `Grep` or `Read` with `offset`/`limit` |
-| `faq.html` | ~166 KB | `Grep` |
+| `faq.html` | ~240 KB (237,357 B) | `Grep` |
+| `references.html` | ~220 KB (219,056 B) | `Grep` |
+| `hypothesis.html` | ~175 KB (173,043 B) | `Grep` |
 | Tool files >40 KB | varies | `compute-in-space`, `constraint-stacker`, `orbital-dynamics`, `cmd-explorer`, `lisa-emri`, `bekenstein-landauer`, `radio-seti`, `bz-kardashev` — `Grep` for specific functions |
 
 Never read: `og-image.png` (204 KB), `apple-touch-icon.png`, `favicon.ico`.
@@ -57,8 +58,13 @@ When chaining tools via `tools/toolname.html#param=val`:
 
 ```
 repo/
-├── index.html                     ← main site (TOKEN LANDMINE)
-├── faq.html                       ← FAQ (TOKEN LANDMINE)
+├── index.html                     ← homepage (~90 KB, readable with offset/limit)
+├── omega-centauri.html            ← NGC 5139 physical overview (~84 KB)
+├── hypothesis.html                ← Macro Transcension Hypothesis (TOKEN LANDMINE, ~175 KB)
+├── fermi.html                     ← Fermi Paradox context (~81 KB)
+├── roadmap.html                   ← project roadmap and phases (~105 KB)
+├── references.html                ← bibliography and citation notes (TOKEN LANDMINE, ~220 KB)
+├── faq.html                       ← FAQ, 60 items (TOKEN LANDMINE, ~240 KB)
 ├── proposals.html                 ← hub for 11 observational proposals
 ├── proposal_*.html                ← 11 proposals (14–25 KB each — readable whole)
 └── tools/
