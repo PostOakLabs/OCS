@@ -6,7 +6,7 @@
   Curated data tables: CC0 1.0 Universal
   Author: The Omega Centauri Society (Tim Swanson)
   Schema version: 1.0
-  Last updated: 2026-08-30
+  Last updated: 2026-10-15
 
   This file is the single source of truth for IMBH mass measurements,
   globular cluster properties, and Omega Centauri pulsar timing data
@@ -479,13 +479,22 @@ window.OCS_MEASUREMENTS = {
     OC_sigma0_kms:  18.2,   // km/s; core velocity dispersion, van de Ven et al. 2006 (A&A 445:513)
     OC_ne_cm3:      0.23,   // cm^-3; central ionized intracluster-medium density, oMEGACat VII (arXiv:2510.00330), method precedent Freire et al. 2001 (47 Tuc MSP dispersion)
     OC_rho0_msun_pc3: 3.0e3,// M☉/pc^3; core mass density (Chandra study ApJ 697:224 / Baumgardt & Vasiliev 2021 compilation)
+    // Galactic orbit. Retrograde. Peri/apocentre from the Baumgardt globular cluster database (orbits table), Gaia EDR3 proper motions (Vasiliev & Baumgardt 2021, MNRAS 505:5978).
+    OC_orbit_retrograde: true,
+    OC_orbit_peri_kpc:      1.47,  // kpc; pericentre from the Galactic centre
+    OC_orbit_peri_err_kpc:  0.04,
+    OC_orbit_apo_kpc:       6.95,  // kpc; apocentre from the Galactic centre
+    OC_orbit_apo_err_kpc:   0.03,
+    // Pre-Gaia period of revolution about the Galactic z-axis (NOT the radial period). Dinescu, Girard & van Altena 1999, AJ 117:1792, Table 5 (p. 1802): 120+-1 Myr (JSH95 potential), 123+-1 Myr (P90 potential).
+    OC_orbit_period_zaxis_myr:     { JSH95: 120, P90: 123 },
+    OC_orbit_period_zaxis_err_myr: 1,
   },
 
   /* ================================================================
      Metadata
      ================================================================ */
   meta: {
-    lastUpdated: "2026-08-30",
+    lastUpdated: "2026-10-15",
     schemaVersion: "1.0",
     sources: [
       "10.3847/2041-8213/ae7a5c",
