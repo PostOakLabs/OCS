@@ -1416,6 +1416,42 @@ html[data-theme="light"] .at-badge-falsifiable{color:rgb(55 30 170);}
 html[data-theme="light"] em{opacity:1!important;}
 .footer-coords{opacity:1!important;color:var(--text-dim)!important;}
 html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
+/* inner-page banner art */
+.pg-art{display:block;width:min(1100px,calc(100% - 4rem));height:auto;margin:1.2rem auto 0;color:var(--text-dim);border:1px solid var(--border-subtle);border-radius:6px;background:var(--deep);}
+.pg-art text{font:10px var(--font-mono);fill:currentColor;}
+.pg-art .pa-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;}
+.pa-axis path{stroke:currentColor;stroke-width:1;} .pa-axis text{text-anchor:middle;} .pa-unit{text-anchor:start!important;}
+.pa-gap rect{fill:rgb(150 96 10);opacity:.12;} .pa-gap text{text-anchor:middle;fill:rgb(150 96 10);letter-spacing:.14em;text-transform:uppercase;}
+.pa-bar rect{transform-box:fill-box;} .pa-up rect{fill:rgb(55 68 130);opacity:.75;} .pa-lo rect{fill:rgb(150 96 10);opacity:.8;}
+.pa-bar text{fill:#f7f5f0;font-size:9.5px;} .pa-up text{opacity:0;animation:pa-fade 6s ease infinite;} .pa-lo text{opacity:0;animation:pa-fade 6s ease .6s infinite;}
+.grow-l{transform-origin:left;animation:pa-grow 6s ease infinite;} .grow-r{transform-origin:right;animation:pa-grow 6s ease .6s infinite;}
+@keyframes pa-grow{0%{transform:scaleX(0)}25%,90%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:.4}}
+@keyframes pa-fade{0%,20%{opacity:0}30%,90%{opacity:1}100%{opacity:0}}
+.pa-disk ellipse{fill:none;stroke:rgb(55 68 130);stroke-width:1.2;stroke-dasharray:6 8;animation:pa-spin 3s linear infinite;}
+.pa-disk .s2{animation-duration:2s;stroke:rgb(150 96 10);} .pa-disk .s3{animation-duration:1.3s;}
+@keyframes pa-spin{to{stroke-dashoffset:-56}}
+.pa-hole{fill:var(--text-primary);}
+.pa-jet path,.pa-energy path{fill:none;stroke:rgb(150 96 10);stroke-width:1.3;}
+.flow{stroke-dasharray:4 6;animation:pa-flow 1.6s linear infinite;}
+.pa-energy .e2{animation-delay:-.5s} .pa-energy .e3{animation-delay:-1s}
+@keyframes pa-flow{to{stroke-dashoffset:-20}}
+.pa-ladder path{fill:none;stroke:currentColor;stroke-width:1;}
+.pa-galaxy ellipse{fill:none;stroke:currentColor;stroke-width:.8;opacity:.5;}
+.pa-bubbles circle{fill:none;stroke:rgb(55 68 130);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pa-bubble 7s ease-out infinite;}
+.pa-bubbles .b2{animation-delay:-2.3s} .pa-bubbles .b3{animation-delay:-4.6s}
+@keyframes pa-bubble{0%{transform:scale(.3);opacity:.9}100%{transform:scale(4);opacity:0}}
+.pa-cores circle{fill:rgb(150 96 10);}
+.mig{fill:currentColor;animation:pa-mig 7s ease-in infinite;}
+@keyframes pa-mig{0%{transform:translate(0,0);opacity:0}10%{opacity:.9}85%{transform:translate(var(--dx),var(--dy));opacity:.9}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
+.pa-track path{stroke:currentColor;stroke-width:1;fill:none;} .pa-track .flow{stroke:rgb(150 96 10);}
+.ms circle{fill:var(--deep);stroke:currentColor;stroke-width:1.2;} .ms text{text-anchor:middle;}
+.ms{animation:pa-ms 6.6s ease infinite;}
+@keyframes pa-ms{0%,5%{opacity:.35}12%,80%{opacity:1}100%{opacity:.35}}
+.ms circle{animation:inherit;animation-name:pa-ms-dot;}
+@keyframes pa-ms-dot{0%,5%{fill:var(--deep)}12%,80%{fill:rgb(150 96 10)}100%{fill:var(--deep)}}
+html[data-theme="dark"] .pa-bar text{fill:#f7f5f0;}
+@media (prefers-reduced-motion: reduce){.pg-art *{animation:none!important}.pa-bar text{opacity:1}.mig{opacity:.8}}
+@media(max-width:700px){.pg-art{width:calc(100% - 2rem)}}
 /* /palette-fix-v1 */
 </style>
 </head>
@@ -1443,6 +1479,15 @@ html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
 </nav>
 <main>
 <p class="crumb"><a href="/">OCS</a> / The hypothesis</p>
+<svg class="pg-art" viewBox="0 0 720 140" role="img" aria-label="Schematic: a spinning black hole with an accretion disk, with energy output climbing a Kardashev-style ladder (speculative)">
+  <g class="pa-disk"><ellipse class="spin" cx="200" cy="72" rx="120" ry="22"/><ellipse class="spin s2" cx="200" cy="72" rx="86" ry="15"/><ellipse class="spin s3" cx="200" cy="72" rx="56" ry="10"/></g>
+  <circle class="pa-hole" cx="200" cy="72" r="18"/>
+  <g class="pa-jet"><path class="flow" d="M200 52V8"/><path class="flow" d="M200 92V136"/></g>
+  <g class="pa-ladder"><path d="M430 120H690M470 120V88H560V56H650V24H690"/>
+    <text x="436" y="114">K I</text><text x="476" y="82">K II</text><text x="566" y="50">K III</text></g>
+  <g class="pa-energy"><path class="flow" d="M330 72C380 72 400 110 452 104"/><path class="flow e2" d="M330 72C390 62 430 70 500 72"/><path class="flow e3" d="M330 72C400 50 480 40 600 40"/></g>
+  <text class="pa-tag" x="12" y="134">Speculative schematic</text>
+</svg>
 <section id="science">
   <p class="section-tag">Physics & Engineering</p>
   <h2 class="section-title">Why <span class="accent">Black Holes Beat</span> Everything Else</h2>

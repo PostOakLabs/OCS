@@ -1416,6 +1416,42 @@ html[data-theme="light"] .at-badge-falsifiable{color:rgb(55 30 170);}
 html[data-theme="light"] em{opacity:1!important;}
 .footer-coords{opacity:1!important;color:var(--text-dim)!important;}
 html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
+/* inner-page banner art */
+.pg-art{display:block;width:min(1100px,calc(100% - 4rem));height:auto;margin:1.2rem auto 0;color:var(--text-dim);border:1px solid var(--border-subtle);border-radius:6px;background:var(--deep);}
+.pg-art text{font:10px var(--font-mono);fill:currentColor;}
+.pg-art .pa-tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.8;}
+.pa-axis path{stroke:currentColor;stroke-width:1;} .pa-axis text{text-anchor:middle;} .pa-unit{text-anchor:start!important;}
+.pa-gap rect{fill:rgb(150 96 10);opacity:.12;} .pa-gap text{text-anchor:middle;fill:rgb(150 96 10);letter-spacing:.14em;text-transform:uppercase;}
+.pa-bar rect{transform-box:fill-box;} .pa-up rect{fill:rgb(55 68 130);opacity:.75;} .pa-lo rect{fill:rgb(150 96 10);opacity:.8;}
+.pa-bar text{fill:#f7f5f0;font-size:9.5px;} .pa-up text{opacity:0;animation:pa-fade 6s ease infinite;} .pa-lo text{opacity:0;animation:pa-fade 6s ease .6s infinite;}
+.grow-l{transform-origin:left;animation:pa-grow 6s ease infinite;} .grow-r{transform-origin:right;animation:pa-grow 6s ease .6s infinite;}
+@keyframes pa-grow{0%{transform:scaleX(0)}25%,90%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:.4}}
+@keyframes pa-fade{0%,20%{opacity:0}30%,90%{opacity:1}100%{opacity:0}}
+.pa-disk ellipse{fill:none;stroke:rgb(55 68 130);stroke-width:1.2;stroke-dasharray:6 8;animation:pa-spin 3s linear infinite;}
+.pa-disk .s2{animation-duration:2s;stroke:rgb(150 96 10);} .pa-disk .s3{animation-duration:1.3s;}
+@keyframes pa-spin{to{stroke-dashoffset:-56}}
+.pa-hole{fill:var(--text-primary);}
+.pa-jet path,.pa-energy path{fill:none;stroke:rgb(150 96 10);stroke-width:1.3;}
+.flow{stroke-dasharray:4 6;animation:pa-flow 1.6s linear infinite;}
+.pa-energy .e2{animation-delay:-.5s} .pa-energy .e3{animation-delay:-1s}
+@keyframes pa-flow{to{stroke-dashoffset:-20}}
+.pa-ladder path{fill:none;stroke:currentColor;stroke-width:1;}
+.pa-galaxy ellipse{fill:none;stroke:currentColor;stroke-width:.8;opacity:.5;}
+.pa-bubbles circle{fill:none;stroke:rgb(55 68 130);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:pa-bubble 7s ease-out infinite;}
+.pa-bubbles .b2{animation-delay:-2.3s} .pa-bubbles .b3{animation-delay:-4.6s}
+@keyframes pa-bubble{0%{transform:scale(.3);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.pa-cores circle{fill:rgb(150 96 10);}
+.mig{fill:currentColor;animation:pa-mig 7s ease-in infinite;}
+@keyframes pa-mig{0%{transform:translate(0,0);opacity:0}10%{opacity:.9}85%{transform:translate(var(--dx),var(--dy));opacity:.9}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
+.pa-track path{stroke:currentColor;stroke-width:1;fill:none;} .pa-track .flow{stroke:rgb(150 96 10);}
+.ms circle{fill:var(--deep);stroke:currentColor;stroke-width:1.2;} .ms text{text-anchor:middle;}
+.ms{animation:pa-ms 6.6s ease infinite;}
+@keyframes pa-ms{0%,5%{opacity:.35}12%,80%{opacity:1}100%{opacity:.35}}
+.ms circle{animation:inherit;animation-name:pa-ms-dot;}
+@keyframes pa-ms-dot{0%,5%{fill:var(--deep)}12%,80%{fill:rgb(150 96 10)}100%{fill:var(--deep)}}
+html[data-theme="dark"] .pa-bar text{fill:#f7f5f0;}
+@media (prefers-reduced-motion: reduce){.pg-art *{animation:none!important}.pa-bar text{opacity:1}.mig{opacity:.8}}
+@media(max-width:700px){.pg-art{width:calc(100% - 2rem)}}
 /* /palette-fix-v1 */
 </style>
 </head>
@@ -1443,6 +1479,13 @@ html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
 </nav>
 <main>
 <p class="crumb"><a href="/">OCS</a> / Fermi paradox</p>
+<svg class="pg-art" viewBox="0 0 720 140" role="img" aria-label="Schematic: outward expansion bubbles fade while civilizations migrate inward toward dense stellar cores">
+  <g class="pa-galaxy"><ellipse cx="360" cy="72" rx="300" ry="52"/><ellipse cx="360" cy="72" rx="190" ry="32"/></g>
+  <g class="pa-bubbles"><circle cx="140" cy="60" r="14"/><circle class="b2" cx="580" cy="90" r="14"/><circle class="b3" cx="380" cy="40" r="14"/></g>
+  <g class="pa-cores"><circle cx="250" cy="72" r="6"/><circle cx="470" cy="80" r="5"/></g>
+  <g class="pa-migrants"><circle class="mig" style="--dx:273px;--dy:31px;animation-delay:-6.2s" cx="197" cy="49" r="1.6"/><circle class="mig" style="--dx:57px;--dy:48px;animation-delay:-3.5s" cx="413" cy="32" r="1.6"/><circle class="mig" style="--dx:-323px;--dy:1px;animation-delay:-1.1s" cx="573" cy="71" r="1.6"/><circle class="mig" style="--dx:-220px;--dy:-29px;animation-delay:-6.7s" cx="470" cy="101" r="1.6"/><circle class="mig" style="--dx:-32px;--dy:40px;animation-delay:-3.4s" cx="282" cy="32" r="1.6"/><circle class="mig" style="--dx:336px;--dy:21px;animation-delay:-4.9s" cx="134" cy="59" r="1.6"/><circle class="mig" style="--dx:-34px;--dy:23px;animation-delay:-5.8s" cx="504" cy="57" r="1.6"/><circle class="mig" style="--dx:-220px;--dy:9px;animation-delay:-6.4s" cx="470" cy="63" r="1.6"/><circle class="mig" style="--dx:245px;--dy:-1px;animation-delay:-4.9s" cx="225" cy="81" r="1.6"/><circle class="mig" style="--dx:-274px;--dy:-4px;animation-delay:-1.3s" cx="524" cy="76" r="1.6"/><circle class="mig" style="--dx:-138px;--dy:15px;animation-delay:-3.4s" cx="388" cy="57" r="1.6"/><circle class="mig" style="--dx:-96px;--dy:14px;animation-delay:-5.3s" cx="346" cy="58" r="1.6"/><circle class="mig" style="--dx:96px;--dy:-1px;animation-delay:-1.5s" cx="374" cy="81" r="1.6"/><circle class="mig" style="--dx:-20px;--dy:-7px;animation-delay:-3.8s" cx="270" cy="79" r="1.6"/><circle class="mig" style="--dx:-315px;--dy:-19px;animation-delay:-2.1s" cx="565" cy="91" r="1.6"/><circle class="mig" style="--dx:-324px;--dy:-32px;animation-delay:-0.1s" cx="574" cy="104" r="1.6"/><circle class="mig" style="--dx:60px;--dy:21px;animation-delay:-4.0s" cx="190" cy="51" r="1.6"/><circle class="mig" style="--dx:-10px;--dy:26px;animation-delay:-1.1s" cx="480" cy="54" r="1.6"/></g>
+  <text class="pa-tag" x="12" y="134">Outward expansion (fading) vs inward migration (speculative)</text>
+</svg>
 <section id="fermi">
   <p class="section-tag">The Fermi Paradox</p>
   <h2 class="section-title">Looking for <span class="accent">Something Already There</span></h2>
