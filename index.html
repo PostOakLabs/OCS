@@ -1456,6 +1456,56 @@ html[data-theme="light"] .pillar{border-top-color:rgb(29 34 51);}
 html[data-theme="light"] .pillar.spec{border-top-color:rgb(55 68 130);}
 html[data-theme="light"] .pillar.test{border-top-color:rgb(150 96 10);}
 html[data-theme="light"] .pillar a{color:rgb(29 34 51);text-decoration:underline;text-decoration-color:rgb(150 96 10);text-underline-offset:3px;}
+/* facelift-v2: statement hero, sectioned cards */
+.fl{max-width:1100px;margin:0 auto;padding:0 2rem;position:relative;z-index:1;}
+.fl .fl-hero{padding:9.5rem 0 4.5rem;max-width:860px;margin:0;}
+.fl .fl-sec{margin:0;max-width:none;padding-left:0;padding-right:0;}
+.fl-eyebrow{font:500 .7rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);display:flex;align-items:center;gap:.6rem;margin-bottom:1.6rem;}
+.fl-dot{width:7px;height:7px;border-radius:50%;background:rgb(150 96 10);display:inline-block;}
+.fl-title{font-family:var(--font-display);font-weight:700;font-size:clamp(2.6rem,6.2vw,4.9rem);line-height:1.02;letter-spacing:-.025em;color:var(--text-primary);margin:0 0 1.6rem;text-align:left;}
+.fl-title span{color:rgb(128 82 6);}
+html[data-theme="dark"] .fl-title span{color:#e0a640;}
+.fl-lead{font-size:1.15rem;line-height:1.6;color:var(--text-secondary);max-width:620px;margin:0 0 2rem;}
+.fl-ctas{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;margin-bottom:2.4rem;}
+.fl-btn{font:500 .8rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;padding:.95rem 1.6rem;background:var(--text-primary);color:var(--void);text-decoration:none;border-radius:3px;}
+.fl-btn:hover{background:rgb(128 82 6);}
+.fl-link{font:500 .8rem var(--font-mono);color:var(--text-primary);text-decoration:underline;text-decoration-color:rgb(150 96 10);text-underline-offset:4px;}
+.fl-meta{font:.68rem var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+.fl-meta a{color:var(--text-dim);}
+.fl-sec{padding:3.2rem 0;}
+.fl-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--border-subtle);padding-bottom:.9rem;margin-bottom:1.6rem;}
+.fl-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,2.4vw,1.9rem);color:var(--text-primary);margin:0;}
+.fl-head span{font:.66rem var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:rgb(128 82 6);}
+html[data-theme="dark"] .fl-head span{color:#e0a640;}
+.fl-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem;}
+.fl-card{display:flex;flex-direction:column;border:1px solid var(--border-subtle);border-radius:6px;overflow:hidden;text-decoration:none;background:var(--deep);transition:border-color .15s,transform .15s;}
+.fl-card:hover{border-color:rgb(150 96 10 / .6);transform:translateY(-2px);}
+.fl-art{display:block;width:100%;height:auto;background:var(--nebula);border-bottom:1px solid var(--border-subtle);color:var(--text-dim);}
+.fl-art .a-grid path{stroke:currentColor;stroke-width:.5;opacity:.3;fill:none;}
+.fl-art .a-dots circle{fill:currentColor;opacity:.75;}
+.fl-art .a-mark circle,.fl-art .a-mark path{stroke:rgb(150 96 10);stroke-width:1.2;fill:none;}
+.fl-art .a-mark circle:only-child,.spec .fl-art .a-mark circle{fill:rgb(150 96 10);}
+.fl-art .a-orbit ellipse{stroke:rgb(55 68 130);stroke-width:1;fill:none;opacity:.7;}
+.fl-art .a-line path{stroke:rgb(150 96 10);stroke-width:1.2;stroke-dasharray:4 3;fill:none;}
+.fl-art .a-err path{stroke:currentColor;stroke-width:1;fill:none;}
+.fl-tag{font:.62rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);padding:1.1rem 1.3rem 0;}
+.fl-card h3{font-family:var(--font-display);font-weight:600;font-size:1.25rem;color:var(--text-primary);margin:.35rem 1.3rem .5rem;}
+.fl-card p{font-size:.98rem;line-height:1.55;color:var(--text-secondary);margin:0 1.3rem 1rem;flex:1;}
+.fl-more{font:.72rem var(--font-mono);color:var(--text-primary);margin:0 1.3rem 1.2rem;padding-top:.8rem;border-top:1px solid var(--border-subtle);}
+.fl-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 3rem;}
+.fl-index a{display:grid;grid-template-columns:10.5rem 1fr;gap:1rem;align-items:baseline;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);text-decoration:none;}
+.fl-index b{font-family:var(--font-display);font-weight:600;font-size:1.02rem;color:var(--text-primary);}
+.fl-index span{font-size:.94rem;color:var(--text-secondary);line-height:1.5;}
+.fl-index a:hover b{color:rgb(128 82 6);}
+.fl-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border-subtle);border-radius:6px;background:var(--deep);}
+.fl-steps>div{padding:1.4rem 1.5rem;}
+.fl-steps>div+div{border-left:1px solid var(--border-subtle);}
+.fl-num{font:.66rem var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:rgb(128 82 6);}
+html[data-theme="dark"] .fl-num{color:#e0a640;}
+.fl-steps p{font-size:.96rem;line-height:1.55;color:var(--text-secondary);margin:.6rem 0 0;}
+.fl-note{font-size:.95rem;color:var(--text-secondary);margin-top:1.4rem;}
+.fl-note a{color:var(--text-primary);text-decoration-color:rgb(150 96 10);}
+@media(max-width:820px){.fl-cards,.fl-steps{grid-template-columns:1fr}.fl-steps>div+div{border-left:0;border-top:1px solid var(--border-subtle)}.fl-index{grid-template-columns:1fr}.fl-index a{grid-template-columns:1fr;gap:.15rem}.fl-hero{padding-top:7.5rem}.fl{padding:0 1rem}}
 /* /palette-fix-v1 */
 </style>
 <script>(function(){var m={"about":"omega-centauri.html","science":"hypothesis.html","imbh":"hypothesis.html","fbh0":"hypothesis.html","fbh1":"hypothesis.html","fbh2":"hypothesis.html","fstar1":"hypothesis.html","fstarBD":"hypothesis.html","fjet0u":"hypothesis.html","fjet0d":"hypothesis.html","fjet2u":"hypothesis.html","fjet2d":"hypothesis.html","fdisk":"hypothesis.html","fdisk2":"hypothesis.html","fedd":"hypothesis.html","farr":"hypothesis.html","farrA":"hypothesis.html","thermodynamic-framework":"hypothesis.html","phases":"hypothesis.html","p1oc":"hypothesis.html","p1bh":"hypothesis.html","p2body":"hypothesis.html","p2star":"hypothesis.html","ar2":"hypothesis.html","p3bh":"hypothesis.html","p3bd":"hypothesis.html","p3jetu":"hypothesis.html","p3jetd":"hypothesis.html","p3dk":"hypothesis.html","p4bh":"hypothesis.html","p4jetu":"hypothesis.html","p4jetd":"hypothesis.html","p4dk":"hypothesis.html","p5bh":"hypothesis.html","p5hz":"hypothesis.html","p5kg":"hypothesis.html","p5jetu":"hypothesis.html","p5jetd":"hypothesis.html","p5dk":"hypothesis.html","kardashev-mth":"hypothesis.html","kardGlow":"hypothesis.html","mthGlow":"hypothesis.html","bhGrad":"hypothesis.html","arrowOut":"hypothesis.html","arrowIn":"hypothesis.html","compute":"hypothesis.html","dg1spin":"hypothesis.html","dg1isco":"hypothesis.html","dg1arr":"hypothesis.html","dg1arr2":"hypothesis.html","dg2bh":"hypothesis.html","dg2ergo":"hypothesis.html","dg2diskL":"hypothesis.html","dg2jetU":"hypothesis.html","dg2jetD":"hypothesis.html","dg3line":"hypothesis.html","fermi":"fermi.html","roadmap":"roadmap.html","falsification":"roadmap.html","null-hypotheses":"roadmap.html","falsification-thresholds":"roadmap.html","observational-roadmap-table":"roadmap.html","research-proposals":"roadmap.html","academic-refs":"references.html","glossary":"references.html","glossarySearch":"references.html","alphaBar":"references.html","glossaryBody":"references.html","footnotes":"references.html","fn-distance":"references.html","fn-age":"references.html","fn-stars":"references.html","fn-mass":"references.html","fn-diameter":"references.html","fn-coredensity":"references.html","fn-dyson07":"references.html","fn-timedil":"references.html","fn-strippednucleus":"references.html","fn-imbhhaberle":"references.html","fn-dvali-inline":"references.html","fn-dyson-swarm-inline":"references.html","fn-ibata-inline":"references.html","references":"references.html","faq":"faq.html","faqToggle":"faq.html","faqBody":"faq.html"};function go(){var h=location.hash.slice(1);if(h&&m[h])location.replace("/"+m[h]+"#"+h);}go();addEventListener("hashchange",go);})();</script>
@@ -1558,101 +1608,81 @@ html[data-theme="light"] .pillar a{color:rgb(29 34 51);text-decoration:underline
       onclick="var l=document.querySelector('.nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
   </div>
 </nav>
-<main>
-<section id="hero" class="hero-compact">
-  <div class="hero-content">
-    <svg class="starchart" viewBox="0 0 360 120" role="img" aria-label="Star-chart position of Omega Centauri: RA 13h 26m 47s, Dec minus 47 degrees 29 arcminutes">
-      <g class="sc-grid">
-        <path d="M0 30H360M0 60H360M0 90H360"/>
-        <path d="M60 0V120M120 0V120M180 0V120M240 0V120M300 0V120"/>
-      </g>
-      <g class="sc-labels">
-        <text x="62" y="116">14h 00m</text><text x="122" y="116">13h 40m</text><text x="182" y="116">13h 20m</text><text x="242" y="116">13h 00m</text>
-        <text x="3" y="27">&minus;46&deg;</text><text x="3" y="57">&minus;47&deg;</text><text x="3" y="87">&minus;48&deg;</text>
-      </g>
-      <g class="sc-stars"><circle cx="34" cy="18" r="1.1"/><circle cx="96" cy="74" r="0.9"/><circle cx="132" cy="40" r="1.3"/><circle cx="214" cy="98" r="0.8"/><circle cx="268" cy="22" r="1"/><circle cx="318" cy="70" r="1.2"/><circle cx="340" cy="104" r="0.8"/><circle cx="78" cy="102" r="0.7"/></g>
-      <g class="sc-target"><circle cx="160" cy="74" r="9"/><circle cx="160" cy="74" r="2.4"/><path d="M160 58V66M160 82V90M144 74H152M168 74H176"/></g>
-      <text class="sc-name" x="180" y="70">NGC 5139</text>
-      <text class="sc-coord" x="180" y="82">13h 26m 47s &middot; &minus;47&deg; 29&prime;</text>
-    </svg>
-    <h1 class="hero-title">The Omega <span>Centauri</span> Society</h1>
-    <p class="hero-desc">A research site on Omega Centauri (NGC 5139), its candidate intermediate-mass black hole, and what the cluster could tell us about the Fermi paradox. Measurements carry their citations; the Macro Transcension Hypothesis is labeled as speculation wherever it appears.</p>
-    <a href="/omega-centauri.html" class="hero-cta">Start with the cluster &rarr;</a>
-    <a href="/tools/" class="hero-cta hero-cta-alt">Try the tools &rarr;</a>
-    <a href="/mcp.html" class="hero-cta hero-cta-alt">Ask Claude &rarr;</a>
+<main class="fl">
+<section class="fl-hero">
+  <p class="fl-eyebrow"><span class="fl-dot"></span>The Omega Centauri Society &middot; NGC 5139</p>
+  <h1 class="fl-title">Testing whether advanced life moves inward, starting with <span>Omega&nbsp;Centauri.</span></h1>
+  <p class="fl-lead">A research site on the Milky Way's largest globular cluster and its candidate intermediate-mass black hole. Measurements carry their citations; the Macro Transcension Hypothesis is labeled as speculation wherever it appears.</p>
+  <div class="fl-ctas">
+    <a class="fl-btn" href="/omega-centauri.html">Start with the cluster &rarr;</a>
+    <a class="fl-link" href="/tools/">or open the tools</a>
   </div>
+  <p class="fl-meta">Open data &middot; CC BY 4.0 &middot; Runs in your browser &middot; <a href="/mcp.html">Use with Claude</a></p>
 </section>
-<!-- ════════════════════════════ START HERE ════════════════════════════ -->
-<section id="start" class="home-wrap">
-  <p class="section-tag">Overview</p>
-  <h2 class="section-title">Where to start</h2>
-  <div class="divider"></div>
-  <div class="pillars">
-    <div class="pillar">
+
+<section class="fl-sec" id="start">
+  <div class="fl-head"><h2>Research</h2><span>Three tracks</span></div>
+  <div class="fl-cards">
+    <a class="fl-card" href="/omega-centauri.html">
+      <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
+        <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
+        <g class="a-dots"><circle cx="150" cy="60" r="1.6"/><circle cx="141" cy="55" r="1.1"/><circle cx="158" cy="66" r="1.2"/><circle cx="146" cy="70" r="1"/><circle cx="160" cy="52" r="1"/><circle cx="133" cy="64" r=".9"/><circle cx="168" cy="61" r=".9"/><circle cx="152" cy="45" r=".8"/><circle cx="149" cy="78" r=".8"/><circle cx="123" cy="52" r=".7"/><circle cx="178" cy="72" r=".7"/><circle cx="137" cy="82" r=".6"/><circle cx="170" cy="40" r=".6"/><circle cx="60" cy="25" r=".8"/><circle cx="250" cy="95" r=".8"/><circle cx="235" cy="20" r=".6"/><circle cx="40" cy="100" r=".6"/></g>
+        <g class="a-mark"><circle cx="150" cy="60" r="22"/><path d="M150 30V38M150 82V90M120 60H128M172 60H180"/></g>
+      </svg>
+      <span class="fl-tag">Observation</span>
       <h3>The cluster</h3>
-      <p>Omega Centauri holds about ten million stars, several distinct stellar populations and a candidate intermediate-mass black hole. Two current bounds disagree: stellar kinematics give at least 8,200 M&#9737; (H&auml;berle et al. 2024) while pulsar timing gives at most 6,000 M&#9737; (Ba&ntilde;ares-Hern&aacute;ndez et al. 2025).</p>
-      <a href="/omega-centauri.html">Cluster data &rarr;</a>
-    </div>
-    <div class="pillar spec">
+      <p>About ten million stars, several stellar populations and a candidate black hole. Kinematics give at least 8,200 M&#9737; (H&auml;berle et al. 2024); pulsar timing gives at most 6,000 M&#9737; (Ba&ntilde;ares-Hern&aacute;ndez et al. 2025).</p>
+      <span class="fl-more">Cluster data &rarr;</span>
+    </a>
+    <a class="fl-card spec" href="/hypothesis.html">
+      <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
+        <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
+        <g class="a-orbit"><ellipse cx="150" cy="60" rx="110" ry="34"/><ellipse cx="150" cy="60" rx="72" ry="22"/><ellipse cx="150" cy="60" rx="38" ry="12"/></g>
+        <g class="a-mark"><circle cx="150" cy="60" r="5"/></g>
+        <g class="a-dots"><circle cx="40" cy="60" r="2"/><circle cx="96" cy="44" r="1.6"/><circle cx="125" cy="70" r="1.3"/></g>
+      </svg>
+      <span class="fl-tag">Speculative</span>
       <h3>The hypothesis</h3>
-      <p>The hypothesis holds that a civilization optimizing for computation would move inward, toward dense stellar systems and black hole power. The five phases, the energy argument and the computronium designs are worked out in one place.</p>
-      <a href="/hypothesis.html">Full argument &rarr;</a>
-    </div>
-    <div class="pillar test">
-      <h3>Tests and falsification</h3>
-      <p>Each claim maps to an observation that would weaken or rule it out, from pulsar accelerations to infrared waste heat. The roadmap lists the instruments, the thresholds and the proposals already drafted for them.</p>
-      <a href="/roadmap.html">Roadmap &amp; falsification &rarr;</a>
-    </div>
+      <p>A civilization optimizing for computation would move inward, toward dense stellar systems and black hole power. The energy argument, five phases and computronium designs are worked out in one place.</p>
+      <span class="fl-more">Full argument &rarr;</span>
+    </a>
+    <a class="fl-card test" href="/roadmap.html">
+      <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
+        <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
+        <g class="a-line"><path d="M20 96L280 30"/></g>
+        <g class="a-err"><path d="M45 78V102M85 70V96M125 56V86M165 54V74M205 38V62M245 34V52"/></g>
+        <g class="a-dots"><circle cx="45" cy="90" r="2.2"/><circle cx="85" cy="83" r="2.2"/><circle cx="125" cy="71" r="2.2"/><circle cx="165" cy="64" r="2.2"/><circle cx="205" cy="50" r="2.2"/><circle cx="245" cy="43" r="2.2"/></g>
+      </svg>
+      <span class="fl-tag">Falsification</span>
+      <h3>How it could fail</h3>
+      <p>Each claim maps to an observation that would weaken or rule it out, from pulsar accelerations to infrared waste heat, with instruments, thresholds and drafted proposals.</p>
+      <span class="fl-more">Roadmap &rarr;</span>
+    </a>
   </div>
 </section>
 
-<!-- ════════════════════════════ EXPLORE ════════════════════════════ -->
-<section id="explore" class="home-wrap" style="padding-top:0;">
-  <p class="section-tag">Explore</p>
-  <h2 class="section-title">Research, tools and reference material</h2>
-  <div class="divider"></div>
-  <div class="explore">
-    <a href="/paper.html"><b>Papers</b><span>Working papers on the IMBH evidence, inward-migration economics and the technosignature campaign.</span><small>Research</small></a>
-    <a href="/tools/"><b>Tools</b><span>Browser calculators, staged workflows and chained scenarios, all running locally from shared measurement data.</span><small>Interactive</small></a>
-    <a href="/proposals.html"><b>Proposals</b><span>Observing proposals across radio, infrared, gamma-ray, neutrino and gravitational-wave channels.</span><small>Observation</small></a>
-    <a href="/live-review.html"><b>IMBH review</b><span>A running review of the literature on the central black hole candidate.</span><small>Literature</small></a>
-    <a href="/fermi.html"><b>Fermi paradox</b><span>Where the hypothesis sits among proposed answers to the Fermi paradox.</span><small>Context</small></a>
-    <a href="/faq.html"><b>FAQ</b><span>Questions on black holes, the hypothesis, the mission concept and common misconceptions.</span><small>Reference</small></a>
-    <a href="/references.html"><b>Glossary &amp; references</b><span>Term definitions, measurement footnotes and the full bibliography.</span><small>Reference</small></a>
-    <a href="/mcp.html"><b>Use with Claude</b><span>Connect the OCS tools to Claude over MCP and run calculations from plain-language questions.</span><small>AI connector</small></a>
+<section class="fl-sec" id="explore">
+  <div class="fl-head"><h2>Library</h2><span>Papers &middot; tools &middot; reference</span></div>
+  <div class="fl-index">
+    <a href="/paper.html"><b>Papers</b><span>Working papers on the IMBH evidence, inward-migration economics and the technosignature campaign.</span></a>
+    <a href="/tools/"><b>Tools</b><span>Browser calculators, staged workflows and chained scenarios built on shared measurement data.</span></a>
+    <a href="/proposals.html"><b>Proposals</b><span>Observing proposals across radio, infrared, gamma-ray, neutrino and gravitational-wave channels.</span></a>
+    <a href="/live-review.html"><b>IMBH review</b><span>A running review of the literature on the central black hole candidate.</span></a>
+    <a href="/fermi.html"><b>Fermi paradox</b><span>Where the hypothesis sits among proposed answers.</span></a>
+    <a href="/faq.html"><b>FAQ</b><span>Black holes, the hypothesis, the mission concept and common misconceptions.</span></a>
+    <a href="/references.html"><b>Glossary &amp; references</b><span>Definitions, measurement footnotes and the full bibliography.</span></a>
+    <a href="/mcp.html"><b>Use with Claude</b><span>Connect the tools to Claude over MCP.</span></a>
   </div>
 </section>
 
-<section id="join" class="home-wrap">
-  <p class="section-tag">Get involved</p>
-  <h2 class="section-title">Support the research</h2>
-  <div class="divider"></div>
-  <p class="section-lead">The Omega Centauri Society is organised as a research programme. Affiliation at any level supports telescope time, grant proposals and the public case for studying Omega Centauri as an astrophysical and SETI target.</p>
-
-  <!-- Compact tier summary -->
-  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem;">
-    <div style="border:1px solid rgb(var(--k1dba90) / 0.25); border-top:2px solid var(--teal-bright); padding:1.2rem 1.3rem; border-radius:4px; background:rgb(var(--k0d0a24) / 0.7);">
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:var(--teal-bright); text-transform:uppercase; margin-bottom:0.5rem;">Affiliate</div>
-      <div style="font-size:0.88rem; color:var(--text-secondary); font-family:'Crimson Pro',serif; margin-bottom:0.9rem; line-height:1.55;">Open enrolment · no fee. Research bulletin, open-access publications, annual public lecture, supporter register.</div>
-    </div>
-    <div style="border:1px solid rgb(var(--ka080f0) / 0.2); border-top:2px solid var(--purple-glow); padding:1.2rem 1.3rem; border-radius:4px; background:rgb(var(--k0d0a24) / 0.7);">
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:var(--purple-glow); text-transform:uppercase; margin-bottom:0.5rem;">Associate</div>
-      <div style="font-size:0.88rem; color:var(--text-secondary); font-family:'Crimson Pro',serif; margin-bottom:0.9rem; line-height:1.55;">Annual contribution. Funds telescope time, paper acknowledgements, working group access, pre-publication data.</div>
-    </div>
-    <div style="border:1px solid rgb(var(--kf0a020) / 0.2); border-top:2px solid var(--amber-bright); padding:1.2rem 1.3rem; border-radius:4px; background:rgb(var(--k0d0a24) / 0.7);">
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:var(--amber-bright); text-transform:uppercase; margin-bottom:0.5rem;">Principal</div>
-      <div style="font-size:0.88rem; color:var(--text-secondary); font-family:'Crimson Pro',serif; margin-bottom:0.9rem; line-height:1.55;">Major grant · by arrangement. Named fellowship, co-applicant on telescope proposals, advisory board seat.</div>
-    </div>
+<section class="fl-sec" id="join">
+  <div class="fl-head"><h2>Support the research</h2><span>Research programme</span></div>
+  <div class="fl-steps">
+    <div><span class="fl-num">01 &middot; Affiliate</span><p>Open enrolment, no fee. Research bulletin, open-access publications, annual public lecture, supporter register.</p></div>
+    <div><span class="fl-num">02 &middot; Associate</span><p>Annual contribution. Funds telescope time, paper acknowledgements, working group access, pre-publication data.</p></div>
+    <div><span class="fl-num">03 &middot; Principal</span><p>Major grant, by arrangement. Named fellowship, co-applicant on telescope proposals, advisory board seat.</p></div>
   </div>
-
-  <div class="newsletter-section">
-    <div class="newsletter-title">Follow releases</div>
-    <p class="newsletter-sub">We don’t run a mailing list. Papers and tools are published to the GitHub repository as they are released; for anything else, write to us.</p>
-    <div class="newsletter-form">
-      <a class="newsletter-btn" style="text-decoration:none; text-align:center;" href="https://github.com/PostOakLabs/OCS">Watch on GitHub →</a>
-      <a class="newsletter-btn" style="text-decoration:none; text-align:center;" href="/contact.html">Contact →</a>
-    </div>
-  </div>
+  <p class="fl-note">We don&rsquo;t run a mailing list. Papers and tools are published to <a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a> as they are released; for anything else, <a href="/contact.html">write to us</a>.</p>
 </section>
 </main>
 <footer>
@@ -1679,7 +1709,7 @@ html[data-theme="light"] .pillar a{color:rgb(29 34 51);text-decoration:underline
     <p style="color:var(--text-dim);font-size:0.68rem;font-family:'IBM Plex Mono',monospace;letter-spacing:0.05em;margin-bottom:0.6rem;text-align:center;">Software DOI: <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener" style="color:var(--teal-glow);text-decoration:underline;">10.5281/zenodo.20689279</a> &nbsp;·&nbsp; ASCL: <a href="https://ascl.net/code/v/4787" target="_blank" rel="noopener" style="color:var(--teal-glow);text-decoration:underline;">submitted</a> &nbsp;·&nbsp; <a href="/cite.html" style="color:var(--teal-glow);text-decoration:underline;">How to cite</a></p>
 
 
-    <p style="color:var(--text-dim);font-size:0.68rem;font-family:'IBM Plex Mono',monospace;letter-spacing:0.05em;margin-bottom:0.6rem;text-align:center;">Last updated: October 15, 2026 &nbsp;·&nbsp; For feedback: <a href="mailto:contact@omegacentauri.me" style="color:var(--teal-glow);text-decoration:underline;">contact@omegacentauri.me</a></p>
+    <p style="color:var(--text-dim);font-size:0.68rem;font-family:'IBM Plex Mono',monospace;letter-spacing:0.05em;margin-bottom:0.6rem;text-align:center;">Last updated: October 16, 2026 &nbsp;·&nbsp; For feedback: <a href="mailto:contact@omegacentauri.me" style="color:var(--teal-glow);text-decoration:underline;">contact@omegacentauri.me</a></p>
     <p class="footer-copy">© 2026 The Omega Centauri Society · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">CC BY 4.0</a> · Content available under Creative Commons Attribution</p>
   </div>
 </footer>
