@@ -1455,6 +1455,8 @@ html[data-theme="dark"] .pa-bar text{fill:#f7f5f0;}
 /* /palette-fix-v1 */
 </style>
 <style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
 .ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
 .ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
 .ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
@@ -1518,6 +1520,8 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
   <g class="pa-energy"><path class="flow" d="M330 72C380 72 400 110 452 104"/><path class="flow e2" d="M330 72C390 62 430 70 500 72"/><path class="flow e3" d="M330 72C400 50 480 40 600 40"/></g>
   <text class="pa-tag" x="12" y="134">Speculative schematic</text>
 </svg>
+<div class="ocs-present-cta"><button type="button" class="ocs-present-btn" id="ocsPresentBtn">Present this page</button><span class="ocs-present-hint">One step per screen. Arrow keys move, A toggles autoplay, Esc exits. Press P to start.</span></div>
+
 <section id="science">
   <p class="section-tag">Physics & Engineering</p>
   <h2 class="section-title">Why <span class="accent">Black Holes Beat</span> Everything Else</h2>
@@ -2633,5 +2637,235 @@ document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('
     <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
+<!-- OCS-PRESENT:v1:START -->
+<style id="ocs-present-css">
+.ocs-present-cta{max-width:1100px;margin:.2rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+.ocs-present-btn{font:500 .74rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:3px;border:1px solid #1d2233;background:#1d2233;color:#f7f5f0;cursor:pointer}
+.ocs-present-btn:hover{background:#805206;border-color:#805206}
+.ocs-present-hint{font:.68rem 'IBM Plex Mono',ui-monospace,monospace;color:#5c616e}
+html[data-theme="dark"] .ocs-present-btn{background:#e8e4ff;color:#03020a;border-color:#e8e4ff}
+html[data-theme="dark"] .ocs-present-hint{color:#a29cc4}
+.ocs-stage{display:none;position:fixed;inset:0;z-index:2000;background:#f7f5f0;color:#1d2233;flex-direction:column}
+html[data-theme="dark"] .ocs-stage{background:#03020a;color:#e8e4ff}
+body.ocs-presenting{overflow:hidden}
+body.ocs-presenting .ocs-stage{display:flex}
+.ocs-stage-body{flex:1;overflow-y:auto;padding:2.2rem 0 1.5rem}
+.ocs-slide{max-width:min(1240px,94vw);margin:0 auto;animation:ocs-slide-in .35s ease both}
+.ocs-slide .ocs-slide-kicker{font:500 .7rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:#805206;margin-bottom:.8rem}
+html[data-theme="dark"] .ocs-slide .ocs-slide-kicker{color:#e0a640}
+.ocs-slide.title-slide{min-height:60vh;display:flex;flex-direction:column;justify-content:center}
+.ocs-slide.title-slide .section-title{font-size:clamp(2rem,4.4vw,3.4rem)!important;line-height:1.1}
+.ocs-slide.title-slide .section-lead{font-size:1.15rem;max-width:860px}
+.ocs-slide>*{max-width:100%}
+.ocs-slide svg{max-height:56vh;width:auto;max-width:100%}
+@keyframes ocs-slide-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ocs-pbar{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;border-top:1px solid #ddd8cc;font:.72rem 'IBM Plex Mono',ui-monospace,monospace}
+html[data-theme="dark"] .ocs-pbar{border-color:rgba(112,85,212,.25)}
+.ocs-pbar button{font:inherit;padding:.38rem .75rem;border:1px solid currentColor;border-radius:3px;background:none;color:inherit;cursor:pointer}
+.ocs-pbar button[aria-pressed="true"]{color:#805206}
+.ocs-pbar .ocs-count{min-width:4.5rem;text-align:center}
+.ocs-rail{flex:1;display:flex;gap:2px;height:14px;align-items:stretch;min-width:0}
+.ocs-rail i{flex:1;background:currentColor;opacity:.18;border-radius:1px;cursor:pointer}
+.ocs-rail i.done{opacity:.5}.ocs-rail i.cur{opacity:1;background:#a46a0a}
+.ocs-rail i.sec{margin-left:5px}
+/* draw-in animation for static diagrams */
+svg.ocs-draw .ocs-dr{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:ocs-draw 1.6s ease forwards;animation-delay:var(--d,0s)}
+svg.ocs-draw text{opacity:0;animation:ocs-fade .6s ease forwards;animation-delay:calc(var(--d,0s) + .9s)}
+svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
+@keyframes ocs-draw{to{stroke-dashoffset:0}}
+@keyframes ocs-fade{to{opacity:1}}
+@keyframes ocs-flow{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){svg.ocs-draw .ocs-dr{animation:none;stroke-dashoffset:0}svg.ocs-draw text{animation:none;opacity:1}svg.ocs-draw .ocs-flow{animation:none}.ocs-slide{animation:none}}
+@media print{.ocs-present-cta,.ocs-stage{display:none!important}}
+</style>
+<div class="ocs-stage" id="ocsStage" role="dialog" aria-modal="true" aria-label="Presenter mode">
+  <div class="ocs-stage-body" id="ocsStageBody"></div>
+  <div class="ocs-pbar" role="toolbar" aria-label="Presenter controls">
+    <button type="button" id="ocsPrev" aria-label="Previous step">&larr;</button>
+    <span class="ocs-count" id="ocsCount">1 / 1</span>
+    <button type="button" id="ocsNext" aria-label="Next step">&rarr;</button>
+    <div class="ocs-rail" id="ocsRail" aria-hidden="true"></div>
+    <button type="button" id="ocsAuto" aria-pressed="false">Autoplay</button>
+    <button type="button" id="ocsExit">Exit</button>
+  </div>
+</div>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var main = document.querySelector('main');
+  if (!main) return;
+
+  // ---- draw-in for static diagrams (skip ones that already animate or are tiny icons) ----
+  function animated(svg) {
+    if (svg.querySelector('animate,animateTransform,animateMotion')) return true;
+    var els = svg.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) { if (getComputedStyle(els[i]).animationName !== 'none') return true; }
+    return false;
+  }
+  function prepDraw(svg) {
+    if (svg.dataset.ocsDraw) return;
+    svg.dataset.ocsDraw = '1';
+    var shapes = svg.querySelectorAll('path,line,polyline,polygon,circle,ellipse,rect');
+    var k = 0;
+    shapes.forEach(function (el) {
+      var st = getComputedStyle(el);
+      if (!st.stroke || st.stroke === 'none' || parseFloat(st.strokeWidth) === 0) return;
+      if (st.strokeDasharray && st.strokeDasharray !== 'none') { el.classList.add('ocs-flow'); return; }
+      var len = 0;
+      try { len = el.getTotalLength ? el.getTotalLength() : 0; } catch (e) { len = 0; }
+      if (!len || len < 4) return;
+      el.style.setProperty('--len', Math.ceil(len));
+      el.style.setProperty('--d', (Math.min(k, 30) * 0.035).toFixed(3) + 's');
+      el.classList.add('ocs-dr');
+      k++;
+    });
+    svg.querySelectorAll('text').forEach(function (t, i) { t.style.setProperty('--d', (Math.min(i, 20) * 0.03).toFixed(3) + 's'); });
+  }
+  function play(svg) {
+    if (reduce || !svg.dataset.ocsDraw) return;
+    svg.classList.remove('ocs-draw'); void svg.getBoundingClientRect(); svg.classList.add('ocs-draw');
+  }
+  var statics = [].slice.call(main.querySelectorAll('svg')).filter(function (s) {
+    var r = s.getBoundingClientRect();
+    return !s.closest('.pg-art') && r.width > 120 && !animated(s);
+  });
+  statics.forEach(prepDraw);
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    statics.forEach(function (s) { io.observe(s); });
+  }
+
+  // ---- presenter: build slides from sections ----
+  var stage = document.getElementById('ocsStage'), sbody = document.getElementById('ocsStageBody');
+  var railEl = document.getElementById('ocsRail'), countEl = document.getElementById('ocsCount');
+  var slides = [], cur = 0, auto = null;
+  var GRID = /grid|cards|tiers|wrap|row|list/;
+  var SKIP = '.section-tag,.section-title,.divider,.section-lead,script,style,.ocs-present-cta';
+  function tableChunks(tbl, wrap, budget, out) {
+    var head = tbl.tHead, rows = [].slice.call(tbl.tBodies.length ? tbl.tBodies[0].rows : tbl.rows);
+    var hh = head ? head.getBoundingClientRect().height : 0, pack = [], h = hh;
+    function flush() {
+      if (!pack.length) return;
+      var t = tbl.cloneNode(false);
+      if (head) t.appendChild(head.cloneNode(true));
+      var tb = document.createElement('tbody');
+      pack.forEach(function (r) { tb.appendChild(r.cloneNode(true)); });
+      t.appendChild(tb);
+      out.push({ el: t, wrap: wrap, h: h, cloned: true });
+      pack = []; h = hh;
+    }
+    rows.forEach(function (r) {
+      if (head && head.contains(r)) return;
+      var rh = r.getBoundingClientRect().height;
+      if (pack.length && h + rh > budget) flush();
+      pack.push(r); h += rh;
+    });
+    flush();
+  }
+  function isBox(el) {
+    if (/^(svg|P|UL|OL|FIGURE|PRE|BLOCKQUOTE|H[1-6]|IMG|CANVAS)$/i.test(el.tagName)) return true;
+    var st = getComputedStyle(el);
+    var bg = st.backgroundColor, a = bg.match(/[\d.]+/g);
+    if (a && (a.length < 4 || parseFloat(a[3]) > 0.02) && bg !== 'transparent') return true;
+    return ['Top', 'Right', 'Bottom', 'Left'].some(function (s) { return parseFloat(st['border' + s + 'Width']) > 0 && st['border' + s + 'Style'] !== 'none'; });
+  }
+  function split(el, wrap, budget, out, depth) {
+    if (el.matches(SKIP)) return;
+    var h = el.getBoundingClientRect().height;
+    if (h < 8) return;
+    if (el.tagName === 'TABLE' && h > budget) { tableChunks(el, wrap, budget, out); return; }
+    if (h <= budget || depth > 5 || isBox(el) || el.children.length < 2) { out.push({ el: el, wrap: wrap, h: h }); return; }
+    var disp = getComputedStyle(el).display;
+    var cls = (disp === 'grid' || disp === 'flex') && typeof el.className === 'string' ? el.className : null;
+    [].slice.call(el.children).forEach(function (k) { split(k, cls || wrap, budget, out, depth + 1); });
+  }
+  function units(sec, budget) {
+    var out = [];
+    sec.querySelectorAll('details:not([open])').forEach(function (d) { d.open = true; d.dataset.ocsOpened = '1'; });
+    [].slice.call(sec.children).forEach(function (ch) { split(ch, null, budget, out, 0); });
+    return out;
+  }
+  function build() {
+    slides = [];
+    var budget = innerHeight * 0.8;
+    [].slice.call(main.querySelectorAll(':scope > section')).forEach(function (sec, si) {
+      var title = sec.querySelector('.section-title');
+      if (!title) return;
+      var kicker = sec.querySelector('.section-tag');
+      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector('.section-lead')].filter(Boolean), label: title.textContent.trim() });
+      var pack = [], h = 0, wrap = null;
+      units(sec, budget).forEach(function (u) {
+        if (pack.length && (h + u.h > budget || u.wrap !== wrap)) { slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() }); pack = []; h = 0; }
+        pack.push(u); h += u.h; wrap = u.wrap;
+      });
+      if (pack.length) slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() });
+    });
+    railEl.innerHTML = '';
+    slides.forEach(function (s, i) {
+      var b = document.createElement('i');
+      if (i && s.sec !== slides[i - 1].sec) b.className = 'sec';
+      b.title = s.label;
+      b.addEventListener('click', function () { stopAuto(); go(i); });
+      railEl.appendChild(b);
+    });
+  }
+  function render() {
+    var s = slides[cur];
+    sbody.innerHTML = '';
+    var box = document.createElement('div');
+    box.className = 'ocs-slide' + (s.kind === 'title' ? ' title-slide' : '');
+    if (s.kind === 'body') {
+      var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k);
+    }
+    var holder = box;
+    if (s.wrap) { holder = document.createElement('div'); holder.className = s.wrap; box.appendChild(holder); }
+    if (s.wrap && s.kind === 'body') { holder.style.gridTemplateColumns = 'repeat(' + Math.min(s.nodes.length, 3) + ', minmax(0, 1fr))'; if (s.nodes.length === 1) holder.style.maxWidth = '820px'; }
+    s.nodes.forEach(function (n) {
+      var c = n.el ? (n.cloned ? n.el.cloneNode(true) : n.el.cloneNode(true)) : n.cloneNode(true);
+      c.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+      c.removeAttribute && c.removeAttribute('id');
+      holder.appendChild(c);
+    });
+    sbody.appendChild(box);
+    sbody.scrollTop = 0;
+    box.querySelectorAll('svg').forEach(function (svg) {
+      if (svg.dataset.ocsDraw) { svg.removeAttribute('data-ocs-draw'); svg.classList.remove('ocs-draw'); }
+      if (!svg.closest('.pg-art') && !animated(svg)) { prepDraw(svg); play(svg); }
+    });
+    countEl.textContent = (cur + 1) + ' / ' + slides.length;
+    [].slice.call(railEl.children).forEach(function (b, i) { b.classList.toggle('cur', i === cur); b.classList.toggle('done', i < cur); });
+  }
+  function go(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+  function stopAuto() { if (auto) { clearInterval(auto); auto = null; } document.getElementById('ocsAuto').setAttribute('aria-pressed', 'false'); }
+  function toggleAuto() {
+    if (auto) { stopAuto(); return; }
+    auto = setInterval(function () { if (cur >= slides.length - 1) { stopAuto(); return; } go(cur + 1); }, 12000);
+    document.getElementById('ocsAuto').setAttribute('aria-pressed', 'true');
+  }
+  function enter() { build(); if (!slides.length) return; document.body.classList.add('ocs-presenting'); go(0); document.getElementById('ocsNext').focus(); }
+  function exit() { document.body.classList.remove('ocs-presenting'); stopAuto(); sbody.innerHTML = ''; main.querySelectorAll('details[data-ocs-opened]').forEach(function (d) { d.open = false; d.removeAttribute('data-ocs-opened'); }); }
+  var btn = document.getElementById('ocsPresentBtn');
+  if (btn) btn.addEventListener('click', enter);
+  document.getElementById('ocsPrev').addEventListener('click', function () { stopAuto(); go(cur - 1); });
+  document.getElementById('ocsNext').addEventListener('click', function () { stopAuto(); go(cur + 1); });
+  document.getElementById('ocsAuto').addEventListener('click', toggleAuto);
+  document.getElementById('ocsExit').addEventListener('click', exit);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+    var on = document.body.classList.contains('ocs-presenting');
+    if (!on) { if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && !e.altKey) enter(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (e.key === 'Escape') { exit(); }
+    else if (e.key === 'a' || e.key === 'A') { toggleAuto(); }
+  });
+})();
+</script>
+<!-- OCS-PRESENT:v1:END -->
 </body>
 </html>
