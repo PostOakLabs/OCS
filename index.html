@@ -1520,6 +1520,20 @@ html[data-theme="dark"] .fl-num{color:#e0a640;}
 html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
 .fl-strip a{margin-left:auto;font:.75rem var(--font-mono);color:var(--text-primary);text-decoration:underline;text-decoration-color:rgb(150 96 10);text-underline-offset:3px;}
 .fl-support .fl-note{font-size:.85rem;margin-top:.7rem;}
+/* card animations: transform/opacity/dash only, art box size unchanged */
+.anim-write path{stroke-dasharray:60;stroke-dashoffset:60;animation:fl-write 6s ease-in-out infinite;}
+.anim-write path:nth-child(2){animation-delay:.25s}.anim-write path:nth-child(3){animation-delay:.5s}.anim-write path:nth-child(4){animation-delay:.75s}
+.anim-write path:nth-child(5){animation-delay:1s}.anim-write path:nth-child(6){animation-delay:1.25s}.anim-write path:nth-child(7){animation-delay:1.5s}
+@keyframes fl-write{0%{stroke-dashoffset:60}35%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:0}}
+.anim-draw{stroke-dasharray:100;stroke-dashoffset:100;animation:fl-draw 5s ease-in-out infinite;}
+@keyframes fl-draw{0%{stroke-dashoffset:100}45%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:0;opacity:.2}}
+.anim-scan{animation:fl-scan 5s ease-in-out infinite;}
+@keyframes fl-scan{0%,25%{opacity:0}40%,85%{opacity:1}100%{opacity:0}}
+.anim-signal{stroke-dasharray:3 5;animation:fl-signal 1.4s linear infinite;}
+@keyframes fl-signal{to{stroke-dashoffset:-16}}
+.anim-pulse{fill:none!important;stroke:rgb(150 96 10);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:fl-pulse 2.4s ease-out infinite;}
+@keyframes fl-pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(4.5);opacity:0}}
+@media (prefers-reduced-motion: reduce){.anim-write path,.anim-draw{animation:none;stroke-dashoffset:0}.anim-scan,.anim-signal,.anim-pulse{animation:none}.anim-pulse{display:none}}
 /* /palette-fix-v1 */
 </style>
 <script>(function(){var m={"about":"omega-centauri.html","science":"hypothesis.html","imbh":"hypothesis.html","fbh0":"hypothesis.html","fbh1":"hypothesis.html","fbh2":"hypothesis.html","fstar1":"hypothesis.html","fstarBD":"hypothesis.html","fjet0u":"hypothesis.html","fjet0d":"hypothesis.html","fjet2u":"hypothesis.html","fjet2d":"hypothesis.html","fdisk":"hypothesis.html","fdisk2":"hypothesis.html","fedd":"hypothesis.html","farr":"hypothesis.html","farrA":"hypothesis.html","thermodynamic-framework":"hypothesis.html","phases":"hypothesis.html","p1oc":"hypothesis.html","p1bh":"hypothesis.html","p2body":"hypothesis.html","p2star":"hypothesis.html","ar2":"hypothesis.html","p3bh":"hypothesis.html","p3bd":"hypothesis.html","p3jetu":"hypothesis.html","p3jetd":"hypothesis.html","p3dk":"hypothesis.html","p4bh":"hypothesis.html","p4jetu":"hypothesis.html","p4jetd":"hypothesis.html","p4dk":"hypothesis.html","p5bh":"hypothesis.html","p5hz":"hypothesis.html","p5kg":"hypothesis.html","p5jetu":"hypothesis.html","p5jetd":"hypothesis.html","p5dk":"hypothesis.html","kardashev-mth":"hypothesis.html","kardGlow":"hypothesis.html","mthGlow":"hypothesis.html","bhGrad":"hypothesis.html","arrowOut":"hypothesis.html","arrowIn":"hypothesis.html","compute":"hypothesis.html","dg1spin":"hypothesis.html","dg1isco":"hypothesis.html","dg1arr":"hypothesis.html","dg1arr2":"hypothesis.html","dg2bh":"hypothesis.html","dg2ergo":"hypothesis.html","dg2diskL":"hypothesis.html","dg2jetU":"hypothesis.html","dg2jetD":"hypothesis.html","dg3line":"hypothesis.html","fermi":"fermi.html","roadmap":"roadmap.html","falsification":"roadmap.html","null-hypotheses":"roadmap.html","falsification-thresholds":"roadmap.html","observational-roadmap-table":"roadmap.html","research-proposals":"roadmap.html","academic-refs":"references.html","glossary":"references.html","glossarySearch":"references.html","alphaBar":"references.html","glossaryBody":"references.html","footnotes":"references.html","fn-distance":"references.html","fn-age":"references.html","fn-stars":"references.html","fn-mass":"references.html","fn-diameter":"references.html","fn-coredensity":"references.html","fn-dyson07":"references.html","fn-timedil":"references.html","fn-strippednucleus":"references.html","fn-imbhhaberle":"references.html","fn-dvali-inline":"references.html","fn-dyson-swarm-inline":"references.html","fn-ibata-inline":"references.html","references":"references.html","faq":"faq.html","faqToggle":"faq.html","faqBody":"faq.html"};function go(){var h=location.hash.slice(1);if(h&&m[h])location.replace("/"+m[h]+"#"+h);}go();addEventListener("hashchange",go);})();</script>
@@ -1625,7 +1639,7 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
 <main class="fl">
 <section class="fl-hero">
   <p class="fl-eyebrow"><span class="fl-dot"></span>The Omega Centauri Society &middot; NGC 5139</p>
-  <h1 class="fl-title">Open research on <span>Omega&nbsp;Centauri</span> and its candidate black hole: papers, tools and observing proposals.</h1>
+  <h1 class="fl-title">Open research on <span>Omega&nbsp;Centauri</span> and its candidate IMBH: papers, tools and observing proposals.</h1>
   <p class="fl-lead">The Milky Way's largest globular cluster may host an intermediate-mass black hole. Measurements here carry their citations, and the Macro Transcension Hypothesis is labeled as speculation wherever it appears.</p>
   <div class="fl-ctas">
     <a class="fl-btn" href="/omega-centauri.html">Start with the cluster &rarr;</a>
@@ -1641,21 +1655,21 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
       <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
         <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
         <g class="a-page"><rect x="112" y="16" width="70" height="92" rx="2"/><rect x="122" y="10" width="70" height="92" rx="2"/></g>
-        <g class="a-text"><path d="M132 26H170M132 36H182M132 44H178M132 52H182M132 60H160M132 72H182M132 80H176M132 88H150"/></g>
+        <g class="a-text anim-write"><path d="M132 36H182"/><path d="M132 44H178"/><path d="M132 52H182"/><path d="M132 60H160"/><path d="M132 72H182"/><path d="M132 80H176"/><path d="M132 88H150"/></g>
         <g class="a-mark"><path d="M150 26H170"/></g>
       </svg>
       <span class="fl-tag">Research</span>
       <h3>Papers</h3>
-      <p>Working papers on the black hole evidence, the mass tension between kinematics and pulsar timing, inward-migration economics and the technosignature campaign.</p>
+      <p>Working papers on the IMBH evidence, the mass tension between kinematics and pulsar timing, inward-migration economics and the technosignature campaign.</p>
       <span class="fl-more">Read the papers &rarr;</span>
     </a>
     <a class="fl-card spec" href="/tools/">
       <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
         <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
         <g class="a-axis"><path d="M40 100H270M40 100V18"/></g>
-        <g class="a-curve"><path d="M42 96C80 94 110 86 135 66S180 26 260 22"/></g>
+        <g class="a-curve"><path class="anim-draw" pathLength="100" d="M42 96C80 94 110 86 135 66S180 26 260 22"/></g>
         <g class="a-band"><path d="M42 90C80 86 110 76 135 54S180 16 260 14"/></g>
-        <g class="a-mark"><circle cx="135" cy="66" r="4"/><path d="M135 66V100"/></g>
+        <g class="a-mark anim-scan"><circle cx="135" cy="66" r="4"/><path d="M135 66V100"/></g>
       </svg>
       <span class="fl-tag">Interactive</span>
       <h3>Tools</h3>
@@ -1666,7 +1680,7 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
       <svg class="fl-art" viewBox="0 0 300 120" aria-hidden="true">
         <g class="a-grid"><path d="M0 40H300M0 80H300M75 0V120M150 0V120M225 0V120"/></g>
         <g class="a-dish"><path d="M112 84C120 56 150 40 178 44C170 64 146 82 112 84Z"/><path d="M146 64L160 94M134 100H186"/></g>
-        <g class="a-mark"><path d="M146 64L210 26" stroke-dasharray="3 3"/><circle cx="214" cy="24" r="4"/></g>
+        <g class="a-mark"><path class="anim-signal" d="M210 26L146 64"/><circle cx="214" cy="24" r="4"/><circle class="anim-pulse" cx="214" cy="24" r="4"/></g>
         <g class="a-dots"><circle cx="240" cy="40" r="1"/><circle cx="60" cy="30" r="1"/><circle cx="262" cy="80" r=".8"/><circle cx="80" cy="96" r=".8"/></g>
       </svg>
       <span class="fl-tag">Observation</span>
@@ -1688,17 +1702,11 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
     <a href="/faq.html"><b>FAQ</b><span>Black holes, the hypothesis, the mission concept and common misconceptions.</span></a>
     <a href="/references.html"><b>Glossary &amp; references</b><span>Definitions, measurement footnotes and the full bibliography.</span></a>
     <a href="/mcp.html"><b>Use with Claude</b><span>Connect the tools to Claude over MCP.</span></a>
+    <a href="/contact.html#support" id="join"><b>Support the research</b><span>Affiliate (free), Associate (annual) or Principal (by arrangement). Releases go to GitHub; there is no mailing list.</span></a>
   </div>
 </section>
 
-<section class="fl-sec fl-support" id="join">
-  <div class="fl-strip">
-    <span class="fl-strip-label">Support the research</span>
-    <span>Affiliate, free</span><span>Associate, annual</span><span>Principal, by arrangement</span>
-    <a href="/contact.html#support">Tier details &rarr;</a>
-  </div>
-  <p class="fl-note">No mailing list: releases go to <a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a>.</p>
-</section>
+
 </main>
 <footer>
   <div class="footer-inner">
