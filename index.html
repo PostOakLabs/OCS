@@ -1462,7 +1462,7 @@ html[data-theme="light"] .pillar a{color:rgb(29 34 51);text-decoration:underline
 .fl .fl-sec{margin:0;max-width:none;padding-left:0;padding-right:0;}
 .fl-eyebrow{font:500 .7rem var(--font-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);display:flex;align-items:center;gap:.6rem;margin-bottom:1.6rem;}
 .fl-dot{width:7px;height:7px;border-radius:50%;background:rgb(150 96 10);display:inline-block;}
-.fl-title{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,4.8vw,3.7rem);line-height:1.08;letter-spacing:-.025em;color:var(--text-primary);margin:0 0 1.6rem;text-align:left;}
+.fl-title{font-family:var(--font-display);font-weight:700;font-size:clamp(2.1rem,3.9vw,3.2rem);line-height:1.08;letter-spacing:-.025em;color:var(--text-primary);margin:0 0 1.6rem;text-align:left;}
 .fl-title span{color:rgb(128 82 6);}
 html[data-theme="dark"] .fl-title span{color:#e0a640;}
 .fl-lead{font-size:1.15rem;line-height:1.6;color:var(--text-secondary);max-width:620px;margin:0 0 2rem;}
@@ -1534,6 +1534,27 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
 .anim-pulse{fill:none!important;stroke:rgb(150 96 10);stroke-width:1;transform-box:fill-box;transform-origin:center;animation:fl-pulse 2.4s ease-out infinite;}
 @keyframes fl-pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(4.5);opacity:0}}
 @media (prefers-reduced-motion: reduce){.anim-write path,.anim-draw{animation:none;stroke-dashoffset:0}.anim-scan,.anim-signal,.anim-pulse{animation:none}.anim-pulse{display:none}}
+/* live star chart hero */
+.fl .fl-hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:3rem;align-items:center;max-width:none;}
+.fl-sky{width:100%;height:auto;color:var(--text-dim);overflow:hidden;border:1px solid var(--border-subtle);border-radius:6px;background:var(--deep);}
+.sky-grid path{stroke:currentColor;stroke-width:.5;opacity:.3;fill:none;}
+.sky-lbl text{font:8px var(--font-mono);fill:currentColor;opacity:.85;}
+.sky-stars circle{fill:currentColor;animation:sky-twinkle 6s ease-in-out infinite;}
+.sky-core circle{fill:currentColor;opacity:.75;}
+.sky-lock circle,.sky-lock path{stroke:rgb(150 96 10);stroke-width:1.2;fill:none;}
+.sky-name{font:600 13px var(--font-display);fill:rgb(128 82 6);}
+.sky-coord{font:8.5px var(--font-mono);fill:currentColor;}
+html[data-theme="dark"] .sky-lock circle,html[data-theme="dark"] .sky-lock path{stroke:#e0a640;}
+html[data-theme="dark"] .sky-name{fill:#e0a640;}
+.sky-pan{animation:sky-drift 24s ease-in-out infinite alternate;}
+.lock-ring{transform-box:fill-box;transform-origin:center;animation:sky-lock 6s ease-in-out infinite;}
+.lock-pulse{transform-box:fill-box;transform-origin:center;animation:sky-pulse 6s ease-out infinite;}
+@keyframes sky-drift{from{transform:translate(4px,-2px)}to{transform:translate(-4px,2px)}}
+@keyframes sky-twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+@keyframes sky-lock{0%{transform:scale(2);opacity:.2}18%,100%{transform:scale(1);opacity:1}}
+@keyframes sky-pulse{0%,18%{transform:scale(1);opacity:0}22%{opacity:.8}60%,100%{transform:scale(2.6);opacity:0}}
+@media (prefers-reduced-motion: reduce){.sky-pan,.sky-stars circle,.lock-ring,.lock-pulse{animation:none}.lock-pulse{display:none}.sky-stars circle{opacity:.6}}
+@media(max-width:900px){.fl .fl-hero-grid{grid-template-columns:1fr}.fl-sky{max-width:420px}}
 /* /palette-fix-v1 */
 </style>
 <script>(function(){var m={"about":"omega-centauri.html","science":"hypothesis.html","imbh":"hypothesis.html","fbh0":"hypothesis.html","fbh1":"hypothesis.html","fbh2":"hypothesis.html","fstar1":"hypothesis.html","fstarBD":"hypothesis.html","fjet0u":"hypothesis.html","fjet0d":"hypothesis.html","fjet2u":"hypothesis.html","fjet2d":"hypothesis.html","fdisk":"hypothesis.html","fdisk2":"hypothesis.html","fedd":"hypothesis.html","farr":"hypothesis.html","farrA":"hypothesis.html","thermodynamic-framework":"hypothesis.html","phases":"hypothesis.html","p1oc":"hypothesis.html","p1bh":"hypothesis.html","p2body":"hypothesis.html","p2star":"hypothesis.html","ar2":"hypothesis.html","p3bh":"hypothesis.html","p3bd":"hypothesis.html","p3jetu":"hypothesis.html","p3jetd":"hypothesis.html","p3dk":"hypothesis.html","p4bh":"hypothesis.html","p4jetu":"hypothesis.html","p4jetd":"hypothesis.html","p4dk":"hypothesis.html","p5bh":"hypothesis.html","p5hz":"hypothesis.html","p5kg":"hypothesis.html","p5jetu":"hypothesis.html","p5jetd":"hypothesis.html","p5dk":"hypothesis.html","kardashev-mth":"hypothesis.html","kardGlow":"hypothesis.html","mthGlow":"hypothesis.html","bhGrad":"hypothesis.html","arrowOut":"hypothesis.html","arrowIn":"hypothesis.html","compute":"hypothesis.html","dg1spin":"hypothesis.html","dg1isco":"hypothesis.html","dg1arr":"hypothesis.html","dg1arr2":"hypothesis.html","dg2bh":"hypothesis.html","dg2ergo":"hypothesis.html","dg2diskL":"hypothesis.html","dg2jetU":"hypothesis.html","dg2jetD":"hypothesis.html","dg3line":"hypothesis.html","fermi":"fermi.html","roadmap":"roadmap.html","falsification":"roadmap.html","null-hypotheses":"roadmap.html","falsification-thresholds":"roadmap.html","observational-roadmap-table":"roadmap.html","research-proposals":"roadmap.html","academic-refs":"references.html","glossary":"references.html","glossarySearch":"references.html","alphaBar":"references.html","glossaryBody":"references.html","footnotes":"references.html","fn-distance":"references.html","fn-age":"references.html","fn-stars":"references.html","fn-mass":"references.html","fn-diameter":"references.html","fn-coredensity":"references.html","fn-dyson07":"references.html","fn-timedil":"references.html","fn-strippednucleus":"references.html","fn-imbhhaberle":"references.html","fn-dvali-inline":"references.html","fn-dyson-swarm-inline":"references.html","fn-ibata-inline":"references.html","references":"references.html","faq":"faq.html","faqToggle":"faq.html","faqBody":"faq.html"};function go(){var h=location.hash.slice(1);if(h&&m[h])location.replace("/"+m[h]+"#"+h);}go();addEventListener("hashchange",go);})();</script>
@@ -1637,7 +1658,8 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
   </div>
 </nav>
 <main class="fl">
-<section class="fl-hero">
+<section class="fl-hero fl-hero-grid">
+  <div class="fl-hero-text">
   <p class="fl-eyebrow"><span class="fl-dot"></span>The Omega Centauri Society &middot; NGC 5139</p>
   <h1 class="fl-title">Open research on <span>Omega&nbsp;Centauri</span> and its candidate IMBH: papers, tools and observing proposals.</h1>
   <p class="fl-lead">The Milky Way's largest globular cluster may host an intermediate-mass black hole. Measurements here carry their citations, and the Macro Transcension Hypothesis is labeled as speculation wherever it appears.</p>
@@ -1646,6 +1668,19 @@ html[data-theme="dark"] .fl-strip-label{color:#e0a640;}
     <a class="fl-link" href="/paper.html">or read the papers</a>
   </div>
   <p class="fl-meta">Open data &middot; CC BY 4.0 &middot; Runs in your browser &middot; <a href="/mcp.html">Use with Claude</a></p>
+  </div>
+  <svg class="fl-sky" viewBox="0 0 360 230" role="img" aria-label="Animated star chart: Omega Centauri (NGC 5139) at right ascension 13h 26m 47s, declination minus 47 degrees 29 arcminutes">
+    <g class="sky-pan">
+      <g class="sky-grid"><path d="M0 50H360M0 100H360M0 150H360M0 200H360"/><path d="M60 0V230M120 0V230M180 0V230M240 0V230M300 0V230"/></g>
+      <g class="sky-lbl"><text x="62" y="226">14h 00m</text><text x="122" y="226">13h 40m</text><text x="182" y="226">13h 20m</text><text x="242" y="226">13h 00m</text><text x="3" y="47">&minus;46&deg;</text><text x="3" y="97">&minus;47&deg;</text><text x="3" y="147">&minus;48&deg;</text></g>
+      <g class="sky-stars"><circle cx="85" cy="44" r="1.5" style="animation-delay:-1.9s"/><circle cx="19" cy="111" r="1" style="animation-delay:-0.3s"/><circle cx="293" cy="15" r="1" style="animation-delay:-0.1s"/><circle cx="22" cy="65" r="1.2" style="animation-delay:-4.5s"/><circle cx="260" cy="181" r="1" style="animation-delay:-3.3s"/><circle cx="113" cy="108" r="1" style="animation-delay:-4.7s"/><circle cx="79" cy="140" r="0.8" style="animation-delay:-1.4s"/><circle cx="121" cy="43" r="1.2" style="animation-delay:-5.5s"/><circle cx="196" cy="81" r="1.2" style="animation-delay:-3.4s"/><circle cx="253" cy="36" r="1.5" style="animation-delay:-3.3s"/><circle cx="78" cy="49" r="1.5" style="animation-delay:-0.3s"/><circle cx="104" cy="130" r="0.6" style="animation-delay:-3.0s"/><circle cx="85" cy="66" r="1.2" style="animation-delay:-4.8s"/><circle cx="62" cy="209" r="1.5" style="animation-delay:-1.1s"/><circle cx="255" cy="200" r="0.8" style="animation-delay:-1.3s"/><circle cx="286" cy="45" r="1" style="animation-delay:-5.4s"/><circle cx="79" cy="153" r="1.2" style="animation-delay:-1.0s"/><circle cx="106" cy="43" r="1.2" style="animation-delay:-3.6s"/><circle cx="234" cy="135" r="1.2" style="animation-delay:-4.3s"/><circle cx="208" cy="21" r="0.8" style="animation-delay:-1.7s"/><circle cx="180" cy="113" r="0.6" style="animation-delay:-5.6s"/><circle cx="214" cy="191" r="0.6" style="animation-delay:-2.8s"/><circle cx="265" cy="196" r="1.2" style="animation-delay:-4.6s"/><circle cx="277" cy="30" r="1" style="animation-delay:-3.9s"/><circle cx="132" cy="210" r="0.8" style="animation-delay:-3.0s"/><circle cx="138" cy="121" r="0.6" style="animation-delay:-4.6s"/><circle cx="255" cy="65" r="1" style="animation-delay:-0.9s"/><circle cx="223" cy="134" r="0.6" style="animation-delay:-0.8s"/><circle cx="47" cy="50" r="0.6" style="animation-delay:-3.1s"/><circle cx="134" cy="191" r="0.8" style="animation-delay:-3.4s"/><circle cx="192" cy="43" r="0.8" style="animation-delay:-2.4s"/><circle cx="140" cy="103" r="0.6" style="animation-delay:-3.5s"/><circle cx="323" cy="88" r="0.8" style="animation-delay:-5.3s"/><circle cx="125" cy="106" r="0.8" style="animation-delay:-0.4s"/></g>
+      <g class="sky-core"><circle cx="156.7" cy="121.4" r="0.7"/><circle cx="159.2" cy="123.7" r="0.9"/><circle cx="162.0" cy="119.4" r="0.5"/><circle cx="157.7" cy="123.0" r="0.5"/><circle cx="159.1" cy="123.2" r="0.9"/><circle cx="159.3" cy="117.7" r="0.5"/><circle cx="156.1" cy="125.2" r="0.9"/><circle cx="163.0" cy="116.3" r="0.9"/><circle cx="154.4" cy="129.8" r="0.7"/><circle cx="163.6" cy="136.4" r="0.7"/><circle cx="162.9" cy="124.4" r="0.7"/><circle cx="158.5" cy="128.6" r="0.9"/><circle cx="142.7" cy="114.1" r="0.5"/><circle cx="163.9" cy="125.2" r="0.5"/><circle cx="170.4" cy="129.6" r="0.9"/><circle cx="161.1" cy="117.9" r="0.7"/><circle cx="157.2" cy="123.4" r="0.7"/><circle cx="160.3" cy="127.6" r="0.9"/><circle cx="160.0" cy="121.9" r="0.5"/><circle cx="162.2" cy="123.9" r="0.5"/><circle cx="156.3" cy="117.1" r="0.7"/><circle cx="165.1" cy="124.0" r="0.5"/><circle cx="152.9" cy="127.1" r="0.7"/><circle cx="154.9" cy="119.6" r="0.5"/><circle cx="155.5" cy="115.2" r="0.5"/><circle cx="164.3" cy="119.9" r="0.7"/><circle cx="165.1" cy="125.1" r="0.9"/><circle cx="155.7" cy="125.2" r="0.7"/><circle cx="162.7" cy="114.5" r="0.9"/><circle cx="164.0" cy="131.9" r="0.9"/><circle cx="166.6" cy="122.6" r="0.9"/><circle cx="165.1" cy="120.7" r="0.9"/><circle cx="161.1" cy="127.1" r="0.9"/><circle cx="165.6" cy="134.7" r="0.9"/><circle cx="162.1" cy="131.4" r="0.5"/><circle cx="160.1" cy="128.7" r="0.7"/><circle cx="162.7" cy="119.9" r="0.5"/><circle cx="166.3" cy="128.7" r="0.5"/><circle cx="158.1" cy="132.8" r="0.5"/><circle cx="154.5" cy="120.1" r="0.5"/></g>
+      <g class="sky-lock"><circle class="lock-ring" cx="160" cy="124" r="20"/><path d="M160 94V102M160 146V154M130 124H138M182 124H190"/><circle class="lock-pulse" cx="160" cy="124" r="20"/></g>
+      <text class="sky-name" x="202" y="112">NGC 5139</text>
+      <text class="sky-coord" x="202" y="125">13h 26m 47s</text>
+      <text class="sky-coord" x="202" y="136">&minus;47&deg; 29&prime;</text>
+    </g>
+  </svg>
 </section>
 
 <section class="fl-sec" id="start">
