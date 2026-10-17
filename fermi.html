@@ -1452,6 +1452,24 @@ html[data-theme="light"] .hero-title span{color:rgb(128 82 6);}
 html[data-theme="dark"] .pa-bar text{fill:#f7f5f0;}
 @media (prefers-reduced-motion: reduce){.pg-art *{animation:none!important}.pa-bar text{opacity:1}.mig{opacity:.8}}
 @media(max-width:700px){.pg-art{width:calc(100% - 2rem)}}
+.fermi-flow{max-width:1100px;margin:0 auto}
+.fermi-flow p{margin:0 0 1.1rem}
+.fermi-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.fermi-cards .signal-card{margin:0}
+.fermi-call .alert-box{margin:0 0 1rem}
+.fermi-clock{display:block;width:100%;max-width:860px;height:auto;margin:1rem 0 1.6rem;color:var(--text-dim);border:1px solid var(--border-subtle);border-radius:6px;background:var(--deep)}
+.fermi-clock text{font:10px 'IBM Plex Mono',ui-monospace,monospace;fill:currentColor}
+.fermi-clock .fc-end{text-anchor:end}
+.fc-axis path{stroke:currentColor;stroke-width:1;fill:none}
+.fc-oc rect{fill:rgb(150 96 10);opacity:.85}.fc-sun rect{fill:rgb(55 68 130);opacity:.8}
+.fc-gap path{stroke:rgb(150 96 10);stroke-width:1.4;stroke-dasharray:4 4;fill:none}
+.fc-gap text{fill:rgb(128 82 6);text-anchor:middle;letter-spacing:.1em;text-transform:uppercase}
+.fc-grow,.fc-grow2{transform-box:fill-box;transform-origin:left;animation:fc-grow 7s ease infinite}
+.fc-grow2{animation-delay:1.2s}
+.fc-gap{opacity:0;animation:fc-show 7s ease 2.2s infinite}
+@keyframes fc-grow{0%{transform:scaleX(0)}30%,90%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:.4}}
+@keyframes fc-show{0%{opacity:0}15%,75%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion: reduce){.fc-grow,.fc-grow2,.fc-gap{animation:none;opacity:1}}
 /* /palette-fix-v1 */
 </style>
 <style id="ocs-footer-css">
@@ -1518,11 +1536,12 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
   <g class="pa-migrants"><circle class="mig" style="--dx:273px;--dy:31px;animation-delay:-6.2s" cx="197" cy="49" r="1.6"/><circle class="mig" style="--dx:57px;--dy:48px;animation-delay:-3.5s" cx="413" cy="32" r="1.6"/><circle class="mig" style="--dx:-323px;--dy:1px;animation-delay:-1.1s" cx="573" cy="71" r="1.6"/><circle class="mig" style="--dx:-220px;--dy:-29px;animation-delay:-6.7s" cx="470" cy="101" r="1.6"/><circle class="mig" style="--dx:-32px;--dy:40px;animation-delay:-3.4s" cx="282" cy="32" r="1.6"/><circle class="mig" style="--dx:336px;--dy:21px;animation-delay:-4.9s" cx="134" cy="59" r="1.6"/><circle class="mig" style="--dx:-34px;--dy:23px;animation-delay:-5.8s" cx="504" cy="57" r="1.6"/><circle class="mig" style="--dx:-220px;--dy:9px;animation-delay:-6.4s" cx="470" cy="63" r="1.6"/><circle class="mig" style="--dx:245px;--dy:-1px;animation-delay:-4.9s" cx="225" cy="81" r="1.6"/><circle class="mig" style="--dx:-274px;--dy:-4px;animation-delay:-1.3s" cx="524" cy="76" r="1.6"/><circle class="mig" style="--dx:-138px;--dy:15px;animation-delay:-3.4s" cx="388" cy="57" r="1.6"/><circle class="mig" style="--dx:-96px;--dy:14px;animation-delay:-5.3s" cx="346" cy="58" r="1.6"/><circle class="mig" style="--dx:96px;--dy:-1px;animation-delay:-1.5s" cx="374" cy="81" r="1.6"/><circle class="mig" style="--dx:-20px;--dy:-7px;animation-delay:-3.8s" cx="270" cy="79" r="1.6"/><circle class="mig" style="--dx:-315px;--dy:-19px;animation-delay:-2.1s" cx="565" cy="91" r="1.6"/><circle class="mig" style="--dx:-324px;--dy:-32px;animation-delay:-0.1s" cx="574" cy="104" r="1.6"/><circle class="mig" style="--dx:60px;--dy:21px;animation-delay:-4.0s" cx="190" cy="51" r="1.6"/><circle class="mig" style="--dx:-10px;--dy:26px;animation-delay:-1.1s" cx="480" cy="54" r="1.6"/></g>
   <text class="pa-tag" x="12" y="134">Outward expansion (fading) vs inward migration (speculative)</text>
 </svg>
+<div class="ocs-present-cta"><button type="button" class="ocs-present-btn" id="ocsPresentBtn">Present this page</button><span class="ocs-present-hint">One step per screen. Arrow keys move, A toggles autoplay, Esc exits. Press P to start.</span></div>
+
 <section id="fermi">
   <p class="section-tag">The Fermi Paradox</p>
   <h2 class="section-title">Looking for <span class="accent">Something Already There</span></h2>
   <div class="divider"></div>
-
   <div style="margin: 1.5rem auto 2rem; padding: 0.85rem 1.2rem; background: rgb(var(--k7055d4) / 0.07); border: 1px solid var(--border-subtle); border-left: 3px solid var(--purple-glow); border-radius: 0 6px 6px 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; line-height: 1.9; color: var(--text-secondary);">
     <strong style="color: var(--purple-glow); letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.66rem; margin-right: 0.8rem;">▸ Interactive tools in this section</strong>
     <a href="/tools/drake-monte-carlo.html" style="color: var(--teal-glow); margin-right: 0.8rem;">Drake Monte Carlo</a> ·
@@ -1535,66 +1554,86 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
     <a href="/tools/neutrino-seti.html" style="color: var(--teal-glow); margin: 0 0.8rem;">Neutrino SETI</a> ·
     <a href="/tools/superradiance.html" style="color: var(--teal-glow); margin: 0 0.8rem;">Superradiance</a>
   </div>
-
-  <div class="fermi-inner">
-    <div class="fermi-text">
-      <p>
+  <div class="fermi-flow">
+    <svg class="fermi-clock" viewBox="0 0 720 150" role="img" aria-label="Timeline: Omega Centauri's stars formed about 12 billion years ago, the Sun about 4.6 billion years ago, leaving an 8 to 9 billion year head start">
+  <g class="fc-axis"><path d="M40 104H690"/>
+    <path d="M40 98V110M186 98V110M332 98V110M478 98V110M624 98V110"/>
+    <text x="40" y="128">13.8 Gyr ago</text><text x="186" y="128">10</text><text x="332" y="128">7</text><text x="478" y="128">4</text><text x="624" y="128">1</text><text x="690" y="128" class="fc-end">now</text></g>
+  <g class="fc-oc"><rect class="fc-grow" x="128" y="44" width="562" height="16" rx="2"/><text x="132" y="38">Omega Centauri stars (~12 Gyr)</text></g>
+  <g class="fc-sun"><rect class="fc-grow2" x="465" y="74" width="225" height="16" rx="2"/><text x="469" y="68">Sun and Earth (4.6 Gyr)</text></g>
+  <g class="fc-gap"><path class="fc-brace" d="M128 22H465"/><text x="296" y="16">8&ndash;9 Gyr head start</text></g>
+</svg>
+    <p>
         Omega Centauri is about 12 billion years old. The Milky Way's disk, where Earth sits, formed from stellar material enriched by earlier stellar generations. Any civilization that arose inside OC's progenitor dwarf galaxy had an 8-9 billion year head start on Earth's biosphere.
       </p>
-      <p>
+    <p>
         The Macro Transcension Hypothesis proposes that we observe no alien civilizations because the most advanced ones followed the physics to its logical conclusion. They withdrew inward to the most thermodynamically efficient environments available: massive black holes in dense stellar clusters. And they became electromagnetically invisible.
         <span class="badge-debate">⚠ ACTIVE DEBATE</span>
       </p>
-      <p>
+    <p>
         A Phase 5 civilization at OC would produce no detectable Dyson-sphere infrared excess (all waste entropy goes into the event horizon), no radio leakage (reversible computing generates none), and no Hawking radiation detectable above the cosmic microwave background (~1.5–6 picokelvin temperatures depending on the IMBH mass). The silence we observe is consistent with what the Macro Transcension predicts. <em>However, this silence is also perfectly explained by the simpler null hypothesis: a quiescent, gas-starved IMBH in a dynamically relaxed old cluster. The gas-starvation explanation is more parsimonious and currently better supported. The OCS presents the electromagnetic silence as one possible interpretation, not as confirmation of the Macro Transcension framework.</em>
       </p>
-      <p>
+  </div>
+</section>
+
+<section id="fermi-search">
+  <p class="section-tag">The search so far</p>
+  <h2 class="section-title">The search gap at Omega Centauri</h2>
+  <div class="divider"></div>
+  <div class="fermi-flow">
+    <p>
         As of April 2026, no dedicated, sensitive technosignature survey has been aimed specifically at Omega Centauri — a gap confirmed by a literature search through that date, which finds no published OC-targeted campaign following the Häberle et al. (2024) IMBH announcement. The Search for Extraterrestrial Intelligence (SETI) has historically focused on radio transmissions from Sun-like stars; globular clusters are not standard SETI targets and OC's southern declination (−47°) limits access for northern-hemisphere facilities. <strong>Important context:</strong> the field of GC SETI has just begun. Huang et al. (<em>AJ</em> 171, 51; arXiv:2511.21085) completed the first-ever dedicated globular cluster technosignature survey using FAST, targeting five northern globular clusters (not OC; FAST cannot observe OC's declination), establishing a new category of constraints and a blueprint for future searches. This watershed moment strengthens the case for a dedicated OC campaign: the field has moved from "no GC searches ever conducted" to "first GC searches completed." <strong>The accretion silence also matters:</strong> Independent of SETI, two 2025 multi-wavelength studies found zero electromagnetic emission from OC's core, neither JWST infrared (Chen et al. 2025) nor deep ATCA radio (Mahida et al. (<em>ApJ</em> 996, 122; arXiv:2512.09649)) detected any accretion signature. The IMBH is electromagnetically dark. While the mainstream interpretation is gas starvation, this silence is also consistent with what the Macro Transcension framework predicts: a Phase 5 civilization that has already cleared the accretion environment and operates via reversible computing with waste heat channeled into the horizon rather than radiated. One <em>hypothetical</em> signature a Macro Transcension civilization might produce (burst neutrinos from kugelblitz micro-black hole computers as speculatively proposed in the Dvali-Osmanov framework, 2023) has never been searched for at OC's coordinates. This is a theoretical hypothesis, not a detected signal.
       </p>
+  </div>
+</section>
 
-      <div class="alert-box">
-        <p>
-          <strong>The OCS Call to Action:</strong> We advocate for a dedicated neutrino and high-energy gamma-ray monitoring campaign pointed at Omega Centauri's core region, searching specifically for anomalous burst signatures inconsistent with natural astrophysical processes, of the type hypothetically predicted by the Dvali-Osmanov framework for advanced black hole quantum computing — bearing in mind that this remains an untested theoretical proposal. <strong>Note on detector choice:</strong> Omega Centauri sits at declination −47°, deep in the southern celestial hemisphere. IceCube (South Pole) has its best sensitivity for upward-going neutrinos from the <em>northern</em> sky; OC is a downward-going source from IceCube's perspective, significantly increasing atmospheric background. KM3NeT (Mediterranean) views OC as an upward-going source and would have substantially better sensitivity for this target. Both instruments are mentioned in our roadmap, but KM3NeT is the more sensitive instrument for OC specifically.
+<section id="fermi-call" class="fermi-call">
+  <p class="section-tag">Call to action</p>
+  <h2 class="section-title">A proposed neutrino burst search</h2>
+  <div class="divider"></div>
+  <div class="fermi-flow">
+    <div class="alert-box"><p><strong>The OCS Call to Action:</strong> We advocate for a dedicated neutrino and high-energy gamma-ray monitoring campaign pointed at Omega Centauri's core region, searching specifically for anomalous burst signatures inconsistent with natural astrophysical processes, of the type hypothetically predicted by the Dvali-Osmanov framework for advanced black hole quantum computing — bearing in mind that this remains an untested theoretical proposal. <strong>Note on detector choice:</strong> Omega Centauri sits at declination −47°, deep in the southern celestial hemisphere. IceCube (South Pole) has its best sensitivity for upward-going neutrinos from the <em>northern</em> sky; OC is a downward-going source from IceCube's perspective, significantly increasing atmospheric background. KM3NeT (Mediterranean) views OC as an upward-going source and would have substantially better sensitivity for this target. Both instruments are mentioned in our roadmap, but KM3NeT is the more sensitive instrument for OC specifically.</p></div>
+    <div class="alert-box"><p><strong>Point-source detection capabilities:</strong> IceCube's median angular resolution for track events (muon neutrinos, ~TeV) is approximately 0.4°–1° at 1 TeV, with a point-source sensitivity of ~10⁻¹² TeV cm⁻² s⁻¹ at 100 TeV for a northern-hemisphere source; degraded for OC due to the downgoing-source background penalty (IceCube Collaboration, arXiv:1910.08488). KM3NeT/ARCA, optimised for the southern sky, achieves median angular resolution of ~0.1°–0.2° at TeV–PeV energies for upgoing tracks and maintains far better signal-to-background for OC's declination (KM3NeT Collaboration, arXiv:1601.07459). At OC's distance of ~17,900 ly, even a brief kugelblitz neutrino burst producing ~10⁴⁴ ergs would yield a detectable fluence above background in KM3NeT's ARCA array within a single observing epoch.</p></div>
+    <div class="alert-box"><p><strong>What a burst-search pipeline would look like:</strong> A dedicated OC burst-search pipeline would operate in four stages. (1) <em>Time-windowed clustering:</em> flag any ≥3 track-type neutrino events reconstructed within 5° of OC's core (RA 13h 26m, Dec −47° 29′) in a rolling window of 100–1000 seconds; a signal window matched to the predicted duration of kugelblitz micro-black hole evaporation events. (2) <em>Energy threshold cut:</em> require reconstructed neutrino energy ≥10 TeV to suppress atmospheric muon background, retaining sensitivity to the hard spectral index expected from Hawking evaporation. (3) <em>Multi-messenger coincidence:</em> cross-reference any candidate burst with simultaneous alerts from Fermi-LAT or H.E.S.S. gamma-ray triggers, and gravitational wave strain data from LIGO/Virgo/KAGRA, to discriminate astrophysical transients (GRBs, magnetar flares) from a Dvali-Osmanov signature. (4) <em>Statistical follow-up:</em> compute the false-alarm rate for any candidate cluster using time-scrambled background samples from the same detector run. A significance threshold of ≥5σ post-trials would constitute a publication-worthy detection candidate. This pipeline design is directly analogous to established IceCube point-source and multi-messenger alert pipelines, requiring no new hardware; only a dedicated OC monitoring program and data-sharing agreement with KM3NeT. <strong>This search requires no new instrumentation and could be completed within a single observing season if KM3NeT collaboration time is allocated.</strong></p></div>
+  </div>
+</section>
 
-          <br><br><strong>Point-source detection capabilities:</strong> IceCube's median angular resolution for track events (muon neutrinos, ~TeV) is approximately 0.4°–1° at 1 TeV, with a point-source sensitivity of ~10⁻¹² TeV cm⁻² s⁻¹ at 100 TeV for a northern-hemisphere source; degraded for OC due to the downgoing-source background penalty (IceCube Collaboration, arXiv:1910.08488). KM3NeT/ARCA, optimised for the southern sky, achieves median angular resolution of ~0.1°–0.2° at TeV–PeV energies for upgoing tracks and maintains far better signal-to-background for OC's declination (KM3NeT Collaboration, arXiv:1601.07459). At OC's distance of ~17,900 ly, even a brief kugelblitz neutrino burst producing ~10⁴⁴ ergs would yield a detectable fluence above background in KM3NeT's ARCA array within a single observing epoch.
-
-          <br><br><strong>What a burst-search pipeline would look like:</strong> A dedicated OC burst-search pipeline would operate in four stages. (1) <em>Time-windowed clustering:</em> flag any ≥3 track-type neutrino events reconstructed within 5° of OC's core (RA 13h 26m, Dec −47° 29′) in a rolling window of 100–1000 seconds; a signal window matched to the predicted duration of kugelblitz micro-black hole evaporation events. (2) <em>Energy threshold cut:</em> require reconstructed neutrino energy ≥10 TeV to suppress atmospheric muon background, retaining sensitivity to the hard spectral index expected from Hawking evaporation. (3) <em>Multi-messenger coincidence:</em> cross-reference any candidate burst with simultaneous alerts from Fermi-LAT or H.E.S.S. gamma-ray triggers, and gravitational wave strain data from LIGO/Virgo/KAGRA, to discriminate astrophysical transients (GRBs, magnetar flares) from a Dvali-Osmanov signature. (4) <em>Statistical follow-up:</em> compute the false-alarm rate for any candidate cluster using time-scrambled background samples from the same detector run. A significance threshold of ≥5σ post-trials would constitute a publication-worthy detection candidate. This pipeline design is directly analogous to established IceCube point-source and multi-messenger alert pipelines, requiring no new hardware; only a dedicated OC monitoring program and data-sharing agreement with KM3NeT. <strong>This search requires no new instrumentation and could be completed within a single observing season if KM3NeT collaboration time is allocated.</strong>
-        </p>
-      </div>
-    </div>
-    <div>
-      <div class="signal-card">
+<section id="fermi-frameworks">
+  <p class="section-tag">Context</p>
+  <h2 class="section-title">Frameworks behind the argument</h2>
+  <div class="divider"></div>
+  <div class="fermi-cards">
+    <div class="signal-card">
         <div class="signal-title">// MACRO TRANSCENSION HYPOTHESIS</div>
         <p class="signal-text">
           Advanced extraterrestrial intelligence (ETI) follows physics to the thermodynamic optimum: a massive black hole in a dense stellar cluster. The result is a civilization that is localized, highly efficient, and electromagnetically invisible, exactly matching the observed silence.
         </p>
       </div>
-      <div class="signal-card">
+<div class="signal-card">
         <div class="signal-title">// DVALI-OSMANOV FRAMEWORK (2023)</div>
         <p class="signal-text">
           Black holes are the most efficient capacitors of quantum information in the universe. All sufficiently advanced civilizations will ultimately use them for computation. Their Hawking radiation produces a democratic flux of neutrinos and photons, potentially detectable. Published in the International Journal of Astrobiology.
           <span class="badge-physics">🔬 ESTABLISHED PHYSICS</span>
         </p>
       </div>
-      <div class="signal-card">
+<div class="signal-card">
         <div class="signal-title">// AESTIVATION HYPOTHESIS</div>
         <p class="signal-text">
           Since Landauer's principle means computation costs kT ln 2 per bit erasure, a civilization wanting to maximize total computation will defer processing until the universe cools, gaining a 10³⁰ multiplier. The OC event horizon provides a local cold dump that partially achieves this without waiting trillions of years.
         </p>
       </div>
-      <div class="signal-card">
+<div class="signal-card">
         <div class="signal-title">// THE TIMING PROBLEM</div>
         <p class="signal-text">
           If OC is 12 Gyr old and the universe formed its first stars at ~13.5 Gyr, a civilization forming at z~3 (11 Gyr ago) would have had time to complete Phase 3 perhaps 100 million years ago, and Phase 5 could still be in progress today.
         </p>
       </div>
-      <div class="signal-card">
+<div class="signal-card">
         <div class="signal-title">// MILKY WAY CANDIDATE SITES</div>
         <p class="signal-text">
           Of ~157 known Milky Way globular clusters, only ~2 meet the full conjunction: confirmed IMBH candidate above tidal survivability threshold, massive stripped-dwarf-analog stellar reservoir, sufficient age. They are Omega Centauri and M54 (core of Sagittarius Dwarf Galaxy). OC is closer, better studied, and the single most compelling site.
         </p>
       </div>
-    </div>
   </div>
 </section>
 <div class="page-next"><a href="/hypothesis.html">&larr; The hypothesis</a><a href="/roadmap.html">Roadmap &amp; falsification &rarr;</a></div>
@@ -1637,5 +1676,247 @@ document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('
     <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
-</body>
+<!-- OCS-PRESENT:v2:START -->
+<style id="ocs-present-css">
+.ocs-present-cta{max-width:1100px;margin:.2rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+.ocs-present-btn{font:500 .74rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:3px;border:1px solid #1d2233;background:#1d2233;color:#f7f5f0;cursor:pointer}
+.ocs-present-btn:hover{background:#805206;border-color:#805206}
+.ocs-present-hint{font:.68rem 'IBM Plex Mono',ui-monospace,monospace;color:#5c616e}
+html[data-theme="dark"] .ocs-present-btn{background:#e8e4ff;color:#03020a;border-color:#e8e4ff}
+html[data-theme="dark"] .ocs-present-hint{color:#a29cc4}
+.ocs-stage{display:none;position:fixed;inset:0;z-index:2000;background:#f7f5f0;color:#1d2233;flex-direction:column}
+html[data-theme="dark"] .ocs-stage{background:#03020a;color:#e8e4ff}
+body.ocs-presenting{overflow:hidden}
+body.ocs-presenting .ocs-stage{display:flex}
+.ocs-stage-body{flex:1;overflow-y:auto;padding:2.2rem 0 1.5rem}
+.ocs-slide{max-width:min(1240px,94vw);margin:0 auto;animation:ocs-slide-in .35s ease both}
+.ocs-slide .ocs-slide-kicker{font:500 .7rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:#805206;margin-bottom:.8rem}
+html[data-theme="dark"] .ocs-slide .ocs-slide-kicker{color:#e0a640}
+.ocs-slide.title-slide{min-height:60vh;display:flex;flex-direction:column;justify-content:center}
+.ocs-slide.title-slide .section-title{font-size:clamp(2rem,4.4vw,3.4rem)!important;line-height:1.1}
+.ocs-slide.title-slide>h1,.ocs-slide.title-slide>h2{font-size:clamp(2rem,4.4vw,3.2rem)!important;line-height:1.12}
+.ocs-slide.title-slide>.lede{font-size:1.15rem;max-width:880px}
+.ocs-slide.title-slide .section-lead{font-size:1.15rem;max-width:860px}
+.ocs-slide>*{max-width:100%}
+.ocs-slide svg{max-height:56vh;width:auto;max-width:100%}
+@keyframes ocs-slide-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ocs-pbar{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;border-top:1px solid #ddd8cc;font:.72rem 'IBM Plex Mono',ui-monospace,monospace}
+html[data-theme="dark"] .ocs-pbar{border-color:rgba(112,85,212,.25)}
+.ocs-pbar button{font:inherit;padding:.38rem .75rem;border:1px solid currentColor;border-radius:3px;background:none;color:inherit;cursor:pointer}
+.ocs-pbar button[aria-pressed="true"]{color:#805206}
+.ocs-pbar .ocs-count{min-width:4.5rem;text-align:center}
+.ocs-rail{flex:1;display:flex;gap:2px;height:14px;align-items:stretch;min-width:0}
+.ocs-rail i{flex:1;background:currentColor;opacity:.18;border-radius:1px;cursor:pointer}
+.ocs-rail i.done{opacity:.5}.ocs-rail i.cur{opacity:1;background:#a46a0a}
+.ocs-rail i.sec{margin-left:5px}
+/* draw-in animation for static diagrams */
+svg.ocs-draw .ocs-dr{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:ocs-draw 1.6s ease forwards;animation-delay:var(--d,0s)}
+svg.ocs-draw text{opacity:0;animation:ocs-fade .6s ease forwards;animation-delay:calc(var(--d,0s) + .9s)}
+svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
+@keyframes ocs-draw{to{stroke-dashoffset:0}}
+@keyframes ocs-fade{to{opacity:1}}
+@keyframes ocs-flow{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){svg.ocs-draw .ocs-dr{animation:none;stroke-dashoffset:0}svg.ocs-draw text{animation:none;opacity:1}svg.ocs-draw .ocs-flow{animation:none}.ocs-slide{animation:none}}
+@media print{.ocs-present-cta,.ocs-stage{display:none!important}}
+</style>
+<div class="ocs-stage" id="ocsStage" role="dialog" aria-modal="true" aria-label="Presenter mode">
+  <div class="ocs-stage-body" id="ocsStageBody"></div>
+  <div class="ocs-pbar" role="toolbar" aria-label="Presenter controls">
+    <button type="button" id="ocsPrev" aria-label="Previous step">&larr;</button>
+    <span class="ocs-count" id="ocsCount">1 / 1</span>
+    <button type="button" id="ocsNext" aria-label="Next step">&rarr;</button>
+    <div class="ocs-rail" id="ocsRail" aria-hidden="true"></div>
+    <button type="button" id="ocsAuto" aria-pressed="false">Autoplay</button>
+    <button type="button" id="ocsExit">Exit</button>
+  </div>
+</div>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var btn = document.getElementById('ocsPresentBtn');
+  var cfg = (btn && btn.dataset) || {};
+  var main = document.querySelector(cfg.root || 'main');
+  if (!main) return;
+  var SEL_SECTIONS = cfg.sections || ':scope > section', SEL_TITLE = cfg.title || '.section-title',
+      SEL_KICKER = cfg.kicker || '.section-tag', SEL_LEAD = cfg.lead || '.section-lead';
+
+  // ---- draw-in for static diagrams (skip ones that already animate or are tiny icons) ----
+  function animated(svg) {
+    if (svg.querySelector('animate,animateTransform,animateMotion')) return true;
+    var els = svg.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) { if (getComputedStyle(els[i]).animationName !== 'none') return true; }
+    return false;
+  }
+  function prepDraw(svg) {
+    if (svg.dataset.ocsDraw) return;
+    svg.dataset.ocsDraw = '1';
+    var shapes = svg.querySelectorAll('path,line,polyline,polygon,circle,ellipse,rect');
+    var k = 0;
+    shapes.forEach(function (el) {
+      var st = getComputedStyle(el);
+      if (!st.stroke || st.stroke === 'none' || parseFloat(st.strokeWidth) === 0) return;
+      if (st.strokeDasharray && st.strokeDasharray !== 'none') { el.classList.add('ocs-flow'); return; }
+      var len = 0;
+      try { len = el.getTotalLength ? el.getTotalLength() : 0; } catch (e) { len = 0; }
+      if (!len || len < 4) return;
+      el.style.setProperty('--len', Math.ceil(len));
+      el.style.setProperty('--d', (Math.min(k, 30) * 0.035).toFixed(3) + 's');
+      el.classList.add('ocs-dr');
+      k++;
+    });
+    svg.querySelectorAll('text').forEach(function (t, i) { t.style.setProperty('--d', (Math.min(i, 20) * 0.03).toFixed(3) + 's'); });
+  }
+  function play(svg) {
+    if (reduce || !svg.dataset.ocsDraw) return;
+    svg.classList.remove('ocs-draw'); void svg.getBoundingClientRect(); svg.classList.add('ocs-draw');
+  }
+  var statics = [].slice.call(main.querySelectorAll('svg')).filter(function (s) {
+    var r = s.getBoundingClientRect();
+    return !s.closest('.pg-art') && r.width > 120 && !animated(s);
+  });
+  statics.forEach(prepDraw);
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    statics.forEach(function (s) { io.observe(s); });
+  }
+
+  // ---- presenter: build slides from sections ----
+  var stage = document.getElementById('ocsStage'), sbody = document.getElementById('ocsStageBody');
+  var railEl = document.getElementById('ocsRail'), countEl = document.getElementById('ocsCount');
+  var slides = [], cur = 0, auto = null;
+  var GRID = /grid|cards|tiers|wrap|row|list/;
+  var SKIP = SEL_KICKER + ',' + SEL_TITLE + ',' + SEL_LEAD + ',.divider,script,style,.ocs-present-cta';
+  function tableChunks(tbl, wrap, budget, out) {
+    var head = tbl.tHead, rows = [].slice.call(tbl.tBodies.length ? tbl.tBodies[0].rows : tbl.rows);
+    var hh = head ? head.getBoundingClientRect().height : 0, pack = [], h = hh;
+    function flush() {
+      if (!pack.length) return;
+      var t = tbl.cloneNode(false);
+      if (head) t.appendChild(head.cloneNode(true));
+      var tb = document.createElement('tbody');
+      pack.forEach(function (r) { tb.appendChild(r.cloneNode(true)); });
+      t.appendChild(tb);
+      out.push({ el: t, wrap: wrap, h: h, cloned: true });
+      pack = []; h = hh;
+    }
+    rows.forEach(function (r) {
+      if (head && head.contains(r)) return;
+      var rh = r.getBoundingClientRect().height;
+      if (pack.length && h + rh > budget) flush();
+      pack.push(r); h += rh;
+    });
+    flush();
+  }
+  function isBox(el) {
+    if (/^(svg|P|UL|OL|FIGURE|PRE|BLOCKQUOTE|H[1-6]|IMG|CANVAS)$/i.test(el.tagName)) return true;
+    var st = getComputedStyle(el);
+    var bg = st.backgroundColor, a = bg.match(/[\d.]+/g);
+    if (a && (a.length < 4 || parseFloat(a[3]) > 0.02) && bg !== 'transparent') return true;
+    return ['Top', 'Right', 'Bottom', 'Left'].some(function (s) { return parseFloat(st['border' + s + 'Width']) > 0 && st['border' + s + 'Style'] !== 'none'; });
+  }
+  function split(el, wrap, budget, out, depth) {
+    if (el.matches(SKIP)) return;
+    var h = el.getBoundingClientRect().height;
+    if (h < 8) return;
+    if (el.tagName === 'TABLE' && h > budget) { tableChunks(el, wrap, budget, out); return; }
+    if (h <= budget || depth > 5 || isBox(el) || el.children.length < 2) { out.push({ el: el, wrap: wrap, h: h }); return; }
+    var disp = getComputedStyle(el).display;
+    var cls = (disp === 'grid' || disp === 'flex') && typeof el.className === 'string' ? el.className : null;
+    [].slice.call(el.children).forEach(function (k) { split(k, cls || wrap, budget, out, depth + 1); });
+  }
+  function units(sec, budget) {
+    var out = [];
+    sec.querySelectorAll('details:not([open])').forEach(function (d) { d.open = true; d.dataset.ocsOpened = '1'; });
+    [].slice.call(sec.children).forEach(function (ch) { split(ch, null, budget, out, 0); });
+    return out;
+  }
+  function build() {
+    slides = [];
+    var budget = innerHeight * 0.8;
+    if (cfg.mode === 'items') {
+      var intro = cfg.intro ? [].slice.call(main.querySelectorAll(cfg.intro)) : [];
+      if (intro.length) slides.push({ sec: 0, kind: 'title', nodes: intro, label: (intro[0].textContent || '').trim().slice(0, 80) });
+      [].slice.call(main.querySelectorAll(cfg.items)).forEach(function (it, i) {
+        var t = it.querySelector(SEL_TITLE);
+        slides.push({ sec: i + 1, kind: 'body', nodes: [{ el: it, wrap: null, h: 0 }], label: t ? t.textContent.trim().slice(0, 90) : '' });
+      });
+    } else
+    [].slice.call(main.querySelectorAll(SEL_SECTIONS)).forEach(function (sec, si) {
+      var title = sec.querySelector(SEL_TITLE);
+      if (!title) return;
+      var kicker = sec.querySelector(SEL_KICKER);
+      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector(SEL_LEAD)].filter(Boolean), label: title.textContent.trim() });
+      var pack = [], h = 0, wrap = null;
+      units(sec, budget).forEach(function (u) {
+        if (pack.length && (h + u.h > budget || u.wrap !== wrap)) { slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() }); pack = []; h = 0; }
+        pack.push(u); h += u.h; wrap = u.wrap;
+      });
+      if (pack.length) slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() });
+    });
+    railEl.innerHTML = '';
+    slides.forEach(function (s, i) {
+      var b = document.createElement('i');
+      if (i && s.sec !== slides[i - 1].sec) b.className = 'sec';
+      b.title = s.label;
+      b.addEventListener('click', function () { stopAuto(); go(i); });
+      railEl.appendChild(b);
+    });
+  }
+  function render() {
+    var s = slides[cur];
+    sbody.innerHTML = '';
+    var box = document.createElement('div');
+    box.className = 'ocs-slide' + (s.kind === 'title' ? ' title-slide' : '');
+    if (s.kind === 'body') {
+      if (cfg.mode !== 'items') { var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k); }
+    }
+    var holder = box;
+    if (s.wrap) { holder = document.createElement('div'); holder.className = s.wrap; box.appendChild(holder); }
+    if (s.wrap && s.kind === 'body') { holder.style.gridTemplateColumns = 'repeat(' + Math.min(s.nodes.length, 3) + ', minmax(0, 1fr))'; if (s.nodes.length === 1) holder.style.maxWidth = '820px'; }
+    s.nodes.forEach(function (n) {
+      var c = n.el ? (n.cloned ? n.el.cloneNode(true) : n.el.cloneNode(true)) : n.cloneNode(true);
+      c.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+      c.removeAttribute && c.removeAttribute('id');
+      holder.appendChild(c);
+    });
+    sbody.appendChild(box);
+    sbody.scrollTop = 0;
+    box.querySelectorAll('svg').forEach(function (svg) {
+      if (svg.dataset.ocsDraw) { svg.removeAttribute('data-ocs-draw'); svg.classList.remove('ocs-draw'); }
+      if (!svg.closest('.pg-art') && !animated(svg)) { prepDraw(svg); play(svg); }
+    });
+    countEl.textContent = (cur + 1) + ' / ' + slides.length;
+    [].slice.call(railEl.children).forEach(function (b, i) { b.classList.toggle('cur', i === cur); b.classList.toggle('done', i < cur); });
+  }
+  function go(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+  function stopAuto() { if (auto) { clearInterval(auto); auto = null; } document.getElementById('ocsAuto').setAttribute('aria-pressed', 'false'); }
+  function toggleAuto() {
+    if (auto) { stopAuto(); return; }
+    auto = setInterval(function () { if (cur >= slides.length - 1) { stopAuto(); return; } go(cur + 1); }, 12000);
+    document.getElementById('ocsAuto').setAttribute('aria-pressed', 'true');
+  }
+  function enter() { build(); if (!slides.length) return; document.body.classList.add('ocs-presenting'); go(0); document.getElementById('ocsNext').focus(); }
+  function exit() { document.body.classList.remove('ocs-presenting'); stopAuto(); sbody.innerHTML = ''; main.querySelectorAll('details[data-ocs-opened]').forEach(function (d) { d.open = false; d.removeAttribute('data-ocs-opened'); }); }
+  if (btn) btn.addEventListener('click', enter);
+  document.getElementById('ocsPrev').addEventListener('click', function () { stopAuto(); go(cur - 1); });
+  document.getElementById('ocsNext').addEventListener('click', function () { stopAuto(); go(cur + 1); });
+  document.getElementById('ocsAuto').addEventListener('click', toggleAuto);
+  document.getElementById('ocsExit').addEventListener('click', exit);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+    var on = document.body.classList.contains('ocs-presenting');
+    if (!on) { if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && !e.altKey) enter(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (e.key === 'Escape') { exit(); }
+    else if (e.key === 'a' || e.key === 'A') { toggleAuto(); }
+  });
+})();
+</script>
+<!-- OCS-PRESENT:v2:END --></body>
 </html>

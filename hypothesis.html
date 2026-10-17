@@ -2637,7 +2637,7 @@ document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('
     <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
   </div>
 </footer>
-<!-- OCS-PRESENT:v1:START -->
+<!-- OCS-PRESENT:v2:START -->
 <style id="ocs-present-css">
 .ocs-present-cta{max-width:1100px;margin:.2rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
 .ocs-present-btn{font:500 .74rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:3px;border:1px solid #1d2233;background:#1d2233;color:#f7f5f0;cursor:pointer}
@@ -2655,6 +2655,8 @@ body.ocs-presenting .ocs-stage{display:flex}
 html[data-theme="dark"] .ocs-slide .ocs-slide-kicker{color:#e0a640}
 .ocs-slide.title-slide{min-height:60vh;display:flex;flex-direction:column;justify-content:center}
 .ocs-slide.title-slide .section-title{font-size:clamp(2rem,4.4vw,3.4rem)!important;line-height:1.1}
+.ocs-slide.title-slide>h1,.ocs-slide.title-slide>h2{font-size:clamp(2rem,4.4vw,3.2rem)!important;line-height:1.12}
+.ocs-slide.title-slide>.lede{font-size:1.15rem;max-width:880px}
 .ocs-slide.title-slide .section-lead{font-size:1.15rem;max-width:860px}
 .ocs-slide>*{max-width:100%}
 .ocs-slide svg{max-height:56vh;width:auto;max-width:100%}
@@ -2692,8 +2694,12 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
 <script>
 (function () {
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var main = document.querySelector('main');
+  var btn = document.getElementById('ocsPresentBtn');
+  var cfg = (btn && btn.dataset) || {};
+  var main = document.querySelector(cfg.root || 'main');
   if (!main) return;
+  var SEL_SECTIONS = cfg.sections || ':scope > section', SEL_TITLE = cfg.title || '.section-title',
+      SEL_KICKER = cfg.kicker || '.section-tag', SEL_LEAD = cfg.lead || '.section-lead';
 
   // ---- draw-in for static diagrams (skip ones that already animate or are tiny icons) ----
   function animated(svg) {
@@ -2742,7 +2748,7 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
   var railEl = document.getElementById('ocsRail'), countEl = document.getElementById('ocsCount');
   var slides = [], cur = 0, auto = null;
   var GRID = /grid|cards|tiers|wrap|row|list/;
-  var SKIP = '.section-tag,.section-title,.divider,.section-lead,script,style,.ocs-present-cta';
+  var SKIP = SEL_KICKER + ',' + SEL_TITLE + ',' + SEL_LEAD + ',.divider,script,style,.ocs-present-cta';
   function tableChunks(tbl, wrap, budget, out) {
     var head = tbl.tHead, rows = [].slice.call(tbl.tBodies.length ? tbl.tBodies[0].rows : tbl.rows);
     var hh = head ? head.getBoundingClientRect().height : 0, pack = [], h = hh;
@@ -2790,11 +2796,19 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
   function build() {
     slides = [];
     var budget = innerHeight * 0.8;
-    [].slice.call(main.querySelectorAll(':scope > section')).forEach(function (sec, si) {
-      var title = sec.querySelector('.section-title');
+    if (cfg.mode === 'items') {
+      var intro = cfg.intro ? [].slice.call(main.querySelectorAll(cfg.intro)) : [];
+      if (intro.length) slides.push({ sec: 0, kind: 'title', nodes: intro, label: (intro[0].textContent || '').trim().slice(0, 80) });
+      [].slice.call(main.querySelectorAll(cfg.items)).forEach(function (it, i) {
+        var t = it.querySelector(SEL_TITLE);
+        slides.push({ sec: i + 1, kind: 'body', nodes: [{ el: it, wrap: null, h: 0 }], label: t ? t.textContent.trim().slice(0, 90) : '' });
+      });
+    } else
+    [].slice.call(main.querySelectorAll(SEL_SECTIONS)).forEach(function (sec, si) {
+      var title = sec.querySelector(SEL_TITLE);
       if (!title) return;
-      var kicker = sec.querySelector('.section-tag');
-      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector('.section-lead')].filter(Boolean), label: title.textContent.trim() });
+      var kicker = sec.querySelector(SEL_KICKER);
+      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector(SEL_LEAD)].filter(Boolean), label: title.textContent.trim() });
       var pack = [], h = 0, wrap = null;
       units(sec, budget).forEach(function (u) {
         if (pack.length && (h + u.h > budget || u.wrap !== wrap)) { slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() }); pack = []; h = 0; }
@@ -2817,7 +2831,7 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
     var box = document.createElement('div');
     box.className = 'ocs-slide' + (s.kind === 'title' ? ' title-slide' : '');
     if (s.kind === 'body') {
-      var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k);
+      if (cfg.mode !== 'items') { var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k); }
     }
     var holder = box;
     if (s.wrap) { holder = document.createElement('div'); holder.className = s.wrap; box.appendChild(holder); }
@@ -2846,7 +2860,6 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
   }
   function enter() { build(); if (!slides.length) return; document.body.classList.add('ocs-presenting'); go(0); document.getElementById('ocsNext').focus(); }
   function exit() { document.body.classList.remove('ocs-presenting'); stopAuto(); sbody.innerHTML = ''; main.querySelectorAll('details[data-ocs-opened]').forEach(function (d) { d.open = false; d.removeAttribute('data-ocs-opened'); }); }
-  var btn = document.getElementById('ocsPresentBtn');
   if (btn) btn.addEventListener('click', enter);
   document.getElementById('ocsPrev').addEventListener('click', function () { stopAuto(); go(cur - 1); });
   document.getElementById('ocsNext').addEventListener('click', function () { stopAuto(); go(cur + 1); });
@@ -2866,6 +2879,6 @@ svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
   });
 })();
 </script>
-<!-- OCS-PRESENT:v1:END -->
+<!-- OCS-PRESENT:v2:END -->
 </body>
 </html>
