@@ -324,7 +324,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
   <span class="endpoint-url" id="ep-url">https://mcp.omegacentauri.me/mcp</span>
   <button class="copy-btn" id="copy-ep" onclick="copyEndpoint()" aria-label="Copy endpoint URL">Copy</button>
 </div>
-<p>The server is a stateless Cloudflare Worker running on the <a href="https://spec.modelcontextprotocol.io/" target="_blank" rel="noopener" style="color:var(--teal-glow)">Streamable HTTP MCP transport (2025-11-25)</a>. All tool logic runs client-side in your browser — the MCP server only returns deep-links and metadata; zero data leaves your machine.</p>
+<p>The server is a stateless Cloudflare Worker running on the <a href="https://spec.modelcontextprotocol.io/" target="_blank" rel="noopener" style="color:var(--teal-glow)">Streamable HTTP MCP transport (2025-11-25)</a>. The browser calculators run client-side. The MCP server returns deep-links and metadata, except for the seven compute kernels and <code>run_chain</code>, which run on the worker and receive the inputs you send them.</p>
 
 <h2>Connecting your AI assistant</h2>
 <p style="color:var(--text-secondary);margin-bottom:1.2rem">The OCS endpoint uses the <strong>Streamable HTTP MCP transport</strong> (spec 2025-11-25) and works with any compliant client. Select your client below.</p>
@@ -627,7 +627,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
 <p><strong>Transport:</strong> Streamable HTTP, MCP spec 2025-11-25. POST <code>/mcp</code>, JSON-RPC 2.0, stateless (no session IDs).</p>
 <p><strong>Runtime:</strong> Cloudflare Workers (free plan), deployed globally. Data fixture (<code>tools-manifest.json</code>) served via ASSETS binding, cached per isolate.</p>
 <p><strong>CORS:</strong> <code>omegacentauri.me</code>, <code>claude.ai</code>, <code>app.claude.ai</code>, and localhost are in the allowed-origins set.</p>
-<p><strong>Privacy:</strong> The MCP server returns only URLs and metadata. All physics calculations run client-side in your browser — no inputs or results pass through the server.</p>
+<p><strong>Privacy:</strong> The browser calculators run entirely client-side. Through MCP, the search, deep-link and hash-verification tools return only URLs and metadata. The seven compute kernels (<code>constraint_stacker</code>, <code>bayes_factor_router</code>, <code>jwst_accretion_ledger</code>, <code>gwtc_remnant_classifier</code>, <code>roman_microlensing</code>, <code>apophis_flyby_geometry</code>, <code>rubin_alert_throughput</code>) and <code>run_chain</code> compute on the worker, so the inputs you pass to them are sent to the worker and the results come back from it. The worker's logging is limited to privacy-scoped counters (no raw query text or IP addresses).</p>
 <p><strong>Source:</strong> <a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener" style="color:var(--teal-glow)">github.com/PostOakLabs/OCS</a></p>
 
 </main>

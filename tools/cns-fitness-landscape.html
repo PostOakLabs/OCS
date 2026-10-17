@@ -336,6 +336,9 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
 function gauss(x, mu, sig){ return Math.exp(-0.5*Math.pow((x-mu)/sig,2)); }
 
 function fitness(gR, aR, lR, mpmeR){
+  return fitnessRaw(gR, aR, lR, mpmeR) / FITNESS_NORM;
+}
+function fitnessRaw(gR, aR, lR, mpmeR){
   const fG     = gauss(gR,    1.0, 0.7) * 2.5;
   const fAlpha = gauss(aR,    1.0, 0.45);
   const fL     = lR > 0 ? Math.exp(-Math.max(0, lR-1)*4) * gauss(lR, 0, 2)
@@ -343,6 +346,9 @@ function fitness(gR, aR, lR, mpmeR){
   const fMpMe  = gauss(mpmeR, 1.0, 1.0);
   return Math.max(0, fG * fAlpha * fL * fMpMe);
 }
+
+// Normalise so our universe (all ratios = 1) has fitness exactly 1
+const FITNESS_NORM = fitnessRaw(1, 1, 1, 1);
 
 // ── Color mapping ────────────────────────────────────────────────────
 function fitToColor(f){

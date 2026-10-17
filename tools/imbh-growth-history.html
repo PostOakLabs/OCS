@@ -504,8 +504,10 @@ function drawChart(tl){
 
   // Y labels
   ctx.textAlign='right';
-  const yStep = maxM>15000?5000:maxM>8000?2000:1000;
-  for(let m=0;m<=maxM;m+=yStep){
+  // Nice-number step targeting ~5-10 ticks; hard cap guards against runaway ranges
+  const yRaw = maxM/6, yMag = Math.pow(10, Math.floor(Math.log10(yRaw))), yFrac = yRaw/yMag;
+  const yStep = (yFrac<=1?1:yFrac<=2?2:yFrac<=5?5:10)*yMag;
+  for(let m=0,nTick=0;m<=maxM && nTick<50;m+=yStep,nTick++){
     const y=yOf(m);
     if(y>padT-5 && y<padT+pH+5){
       ctx.fillText(m>=1000?(m/1000).toFixed(0)+'k':m+'', padL-5, y+3);
