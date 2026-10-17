@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,90 +14,200 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
-  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
-  --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
-  --amber-glow:#EF9F27; --amber-soft:#FAC775;
-  --red-bright:#E24B4A;
-  --border-subtle:rgba(112,85,212,0.25);
+  --deep-space:rgb(var(--k03020a)); --panel:rgb(var(--k0d0a24)); --panel2:rgb(var(--k121035));
+  --text-primary:rgb(var(--keeedfe)); --text-secondary:rgb(var(--kbdb8e6)); --text-dim:rgb(var(--k7a739f));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --purple-glow:rgb(var(--k7f77dd)); --purple-soft:rgb(var(--kafa9ec));
+  --amber-glow:rgb(var(--kef9f27)); --amber-soft:rgb(var(--kfac775));
+  --red-bright:rgb(var(--ke24b4a));
+  --border-subtle:rgb(var(--k7055d4) / 0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
 a{color:var(--teal-glow);text-decoration:none;}
 a:hover{text-decoration:underline;}
-nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;}
-nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+nav.top{position:sticky;top:0;z-index:50;background:rgb(var(--k03020a) / 0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+nav.top .brand{font-family:'Source Serif 4',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
 main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
-h1{font-family:'Orbitron',sans-serif;font-size:1.7rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
-h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
-h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+h1{font-family:'Source Serif 4',sans-serif;font-size:1.7rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Source Serif 4',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'IBM Plex Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
 p{margin:0 0 1rem;}
-.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
-.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
-.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
-.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.byline{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgb(var(--kc47800) / 0.08);border:1px solid rgb(var(--kc47800) / 0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
 .banner strong{color:var(--amber-glow);}
-.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
-.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.specbox{background:rgb(var(--kc47800) / 0.06);border:1px dashed rgb(var(--kc47800) / 0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
 .abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
-.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
-.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
-.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
-.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.abstract .lead{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Source Serif 4',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
 .toc ol{margin-left:1.3rem;}
 figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
 figure svg{width:100%;height:auto;display:block;}
 figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
-figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+figcaption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
 table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
 caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
-caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
-th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
-td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
-td.kill{color:#f08c8b;}
+caption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgb(var(--k7055d4) / 0.15);vertical-align:top;color:var(--text-secondary);}
+td.kill{color:rgb(var(--kf08c8b));}
 td.live{color:var(--teal-glow);}
 .eq{display:block;text-align:center;font-size:1.08rem;margin:1.1rem 0;color:var(--text-primary);}
-.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;}
 .postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
-.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+.postulate b{color:var(--purple-soft);font-family:'IBM Plex Mono',monospace;font-size:0.85rem;}
 .refs{font-size:0.88rem;line-height:1.65;}
 .refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
 .refs ol{margin-left:1.3rem;}
 ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
 ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
-.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
 .dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
-.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+.dl-btn{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
 sup,sub{line-height:0;}
 .imp{color:var(--text-primary);font-weight:600;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
 @media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+[fill="#03020a"]{fill:rgb(var(--k03020a))}
+[fill="#4de8c0"]{fill:rgb(var(--k4de8c0))}
+[fill="#7F77DD"]{fill:rgb(var(--k7f77dd))}
+[fill="#7a739f"]{fill:rgb(var(--k7a739f))}
+[fill="#AFA9EC"]{fill:rgb(var(--kafa9ec))}
+[fill="#E24B4A"]{fill:rgb(var(--ke24b4a))}
+[fill="#EEEDFE"]{fill:rgb(var(--keeedfe))}
+[fill="#EF9F27"]{fill:rgb(var(--kef9f27))}
+[fill="#bdb8e6"]{fill:rgb(var(--kbdb8e6))}
+[fill="#f08c8b"]{fill:rgb(var(--kf08c8b))}
+[stroke="#1dba90"]{stroke:rgb(var(--k1dba90))}
+[stroke="#4de8c0"]{stroke:rgb(var(--k4de8c0))}
+[stroke="#7F77DD"]{stroke:rgb(var(--k7f77dd))}
+[stroke="#7a739f"]{stroke:rgb(var(--k7a739f))}
+[stroke="#AFA9EC"]{stroke:rgb(var(--kafa9ec))}
+[stroke="#E24B4A"]{stroke:rgb(var(--ke24b4a))}
+[stroke="#EEEDFE"]{stroke:rgb(var(--keeedfe))}
+[stroke="#EF9F27"]{stroke:rgb(var(--kef9f27))}
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0d0a24:238 236 231;--k121035:237 235 230;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k7055d4:55 68 130;--k7a739f:100 93 136;--k7f77dd:55 68 130;--k9890c0:70 76 94;--kafa9ec:55 68 130;--kbdb8e6:72 60 170;--kc47800:128 82 6;--ke24b4a:165 30 30;--ke8e4ff:29 34 51;--keeedfe:29 34 51;--kef9f27:128 82 6;--kf08c8b:194 27 25;--kfac775:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0d0a24:13 10 36;--k121035:18 16 53;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k7055d4:112 85 212;--k7a739f:122 115 159;--k7f77dd:127 119 221;--k9890c0:152 144 192;--kafa9ec:175 169 236;--kbdb8e6:189 184 230;--kc47800:196 120 0;--ke24b4a:226 75 74;--ke8e4ff:232 228 255;--keeedfe:238 237 254;--kef9f27:239 159 39;--kf08c8b:240 140 139;--kfac775:250 199 117;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
-<nav class="top">
-  <span class="brand">OCS</span>
-  <a href="/index.html">Home</a>
-  <a href="/tools/">Tools</a>
-  <a href="/proposals.html">Proposals</a>
-  <a href="/paper.html">Papers</a>
-  <a href="/macro-transcension-hypothesis.html">MTH paper</a>
-  <a href="/faq.html">FAQ</a>
-  <span style="margin-left:auto;color:var(--text-dim);">campaign · v3.1 · September 2026</span>
-</nav>
+<p class="ocs-crumb"><a href="/">OCS</a> / <a href="/paper.html">Papers</a> / Technosignature campaign</p>
 
 <main>
 
 <p class="eyebrow">OCS Research Paper · Preprint · Paper C (observational campaign)</p>
 <h1>A Multi-Messenger Technosignature and Anomaly-Detection Campaign for Omega Centauri</h1>
 <p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
-<p class="venue">Draft v3.1, last revised 2026-09-03 · companion to <em>The Macro Transcension Hypothesis</em> (Swanson 2026) · prepared for omegacentauri.me · <span style="color:var(--amber-glow)">HYPOTHESIS-AGNOSTIC CAMPAIGN — every program is conventional astrophysics first</span></p>
+<p class="venue">Draft v3.2, last revised 2026-10-08 · companion to <em>The Macro Transcension Hypothesis</em> (Swanson 2026) · prepared for omegacentauri.me · <span style="color:var(--amber-glow)">HYPOTHESIS-AGNOSTIC CAMPAIGN — every program is conventional astrophysics first</span></p>
 
 <div class="dl-row">
   <a class="dl-btn" href="/papers/omega-centauri-technosignature-campaign.pdf">⬇ PDF</a>
@@ -114,7 +224,7 @@ sup,sub{line-height:0;}
 <section id="sec-abstract">
 <div class="abstract">
 <span class="lead">Abstract</span>
-<p>Omega Centauri (NGC 5139), the most massive Galactic globular cluster and the probable stripped nucleus of an accreted dwarf galaxy, presents a unique conjunction of observational circumstances: the strongest current candidate for an intermediate-mass black hole (IMBH) in the Galaxy, anchored by seven stars moving above the local escape velocity (Häberle et al. 2024a); a formally unresolved factor-of-several tension between kinematic lower bounds (≥8,200 M<sub>☉</sub>) and a pulsar-timing upper bound (≲6,000 M<sub>☉</sub>; Bañares-Hernández et al. 2025); complete electromagnetic silence to the deepest radio and infrared limits ever placed on a globular cluster core (Mahida et al. 2026; Chen et al. 2025); and a southern declination optimal for the newest southern-hemisphere facilities. No dedicated technosignature search of ω Cen has ever been conducted at any wavelength. We present a coordinated, hypothesis-agnostic, multi-messenger campaign of eight instrument-matched programs (enumerated in Section 1) spanning infrared imaging, radio timing and SETI, astrometry, gravitational waves, neutrinos, gamma rays, the optical time domain, and archival channels, addressing conventional astrophysics (IMBH reality, mass, and spin; cluster dynamics) and technosignature hypotheses with the same data. For each program we state quantitative sensitivities, time requests, decision thresholds, and explicit falsification criteria, including negative results: with the acceleration estimator calibrated to the proper-motion precision the oMEGACat catalogue itself reports, direct astrometric acceleration detection of the fast stars stands at 0.21σ today and stays below 1σ at nominal parameters before ~2040, so the decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead. Total cost is ≲ US$10M over 2026–2040, of which the cash lines are dominated by archival analysis and commensal observing, though the facility request includes ~650 h of dedicated MeerKAT time, 65 h of JWST and 50 h of CTAO. A per-mille mass and spin measurement is available from LISA if an inspiral is caught in band, at a target-specific probability of ~3×10<sup>−7</sup> over a four-year mission; the probable LISA deliverable is instead a resolved-source count for the cluster's remnant population. Every null result constrains conventional astrophysics, and no anomaly claim advances without confirmation from at least two independent messengers; under realistic outcomes the campaign adjudicates the astrophysical hypotheses, while the technosignature hypothesis is constrained only along specific low-probability branches.</p>
+<p>Omega Centauri (NGC 5139), the most massive Galactic globular cluster and the probable stripped nucleus of an accreted dwarf galaxy, presents a unique conjunction of observational circumstances: the strongest current candidate for an intermediate-mass black hole (IMBH) in the Galaxy, anchored by seven stars moving above the local escape velocity (Häberle et al. 2024a); a formally unresolved factor-of-several tension between kinematic lower bounds (≥8,200 M<sub>☉</sub>) and a pulsar-timing upper bound (≲6,000 M<sub>☉</sub>; Bañares-Hernández et al. 2025); complete electromagnetic silence to the deepest radio and infrared limits ever placed on a globular cluster core (Mahida et al. 2026; Chen et al. 2025); and a southern declination optimal for the newest southern-hemisphere facilities. No dedicated technosignature search of ω Cen has ever been reported at any wavelength. We present a coordinated, hypothesis-agnostic, multi-messenger campaign of eight instrument-matched programs (enumerated in Section 1) spanning infrared imaging, radio timing and SETI, astrometry, gravitational waves, neutrinos, gamma rays, the optical time domain, and archival channels, addressing conventional astrophysics (IMBH reality, mass, and spin; cluster dynamics) and technosignature hypotheses with the same data. For each program we state quantitative sensitivities, time requests, decision thresholds, and explicit falsification criteria, including negative results: with the acceleration estimator calibrated to the proper-motion precision the oMEGACat catalogue itself reports, direct astrometric acceleration detection of the fast stars stands at 0.21σ today and stays below 1σ at nominal parameters before ~2040, so the decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead. Total cost is ≲ US$10M over 2026–2040, of which the cash lines are dominated by archival analysis and commensal observing, though the facility request includes ~650 h of dedicated MeerKAT time, 65 h of JWST and 50 h of CTAO. A per-mille mass and spin measurement is available from LISA if an inspiral is caught in band, at a target-specific probability of ~3×10<sup>−7</sup> over a four-year mission; the probable LISA deliverable is instead a resolved-source count for the cluster's remnant population. Every null result constrains conventional astrophysics, and no anomaly claim advances without confirmation from at least two independent messengers; under realistic outcomes the campaign adjudicates the astrophysical hypotheses, while the technosignature hypothesis is constrained only along specific low-probability branches.</p>
 <p class="kw"><b>Keywords:</b> Omega Centauri · NGC 5139 · intermediate-mass black holes · technosignatures · SETI · multi-messenger astronomy · millisecond pulsars · gravitational waves · neutrino astronomy</p>
 </div>
 </section>
@@ -150,9 +260,9 @@ sup,sub{line-height:0;}
 
 <h3>1.2 The technosignature rationale</h3>
 <p>This paper is the observational companion to a speculative hypothesis paper (Swanson 2026, hereafter Paper A), which argues that rapidly spinning massive black holes in dense old stellar systems are thermodynamic attractors for hypothetical computation-optimizing civilizations, and that ω Cen is the most accessible system satisfying the resulting selection criteria. We neither assume nor argue for that hypothesis here. The campaign is designed to be <em>hypothesis-agnostic</em> in the specific sense that every observation in it is independently justified by conventional astrophysics: IMBH demographics (Greene et al. 2020), cluster dynamics, pulsar timing, accretion physics at the lowest Eddington ratios, and EMRI astrophysics (Amaro-Seoane 2018). The technosignature dimension adds analysis channels (narrowband drift searches, burst-coincidence triggers, anomaly statistics) to data that would be taken anyway, in the cost-effective tradition of commensal SETI (Tarter 2001; Wright et al. 2022; Lacki &amp; DiKerby 2025), consistent with the archival anomaly-detection strategy recommended by the Dyson Minds workshop for black-hole-hosted intelligence (Curtis et al. 2026), and aligned with recent calls for integrated, multi-channel technosignature-search strategies as the efficient way to constrain Fermi-paradox hypotheses (Crawford 2026).</p>
-<p>Three considerations nevertheless justify making the technosignature dimension explicit rather than incidental. First, globular clusters are almost entirely unexplored SETI territory: the first dedicated globular-cluster survey, a FAST pilot of five northern clusters, was published only this year and could not observe ω Cen from FAST's latitude (Huang et al. 2026a); Gaia-based dynamical metrics for prioritizing clusters as technosignature targets have followed (Huang et al. 2026b). Second, ω Cen is a privileged target on entirely generic arguments: 10<sup>7</sup> stars of age 12.08 Gyr (0.75 Gyr spread; systematics dominate the mean; Clontz et al. 2024) in a beam a few arcminutes across, a possible IMBH, and (as the probable nucleus of an accreted dwarf; Hilker &amp; Richtler 2000; Ibata et al. 2019) an independent galactic chemical-evolution history, so that any ETI prior that weights stellar age and number density at all concentrates sharply here. Third, the high-energy technosignature channels (neutrino bursts from hypothetical black-hole-based computation; Dvali &amp; Osmanov 2023) happen to be testable at ω Cen essentially for free, because the cluster's declination makes it an up-going source for the Mediterranean neutrino telescopes. Where Paper A's specific predictions sharpen a test, we say so explicitly and label the dependence; readers uninterested in that hypothesis may strike those sentences without loss to the campaign.</p>
+<p>Three considerations nevertheless justify making the technosignature dimension explicit rather than incidental. First, globular clusters are almost entirely unexplored SETI territory, and the documented record contains no search of ω Cen at any wavelength. The earliest globular-cluster technosignature search was a passive one: Cohen et al. (1980) re-analysed existing hydroxyl and water maser-survey spectra of 25 clusters, taken for astronomical reasons, to bound beacons in a sample of up to 10<sup>7</sup> stars, and ω Cen was absent from all three component surveys; the method, mining spectra taken for other purposes, is the archival re-use on which this campaign's commensal programs rest. The only dedicated optical SETI of globular clusters, coincidence observations of 30 southern clusters with repeat visits, recorded one laser-like event toward 47 Tuc in December 2008 that further searches of the same region did not see again, and its target list is not published, so whether ω Cen was among the thirty is unknown (Bhathal 2010). The first dedicated globular-cluster survey at radio wavelengths, a FAST pilot of five northern clusters, was published only this year and could not observe ω Cen from FAST's latitude (Huang et al. 2026a); Gaia-based dynamical metrics for prioritizing clusters as technosignature targets have followed (Huang et al. 2026b). ω Cen itself is listed in the Breakthrough Listen Exotica Catalog, entry 344 of the Prototype sample, typed as a stripped nucleus; its observation status is not public (Lacki et al. 2021). Second, ω Cen is a privileged target on entirely generic arguments: 10<sup>7</sup> stars of age 12.08 Gyr (0.75 Gyr spread; systematics dominate the mean; Clontz et al. 2024) in a beam a few arcminutes across, a possible IMBH, and (as the probable nucleus of an accreted dwarf; Hilker &amp; Richtler 2000; Ibata et al. 2019) an independent galactic chemical-evolution history, so that any ETI prior that weights stellar age and number density at all concentrates sharply here. Third, the high-energy technosignature channels (neutrino bursts from hypothetical black-hole-based computation; Dvali &amp; Osmanov 2023) happen to be testable at ω Cen essentially for free, because the cluster's declination makes it an up-going source for the Mediterranean neutrino telescopes. Where Paper A's specific predictions sharpen a test, we say so explicitly and label the dependence; readers uninterested in that hypothesis may strike those sentences without loss to the campaign.</p>
 
-<div class="specbox"><span style="color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;">Epistemic status.</span> The observational programs of Sections 3–10 stand on conventional astrophysics and are stated in the empirical register. The technosignature interpretation of any anomaly they return belongs to the speculative register, is conditional on the optimization premise of Papers A and B, and is adjudicated by the quantitative framework of Paper E rather than by this campaign.</div>
+<div class="specbox"><span style="color:var(--amber-glow);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;">Epistemic status.</span> The observational programs of Sections 3–10 stand on conventional astrophysics and are stated in the empirical register. The technosignature interpretation of any anomaly they return belongs to the speculative register, is conditional on the optimization premise of Papers A and B, and is adjudicated by the quantitative framework of Paper E rather than by this campaign.</div>
 
 <h3>1.3 Design principles</h3>
 <p>Five principles govern the campaign design, and we state them up front because they discipline everything that follows.</p>
@@ -274,7 +384,7 @@ sup,sub{line-height:0;}
 <section id="sec-radio">
 <h2>4. Program 2: radio deep imaging, narrowband SETI, and pulsar timing</h2>
 <h3>4.1 Science case</h3>
-<p>The radio program carries three loads at once. (i) <em>Continuum</em>: a deeper interferometric limit (or first detection) on the central compact source, extending Mahida et al. (2026) and the globular-cluster IMBH radio campaigns (Strader et al. 2012; Tremou et al. 2018). (ii) <em>Narrowband SETI</em>: to our knowledge the first dedicated technosignature search of any kind at ω Cen, closing the gap left by the FAST pilot survey's latitude limit (Huang et al. 2026a). (iii) <em>Pulsar timing</em>: the binding constraint on the central mass comes from the cluster's MSP population (five discovered with Parkes, Dai et al. 2020, timed to ν̇ within 3.5 yr, Dai et al. 2023; then thirteen more with MeerKAT/TRAPUM, Chen et al. 2023; Stappers &amp; Kramer 2016). The joint MeerKAT–Parkes timing analysis now extends both the census and the constraints: it reports a nineteenth discovery, PSR J1326−4728S, bringing the known population to nineteen, and its measurements are insensitive to an IMBH of 10³–10⁴ M<sub>☉</sub> while placing a 90 per cent upper limit of &lt;10⁵ M<sub>☉</sub> on the central mass (Colom i Bernadich et al. 2026). The same analysis finds an anomalously high fraction of isolated and black-widow systems among the cluster's MSPs, which bears directly on the MSP radial-distribution priors on which the Bañares-Hernández et al. (2025) timing bound leans, since the spatial distribution of a dynamically processed population need not follow the assumed profile. The path to resolving the mass tension runs directly through more pulsars and longer baselines (Bañares-Hernández et al. 2025; X. Chen et al. 2025).</p>
+<p>The radio program carries three loads at once. (i) <em>Continuum</em>: a deeper interferometric limit (or first detection) on the central compact source, extending Mahida et al. (2026) and the globular-cluster IMBH radio campaigns (Strader et al. 2012; Tremou et al. 2018). (ii) <em>Narrowband SETI</em>: to our knowledge the first dedicated technosignature search of any kind at ω Cen (the one candidate for precedence, Bhathal's thirty-cluster optical survey, does not publish its target list), closing the gap left by the FAST pilot survey's latitude limit (Huang et al. 2026a). (iii) <em>Pulsar timing</em>: the binding constraint on the central mass comes from the cluster's MSP population (five discovered with Parkes, Dai et al. 2020, timed to ν̇ within 3.5 yr, Dai et al. 2023; then thirteen more with MeerKAT/TRAPUM, Chen et al. 2023; Stappers &amp; Kramer 2016). The joint MeerKAT–Parkes timing analysis now extends both the census and the constraints: it reports a nineteenth discovery, PSR J1326−4728S, bringing the known population to nineteen, and its measurements are insensitive to an IMBH of 10³–10⁴ M<sub>☉</sub> while placing a 90 per cent upper limit of &lt;10⁵ M<sub>☉</sub> on the central mass (Colom i Bernadich et al. 2026). The same analysis finds an anomalously high fraction of isolated and black-widow systems among the cluster's MSPs, which bears directly on the MSP radial-distribution priors on which the Bañares-Hernández et al. (2025) timing bound leans, since the spatial distribution of a dynamically processed population need not follow the assumed profile. The path to resolving the mass tension runs directly through more pulsars and longer baselines (Bañares-Hernández et al. 2025; X. Chen et al. 2025).</p>
 <h3>4.2 Implementation: MeerKAT era (2026–2030)</h3>
 <p><span class="imp">Timing.</span> Bi-weekly L-band sessions (~26 per year, ~3–5 h each) on all nineteen MSPs with MeerKAT (Jonas 2016), producing times of arrival at several-μs precision for the brightest objects (the cluster's MSPs are 10–30 μJy sources; sub-μs timing is not on offer). Line-of-sight acceleration precision from timing scales steeply with baseline (σ<sub>a</sub> ∝ T<sup>−5/2</sup> for white noise); by analogy with the mature 47 Tuc and Terzan 5 programs (Freire et al. 2017; Prager et al. 2017), five years of MeerKAT data yield per-pulsar acceleration uncertainties of order 10<sup>−10</sup> m s<sup>−2</sup> for the best-timed objects. We do not extrapolate to the 10<sup>−11</sup> decade: the 47 Tuc and Terzan 5 precedents rest on 20–25-yr baselines, and DM variation and red timing noise break the white-noise T<sup>−5/2</sup> scaling before that precision is reached. For scale, a 4×10<sup>4</sup> M<sub>☉</sub> point mass imposes a ≈ 6×10<sup>−8</sup> m s<sup>−2</sup> at r = 0.3 pc: the discriminating signal is not the detection of acceleration (already achieved; Dai et al. 2023; Bañares-Hernández et al. 2025) but the <em>radial profile</em> of accelerations and jerks across the MSP population, which distinguishes a point mass (a ∝ r<sup>−2</sup>) from an extended remnant component. Commensal search observations are expected to add 5–10 MSPs (the luminosity function is far from exhausted; Chen et al. 2023), and the population-level point-mass upper bound tightens approximately as 1/√N<sub>psr</sub> (T<sub>0</sub>/T)<sup>≥1</sup>; this is an ensemble, bound-level scaling, distinct from the per-pulsar white-noise acceleration scaling σ<sub>a</sub> ∝ T<sup>−5/2</sup> quoted above, because the ensemble constraint is limited by the pulsars' unknown line-of-sight positions and intrinsic spin-down as well as by timing noise. Ten well-timed pulsars with ten-year baselines push a 6,000 M<sub>☉</sub> bound to the 3,000–4,000 M<sub>☉</sub> level if no point-mass signal emerges, or find one.</p>
 <p><span class="imp">Forecast requirement (pre-registered).</span> The profile discriminator just described is the campaign's primary near-term test, and it is at present asserted rather than demonstrated: most of the MSPs sit well outside the central 0.1 pc, and their unknown line-of-sight positions degrade the radial information the test needs. Before the D2 data lock (decision point D2 of the D1–D4 sequence defined in Section 13) we will therefore complete and publish a mock-population forecast: point-mass and extended-component potentials injected at the real MSP sky positions, line-of-sight positions marginalized over the cluster density profile, and realistic timing noise applied, reporting the recoverable Bayes factor (or Δχ²) as a function of baseline and census size. An order-of-magnitude expectation frames the exercise: with 19–25 MSPs, 5–10-yr baselines, and per-pulsar acceleration uncertainties of order 10<sup>−10</sup> m s<sup>−2</sup>, the profile difference between a 2×10<sup>4</sup> M<sub>☉</sub> point mass and a 2–3×10<sup>5</sup> M<sub>☉</sub> extended component is of order 10<sup>−9</sup>–10<sup>−8</sup> m s<sup>−2</sup> for the innermost pulsars. The pre-registered success criterion is a median discrimination of Δχ² ≥ 9 between the two named potentials at the D2 epoch; if the forecast falls short, the D2 decision weight shifts to the astrometric channels of Section 5. A complementary dynamical diagnostic is available from the same data: an IMBH measurably alters the degree of energy equipartition of the host cluster (Aros &amp; Vesperini 2023), so the equipartition profile inferred from the kinematic catalogues provides an independent axis along which the point-mass and extended hypotheses separate.</p>
@@ -681,8 +791,8 @@ sup,sub{line-height:0;}
 <h2>14. Conclusion</h2>
 <p>Omega Centauri in 2026 presents a configuration that observational astronomy rarely supplies: a contested discovery (the Galaxy's best IMBH candidate) whose two strongest constraints formally contradict each other; an electromagnetic silence deep enough to be a result in itself; an essentially untouched technosignature parameter space; and a fleet of new southern and all-sky instruments (Rubin, Roman, Gaia DR4, KM3NeT, CTAO, SKA-Mid, ELT, and ultimately LISA) arriving on the timescale needed to resolve all of it. The campaign presented here is designed to use that conjunction fully.</p>
 <p>Its architecture reflects three commitments. First, <em>dual use</em>: every program stands as conventional astrophysics (the mass tension, the quiescent-accretion frontier, the MSP dynamical laboratory, the first deep TeV and neutrino limits on a globular cluster) so that no null result is a loss. Second, <em>conservative sensitivity accounting</em>: where the obvious measurement fails (direct fast-star acceleration before ~2040), we demonstrate the failure quantitatively and redesign around it, because a program that oversells its tests invites the credibility collapse that has repeatedly damaged this field. Third, <em>pre-registration</em>: hypotheses H<sub>0</sub>/H<sub>1</sub>/H<sub>2</sub>, thresholds, confirmation rules, and decision points are fixed in advance, so that whatever the sky delivers (a remnant swarm, a quiet heavy hole, or a genuine anomaly) the inference chain was written down before anyone knew the answer.</p>
-<p>The adjudication asymmetry deserves a blunt statement. Under realistic outcomes, this campaign will resolve H<sub>0</sub> versus H<sub>1</sub>; it will neither support nor retire H<sub>2</sub> except through the low-probability LISA spin branch or a serendipitous multi-messenger multiplet. No null result carries evidential weight against H<sub>2</sub>, because the leakage-free and electromagnetically silent predictions of that hypothesis class are compatible with every null the campaign can produce; what the campaign buys for H<sub>2</sub> is the pre-registered infrastructure to adjudicate a positive trigger if one ever arrives, and quantitative limits on the specific loud sub-classes (beacons, warm waste heat above the JWST floor, neutrino bursts at predicted strength).</p>
-<p>The cost is US$8.7M across 2026–2040 including 20% contingency, most of it salaries for archival analysis riding on facilities that are funded regardless. The payoff structure is asymmetric in the campaign's favour: the probable outcomes (a resolved mass tension, a characterized central object, the first technosignature limits on 10<sup>7</sup> old stars) are solid science at modest cost, and the improbable outcome (the green branch of Figure 5) would justify the program many thousands of times over. We commit, symmetrically, to the red branches: if the timing profile confirms an extended remnant component, or LISA delivers a light or slowly spinning hole, the anomaly hypotheses retire here without special pleading, and what remains is what was always underneath: the most interesting stellar system in the southern sky, finally measured properly.</p>
+<p>The adjudication asymmetry deserves a blunt statement. Under realistic outcomes, this campaign will resolve H<sub>0</sub> versus H<sub>1</sub>; it will neither support nor retire H<sub>2</sub> except through the low-probability LISA spin branch or a serendipitous multi-messenger multiplet. No null result carries evidential weight against H<sub>2</sub>, because the leakage-free and electromagnetically silent predictions of that hypothesis class are compatible with every null the campaign can produce; what the campaign buys for H<sub>2</sub> is the pre-registered infrastructure to adjudicate a positive trigger if one ever arrives, and quantitative limits on the specific loud sub-classes (beacons, warm waste heat above the JWST floor, neutrino bursts at predicted strength). (Waste heat need not be warm: computation cooled toward the 2.7 K cosmic microwave background floor would radiate grey, line-free thermal emission in the far infrared and submillimetre, with the required radiating area growing as T<sup>−4</sup>, a regime the mid-infrared bands of Program 1 do not reach; Garrett 2026. The inventory of channels limited here is deliberately small; the wider space of proposed technosignatures, from gravitational-wave beacons to the by-products of interstellar transport, is catalogued by Jackson &amp; Benford 2020.)</p>
+<p>The cost is US$8.7M across 2026–2040 including 20% contingency, most of it salaries for archival analysis riding on facilities that are funded regardless. The payoff structure is asymmetric in the campaign's favour: the probable outcomes (a resolved mass tension, a characterized central object, the deepest technosignature limits on 10<sup>7</sup> old stars) are solid science at modest cost, and the improbable outcome (the green branch of Figure 5) would justify the program many thousands of times over. We commit, symmetrically, to the red branches: if the timing profile confirms an extended remnant component, or LISA delivers a light or slowly spinning hole, the anomaly hypotheses retire here without special pleading, and what remains is what was always underneath: the most interesting stellar system in the southern sky, finally measured properly.</p>
 </section>
 
 <section id="sec-acknowledgements">
@@ -708,6 +818,7 @@ sup,sub{line-height:0;}
 <li>Bañares-Hernández, A., Calore, F., Martín Camalich, J., &amp; Read, J. I. (2025). New constraints on the central mass contents of Omega Centauri from combined stellar kinematics and pulsar timing. <em>A&amp;A</em>, 693, A104. <a href="https://doi.org/10.1051/0004-6361/202451763">doi:10.1051/0004-6361/202451763</a> · <a href="https://arxiv.org/abs/2408.00939">arXiv:2408.00939</a></li>
 <li>Baumgardt, H., &amp; Hilker, M. (2018). A catalogue of masses, structural parameters, and velocity dispersion profiles of 112 Milky Way globular clusters. <em>MNRAS</em>, 478, 1520–1557. <a href="https://doi.org/10.1093/mnras/sty1057">doi:10.1093/mnras/sty1057</a> · <a href="https://arxiv.org/abs/1804.08359">arXiv:1804.08359</a></li>
 <li>Baumgardt, H., &amp; Vasiliev, E. (2021). Accurate distances to Galactic globular clusters through a combination of Gaia EDR3, HST, and literature data. <em>MNRAS</em>, 505, 5957–5977. <a href="https://doi.org/10.1093/mnras/stab1474">doi:10.1093/mnras/stab1474</a> · <a href="https://arxiv.org/abs/2105.09526">arXiv:2105.09526</a></li>
+<li>Bhathal, R. (2010). The Australian Optical SETI Project. Astrobiology Science Conference 2010, Abstract 5046. <a href="https://www.lpi.usra.edu/meetings/abscicon2010/pdf/5046.pdf">lpi.usra.edu/meetings/abscicon2010 (PDF)</a></li>
 <li>Braun, J., Dumm, J., De Palma, F., Finley, C., Karle, A., &amp; Montaruli, T. (2008). Methods for point source analysis in high energy neutrino telescopes. <em>Astropart. Phys.</em>, 29, 299–305. <a href="https://doi.org/10.1016/j.astropartphys.2008.02.007">doi:10.1016/j.astropartphys.2008.02.007</a> · <a href="https://arxiv.org/abs/0801.1604">arXiv:0801.1604</a></li>
 <li>Braun, R., Bonaldi, A., Bourke, T., Keane, E., &amp; Wagg, J. (2019). Anticipated performance of the Square Kilometre Array — Phase 1 (SKA1). <a href="https://doi.org/10.48550/arXiv.1912.12699">doi:10.48550/arXiv.1912.12699</a> · <a href="https://arxiv.org/abs/1912.12699">arXiv:1912.12699</a></li>
 <li>Breen, P. G., &amp; Heggie, D. C. (2013). Dynamical evolution of black hole subsystems in idealized star clusters. <em>MNRAS</em>, 432, 2779–2797. <a href="https://doi.org/10.1093/mnras/stt628">doi:10.1093/mnras/stt628</a> · <a href="https://arxiv.org/abs/1304.3401">arXiv:1304.3401</a></li>
@@ -715,6 +826,7 @@ sup,sub{line-height:0;}
 <li>Chen, S., et al. (2025). The intermediate mass black hole in Omega Centauri: constraints on accretion from JWST. <a href="https://arxiv.org/abs/2511.20945">arXiv:2511.20945</a> (preprint, submitted to ApJ)</li>
 <li>Chen, W., Freire, P. C. C., Ridolfi, A., Barr, E. D., Stappers, B., Kramer, M., et al. (2023). MeerKAT discovery of 13 new pulsars in Omega Centauri. <em>MNRAS</em>, 520, 3847–3856. <a href="https://doi.org/10.1093/mnras/stad029">doi:10.1093/mnras/stad029</a> · <a href="https://arxiv.org/abs/2301.03864">arXiv:2301.03864</a></li>
 <li>Chen, X., Vázquez-Aceves, V., Chen, S., Lee, K., Guo, Y., &amp; Liu, K. (2025). Detecting intermediate-mass black holes using miniature pulsar timing arrays in globular clusters. <a href="https://arxiv.org/abs/2507.08201">arXiv:2507.08201</a> (preprint)</li>
+<li>Cohen, N., Malkan, M., &amp; Dickey, J. (1980). A passive SETI in globular clusters at the hydroxyl and water lines. <em>Icarus</em>, 41, 198–204. <a href="https://doi.org/10.1016/0019-1035(80)90004-4">doi:10.1016/0019-1035(80)90004-4</a></li>
 <li>Colom i Bernadich, M., Dai, S., Abbate, F., et al. (2026). A joint MeerKAT and Parkes view of Omega Centauri: new TRAPUM searches and pulsar timing. <a href="https://arxiv.org/abs/2603.21845">arXiv:2603.21845</a> (under review)</li>
 <li>Czech, D., Isaacson, H., Pearce, L., et al. (2021). The Breakthrough Listen search for intelligent life: MeerKAT target selection. <em>PASP</em>, 133, 064502. <a href="https://doi.org/10.1088/1538-3873/abf329">doi:10.1088/1538-3873/abf329</a> · <a href="https://arxiv.org/abs/2103.16383">arXiv:2103.16383</a></li>
 <li>Cherenkov Telescope Array Consortium (2019). <em>Science with the Cherenkov Telescope Array.</em> World Scientific. <a href="https://doi.org/10.1142/10986">doi:10.1142/10986</a> · <a href="https://arxiv.org/abs/1709.07997">arXiv:1709.07997</a></li>
@@ -733,6 +845,7 @@ sup,sub{line-height:0;}
 <li>Fragione, G., Leigh, N. W. C., Ginsburg, I., &amp; Kocsis, B. (2018). Tidal disruption events and gravitational waves from intermediate-mass black holes in evolving globular clusters across space and time. <em>ApJ</em>, 867, 119. <a href="https://doi.org/10.3847/1538-4357/aae486">doi:10.3847/1538-4357/aae486</a></li>
 <li>Freire, P. C. C., Ridolfi, A., Kramer, M., Jordan, C., Manchester, R. N., Torne, P., et al. (2017). Long-term observations of the pulsars in 47 Tucanae — II. Proper motions, accelerations and jerks. <em>MNRAS</em>, 471, 857–876. <a href="https://doi.org/10.1093/mnras/stx1533">doi:10.1093/mnras/stx1533</a> · <a href="https://arxiv.org/abs/1706.04908">arXiv:1706.04908</a></li>
 <li>Gaia Collaboration (Prusti, T., et al.) (2016). The Gaia mission. <em>A&amp;A</em>, 595, A1. <a href="https://doi.org/10.1051/0004-6361/201629272">doi:10.1051/0004-6361/201629272</a> · <a href="https://arxiv.org/abs/1609.04153">arXiv:1609.04153</a></li>
+<li>Garrett, M. (2026). Slysh haloes: the waste heat of cold computing as a submillimetre technosignature. <a href="https://arxiv.org/abs/2608.31153">arXiv:2608.31153</a> (preprint)</li>
 <li>Gezari, S. (2021). Tidal disruption events. <em>ARA&amp;A</em>, 59, 21–58. <a href="https://doi.org/10.1146/annurev-astro-111720-030029">doi:10.1146/annurev-astro-111720-030029</a> · <a href="https://arxiv.org/abs/2104.14580">arXiv:2104.14580</a></li>
 <li>González Prieto, E., Rodriguez, C. L., &amp; Cabrera, T. (2025). Growing the intermediate-mass black hole in Omega Centauri. <em>ApJL</em>, 990, L69. <a href="https://doi.org/10.3847/2041-8213/adfd4a">doi:10.3847/2041-8213/adfd4a</a> · <a href="https://arxiv.org/abs/2507.06316">arXiv:2507.06316</a></li>
 <li>GRAVITY Collaboration (2018). Detection of the gravitational redshift in the orbit of the star S2 near the Galactic centre massive black hole. <em>A&amp;A</em>, 615, L15. <a href="https://doi.org/10.1051/0004-6361/201833718">doi:10.1051/0004-6361/201833718</a> · <a href="https://arxiv.org/abs/1807.09409">arXiv:1807.09409</a></li>
@@ -752,9 +865,11 @@ sup,sub{line-height:0;}
 <li>IceCube Collaboration (Aartsen, M. G., et al.) (2020). Time-integrated neutrino source searches with 10 years of IceCube data. <em>Phys. Rev. Lett.</em>, 124, 051103. <a href="https://doi.org/10.1103/PhysRevLett.124.051103">doi:10.1103/PhysRevLett.124.051103</a> · <a href="https://arxiv.org/abs/1910.08488">arXiv:1910.08488</a></li>
 <li>Ivezić, Ž., et al. (2019). LSST: from science drivers to reference design and anticipated data products. <em>ApJ</em>, 873, 111. <a href="https://doi.org/10.3847/1538-4357/ab042c">doi:10.3847/1538-4357/ab042c</a> · <a href="https://arxiv.org/abs/0805.2366">arXiv:0805.2366</a></li>
 <li>JWST GO 5137 (Seth, A. C., et al.) (2024). Weighing the intermediate mass black hole in Omega Centauri. JWST Proposal, Cycle 3, GO 5137. <a href="https://www.stsci.edu/jwst/phase2-public/5137.pdf">stsci.edu/jwst/phase2-public/5137.pdf</a></li>
+<li>Jackson, A. A., &amp; Benford, G. (2020). Novel technosignatures. <a href="https://arxiv.org/abs/2009.08873">arXiv:2009.08873</a> (preprint)</li>
 <li>JWST GO 8322 team (2026). Astrometric monitoring of the fast stars around the IMBH in ω Centauri. JWST Proposal, GO 8322. <a href="https://www.stsci.edu/jwst-program-info/download/jwst/pdf/8322/">stsci.edu/jwst-program-info</a></li>
 <li>Jonas, J. L., &amp; MeerKAT Team (2016). The MeerKAT radio telescope. <em>PoS</em>, MeerKAT2016, 001. <a href="https://doi.org/10.22323/1.277.0001">doi:10.22323/1.277.0001</a></li>
 <li>KM3NeT Collaboration (2025). Observation of an ultra-high-energy cosmic neutrino with KM3NeT. <em>Nature</em>, 638, 376–382. <a href="https://doi.org/10.1038/s41586-024-08543-1">doi:10.1038/s41586-024-08543-1</a></li>
+<li>Lacki, B. C., et al. (2021). One of Everything: The Breakthrough Listen Exotica Catalog. <em>ApJS</em>, 257, 42. <a href="https://doi.org/10.3847/1538-4365/ac168a">doi:10.3847/1538-4365/ac168a</a> · <a href="https://arxiv.org/abs/2006.11304">arXiv:2006.11304</a></li>
 <li>Lacki, B. C., &amp; DiKerby, S. (2025). Possibilities for SETI at high energy. <a href="https://arxiv.org/abs/2506.16351">arXiv:2506.16351</a> (white paper, preprint)</li>
 <li>Loeb, A. (2024). Comment on "No black holes from light". <a href="https://arxiv.org/abs/2408.06714">arXiv:2408.06714</a> (preprint; authors' reply at arXiv:2408.11097)</li>
 <li>Mahida, A. D., et al. (2026). No evidence for accretion around the intermediate-mass black hole in Omega Centauri. <em>ApJ</em>, 996, 122. <a href="https://doi.org/10.3847/1538-4357/ae2ad4">doi:10.3847/1538-4357/ae2ad4</a> · <a href="https://arxiv.org/abs/2512.09649">arXiv:2512.09649</a></li>
@@ -783,12 +898,28 @@ sup,sub{line-height:0;}
 </ol>
 </section>
 
-<div class="footer">
-<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
-<p>Companion paper: <a href="/macro-transcension-hypothesis.html">The Macro Transcension Hypothesis</a> (Paper A — the speculative hypothesis this campaign tests, alongside conventional astrophysics).</p>
-<p><b>AI assistance disclosure:</b> drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
-</div>
+
 
 </main>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <p class="of-note">Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>. &middot; Companion paper: <a href="/macro-transcension-hypothesis.html">The Macro Transcension Hypothesis</a> (Paper A — the speculative hypothesis this campaign tests, alongside conventional astrophysics). &middot; <b>AI assistance disclosure:</b> drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-15 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
 </body>
 </html>

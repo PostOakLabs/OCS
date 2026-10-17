@@ -67,6 +67,11 @@ jobs:
           REQUIRED=(
             index.html
             faq.html
+            omega-centauri.html
+            hypothesis.html
+            fermi.html
+            roadmap.html
+            references.html
             proposals.html
             tools/index.html
             robots.txt
@@ -133,6 +138,11 @@ jobs:
       # sitemap.xml and sitemap.html (companion to the stranded-page gate).
       - name: Sitemap-coverage gate
         run: python3 scripts/check-sitemap.py
+
+      # Papers run Paper A, B, C ... with companions right after their parent;
+      # every proposal_*.html is linked once from proposals.html and in sitemap.xml.
+      - name: Index-order gate
+        run: python3 scripts/check-index-order.py
 
       # OpenChainGraph gates (OCG 0.2→0.8 Phase B): inline-script syntax check,
       # forbidden-hash-scheme lint on all artifact-qualified tools, and a

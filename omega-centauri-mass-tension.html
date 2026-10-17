@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,95 +14,186 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
-  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
-  --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
-  --amber-glow:#EF9F27; --amber-soft:#FAC775;
-  --red-bright:#E24B4A;
-  --border-subtle:rgba(112,85,212,0.25);
+  --deep-space:rgb(var(--k03020a)); --panel:rgb(var(--k0d0a24)); --panel2:rgb(var(--k121035));
+  --text-primary:rgb(var(--keeedfe)); --text-secondary:rgb(var(--kbdb8e6)); --text-dim:rgb(var(--k7a739f));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --purple-glow:rgb(var(--k7f77dd)); --purple-soft:rgb(var(--kafa9ec));
+  --amber-glow:rgb(var(--kef9f27)); --amber-soft:rgb(var(--kfac775));
+  --red-bright:rgb(var(--ke24b4a));
+  --border-subtle:rgb(var(--k7055d4) / 0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
 a{color:var(--teal-glow);text-decoration:none;}
 a:hover{text-decoration:underline;}
-nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;flex-wrap:wrap;}
-nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+nav.top{position:sticky;top:0;z-index:50;background:rgb(var(--k03020a) / 0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;flex-wrap:wrap;}
+nav.top .brand{font-family:'Source Serif 4',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
 main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
-h1{font-family:'Orbitron',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
-h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
-h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+h1{font-family:'Source Serif 4',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Source Serif 4',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'IBM Plex Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
 p{margin:0 0 1rem;}
-.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
-.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
-.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
-.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.byline{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgb(var(--kc47800) / 0.08);border:1px solid rgb(var(--kc47800) / 0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
 .banner strong{color:var(--amber-glow);}
-.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
-.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.specbox{background:rgb(var(--kc47800) / 0.06);border:1px dashed rgb(var(--kc47800) / 0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
 .abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
-.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
-.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
-.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
-.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.abstract .lead{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Source Serif 4',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
 .toc ol{margin-left:1.3rem;}
 figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
 figure svg{width:100%;height:auto;display:block;}
-figure img{width:100%;height:auto;display:block;border-radius:4px;background:#0a0820;}
+figure img{width:100%;height:auto;display:block;border-radius:4px;background:rgb(var(--k0a0820));}
 figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
-figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+figcaption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
 table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
 caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
-caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
-th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
-td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
+caption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgb(var(--k7055d4) / 0.15);vertical-align:top;color:var(--text-secondary);}
 td.c{text-align:center;}
 td.ok{color:var(--teal-glow);text-align:center;font-weight:600;}
 .tbl-wrap{overflow-x:auto;}
 .eq{display:block;text-align:center;font-size:1.06rem;margin:1.1rem 0;color:var(--text-primary);}
-.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;}
 .postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
-.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+.postulate b{color:var(--purple-soft);font-family:'IBM Plex Mono',monospace;font-size:0.85rem;}
 blockquote{margin:1.2rem 0;padding:0.9rem 1.2rem;background:var(--panel);border-left:3px solid var(--teal-bright);border-radius:0 4px 4px 0;color:var(--text-secondary);font-size:0.96rem;}
 .refs{font-size:0.88rem;line-height:1.65;}
 .refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
 .refs ol{margin-left:1.3rem;}
 ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
 ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
-.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
 .dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
-.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+.dl-btn{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
 sup,sub{line-height:0;}
 .imp{color:var(--text-primary);font-weight:600;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
 @media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0a0820:241 239 234;--k0d0a24:238 236 231;--k121035:237 235 230;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k7055d4:55 68 130;--k7a739f:100 93 136;--k7f77dd:55 68 130;--k9890c0:70 76 94;--kafa9ec:55 68 130;--kbdb8e6:72 60 170;--kc47800:128 82 6;--ke24b4a:165 30 30;--ke8e4ff:29 34 51;--keeedfe:29 34 51;--kef9f27:128 82 6;--kfac775:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0a0820:10 8 32;--k0d0a24:13 10 36;--k121035:18 16 53;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k7055d4:112 85 212;--k7a739f:122 115 159;--k7f77dd:127 119 221;--k9890c0:152 144 192;--kafa9ec:175 169 236;--kbdb8e6:189 184 230;--kc47800:196 120 0;--ke24b4a:226 75 74;--ke8e4ff:232 228 255;--keeedfe:238 237 254;--kef9f27:239 159 39;--kfac775:250 199 117;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
-<nav class="top">
-  <span class="brand">OCS</span>
-  <a href="/index.html">Home</a>
-  <a href="/tools/">Tools</a>
-  <a href="/proposals.html">Proposals</a>
-  <a href="/paper.html">Papers</a>
-  <a href="/macro-transcension-hypothesis.html">MTH paper</a>
-  <a href="/engineered-imbh-systems.html">Engineering</a>
-  <a href="/omega-centauri-accretion-limit.html">Accretion limit</a>
-  <a href="/omega-centauri-axi-note.html">AXI note</a>
-  <span style="margin-left:auto;color:var(--text-dim);">mass tension · v2.1 · September 2026</span>
-</nav>
+<p class="ocs-crumb"><a href="/">OCS</a> / <a href="/paper.html">Papers</a> / The Contested Central Dark Mass of Omega Centauri</p>
 
 <main>
 
 <p class="eyebrow">OCS Research Paper · Preprint · Paper H (the mass tension)</p>
 <h1>The Contested Central Dark Mass of Omega Centauri: A Pre-registered Joint Analysis of Fast Stars, Pulsar Timing, and the Limits of the Proper-Motion Dispersion Profile</h1>
 <p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
-<p class="venue">v2.1, last revised 2026-09-03 · Paper H of eight (A: hypothesis · B: review · C: observational campaign · D: economics · E: engineering and adjudication · F: accretion limit · G: X-ray census · AXI: methods companion to this paper)</p>
+<p class="venue">v2.2, last revised 2026-10-10 · Paper H of eight (A: hypothesis · B: review · C: observational campaign · D: economics · E: engineering and adjudication · F: accretion limit · G: X-ray census · AXI: methods companion to this paper)</p>
 
 <div class="dl-row">
   <a class="dl-btn" href="/papers/omega-centauri-mass-tension.pdf">⬇ PDF</a>
@@ -116,7 +207,7 @@ sup,sub{line-height:0;}
 <section id="sec-abstract">
 <div class="abstract">
 <span class="lead">Abstract</span>
-<p>The center of Omega Centauri carries the sharpest unresolved mass question in globular-cluster dynamics: seven fast-moving stars inside the central 3″ imply an enclosed dark mass ≳ 8,200 M<sub>☉</sub> (Häberle et al. 2024), while joint stellar-kinematics and pulsar-timing modeling favors an extended ~2–3×10<sup>5</sup> M<sub>☉</sub> remnant component and caps any point mass at ≲ 6,000 M<sub>☉</sub> (Bañares-Hernández et al. 2025). We report the first joint likelihood analysis of the individual fast stars, the 19-pulsar TRAPUM timing set (Colom i Bernadich et al. 2026) read correctly as one-sided acceleration bounds, and the oMEGACat 40-bin proper-motion dispersion and anisotropy profiles (Häberle et al. 2025), with the dark component parameterized continuously in mass and scale radius from the point-mass limit to the extended-cluster regime. The analysis was pre-registered before real-data contact, with prior grids, decision criteria, and validation gates fixed in advance and five dated amendments disclosed. The pre-registered outcome is the one we report: the data cannot yet decide between a compact and an extended central dark mass, and we can now say why, quantitatively, for each data type. The dispersion profile, measured to 0.03–0.05 km s<sup>−1</sup>, rejects every smooth spherical non-rotating model (χ<sup>2</sup>/ν ≈ 473 in the outer bins) through a coherent, component-differential residual that no radial systematic term can absorb, and its statistical errors sit a factor 10–40 below its own physics-derived systematic budget; on those two grounds, by a pre-set gate, we retire it from the verdict. The pulsar accelerations, all censored, span 3.0 nats across the entire parameter plane. The pulsar spin-frequency second derivatives are inconsistent with cluster jerks and, after correcting a numerical constant in the published nearest-neighbour jerk scale (ξ = 3.4596, not 3.04), we show jerk discrimination requires a timed-pulsar census of order 10<sup>2</sup>, several times the 19 available, at any timing precision, because the nearest-neighbour floor is a 1-stable process that does not average away. The fast-star and pulsar legs jointly, with the profile leg retired and under the assumed tracer cusp, return a compact optimum (M<sub>dark</sub> ≈ 2.0–2.5×10<sup>4</sup> M<sub>☉</sub> at the point-mass limit, ln K = +10 to +12; range over all prior cells and brackets, Section 5.3). A calibration campaign, now complete, traced the gate battery's one failing check to the retired profile leg itself; re-scored on the verdict configuration under two further dated gate-scope amendments, the battery passes at the fiducial mass-to-light bracket by the point-estimate rule the gate fixes (90 per cent coverage 0.8825 extended, Wilson 0.847–0.910, and 0.865 point, Wilson 0.828–0.895; null and sign-recovery checks passed non-trivially), and the compact preference is quotable as a calibrated 90 per cent statement of consistency between the fast-star and pulsar legs, at the fiducial bracket only and conditional on a Bahcall–Wolf tracer cusp: regenerated at the shallower published stellar-cusp slope the same check returns 0.660 and fails the gate. The same statement is conditional on the TRAPUM pulsar reduction: under the earlier reduction of the same five pulsars, carried here as a labelled sensitivity, the consistency criterion fails in every prior cell of the fit of record and the evidence changes sign. The statement is further conditional on the truncated-polytrope speed-tail family; a hard-truncated isothermal alternative is admissible against the same kinematics and remains untested. It is a statement of consistency, and no resolution of the profile-leg tension, which the gates removed from the verdict, is claimed. A formation-physics overlay sharpens the impasse from the other side: published retention physics builds the compact solution readily and reaches the extended solution only through hybrid configurations that the extended solution's own point-mass cap excludes. We state what would decide the question, and in which order.</p>
+<p>The center of Omega Centauri carries the sharpest unresolved mass question in globular-cluster dynamics: seven fast-moving stars inside the central 3″ imply an enclosed dark mass ≳ 8,200 M<sub>☉</sub> (Häberle et al. 2024) (the discovery team's thesis synthesis deems 2–4×10<sup>4</sup> M<sub>☉</sub> plausible, with the 8,200 M<sub>☉</sub> bound the firm statement (Häberle 2025)), while joint stellar-kinematics and pulsar-timing modeling favors an extended ~2–3×10<sup>5</sup> M<sub>☉</sub> remnant component and caps any point mass at ≲ 6,000 M<sub>☉</sub> (Bañares-Hernández et al. 2025). We report the first joint likelihood analysis of the individual fast stars, the 19-pulsar TRAPUM timing set (Colom i Bernadich et al. 2026) read correctly as one-sided acceleration bounds, and the oMEGACat 40-bin proper-motion dispersion and anisotropy profiles (Häberle et al. 2025), with the dark component parameterized continuously in mass and scale radius from the point-mass limit to the extended-cluster regime. The analysis was pre-registered before real-data contact, with prior grids, decision criteria, and validation gates fixed in advance and five dated amendments disclosed. The pre-registered outcome is the one we report: the data cannot yet decide between a compact and an extended central dark mass, and we can now say why, quantitatively, for each data type. The dispersion profile, measured to 0.03–0.05 km s<sup>−1</sup>, rejects every smooth spherical non-rotating model (χ<sup>2</sup>/ν ≈ 473 in the outer bins) through a coherent, component-differential residual that no radial systematic term can absorb, and its statistical errors sit a factor 10–40 below its own physics-derived systematic budget; on those two grounds, by a pre-set gate, we retire it from the verdict. The pulsar accelerations, all censored, span 3.0 nats across the entire parameter plane. The pulsar spin-frequency second derivatives are inconsistent with cluster jerks and, after <a href="/omega-centauri-xi-erratum.html">correcting a numerical constant in the published nearest-neighbour jerk scale</a> (ξ = 3.4596, not 3.04), we show jerk discrimination requires a timed-pulsar census of order 10<sup>2</sup>, several times the 19 available, at any timing precision, because the nearest-neighbour floor is a 1-stable process that does not average away. The fast-star and pulsar legs jointly, with the profile leg retired and under the assumed tracer cusp, return a compact optimum (M<sub>dark</sub> ≈ 2.0–2.5×10<sup>4</sup> M<sub>☉</sub> at the point-mass limit, ln K = +10 to +12; range over all prior cells and brackets, Section 5.3). A calibration campaign, now complete, traced the gate battery's one failing check to the retired profile leg itself; re-scored on the verdict configuration under two further dated gate-scope amendments, the battery passes at the fiducial mass-to-light bracket by the point-estimate rule the gate fixes (90 per cent coverage 0.8825 extended, Wilson 0.847–0.910, and 0.865 point, Wilson 0.828–0.895; null and sign-recovery checks passed non-trivially), and the compact preference is quotable as a calibrated 90 per cent statement of consistency between the fast-star and pulsar legs, at the fiducial bracket only and conditional on a Bahcall–Wolf tracer cusp: regenerated at the shallower published stellar-cusp slope the same check returns 0.660 and fails the gate. The same statement is conditional on the TRAPUM pulsar reduction: under the earlier reduction of the same five pulsars, carried here as a labelled sensitivity, the consistency criterion fails in every prior cell of the fit of record and the evidence changes sign. The statement is further conditional on the truncated-polytrope speed-tail family; a hard-truncated isothermal alternative is admissible against the same kinematics and remains untested. It is a statement of consistency, and no resolution of the profile-leg tension, which the gates removed from the verdict, is claimed. A formation-physics overlay sharpens the impasse from the other side: published retention physics builds the compact solution readily and reaches the extended solution only through hybrid configurations that the extended solution's own point-mass cap excludes. We state what would decide the question, and in which order.</p>
 <p class="kw"><b>Keywords:</b> globular clusters: individual (NGC 5139) · intermediate-mass black holes · stellar dynamics · pulsars: timing · methods: statistical · pre-registration</p>
 </div>
 </section>
@@ -143,7 +234,7 @@ sup,sub{line-height:0;}
 
 <section id="sec-intro">
 <h2>1. Introduction</h2>
-<p>ω Cen (NGC 5139) has hosted claims and counter-claims of a central intermediate-mass black hole (IMBH) for nearly two decades: integrated-light kinematics for ~4×10<sup>4</sup> M<sub>☉</sub> (Noyola et al. 2008, 2010), proper-motion modeling capping the mass at ≲ 1.2×10<sup>4</sup> M<sub>☉</sub> at ~1σ (1.8×10<sup>4</sup> M<sub>☉</sub> at 3σ), with the verdict hinging on the adopted center (van der Marel &amp; Anderson 2010), radial anisotropy shown to mimic much of the signal (Zocchi et al. 2017), stellar-mass black-hole populations shown to mimic more of it (Zocchi et al. 2019; Baumgardt et al. 2019). The modern form of the question is sharper on both sides. Häberle et al. (2024) found seven fast-moving stars inside the central 3″, five robust, with velocities above the central escape speed of any IMBH-free model, giving a firm kinematic lower bound of 8,200 M<sub>☉</sub> on an enclosed dark mass. Bañares-Hernández et al. (2025) combined stellar kinematics with millisecond-pulsar accelerations and found the data favor an extended dark component of 2–3×10<sup>5</sup> M<sub>☉</sub> at parsec scale, with a 3σ cap of 6,000 M<sub>☉</sub> on any point mass, below the fast-star bound. The TRAPUM timing release (Colom i Bernadich et al. 2026) expanded the pulsar census to 19 with an IMBH-insensitive upper limit of 10<sup>5</sup> M<sub>☉</sub>, sharpening the data without resolving the contradiction.</p>
+<p>ω Cen (NGC 5139) has hosted claims and counter-claims of a central intermediate-mass black hole (IMBH) for nearly two decades: integrated-light kinematics for ~4×10<sup>4</sup> M<sub>☉</sub> (Noyola et al. 2008, 2010), a direct N-body model of the central region whose best fit carries a 5×10<sup>4</sup> M<sub>☉</sub> black hole (Jalali et al. 2012), proper-motion modeling capping the mass at ≲ 1.2×10<sup>4</sup> M<sub>☉</sub> at ~1σ (1.8×10<sup>4</sup> M<sub>☉</sub> at 3σ), with the verdict hinging on the adopted center (van der Marel &amp; Anderson 2010), radial anisotropy shown to mimic much of the signal (Zocchi et al. 2017), stellar-mass black-hole populations shown to mimic more of it (Zocchi et al. 2019; Baumgardt et al. 2019). The modern form of the question is sharper on both sides. Häberle et al. (2024) found seven fast-moving stars inside the central 3″, five robust, with velocities above the central escape speed of any IMBH-free model, giving a firm kinematic lower bound of 8,200 M<sub>☉</sub> on an enclosed dark mass. Bañares-Hernández et al. (2025) combined stellar kinematics with millisecond-pulsar accelerations and found the data favor an extended dark component of 2–3×10<sup>5</sup> M<sub>☉</sub> at parsec scale, with a 3σ cap of 6,000 M<sub>☉</sub> on any point mass, below the fast-star bound. The TRAPUM timing release (Colom i Bernadich et al. 2026) expanded the pulsar census to 19 with an IMBH-insensitive upper limit of 10<sup>5</sup> M<sub>☉</sub>, sharpening the data without resolving the contradiction.</p>
 <p>The methodological history of this exact contest in other clusters is cautionary in both directions. In 47 Tucanae, a pulsar-dynamics IMBH claim (Kiziltan et al. 2017) did not survive multimass remnant modeling (Mann et al. 2019; Smith et al. 2024); in NGC 6397, a claimed IMBH resolved into a diffuse inner subcluster (Vitral &amp; Mamon 2021); and Aros et al. (2020) showed with mock data that Jeans-type fits fabricate IMBH masses at this scale when anisotropy or mass-to-light structure is mis-modeled. Any new joint analysis of ω Cen enters a literature where the last three comparable verdicts were overturned by systematics, and it should be built accordingly.</p>
 <p>This paper reports such an analysis, built with three defenses the prior literature lacked in combination. First, a genuinely joint likelihood: the individual fast stars (velocities, positions, selection function, contamination), the pulsar line-of-sight accelerations read as the one-sided bounds they are, and the dispersion and anisotropy profiles, all constraining one dark component parameterized continuously by mass M<sub>dark</sub> and Plummer scale a, from the point-mass limit (a → 0) to the extended-cluster regime, so that the compact and extended hypotheses are regions of one parameter plane rather than separate models with separate machinery. Second, pre-registration: the prior grid, the decision criteria, the validation gates, and the amendment protocol were committed to a public repository before any likelihood touched real data, and all five subsequent amendments are dated and disclosed (Section 3). Third, adversarial validation: the pipeline had to reproduce the Aros et al. (2020) failure mode on demand (inject anisotropy, fit isotropic, measure the fabricated mass) and demonstrate calibrated coverage on mock injections before first real-data contact, and a second gate battery governed what became quotable afterward.</p>
 <p>The outcome is the pre-registered null: the data cannot yet decide. We consider that outcome, reached this way, more useful than another overturnable verdict, because the machinery now localizes the indecision to specific, named causes per data type, and because the same machinery yields the first quantitative statement of what a deciding dataset must contain. Sections 2–4 describe the data, the pre-registered design, and the validated machinery, including a correction to a published constant in the pulsar-jerk formalism that other groups may wish to note independently of anything else in this paper. Sections 5–6 report the joint fits under both pre-registered error models and diagnose, leg by leg, where the discriminating power actually resides. Section 7 adds the formation-physics overlay, Section 8 states what would decide the question, and Section 9 concludes.</p>
@@ -152,8 +243,8 @@ sup,sub{line-height:0;}
 <section id="sec-data">
 <h2>2. Data</h2>
 <p>All inputs were extracted from their primary sources into versioned, provenance-annotated tables before any modeling, with every value carrying its source location and verbatim context; the fit records the content hash of each input it consumed. Four datasets enter.</p>
-<p><span class="imp">Fast stars.</span> The seven candidates of Häberle et al. (2024), with the robust/candidate split preserved: the headline analysis uses the five robust stars (stars A, C, D, E, F; star letters and pulsar letters are separate series throughout this paper and are prefixed wherever either could be meant), and the all-seven variant is a reported sensitivity row. Positions, proper motions, and uncertainties come from their Extended Data tables; the selection function is reconstructed from the stated quality-cut pass fraction (157,320 of 241,133 stars, completeness 0.652), the 3″ search radius, the 2.41 mas yr<sup>−1</sup> threshold, and the published contamination density, which reproduces the paper's own expected foreground count (0.0735 against their quoted 0.074). The N-body-informed mass range quoted in that paper's methods is model output, not data, and enters nowhere in this analysis.</p>
-<p><span class="imp">Pulsar accelerations.</span> The TRAPUM timing solutions (Colom i Bernadich et al. 2026): 8 of 19 pulsars have measured spin-period derivatives; every derived cluster line-of-sight acceleration is a one-sided bound, because the intrinsic spin-down is unknown and non-negative. Seven bounds enter the likelihood; one (pulsar C, which is unrelated to star C above) is excluded because its published table entry is typeset in a form we could not disambiguate, and we do not silently repair source tables. Three of the seven bounds are negative-signed (pulsars B, D, K), and those carry what constraining power the leg has. We verified the published reduction chain by recomputing pulsar A's bound from its P, Ṗ, and the Shklovskii and Galactic terms (1.9796×10<sup>−9</sup> against the printed 1.98×10<sup>−9</sup> m s<sup>−2</sup>). The earlier five-pulsar solutions of Dai et al. (2023) are carried as a labelled sensitivity variant; Section 6 reports what that comparison revealed.</p>
+<p><span class="imp">Fast stars.</span> The seven candidates of Häberle et al. (2024), with the robust/candidate split preserved: the headline analysis uses the five robust stars (stars A, C, D, E, F; star letters and pulsar letters are separate series throughout this paper and are prefixed wherever either could be meant), and the all-seven variant is a reported sensitivity row. Line-of-sight velocities exist for only three of the seven, and for none of the four innermost stars, which include the three fastest and most mass-constraining members of the sample (Häberle 2025); the leg is proper-motion-only for those innermost stars. Positions, proper motions, and uncertainties come from their Extended Data tables; the selection function is reconstructed from the stated quality-cut pass fraction (157,320 of 241,133 stars, completeness 0.652), the 3″ search radius, the 2.41 mas yr<sup>−1</sup> threshold, and the published contamination density, which reproduces the paper's own expected foreground count (0.0735 against their quoted 0.074). The N-body-informed mass range quoted in that paper's methods is model output, not data, and enters nowhere in this analysis.</p>
+<p><span class="imp">Pulsar accelerations.</span> The TRAPUM timing solutions (Colom i Bernadich et al. 2026): 8 of 19 pulsars have measured spin-period derivatives (a gravitational-wave timing channel would sit far below the data: for an assumed central binary of total mass 10<sup>4</sup> M<sub>☉</sub> and five-year period, the induced timing residual for a millisecond pulsar at 0.2 core radii is of order 10 ns (Qi et al. 2026), three orders of magnitude below the ~10 µs precision achieved for ω Cen millisecond pulsars); every derived cluster line-of-sight acceleration is a one-sided bound, because the intrinsic spin-down is unknown and non-negative. Seven bounds enter the likelihood; one (pulsar C, which is unrelated to star C above) is excluded because its published table entry is typeset in a form we could not disambiguate, and we do not silently repair source tables. Three of the seven bounds are negative-signed (pulsars B, D, K), and those carry what constraining power the leg has. We verified the published reduction chain by recomputing pulsar A's bound from its P, Ṗ, and the Shklovskii and Galactic terms (1.9796×10<sup>−9</sup> against the printed 1.98×10<sup>−9</sup> m s<sup>−2</sup>). The earlier five-pulsar solutions of Dai et al. (2023) are carried as a labelled sensitivity variant; Section 6 reports what that comparison revealed.</p>
 <p><span class="imp">Dispersion, anisotropy, rotation.</span> The oMEGACat 40-bin sky-radial and sky-tangential proper-motion dispersion profiles with their anisotropy ratios, r = 1.8″–311″, statistical errors 0.023–0.05 km s<sup>−1</sup> in the best-measured bins, retrieved from the survey's machine-readable release and checksum-verified (Häberle et al. 2025); the integrated-light rotation profile (amplitude rising to 8.4 ± 0.8 km s<sup>−1</sup> at 4.7′) frozen from Häberle et al. (2026); kinematic distance 5,494 ± 61 pc from the same survey, with the 5,200 pc value adopted by Bañares-Hernández et al. (2025) carried as a reported axis rather than harmonized away.</p>
 <p><span class="imp">Visible-model structure.</span> No machine-readable radial surface-brightness array for ω Cen exists in the public record; we verified this against the survey chain, the Baumgardt &amp; Hilker (2018) catalogue release, and its archival files before concluding it, and the gap forced Amendment A1 below. The visible model is therefore the reported pair: a Plummer sphere at the catalogue half-light scale, and the published αβγ profile of Bañares-Hernández et al. (2025) at its released best-fit parameters, each normalized on the outer dispersion bins (r &gt; 100″).</p>
 <p><span class="imp">The calibration domain, and what it absorbs.</span> Earlier drafts of this paper, and the calibration module itself, justified that r &gt; 100″ domain by asserting that the dark component contributes below one part in 10<sup>3</sup> of the enclosed mass there everywhere in the prior grid. That assertion is wrong, and we withdraw it. Recomputed in the model code the fit itself uses, with M<sub>vis</sub> = 3.54×10<sup>6</sup> M<sub>☉</sub> and b<sub>vis</sub> = 7.56 pc at 5.494 kpc, the enclosed visible mass inside 100″ (2.66 pc) is 1.30×10<sup>5</sup> M<sub>☉</sub>, and the dark fraction M<sub>dark</sub>(&lt;r)/M(&lt;r) runs as in Table 1. The claim holds only at the lowest corner of the prior grid and only outside ~250″; at 100″ it is exceeded by a factor 7.6 even there, and the extended solution of Bañares-Hernández et al. (2025) contributes 63 per cent of the enclosed mass in the innermost calibration bin. Recalibrating M<sub>vis</sub> on the same bins with each prior corner's dark component present, under the same A2 marginal profile likelihood the fit of record uses, moves M<sub>vis</sub> by −0.14, −2.0, −10.3 and −46.2 per cent at the four corners of Table 1; the first two sit inside the 9.7 per cent mass-to-light bracket the fit already carries, the extended corners do not, so the normalization is biased against extended solutions by up to a bracket width at 2.5×10<sup>5</sup> M<sub>☉</sub> and by more than four bracket widths at 10<sup>6</sup> M<sub>☉</sub>. This bias affects the analysis in two ways. The compact optimum of the fit of record is not affected at the level of its own error budget, because a 2.5×10<sup>4</sup> M<sub>☉</sub> point mass shifts the calibration by 2 per cent. The retirement of the profile leg (Section 5.2) is argued on the component-differential residual and the systematics-to-statistics ratio alone, both independent of this claim; the signal-content argument is withdrawn from it.</p>
@@ -227,7 +318,7 @@ sup,sub{line-height:0;}
 <h3>5.2 Amendment A2 and the gate battery it failed</h3>
 <p>The A2 rerun replaced every floor with the reviewed discrepancy model: a four-knot spline mean term δ(r) with Normal(0, 1.0 km s<sup>−1</sup>) knot priors, the scale fixed in advance as the quadrature budget of three named physics terms (energy-equipartition and multimass effects, 0.5–0.8 km s<sup>−1</sup> from the survey's own equipartition profile; flattening and azimuthal averaging at the cluster's projected ellipticity ε = 0.17, per White &amp; Shawl (1987) as compiled in the Harris catalogue, the largest of the published values, which range from 0.08 to 0.17 with method and radius (Geyer et al. 1983; Pancino et al. 2003), so the budget term is conservative; the intrinsic axial ratio is 0.78±0.03 at inclination 50° (van de Ven et al. 2006); second-order rotation leakage), plus a half-Normal(0, 0.3 km s<sup>−1</sup>) white term, both marginalized everywhere, across sixteen configurations (both visible models, both distances, the primary and three mandatory companion rows). Rotation does not enter the mean model, on a mechanism ruling worth recording: the misfit lives in proper-motion dispersions computed about per-bin means, which remove ordered rotation to first order, and the measured rotation is line-of-sight in any case; the data agree, since residual rotation would inflate the tangential component and the tangential component is the low one.</p>
 <p>All four quotability gates failed, each informatively.</p>
-<p><span class="imp">The residual is component-differential.</span> The sign test fails in every configuration (p = 8×10<sup>−6</sup> to 4×10<sup>−5</sup>), and it fails by component: the model under-predicts the sky-radial dispersion in 33 of 40 bins and over-predicts the sky-tangential in 26 of 40, at every cell of the parameter plane, including the cell where the profile leg fits best. A shared radial discrepancy δ(r) cannot represent a component-differential residual by construction. Whatever the profile is expressing (anisotropy structure beyond one Osipkov–Merritt scale, flattening, unrelaxed substructure from the cluster's accretion origin), it is not absorbable by any radial error term, fixed or fitted.</p>
+<p><span class="imp">The residual is component-differential.</span> The sign test fails in every configuration (p = 8×10<sup>−6</sup> to 4×10<sup>−5</sup>), and it fails by component: the model under-predicts the sky-radial dispersion in 33 of 40 bins and over-predicts the sky-tangential in 26 of 40, at every cell of the parameter plane, including the cell where the profile leg fits best. A shared radial discrepancy δ(r) cannot represent a component-differential residual by construction. Whatever the profile is expressing (anisotropy structure beyond one Osipkov–Merritt scale, flattening, unrelaxed substructure from the cluster's accretion origin), it is not absorbable by any radial error term, fixed or fitted. Population-dependent anisotropy is in fact reported for ω Cen: between about 4′ and 20′ the Al-rich population shows a proper-motion anisotropy ratio σ<sub>tan</sub>/σ<sub>rad</sub> = 0.76 ± 0.04 against 0.94 ± 0.06 for the Al-poor (Pagnini et al. 2026), and stellar populations differ in anisotropy over 0.9–2.3 half-light radii (Ziliotto et al. 2026). Both ranges lie largely outside the 1.8″–311″ (0.03–5.2′) span of the profile leg, so its single Osipkov–Merritt scale is a stated simplification; no number in this paper changes on that account.</p>
 <p><span class="imp">The verdict-controlling assumption reproduces one level up.</span> ln K fails sign unanimity (52 of 288 defined cells carry the minority sign), and the minority concentrates in the halved-prior companion row: at half the knot-prior scale, the worst configuration returns ln K = −5.5 with 99 per cent extended posterior mass, against +7.3 and 97 per cent compact for the primary. Striking the quadrature floor moved the controlling assumption from an error-bar width to a prior width. We take the reproduction of the regress as a result, and we do not pursue a third amendment: the leg's answer is not stable under any error model we or three independent reviews could defend, because the leg does not contain the answer. Figure 3 shows the sixteen configurations at the fiducial bracket, which is the level of the record at which the reproduction is visible in one panel.</p>
 
 <figure id="fig3">
@@ -431,9 +522,11 @@ sup,sub{line-height:0;}
 <li>Dickson, N., Smith, P. J., Hénault-Brunet, V., Gieles, M., and Baumgardt, H. (2024). Multimass modelling of Milky Way globular clusters – II. present-day black hole populations. Monthly Notices of the Royal Astronomical Society. <a href="https://arxiv.org/abs/2308.13037">arXiv:2308.13037</a></li>
 <li>Geyer, E. H., Nelles, B., and Hopp, U. (1983). The shape of NGC 5139 (omega Centauri): the ellipticity as a function of radius. Astronomy &amp; Astrophysics, 125:359–364. Bibcode 1983A&amp;A...125..359G.</li>
 <li>González Prieto, E., Rodriguez, C. L., and Cabrera, T. (2025). Growing the intermediate-mass black hole in Omega Centauri. The Astrophysical Journal Letters, 990:L69. <a href="https://arxiv.org/abs/2507.06316">arXiv:2507.06316</a> · <a href="https://doi.org/10.3847/2041-8213/adfd4a">doi:10.3847/2041-8213/adfd4a</a></li>
+<li>Häberle, M. (2025). A new kinematic view of the globular cluster ω Centauri. PhD thesis, Heidelberg University. <a href="https://doi.org/10.11588/heidok.00036483">doi:10.11588/heidok.00036483</a></li>
 <li>Häberle, M. et al. (2026). SDSS-V local volume mapper (LVM): The integrated light and internal rotation of omega Centauri. arXiv:2607.28809; unpublished as of 2026-08-16. <a href="https://arxiv.org/abs/2607.28809">arXiv:2607.28809</a></li>
 <li>Häberle, M., Neumayer, N., Seth, A., Bellini, A., Libralato, M., Anderson, J., Whitaker, M., van de Ven, G., Watkins, L. L., Clontz, C., et al. (2024). Fast-moving stars around an intermediate-mass black hole in ω Centauri. Nature, 631(8020):285–289. <a href="https://arxiv.org/abs/2405.06015">arXiv:2405.06015</a> · <a href="https://doi.org/10.1038/s41586-024-07511-z">doi:10.1038/s41586-024-07511-z</a></li>
 <li>Häberle, M., Neumayer, N., Seth, A. C., et al. (2025). oMEGACat. VI. analysis of the overall kinematics of ω Centauri in 3D: velocity dispersion, kinematic distance, anisotropy, and energy equipartition. The Astrophysical Journal. <a href="https://arxiv.org/abs/2503.04903">arXiv:2503.04903</a></li>
+<li>Jalali, B., Baumgardt, H., Kissler-Patig, M., Gebhardt, K., Noyola, E., Lützgendorf, N., and de Zeeuw, P. T. (2012). A dynamical N-body model for the central region of ω Centauri. Astronomy &amp; Astrophysics, 538:A19. <a href="https://arxiv.org/abs/1111.5011">arXiv:1111.5011</a> · <a href="https://doi.org/10.1051/0004-6361/201116923">doi:10.1051/0004-6361/201116923</a></li>
 <li>Kennedy, M. C. and O'Hagan, A. (2001). Bayesian calibration of computer models. Journal of the Royal Statistical Society: Series B, 63:425–464. <a href="https://doi.org/10.1111/1467-9868.00294">doi:10.1111/1467-9868.00294</a></li>
 <li>Kiziltan, B., Baumgardt, H., and Loeb, A. (2017). An intermediate-mass black hole in the centre of the globular cluster 47 Tucanae. Nature, 542:203–205. <a href="https://arxiv.org/abs/1702.02149">arXiv:1702.02149</a> · <a href="https://doi.org/10.1038/nature21361">doi:10.1038/nature21361</a></li>
 <li>Mai, A., Kremer, K., and Kıroğlu, F. (2026). Shadows of the colossus: Hierarchical black hole mergers in a 10-million-body globular cluster simulation. The Astrophysical Journal, 998:138. <a href="https://arxiv.org/abs/2510.21916">arXiv:2510.21916</a> · <a href="https://doi.org/10.3847/1538-4357/ae2de5">doi:10.3847/1538-4357/ae2de5</a></li>
@@ -441,8 +534,10 @@ sup,sub{line-height:0;}
 <li>Martinez, M. A. S., González Prieto, E., and Rasio, F. A. (2026). Survival analysis of intermediate-mass black holes in dense star clusters. arXiv e-prints, page arXiv:2602.23431. Submitted to ApJ. <a href="https://arxiv.org/abs/2602.23431">arXiv:2602.23431</a></li>
 <li>Noyola, E., Gebhardt, K., and Bergmann, M. (2008). Gemini and Hubble Space Telescope evidence for an intermediate-mass black hole in ω Centauri. The Astrophysical Journal, 676:1008–1015. <a href="https://arxiv.org/abs/0801.2782">arXiv:0801.2782</a> · <a href="https://doi.org/10.1086/529002">doi:10.1086/529002</a></li>
 <li>Noyola, E., Gebhardt, K., Kissler-Patig, M., Lützgendorf, N., Jalali, B., de Zeeuw, P. T., and Baumgardt, H. (2010). Very large telescope kinematics for omega Centauri: Further support for a central black hole. The Astrophysical Journal Letters, 719:L60–L64. <a href="https://arxiv.org/abs/1007.4559">arXiv:1007.4559</a> · <a href="https://doi.org/10.1088/2041-8205/719/1/L60">doi:10.1088/2041-8205/719/1/L60</a></li>
+<li>Pagnini, G., Bianchini, P., Di Matteo, P., and Mastrobuono-Battisti, A. (2026). The chemo-dynamical complexity of ω Centauri: different kinematics for different populations. arXiv:2605.20503; unpublished as of 2026-10-08. <a href="https://arxiv.org/abs/2605.20503">arXiv:2605.20503</a></li>
 <li>Pancino, E., Seleznev, A., Ferraro, F. R., Bellazzini, M., and Piotto, G. (2003). The multiple stellar population in ω Centauri: spatial distribution and structural properties. Monthly Notices of the Royal Astronomical Society, 345:683–690. <a href="https://doi.org/10.1046/j.1365-8711.2003.06981.x">doi:10.1046/j.1365-8711.2003.06981.x</a></li>
 <li>Prager, B. J., Ransom, S. M., Freire, P. C. C., Hessels, J. W. T., Stairs, I. H., Arras, P., and Cadelano, M. (2017). Using long-term millisecond pulsar timing to obtain physical characteristics of the bulge globular cluster Terzan 5. The Astrophysical Journal, 845:148. <a href="https://arxiv.org/abs/1612.04395">arXiv:1612.04395</a> · <a href="https://doi.org/10.3847/1538-4357/aa7ed7">doi:10.3847/1538-4357/aa7ed7</a></li>
+<li>Qi, H., Chen, X., Wang, L., and Liu, K. (2026). A whisper from within: Response of a pulsar timing array to an internal gravitational-wave source. arXiv:2606.20021; unpublished as of 2026-10-08. <a href="https://arxiv.org/abs/2606.20021">arXiv:2606.20021</a></li>
 <li>Smith, P. J., Hénault-Brunet, V., Dickson, N., Gieles, M., and Baumgardt, H. (2024). Probing the population of dark stellar remnants in the globular clusters 47 Tuc and Terzan 5 using pulsar timing. The Astrophysical Journal, 975. <a href="https://arxiv.org/abs/2407.06274">arXiv:2407.06274</a></li>
 <li>Swanson, T. (2026). The component-differential residual in the omega centauri proper-motion dispersion profile: A pre-registered campaign that cannot identify its mechanism. <a href="/omega-centauri-axi-note.html">omegacentauri.me/papers/omega-centauri-axi-note.pdf</a>. Methods note, The Omega Centauri Society.</li>
 <li>van de Ven, G., van den Bosch, R. C. E., Verolme, E. K., and de Zeeuw, P. T. (2006). The dynamical distance and intrinsic structure of the globular cluster ω Centauri. Astronomy &amp; Astrophysics, 445:513–543. <a href="https://doi.org/10.1051/0004-6361:20053061">doi:10.1051/0004-6361:20053061</a></li>
@@ -450,17 +545,35 @@ sup,sub{line-height:0;}
 <li>Vitral, E. and Mamon, G. A. (2021). Does NGC 6397 contain an intermediate-mass black hole or a more diffuse inner subcluster? Astronomy &amp; Astrophysics, 646:A63. <a href="https://arxiv.org/abs/2010.05532">arXiv:2010.05532</a> · <a href="https://doi.org/10.1051/0004-6361/202039650">doi:10.1051/0004-6361/202039650</a></li>
 <li>Whitaker, K. et al. (2026). A long period stellar-mass black hole binary in ω Centauri. The Astrophysical Journal Letters, 1006:L1. <a href="https://arxiv.org/abs/2606.18350">arXiv:2606.18350</a></li>
 <li>White, R. E. and Shawl, S. J. (1987). Axial ratios and orientations of 100 galactic globular clusters. The Astronomical Journal, 94:30–34. Bibcode 1987AJ.....94...30W; compiled in the Harris Milky Way GC catalogue. <a href="https://doi.org/10.1086/114442">doi:10.1086/114442</a></li>
+<li>Ziliotto, T., Milone, A. P., Cordoni, G., Marino, A. F., et al. (2026). A joint JWST and HST view of Omega Centauri: Multiple stellar populations and their kinematics. Astronomy &amp; Astrophysics, 707:A86. <a href="https://arxiv.org/abs/2506.21187">arXiv:2506.21187</a> · <a href="https://doi.org/10.1051/0004-6361/202556112">doi:10.1051/0004-6361/202556112</a></li>
 <li>Zocchi, A., Gieles, M., and Hénault-Brunet, V. (2017). Radial anisotropy in ω Cen limiting the room for an intermediate-mass black hole. Monthly Notices of the Royal Astronomical Society, 468:4429–4440. <a href="https://arxiv.org/abs/1702.00725">arXiv:1702.00725</a> · <a href="https://doi.org/10.1093/mnras/stx316">doi:10.1093/mnras/stx316</a></li>
 <li>Zocchi, A., Gieles, M., and Hénault-Brunet, V. (2019). The effect of stellar-mass black holes on the central kinematics of ω Cen: a cautionary tale for IMBH interpretations. Monthly Notices of the Royal Astronomical Society, 482:4713–4725. <a href="https://arxiv.org/abs/1806.02157">arXiv:1806.02157</a></li>
 </ol>
 </div>
 </section>
 
-<div class="footer">
-<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
-<p>Preprint. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. Interactive calculators implementing the quantitative material are available under <a href="/tools/">/tools/</a>. This HTML edition is generated from the LaTeX source (<code>paper/mass-tension-paper.tex</code>) and mirrors it; the PDF is canonical for citation.</p>
-</div>
+
 
 </main>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <p class="of-note">Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>. &middot; Preprint. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. Interactive calculators implementing the quantitative material are available under <a href="/tools/">/tools/</a>. This HTML edition is generated from the LaTeX source (<code>paper/mass-tension-paper.tex</code>) and mirrors it; the PDF is canonical for citation.</p>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-15 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
 </body>
 </html>

@@ -12,8 +12,9 @@ Science portal about NGC 5139 (Omega Centauri): candidate IMBH, Fermi Paradox, M
 
 | File | Size | Use instead |
 |---|---|---|
-| `index.html` | ~700 KB / ~4,800 lines | `Grep` or `Read` with `offset`/`limit` |
-| `faq.html` | ~166 KB | `Grep` |
+| `faq.html` | ~240 KB (237,357 B) | `Grep` |
+| `references.html` | ~220 KB (219,056 B) | `Grep` |
+| `hypothesis.html` | ~175 KB (173,043 B) | `Grep` |
 | Tool files >40 KB | varies | `compute-in-space`, `constraint-stacker`, `orbital-dynamics`, `cmd-explorer`, `lisa-emri`, `bekenstein-landauer`, `radio-seti`, `bz-kardashev` — `Grep` for specific functions |
 
 Never read: `og-image.png` (204 KB), `apple-touch-icon.png`, `favicon.ico`.
@@ -51,16 +52,36 @@ When chaining tools via `tools/toolname.html#param=val`:
 ### Scenario page pattern
 `tools/scenario-*.html` files chain existing tools as deeplinks (no iframes). Structure: scenario selector → step cards with CTA hash links → synthesis box. Use `scenario-breaking-degeneracy.html` as template (6-step); `scenario-dwarf-inheritance.html` for 4-step. Scenarios must not use `measurements.js` unless they actually need cluster data.
 
+### Adding a paper or proposal
+Enforced by `scripts/check-index-order.py` (pre-push + CI). Papers and proposals are not ordered automatically; follow this list.
+
+**New paper**
+1. Take the next letter after the last `Paper X` card on `paper.html` (currently A–H). A methods note, erratum or other companion is not lettered; label it "… companion to Paper X".
+2. Add its card to `paper.html` immediately after the previous lettered paper; a companion goes directly after its parent paper (after any existing companions of that parent).
+3. Card markup: `<a class="paper-card" href="/<file>.html">` with the label line "Paper X · Short title" (or "… companion to Paper X"), title in `<h2>`, byline, abstract. Presenter mode picks the card up automatically.
+4. Add the page to `sitemap.xml` and `sitemap.html`; give it the shared nav, `ocs-crumb` breadcrumb (`OCS / Papers / <short title>`) and the shared footer.
+5. Update the paper count in the `paper.html` lede ("Nine companion preprints …") and anywhere `verify-counts.py` reports.
+
+**New proposal**
+1. Create `proposal_<slug>.html` from an existing proposal page.
+2. Link it exactly once from `proposals.html`, inside the `<section>` for its channel (neutrino, gamma-ray, radio, infrared, multi-messenger/GW, time-domain, astrometry); add a new `<section><h2>…</h2>` only for a genuinely new channel (it becomes a presenter step automatically).
+3. Add it to `sitemap.xml` and `sitemap.html`, and update the proposal count in the `proposals.html` lede and any count sentinels (`python3 scripts/verify-counts.py`).
+
 ---
 
 ## File map
 
 ```
 repo/
-├── index.html                     ← main site (TOKEN LANDMINE)
-├── faq.html                       ← FAQ (TOKEN LANDMINE)
-├── proposals.html                 ← hub for 11 observational proposals
-├── proposal_*.html                ← 11 proposals (14–25 KB each — readable whole)
+├── index.html                     ← homepage (~90 KB, readable with offset/limit)
+├── omega-centauri.html            ← NGC 5139 physical overview (~84 KB)
+├── hypothesis.html                ← Macro Transcension Hypothesis (TOKEN LANDMINE, ~175 KB)
+├── fermi.html                     ← Fermi Paradox context (~81 KB)
+├── roadmap.html                   ← project roadmap and phases (~105 KB)
+├── references.html                ← bibliography and citation notes (TOKEN LANDMINE, ~220 KB)
+├── faq.html                       ← FAQ, 60 items (TOKEN LANDMINE, ~240 KB)
+├── proposals.html                 ← hub for 13 observational proposals (order rules: "Adding a paper or proposal")
+├── proposal_*.html                ← 13 proposals (14–25 KB each — readable whole)
 └── tools/
     ├── index.html                 ← tools landing page
     ├── data/measurements.js       ← SINGLE SOURCE OF TRUTH for IMBH/cluster values

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,97 +14,205 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
-  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
-  --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
-  --amber-glow:#EF9F27; --amber-soft:#FAC775;
-  --red-bright:#E24B4A;
-  --border-subtle:rgba(112,85,212,0.25);
+  --deep-space:rgb(var(--k03020a)); --panel:rgb(var(--k0d0a24)); --panel2:rgb(var(--k121035));
+  --text-primary:rgb(var(--keeedfe)); --text-secondary:rgb(var(--kbdb8e6)); --text-dim:rgb(var(--k7a739f));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --purple-glow:rgb(var(--k7f77dd)); --purple-soft:rgb(var(--kafa9ec));
+  --amber-glow:rgb(var(--kef9f27)); --amber-soft:rgb(var(--kfac775));
+  --red-bright:rgb(var(--ke24b4a));
+  --border-subtle:rgb(var(--k7055d4) / 0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
 a{color:var(--teal-glow);text-decoration:none;}
 a:hover{text-decoration:underline;}
-nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;}
-nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+nav.top{position:sticky;top:0;z-index:50;background:rgb(var(--k03020a) / 0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+nav.top .brand{font-family:'Source Serif 4',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
 main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
-h1{font-family:'Orbitron',sans-serif;font-size:1.7rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
-h2{font-family:'Orbitron',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
-h3{font-family:'Space Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+h1{font-family:'Source Serif 4',sans-serif;font-size:1.7rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Source Serif 4',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'IBM Plex Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
 p{margin:0 0 1rem;}
-.byline{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
-.venue{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
-.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
-.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.byline{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgb(var(--kc47800) / 0.08);border:1px solid rgb(var(--kc47800) / 0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
 .banner strong{color:var(--amber-glow);}
-.specbox{background:rgba(196,120,0,0.06);border:1px dashed rgba(196,120,0,0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
-.specbox strong{color:var(--amber-glow);font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.specbox{background:rgb(var(--kc47800) / 0.06);border:1px dashed rgb(var(--kc47800) / 0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
 .abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
-.abstract .lead{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
-.kw{font-family:'Space Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
-.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.82rem;line-height:2.0;}
-.toc .toc-h{font-family:'Orbitron',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.abstract .lead{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Source Serif 4',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
 .toc ol{margin-left:1.3rem;}
 figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
 figure svg{width:100%;height:auto;display:block;}
 figure img{width:100%;height:auto;display:block;border-radius:4px;background:#0a0820;}
 figure object{width:100%;height:auto;aspect-ratio:4/3;display:block;border-radius:4px;background:#0a0820;}
 figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
-figcaption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
+figcaption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
 figcaption p{margin:0 0 0.7rem;}
-.explainer-meta{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin:0.6rem 0 0;display:flex;flex-wrap:wrap;gap:0.5rem 0.9rem;align-items:center;}
-.anim-btn{font-family:'Space Mono',monospace;font-size:0.72rem;background:transparent;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.4rem 0.8rem;cursor:pointer;}
+.explainer-meta{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin:0.6rem 0 0;display:flex;flex-wrap:wrap;gap:0.5rem 0.9rem;align-items:center;}
+.anim-btn{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;background:transparent;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.4rem 0.8rem;cursor:pointer;}
 .anim-btn:hover{background:rgba(29,186,144,0.12);}
 .anim-btn:focus-visible{outline:2px solid var(--teal-glow);outline-offset:2px;}
 .anim-btn[aria-pressed="true"]{border-color:var(--amber-glow);color:var(--amber-soft);}
 table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
 caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
-caption b{color:var(--teal-glow);font-family:'Space Mono',monospace;font-size:0.78rem;}
-th{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
-td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(112,85,212,0.15);vertical-align:top;color:var(--text-secondary);}
-td.kill{color:#f08c8b;}
+caption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgb(var(--k7055d4) / 0.15);vertical-align:top;color:var(--text-secondary);}
+td.kill{color:rgb(var(--kf08c8b));}
 td.live{color:var(--teal-glow);}
 .eq{display:block;text-align:center;font-size:1.08rem;margin:1.1rem 0;color:var(--text-primary);}
-.eq .eqno{float:right;color:var(--text-dim);font-family:'Space Mono',monospace;font-size:0.8rem;}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;}
 .postulate{margin:1rem 0 1rem 0;padding:0.8rem 1.1rem;background:var(--panel);border-left:3px solid var(--purple-glow);border-radius:0 4px 4px 0;}
-.postulate b{color:var(--purple-soft);font-family:'Space Mono',monospace;font-size:0.85rem;}
+.postulate b{color:var(--purple-soft);font-family:'IBM Plex Mono',monospace;font-size:0.85rem;}
 .refs{font-size:0.88rem;line-height:1.65;}
 .refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
 .refs ol{margin-left:1.3rem;}
 ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
 ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
-.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
 .dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
-.dl-btn{font-family:'Space Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+.dl-btn{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
 sup,sub{line-height:0;}
 .imp{color:var(--text-primary);font-weight:600;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
 @media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+[fill="#4de8c0"]{fill:rgb(var(--k4de8c0))}
+[fill="#7a739f"]{fill:rgb(var(--k7a739f))}
+[fill="#E24B4A"]{fill:rgb(var(--ke24b4a))}
+[fill="#EEEDFE"]{fill:rgb(var(--keeedfe))}
+[fill="#EF9F27"]{fill:rgb(var(--kef9f27))}
+[fill="#bdb8e6"]{fill:rgb(var(--kbdb8e6))}
+[fill="#f08c8b"]{fill:rgb(var(--kf08c8b))}
+[stroke="#1dba90"]{stroke:rgb(var(--k1dba90))}
+[stroke="#4de8c0"]{stroke:rgb(var(--k4de8c0))}
+[stroke="#7F77DD"]{stroke:rgb(var(--k7f77dd))}
+[stroke="#7a739f"]{stroke:rgb(var(--k7a739f))}
+[stroke="#AFA9EC"]{stroke:rgb(var(--kafa9ec))}
+[stroke="#E24B4A"]{stroke:rgb(var(--ke24b4a))}
+[stroke="#EF9F27"]{stroke:rgb(var(--kef9f27))}
+[stroke="#bdb8e6"]{stroke:rgb(var(--kbdb8e6))}
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0d0a24:238 236 231;--k121035:237 235 230;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k7055d4:55 68 130;--k7a739f:100 93 136;--k7f77dd:55 68 130;--k9890c0:70 76 94;--kafa9ec:55 68 130;--kbdb8e6:72 60 170;--kc47800:128 82 6;--ke24b4a:165 30 30;--ke8e4ff:29 34 51;--keeedfe:29 34 51;--kef9f27:128 82 6;--kf08c8b:194 27 25;--kfac775:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0d0a24:13 10 36;--k121035:18 16 53;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k7055d4:112 85 212;--k7a739f:122 115 159;--k7f77dd:127 119 221;--k9890c0:152 144 192;--kafa9ec:175 169 236;--kbdb8e6:189 184 230;--kc47800:196 120 0;--ke24b4a:226 75 74;--ke8e4ff:232 228 255;--keeedfe:238 237 254;--kef9f27:239 159 39;--kf08c8b:240 140 139;--kfac775:250 199 117;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
-<nav class="top">
-  <span class="brand">OCS</span>
-  <a href="/index.html">Home</a>
-  <a href="/tools/">Tools</a>
-  <a href="/proposals.html">Proposals</a>
-  <a href="/paper.html">Papers</a>
-  <a href="/faq.html">FAQ</a>
-  <span style="margin-left:auto;color:var(--text-dim);">paper · v2.8 · September 2026</span>
-</nav>
+<p class="ocs-crumb"><a href="/">OCS</a> / <a href="/paper.html">Papers</a> / The Macro Transcension Hypothesis</p>
 
 <main>
 
 <p class="eyebrow">OCS Research Paper · Preprint</p>
 <h1>The Macro Transcension Hypothesis: Spinning Black Holes in Dense Stellar Clusters as Thermodynamic Attractors for Advanced Civilizations, with Omega Centauri as an Observational Test Bed</h1>
 <p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
-<p class="venue">Draft v2.8, last revised 2026-09-03 · published here first · <span style="color:var(--amber-glow)">SPECULATIVE HYPOTHESIS — falsification framework included</span></p>
+<p class="venue">Draft v2.9, last revised 2026-10-08 · published here first · <span style="color:var(--amber-glow)">SPECULATIVE HYPOTHESIS — falsification framework included</span></p>
 
 <div class="dl-row">
   <a class="dl-btn" href="/papers/macro-transcension-hypothesis.pdf">⬇ PDF</a>
@@ -163,7 +271,7 @@ sup,sub{line-height:0;}
 <section id="sec-intro">
 <h2>1. Introduction</h2>
 <p>The Fermi paradox, in its modern form (Hart 1975; Tipler 1980; Webb 2015; Ćirković 2018; Forgan 2019), rests on an expansionist premise: that at least some technological civilizations should grow outward across interstellar distances, and that such growth, sustained for even a small fraction of galactic history, would be conspicuous. The premise is quantitatively robust. Self-reproducing probe architectures permit galaxy-scale colonization in 10<sup>6</sup>–10<sup>8</sup> years (Tipler 1980; Freitas &amp; Gilbreath 1982), intergalactic expansion is energetically cheap for a mature civilization (Armstrong &amp; Sandberg 2013), and surveys for the waste heat of large-scale energy harvesting have returned null results across ~10<sup>5</sup> galaxies (Wright et al. 2014; Griffith et al. 2015). The observed silence therefore demands either that technological life is extremely rare, that it reliably destroys itself, or that the expansionist premise is wrong.</p>
-<p>A minority tradition in the literature attacks the premise itself. Smart (2012) proposed the <em>transcension hypothesis</em>: that the developmental trajectory of intelligence points not outward but inward, toward ever denser, faster, and more efficient configurations of matter and energy ("STEM compression" of space, time, energy, and matter) terminating, in Smart's telling, at black-hole-scale densities and an effective exit from the observable universe. Sandberg, Armstrong &amp; Ćirković (2016) proposed the <em>aestivation hypothesis</em>: that civilizations which value computation should defer it to the far future, when the cosmic microwave background (CMB) has cooled and each erased bit costs less free energy, and should therefore be dormant now. Both proposals share a key insight, that the thermodynamics of computation is the correct lens through which to predict the behaviour of mature intelligence, and both have been criticized on physical grounds. Smart's mechanism for leaving the universe is not specified in testable form, and the aestivation argument was shown by Bennett, Hanson &amp; Riedel (2019) to rest on a thermodynamic error: free energy not harvested now is largely lost, not banked, so a computation-maximizing civilization should collect resources <em>now</em> even if it spends them later.</p>
+<p>A minority tradition in the literature attacks the premise itself. Smart (2012) proposed the <em>transcension hypothesis</em>: that the developmental trajectory of intelligence points not outward but inward, toward ever denser, faster, and more efficient configurations of matter and energy ("STEM compression" of space, time, energy, and matter) terminating, in Smart's telling, at black-hole-scale densities and an effective exit from the observable universe. Sandberg, Armstrong &amp; Ćirković (2016) proposed the <em>aestivation hypothesis</em>: that civilizations which value computation should defer it to the far future, when the cosmic microwave background (CMB) has cooled and each erased bit costs less free energy, and should therefore be dormant now. Both proposals share a key insight, that the thermodynamics of computation is the correct lens through which to predict the behaviour of mature intelligence, and both have been criticized on physical grounds. Smart's mechanism for leaving the universe is not specified in testable form, and the aestivation argument was shown by Bennett, Hanson &amp; Riedel (2019) to rest on a thermodynamic error: free energy not harvested now is largely lost, not banked, so a computation-maximizing civilization should collect resources <em>now</em> even if it spends them later. The earliest proposal found that black holes could host intelligence predates both: Lefebvre &amp; Efremov (2000) argued that black holes may serve as a physical substratum for intelligent beings, on the strength of structural analogies between Kerr black holes and the brain–psyche system. The grounding there is analogy rather than any energy logic, and the thermodynamic argument developed here is independent of it.</p>
 <p>This paper develops a third member of that family, which we call the <em>Macro Transcension Hypothesis</em> (MTH). Its core claim is that the inward trajectory identified by Smart has a concrete, macroscopic, observationally accessible destination in ordinary astrophysics: rapidly spinning massive black holes embedded in dense, dynamically old stellar systems. No new physics, no exit from the universe, and no multi-gigayear dormancy are required. The advantages that drive the migration (accretion power at up to ~42 times the mass-energy efficiency of hydrogen fusion at the highest spin disk accretion reaches, an event horizon serving as an entropy sink of unlimited capacity, information storage at the Bekenstein–Hawking density, and gravitational time dilation as a controllable computational resource) are all available in the present epoch, and all follow from textbook general relativity and black-hole thermodynamics (Misner, Thorne &amp; Wheeler 1973; Bardeen, Press &amp; Teukolsky 1972; Bekenstein 1973, 1974). The hypothesis predicts that the most advanced civilizations remain present but electromagnetically invisible, because maximum computational efficiency, viewed from outside, is electromagnetically quiet.</p>
 <p>The MTH would remain idle philosophy if it did not select targets. The selection criteria, a massive black hole of modest depth (intermediate, not supermassive), a dense retinue of low-mass stars as fuel, dynamical age sufficient for any migrating civilization to have arrived and matured, and a quiescent electromagnetic environment, converge on a short list of Galactic systems, at the top of which sits Omega Centauri (ω Cen, NGC 5139): the Milky Way's most massive globular cluster, widely interpreted as the stripped nucleus of an accreted dwarf galaxy (Hilker &amp; Richtler 2000; Bekki &amp; Tsujimoto 2019; Ibata et al. 2019), host to ~10<sup>7</sup> stars of mean age 12.08 ± 0.01 Gyr (Clontz et al. 2024), and, since the detection of seven fast-moving stars within its central 3 arcsec (five of which are robust detections), host to the strongest current candidate for an intermediate-mass black hole (IMBH) in the Galaxy (Häberle et al. 2024a). That candidate is simultaneously the subject of a sharp observational controversy: combined stellar-kinematic and millisecond-pulsar-timing analysis places a 3σ <em>upper</em> limit of ~6,000 M<sub>☉</sub> on any central point mass (Bañares-Hernández et al. 2025), formally inconsistent with the kinematic lower bound. And it is electromagnetically dark to remarkable depth: neither ~170 hours of ATCA radio integration (Mahida et al. 2026), nor JWST infrared photometry (Chen et al. 2025), nor a ~291 ks Chandra exposure (Haggard et al. 2013) detects any accretion signature. Every element of this situation (a contested central mass, perfect electromagnetic silence, an imminent decisive instrument in LISA) makes ω Cen a natural laboratory for testing inward-migration hypotheses, entirely independent of whether the MTH is true.</p>
 
@@ -171,7 +279,7 @@ sup,sub{line-height:0;}
 <p>Because the argument mixes established physics with speculative inference, we state the epistemic register of each claim explicitly. The paper makes three claims of different strength:</p>
 <ol class="body-list">
 <li><span class="imp">(Established physics plus a comparative synthesis.)</span> Spinning black holes in dense old clusters are, by a wide quantitative margin, the most thermodynamically favourable environments in the present-day universe for long-term, large-scale computation. The ingredient results are established physics; the optimality claim is a synthesis over a stated comparison set (fusion, Dyson-type stellar harvesting, and cold-space computing), defended quantitatively in Section 4 using standard results, and is independent of any claim about extraterrestrial intelligence. The ranking of cluster IMBHs above supermassive holes rests partly on strategic rather than thermodynamic criteria (hazard exposure, contested resources), which we treat separately in Section 5.4.</li>
-<li><span class="imp">(Speculative hypothesis.)</span> If long-lived technological civilizations exist and even a subset optimizes for computational capacity, the environments of claim 1 act as attractors, and the resulting migration resolves the Fermi paradox without rare-Earth or doomsday assumptions. This is the MTH proper, stated formally in Section 3. We regard it as less parsimonious than the null hypothesis (technological life is rare or absent) and say so.</li>
+<li><span class="imp">(Speculative hypothesis.)</span> If long-lived technological civilizations exist and even a subset optimizes for computational capacity, the environments of claim 1 act as attractors (the attractor vocabulary has recent independent precedent: Kriger (2026), a Zenodo preprint of 31 January 2026, frames the inward turn of advanced civilizations as computational efficiency acting as a universal attractor, offered as a Fermi Paradox solution and derived from the energy-cost asymmetry between moving mass and processing information; it makes no black-hole or cluster-specific claims and selects no astrophysical environment), and the resulting migration resolves the Fermi paradox without rare-Earth or doomsday assumptions. This is the MTH proper, stated formally in Section 3. We regard it as less parsimonious than the null hypothesis (technological life is rare or absent) and say so.</li>
 <li><span class="imp">(Observational program.)</span> Whether or not claim 2 is true, it generates instrument-matched, time-bounded, falsifiable predictions at ω Cen, several of which will be adjudicated by existing or funded instruments within ~15 years. This program is presented in Section 7.</li>
 </ol>
 <p>We do <em>not</em> claim that ω Cen hosts a civilization; we do not claim the IMBH is confirmed (it is not); and we do not claim the observed electromagnetic silence is evidence for the MTH, since it is equally consistent with the simpler gas-starvation explanation that we adopt as the null hypothesis throughout.</p>
@@ -326,11 +434,12 @@ sup,sub{line-height:0;}
 <p><span class="imp">Spin-up economics.</span> A hole of low natal spin is itself improvable. Prograde thin-disk accretion drives a<sub>★</sub> → 0.998 after the hole grows by a factor ≈2.2 (2.2024) (Bardeen 1970; Thorne 1974); for an initial 2×10<sup>4</sup> M<sub>☉</sub> hole this raises the hole mass by 2.4×10<sup>4</sup> M<sub>☉</sub>, which is 2.91×10<sup>4</sup> M<sub>☉</sub> of delivered rest mass once the ISCO binding energy is charged along the track, and consumes 6.8×10<sup>4</sup> cluster stars at 0.43 M<sub>☉</sub>. At Eddington throughput the episode runs ~3.4×10<sup>7</sup> yr with the rate evaluated at the mean hole mass during the episode. Integrating instead against the rising efficiency and the rising Eddington limit together gives an episode of 5.3×10<sup>7</sup> yr, a factor 1.57 longer, which we carry as the conservative bracket. (Earlier drafts printed ~10<sup>8</sup> yr here, from a spin-up integrator carrying compounding sign and root errors; the repaired routine underlies the efficiencies quoted throughout this paper.) The investment multiplies all subsequent per-unit-fuel returns by ~5 (Fig. 1) and unlocks the BZ reservoir. The corollary for observers: spin is a key parameter of the system's history (Section 7), since the MTH requires engineered systems to approach near-extremal spin; the converse inference is weaker, because some natural formation channels, in particular coherent disk growth in a gas-rich nucleus, also reach high spin (Reynolds 2021; Section 7).</p>
 
 <h3 id="sec-landauer">4.2 Entropy disposal: the horizon as the ultimate cold reservoir</h3>
-<p>Landauer's principle sets the minimum thermodynamic cost of irreversible computation: erasing one bit dissipates at least k<sub>B</sub>T ln 2 into a reservoir at temperature T (Landauer 1961; Bennett 1982; Parrondo, Horowitz &amp; Sagawa 2015), a bound verified experimentally (Bérut et al. 2012). Reversible logic evades the bound for intermediate steps (Bennett 1973; Toffoli 1980; Fredkin &amp; Toffoli 1982; Athas et al. 1994; Frank 2002), but error correction, measurement, and memory reuse impose a residual erasure budget on any real computer (Wolpert 2019). For a conventional deep-space computer the reservoir floor is the CMB at T<sub>γ</sub> = 2.7 K, so the marginal cost is k<sub>B</sub>T<sub>γ</sub> ln 2 = 2.6×10<sup>−23</sup> J per bit. This is the floor that aestivation proposes to lower by waiting ~10<sup>12</sup> years (Sandberg et al. 2016).</p>
+<p>Landauer's principle sets the minimum thermodynamic cost of irreversible computation: erasing one bit dissipates at least k<sub>B</sub>T ln 2 into a reservoir at temperature T (Landauer 1961; Bennett 1982; Parrondo, Horowitz &amp; Sagawa 2015), a bound verified experimentally (Bérut et al. 2012). Reversible logic evades the bound for intermediate steps (Bennett 1973; Toffoli 1980; Fredkin &amp; Toffoli 1982; Athas et al. 1994; Frank 2002), but error correction, measurement, and memory reuse impose a residual erasure budget on any real computer (Wolpert 2019). For a conventional deep-space computer the reservoir floor is the CMB at T<sub>γ</sub> = 2.7 K, so the marginal cost is k<sub>B</sub>T<sub>γ</sub> ln 2 = 2.6×10<sup>−23</sup> J per bit; the Landsberg-formalism treatment of radiative computation by Wright (2023) addresses this regime for Dyson-sphere computers, finding little advantage to nested shells and an optimum at small, hot spheres. This is the floor that aestivation proposes to lower by waiting ~10<sup>12</sup> years (Sandberg et al. 2016).</p>
 <p>An event horizon lowers it in the present epoch. By the generalized second law (GSL), the sum of black-hole entropy S<sub>BH</sub> = k<sub>B</sub>c³A/4Għ and exterior entropy is non-decreasing, and entropy carried across the horizon is accounted by the area increase (Bekenstein 1973, 1974; Bousso 2002). A computation platform orbiting the hole may therefore dump its waste entropy into the horizon rather than radiating it to the sky. The marginal energy cost of horizon disposal is set by the horizon temperature</p>
 <span class="eq">T<sub>H</sub> = ħc³/8πGMk<sub>B</sub> ≈ 6.2×10<sup>−8</sup> (M<sub>☉</sub>/M) K <span class="eqno">(4)</span></span>
 <p>(Hawking 1974, 1975): T<sub>H</sub> ≈ 3×10<sup>−12</sup> K at 2×10<sup>4</sup> M<sub>☉</sub>, twelve orders of magnitude below the CMB. A bit dumped at the horizon costs k<sub>B</sub>T<sub>H</sub> ln 2 ~ 3×10<sup>−35</sup> J against 2.6×10<sup>−23</sup> J for CMB radiation (Fig. 3). In practical terms the erasure cost ceases to be the binding constraint on computation; the budget shifts to transport of waste heat to the horizon (radiative or conductive tethering from the ISCO swarm inward), an engineering loss rather than a thermodynamic floor. The quantified gain from this substitution is the ~10<sup>12</sup> temperature ratio between the CMB and the horizon; the larger ~10<sup>30</sup> factor cited by Sandberg et al. (2016) assumes cooling to temperatures far below the horizon temperature used here and is not directly comparable. The substitution's decisive property is that it operates without waiting, and therefore without forfeiting the free energy that Bennett, Hanson &amp; Riedel (2019) showed dormant civilizations irretrievably lose. The related configuration of Opatrný, Richterek &amp; Bakala (2017), a shell absorbing CMB radiation as its hot reservoir and rejecting entropy to a central black hole, demonstrates the same thermodynamic asymmetry in a fully worked classical setting.</p>
 <p>The claim should also be stated in its energy-conservation form, because that is where the mainstream objection lands. Curtis et al. (2026) state the standard position: Dyson-scale computation must reradiate nearly all of the energy it absorbs, so mid-infrared thermal emission is the robust technosignature of black-hole-hosted intelligence. For a horizon-sink architecture the premise fails, and it fails on energy grounds rather than entropy grounds: the waste carriers themselves cross the horizon, and their energy goes with the entropy. Writing f<sub>sink</sub> for the fraction of waste <em>energy</em> delivered into the capture cone (a vocabulary adopted throughout this series), only the missed fraction (1 − f<sub>sink</sub>) must be reradiated, at swarm temperature; the absorbed remainder raises M and thereby lowers T<sub>H</sub> further, so the channel is weakly self-improving. The disagreement with Curtis et al. (2026) is thus quantitative and falsifiable: the predicted mid-infrared residue scales with (1 − f<sub>sink</sub>) rather than with the full computational throughput.</p>
+<p>The 2.7 K sky is also a competing cold sink, available without any black hole. Garrett (2026) argues that computation-dominated civilizations should radiate at the lowest temperature their surroundings permit, approaching the CMB floor; the required area grows as T<sup>−4</sup>, the emission is grey, line-free, and submillimetre (a "Slysh halo"), and archival surveys already constrain such dissipation at the ~10<sup>20</sup> W level. The comparison of this section is measured against that alternative throughout: every gain quoted below stands against k<sub>B</sub>T<sub>γ</sub> ln 2, so the margin over a non-black-hole cold computer is the delivered 10<sup>6</sup>–10<sup>9</sup> factor, bought with a delivery problem a cold radiator never faces. Which architecture a maximizer prefers is not settled here; it turns on whether the transport budget charged above is worth a sink twelve orders of magnitude deeper, and the two leave different residues, a submillimetre excess that scales with throughput against the (1 − f<sub>sink</sub>) mid-infrared remainder.</p>
 <p>The k<sub>B</sub>T<sub>H</sub> ln 2 figure is the marginal cost of <em>disposal at the horizon</em>; it is not the delivered cost from an orbiting platform, and the gap between the two can be estimated rather than merely flagged. Consider radiative delivery, the least demanding channel. Efficient absorption requires a carrier wavelength λ ≲ r<sub>g</sub>, the geometric-optics condition for capture rather than diffraction around the hole (aiming is a separate and easier requirement, treated below). At M = 2×10<sup>4</sup> M<sub>☉</sub>, r<sub>g</sub> ≈ 3×10<sup>7</sup> m, so the vacuum-gravitational floor on the carrier energy is E<sub>γ</sub> ≳ hc/r<sub>g</sub> ≈ 7×10<sup>−33</sup> J, corresponding to a frequency of ~10 Hz. That floor is unreachable through plasma: propagation requires ν &gt; ν<sub>p</sub> = 8.98 kHz √(n<sub>e</sub>/cm<sup>−3</sup>), and even the cluster's ambient n<sub>e</sub> = 0.23 cm<sup>−3</sup> (47 Tucanae analogy value; Abbate et al. 2018) gives ν<sub>p</sub> ≈ 4.3 kHz, while any fed inner-flow environment (n<sub>e</sub> ~ 10<sup>4</sup>–10<sup>8</sup> cm<sup>−3</sup> inside ~10<sup>2</sup> r<sub>g</sub>) gives ν<sub>p</sub> ≈ 1–90 MHz. The minimum propagating carrier energy E = hν<sub>p</sub> therefore spans 2.9×10<sup>−30</sup> J at the ambient density to 6.0×10<sup>−26</sup> J at the densest fed flow, 2.6 to 6.9 decades above hc/r<sub>g</sub>. Two consequences follow. First, single-bit-per-photon delivery no longer suffices: at the plasma-cutoff carrier energies the single-bit advantage over the CMB would erode to 9×10<sup>6</sup> in the ambient medium and to 4×10<sup>2</sup> in the densest fed flow considered. What preserves the realized range is dense coding: a carrier may bear many bits, up to the Bekenstein channel capacity (Bekenstein 1981; Bousso 2002), and coding at that capacity restores the delivered cost per bit to a factor of 10<sup>6</sup>–10<sup>9</sup> below the CMB figure of 2.6×10<sup>−23</sup> J.</p>
 
 <p>This requirement can be stated as a length rather than assumed. The Bekenstein bound caps the information carried by a packet of energy E confined to radius R at I ≤ 2πER/(ℏc ln 2) (Bekenstein 1981), so a diffraction-limited packet one wavelength long carries at most 2πh/(ℏ ln 2) ≈ 57 bits whatever its frequency. Reaching a realized gain G against the CMB figure requires carriers averaging b = GE<sub>carr</sub>/(k<sub>B</sub>T<sub>γ</sub> ln 2) bits, so the packet coherence length the coding demands is L = Ghc/(57 k<sub>B</sub>T<sub>γ</sub> ln 2), the same at every carrier floor: about 1.4×10<sup>2</sup> m at the bottom of the claimed range and 1.4×10<sup>5</sup> m at its top. At every G and every floor these lengths put the packet exactly on the Bekenstein bound (57 bits per wavelength, no headroom); a code running at a fraction f of capacity needs a packet longer by 1/f. What the assumption consumes is packet coherence rather than any exotic code, and the quantity to check is the length, not spare capacity.</p>
@@ -387,7 +496,7 @@ sup,sub{line-height:0;}
 <h3>4.4 Time dilation as an engineering parameter</h3>
 <p>A platform on a circular equatorial geodesic at radius r around a Kerr hole runs slow relative to infinity by</p>
 <span class="eq">dτ/dt = √(1 − 3r<sub>g</sub>/r + 2a<sub>★</sub>(r<sub>g</sub>/r)<sup>3/2</sup>) / (1 + a<sub>★</sub>(r<sub>g</sub>/r)<sup>3/2</sup>) <span class="eqno">(6)</span></span>
-<p>(Bardeen, Press &amp; Teukolsky 1972): dτ/dt = √½ ≈ 0.707 at the Schwarzschild ISCO, falling to ≈0.093 (a factor ~11) at the prograde ISCO for a<sub>★</sub> = 0.998 (Fig. 4). Larger factors require powered non-geodesic hovering at diverging thrust cost and are not usable by stable platforms. The ~11:1 ceiling is set by the Thorne (1974) spin-equilibrium limit a<sub>★</sub> = 0.998 rather than by orbital stability: the ISCO proper-time ratio falls toward zero as a<sub>★</sub> → 1, and it is the accretion physics capping the spin that caps the dilation. A tiered swarm can therefore place archival and slow-integration processes deep (subjectively skipping across external time) and interactive processes high, with the choice of orbit acting as a clock-rate dial — a resource with no terrestrial analogue, though we note its strategic value (e.g. outwaiting external change) trades directly against responsiveness. The dial is two-way: viewed from outside, a deep tier both runs and receives 11× slower in external time, so deep placement taxes bandwidth to, and coherence with, the shallow tier; and uplink photons arrive blueshifted by the same factor, each depositing ~11× its emitted energy at the deep receiver.</p>
+<p>(Bardeen, Press &amp; Teukolsky 1972): dτ/dt = √½ ≈ 0.707 at the Schwarzschild ISCO, falling to ≈0.093 (a factor ~11) at the prograde ISCO for a<sub>★</sub> = 0.998 (Fig. 4). Larger factors require powered non-geodesic hovering at diverging thrust cost and are not usable by stable platforms. The ~11:1 ceiling is set by the Thorne (1974) spin-equilibrium limit a<sub>★</sub> = 0.998 rather than by orbital stability: the ISCO proper-time ratio falls toward zero as a<sub>★</sub> → 1, and it is the accretion physics capping the spin that caps the dilation. (Reiss &amp; Feng (2026) have independently proposed time-dilated frames as a settlement strategy: biologically tolerable orbits near the photon radius of Sgr A* can, on their analysis, be maintained below the Kardashev Type II threshold, and a time-dilation factor of 10<sup>4</sup> enables galaxy-spanning migration within a subjective lifetime. They also note that isotropic, monochromatic signals emitted from such orbits exhibit a downward frequency drift. Their supermassive-host, near-photon-radius regime lies outside the stable-geodesic ceiling computed here.) A tiered swarm can therefore place archival and slow-integration processes deep (subjectively skipping across external time) and interactive processes high, with the choice of orbit acting as a clock-rate dial — a resource with no terrestrial analogue, though we note its strategic value (e.g. outwaiting external change) trades directly against responsiveness. The dial is two-way: viewed from outside, a deep tier both runs and receives 11× slower in external time, so deep placement taxes bandwidth to, and coherence with, the shallow tier; and uplink photons arrive blueshifted by the same factor, each depositing ~11× its emitted energy at the deep receiver.</p>
 
 <figure id="fig4">
 <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ISCO radius and proper-time ratio versus spin">
@@ -758,6 +867,7 @@ sup,sub{line-height:0;}
 <li>Freitas, R. A., Jr., &amp; Gilbreath, W. P. (Eds.) (1982). <em>Advanced Automation for Space Missions.</em> NASA CP-2255 (proceedings of the 1980 NASA/ASEE Summer Study). <a href="https://ntrs.nasa.gov/citations/19830007077">NASA NTRS</a></li>
 <li>Frolov, V. P., &amp; Novikov, I. D. (1998). <em>Black Hole Physics: Basic Concepts and New Developments.</em> Kluwer Academic.</li>
 <li>Fujii, M. S., Wang, L., Tanikawa, A., Hirai, Y., &amp; Saitoh, T. R. (2024). Simulations predict intermediate-mass black hole formation in globular clusters. <em>Science</em>, 384, 1488–1492. <a href="https://doi.org/10.1126/science.adi4211">doi:10.1126/science.adi4211</a></li>
+<li>Garrett, M. (2026). Slysh haloes: the waste heat of cold computing as a submillimetre technosignature. <a href="https://arxiv.org/abs/2608.31153">arXiv:2608.31153</a> (preprint)</li>
 <li>González Prieto, E., Rodriguez, C. L., &amp; Cabrera, T. (2025). Growing the intermediate-mass black hole in Omega Centauri. <em>ApJL</em>, 990, L69. <a href="https://doi.org/10.3847/2041-8213/adfd4a">doi:10.3847/2041-8213/adfd4a</a></li>
 <li>GRAVITY Collaboration (2022). Mass distribution in the Galactic Center based on interferometric astrometry of multiple stellar orbits. <em>A&amp;A</em>, 657, L12. <a href="https://doi.org/10.1051/0004-6361/202142465">doi:10.1051/0004-6361/202142465</a></li>
 <li>Greene, J. E., Strader, J., &amp; Ho, L. C. (2020). Intermediate-mass black holes. <em>ARA&amp;A</em>, 58, 257–312. <a href="https://doi.org/10.1146/annurev-astro-032620-021835">doi:10.1146/annurev-astro-032620-021835</a></li>
@@ -783,8 +893,10 @@ sup,sub{line-height:0;}
 <li>Kardashev, N. S. (1964). Transmission of information by extraterrestrial civilizations. <em>Soviet Astronomy</em>, 8, 217–221.</li>
 <li>KM3NeT Collaboration (2025). Observation of an ultra-high-energy cosmic neutrino with KM3NeT. <em>Nature</em>, 638, 376–382. <a href="https://doi.org/10.1038/s41586-024-08543-1">doi:10.1038/s41586-024-08543-1</a></li>
 <li>Kızıltan, B., Baumgardt, H., &amp; Loeb, A. (2017). An intermediate-mass black hole in the centre of the globular cluster 47 Tucanae. <em>Nature</em>, 542, 203–205. <a href="https://doi.org/10.1038/nature21361">doi:10.1038/nature21361</a></li>
+<li>Kriger, B. (2026). The Inward Turn: Advanced Civilizations and the Fermi Paradox – Computational Efficiency as a Universal Attractor in Civilizational Development. Zenodo preprint, 31 January 2026. <a href="https://doi.org/10.5281/zenodo.18437440">doi:10.5281/zenodo.18437440</a></li>
 <li>Lacki, B. C., &amp; DiKerby, S. (2025). Possibilities for SETI at high energy. <a href="https://arxiv.org/abs/2506.16351">arXiv:2506.16351</a> (white paper, preprint)</li>
 <li>Landauer, R. (1961). Irreversibility and heat generation in the computing process. <em>IBM J. Res. Dev.</em>, 5, 183–191. <a href="https://doi.org/10.1147/rd.53.0183">doi:10.1147/rd.53.0183</a></li>
+<li>Lefebvre, V. A., &amp; Efremov, Yu. N. (2000). Cosmic Intelligence and Black Holes. Zemlya i Vselennaya, No. 5, 69–83 (in Russian; English version at <a href="https://arxiv.org/abs/astro-ph/0005546">arXiv:astro-ph/0005546</a>)</li>
 <li>Lingam, M., &amp; Loeb, A. (2021). <em>Life in the Cosmos: From Biosignatures to Technosignatures.</em> Harvard University Press.</li>
 <li>Lloyd, S. (2000). Ultimate physical limits to computation. <em>Nature</em>, 406, 1047–1054. <a href="https://doi.org/10.1038/35023282">doi:10.1038/35023282</a></li>
 <li>Loeb, A. (2024). Comment on "No black holes from light". <a href="https://arxiv.org/abs/2408.06714">arXiv:2408.06714</a> (preprint; authors' reply at arXiv:2408.11097)</li>
@@ -807,6 +919,7 @@ sup,sub{line-height:0;}
 <li>Penrose, R., &amp; Floyd, R. M. (1971). Extraction of rotational energy from a black hole. <em>Nature Phys. Sci.</em>, 229, 177–179. <a href="https://doi.org/10.1038/physci229177a0">doi:10.1038/physci229177a0</a></li>
 <li>Pryor, C., &amp; Meylan, G. (1993). Velocity dispersions for Galactic globular clusters. In <em>Structure and Dynamics of Globular Clusters</em>, ASP Conf. Ser. 50, 357.</li>
 <li>Rauch, K. P., &amp; Tremaine, S. (1996). Resonant relaxation in stellar systems. <em>New Astronomy</em>, 1, 149–170. <a href="https://doi.org/10.1016/S1384-1076(96)00012-7">doi:10.1016/S1384-1076(96)00012-7</a></li>
+<li>Reiss, C., &amp; Feng, J. C. (2026). Redshifted civilizations, galactic empires, and the Fermi paradox. Acta Astronautica, 246, 114–128. <a href="https://doi.org/10.1016/j.actaastro.2026.04.003">doi:10.1016/j.actaastro.2026.04.003</a></li>
 <li>Reynolds, C. S. (2021). Observational constraints on black hole spin. <em>ARA&amp;A</em>, 59, 117–154. <a href="https://doi.org/10.1146/annurev-astro-112420-035022">doi:10.1146/annurev-astro-112420-035022</a></li>
 <li>Sandberg, A., Armstrong, S., &amp; Ćirković, M. M. (2016). That is not dead which can eternal lie: the aestivation hypothesis for resolving Fermi's paradox. <em>JBIS</em>, 69, 406–415. <a href="https://arxiv.org/abs/1705.03394">arXiv:1705.03394</a></li>
 <li>Schwinger, J. (1951). On gauge invariance and vacuum polarization. <em>Phys. Rev.</em>, 82, 664–679. <a href="https://doi.org/10.1103/PhysRev.82.664">doi:10.1103/PhysRev.82.664</a></li>
@@ -834,17 +947,14 @@ sup,sub{line-height:0;}
 <li>Wolpert, D. H. (2019). The stochastic thermodynamics of computation. <em>J. Phys. A</em>, 52, 193001. <a href="https://doi.org/10.1088/1751-8121/ab0850">doi:10.1088/1751-8121/ab0850</a></li>
 <li>Wright, J. T., et al. (2014). The Ĝ infrared search for extraterrestrial civilizations with large energy supplies. I. <em>ApJ</em>, 792, 26. <a href="https://doi.org/10.1088/0004-637X/792/1/26">doi:10.1088/0004-637X/792/1/26</a></li>
 <li>Wright, J. T., et al. (2022). The case for technosignatures: why they may be abundant, long-lived, highly detectable, and unambiguous. <em>ApJL</em>, 927, L30. <a href="https://doi.org/10.3847/2041-8213/ac5824">doi:10.3847/2041-8213/ac5824</a></li>
+<li>Wright, J. T. (2023). Application of the thermodynamics of radiation to Dyson spheres as work extractors and computational engines, and their observational consequences. ApJ, 956, 34. <a href="https://doi.org/10.3847/1538-4357/acf44f">doi:10.3847/1538-4357/acf44f</a></li>
 <li>Zocchi, A., Gieles, M., &amp; Hénault-Brunet, V. (2019). The effect of stellar-mass black holes on the central kinematics of ω Cen: a cautionary tale for IMBH interpretations. <em>MNRAS</em>, 482, 4713–4725. <a href="https://doi.org/10.1093/mnras/sty1508">doi:10.1093/mnras/sty1508</a></li>
 </ol>
 </section>
 
-<div class="footer">
-<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
-<p><b>AI assistance disclosure:</b> drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
-</div>
+
 
 </main>
-
 <script>
 (function(){
   var fig = document.getElementById('mth-explainer-fig');
@@ -882,5 +992,25 @@ sup,sub{line-height:0;}
   apply();
 })();
 </script>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <p class="of-note">Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>. &middot; <b>AI assistance disclosure:</b> drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-15 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
 </body>
 </html>

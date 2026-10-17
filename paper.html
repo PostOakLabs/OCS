@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,55 +14,151 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Orbitron:wght@600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --deep-space:#03020a; --panel:#0d0a24; --panel2:#121035;
-  --text-primary:#EEEDFE; --text-secondary:#bdb8e6; --text-dim:#7a739f;
-  --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --purple-glow:#7F77DD; --purple-soft:#AFA9EC;
-  --amber-glow:#EF9F27; --amber-soft:#FAC775;
-  --red-bright:#E24B4A;
-  --border-subtle:rgba(112,85,212,0.25);
+  --deep-space:rgb(var(--k03020a)); --panel:rgb(var(--k0d0a24)); --panel2:rgb(var(--k121035));
+  --text-primary:rgb(var(--keeedfe)); --text-secondary:rgb(var(--kbdb8e6)); --text-dim:rgb(var(--k7a739f));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --purple-glow:rgb(var(--k7f77dd)); --purple-soft:rgb(var(--kafa9ec));
+  --amber-glow:rgb(var(--kef9f27)); --amber-soft:rgb(var(--kfac775));
+  --red-bright:rgb(var(--ke24b4a));
+  --border-subtle:rgb(var(--k7055d4) / 0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
 a{color:var(--teal-glow);text-decoration:none;}
 a:hover{text-decoration:underline;}
-nav.top{position:sticky;top:0;z-index:50;background:rgba(3,2,10,0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'Space Mono',monospace;font-size:0.78rem;}
-nav.top .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+nav.top{position:sticky;top:0;z-index:50;background:rgb(var(--k03020a) / 0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+nav.top .brand{font-family:'Source Serif 4',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
 main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
-h1{font-family:'Orbitron',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h1{font-family:'Source Serif 4',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
 .lede{font-size:1.0rem;color:var(--text-secondary);margin:0.6rem 0 0.4rem;}
-.eyebrow{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
-.banner{background:rgba(196,120,0,0.08);border:1px solid rgba(196,120,0,0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.6rem 0 2.2rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgb(var(--kc47800) / 0.08);border:1px solid rgb(var(--kc47800) / 0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.6rem 0 2.2rem;}
 .banner strong{color:var(--amber-glow);}
 a.paper-card{display:block;background:var(--panel);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.7rem;margin:1.6rem 0;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s,box-shadow .15s;}
-a.paper-card:hover{text-decoration:none;border-color:var(--purple-glow);transform:translateY(-2px);box-shadow:0 6px 28px rgba(127,119,221,0.18);}
-.paper-card .tag{font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--purple-soft);}
-.paper-card h2{font-family:'Orbitron',sans-serif;font-size:1.12rem;line-height:1.45;margin:0.5rem 0 0.4rem;color:var(--teal-glow);}
-.paper-card .byline{font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--text-dim);margin-bottom:0.9rem;}
-.paper-card .abstract-label{font-family:'Space Mono',monospace;font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.4rem;}
+a.paper-card:hover{text-decoration:none;border-color:var(--purple-glow);transform:translateY(-2px);box-shadow:0 6px 28px rgb(var(--k7f77dd) / 0.18);}
+.paper-card .tag{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--purple-soft);}
+.paper-card h2{font-family:'Source Serif 4',sans-serif;font-size:1.12rem;line-height:1.45;margin:0.5rem 0 0.4rem;color:var(--teal-glow);}
+.paper-card .byline{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--text-dim);margin-bottom:0.9rem;}
+.paper-card .abstract-label{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.4rem;}
 .paper-card p.abstract{font-size:0.96rem;color:var(--text-secondary);margin:0;}
-.paper-card .cta{display:inline-block;margin-top:1rem;font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--teal-glow);border:1px solid var(--teal-bright);border-radius:4px;padding:0.4rem 0.9rem;}
-a.paper-card:hover .cta{background:rgba(29,186,144,0.12);}
-.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.paper-card .cta{display:inline-block;margin-top:1rem;font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--teal-glow);border:1px solid var(--teal-bright);border-radius:4px;padding:0.4rem 0.9rem;}
+a.paper-card:hover .cta{background:rgb(var(--k1dba90) / 0.12);}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
 sup,sub{line-height:0;}
 @media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.25rem;} .paper-card h2{font-size:1.0rem;} }
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0d0a24:238 236 231;--k121035:237 235 230;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k7055d4:55 68 130;--k7a739f:100 93 136;--k7f77dd:55 68 130;--k9890c0:70 76 94;--kafa9ec:55 68 130;--kbdb8e6:72 60 170;--kc47800:128 82 6;--ke24b4a:165 30 30;--ke8e4ff:29 34 51;--keeedfe:29 34 51;--kef9f27:128 82 6;--kfac775:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0d0a24:13 10 36;--k121035:18 16 53;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k7055d4:112 85 212;--k7a739f:122 115 159;--k7f77dd:127 119 221;--k9890c0:152 144 192;--kafa9ec:175 169 236;--kbdb8e6:189 184 230;--kc47800:196 120 0;--ke24b4a:226 75 74;--ke8e4ff:232 228 255;--keeedfe:238 237 254;--kef9f27:239 159 39;--kfac775:250 199 117;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
-<nav class="top">
-  <span class="brand">OCS</span>
-  <a href="/index.html">Home</a>
-  <a href="/tools/">Tools</a>
-  <a href="/proposals.html">Proposals</a>
-  <a href="/paper.html">Papers</a>
-  <a href="/faq.html">FAQ</a>
-  <span style="margin-left:auto;color:var(--text-dim);">papers · September 2026</span>
-</nav>
+<p class="ocs-crumb"><a href="/">OCS</a> / Papers</p>
+<div class="ocs-present-cta"><button type="button" class="ocs-present-btn" id="ocsPresentBtn" data-mode="items" data-intro="h1, .lede, .banner" data-items=".paper-card" data-title="h2">Present this page</button><span class="ocs-present-hint">One step per screen. Arrow keys move, A toggles autoplay, Esc exits. Press P to start.</span></div>
+
 
 <main>
 
@@ -75,7 +171,7 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/macro-transcension-hypothesis.html">
   <span class="tag">Paper A · The hypothesis</span>
   <h2>The Macro Transcension Hypothesis: Spinning Black Holes in Dense Stellar Clusters as Thermodynamic Attractors for Advanced Civilizations, with Omega Centauri as an Observational Test Bed</h2>
-  <p class="byline">Tim Swanson · draft v2.8, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · draft v2.9, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
   <p class="abstract">Most proposed resolutions of the Fermi paradox assume that long-lived technological civilizations either expand outward, perish, or deliberately hide. We develop a fourth alternative, the <em>Macro Transcension Hypothesis</em> (MTH): that civilizations which optimize for long-term computation are driven by thermodynamics, rather than preference, toward a specific class of astrophysical environment, namely rapidly spinning massive black holes embedded in dense, old stellar systems, and that the migration and its endpoint are both electromagnetically quiet. The MTH extends the transcension hypothesis of Smart (2012) from planet-scale &ldquo;inner space&rdquo; to macroscopic black-hole infrastructure, and differs from the aestivation hypothesis of Sandberg, Armstrong &amp; Ćirković (2016) in requiring no waiting strategy: the relevant free-energy and entropy-disposal advantages are available now. We quantify the case in four steps: (i) thin-disk accretion onto a Kerr black hole releases 5.7–30 per cent of rest-mass energy across the spins disk accretion can reach, rising to 42 per cent only in the formal a<sub>★</sub>→1 limit that radiative spin equilibrium forbids, versus 0.7 per cent for hydrogen fusion, while magnetically arrested disks extract additional spin energy at effective efficiencies exceeding 100 per cent of accreted rest mass; (ii) by the generalized second law, an event horizon is a thermodynamically ideal entropy sink, and a worked delivery budget shows the realized erasure cost lands a factor of ~10<sup>6</sup>–10<sup>9</sup> below the CMB-limited Landauer floor once carrier propagation and an itemized loss budget are charged, at packet coherence lengths between 0.2 and 3×10<sup>3</sup> km, with little radiated waste heat; (iii) the Bekenstein–Hawking entropy of a ~2×10<sup>4</sup> M<sub>☉</sub> black hole corresponds to ~6×10<sup>85</sup> bits, or ≈3×10<sup>85</sup> at the Thorne spin the architecture ends at, exceeding any material archive; and (iv) per unit of harvested mass, this architecture outperforms complete fusion of the same fuel by a factor of ~11–60, outperforms Dyson-type stellar harvesting without star lifting by ~115–600 in lifetime energy yield (~11–60 against a star-lifting economy), and exceeds a solar Dyson swarm by a factor of ~10<sup>9</sup> (6.6×10<sup>8</sup> at 2×10<sup>4</sup> M<sub>☉</sub>) in instantaneous Eddington-limited power. We then identify Omega Centauri (NGC 5139), a ~4×10<sup>6</sup> M<sub>☉</sub>, ~12-Gyr-old stripped dwarf-galaxy nucleus hosting the nearest strong candidate intermediate-mass black hole, as the most observationally accessible system satisfying the MTH selection criteria, and present a falsification framework built on six instrument-matched tests: accretion-luminosity limits (JWST, ATCA), mid-infrared waste-heat limits (JWST), a gravitational-wave signature inconsistent with a single point mass, an EMRI point-mass measurement, and an EMRI spin measurement (the latter three via LISA, contingent on a compact-object inspiral occurring in-band during the mission), plus neutrino burst searches (KM3NeT). Current data, including the unresolved tension between a ≥8,200 M<sub>☉</sub> kinematic lower bound (Häberle et al. 2024) and a ≲6,000 M<sub>☉</sub> pulsar-timing upper bound (Bañares-Hernández et al. 2025) and the complete electromagnetic silence of the central object (Mahida et al. 2026; Chen et al. 2025), are consistent with both the MTH and the more parsimonious gas-starvation null hypothesis; we state explicitly which forthcoming observations would discriminate between them, and which would falsify the MTH outright. The hypothesis is offered in the falsificationist tradition of Sandberg, Armstrong &amp; Ćirković (2016) and Dvali &amp; Osmanov (2023): a speculative but physically grounded working model whose value lies in the concrete observational program it motivates.</p>
   <span class="cta">Full paper →</span>
@@ -84,7 +180,7 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/inward-migration-fermi-paradox-review.html">
   <span class="tag">Paper B · The review</span>
   <h2>Inward Resolutions of the Fermi Paradox: A Critical Review of Migration Down Thermodynamic Gradients</h2>
-  <p class="byline">Tim Swanson · draft v2.3, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · draft v2.4, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
   <p class="abstract">Most catalogued resolutions of the Fermi paradox modify one of three things: the abundance of technological life, its longevity, or its visibility. A smaller family modifies its direction: these are the inward-migration hypotheses, which hold that mature technological intelligence migrates down thermodynamic gradients, toward denser, serially faster, colder and more computationally efficient configurations of matter, and that the observed silence of the sky is the external appearance of that migration. The family comprises six distinguishable proposals, built on a six-decade precursor lineage from Dyson&rsquo;s eternal-computation bound to Bradbury&rsquo;s Matrioshka-brain engineering: the migration hypothesis of Ćirković and Bradbury, Smart&rsquo;s transcension hypothesis, Vidal&rsquo;s stellivore interpretation, the aestivation hypothesis of Sandberg, Armstrong and Ćirković, black-hole computing proposals from Inoue and Yokoo through Dvali and Osmanov, and the recent Macro Transcension Hypothesis. They share one load-bearing premise: that the thermodynamics of computation, rather than expansion, reproduction, or communication, is the correct lens for predicting the behaviour of the oldest intelligence. The family has not previously been reviewed as such, nor its mutual inconsistencies catalogued or its falsifiability graded. We reconstruct the family tree and its intellectual debts; restate the unifying physics (Landauer&rsquo;s principle, the Margolus&ndash;Levitin bound, Bekenstein&ndash;Hawking entropy, and the temperature hierarchy of available entropy sinks) with explicit numbers; construct a comparative matrix of assumptions, energy logics, predicted observables, standing objections, and observational status for each member; and grade each against six falsifiability criteria. Against the sociological solutions that predict the same silence from different premises (zoo, dark-forest, and sustainability), the inward family&rsquo;s distinguishing virtue is residue: thermodynamic optimization leaves dynamical and high-energy traces that fear and ethics do not. Open problems are stated as research questions: goal stability over 10<sup>8</sup>-year horizons, migration economics under Bostrom-type opportunity costs, the incomplete-compliance gap, and population-level consistency with grabby-aliens selection effects. We close with the instrument-matched tests now feasible for each hypothesis, anchored by the first dedicated globular-cluster technosignature surveys and the multi-messenger campaign proposed for Omega Centauri.</p>
   <span class="cta">Full paper →</span>
@@ -93,16 +189,16 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/omega-centauri-technosignature-campaign.html">
   <span class="tag">Paper C · The observational campaign</span>
   <h2>A Multi-Messenger Technosignature and Anomaly-Detection Campaign for Omega Centauri</h2>
-  <p class="byline">Tim Swanson · draft v3.1, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · draft v3.2, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
-  <p class="abstract">Omega Centauri (NGC 5139), the most massive Galactic globular cluster and the probable stripped nucleus of an accreted dwarf galaxy, presents a unique conjunction of observational circumstances: the strongest current candidate for an intermediate-mass black hole (IMBH) in the Galaxy, anchored by seven stars moving above the local escape velocity (Häberle et al. 2024); a formally unresolved factor-of-several tension between kinematic lower bounds (≥8,200 M<sub>☉</sub>) and a pulsar-timing upper bound (≲6,000 M<sub>☉</sub>; Bañares-Hernández et al. 2025); complete electromagnetic silence to the deepest radio and infrared limits yet placed on this cluster, and among the deepest placed on any globular-cluster core (Mahida et al. 2026; Chen et al. 2025); and a southern declination optimal for the newest southern-hemisphere facilities. No dedicated technosignature search of ω Cen has ever been conducted at any wavelength. We present a coordinated, hypothesis-agnostic, multi-messenger campaign of eight instrument-matched programs (enumerated in Section 1) spanning infrared imaging, radio timing and SETI, astrometry, gravitational waves, neutrinos, gamma rays, the optical time domain, and archival channels, addressing conventional astrophysics (IMBH reality, mass, and spin; cluster dynamics) and technosignature hypotheses with the same data. For each program we state quantitative sensitivities, time requests, decision thresholds, and explicit falsification criteria, including negative results: with the acceleration estimator calibrated to the proper-motion precision the oMEGACat catalogue itself reports, direct astrometric acceleration detection of the fast stars stands at 0.21σ today and stays below 1σ at nominal parameters before ~2040, so the decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead. Total cost is ≲ US$10M over 2026–2040, of which the cash lines are dominated by archival analysis and commensal observing, though the facility request includes ~650 h of dedicated MeerKAT time, 65 h of JWST and 50 h of CTAO. A per-mille mass and spin measurement is available from LISA if an inspiral is caught in band, at a target-specific probability of ~3×10<sup>−7</sup> over a four-year mission; the probable LISA deliverable is instead a resolved-source count for the cluster’s remnant population. Every null result constrains conventional astrophysics, and no anomaly claim advances without confirmation from at least two independent messengers; under realistic outcomes the campaign adjudicates the astrophysical hypotheses, while the technosignature hypothesis is constrained only along specific low-probability branches.</p>
+  <p class="abstract">Omega Centauri (NGC 5139), the most massive Galactic globular cluster and the probable stripped nucleus of an accreted dwarf galaxy, presents a unique conjunction of observational circumstances: the strongest current candidate for an intermediate-mass black hole (IMBH) in the Galaxy, anchored by seven stars moving above the local escape velocity (Häberle et al. 2024); a formally unresolved factor-of-several tension between kinematic lower bounds (≥8,200 M<sub>☉</sub>) and a pulsar-timing upper bound (≲6,000 M<sub>☉</sub>; Bañares-Hernández et al. 2025); complete electromagnetic silence to the deepest radio and infrared limits yet placed on this cluster, and among the deepest placed on any globular-cluster core (Mahida et al. 2026; Chen et al. 2025); and a southern declination optimal for the newest southern-hemisphere facilities. No dedicated technosignature search of ω Cen has ever been reported at any wavelength. We present a coordinated, hypothesis-agnostic, multi-messenger campaign of eight instrument-matched programs (enumerated in Section 1) spanning infrared imaging, radio timing and SETI, astrometry, gravitational waves, neutrinos, gamma rays, the optical time domain, and archival channels, addressing conventional astrophysics (IMBH reality, mass, and spin; cluster dynamics) and technosignature hypotheses with the same data. For each program we state quantitative sensitivities, time requests, decision thresholds, and explicit falsification criteria, including negative results: with the acceleration estimator calibrated to the proper-motion precision the oMEGACat catalogue itself reports, direct astrometric acceleration detection of the fast stars stands at 0.21σ today and stays below 1σ at nominal parameters before ~2040, so the decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead. Total cost is ≲ US$10M over 2026–2040, of which the cash lines are dominated by archival analysis and commensal observing, though the facility request includes ~650 h of dedicated MeerKAT time, 65 h of JWST and 50 h of CTAO. A per-mille mass and spin measurement is available from LISA if an inspiral is caught in band, at a target-specific probability of ~3×10<sup>−7</sup> over a four-year mission; the probable LISA deliverable is instead a resolved-source count for the cluster’s remnant population. Every null result constrains conventional astrophysics, and no anomaly claim advances without confirmation from at least two independent messengers; under realistic outcomes the campaign adjudicates the astrophysical hypotheses, while the technosignature hypothesis is constrained only along specific low-probability branches.</p>
   <span class="cta">Full paper →</span>
 </a>
 
 <a class="paper-card" href="/inward-migration-economics.html">
   <span class="tag">Paper D · The economics</span>
   <h2>The Economics of Inward Migration: Relocation versus Densification for Computation-Maximizing Civilizations</h2>
-  <p class="byline">Tim Swanson · draft v2.1, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · draft v2.2, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
   <p class="abstract">The inward-migration resolutions of the Fermi paradox hold that computation-optimizing civilizations relocate to thermodynamically privileged environments, with rapidly spinning intermediate-mass black holes (IMBHs) in dense old clusters as the strongest candidate destination. Bostrom (2003) priced the opportunity cost of delayed expansion and Bennett et al. (2019) priced the losses of dormancy, but relocation itself, the abandonment of accumulated local infrastructure for a transit of 10<sup>4</sup>–10<sup>6</sup> years toward a large deferred payoff, has never been priced. This paper treats that trade as a decision problem over a common utility (discounted integrated computation) with three strategies: stay-and-densify (Matrioshka-style local engineering), migrate (beamed-sail relocation to the nearest suitable IMBH cluster), and seed-and-stay (a self-replicating seed dispatched while densification continues at home). Using payoff kernels assembled from established physics, we derive closed-form crossover conditions. The central result is a threshold on the effective discount-plus-hazard rate: migration dominates densification whenever ρ + λ &lt; ln(G p<sub>s</sub>)/τ, provided G p<sub>s</sub> &gt; 1, where G is the destination computation-rate multiplier (10<sup>3</sup>–10<sup>9</sup> on power alone, from an ADIOS-suppressed floor to full Eddington capacity, depending on fuel imports), p<sub>s</sub> the transit survival probability, and τ the transit-plus-construction time. At fiducial parameters the threshold is ρ + λ ≲ 2×10<sup>−4</sup> yr<sup>−1</sup>: any lineage whose combined discount-plus-hazard half-life exceeds roughly 3,500 years should migrate. Under additive utility, symmetric valuation, and near-unity seed fidelity, the seed-and-stay hybrid dominates both pure strategies throughout the migration-favourable region and in a band extending modestly beyond the threshold (to ρ + λ ≈ 1.7 ρ* at a physical seed cost f = 10<sup>−6</sup>), because seed mass is a negligible fraction of local output; beyond that band the exponential discount on the deferred payoff extinguishes the seed's value. Embedding the decision rule in a mixed population quantifies how much inward migration thins the expected loud population, and yields a new population-level residue: the predicted sky ratio of Matrioshka-type infrared sources to quiet-cluster systems, for which archival infrared nulls place a joint-likelihood limit conditional on an assumed residue-to-formation ratio and maintenance lifetimes. All results are conditional on the optimization premise shared by the hypothesis family, on symmetric valuation of drifted successors, and on power-only destination accounting; the contribution is the pricing structure, not the premise.</p>
   <span class="cta">Full paper →</span>
@@ -111,16 +207,16 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/engineered-imbh-systems.html">
   <span class="tag">Paper E · The engineering and the adjudication</span>
   <h2>Engineered Intermediate-Mass Black Hole Systems: Infrastructure Constraints, Observable Residue, and a Multi-Messenger Adjudication Framework</h2>
-  <p class="byline">Tim Swanson · v2.1, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · v2.2, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
-  <p class="abstract">The inward-migration resolutions of the Fermi paradox identify rapidly spinning intermediate-mass black holes (IMBHs) in dense, old stellar clusters as thermodynamically privileged destinations for computation-optimizing civilizations. Previous papers in this series argued the thermodynamic case (A), surveyed the hypothesis family (B), designed a multi-messenger campaign for the nearest candidate, Omega Centauri (C), and priced the migration decision (D). This paper addresses the two remaining questions. First, feasibility: whether large-scale computational infrastructure can persist around a Kerr IMBH embedded in a live cluster core (stellar density ~3×10<sup>3</sup> M<sub>☉</sub> pc<sup>−3</sup>, velocity dispersion ~21 km s<sup>−1</sup>). Extending recent passive-stability results for stellar engines and Dyson bubbles (McInnes et al. 2026) to the combined Kerr-plus-cluster potential, and combining analytic tidal, thermal, and material limits with a Monte Carlo of gravitationally focused stellar flybys, we derive an allowed envelope for a fiducial 2×10<sup>4</sup> M<sub>☉</sub> hole in the ω Cen core: precession-tolerant swarms survive passively from ~10<sup>2</sup> gravitational radii out to the cluster stripping radius at ~4×10<sup>3</sup> AU. Stellar flybys never set the boundary, and the margin is larger than an impulsive treatment shows. The Monte Carlo, run with a mass-segregated heavy-remnant perturber component (31 M<sub>☉</sub> black holes at 0.1–3 per cent number fraction), yields a conservative impulsive floor of ~2×10<sup>8</sup> yr at the fiducial 1 per cent fraction (4×10<sup>9</sup> yr without remnants); but unbound cluster stars are adiabatically decoupled from every orbit in the envelope (the adiabatic parameter runs from 2.2 at the stripping radius to 4×10<sup>3</sup> at the ISCO), and applying the standard correction lifts the physical lifetime to ≳3×10<sup>8</sup> yr at the envelope edge and to the cluster age within ~3 AU. The relaxed Bahcall–Wolf cusp around the hole is no longer a conditional: the González Prieto et al. (2025) ω Cen-specific realizations form one at 300 Myr with γ ≃ 1.3 for the stellar population, steepening to γ ≃ 2 for the heavy remnants, consistent with the classic single-mass γ ≃ 1.75 benchmark of Baumgardt (2004). Cusp members are bound, so the impulsive kernel applies to them where it does not to the unbound field, and the population is granular, about 0.4 black holes expected inside the stripping radius: a bound heavy remnant is present in a quarter of realizations at the envelope edge, giving a diffusion floor of a few times 10<sup>7</sup> yr when one is drawn, against the cluster-age cap in the three quarters where none is. That bound-member diffusion channel, not the decoupled unbound field, is the binding clock at the envelope edge. The same remnant also forces the orbit secularly (Kozai–Lidov), but that forcing is coherent and quenched by relativistic apsidal precession inward of ~4×10<sup>2</sup> AU, so it reads as a station-keeping cadence rather than a second survival limit. Tidal disruption events set the hazard-recurrence horizon (≳10<sup>7</sup> yr), and the measured intracluster medium funds, via Bondi accretion at magnetically arrested efficiencies, a power budget of up to ~7.6×10<sup>5</sup> L<sub>☉</sub>, provided the standard outflow suppression of hot low-Eddington flows is itself suppressed, an engineered capability; the natural suppressed supply is ~10<sup>3</sup> L<sub>☉</sub>, at or below the thermal-concealment ceiling. For the engineered case the binding constraint is thermal concealment, not supply. An abandoned deep swarm grinds to debris on an estimated ~10<sup>3</sup> yr timescale and is then drained by the hole, leaving spin as the only durable observable of engineered history. Second, residue and adjudication: the envelope implies three forward-modeled observables, a temperature-dependent waste-heat floor, a magnetically-arrested-disk (MAD) regulation signature, suppression of the flux-eruption variability characteristic of natural MAD accretion, and environmental dephasing of any extreme-mass-ratio inspiral, the only channel that constrains engineered mass. We construct a hierarchical Bayesian framework, with per-messenger Bayes factors against an explicit menu of astrophysical nulls (quiescent IMBH; stellar-remnant subcluster) combined through coincidence likelihoods of the kind developed for gravitational-wave counterpart searches, and with pre-registered decision thresholds. The adjudication machinery itself is validated against three historical cases with independently known resolutions. Applied to the current ω Cen data and scored against forecast ETC-class depths (a pre-registered forecast, not an observation of record), the framework's mid-infrared channel yields a Bayes factor mildly favoring the astrophysical nulls, a continuous per-filter likelihood against the real JWST/MIRI sensitivity curve marginalized over swarm radius and temperature split; conditional on those depths, it remains below the decisive band under every fuel ceiling considered, a result dominated by the dormancy prior rather than by the data: the data enter only through the excluded active-prior fraction ξ = 0.755, and the channel's evidence is capped at ln f<sub>d</sub> = −0.69 however deep the photometry goes. The engineered-mass channel, which earlier drafts described as an already-observable discriminant and left unscored, is priced here and returns −0.03 nats against the merger-mass prior both hypotheses share, so the total stands at −0.50. That channel is one-sided and its evidence is capped at ln f<sub>d</sub> = −0.69 for any depth of photometry, of which 68 per cent is already spent, so the framework's present product is the information forecast: how much each planned observation from Paper C can move the odds, and how much headroom each channel has left. The adjudication machinery itself is validated, not only proposed: scored against three historical cases with an independently known resolution, including a positive control (the 1967 pulsar discovery, LGM-1), it registers a strong anomaly (ln K = +7.9) ahead of the resolving hypothesis and collapses appropriately once that hypothesis is added to the menu, while returning no false positive on either mundane case tested; one pre-registered criterion, testing whether the data alone (menu held fixed) drive the anomaly below the candidate threshold, fails as constructed and is reported as such. All results are conditional on the optimization premise shared by the hypothesis family; the contribution is the feasibility envelope, the forward-modeled residue, and the validated adjudication machinery.</p>
+  <p class="abstract">The inward-migration resolutions of the Fermi paradox identify rapidly spinning intermediate-mass black holes (IMBHs) in dense, old stellar clusters as thermodynamically privileged destinations for computation-optimizing civilizations. Previous papers in this series argued the thermodynamic case (A), surveyed the hypothesis family (B), designed a multi-messenger campaign for the nearest candidate, Omega Centauri (C), and priced the migration decision (D). This paper addresses the two remaining questions. First, feasibility: whether large-scale computational infrastructure can persist around a Kerr IMBH embedded in a live cluster core (stellar density ~3×10<sup>3</sup> M<sub>☉</sub> pc<sup>−3</sup>, velocity dispersion ~21 km s<sup>−1</sup>). Extending recent passive-stability results for stellar engines and Dyson bubbles (McInnes et al. 2026) to the combined Kerr-plus-cluster potential, and combining analytic tidal, thermal, and material limits with a Monte Carlo of gravitationally focused stellar flybys, we derive an allowed envelope for a fiducial 2×10<sup>4</sup> M<sub>☉</sub> hole in the ω Cen core: precession-tolerant swarms survive passively from ~10<sup>2</sup> gravitational radii out to the cluster stripping radius at ~4×10<sup>3</sup> AU. Stellar flybys never set the boundary, and the margin is larger than an impulsive treatment shows. The Monte Carlo, run with a mass-segregated heavy-remnant perturber component (31 M<sub>☉</sub> black holes at 0.1–3 per cent number fraction), yields a conservative impulsive floor of ~2×10<sup>8</sup> yr at the fiducial 1 per cent fraction (4×10<sup>9</sup> yr without remnants); but unbound cluster stars are adiabatically decoupled from every orbit in the envelope (the adiabatic parameter runs from 2.2 at the stripping radius to 4×10<sup>3</sup> at the ISCO), and applying the standard correction lifts the physical lifetime to ≳3×10<sup>8</sup> yr at the envelope edge and to the cluster age within ~3 AU. The relaxed Bahcall–Wolf cusp around the hole is no longer a conditional: the González Prieto et al. (2025) ω Cen-specific realizations form one at 300 Myr with γ ≃ 1.3 for the stellar population, steepening to γ ≃ 2 for the heavy remnants, consistent with the classic single-mass γ ≃ 1.75 benchmark of Baumgardt (2004). Cusp members are bound, so the impulsive kernel applies to them where it does not to the unbound field, and the population is granular, about 0.4 black holes expected inside the stripping radius: a bound heavy remnant is present in a quarter of realizations at the envelope edge, giving a diffusion floor of a few times 10<sup>7</sup> yr when one is drawn, against the cluster-age cap in the three quarters where none is. That bound-member diffusion channel, not the decoupled unbound field, is the binding clock at the envelope edge. The same remnant also forces the orbit secularly (Kozai–Lidov), but that forcing is coherent and quenched by relativistic apsidal precession inward of ~4×10<sup>2</sup> AU, so it reads as a station-keeping cadence rather than a second survival limit. Tidal disruption events set the hazard-recurrence horizon (≳10<sup>7</sup> yr), and the measured intracluster medium funds, via Bondi accretion at magnetically arrested efficiencies, a power budget of up to ~7.6×10<sup>5</sup> L<sub>☉</sub>, provided the standard outflow suppression of hot low-Eddington flows is itself suppressed, an engineered capability; the natural suppressed supply is ~10<sup>3</sup> L<sub>☉</sub>, at or below the thermal-concealment ceiling. For the engineered case the binding constraint is thermal concealment, not supply. An abandoned deep swarm grinds to debris on an estimated ~10<sup>3</sup> yr timescale and is then drained by the hole, leaving spin as the only durable observable of engineered history. Second, residue and adjudication: the envelope implies three forward-modeled observables, a temperature-dependent waste-heat floor, a magnetically-arrested-disk (MAD) regulation signature, suppression of the flux-eruption variability characteristic of natural MAD accretion, and environmental dephasing of any extreme-mass-ratio inspiral, the only channel that constrains engineered mass. We construct a hierarchical Bayesian framework, with per-messenger Bayes factors against an explicit menu of astrophysical nulls (quiescent IMBH; stellar-remnant subcluster) combined through coincidence likelihoods of the kind developed for gravitational-wave counterpart searches, and with pre-registered decision thresholds. The adjudication machinery itself is validated against three historical cases with independently known resolutions. Applied to the current ω Cen data and scored against forecast ETC-class depths (a pre-registered forecast, not an observation of record), the framework's mid-infrared channel yields a Bayes factor mildly favoring the astrophysical nulls, a continuous per-filter likelihood against the real JWST/MIRI sensitivity curve marginalized over swarm radius and temperature split; conditional on those depths, it remains below the decisive band under every fuel ceiling considered, a result dominated by the dormancy prior rather than by the data: the data enter only through the excluded active-prior fraction ξ = 0.755, and the channel's evidence is capped at ln f<sub>d</sub> = −0.69 however deep the photometry goes. The engineered-mass channel, which earlier drafts described as an already-observable discriminant and left unscored, is priced here and returns −0.03 nats against the merger-mass prior both hypotheses share, so the total stands at −0.50. That channel is one-sided and its evidence is capped at ln f<sub>d</sub> = −0.69 for any depth of photometry, of which 68 per cent is already spent, so the framework's present product is the information forecast: how much each planned observation from Paper C can move the odds, and how much headroom each channel has left. The adjudication machinery itself is also validated: scored against three historical cases with an independently known resolution, including a positive control (the 1967 pulsar discovery, LGM-1), it registers a strong anomaly (ln K = +7.9) ahead of the resolving hypothesis and collapses appropriately once that hypothesis is added to the menu, while returning no false positive on either mundane case tested; one pre-registered criterion, testing whether the data alone (menu held fixed) drive the anomaly below the candidate threshold, fails as constructed and is reported as such. All results are conditional on the optimization premise shared by the hypothesis family; the contribution is the feasibility envelope, the forward-modeled residue, and the validated adjudication machinery.</p>
   <span class="cta">Full paper →</span>
 </a>
 
 <a class="paper-card" href="/omega-centauri-accretion-limit.html">
   <span class="tag">Paper F · The accretion limit</span>
   <h2>A Joint Radio&ndash;Infrared&ndash;X-ray Bound on Bondi-fed Accretion onto the Candidate Intermediate-Mass Black Hole in Omega Centauri</h2>
-  <p class="byline">Tim Swanson · v2.1, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · v2.2, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
   <p class="abstract">Three deep non-detections now constrain any accretion flow onto the candidate intermediate-mass black hole (IMBH) at the center of Omega Centauri: a 170-hour ATCA radio campaign reaching 1.1&nbsp;&mu;Jy rms at 7.25&nbsp;GHz (Mahida et al. 2026), JWST NIRCam/MIRI imaging showing no accretion-like point source at any proposed center (Chen et al. 2025), and a 291-ks Chandra exposure bounding L<sub>X</sub>(0.5&ndash;7&nbsp;keV) &le; 1.6&times;10<sup>30</sup>&nbsp;erg&nbsp;s<sup>&minus;1</sup> (Haggard et al. 2013). Chen et al. (2025) compare the infrared and radio limits qualitatively; no formal joint bound with propagated uncertainties has been published. We supply one, as a posterior. Defining the Bondi radiative efficiency &epsilon; &equiv; L<sub>bol</sub>/(&#7745;<sub>B</sub>c<sup>2</sup>), we build a forward model from (&epsilon;, M) and eight shared nuisance parameters (gas density, sound speed, distance, two SED band fractions, fundamental-plane scatter as a latent variable, inflow-suppression index, electron-heating fraction) to the three measured quantities, evaluate Gaussian likelihoods on the measurements themselves, and report the 95&nbsp;per&nbsp;cent credible upper limit &epsilon;<sub>lim</sub>(M) for three named accretion-flow families. For a radiatively inefficient (RIAF-like) flow, &epsilon;<sub>lim</sub> = 2.9&times;10<sup>&minus;10</sup> at the fast-star mass anchor of 8,200&nbsp;M<sub>&#9737;</sub> and 1.1&times;10<sup>&minus;11</sup> at 4&times;10<sup>4</sup>&nbsp;M<sub>&#9737;</sub>; removing the fundamental-plane radio leg entirely relaxes these to 1.4&times;10<sup>&minus;8</sup> and 7.9&times;10<sup>&minus;10</sup>. Overplotting the expectation band for a natural outflow-suppressed hot flow at the same nuisance draws converts the curve into a calibrated verdict. Scoring each natural-flow draw against the measured data directly, the data reject 85&nbsp;per&nbsp;cent of that parameter space at the fast-star anchor, 78&nbsp;per&nbsp;cent at the pulsar-timing point-mass cap and 99&nbsp;per&nbsp;cent at 4&times;10<sup>4</sup>&nbsp;M<sub>&#9737;</sub> (28, 20 and 76&nbsp;per&nbsp;cent using no radio information). A Bondi-fed hot flow at a 47&nbsp;Tucanae-like density is therefore disfavoured across the contested mass range rather than only at its top, and something must give at every anchor: the mass, the gas density, or the suppression physics. Two of those figures replace weaker ones from earlier drafts of this paper, which reported 31 and 90&nbsp;per&nbsp;cent at the two upper anchors and a natural flow surviving comfortably at the fast-star anchor; that reading rested on an efficiency law linear in accretion rate where the fits it cited are close to square-root, and on an exclusion statistic that compared the natural draws against a limit marginalized over those same draws. Both are corrected here and both move the verdict the same way. The strengthened claim is also the more fragile one, since the corrected efficiency law is extrapolated three to five decades below the rates it was computed for; holding it flat at the edge of its computed range instead drives every figure above 99&nbsp;per&nbsp;cent, so the extrapolation is the conservative end of the bracket rather than the optimistic one. The limit's normalization is conditional on the unmeasured central gas density throughout, and we quantify that dependence three ways: prior-widening and prior-shift tests (factor ~6 each), a stellar-wind budget that bounds the density from above rather than below once its giant census is recounted, and a forecast showing that a pulsar dispersion-measure determination of the core density, feasible with the current 19-pulsar timing set, would harden the entire curve. The single observation that converts these limits from analogy-conditional to measured is a DM-gradient fit to the 19-pulsar set at the &plusmn;10 per cent level. Resolving the radio campaign into the 25 observing blocks its source paper tabulates also converts the duty-cycle loophole from an acknowledgement into a bounded region: a train of 100&nbsp;&mu;Jy flares lasting 2&nbsp;hr is excluded for recurrence intervals shorter than 31&nbsp;hr, while a 1&nbsp;mJy flare lasting half an hour escapes the whole campaign if it recurs less often than every 3.4&nbsp;days, a duty cycle of 6&times;10<sup>&minus;3</sup>. All results derive from a fixed-seed Monte Carlo shipped with the paper.</p>
   <span class="cta">Full paper →</span>
@@ -129,7 +225,7 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/omega-centauri-xray-census.html">
   <span class="tag">Paper G · The X-ray census</span>
   <h2>A Residual Census of Unidentified X-ray Sources in Omega Centauri after the Modern Pulsar Catalogue</h2>
-  <p class="byline">Tim Swanson · v1.5, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · v1.6, last revised 2026-10-08</p>
   <span class="abstract-label">Abstract</span>
   <p class="abstract">The deepest Chandra catalogue of Omega Centauri (Henleywillis et al. 2018) lists 233 X-ray sources, 188 of them without an optical identification, and notes that more than 30 of the unidentified sources carry luminosities and X-ray colours resembling millisecond pulsars (MSPs) in other clusters. That catalogue was published when no radio MSP was known in the cluster. Nineteen are known now (Colom i Bernadich et al. 2026), and the catalogue has never been cross-matched against them as a set. We supply that cross-match and the residual census it leaves behind, running the identical pipeline on 47&nbsp;Tucanae first as a control. The control recovers 18 of 21 known MSP X-ray counterparts at the 95&nbsp;per&nbsp;cent match radius, and the three it misses are the three rows the source catalogue itself flags as deviating beyond that radius (Bhattacharya et al. 2017), so the pipeline reproduces the control's own flag set rather than an independent error budget. In &omega;&nbsp;Cen the Chandra astrometric frame carries a measured +0.41&Prime; declination offset relative to the radio frame; registering it takes tier-1 matches from three of eight to five of eight and, with the new timing positions, tightens two published associations from 2.65&Prime; and 2.42&Prime; to 0.07&Prime; and 0.01&Prime;. All five registered associations sit between 0.01&Prime; and 0.35&Prime; with per-source chance-coincidence probabilities below 2.3&times;10<sup>&minus;3</sup> under each of three independent estimators, reported separately and never combined. One published association is discrepant: the timing position of MSP&nbsp;H sits 1.81&Prime; from source 14c after registration, in the opposite declination sense to the other five anchors, against the 0.73&Prime; offset quoted for the same pulsar in Zhao &amp; Heinke (2023). We record that as a data-quality finding rather than reconciling it. This is a positional and colour census; variability is deferred and addressed only in the back matter. Matching the 145 unidentified sources with a tabulated soft flux at or above the adopted 1.4&times;10<sup>&minus;16</sup>&nbsp;erg&nbsp;cm<sup>&minus;2</sup>&nbsp;s<sup>&minus;1</sup> limit against a log&nbsp;N&ndash;log&nbsp;S background expectation of 146.9 (92.4&ndash;215.5) sources at that same limit, the residual is &minus;1.9 (&minus;70.5, +52.6), consistent with zero and dominated by the background bracket; subtracting the same background from the full 159-source unidentified population instead, a comparison of mismatched limits, gives 12.1, a quantity this paper no longer headlines. 39 (primary bounding box) or 53 (secondary 2&sigma; ellipse) unidentified sources fall inside a colour-flux region defined by this cluster's own confirmed counterparts, two separate constructions on the same four anchors rather than a bracket on one quantity, and neither of them interchangeable with the catalogue's own "more than 30". The two published population predictions disagree, predicted totals of 324 and 6 pulsars (a factor of 54), which against 19 known imply 176.6 and zero X-ray-detectable undiscovered pulsars (Yin et al. 2024). We bound that disagreement against the residual without adjudicating it. From the 39 sources inside the primary colour-flux region we publish a ranked follow-up list under a ranking rule fixed before the ranking was computed, together with the epoch-comparison depth each entry would need. The residual is an input to future identification work and is not a detection of anything.</p>
   <span class="cta">Full paper →</span>
@@ -138,9 +234,9 @@ sup,sub{line-height:0;}
 <a class="paper-card" href="/omega-centauri-mass-tension.html">
   <span class="tag">Paper H · The mass tension</span>
   <h2>The Contested Central Dark Mass of Omega Centauri: A Pre-registered Joint Analysis of Fast Stars, Pulsar Timing, and the Limits of the Proper-Motion Dispersion Profile</h2>
-  <p class="byline">Tim Swanson · v2.1, last revised 2026-09-03</p>
+  <p class="byline">Tim Swanson · v2.2, last revised 2026-10-10</p>
   <span class="abstract-label">Abstract</span>
-  <p class="abstract">The center of Omega Centauri carries the sharpest unresolved mass question in globular-cluster dynamics: seven fast-moving stars inside the central 3&Prime; imply an enclosed dark mass &gtrsim; 8,200&nbsp;M<sub>&#9737;</sub> (H&auml;berle et al. 2024), while joint stellar-kinematics and pulsar-timing modeling favors an extended ~2&ndash;3&times;10<sup>5</sup>&nbsp;M<sub>&#9737;</sub> remnant component and caps any point mass at &lesssim; 6,000&nbsp;M<sub>&#9737;</sub> (Ba&ntilde;ares-Hern&aacute;ndez et al. 2025). We report the first joint likelihood analysis of the individual fast stars, the 19-pulsar TRAPUM timing set (Colom i Bernadich et al. 2026) read correctly as one-sided acceleration bounds, and the oMEGACat 40-bin proper-motion dispersion and anisotropy profiles (oMEGACat VI 2025), with the dark component parameterized continuously in mass and scale radius from the point-mass limit to the extended-cluster regime. The analysis was pre-registered before real-data contact, with prior grids, decision criteria, and validation gates fixed in advance and five dated amendments disclosed. The pre-registered outcome is the one we report: the data cannot yet decide between a compact and an extended central dark mass, and we can now say why, quantitatively, for each data type. The pre-registered outcome &mdash; the data cannot yet decide &mdash; is itself a publishable finding that localizes the indecision to specific, named causes per data type. The dispersion profile, measured to 0.03&ndash;0.05&nbsp;km&nbsp;s<sup>&minus;1</sup>, rejects every smooth spherical non-rotating model (&chi;<sup>2</sup>/&nu; &asymp; 473 in the outer bins) through a coherent, component-differential residual that no radial systematic term can absorb, and its statistical errors sit a factor 10&ndash;40 below its own physics-derived systematic budget; on those two grounds, by a pre-set gate, we retire it from the verdict. The pulsar accelerations, all censored, span 3.0 nats across the entire parameter plane. The pulsar spin-frequency second derivatives are inconsistent with cluster jerks and, after correcting a numerical constant in the published nearest-neighbour jerk scale (&xi; = 3.4596, not 3.04), we show jerk discrimination requires a timed-pulsar census of order 10<sup>2</sup>, several times the 19 available, at any timing precision, because the nearest-neighbour floor is a 1-stable process that does not average away. The fast-star and pulsar legs jointly, with the profile leg retired and under the assumed tracer cusp, return a compact optimum (M<sub>dark</sub> &asymp; 2.0&ndash;2.5&times;10<sup>4</sup>&nbsp;M<sub>&#9737;</sub> at the point-mass limit, ln&nbsp;K = +10 to +12; range over all prior cells and brackets). A calibration campaign, now complete, traced the gate battery's one failing check to the retired profile leg itself; re-scored on the verdict configuration under two further dated gate-scope amendments, the battery passes at the fiducial mass-to-light bracket by the point-estimate rule the gate fixes (90&nbsp;per&nbsp;cent coverage 0.8825 extended, Wilson 0.847&ndash;0.910, and 0.865 point, Wilson 0.828&ndash;0.895; null and sign-recovery checks passed non-trivially), and the compact preference is quotable as a calibrated 90&nbsp;per&nbsp;cent statement of consistency between the fast-star and pulsar legs, at the fiducial bracket only and conditional on a Bahcall&ndash;Wolf tracer cusp: regenerated at the shallower published stellar-cusp slope the same check returns 0.660 and fails the gate. The same statement is conditional on the TRAPUM pulsar reduction: under the earlier reduction of the same five pulsars, carried here as a labelled sensitivity, the consistency criterion fails in every prior cell of the fit of record and the evidence changes sign. The statement is further conditional on the truncated-polytrope speed-tail family; a hard-truncated isothermal alternative is admissible against the same kinematics and remains untested. It is a statement of consistency, and no resolution of the profile-leg tension, which the gates removed from the verdict, is claimed. A formation-physics overlay sharpens the impasse from the other side: published retention physics builds the compact solution readily and reaches the extended solution only through hybrid configurations that the extended solution's own point-mass cap excludes. We state what would decide the question, and in which order.</p>
+  <p class="abstract">The center of Omega Centauri carries the sharpest unresolved mass question in globular-cluster dynamics: seven fast-moving stars inside the central 3&Prime; imply an enclosed dark mass &gtrsim; 8,200&nbsp;M<sub>&#9737;</sub> (H&auml;berle et al. 2024) (the discovery team's thesis synthesis deems 2&ndash;4&times;10<sup>4</sup>&nbsp;M<sub>&#9737;</sub> plausible, with the 8,200&nbsp;M<sub>&#9737;</sub> bound the firm statement (H&auml;berle 2025)), while joint stellar-kinematics and pulsar-timing modeling favors an extended ~2&ndash;3&times;10<sup>5</sup>&nbsp;M<sub>&#9737;</sub> remnant component and caps any point mass at &lesssim; 6,000&nbsp;M<sub>&#9737;</sub> (Ba&ntilde;ares-Hern&aacute;ndez et al. 2025). We report the first joint likelihood analysis of the individual fast stars, the 19-pulsar TRAPUM timing set (Colom i Bernadich et al. 2026) read correctly as one-sided acceleration bounds, and the oMEGACat 40-bin proper-motion dispersion and anisotropy profiles (oMEGACat VI 2025), with the dark component parameterized continuously in mass and scale radius from the point-mass limit to the extended-cluster regime. The analysis was pre-registered before real-data contact, with prior grids, decision criteria, and validation gates fixed in advance and five dated amendments disclosed. The pre-registered outcome is the one we report: the data cannot yet decide between a compact and an extended central dark mass, and we can now say why, quantitatively, for each data type. The dispersion profile, measured to 0.03&ndash;0.05&nbsp;km&nbsp;s<sup>&minus;1</sup>, rejects every smooth spherical non-rotating model (&chi;<sup>2</sup>/&nu; &asymp; 473 in the outer bins) through a coherent, component-differential residual that no radial systematic term can absorb, and its statistical errors sit a factor 10&ndash;40 below its own physics-derived systematic budget; on those two grounds, by a pre-set gate, we retire it from the verdict. The pulsar accelerations, all censored, span 3.0 nats across the entire parameter plane. The pulsar spin-frequency second derivatives are inconsistent with cluster jerks and, after correcting a numerical constant in the published nearest-neighbour jerk scale (&xi; = 3.4596, not 3.04), we show jerk discrimination requires a timed-pulsar census of order 10<sup>2</sup>, several times the 19 available, at any timing precision, because the nearest-neighbour floor is a 1-stable process that does not average away. The fast-star and pulsar legs jointly, with the profile leg retired and under the assumed tracer cusp, return a compact optimum (M<sub>dark</sub> &asymp; 2.0&ndash;2.5&times;10<sup>4</sup>&nbsp;M<sub>&#9737;</sub> at the point-mass limit, ln&nbsp;K = +10 to +12; range over all prior cells and brackets). A calibration campaign, now complete, traced the gate battery's one failing check to the retired profile leg itself; re-scored on the verdict configuration under two further dated gate-scope amendments, the battery passes at the fiducial mass-to-light bracket by the point-estimate rule the gate fixes (90&nbsp;per&nbsp;cent coverage 0.8825 extended, Wilson 0.847&ndash;0.910, and 0.865 point, Wilson 0.828&ndash;0.895; null and sign-recovery checks passed non-trivially), and the compact preference is quotable as a calibrated 90&nbsp;per&nbsp;cent statement of consistency between the fast-star and pulsar legs, at the fiducial bracket only and conditional on a Bahcall&ndash;Wolf tracer cusp: regenerated at the shallower published stellar-cusp slope the same check returns 0.660 and fails the gate. The same statement is conditional on the TRAPUM pulsar reduction: under the earlier reduction of the same five pulsars, carried here as a labelled sensitivity, the consistency criterion fails in every prior cell of the fit of record and the evidence changes sign. The statement is further conditional on the truncated-polytrope speed-tail family; a hard-truncated isothermal alternative is admissible against the same kinematics and remains untested. It is a statement of consistency, and no resolution of the profile-leg tension, which the gates removed from the verdict, is claimed. A formation-physics overlay sharpens the impasse from the other side: published retention physics builds the compact solution readily and reaches the extended solution only through hybrid configurations that the extended solution's own point-mass cap excludes. We state what would decide the question, and in which order.</p>
   <span class="cta">Full paper →</span>
 </a>
 
@@ -153,11 +249,279 @@ sup,sub{line-height:0;}
   <span class="cta">Full paper →</span>
 </a>
 
-<div class="footer">
-<p>© 2026 Tim Swanson · The Omega Centauri Society · omegacentauri.me · Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>.</p>
-<p>Preprints. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
-</div>
+<a class="paper-card" href="/omega-centauri-xi-erratum.html">
+  <span class="tag">XI note · Erratum companion to Paper H</span>
+  <h2>An Erratum to the Jerk Noise-Floor Constant in Prager et al. (2017) and Abbate et al. (2019)</h2>
+  <p class="byline">Tim Swanson · preprint v1.1, 2026-10-11</p>
+  <span class="abstract-label">Abstract</span>
+  <p class="abstract">Pulsar spin-frequency second derivatives, jerks, probe cluster gravitational potentials and central masses against a stochastic floor of nearest-neighbour stellar encounters, whose characteristic amplitude is ȧ<sub>0</sub> = (2πξ/3) G⟨m⟩σn, with n the stellar number density, σ the velocity dispersion, and ⟨m⟩ the mean stellar mass. Prager et al. (2017) quote the dimensionless constant ξ ≃ 3.04, and Abbate et al. (2019) adopt it. The double integral that defines ξ evaluates in closed form to √(2π) [1 + ln(2+√3)/(2√3)] = 3.4595806610: five evaluations of that one integral (a closed-form reduction, adaptive quadrature, symbolic evaluation, antiderivative differentiation, and high-precision quadrature) plus two independently coded Monte Carlo simulations of the underlying stellar field that never evaluate the integral, at 15.8σ and 14.6σ respectively, both reject 3.04. Because ȧ<sub>0</sub> is linear in ξ, the printed constant understates the jerk floor by 12.1 per cent, inflating the apparent significance of jerk-based central-mass inferences. A 2026-10-11 addendum records Abbate et al. (2018) as a third work whose inference adopts the printed constant.</p>
+  <span class="cta">Full paper →</span>
+</a>
+
+
 
 </main>
-</body>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <p class="of-note">Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>. &middot; Preprints. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references.</p>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+<!-- OCS-PRESENT:v2:START -->
+<style id="ocs-present-css">
+.ocs-present-cta{max-width:1100px;margin:.2rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+.ocs-present-btn{font:500 .74rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:3px;border:1px solid #1d2233;background:#1d2233;color:#f7f5f0;cursor:pointer}
+.ocs-present-btn:hover{background:#805206;border-color:#805206}
+.ocs-present-hint{font:.68rem 'IBM Plex Mono',ui-monospace,monospace;color:#5c616e}
+html[data-theme="dark"] .ocs-present-btn{background:#e8e4ff;color:#03020a;border-color:#e8e4ff}
+html[data-theme="dark"] .ocs-present-hint{color:#a29cc4}
+.ocs-stage{display:none;position:fixed;inset:0;z-index:2000;background:#f7f5f0;color:#1d2233;flex-direction:column}
+html[data-theme="dark"] .ocs-stage{background:#03020a;color:#e8e4ff}
+body.ocs-presenting{overflow:hidden}
+body.ocs-presenting .ocs-stage{display:flex}
+.ocs-stage-body{flex:1;overflow-y:auto;padding:2.2rem 0 1.5rem}
+.ocs-slide{max-width:min(1240px,94vw);margin:0 auto;animation:ocs-slide-in .35s ease both}
+.ocs-slide .ocs-slide-kicker{font:500 .7rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:#805206;margin-bottom:.8rem}
+html[data-theme="dark"] .ocs-slide .ocs-slide-kicker{color:#e0a640}
+.ocs-slide.title-slide{min-height:60vh;display:flex;flex-direction:column;justify-content:center}
+.ocs-slide.title-slide .section-title{font-size:clamp(2rem,4.4vw,3.4rem)!important;line-height:1.1}
+.ocs-slide.title-slide>h1,.ocs-slide.title-slide>h2{font-size:clamp(2rem,4.4vw,3.2rem)!important;line-height:1.12}
+.ocs-slide.title-slide>.lede{font-size:1.15rem;max-width:880px}
+.ocs-slide.title-slide .section-lead{font-size:1.15rem;max-width:860px}
+.ocs-slide>*{max-width:100%}
+.ocs-slide svg{max-height:56vh;width:auto;max-width:100%}
+@keyframes ocs-slide-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ocs-pbar{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;border-top:1px solid #ddd8cc;font:.72rem 'IBM Plex Mono',ui-monospace,monospace}
+html[data-theme="dark"] .ocs-pbar{border-color:rgba(112,85,212,.25)}
+.ocs-pbar button{font:inherit;padding:.38rem .75rem;border:1px solid currentColor;border-radius:3px;background:none;color:inherit;cursor:pointer}
+.ocs-pbar button[aria-pressed="true"]{color:#805206}
+.ocs-pbar .ocs-count{min-width:4.5rem;text-align:center}
+.ocs-rail{flex:1;display:flex;gap:2px;height:14px;align-items:stretch;min-width:0}
+.ocs-rail i{flex:1;background:currentColor;opacity:.18;border-radius:1px;cursor:pointer}
+.ocs-rail i.done{opacity:.5}.ocs-rail i.cur{opacity:1;background:#a46a0a}
+.ocs-rail i.sec{margin-left:5px}
+/* draw-in animation for static diagrams */
+svg.ocs-draw .ocs-dr{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:ocs-draw 1.6s ease forwards;animation-delay:var(--d,0s)}
+svg.ocs-draw text{opacity:0;animation:ocs-fade .6s ease forwards;animation-delay:calc(var(--d,0s) + .9s)}
+svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
+@keyframes ocs-draw{to{stroke-dashoffset:0}}
+@keyframes ocs-fade{to{opacity:1}}
+@keyframes ocs-flow{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){svg.ocs-draw .ocs-dr{animation:none;stroke-dashoffset:0}svg.ocs-draw text{animation:none;opacity:1}svg.ocs-draw .ocs-flow{animation:none}.ocs-slide{animation:none}}
+@media print{.ocs-present-cta,.ocs-stage{display:none!important}}
+</style>
+<div class="ocs-stage" id="ocsStage" role="dialog" aria-modal="true" aria-label="Presenter mode">
+  <div class="ocs-stage-body" id="ocsStageBody"></div>
+  <div class="ocs-pbar" role="toolbar" aria-label="Presenter controls">
+    <button type="button" id="ocsPrev" aria-label="Previous step">&larr;</button>
+    <span class="ocs-count" id="ocsCount">1 / 1</span>
+    <button type="button" id="ocsNext" aria-label="Next step">&rarr;</button>
+    <div class="ocs-rail" id="ocsRail" aria-hidden="true"></div>
+    <button type="button" id="ocsAuto" aria-pressed="false">Autoplay</button>
+    <button type="button" id="ocsExit">Exit</button>
+  </div>
+</div>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var btn = document.getElementById('ocsPresentBtn');
+  var cfg = (btn && btn.dataset) || {};
+  var main = document.querySelector(cfg.root || 'main');
+  if (!main) return;
+  var SEL_SECTIONS = cfg.sections || ':scope > section', SEL_TITLE = cfg.title || '.section-title',
+      SEL_KICKER = cfg.kicker || '.section-tag', SEL_LEAD = cfg.lead || '.section-lead';
+
+  // ---- draw-in for static diagrams (skip ones that already animate or are tiny icons) ----
+  function animated(svg) {
+    if (svg.querySelector('animate,animateTransform,animateMotion')) return true;
+    var els = svg.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) { if (getComputedStyle(els[i]).animationName !== 'none') return true; }
+    return false;
+  }
+  function prepDraw(svg) {
+    if (svg.dataset.ocsDraw) return;
+    svg.dataset.ocsDraw = '1';
+    var shapes = svg.querySelectorAll('path,line,polyline,polygon,circle,ellipse,rect');
+    var k = 0;
+    shapes.forEach(function (el) {
+      var st = getComputedStyle(el);
+      if (!st.stroke || st.stroke === 'none' || parseFloat(st.strokeWidth) === 0) return;
+      if (st.strokeDasharray && st.strokeDasharray !== 'none') { el.classList.add('ocs-flow'); return; }
+      var len = 0;
+      try { len = el.getTotalLength ? el.getTotalLength() : 0; } catch (e) { len = 0; }
+      if (!len || len < 4) return;
+      el.style.setProperty('--len', Math.ceil(len));
+      el.style.setProperty('--d', (Math.min(k, 30) * 0.035).toFixed(3) + 's');
+      el.classList.add('ocs-dr');
+      k++;
+    });
+    svg.querySelectorAll('text').forEach(function (t, i) { t.style.setProperty('--d', (Math.min(i, 20) * 0.03).toFixed(3) + 's'); });
+  }
+  function play(svg) {
+    if (reduce || !svg.dataset.ocsDraw) return;
+    svg.classList.remove('ocs-draw'); void svg.getBoundingClientRect(); svg.classList.add('ocs-draw');
+  }
+  var statics = [].slice.call(main.querySelectorAll('svg')).filter(function (s) {
+    var r = s.getBoundingClientRect();
+    return !s.closest('.pg-art') && r.width > 120 && !animated(s);
+  });
+  statics.forEach(prepDraw);
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    statics.forEach(function (s) { io.observe(s); });
+  }
+
+  // ---- presenter: build slides from sections ----
+  var stage = document.getElementById('ocsStage'), sbody = document.getElementById('ocsStageBody');
+  var railEl = document.getElementById('ocsRail'), countEl = document.getElementById('ocsCount');
+  var slides = [], cur = 0, auto = null;
+  var GRID = /grid|cards|tiers|wrap|row|list/;
+  var SKIP = SEL_KICKER + ',' + SEL_TITLE + ',' + SEL_LEAD + ',.divider,script,style,.ocs-present-cta';
+  function tableChunks(tbl, wrap, budget, out) {
+    var head = tbl.tHead, rows = [].slice.call(tbl.tBodies.length ? tbl.tBodies[0].rows : tbl.rows);
+    var hh = head ? head.getBoundingClientRect().height : 0, pack = [], h = hh;
+    function flush() {
+      if (!pack.length) return;
+      var t = tbl.cloneNode(false);
+      if (head) t.appendChild(head.cloneNode(true));
+      var tb = document.createElement('tbody');
+      pack.forEach(function (r) { tb.appendChild(r.cloneNode(true)); });
+      t.appendChild(tb);
+      out.push({ el: t, wrap: wrap, h: h, cloned: true });
+      pack = []; h = hh;
+    }
+    rows.forEach(function (r) {
+      if (head && head.contains(r)) return;
+      var rh = r.getBoundingClientRect().height;
+      if (pack.length && h + rh > budget) flush();
+      pack.push(r); h += rh;
+    });
+    flush();
+  }
+  function isBox(el) {
+    if (/^(svg|P|UL|OL|FIGURE|PRE|BLOCKQUOTE|H[1-6]|IMG|CANVAS)$/i.test(el.tagName)) return true;
+    var st = getComputedStyle(el);
+    var bg = st.backgroundColor, a = bg.match(/[\d.]+/g);
+    if (a && (a.length < 4 || parseFloat(a[3]) > 0.02) && bg !== 'transparent') return true;
+    return ['Top', 'Right', 'Bottom', 'Left'].some(function (s) { return parseFloat(st['border' + s + 'Width']) > 0 && st['border' + s + 'Style'] !== 'none'; });
+  }
+  function split(el, wrap, budget, out, depth) {
+    if (el.matches(SKIP)) return;
+    var h = el.getBoundingClientRect().height;
+    if (h < 8) return;
+    if (el.tagName === 'TABLE' && h > budget) { tableChunks(el, wrap, budget, out); return; }
+    if (h <= budget || depth > 5 || isBox(el) || el.children.length < 2) { out.push({ el: el, wrap: wrap, h: h }); return; }
+    var disp = getComputedStyle(el).display;
+    var cls = (disp === 'grid' || disp === 'flex') && typeof el.className === 'string' ? el.className : null;
+    [].slice.call(el.children).forEach(function (k) { split(k, cls || wrap, budget, out, depth + 1); });
+  }
+  function units(sec, budget) {
+    var out = [];
+    sec.querySelectorAll('details:not([open])').forEach(function (d) { d.open = true; d.dataset.ocsOpened = '1'; });
+    [].slice.call(sec.children).forEach(function (ch) { split(ch, null, budget, out, 0); });
+    return out;
+  }
+  function build() {
+    slides = [];
+    var budget = innerHeight * 0.8;
+    if (cfg.mode === 'items') {
+      var intro = cfg.intro ? [].slice.call(main.querySelectorAll(cfg.intro)) : [];
+      if (intro.length) slides.push({ sec: 0, kind: 'title', nodes: intro, label: (intro[0].textContent || '').trim().slice(0, 80) });
+      [].slice.call(main.querySelectorAll(cfg.items)).forEach(function (it, i) {
+        var t = it.querySelector(SEL_TITLE);
+        slides.push({ sec: i + 1, kind: 'body', nodes: [{ el: it, wrap: null, h: 0 }], label: t ? t.textContent.trim().slice(0, 90) : '' });
+      });
+    } else
+    [].slice.call(main.querySelectorAll(SEL_SECTIONS)).forEach(function (sec, si) {
+      var title = sec.querySelector(SEL_TITLE);
+      if (!title) return;
+      var kicker = sec.querySelector(SEL_KICKER);
+      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector(SEL_LEAD)].filter(Boolean), label: title.textContent.trim() });
+      var pack = [], h = 0, wrap = null;
+      units(sec, budget).forEach(function (u) {
+        if (pack.length && (h + u.h > budget || u.wrap !== wrap)) { slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() }); pack = []; h = 0; }
+        pack.push(u); h += u.h; wrap = u.wrap;
+      });
+      if (pack.length) slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() });
+    });
+    railEl.innerHTML = '';
+    slides.forEach(function (s, i) {
+      var b = document.createElement('i');
+      if (i && s.sec !== slides[i - 1].sec) b.className = 'sec';
+      b.title = s.label;
+      b.addEventListener('click', function () { stopAuto(); go(i); });
+      railEl.appendChild(b);
+    });
+  }
+  function render() {
+    var s = slides[cur];
+    sbody.innerHTML = '';
+    var box = document.createElement('div');
+    box.className = 'ocs-slide' + (s.kind === 'title' ? ' title-slide' : '');
+    if (s.kind === 'body') {
+      if (cfg.mode !== 'items') { var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k); }
+    }
+    var holder = box;
+    if (s.wrap) { holder = document.createElement('div'); holder.className = s.wrap; box.appendChild(holder); }
+    if (s.wrap && s.kind === 'body') { holder.style.gridTemplateColumns = 'repeat(' + Math.min(s.nodes.length, 3) + ', minmax(0, 1fr))'; if (s.nodes.length === 1) holder.style.maxWidth = '820px'; }
+    s.nodes.forEach(function (n) {
+      var c = n.el ? (n.cloned ? n.el.cloneNode(true) : n.el.cloneNode(true)) : n.cloneNode(true);
+      c.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+      c.removeAttribute && c.removeAttribute('id');
+      holder.appendChild(c);
+    });
+    sbody.appendChild(box);
+    sbody.scrollTop = 0;
+    box.querySelectorAll('svg').forEach(function (svg) {
+      if (svg.dataset.ocsDraw) { svg.removeAttribute('data-ocs-draw'); svg.classList.remove('ocs-draw'); }
+      if (!svg.closest('.pg-art') && !animated(svg)) { prepDraw(svg); play(svg); }
+    });
+    countEl.textContent = (cur + 1) + ' / ' + slides.length;
+    [].slice.call(railEl.children).forEach(function (b, i) { b.classList.toggle('cur', i === cur); b.classList.toggle('done', i < cur); });
+  }
+  function go(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+  function stopAuto() { if (auto) { clearInterval(auto); auto = null; } document.getElementById('ocsAuto').setAttribute('aria-pressed', 'false'); }
+  function toggleAuto() {
+    if (auto) { stopAuto(); return; }
+    auto = setInterval(function () { if (cur >= slides.length - 1) { stopAuto(); return; } go(cur + 1); }, 12000);
+    document.getElementById('ocsAuto').setAttribute('aria-pressed', 'true');
+  }
+  function enter() { build(); if (!slides.length) return; document.body.classList.add('ocs-presenting'); go(0); document.getElementById('ocsNext').focus(); }
+  function exit() { document.body.classList.remove('ocs-presenting'); stopAuto(); sbody.innerHTML = ''; main.querySelectorAll('details[data-ocs-opened]').forEach(function (d) { d.open = false; d.removeAttribute('data-ocs-opened'); }); }
+  if (btn) btn.addEventListener('click', enter);
+  document.getElementById('ocsPrev').addEventListener('click', function () { stopAuto(); go(cur - 1); });
+  document.getElementById('ocsNext').addEventListener('click', function () { stopAuto(); go(cur + 1); });
+  document.getElementById('ocsAuto').addEventListener('click', toggleAuto);
+  document.getElementById('ocsExit').addEventListener('click', exit);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+    var on = document.body.classList.contains('ocs-presenting');
+    if (!on) { if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && !e.altKey) enter(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (e.key === 'Escape') { exit(); }
+    else if (e.key === 'a' || e.key === 'A') { toggleAuto(); }
+  });
+})();
+</script>
+<!-- OCS-PRESENT:v2:END --></body>
 </html>

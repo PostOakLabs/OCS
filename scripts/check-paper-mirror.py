@@ -49,6 +49,7 @@ PDF_MAP = {
     "macro-transcension-hypothesis.pdf": "mth-paper.pdf",
     "omega-centauri-accretion-limit.pdf": "accretion-limit-paper.pdf",
     "omega-centauri-axi-note.pdf": os.path.join("axi", "axi-note.pdf"),
+    "omega-centauri-xi-erratum.pdf": os.path.join("h", "xi_erratum_note.pdf"),
     "omega-centauri-mass-tension.pdf": "mass-tension-paper.pdf",
     "omega-centauri-technosignature-campaign.pdf": "campaign-paper.pdf",
     "omega-centauri-xray-census.pdf": os.path.join("g", "census-paper.pdf"),

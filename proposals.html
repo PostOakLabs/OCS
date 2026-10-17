@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,16 +89,16 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Space+Mono:ital,wght@0,400;0,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --void:#03020a; --deep:#070515; --nebula:#0d0a24;
-  --purple-bright:#7055d4; --purple-glow:#a080f0;
-  --teal-bright:#1dba90; --teal-glow:#4de8c0;
-  --amber-glow:#ffc840;
-  --text-primary:#e8e4ff; --text-secondary:#9890c0; --text-dim:#504870;
-  --border-subtle:rgba(112,85,212,0.2); --border-teal:rgba(29,186,144,0.25);
+  --void:rgb(var(--k03020a)); --deep:rgb(var(--k070515)); --nebula:rgb(var(--k0d0a24));
+  --purple-bright:rgb(var(--k7055d4)); --purple-glow:rgb(var(--ka080f0));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --amber-glow:rgb(var(--kffc840));
+  --text-primary:rgb(var(--ke8e4ff)); --text-secondary:rgb(var(--k9890c0)); --text-dim:rgb(var(--k504870));
+  --border-subtle:rgb(var(--k7055d4) / 0.2); --border-teal:rgb(var(--k1dba90) / 0.25);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -107,21 +107,21 @@ body{
   font-family:'Crimson Pro',Georgia,serif;
   font-size:16px; line-height:1.65;
   min-height:100vh;
-  padding:3rem 1.5rem 6rem;
+  padding:0 0 6rem;
 }
-.wrap{max-width:920px;margin:0 auto}
+.wrap{max-width:920px;margin:0 auto;padding:0 1.5rem}
 nav.crumb{
-  font-family:'Space Mono',monospace; font-size:0.72rem; letter-spacing:0.08em;
+  font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.08em;
   color:var(--text-dim); margin-bottom:2.5rem; padding-bottom:1rem;
   border-bottom:1px solid var(--border-subtle);
 }
 nav.crumb a{color:var(--teal-glow);text-decoration:none}
 nav.crumb a:hover{text-decoration:underline}
 h1{
-  font-family:'Orbitron',sans-serif;
+  font-family:'Source Serif 4',sans-serif;
   font-size:2.4rem; font-weight:900; letter-spacing:0.02em;
   margin-bottom:0.6rem; line-height:1.15;
-  background:linear-gradient(90deg,#e8e4ff 0%,#a080f0 55%,#4de8c0 100%);
+  background:linear-gradient(90deg,rgb(var(--ke8e4ff)) 0%,rgb(var(--ka080f0)) 55%,rgb(var(--k4de8c0)) 100%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .lede{
@@ -129,13 +129,13 @@ h1{
   margin-bottom:2.5rem; max-width:680px;
 }
 .meta{
-  font-family:'Space Mono',monospace; font-size:0.7rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
   color:var(--text-dim); letter-spacing:0.1em;
   margin-bottom:3rem;
 }
 section{margin-bottom:2.8rem}
 h2{
-  font-family:'Orbitron',sans-serif;
+  font-family:'Source Serif 4',sans-serif;
   font-size:1.05rem; font-weight:600; letter-spacing:0.18em;
   color:var(--amber-glow); text-transform:uppercase;
   margin-bottom:1.1rem; padding-bottom:0.4rem;
@@ -146,17 +146,17 @@ ul.props li{
   margin-bottom:1.2rem;
   padding:0.9rem 1rem;
   border-left:2px solid var(--border-teal);
-  background:rgba(13,10,36,0.4);
+  background:rgb(var(--k0d0a24) / 0.4);
   transition:border-color 0.2s, background 0.2s;
 }
 ul.props li:hover{
   border-left-color:var(--teal-glow);
-  background:rgba(13,10,36,0.7);
+  background:rgb(var(--k0d0a24) / 0.7);
 }
 ul.props a{
   color:var(--text-primary);
   text-decoration:none;
-  font-family:'Orbitron',sans-serif;
+  font-family:'Source Serif 4',sans-serif;
   font-size:0.95rem; font-weight:600;
   display:block; margin-bottom:0.3rem;
 }
@@ -168,7 +168,7 @@ ul.props .desc{
 }
 ul.props .channel{
   display:inline-block;
-  font-family:'Space Mono',monospace;
+  font-family:'IBM Plex Mono',monospace;
   font-size:0.65rem; letter-spacing:0.12em;
   color:var(--purple-glow);
   text-transform:uppercase;
@@ -177,25 +177,144 @@ ul.props .channel{
 footer{
   margin-top:4rem; padding-top:1.5rem;
   border-top:1px solid var(--border-subtle);
-  font-family:'Space Mono',monospace; font-size:0.7rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
   color:var(--text-dim); letter-spacing:0.06em;
   text-align:center;
 }
 footer a{color:var(--teal-glow); text-decoration:none}
 footer a:hover{text-decoration:underline}
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0d0a24:238 236 231;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k504870:92 97 110;--k7055d4:55 68 130;--k9890c0:70 76 94;--ka080f0:55 68 130;--ke8e4ff:29 34 51;--kffc840:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0d0a24:13 10 36;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k504870:80 72 112;--k7055d4:112 85 212;--k9890c0:152 144 192;--ka080f0:160 128 240;--ke8e4ff:232 228 255;--kffc840:255 200 64;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
+<style id="pr-art-css">
+.pr-art{display:block;width:100%;height:auto;margin:.4rem 0 1.4rem;color:#5c616e;border:1px solid #ddd8cc;border-radius:6px;background:#efede6}
+html[data-theme="dark"] .pr-art{color:#a29cc4;border-color:rgba(112,85,212,.25);background:#070515}
+.pr-art text{font:10.5px 'IBM Plex Mono',ui-monospace,monospace;fill:currentColor}
+.pr-art .pr-lbl{text-anchor:middle;fill:#805206;letter-spacing:.1em}
+.pr-cl circle{fill:currentColor;opacity:.75}.pr-cl .pr-core{fill:#a46a0a;opacity:1}
+.pr-ray{fill:none;stroke:#a46a0a;stroke-width:1.2;stroke-dasharray:3 7;animation:pr-flow 1.9s linear infinite;opacity:.8}
+.pr-det{fill:#efede6;stroke:currentColor;stroke-width:1.2;animation:pr-hit 2.8s ease infinite}
+html[data-theme="dark"] .pr-det{fill:#070515}
+@keyframes pr-flow{to{stroke-dashoffset:-20}}
+@keyframes pr-hit{0%,60%,100%{fill:#efede6}70%{fill:#a46a0a}}
+@media (prefers-reduced-motion: reduce){.pr-ray,.pr-det{animation:none}}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 <div class="wrap">
 
-<nav class="crumb" aria-label="Breadcrumb">
-  <a href="/">◉ The Omega Centauri Society</a> &nbsp;·&nbsp; Research Proposals
-</nav>
+<p class="ocs-crumb" style="padding:0;margin:1.1rem 0 1.6rem"><a href="/">OCS</a> / Research Proposals</p>
 
 <main>
   <h1>Research Proposals</h1>
-  <p class="lede">Thirteen working-draft observational programs targeting Omega Centauri's candidate intermediate-mass black hole — across neutrino, gamma-ray, radio, infrared, gravitational-wave, astrometric, and time-domain channels. Each proposal specifies a falsification framework: an observable that would <em>rule out</em> the OCS hypothesis, not just support it.</p>
+  <p class="lede">Thirteen working-draft observational programs targeting Omega Centauri's candidate intermediate-mass black hole — across neutrino, gamma-ray, radio, infrared, gravitational-wave, astrometric, and time-domain channels. Each proposal specifies a falsification framework: an observable that would <em>rule out</em> the OCS hypothesis.</p>
   <p class="meta">Working drafts · Last index update: 2026-08-14</p>
+  <svg class="pr-art" viewBox="0 0 720 190" role="img" aria-label="Omega Centauri at left, with signals in seven channels (neutrino, gamma-ray, radio, infrared, gravitational waves, time-domain, astrometry) travelling to detectors">
+  <g class="pr-cl"><circle cx="110.7" cy="103.8" r="1.1"/><circle cx="116.9" cy="91.0" r="1.4"/><circle cx="111.0" cy="95.5" r="1.1"/><circle cx="109.7" cy="100.1" r="1.4"/><circle cx="96.9" cy="97.5" r="1.1"/><circle cx="98.9" cy="103.4" r="0.8"/><circle cx="100.7" cy="84.4" r="1.4"/><circle cx="109.1" cy="95.8" r="0.8"/><circle cx="119.5" cy="109.8" r="0.8"/><circle cx="109.4" cy="96.7" r="1.1"/><circle cx="99.0" cy="96.9" r="1.1"/><circle cx="106.5" cy="79.6" r="1.1"/><circle cx="108.7" cy="85.9" r="0.8"/><circle cx="112.3" cy="92.8" r="0.8"/><circle cx="104.6" cy="95.2" r="1.4"/><circle cx="101.0" cy="98.8" r="1.1"/><circle cx="98.3" cy="101.3" r="1.4"/><circle cx="104.5" cy="102.5" r="1.4"/><circle cx="110.7" cy="101.3" r="0.8"/><circle cx="123.3" cy="78.1" r="1.4"/><circle cx="106.4" cy="84.8" r="1.1"/><circle cx="124.8" cy="91.7" r="1.4"/><circle cx="118.1" cy="101.2" r="1.4"/><circle cx="114.5" cy="87.0" r="1.1"/><circle cx="115.7" cy="100.7" r="1.4"/><circle cx="113.0" cy="94.8" r="0.8"/><circle cx="106.6" cy="97.1" r="1.1"/><circle cx="103.5" cy="98.2" r="0.8"/><circle cx="119.3" cy="97.6" r="0.8"/><circle cx="103.3" cy="101.5" r="1.4"/><circle cx="124.4" cy="81.6" r="1.4"/><circle cx="110.2" cy="96.9" r="0.8"/><circle cx="118.4" cy="99.4" r="0.8"/><circle cx="127.7" cy="89.1" r="1.1"/><circle cx="106.9" cy="92.4" r="0.8"/><circle cx="116.3" cy="94.2" r="1.1"/><circle cx="124.4" cy="91.2" r="1.1"/><circle cx="99.9" cy="104.9" r="1.1"/><circle cx="104.2" cy="87.6" r="1.4"/><circle cx="125.0" cy="106.3" r="1.4"/><circle cx="110" cy="95" r="5" class="pr-core"/></g>
+  <text class="pr-lbl" x="110" y="133">NGC 5139</text>
+  <path class="pr-ray" style="animation-delay:-0.00s" d="M124 95C230 95 330 22 470 22"/><circle class="pr-det" cx="480" cy="22" r="4.5" style="animation-delay:0.0s"/><text x="494" y="25.5">Neutrino</text><path class="pr-ray" style="animation-delay:-0.27s" d="M124 95C230 95 330 46 470 46"/><circle class="pr-det" cx="480" cy="46" r="4.5" style="animation-delay:0.4s"/><text x="494" y="49.5">Gamma-ray</text><path class="pr-ray" style="animation-delay:-0.54s" d="M124 95C230 95 330 70 470 70"/><circle class="pr-det" cx="480" cy="70" r="4.5" style="animation-delay:0.8s"/><text x="494" y="73.5">Radio</text><path class="pr-ray" style="animation-delay:-0.81s" d="M124 95C230 95 330 94 470 94"/><circle class="pr-det" cx="480" cy="94" r="4.5" style="animation-delay:1.2s"/><text x="494" y="97.5">Infrared</text><path class="pr-ray" style="animation-delay:-1.08s" d="M124 95C230 95 330 118 470 118"/><circle class="pr-det" cx="480" cy="118" r="4.5" style="animation-delay:1.6s"/><text x="494" y="121.5">Gravitational waves</text><path class="pr-ray" style="animation-delay:-1.35s" d="M124 95C230 95 330 142 470 142"/><circle class="pr-det" cx="480" cy="142" r="4.5" style="animation-delay:2.0s"/><text x="494" y="145.5">Time-domain</text><path class="pr-ray" style="animation-delay:-1.62s" d="M124 95C230 95 330 166 470 166"/><circle class="pr-det" cx="480" cy="166" r="4.5" style="animation-delay:2.4s"/><text x="494" y="169.5">Astrometry</text>
+</svg>
+  <div class="ocs-present-cta" style="padding:0;margin:0 0 1.6rem"><button type="button" class="ocs-present-btn" id="ocsPresentBtn" data-sections=":scope > section" data-title="h2" data-kicker=".pr-none" data-lead=".pr-none">Present this page</button><span class="ocs-present-hint">One step per screen. Arrow keys move, A toggles autoplay, Esc exits. Press P to start.</span></div>
 
   <section>
     <h2>Neutrino channel</h2>
@@ -206,7 +325,7 @@ footer a:hover{text-decoration:underline}
       </li>
       <li>
         <a href="/proposal_icecube.html"><span class="channel">Complement</span>IceCube — OC Technosignature Neutrino Search</a>
-        <p class="desc">Directional high-energy neutrino analysis at the Häberle IMBH candidate position. OC at declination −47° is a downward-going source for IceCube — higher atmospheric background than for northern-sky targets.</p>
+        <p class="desc">Directional high-energy neutrino analysis at the Häberle IMBH candidate position. OC at declination −47° is a downward-going source for IceCube; higher atmospheric background than for northern-sky targets.</p>
       </li>
     </ul>
   </section>
@@ -293,14 +412,269 @@ footer a:hover{text-decoration:underline}
 
 </main>
 
-<footer>
-  ◉ THE OMEGA CENTAURI SOCIETY &nbsp;·&nbsp;
-  <a href="/">Main portal</a> &nbsp;·&nbsp;
-  <a href="/faq.html">FAQ</a> &nbsp;·&nbsp;
-  <a href="mailto:contact@omegacentauri.me">contact@omegacentauri.me</a> &nbsp;·&nbsp;
-  <a href="/cite.html">Cite</a>
-</footer>
+
 
 </div>
-</body>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+<!-- OCS-PRESENT:v2:START -->
+<style id="ocs-present-css">
+.ocs-present-cta{max-width:1100px;margin:.2rem auto 0;padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;position:relative;z-index:1}
+.ocs-present-btn{font:500 .74rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;padding:.6rem 1.1rem;border-radius:3px;border:1px solid #1d2233;background:#1d2233;color:#f7f5f0;cursor:pointer}
+.ocs-present-btn:hover{background:#805206;border-color:#805206}
+.ocs-present-hint{font:.68rem 'IBM Plex Mono',ui-monospace,monospace;color:#5c616e}
+html[data-theme="dark"] .ocs-present-btn{background:#e8e4ff;color:#03020a;border-color:#e8e4ff}
+html[data-theme="dark"] .ocs-present-hint{color:#a29cc4}
+.ocs-stage{display:none;position:fixed;inset:0;z-index:2000;background:#f7f5f0;color:#1d2233;flex-direction:column}
+html[data-theme="dark"] .ocs-stage{background:#03020a;color:#e8e4ff}
+body.ocs-presenting{overflow:hidden}
+body.ocs-presenting .ocs-stage{display:flex}
+.ocs-stage-body{flex:1;overflow-y:auto;padding:2.2rem 0 1.5rem}
+.ocs-slide{max-width:min(1240px,94vw);margin:0 auto;animation:ocs-slide-in .35s ease both}
+.ocs-slide .ocs-slide-kicker{font:500 .7rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:#805206;margin-bottom:.8rem}
+html[data-theme="dark"] .ocs-slide .ocs-slide-kicker{color:#e0a640}
+.ocs-slide.title-slide{min-height:60vh;display:flex;flex-direction:column;justify-content:center}
+.ocs-slide.title-slide .section-title{font-size:clamp(2rem,4.4vw,3.4rem)!important;line-height:1.1}
+.ocs-slide.title-slide>h1,.ocs-slide.title-slide>h2{font-size:clamp(2rem,4.4vw,3.2rem)!important;line-height:1.12}
+.ocs-slide.title-slide>.lede{font-size:1.15rem;max-width:880px}
+.ocs-slide.title-slide .section-lead{font-size:1.15rem;max-width:860px}
+.ocs-slide>*{max-width:100%}
+.ocs-slide svg{max-height:56vh;width:auto;max-width:100%}
+@keyframes ocs-slide-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ocs-pbar{display:flex;align-items:center;gap:.7rem;padding:.55rem 1rem;border-top:1px solid #ddd8cc;font:.72rem 'IBM Plex Mono',ui-monospace,monospace}
+html[data-theme="dark"] .ocs-pbar{border-color:rgba(112,85,212,.25)}
+.ocs-pbar button{font:inherit;padding:.38rem .75rem;border:1px solid currentColor;border-radius:3px;background:none;color:inherit;cursor:pointer}
+.ocs-pbar button[aria-pressed="true"]{color:#805206}
+.ocs-pbar .ocs-count{min-width:4.5rem;text-align:center}
+.ocs-rail{flex:1;display:flex;gap:2px;height:14px;align-items:stretch;min-width:0}
+.ocs-rail i{flex:1;background:currentColor;opacity:.18;border-radius:1px;cursor:pointer}
+.ocs-rail i.done{opacity:.5}.ocs-rail i.cur{opacity:1;background:#a46a0a}
+.ocs-rail i.sec{margin-left:5px}
+/* draw-in animation for static diagrams */
+svg.ocs-draw .ocs-dr{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:ocs-draw 1.6s ease forwards;animation-delay:var(--d,0s)}
+svg.ocs-draw text{opacity:0;animation:ocs-fade .6s ease forwards;animation-delay:calc(var(--d,0s) + .9s)}
+svg.ocs-draw .ocs-flow{animation:ocs-flow 1.8s linear infinite}
+@keyframes ocs-draw{to{stroke-dashoffset:0}}
+@keyframes ocs-fade{to{opacity:1}}
+@keyframes ocs-flow{to{stroke-dashoffset:-24}}
+@media (prefers-reduced-motion: reduce){svg.ocs-draw .ocs-dr{animation:none;stroke-dashoffset:0}svg.ocs-draw text{animation:none;opacity:1}svg.ocs-draw .ocs-flow{animation:none}.ocs-slide{animation:none}}
+@media print{.ocs-present-cta,.ocs-stage{display:none!important}}
+</style>
+<div class="ocs-stage" id="ocsStage" role="dialog" aria-modal="true" aria-label="Presenter mode">
+  <div class="ocs-stage-body" id="ocsStageBody"></div>
+  <div class="ocs-pbar" role="toolbar" aria-label="Presenter controls">
+    <button type="button" id="ocsPrev" aria-label="Previous step">&larr;</button>
+    <span class="ocs-count" id="ocsCount">1 / 1</span>
+    <button type="button" id="ocsNext" aria-label="Next step">&rarr;</button>
+    <div class="ocs-rail" id="ocsRail" aria-hidden="true"></div>
+    <button type="button" id="ocsAuto" aria-pressed="false">Autoplay</button>
+    <button type="button" id="ocsExit">Exit</button>
+  </div>
+</div>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var btn = document.getElementById('ocsPresentBtn');
+  var cfg = (btn && btn.dataset) || {};
+  var main = document.querySelector(cfg.root || 'main');
+  if (!main) return;
+  var SEL_SECTIONS = cfg.sections || ':scope > section', SEL_TITLE = cfg.title || '.section-title',
+      SEL_KICKER = cfg.kicker || '.section-tag', SEL_LEAD = cfg.lead || '.section-lead';
+
+  // ---- draw-in for static diagrams (skip ones that already animate or are tiny icons) ----
+  function animated(svg) {
+    if (svg.querySelector('animate,animateTransform,animateMotion')) return true;
+    var els = svg.querySelectorAll('*');
+    for (var i = 0; i < els.length; i++) { if (getComputedStyle(els[i]).animationName !== 'none') return true; }
+    return false;
+  }
+  function prepDraw(svg) {
+    if (svg.dataset.ocsDraw) return;
+    svg.dataset.ocsDraw = '1';
+    var shapes = svg.querySelectorAll('path,line,polyline,polygon,circle,ellipse,rect');
+    var k = 0;
+    shapes.forEach(function (el) {
+      var st = getComputedStyle(el);
+      if (!st.stroke || st.stroke === 'none' || parseFloat(st.strokeWidth) === 0) return;
+      if (st.strokeDasharray && st.strokeDasharray !== 'none') { el.classList.add('ocs-flow'); return; }
+      var len = 0;
+      try { len = el.getTotalLength ? el.getTotalLength() : 0; } catch (e) { len = 0; }
+      if (!len || len < 4) return;
+      el.style.setProperty('--len', Math.ceil(len));
+      el.style.setProperty('--d', (Math.min(k, 30) * 0.035).toFixed(3) + 's');
+      el.classList.add('ocs-dr');
+      k++;
+    });
+    svg.querySelectorAll('text').forEach(function (t, i) { t.style.setProperty('--d', (Math.min(i, 20) * 0.03).toFixed(3) + 's'); });
+  }
+  function play(svg) {
+    if (reduce || !svg.dataset.ocsDraw) return;
+    svg.classList.remove('ocs-draw'); void svg.getBoundingClientRect(); svg.classList.add('ocs-draw');
+  }
+  var statics = [].slice.call(main.querySelectorAll('svg')).filter(function (s) {
+    var r = s.getBoundingClientRect();
+    return !s.closest('.pg-art') && r.width > 120 && !animated(s);
+  });
+  statics.forEach(prepDraw);
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { play(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.35 });
+    statics.forEach(function (s) { io.observe(s); });
+  }
+
+  // ---- presenter: build slides from sections ----
+  var stage = document.getElementById('ocsStage'), sbody = document.getElementById('ocsStageBody');
+  var railEl = document.getElementById('ocsRail'), countEl = document.getElementById('ocsCount');
+  var slides = [], cur = 0, auto = null;
+  var GRID = /grid|cards|tiers|wrap|row|list/;
+  var SKIP = SEL_KICKER + ',' + SEL_TITLE + ',' + SEL_LEAD + ',.divider,script,style,.ocs-present-cta';
+  function tableChunks(tbl, wrap, budget, out) {
+    var head = tbl.tHead, rows = [].slice.call(tbl.tBodies.length ? tbl.tBodies[0].rows : tbl.rows);
+    var hh = head ? head.getBoundingClientRect().height : 0, pack = [], h = hh;
+    function flush() {
+      if (!pack.length) return;
+      var t = tbl.cloneNode(false);
+      if (head) t.appendChild(head.cloneNode(true));
+      var tb = document.createElement('tbody');
+      pack.forEach(function (r) { tb.appendChild(r.cloneNode(true)); });
+      t.appendChild(tb);
+      out.push({ el: t, wrap: wrap, h: h, cloned: true });
+      pack = []; h = hh;
+    }
+    rows.forEach(function (r) {
+      if (head && head.contains(r)) return;
+      var rh = r.getBoundingClientRect().height;
+      if (pack.length && h + rh > budget) flush();
+      pack.push(r); h += rh;
+    });
+    flush();
+  }
+  function isBox(el) {
+    if (/^(svg|P|UL|OL|FIGURE|PRE|BLOCKQUOTE|H[1-6]|IMG|CANVAS)$/i.test(el.tagName)) return true;
+    var st = getComputedStyle(el);
+    var bg = st.backgroundColor, a = bg.match(/[\d.]+/g);
+    if (a && (a.length < 4 || parseFloat(a[3]) > 0.02) && bg !== 'transparent') return true;
+    return ['Top', 'Right', 'Bottom', 'Left'].some(function (s) { return parseFloat(st['border' + s + 'Width']) > 0 && st['border' + s + 'Style'] !== 'none'; });
+  }
+  function split(el, wrap, budget, out, depth) {
+    if (el.matches(SKIP)) return;
+    var h = el.getBoundingClientRect().height;
+    if (h < 8) return;
+    if (el.tagName === 'TABLE' && h > budget) { tableChunks(el, wrap, budget, out); return; }
+    if (h <= budget || depth > 5 || isBox(el) || el.children.length < 2) { out.push({ el: el, wrap: wrap, h: h }); return; }
+    var disp = getComputedStyle(el).display;
+    var cls = (disp === 'grid' || disp === 'flex') && typeof el.className === 'string' ? el.className : null;
+    [].slice.call(el.children).forEach(function (k) { split(k, cls || wrap, budget, out, depth + 1); });
+  }
+  function units(sec, budget) {
+    var out = [];
+    sec.querySelectorAll('details:not([open])').forEach(function (d) { d.open = true; d.dataset.ocsOpened = '1'; });
+    [].slice.call(sec.children).forEach(function (ch) { split(ch, null, budget, out, 0); });
+    return out;
+  }
+  function build() {
+    slides = [];
+    var budget = innerHeight * 0.8;
+    if (cfg.mode === 'items') {
+      var intro = cfg.intro ? [].slice.call(main.querySelectorAll(cfg.intro)) : [];
+      if (intro.length) slides.push({ sec: 0, kind: 'title', nodes: intro, label: (intro[0].textContent || '').trim().slice(0, 80) });
+      [].slice.call(main.querySelectorAll(cfg.items)).forEach(function (it, i) {
+        var t = it.querySelector(SEL_TITLE);
+        slides.push({ sec: i + 1, kind: 'body', nodes: [{ el: it, wrap: null, h: 0 }], label: t ? t.textContent.trim().slice(0, 90) : '' });
+      });
+    } else
+    [].slice.call(main.querySelectorAll(SEL_SECTIONS)).forEach(function (sec, si) {
+      var title = sec.querySelector(SEL_TITLE);
+      if (!title) return;
+      var kicker = sec.querySelector(SEL_KICKER);
+      slides.push({ sec: si, kind: 'title', nodes: [kicker, title, sec.querySelector(SEL_LEAD)].filter(Boolean), label: title.textContent.trim() });
+      var pack = [], h = 0, wrap = null;
+      units(sec, budget).forEach(function (u) {
+        if (pack.length && (h + u.h > budget || u.wrap !== wrap)) { slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() }); pack = []; h = 0; }
+        pack.push(u); h += u.h; wrap = u.wrap;
+      });
+      if (pack.length) slides.push({ sec: si, kind: 'body', nodes: pack, wrap: wrap, label: title.textContent.trim() });
+    });
+    railEl.innerHTML = '';
+    slides.forEach(function (s, i) {
+      var b = document.createElement('i');
+      if (i && s.sec !== slides[i - 1].sec) b.className = 'sec';
+      b.title = s.label;
+      b.addEventListener('click', function () { stopAuto(); go(i); });
+      railEl.appendChild(b);
+    });
+  }
+  function render() {
+    var s = slides[cur];
+    sbody.innerHTML = '';
+    var box = document.createElement('div');
+    box.className = 'ocs-slide' + (s.kind === 'title' ? ' title-slide' : '');
+    if (s.kind === 'body') {
+      if (cfg.mode !== 'items') { var k = document.createElement('div'); k.className = 'ocs-slide-kicker'; k.textContent = s.label; box.appendChild(k); }
+    }
+    var holder = box;
+    if (s.wrap) { holder = document.createElement('div'); holder.className = s.wrap; box.appendChild(holder); }
+    if (s.wrap && s.kind === 'body') { holder.style.gridTemplateColumns = 'repeat(' + Math.min(s.nodes.length, 3) + ', minmax(0, 1fr))'; if (s.nodes.length === 1) holder.style.maxWidth = '820px'; }
+    s.nodes.forEach(function (n) {
+      var c = n.el ? (n.cloned ? n.el.cloneNode(true) : n.el.cloneNode(true)) : n.cloneNode(true);
+      c.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+      c.removeAttribute && c.removeAttribute('id');
+      holder.appendChild(c);
+    });
+    sbody.appendChild(box);
+    sbody.scrollTop = 0;
+    box.querySelectorAll('svg').forEach(function (svg) {
+      if (svg.dataset.ocsDraw) { svg.removeAttribute('data-ocs-draw'); svg.classList.remove('ocs-draw'); }
+      if (!svg.closest('.pg-art') && !animated(svg)) { prepDraw(svg); play(svg); }
+    });
+    countEl.textContent = (cur + 1) + ' / ' + slides.length;
+    [].slice.call(railEl.children).forEach(function (b, i) { b.classList.toggle('cur', i === cur); b.classList.toggle('done', i < cur); });
+  }
+  function go(i) { cur = Math.max(0, Math.min(slides.length - 1, i)); render(); }
+  function stopAuto() { if (auto) { clearInterval(auto); auto = null; } document.getElementById('ocsAuto').setAttribute('aria-pressed', 'false'); }
+  function toggleAuto() {
+    if (auto) { stopAuto(); return; }
+    auto = setInterval(function () { if (cur >= slides.length - 1) { stopAuto(); return; } go(cur + 1); }, 12000);
+    document.getElementById('ocsAuto').setAttribute('aria-pressed', 'true');
+  }
+  function enter() { build(); if (!slides.length) return; document.body.classList.add('ocs-presenting'); go(0); document.getElementById('ocsNext').focus(); }
+  function exit() { document.body.classList.remove('ocs-presenting'); stopAuto(); sbody.innerHTML = ''; main.querySelectorAll('details[data-ocs-opened]').forEach(function (d) { d.open = false; d.removeAttribute('data-ocs-opened'); }); }
+  if (btn) btn.addEventListener('click', enter);
+  document.getElementById('ocsPrev').addEventListener('click', function () { stopAuto(); go(cur - 1); });
+  document.getElementById('ocsNext').addEventListener('click', function () { stopAuto(); go(cur + 1); });
+  document.getElementById('ocsAuto').addEventListener('click', toggleAuto);
+  document.getElementById('ocsExit').addEventListener('click', exit);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+    var on = document.body.classList.contains('ocs-presenting');
+    if (!on) { if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey && !e.altKey) enter(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || (e.key === ' ' && e.shiftKey)) { e.preventDefault(); stopAuto(); go(cur - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (e.key === 'Escape') { exit(); }
+    else if (e.key === 'a' || e.key === 'A') { toggleAuto(); }
+  });
+})();
+</script>
+<!-- OCS-PRESENT:v2:END --></body>
 </html>

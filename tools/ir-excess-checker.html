@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>IR Excess Checker — Omega Centauri Society</title>
 <link rel="icon" href="../favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <script src="data/measurements.js"></script>
 <style>
 :root{
-  --bg:#0c0d10;--surface:#13151a;--border:#1e2128;--text:#e2e4e9;
-  --text-sec:#8890a0;--text-dim:#5a6070;
-  --teal:#1dba90;--amber:#f0a020;--red:#d04040;--purple:#a080f0;--blue:#4090d0;
-  --green:#30b860;
-  --teal-dim:rgba(29,186,144,.1);--amber-dim:rgba(240,160,32,.1);
-  --red-dim:rgba(208,64,64,.1);--blue-dim:rgba(64,144,208,.1);
+  --bg:rgb(var(--k0c0d10));--surface:rgb(var(--k13151a));--border:rgb(var(--k1e2128));--text:rgb(var(--ke2e4e9));
+  --text-sec:rgb(var(--k8890a0));--text-dim:rgb(var(--k5a6070));
+  --teal:rgb(var(--k1dba90));--amber:rgb(var(--kf0a020));--red:rgb(var(--kd04040));--purple:rgb(var(--ka080f0));--blue:rgb(var(--k4090d0));
+  --green:rgb(var(--k30b860));
+  --teal-dim:rgb(var(--k1dba90) / .1);--amber-dim:rgb(var(--kf0a020) / .1);
+  --red-dim:rgb(var(--kd04040) / .1);--blue-dim:rgb(var(--k4090d0) / .1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
@@ -30,10 +30,10 @@ nav a:hover{color:var(--text)}
 .tool-header p{color:var(--text-sec);font-size:.875rem;margin-top:.3rem;max-width:700px}
 .badges{display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:wrap}
 .badge{font-size:.7rem;font-weight:500;padding:.2rem .55rem;border-radius:4px;letter-spacing:.04em;text-transform:uppercase}
-.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(29,186,144,.25)}
-.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,160,32,.25)}
-.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(64,144,208,.25)}
-.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(208,64,64,.25)}
+.badge-teal{background:var(--teal-dim);color:var(--teal);border:1px solid rgb(var(--k1dba90) / .25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgb(var(--kf0a020) / .25)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgb(var(--k4090d0) / .25)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgb(var(--kd04040) / .25)}
 main{display:grid;grid-template-columns:270px 1fr;gap:1.25rem;padding:1.25rem 1.5rem;max-width:1160px}
 @media(max-width:760px){main{grid-template-columns:1fr}}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
@@ -67,7 +67,7 @@ details summary::marker{color:var(--text-dim)}
 .ref{font-size:.75rem;color:var(--text-dim);margin-top:.5rem;line-height:1.6}
 .ref a{color:var(--text-dim)}
 .ref a:hover{color:var(--text-sec)}
-.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgba(240,160,32,.2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
+.note-box{font-size:.75rem;background:var(--amber-dim);border:1px solid rgb(var(--kf0a020) / .2);border-radius:6px;padding:.55rem .75rem;color:var(--amber);line-height:1.55;margin-top:.6rem}
 .deeplinks{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.5rem}
 .deeplink-btn{font-size:.75rem;padding:.3rem .65rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
 .deeplink-btn:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
@@ -75,22 +75,140 @@ details summary::marker{color:var(--text-dim)}
 /* ---------- Artifact export (OCS OpenChainGraph) ---------- */
 .artifact-section{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1.25rem}
 .artifact-toggle{width:100%;text-align:left;background:none;border:1px solid var(--border);border-radius:7px;padding:.55rem .85rem;color:var(--teal);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;font-weight:500}
-.artifact-toggle:hover{border-color:var(--teal);background:rgba(29,186,144,.05)}
+.artifact-toggle:hover{border-color:var(--teal);background:rgb(var(--k1dba90) / .05)}
 .artifact-toggle .arrow{font-size:.65rem;transition:transform .2s}
 .artifact-toggle[aria-expanded="true"] .arrow{transform:rotate(90deg)}
 .artifact-body{display:none;margin-top:.5rem;border:1px solid var(--border);border-radius:7px;padding:.75rem;background:var(--surface)}
 .artifact-body.open{display:block}
-.artifact-hash-cite{font-size:.7rem;color:var(--teal);background:rgba(29,186,144,.05);border:1px solid rgba(29,186,144,.2);border-radius:5px;padding:.5rem .7rem;margin-bottom:.6rem;word-break:break-all;font-family:monospace}
+.artifact-hash-cite{font-size:.7rem;color:var(--teal);background:rgb(var(--k1dba90) / .05);border:1px solid rgb(var(--k1dba90) / .2);border-radius:5px;padding:.5rem .7rem;margin-bottom:.6rem;word-break:break-all;font-family:monospace}
 .artifact-json{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;font-size:.7rem;line-height:1.5;color:var(--text-sec);overflow-x:auto;margin-bottom:.6rem;max-height:320px;overflow-y:auto;white-space:pre;font-family:monospace}
 .artifact-actions{display:flex;gap:.5rem;flex-wrap:wrap}
 .artifact-btn{font-size:.72rem;padding:.3rem .75rem;border-radius:5px;border:1px solid var(--border);color:var(--text-sec);background:transparent;cursor:pointer;transition:all .15s}
-.artifact-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgba(29,186,144,.05)}
-.artifact-btn:active:not(:disabled){background:rgba(29,186,144,.1)}
+.artifact-btn:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:rgb(var(--k1dba90) / .05)}
+.artifact-btn:active:not(:disabled){background:rgb(var(--k1dba90) / .1)}
 .artifact-btn:disabled{opacity:.4;cursor:default}
 .artifact-btn.copied{border-color:var(--amber);color:var(--amber)}
 </style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+/* JS-drawn charts keep their dark plotting panel */
+html[data-theme="light"] canvas { background: #0d0a24; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0c0d10:243 241 236;--k13151a:240 238 233;--k1dba90:12 98 80;--k1e2128:237 235 230;--k30b860:30 113 59;--k4090d0:38 103 156;--k5a6070:90 96 112;--k7055d4:55 68 130;--k8890a0:91 98 113;--k9890c0:70 76 94;--ka080f0:55 68 130;--kd04040:165 30 30;--ke2e4e9:29 34 51;--ke8e4ff:29 34 51;--kf0a020:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0c0d10:12 13 16;--k13151a:19 21 26;--k1dba90:29 186 144;--k1e2128:30 33 40;--k30b860:48 184 96;--k4090d0:64 144 208;--k5a6070:90 96 112;--k7055d4:112 85 212;--k8890a0:136 144 160;--k9890c0:152 144 192;--ka080f0:160 128 240;--kd04040:208 64 64;--ke2e4e9:226 228 233;--ke8e4ff:232 228 255;--kf0a020:240 160 32;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;--k5a6070:138 145 162;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+html[data-theme="dark"] .speculative-notice strong{color:rgb(160 128 240);}
+.canvas-instruction{color:rgb(160 128 240)!important;}
+.reset-btn{color:rgb(var(--kd04040))!important;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body * { min-width: 0; }
+  body .nav-inner { flex-wrap: wrap; }
+  body .nav-title { min-width: 12em; }
+  body .colorbar-wrap, body .method-header, body .preset-row, body .out-row { flex-wrap: wrap; }
+  body .out-val { white-space: normal; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+  body .input-row, body .tool-header, body .tier-badges, body .tl-row { flex-wrap: wrap; }
+  body .badge, body .tier-badge, body .input-val, body .ladder-tick-label, body .tl-tick-label { white-space: normal; min-width: 0; }
+  body .cols { grid-template-columns: minmax(0, 1fr) !important; }
+  body .cols > * { min-width: 0; }
+  body .stage { grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr) auto !important; }
+  body .output-table { width: 100%; }
+  body .weights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  body .slider-row input[type=range] { min-width: 0; }
+  body .row, body .detect-row { flex-wrap: wrap; }
+  body .row-value, body .detect-result, body .ladder-pointer .label { white-space: normal; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
 </head>
 <body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
 
 <nav>
   <a href="../index.html">Omega Centauri Society</a>
@@ -165,10 +283,10 @@ details summary::marker{color:var(--text-dim)}
 
       <div style="font-size:.75rem;color:var(--text-dim);line-height:1.6">
         <b style="color:var(--text-sec)">Survey depth (5σ point source):</b><br>
-        <span style="color:#4090d0">■</span> SPHEREx 3.5 μm: 40 μJy<br>
-        <span style="color:#1dba90">■</span> SPHEREx 4.5 μm: 80 μJy<br>
-        <span style="color:#f0a020">■</span> WISE W3 (12 μm): 1 mJy<br>
-        <span style="color:#d04040">■</span> WISE W4 (22 μm): 6 mJy
+        <span style="color:rgb(var(--k4090d0))">■</span> SPHEREx 3.5 μm: 40 μJy<br>
+        <span style="color:rgb(var(--k1dba90))">■</span> SPHEREx 4.5 μm: 80 μJy<br>
+        <span style="color:rgb(var(--kf0a020))">■</span> WISE W3 (12 μm): 1 mJy<br>
+        <span style="color:rgb(var(--kd04040))">■</span> WISE W4 (22 μm): 6 mJy
       </div>
     </div>
 
@@ -950,5 +1068,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-16 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
 </body>
 </html>

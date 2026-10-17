@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An erratum to the jerk noise-floor constant in Prager et al. (2017) and Abbate et al. (2019) — Omega Centauri Society</title>
+<meta name="description" content="A numerical correction to the published nearest-neighbour jerk constant: the double integral that defines ξ = 3.4595806610, not the printed 3.04, verified by five evaluations of the integral and two independent Monte Carlo simulations that never evaluate it. Erratum note (Swanson 2026) in the Omega Centauri IMBH evidence record.">
+<meta name="keywords" content="globular clusters, NGC 5139, Omega Centauri, pulsars, jerks, millisecond pulsar timing, erratum, numerical correction">
+<meta property="og:title" content="An erratum to the jerk noise-floor constant in Prager et al. (2017) and Abbate et al. (2019)">
+<meta property="og:description" content="The double integral defining the nearest-neighbour jerk constant evaluates to 3.4596, not the printed 3.04: five evaluations plus two field-level Monte Carlo simulations, and where the error entered the literature.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://omegacentauri.me/omega-centauri-xi-erratum.html">
+<link rel="canonical" href="https://omegacentauri.me/omega-centauri-xi-erratum.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-space:rgb(var(--k03020a)); --panel:rgb(var(--k0d0a24)); --panel2:rgb(var(--k121035));
+  --text-primary:rgb(var(--keeedfe)); --text-secondary:rgb(var(--kbdb8e6)); --text-dim:rgb(var(--k7a739f));
+  --teal-bright:rgb(var(--k1dba90)); --teal-glow:rgb(var(--k4de8c0));
+  --purple-glow:rgb(var(--k7f77dd)); --purple-soft:rgb(var(--kafa9ec));
+  --amber-glow:rgb(var(--kef9f27)); --amber-soft:rgb(var(--kfac775));
+  --red-bright:rgb(var(--ke24b4a));
+  --border-subtle:rgb(var(--k7055d4) / 0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep-space);color:var(--text-primary);font-family:'Crimson Pro',Georgia,serif;font-size:1.06rem;line-height:1.75;}
+a{color:var(--teal-glow);text-decoration:none;}
+a:hover{text-decoration:underline;}
+nav.top{position:sticky;top:0;z-index:50;background:rgb(var(--k03020a) / 0.95);border-bottom:1px solid var(--border-subtle);padding:0.7rem max(1.4rem, calc((100% - 880px) / 2));display:flex;gap:1.4rem;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;flex-wrap:wrap;}
+nav.top .brand{font-family:'Source Serif 4',sans-serif;font-weight:800;letter-spacing:0.08em;color:var(--purple-soft);}
+main{max-width:880px;margin:0 auto;padding:2.5rem 1.4rem 5rem;}
+h1{font-family:'Source Serif 4',sans-serif;font-size:1.6rem;line-height:1.4;margin:1.2rem 0 0.6rem;color:var(--text-primary);}
+h2{font-family:'Source Serif 4',sans-serif;font-size:1.25rem;margin:2.6rem 0 1rem;color:var(--teal-glow);border-bottom:1px solid var(--border-subtle);padding-bottom:0.4rem;}
+h3{font-family:'IBM Plex Mono',monospace;font-size:1.0rem;margin:1.8rem 0 0.7rem;color:var(--purple-soft);}
+p{margin:0 0 1rem;}
+.byline{font-family:'IBM Plex Mono',monospace;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.3rem;}
+.venue{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);margin-bottom:1.6rem;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-glow);}
+.banner{background:rgb(var(--kc47800) / 0.08);border:1px solid rgb(var(--kc47800) / 0.35);border-left:3px solid var(--amber-glow);border-radius:0 6px 6px 0;padding:0.9rem 1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;line-height:1.8;color:var(--text-secondary);margin:1.4rem 0;}
+.banner strong{color:var(--amber-glow);}
+.specbox{background:rgb(var(--kc47800) / 0.06);border:1px dashed rgb(var(--kc47800) / 0.4);border-radius:4px;padding:0.7rem 1rem;font-size:0.92rem;color:var(--text-secondary);margin:1.1rem 0;}
+.specbox strong{color:var(--amber-glow);font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.abstract{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.4rem 1.6rem;font-size:0.98rem;color:var(--text-secondary);}
+.abstract .lead{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple-soft);display:block;margin-bottom:0.7rem;}
+.kw{font-family:'IBM Plex Mono',monospace;font-size:0.74rem;color:var(--text-dim);margin:1rem 0 0;}
+.toc{background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1.1rem 1.5rem;margin:1.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;line-height:2.0;}
+.toc .toc-h{font-family:'Source Serif 4',sans-serif;font-size:0.85rem;color:var(--purple-soft);margin-bottom:0.5rem;}
+.toc ol{margin-left:1.3rem;}
+figure{margin:2rem 0;background:var(--panel);border:1px solid var(--border-subtle);border-radius:6px;padding:1rem;}
+figure svg{width:100%;height:auto;display:block;}
+figure img{width:100%;height:auto;display:block;border-radius:4px;background:rgb(var(--k0a0820));}
+figcaption{font-size:0.88rem;color:var(--text-secondary);margin-top:0.8rem;line-height:1.6;}
+figcaption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+table{width:100%;border-collapse:collapse;margin:1.6rem 0;font-size:0.88rem;}
+caption{caption-side:top;text-align:left;font-size:0.88rem;color:var(--text-secondary);padding-bottom:0.6rem;}
+caption b{color:var(--teal-glow);font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
+th{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--purple-soft);text-align:left;padding:0.5rem 0.6rem;border-bottom:1px solid var(--purple-glow);}
+td{padding:0.55rem 0.6rem;border-bottom:1px solid rgb(var(--k7055d4) / 0.15);vertical-align:top;color:var(--text-secondary);}
+td.c{text-align:center;}
+.tbl-wrap{overflow-x:auto;}
+.eq{display:block;text-align:center;font-size:1.06rem;margin:1.1rem 0;color:var(--text-primary);}
+.eq .eqno{float:right;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:0.8rem;}
+blockquote{margin:1.2rem 0;padding:0.9rem 1.2rem;background:var(--panel);border-left:3px solid var(--teal-bright);border-radius:0 4px 4px 0;color:var(--text-secondary);font-size:0.96rem;}
+.refs{font-size:0.88rem;line-height:1.65;}
+.refs li{margin-bottom:0.55rem;color:var(--text-secondary);}
+.refs ol{margin-left:1.3rem;}
+ol.body-list, ul.body-list{margin:0 0 1rem 1.6rem;}
+ol.body-list li, ul.body-list li{margin-bottom:0.5rem;}
+.footer{border-top:1px solid var(--border-subtle);margin-top:3rem;padding-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--text-dim);}
+.dl-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0;}
+.dl-btn{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border:1px solid var(--teal-bright);color:var(--teal-glow);border-radius:4px;padding:0.45rem 0.9rem;}
+sup,sub{line-height:0;}
+.imp{color:var(--text-primary);font-weight:600;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{margin:12mm;}nav.top{position:static;}a{color:var(--teal-glow);}}
+@media (max-width:640px){ body{font-size:0.98rem;} h1{font-size:1.3rem;} td,th{padding:0.4rem 0.35rem;} }
+</style>
+<script>
+(function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* ---- paper theme scaffolding ---- */
+html[data-theme="light"], html[data-theme="light"] body { background: #f7f5f0; }
+html[data-theme="dark"], html[data-theme="dark"] body { background: #03020a; }
+html[data-theme="light"] #starfield, html[data-theme="light"] .starfield, html[data-theme="light"] #stars,
+html[data-theme="light"] .nebula-bg, html[data-theme="light"] .stars { display: none; }
+html[data-theme="light"] * { text-shadow: none !important; }
+html[data-theme="light"] em { opacity: 1 !important; }
+.ocs-nav { position: sticky; top: 0; z-index: 1000; padding: 0 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2);
+  background: rgb(var(--k03020a) / 0.92); backdrop-filter: blur(12px); line-height: 1.4; }
+.ocs-nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 1rem; }
+.ocs-nav-logo { font: 600 0.85rem 'Source Serif 4', Georgia, serif; letter-spacing: 0.15em; color: rgb(var(--k1dba90)); text-decoration: none; }
+.ocs-nav-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem 1.4rem; list-style: none; margin: 0 0 0 auto; padding: 0; }
+.ocs-nav-links a { font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--k9890c0)); text-decoration: none; white-space: nowrap; border: 0; }
+.ocs-nav-links a:hover { color: rgb(var(--k1dba90)); }
+.ocs-theme-btn { background: none; border: 1px solid rgb(var(--k7055d4) / 0.3); color: rgb(var(--k9890c0)); cursor: pointer;
+  font: 0.7rem 'IBM Plex Mono', ui-monospace, monospace; padding: 0.35rem 0.7rem; border-radius: 3px; }
+.ocs-theme-btn:hover { color: rgb(var(--ke8e4ff)); }
+.ocs-nav-mobile { display: none; background: none; border: none; color: rgb(var(--k9890c0)); font-size: 1.4rem; cursor: pointer; }
+@media (max-width: 768px) {
+  .ocs-nav-links { display: none; }
+  .ocs-nav-mobile { display: block; }
+  .ocs-nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0;
+    background: rgb(var(--k070515)); padding: 1.25rem; border-bottom: 1px solid rgb(var(--k7055d4) / 0.2); }
+  .ocs-theme-btn { margin-left: auto; }
+}
+
+
+html[data-theme="light"]{color-scheme:light;--k03020a:245 243 238;--k070515:242 240 235;--k0a0820:241 239 234;--k0d0a24:238 236 231;--k121035:237 235 230;--k1dba90:12 98 80;--k4de8c0:12 98 80;--k7055d4:55 68 130;--k7a739f:100 93 136;--k7f77dd:55 68 130;--k9890c0:70 76 94;--kafa9ec:55 68 130;--kbdb8e6:72 60 170;--kc47800:128 82 6;--ke24b4a:165 30 30;--ke8e4ff:29 34 51;--keeedfe:29 34 51;--kef9f27:128 82 6;--kfac775:128 82 6;}
+html[data-theme="dark"]{color-scheme:dark;--k03020a:3 2 10;--k070515:7 5 21;--k0a0820:10 8 32;--k0d0a24:13 10 36;--k121035:18 16 53;--k1dba90:29 186 144;--k4de8c0:77 232 192;--k7055d4:112 85 212;--k7a739f:122 115 159;--k7f77dd:127 119 221;--k9890c0:152 144 192;--kafa9ec:175 169 236;--kbdb8e6:189 184 230;--kc47800:196 120 0;--ke24b4a:226 75 74;--ke8e4ff:232 228 255;--keeedfe:238 237 254;--kef9f27:239 159 39;--kfac775:250 199 117;}
+
+/* palette-fix-v1 */
+html[data-theme="dark"]{--k504870:138 130 170;--kd04040:228 98 98;--k9890c0:170 162 210;--k7a739f:142 135 180;}
+.badge-pending{color:var(--text-secondary)!important;}
+html[data-theme="dark"] .step-num{color:#fff;}
+@media (max-width: 600px) {
+  body table { display: block; overflow-x: auto; max-width: 100%; }
+  body nav { flex-wrap: wrap; }
+  body pre, body .eq, body .equation { overflow-x: auto; max-width: 100%; }
+  body a, body code, body td, body th, body li, body p, body caption, body span { overflow-wrap: break-word; }
+}
+/* /palette-fix-v1 */
+</style>
+<style id="ocs-footer-css">
+html[data-theme="light"]{--text-primary:#1d2233;--text-secondary:#3f4557;--text-dim:#5c616e;--text:#1d2233;--text-sec:#3f4557;}
+
+.ocs-crumb{max-width:1100px;margin:1.1rem auto .4rem;padding:0 2rem;font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#5c616e;position:relative;z-index:1;text-align:left;}
+.ocs-crumb a{color:#805206;text-decoration:none;} .ocs-crumb a:hover{text-decoration:underline;}
+html[data-theme="dark"] .ocs-crumb{color:#a29cc4;} html[data-theme="dark"] .ocs-crumb a{color:#e0a640;}
+
+.ocs-emblem{width:26px;height:26px;flex:none;vertical-align:middle;color:currentColor;}
+.ocs-emblem-core{fill:#a46a0a;} html[data-theme="dark"] .ocs-emblem-core{fill:#e0a640;}
+.ocs-logo,.ocs-nav-logo.ocs-logo,.nav-logo.ocs-logo{display:inline-flex!important;align-items:center;gap:.55rem;font-family:'Source Serif 4',Georgia,serif!important;font-weight:600!important;font-size:1rem!important;letter-spacing:0!important;text-transform:none!important;text-decoration:none;white-space:nowrap;}
+html[data-theme="light"] .ocs-logo{color:#1d2233!important;} html[data-theme="dark"] .ocs-logo{color:#e8e4ff!important;}
+.ocs-logo-short{display:none;}
+@media(max-width:1180px){.ocs-logo-name{display:none}.ocs-logo-short{display:inline}}
+.ocs-foot .of-brand .ocs-emblem{width:30px;height:30px;}
+
+.ocs-foot{--of-bg:#f7f5f0;--of-ink:#1d2233;--of-dim:#5c616e;--of-line:#ddd8cc;--of-acc:#805206;
+  border-top:1px solid var(--of-line);background:var(--of-bg);color:var(--of-ink);margin-top:3rem;font-family:'Crimson Pro',Georgia,serif;position:relative;z-index:1;text-align:left;}
+html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29cc4;--of-line:rgba(112,85,212,.25);--of-acc:#e0a640;}
+.ocs-foot .of-grid{max-width:1100px;margin:0 auto;padding:2.6rem 2rem 0;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+.ocs-foot .of-brand{font:600 1.05rem 'Source Serif 4',Georgia,serif;display:flex;align-items:center;gap:.5rem;color:var(--of-ink);text-decoration:none;}
+.ocs-foot .of-brand i{width:9px;height:9px;border-radius:50%;background:var(--of-acc);display:inline-block;}
+.ocs-foot h4{font:500 .68rem 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--of-acc);margin:.15rem 0 .75rem;}
+.ocs-foot ul{list-style:none;margin:0;padding:0;} .ocs-foot li{margin:0 0 .45rem;}
+.ocs-foot li a{color:var(--of-ink);text-decoration:none;font-size:1rem;}
+.ocs-foot li a:hover{text-decoration:underline;text-decoration-color:var(--of-acc);}
+.ocs-foot .of-note{max-width:1100px;margin:1.6rem auto 0;padding:0 2rem;font:.72rem/1.6 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-note a{color:var(--of-dim);}
+.ocs-foot .of-bar{max-width:1100px;margin:1.4rem auto 0;padding:1rem 2rem 1.4rem;border-top:1px solid var(--of-line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;font:.7rem 'IBM Plex Mono',ui-monospace,monospace;color:var(--of-dim);}
+.ocs-foot .of-bar a{color:var(--of-dim);text-decoration:underline;text-decoration-color:var(--of-line);}
+@media(max-width:760px){.ocs-foot .of-grid{grid-template-columns:1fr 1fr;}.ocs-foot .of-grid>div:first-child{grid-column:1/-1;}}
+@media print{.ocs-foot .of-grid{display:none}}
+.ocs-foot{padding:0!important;letter-spacing:normal;text-transform:none;}
+.ocs-foot li{line-height:1.4;font-size:1rem;}
+.ocs-foot ul,.ocs-foot h4,.ocs-foot p{text-align:left;}
+</style>
+</head>
+<body>
+<header class="ocs-nav" role="navigation" aria-label="Main">
+  <div class="ocs-nav-inner">
+    <a href="/" class="ocs-nav-logo ocs-logo" aria-label="The Omega Centauri Society home"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg><span class="ocs-logo-name">The Omega Centauri Society</span><span class="ocs-logo-short">OCS</span></a>
+    <ul class="ocs-nav-links">
+      <li><a href="/omega-centauri.html">The Cluster</a></li>
+      <li><a href="/hypothesis.html">Hypothesis</a></li>
+      <li><a href="/fermi.html">Fermi</a></li>
+      <li><a href="/roadmap.html">Roadmap</a></li>
+      <li><a href="/paper.html">Papers</a></li>
+      <li><a href="/tools/">Tools</a></li>
+      <li><a href="/proposals.html">Proposals</a></li>
+      <li><a href="/faq.html">FAQ</a></li>
+      <li><a href="/references.html">Glossary</a></li>
+    </ul>
+    <button class="ocs-theme-btn" id="themeBtn" type="button" aria-label="Switch colour theme">Dark</button>
+    <button class="ocs-nav-mobile" type="button" aria-label="Open main navigation menu" aria-expanded="false"
+      onclick="var l=document.querySelector('.ocs-nav-links');var o=l.classList.toggle('open');this.setAttribute('aria-expanded',String(o));">&#9776;</button>
+  </div>
+</header>
+
+<p class="ocs-crumb"><a href="/">OCS</a> / <a href="/paper.html">Papers</a> / Jerk-constant erratum</p>
+
+<main>
+
+<p class="eyebrow">OCS Research Note · Preprint · numerical correction to the nearest-neighbour jerk scale</p>
+<h1>An erratum to the jerk noise-floor constant in Prager et al. (2017) and Abbate et al. (2019)</h1>
+<p class="byline">Tim Swanson — The Omega Centauri Society / Post Oak Labs · tim@postoaklabs.com</p>
+<p class="venue">Preprint v1.1 · 2026-10-11 · this HTML edition mirrors the LaTeX source (<code>xi_erratum_note.tex</code>); the PDF is canonical for citation</p>
+
+<div class="dl-row">
+  <a class="dl-btn" href="/papers/omega-centauri-xi-erratum.pdf">⬇ PDF</a>
+  <a class="dl-btn" href="/omega-centauri-mass-tension.html">← Paper H — the mass tension (uses the corrected constant)</a>
+  <a class="dl-btn" href="#sec-verify">The verification</a>
+  <a class="dl-btn" href="#sec-prov">Where the error entered</a>
+  <a class="dl-btn" href="#sec-refs">References</a>
+</div>
+
+<section id="sec-abstract">
+<div class="abstract">
+<span class="lead">Abstract</span>
+<p>Pulsar spin-frequency second derivatives, jerks, probe cluster gravitational potentials and central masses against a stochastic floor of nearest-neighbour stellar encounters, whose characteristic amplitude is ȧ<sub>0</sub> = (2πξ/3) G⟨m⟩σn, with n the stellar number density, σ the velocity dispersion, and ⟨m⟩ the mean stellar mass. Prager et al. (2017) quote the dimensionless constant ξ ≃ 3.04, and Abbate et al. (2019) adopt it. The double integral that defines ξ evaluates in closed form to √(2π) [1 + ln(2+√3)/(2√3)] = 3.4595806610: five evaluations of that one integral (a closed-form reduction, adaptive quadrature, symbolic evaluation, antiderivative differentiation, and high-precision quadrature) plus two independently coded Monte Carlo simulations of the underlying stellar field that never evaluate the integral, at 15.8σ and 14.6σ respectively, both reject 3.04; Section 3 states the common-mode caveat on the first five. Because ȧ<sub>0</sub> is linear in ξ, the printed constant understates the jerk floor by 12.1 per cent, inflating the apparent significance of jerk-based central-mass inferences.</p>
+<p class="kw"><b>Keywords:</b> pulsars: general · globular clusters: general · methods: analytical · methods: statistical</p>
+</div>
+</section>
+
+<div class="specbox"><strong>Epistemic status:</strong> This note reports an arithmetic correction to a published numerical constant and traces how it entered the literature. It states no claim about the dark mass of ω Centauri and none about the qualitative conclusions of the papers it corrects; Section 5 states what the correction does and does not change.</div>
+
+<div class="toc">
+<div class="toc-h">Contents</div>
+<ol>
+<li><a href="#sec-intro">Introduction</a></li>
+<li><a href="#sec-value">The integral and its closed form</a></li>
+<li><a href="#sec-verify">Verification</a></li>
+<li><a href="#sec-prov">Provenance in the published sources</a></li>
+<li><a href="#sec-conseq">Consequence for jerk-based inference</a></li>
+<li><a href="#sec-refs">References</a></li>
+<li><a href="#sec-addendum">Addendum (2026-10-11)</a></li>
+</ol>
+</div>
+
+<section id="sec-intro">
+<h2>1. Introduction</h2>
+<p>Long-term timing of millisecond pulsars in globular clusters measures spin-frequency second derivatives, jerks, which probe the cluster gravitational potential and any intermediate-mass black hole it hosts (Prager et al. 2017; Abbate et al. 2019). Jerks from passing cluster stars follow the statistics of random backgrounds long studied as source confusion in radio astronomy (Condon 1974): nearest neighbours dominate, the sum has no finite variance, and its scale is set by a characteristic amplitude,</p>
+<span class="eq">ȧ<sub>0</sub> = (2πξ/3) G ⟨m⟩ σ n, <span class="eqno">(1)</span></span>
+<p>rather than by an rms. Here n is the stellar number density, σ the one-dimensional velocity dispersion, ⟨m⟩ the mean stellar mass, and ξ a dimensionless constant collecting all of the geometry (Prager et al. 2017). Both papers quote ξ ≃ 3.04.</p>
+<p>While implementing this formalism for a study of NGC 5139 (ω Cen) now in preparation, I found that the quoted value disagrees with the integral that defines it, which has a closed-form evaluation (Section 2). Section 3 reports the verification, five evaluations of the integral plus two independently coded Monte Carlo simulations of the physical field; Section 4 traces how the error entered the published literature; Section 5 states the consequence for jerk-based inference.</p>
+</section>
+
+<section id="sec-value">
+<h2>2. The integral and its closed form</h2>
+<p>Prager et al. (2017) define ξ by the double integral of their arXiv v1 Equation B7,</p>
+<span class="eq">ξ = ∫<sub>0</sub><sup>∞</sup> dx ∫<sub>−1</sub><sup>1</sup> dμ [ 1 − exp( −(1+3μ<sup>2</sup>)/(2x<sup>2</sup>) ) ], <span class="eqno">(2)</span></span>
+<p>For fixed μ the bracket depends on x only through a/x<sup>2</sup> with a ≡ 1+3μ<sup>2</sup>, and the inner integral evaluates to √(π/2) (1+3μ<sup>2</sup>)<sup>1/2</sup>. The remaining integral is elementary, ∫<sub>−1</sub><sup>1</sup> (1+3μ<sup>2</sup>)<sup>1/2</sup> dμ = 2 + asinh √3 / √3, and asinh √3 = ln(2+√3), so</p>
+<span class="eq">ξ = √(2π) [ 1 + ln(2+√3)/(2√3) ] = 3.4595806610, <span class="eqno">(3)</span></span>
+<p>or, to fifty digits, 3.4595 8066 1046 2156 1909 2857 1405 6923 3043 7918 3879 5001 67. The closed form exceeds the printed value by 13.8 per cent.</p>
+</section>
+
+<section id="sec-verify">
+<h2>3. Verification</h2>
+<p>I verified Equation (3) with five evaluations of Equation (2) itself, routes (i), (ii), (iv), (v), (vi) below, and two independently coded Monte Carlo simulations of the physical system, route (iii), that never evaluate the formula. Because routes (i), (ii), (iv), (v), and (vi) all evaluate or manipulate the same double integral, they share whatever algebraic or limiting error the integral itself might carry; only the two Monte Carlo passes are independent of Equation (2), and the rejection of 3.04 rests on those.</p>
+<ul class="body-list">
+<li><span class="imp">(i)</span> The closed form itself.</li>
+<li><span class="imp">(ii)</span> Adaptive quadrature of Equation (2), agreeing with the closed form to 2.1×10<sup>−13</sup> relative (7.3×10<sup>−13</sup> absolute).</li>
+<li><span class="imp">(iii)</span> Two Monte Carlo passes of the physical system, described next.</li>
+<li><span class="imp">(iv)</span> End-to-end symbolic evaluation of both integrals, returning the inner result above and 2 + asinh √3 / √3 for the outer one.</li>
+<li><span class="imp">(v)</span> Differentiation of the closed-form antiderivative used in the reduction, which simplifies identically to zero against the integrand.</li>
+<li><span class="imp">(vi)</span> Arbitrary-precision quadrature of Equation (2) at 55 decimal digits (mpmath), substituting x = tan θ to remove the 1/x<sup>2</sup> tail rather than truncating it, agreeing with the closed form to 3.1×10<sup>−35</sup> relative (<code>fH_verify_xi_mpmath_quad.py</code>, accompanying the note; a 70-digit attempt did not converge in reasonable time). This route is a true numerical quadrature of the double integral, not arithmetic on the closed form.</li>
+</ul>
+<p>Route (iii), first pass, never evaluates the formula. Each of 4×10<sup>4</sup> realizations draws Poisson(nV) stars uniformly in a sphere, assigns Maxwellian velocities, sums the line-of-sight single-star jerk of Prager et al.'s Equation B1 directly, and estimates the Cauchy scale from the interquartile range, equal to twice the scale for a Cauchy law and insensitive to the heavy tail that invalidates the sample mean. The result is ξ<sub>MC</sub> = 3.4886 ± 0.0283: consistent with Equation (3) at 1.0σ and excluding 3.04 at 15.8σ (Figure 1). The same sample reproduces the published line-of-sight law in shape, with a Kolmogorov–Smirnov p = 0.26 against the Cauchy form, and in tail index, with a Hill estimate of 1.025 against the 1-stable value of 1.</p>
+<p>A second, separately coded Monte Carlo (<code>fH_verify_xi_second_mc.py</code>, accompanying the note) built directly on the projected line-of-sight jerk expression with an independent seed, drew 4×10<sup>4</sup> realizations, and estimated the Lorentzian scale from the interquartile range with a bootstrap standard error over 2000 resamples: ξ<sub>MC,2</sub> = 3.4403 ± 0.0275, agreeing with Equation (3) at −0.7σ and excluding 3.04 at 14.6σ. The two Monte Carlo passes sit on opposite sides of the closed form, at +1.0σ and −0.7σ, consistent with sampling scatter between independent implementations; a check of the interquartile-range Cauchy-scale estimator itself, 3000 synthetic draws of 4×10<sup>4</sup> standard-Cauchy variates each, finds it unbiased to within 0.02 per cent, so the scatter is not an estimator artifact. The rejection of 3.04 rests on the two Monte Carlo passes; the 13.8 per cent correction rests on the closed form.</p>
+<p>I also re-derived Equations B4–B10 through the characteristic function, reproducing every step including the angular factor s<sup>2</sup>(1+3μ<sup>2</sup>). The algebra is sound; the discrepancy is confined to the numerical evaluation of Equation (2). The verification scripts and the Monte Carlo drivers are prepared for a Zenodo deposit (deposit pending; the DOI will be added here once issued).</p>
+
+<figure id="fig1">
+<img src="/papers/figs/fxi_mc_hist.png" alt="Histogram of 4e4 Monte Carlo realizations of the line-of-sight jerk sum against the Cauchy law at the corrected scale (3.4596, solid) and the printed scale (3.04, dashed), log y-scale.">
+<figcaption><b>Figure 1.</b> Route (iii). Line-of-sight jerk sums from 4×10<sup>4</sup> realizations of a Poisson stellar field with Maxwellian velocities, in the scaled units G = ⟨m⟩ = σ = n = 1, against the Cauchy law of Prager et al.'s Equation B10 at the corrected scale (ξ = 3.4596, solid) and the printed scale (ξ ≃ 3.04, dashed). The interquartile estimate for this sample is ξ<sub>MC</sub> = 3.4886 ± 0.0283, excluding 3.04 at 15.8σ.</figcaption>
+</figure>
+</section>
+
+<section id="sec-prov">
+<h2>4. Provenance in the published sources</h2>
+<p>The derivation survives in full only in version 1 of the arXiv posting of Prager et al. (2017) (1612.04395v1), where Appendix B carries Equations B1–B10 and Equation B7 defines ξ as the double integral. In the v1 source the defining equation reads, for s ≥ 0,</p>
+<span class="eq">C(s) = (2πGs/3) ∫ dm P(m) mσ ∫<sub>0</sub><sup>∞</sup> dx ∫<sub>−1</sub><sup>1</sup> dμ (1 − e<sup>−(1+3μ<sup>2</sup>)/2x<sup>2</sup>) <span class="eqno">(4)</span></span>
+<span class="eq">≡ (2πξ/3) G⟨m⟩σs,</span>
+<blockquote>As printed, Equation (4) is dimensionally inconsistent with Equation (1): both sides carry no factor of the stellar number density n, so C(s) has dimensions of volume rather than being dimensionless. Reducing the right-hand side with x ≡ r<sup>3</sup>/(sGmσ), so that d<sup>3</sup>r = 2π(sGmσ/3) dx dμ, gives C(|s|) = (2π/3) n G⟨m⟩σ|s|ξ; the reduction also pulls σ outside ∫ dm P(m), which holds only if the velocity dispersion is assumed independent of stellar mass, an assumption Prager et al. leave implicit. I reproduce the source equation as printed and note the omission here rather than silently inserting n into a quotation.</blockquote>
+<p>where C(s) is the cumulant of the line-of-sight jerk's characteristic function at conjugate variable s ≥ 0 (the full symmetric-Cauchy cumulant is linear in |s|, not s), followed, in the same paragraph, by the sentence: "where ⟨m⟩ = ∫ dm mP(m) and ξ ≃ 3.04 is the numerical value of the integral." Integral and number share a sentence, so no alternative convention can reconcile them: the text offers 3.04 as the value of this integral, and the integral equals 3.4596.</p>
+<p>The published article (ApJ, 845, 148) truncates Appendix B after Equation B3 and so removes the definition of ξ, while main-text Equation 8 retains ξ ≃ 3.04 and points to Appendix B for its origin; a reader checking the constant against the journal version alone cannot reproduce it from what is printed. A citation screen of the works citing Prager et al. (2017) or Abbate et al. (2019) (OpenAlex, 2026 October 3; 102 works; per-title dispositions accompany the verification package) finds no published correction to the constant, and exactly two works adopt the printed value in an inference: Equation 6 of Abbate et al. (2019), and Corongiu et al. (2024), who print "where ξ ≃ 3.04 is a numerical constant" in the characteristic-jerk relation and use it in a published core-mass inference for NGC 6752.</p>
+</section>
+
+<section id="sec-conseq">
+<h2>5. Consequence for jerk-based inference</h2>
+<p>By Equation (1) the floor is linear in ξ, so the printed constant understates the stochastic jerk floor by 12.1 per cent. The direction of the error is the unfavourable one for inference: a floor assumed too low inflates the apparent significance of any jerk-based central-mass constraint, including the Bayes factors that Abbate et al. (2019) tabulate, which inherit the constant. I have not recomputed those values; a 12 per cent rescaling of the neighbour term is unlikely to move qualitative conclusions, but quantitative claims near threshold deserve re-examination by the groups concerned. Any analysis using the formalism should state which value of ξ it adopts.</p>
+</section>
+
+<section id="sec-refs">
+<h2>References</h2>
+<div class="refs">
+<ol>
+<li>Abbate, F., Possenti, A., Ridolfi, A., et al. 2018, Internal gas models and central black hole in 47 Tucanae using millisecond pulsars, Monthly Notices of the Royal Astronomical Society, 481:627. 10.1093/mnras/sty2298. <a href="https://arxiv.org/abs/1808.06621">arXiv:1808.06621</a></li>
+<li>Abbate, F., Spera, M., &amp; Colpi, M. 2019, Intermediate mass black holes in globular clusters: effects on jerks and jounces of millisecond pulsars, Monthly Notices of the Royal Astronomical Society, 487:769. 10.1093/mnras/stz1330. <a href="https://arxiv.org/abs/1905.05209">arXiv:1905.05209</a></li>
+<li>Condon, J. J. 1974, The Astrophysical Journal, 188:279.</li>
+<li>Corongiu, A., Ridolfi, A., Abbate, F., et al. 2024, Timing of Millisecond Pulsars in NGC 6752. III. On the Presence of Nonluminous Matter in the Cluster's Core, The Astrophysical Journal, 972:198. 10.3847/1538-4357/ad5e74. <a href="https://arxiv.org/abs/2407.03271">arXiv:2407.03271</a></li>
+<li>Prager, B. J., Ransom, S. M., Freire, P. C. C., Hessels, J. W. T., Stairs, I. H., Arras, P., &amp; Cadelano, M. 2017, Using Long-term Millisecond Pulsar Timing to Obtain Physical Characteristics of the Bulge Globular Cluster Terzan 5, The Astrophysical Journal, 845:148. <a href="https://arxiv.org/abs/1612.04395">arXiv:1612.04395</a></li>
+</ol>
+</div>
+</section>
+
+<section id="sec-addendum">
+<h2>Addendum (2026-10-11)</h2>
+<p>A full-text check of 2026-10-11 finds one further adopting work. Equation 17 of Abbate et al. (2018), the 47 Tucanae gas-density and jerk analysis, states "where ξ ≃ 3.04 is a numerical factor" for the nearest-neighbour relation, and the likelihood of its Equation 25 uses that equation's scale parameter behind the paper's published gas-density and central-black-hole results. The printed constant therefore enters a third published inference chain, alongside Abbate, Spera &amp; Colpi (2019) and Corongiu et al. (2024), and the consequence statement of Section 5 covers it as well. The note's derivation and numbers are unchanged.</p>
+</section>
+
+
+
+</main>
+<script>
+// theme toggle (per-viewer preference only)
+(function(){var b=document.getElementById('themeBtn');if(!b)return;
+function label(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Light':'Dark';}
+label();b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ocs-theme',n);}catch(e){}label();});})();
+</script>
+<footer class="ocs-foot" id="ocs-footer">
+  <div class="of-grid">
+    <div><a class="of-brand" href="/"><svg class="ocs-emblem" viewBox="0 0 90 90" aria-hidden="true"><path d="M14 80H33C19 71 11 59 11 45A34 34 0 0 1 79 45C79 59 71 71 57 80H76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g class="ocs-emblem-core"><circle cx="45" cy="46" r="7"/><circle cx="35" cy="40" r="2.6"/><circle cx="55" cy="51" r="2.6"/><circle cx="52" cy="36" r="2.1"/><circle cx="37" cy="54" r="2.1"/></g></svg>The Omega Centauri Society</a></div>
+    <div><h4>Science</h4><ul><li><a href="/omega-centauri.html">The cluster</a></li><li><a href="/hypothesis.html">Hypothesis</a></li><li><a href="/fermi.html">Fermi paradox</a></li><li><a href="/roadmap.html">Roadmap</a></li></ul></div>
+    <div><h4>Library</h4><ul><li><a href="/paper.html">Papers</a></li><li><a href="/tools/">Tools</a></li><li><a href="/proposals.html">Proposals</a></li><li><a href="/faq.html">FAQ</a></li><li><a href="/references.html">Glossary &amp; references</a></li></ul></div>
+    <div><h4>Project</h4><ul><li><a href="/mcp.html">Use with LLMs (MCP)</a></li><li><a href="/prompts.html">Prompts</a></li><li><a href="/cite.html">Cite</a></li><li><a href="/contact.html">Contact</a></li><li><a href="https://github.com/PostOakLabs/OCS" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+  </div>
+  <p class="of-note">Content licensed per <a href="/LICENSE-content.md">LICENSE-content</a>. &middot; Preprint. Drafting, citation verification, derivation checking, and figure preparation were performed with substantial assistance from a large language model (Claude, Anthropic), under the author's direction; the author reviewed and takes full responsibility for all claims, derivations, and references. This HTML edition mirrors the LaTeX source (<code>xi_erratum_note.tex</code>); the PDF is canonical for citation. The verification scripts, the Monte Carlo drivers, and the per-title citation screen (102 works, 2026-10-03) accompany the note; a Zenodo DOI will be added to this page once issued.</p>
+  <div class="of-bar">
+    <span>&copy; 2026 The Omega Centauri Society &middot; Prose <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> &middot; Code MIT &middot; DOI <a href="https://doi.org/10.5281/zenodo.20689279" target="_blank" rel="noopener">10.5281/zenodo.20689279</a></span>
+    <span>Updated 2026-10-15 &middot; <a href="/sitemap.html">Sitemap</a></span>
+  </div>
+</footer>
+</body>
+</html>
