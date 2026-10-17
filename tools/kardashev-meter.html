@@ -8,9 +8,8 @@
   Data:
     World energy consumption 2023: ~580 EJ/yr (IEA World Energy Outlook 2024)
     K-value formula: K = (log10(P) - 6) / 10 where P in watts
-    P_K1  = 1.74×10¹⁷ W (Earth total insolation)
-    P_K2  = 3.86×10²⁶ W (total solar luminosity)
-    P_K3  = ~4×10³⁷ W  (Milky Way total luminosity, ~10¹¹ stars × L☉ mean)
+    P_K1  = 1×10¹⁶ W, P_K2 = 4×10²⁶ W, P_K3 = 4×10³⁷ W (Sagan-style anchors, as on bz-kardashev / starivore-energy)
+    Reference points (not anchors): 1.74×10¹⁷ W Earth-intercepted sunlight, 3.86×10²⁶ W solar luminosity
     Humanity 2023: ~1.84×10¹³ W → K ≈ 0.724
 
   Register: speculative (Kardashev 1964 framework — extrapolation labelled)
@@ -325,7 +324,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
       <h3>K-value Formula</h3>
       <p>Sagan (1973) modified Kardashev's original three-point scale to a continuous one: <code>K = (log₁₀(P) − 6) / 10</code> where P is power in watts. This gives K=1 at 10¹⁶ W, K=2 at 10²⁶ W, K=3 at 10³⁶ W. Some sources use slightly different anchors; this tool uses Sagan's formulation.</p>
       <h3>Energy Anchors</h3>
-      <p>K1: P_K1 = 1.74 × 10¹⁷ W (Earth total solar insolation). K2: P_K2 = 3.86 × 10²⁶ W (total solar luminosity). K3: P_K3 ≈ 4 × 10³⁷ W (Milky Way total luminosity estimate, ~10¹¹ stars). Anchors are definitional, not fixed by the original paper.</p>
+      <p>K1: P_K1 = 1 × 10¹⁶ W. K2: P_K2 = 4 × 10²⁶ W. K3: P_K3 = 4 × 10³⁷ W. These anchors are definitional, not fixed by the original paper, and match the other Kardashev tools on this site. For reference, sunlight intercepted by Earth is about 1.74 × 10¹⁷ W (K ≈ 1.12 on the formula) and the solar luminosity is about 3.86 × 10²⁶ W (K ≈ 2.06).</p>
       <h3>Growth Model</h3>
       <p>Compound annual growth: P(t) = P₀ × (1 + r)ᵗ. Year to reach milestone solved by inverting: t = log(P_milestone/P₀) / log(1+r). Base year: 2025.</p>
       <h3>Data Source</h3>
@@ -359,8 +358,8 @@ const EJ_TO_W   = 1e18 / (365.25*24*3600);
 
 // Milestone definitions
 const MILESTONES = [
-  { k:1.0, label:'K1 — Planetary civilisation', desc:'Harnesses all energy reaching Earth from the Sun', P_W:1.74e17 },
-  { k:2.0, label:'K2 — Stellar civilisation', desc:'Harnesses total output of its star (Dyson sphere)', P_W:3.86e26 },
+  { k:1.0, label:'K1 — Planetary civilisation', desc:'Anchor 1e16 W (Sagan); sunlight intercepted by Earth is about 1.74e17 W', P_W:1e16 },
+  { k:2.0, label:'K2 — Stellar civilisation', desc:'Anchor 4e26 W; solar luminosity is about 3.86e26 W', P_W:4e26 },
   { k:3.0, label:'K3 — Galactic civilisation', desc:'Harnesses energy of an entire galaxy', P_W:4e37 },
 ];
 
