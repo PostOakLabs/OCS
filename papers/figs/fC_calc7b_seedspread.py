@@ -18,12 +18,41 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(HERE, "..", "..", "paper", "figs")))
 
-import fC_calc7b_d2forecast as M   # noqa: E402  (shipped module, read-only import)
+import types                       # noqa: E402
+
+# 2026-10-22 (FIX-C): the v1 module omits G on every dark-mass term (G_PC is
+# defined at its l.44 and never used), exactly as v2 did.  v1 is retained
+# unchanged as the historical record, so the G factor is applied here, to a
+# copy of its source held in memory, with each substitution asserted.
+_V1 = os.path.join(HERE, "fC_calc7b_d2forecast.py")
+_src = open(_V1, encoding="utf-8-sig").read().replace("\r\n", "\n")
+for _a, _b in (
+    ("def g_point(r, z):\n    return z / r ** 3",
+     "def g_point(r, z):\n    return G_PC * z / r ** 3"),
+    ("def g_plummer(r, z, a_pc):\n    return z / (r * r + a_pc * a_pc) ** 1.5",
+     "def g_plummer(r, z, a_pc):\n    return G_PC * z / (r * r + a_pc * a_pc) ** 1.5"),
+    ("gB = Z / (rA * rA + 4.0) ** 1.5",
+     "gB = G_PC * Z / (rA * rA + 4.0) ** 1.5"),
+):
+    assert _src.count(_a) == 1, _a
+    _src = _src.replace(_a, _b)
+M = types.ModuleType("fC_calc7b_d2forecast_gfixed")
+M.__file__ = _V1
+exec(compile(_src, _V1, "exec"), M.__dict__)
 
 JSON_PATH = os.path.join(M.HERE, "fC_calc7b_d2forecast.json")
-SHIPPED = open(JSON_PATH, "rb").read()
-shipped_doc = json.loads(SHIPPED)
-shipped_cells = {(c["truth"], c["sigma"], c["N"]): c for c in shipped_doc["cells"]}
+SHIPPED = open(JSON_PATH, "rb").read()      # v1 record (G-less), restored below
+# Reference column: the regenerated v2 record, converted to v1's sign
+# convention (positive toward the true family).  v1 and v2 share the rng
+# stream per cell, so at the full census they agree once both carry G.
+_v2 = json.load(open(os.path.join(M.HERE, "fC_calc7b_d2forecast_v2.json"),
+                     encoding="utf-8"))
+shipped_cells = {}
+for _c in _v2["cells"]:
+    if _c["truth"] in ("compact", "extended"):
+        _c = dict(_c)
+        _c["median_dsimple"] *= -1.0 if _c["truth"] == "compact" else 1.0
+        shipped_cells[(_c["truth"], _c["sigma"], _c["N"])] = _c
 
 M.CENSUS = [19]                    # headline ladder only (module global, call-time)
 
@@ -70,7 +99,7 @@ for key, c_ref in sorted(shipped_cells.items()):
 all_above_9 = all(s["min_over_seeds_above_9"] for s in spread)
 out = dict(
     meta=dict(wu="R7-CALC-FIN", part="S3 item 3 — eight-seed spread, n=19 ladder",
-              date="2026-08-24", N_REAL=200,
+              date="2026-08-24", regenerated="2026-10-22 with G applied (FIX-C)", N_REAL=200,
               seeds=[r["seed0"] for r in seed_runs],
               note="shipped seed (k=0) reproduces the shipped n=19 cells exactly"),
     per_cell_spread=spread,

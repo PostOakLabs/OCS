@@ -62,14 +62,14 @@ def apply_coding(grid, coding):
         for k in g:
             g[k] = ["F" if v == "H" else v for v in g[k]]
     elif coding == "K3_two_leg_min":
-        # documented split cell(s): Aestivation-C3 (none leg + full leg, averaged to half at :298)
+        # documented split cell(s): Aestivation-C3 (none leg + full leg, averaged to half at :331)
         g["Aestivation"][CRITERIA.index("C3")] = "N"
     elif coding == "K4_mth_c5_contingent_withdraw":
         # R9-B-1 (B-R9-01/B-R9-02): the printed table already carries Migration's
         # C5 as none (the v1 K4 -- Migration C5 H->N -- became a no-op once the
         # table itself was fixed under R8; a withdrawal coding needs a live target).
         # The remaining contingent half-grade in tab:scorecard is MTH's C5, credited
-        # only via the limit-tightening restatement of Paper A's T1 (:299). This
+        # only via the limit-tightening restatement of Paper A's T1 (:306). This
         # coding withdraws that contingent credit to test the ranking as-registered.
         g["MTH"][CRITERIA.index("C5")] = "N"
     return g
@@ -128,8 +128,9 @@ check("G-B2 C6 distribution", VAL[grid["MTH"][5]] == 0.5
       "(reproduces the B-M6 evidence)")
 
 json.dump(dict(
-    meta=dict(wu="R9-B-1", part="Paper B scorecard robustness (supersedes R7-CALC-AB)", date="2026-09-03",
-              source="paper/inward-review.tex tab:scorecard :314-319",
+    meta=dict(wu="D212 (regenerated against Paper B v2.5; original run R9-B-1)",
+              part="Paper B scorecard robustness (supersedes R7-CALC-AB)", date="2026-10-22",
+              source="paper/inward-review.tex tab:scorecard :315-326 (v2.5, revised 2026-10-20)",
               metric="row sums, full=1 half=0.5 none=0"),
     printed_grid={k: grid[k] for k in MEMBERS},
     codings=results,
