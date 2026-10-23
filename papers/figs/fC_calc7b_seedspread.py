@@ -24,6 +24,11 @@ import types                       # noqa: E402
 # defined at its l.44 and never used), exactly as v2 did.  v1 is retained
 # unchanged as the historical record, so the G factor is applied here, to a
 # copy of its source held in memory, with each substitution asserted.
+# 2026-10-23 (D244): the z grid is patched to 1201 nodes as well.  The spread
+# is computed on the same n=19 ladder the paper quotes, and those cells now
+# come from the converged grid; leaving v1 at 301 would spread a grid the
+# headline numbers no longer use and would leave the shipped-reference column
+# comparing two different grids.
 _V1 = os.path.join(HERE, "fC_calc7b_d2forecast.py")
 _src = open(_V1, encoding="utf-8-sig").read().replace("\r\n", "\n")
 for _a, _b in (
@@ -33,6 +38,8 @@ for _a, _b in (
      "def g_plummer(r, z, a_pc):\n    return G_PC * z / (r * r + a_pc * a_pc) ** 1.5"),
     ("gB = Z / (rA * rA + 4.0) ** 1.5",
      "gB = G_PC * Z / (rA * rA + 4.0) ** 1.5"),
+    ("Z_MAX, N_Z = 60.0, 301",
+     "Z_MAX, N_Z = 60.0, 1201"),
 ):
     assert _src.count(_a) == 1, _a
     _src = _src.replace(_a, _b)
