@@ -1,3 +1,4 @@
+% Last revised 2026-10-20 (PL-H M8: third adopter Abbate et al. 2018 added; title de-ambiguated). Word count 1492 by texcount.
 % Research Note of the AAS (RNAAS) -- xi erratum.
 %
 % Format compliance (AAS Research Note preparation guidelines, checked
@@ -11,46 +12,44 @@
 % the recorded validate_g2.py V4 Monte Carlo bit-for-bit and asserts against
 % paper/h/jerk/g2_results.json before writing any file).
 %
-% TODO(before submission): fill in the author block (name form, affiliation
-% lines, ORCID iD, confirm email); confirm the RNAAS author-portal keyword
-% selection (UAT concepts); Tim FLAG -- deposit the verification scripts
-% (fH_verify_xi_independent.py, fH_verify_xi_mpmath_quad.py,
-% fH_verify_xi_second_mc.py, fxi_mc_hist.py) per jerk/zenodo_deposit/README.md
-% to Zenodo under Tim's account. R9-XPAPER-1 (2026-09-03) removed the
+% TODO(before submission): ORCID iD (the RNAAS portal collects it; optional
+% here) and optional affiliation location; confirm the RNAAS author-portal
+% keyword selection (UAT concepts); Tim FLAG -- deposit the verification
+% scripts + citation_screen.md per jerk/zenodo_deposit/README.md to Zenodo
+% under Tim's account, then restore a \citep/\bibitem pair with the issued
+% DOI before submission. R9-XPAPER-1 (2026-09-03) removed the
 % fabricated-placeholder \citep{TODOzenodo}/\bibitem, which cited a DOI that
 % does not exist yet, and replaced it with a plain-text "deposit pending"
 % note per STANDING-ORDERS.md item 7 (public submissions = prepare, Tim
-% submits; do not fabricate a DOI). Once Tim deposits and supplies the real
-% DOI, restore a \citep/\bibitem pair with the issued reference before
-% submission. Also re-run the citation screen in sec:prov once rate-limiting
-% clears (see its footnote).
+% submits; do not fabricate a DOI). Citation screen COMPLETE 2026-10-03
+% (OpenAlex, 102 works; zenodo_deposit/citation_screen.md); sec:prov updated.
 \documentclass[twocolumn]{aastex701}
 
 \usepackage{amsmath}
 
 \begin{document}
 
-\title{An erratum to the jerk noise-floor constant in Prager et al. (2017) and Abbate et al. (2019)}
+\title{An erratum to the jerk noise-floor constant in Prager et al. (2017) and the works that adopt it}
 
 \shortauthors{Swanson, T.}
 \author{Tim Swanson}
-\affiliation{[Affiliation]}
+\affiliation{The Omega Centauri Society}
 \email{tim@postoaklabs.com}
 
 \begin{abstract}
-Pulsar spin-frequency second derivatives, jerks, probe cluster gravitational potentials and central masses against a stochastic floor of nearest-neighbour stellar encounters, whose characteristic amplitude is $\dot{a}_0=(2\pi\xi/3)\,G\langle m\rangle\sigma n$, with $n$ the stellar number density, $\sigma$ the velocity dispersion, and $\langle m\rangle$ the mean stellar mass. \citet{Prager2017} quote the dimensionless constant $\xi\simeq3.04$, and \citet{Abbate2019} adopt it. The double integral that defines $\xi$ evaluates in closed form to $\sqrt{2\pi}\,[1+\ln(2+\sqrt{3})/(2\sqrt{3})]=3.4595806610$: five evaluations of that one integral (a closed-form reduction, adaptive quadrature, symbolic evaluation, antiderivative differentiation, and high-precision quadrature) plus two independently coded Monte Carlo simulations of the underlying stellar field that never evaluate the integral, at $15.8\sigma$ and $14.6\sigma$ respectively, both reject 3.04; Section~\ref{sec:verify} states the common-mode caveat on the first five. Because $\dot{a}_0$ is linear in $\xi$, the printed constant understates the jerk floor by 12.1 per cent, inflating the apparent significance of jerk-based central-mass inferences.
+Pulsar spin-frequency second derivatives, jerks, probe cluster gravitational potentials and central masses against a stochastic floor of nearest-neighbour stellar encounters, whose characteristic amplitude is $\dot{a}_0=(2\pi\xi/3)\,G\langle m\rangle\sigma n$, with $n$ the stellar number density, $\sigma$ the velocity dispersion, and $\langle m\rangle$ the mean stellar mass. \citet{Prager2017} quote the dimensionless constant $\xi\simeq3.04$, and \citet{Abbate2018,Abbate2019} adopt it. The double integral that defines $\xi$ evaluates in closed form to $\sqrt{2\pi}\,[1+\ln(2+\sqrt{3})/(2\sqrt{3})]=3.4595806610$: five evaluations of that one integral (a closed-form reduction, adaptive quadrature, symbolic evaluation, antiderivative differentiation, and high-precision quadrature) plus two independently coded Monte Carlo simulations of the underlying stellar field that never evaluate the integral, at $15.8\sigma$ and $14.6\sigma$ respectively, both reject 3.04; Section~\ref{sec:verify} states the common-mode caveat on the first five. Because $\dot{a}_0$ is linear in $\xi$, the printed constant understates the jerk floor by 12.1 per cent, inflating the apparent significance of jerk-based central-mass inferences.
 \end{abstract}
 
 \keywords{pulsars: general -- globular clusters: general -- methods: analytical -- methods: statistical}
 
 \section{Introduction} \label{sec:intro}
 
-Long-term timing of millisecond pulsars in globular clusters measures spin-frequency second derivatives, jerks, which probe the cluster gravitational potential and any intermediate-mass black hole it hosts \citep{Prager2017,Abbate2019}. Jerks from passing cluster stars follow the statistics of random backgrounds long studied as source confusion in radio astronomy \citep{Condon1974}: nearest neighbours dominate, the sum has no finite variance, and its scale is set by a characteristic amplitude,
+Long-term timing of millisecond pulsars in globular clusters measures spin-frequency second derivatives, jerks, which probe the cluster gravitational potential and any intermediate-mass black hole it hosts \citep{Prager2017,Abbate2018,Abbate2019}. Jerks from passing cluster stars follow the statistics of random backgrounds long studied as source confusion in radio astronomy \citep{Condon1974}: nearest neighbours dominate, the sum has no finite variance, and its scale is set by a characteristic amplitude,
 \begin{equation}
 \dot{a}_0={2\pi\xi\over 3}\,G\,\langle m\rangle\,\sigma\,n,
 \label{eq:a0}
 \end{equation}
-rather than by an rms. Here $n$ is the stellar number density, $\sigma$ the one-dimensional velocity dispersion, $\langle m\rangle$ the mean stellar mass, and $\xi$ a dimensionless constant collecting all of the geometry \citep{Prager2017}. Both papers quote $\xi\simeq3.04$.
+rather than by an rms. Here $n$ is the stellar number density, $\sigma$ the one-dimensional velocity dispersion, $\langle m\rangle$ the mean stellar mass, and $\xi$ a dimensionless constant collecting all of the geometry \citep{Prager2017}. All three papers quote $\xi\simeq3.04$.
 
 While implementing this formalism for a study of NGC~5139 ($\omega$~Cen) now in preparation, I found that the quoted value disagrees with the integral that defines it, which has a closed-form evaluation (Section~\ref{sec:value}). Section~\ref{sec:verify} reports the verification, five evaluations of the integral plus two independently coded Monte Carlo simulations of the physical field; Section~\ref{sec:prov} traces how the error entered the published literature; Section~\ref{sec:conseq} states the consequence for jerk-based inference.
 
@@ -70,11 +69,11 @@ or, to fifty digits, $3.4595\allowbreak8066\allowbreak1046\allowbreak2156\allowb
 
 \section{Verification} \label{sec:verify}
 
-I verified Equation~(\ref{eq:xi}) with five evaluations of Equation~(\ref{eq:xidef}) itself, (i)~(ii)~(iv)~(v)~(vi) below, and two independently coded Monte Carlo simulations of the physical system, (iii), that never evaluate the formula. Because routes (i), (ii), (iv), (v), and (vi) all evaluate or manipulate the same double integral, they share whatever algebraic or limiting error the integral itself might carry; only the two Monte Carlo passes are independent of Equation~(\ref{eq:xidef}), and the rejection of 3.04 rests on those. (i)~The closed form itself. (ii)~Adaptive quadrature of Equation~(\ref{eq:xidef}), agreeing with the closed form to $2.1\times10^{-13}$ relative ($7.3\times10^{-13}$ absolute). (iii)~Two Monte Carlo passes of the physical system, described next. (iv)~End-to-end symbolic evaluation of both integrals, returning the inner result above and $2+{\rm asinh}\,\sqrt{3}/\sqrt{3}$ for the outer one. (v)~Differentiation of the closed-form antiderivative used in the reduction, which simplifies identically to zero against the integrand. (vi)~Arbitrary-precision quadrature of Equation~(\ref{eq:xidef}) at 55 decimal digits (mpmath), substituting $x=\tan\theta$ to remove the $1/x^2$ tail rather than truncating it, agreeing with the closed form to $3.1\times10^{-35}$ relative (\texttt{fH\_verify\_xi\_mpmath\_quad.py}, deposited with the others; a 70-digit attempt did not converge in reasonable time). This route is a true numerical quadrature of the double integral, not arithmetic on the closed form.
+I verified Equation~(\ref{eq:xi}) with five evaluations of Equation~(\ref{eq:xidef}) itself, (i)~(ii)~(iv)~(v)~(vi) below, and two independently coded Monte Carlo simulations of the physical system, (iii), that never evaluate the formula. Routes (i), (ii), (iv), (v), and (vi) share the double integral and any error it carries; only the two Monte Carlo passes are independent of Equation~(\ref{eq:xidef}), and the rejection of 3.04 rests on those. (i)~The closed form itself. (ii)~Adaptive quadrature of Equation~(\ref{eq:xidef}), agreeing with the closed form to $2.1\times10^{-13}$ relative ($7.3\times10^{-13}$ absolute). (iii)~Two Monte Carlo passes of the physical system, described next. (iv)~End-to-end symbolic evaluation of both integrals, returning the inner result above and $2+{\rm asinh}\,\sqrt{3}/\sqrt{3}$ for the outer one. (v)~Differentiation of the closed-form antiderivative used in the reduction, which simplifies identically to zero against the integrand. (vi)~Arbitrary-precision quadrature of Equation~(\ref{eq:xidef}) at 55 decimal digits (mpmath), substituting $x=\tan\theta$ to remove the $1/x^2$ tail rather than truncating it, agreeing with the closed form to $3.1\times10^{-35}$ relative (\texttt{fH\_verify\_xi\_mpmath\_quad.py}, deposited with the others; a 70-digit attempt did not converge in reasonable time). This route is a true numerical quadrature of the double integral, not arithmetic on the closed form.
 
 Route (iii), first pass, never evaluates the formula. Each of $4\times10^{4}$ realizations draws Poisson($nV$) stars uniformly in a sphere, assigns Maxwellian velocities, sums the line-of-sight single-star jerk of Prager et al.'s Equation~B1 directly, and estimates the Cauchy scale from the interquartile range, equal to twice the scale for a Cauchy law and insensitive to the heavy tail that invalidates the sample mean. The result is $\xi_{\rm MC}=3.4886\pm0.0283$: consistent with Equation~(\ref{eq:xi}) at $1.0\sigma$ and excluding $3.04$ at $15.8\sigma$ (Figure~\ref{fig:mc}). The same sample reproduces the published line-of-sight law in shape, with a Kolmogorov--Smirnov $p=0.26$ against the Cauchy form, and in tail index, with a Hill estimate of $1.025$ against the 1-stable value of $1$.
 
-A second, separately coded Monte Carlo (\texttt{fH\_verify\_xi\_second\_mc.py}, deposited with the others) built directly on the projected line-of-sight jerk expression with an independent seed, drew $4\times10^{4}$ realizations, and estimated the Lorentzian scale from the interquartile range with a bootstrap standard error over $2000$ resamples: $\xi_{\rm MC,2}=3.4403\pm0.0275$, agreeing with Equation~(\ref{eq:xi}) at $-0.7\sigma$ and excluding $3.04$ at $14.6\sigma$. The two Monte Carlo passes sit on opposite sides of the closed form, at $+1.0\sigma$ and $-0.7\sigma$, consistent with sampling scatter between independent implementations; a check of the interquartile-range Cauchy-scale estimator itself, $3000$ synthetic draws of $4\times10^{4}$ standard-Cauchy variates each, finds it unbiased to within $0.02$~per~cent, so the scatter is not an estimator artifact. The rejection of $3.04$ rests on the two Monte Carlo passes; the 13.8~per~cent correction rests on the closed form.
+A second, separately coded Monte Carlo (\texttt{fH\_verify\_xi\_second\_mc.py}, deposited with the others) built directly on the projected line-of-sight jerk expression with an independent seed, drew $4\times10^{4}$ realizations, and estimated the Lorentzian scale from the interquartile range with a bootstrap standard error over $2000$ resamples: $\xi_{\rm MC,2}=3.4403\pm0.0275$, agreeing with Equation~(\ref{eq:xi}) at $-0.7\sigma$ and excluding $3.04$ at $14.6\sigma$. The two passes lie at $+1.0\sigma$ and $-0.7\sigma$ from the closed form, consistent with sampling scatter; the interquartile-range estimator, tested on $3000$ synthetic draws of $4\times10^{4}$ standard-Cauchy variates, is unbiased to within $0.02$~per~cent. The rejection of $3.04$ rests on the two Monte Carlo passes; the 13.8~per~cent correction rests on the closed form.
 
 I also re-derived Equations~B4--B10 through the characteristic function, reproducing every step including the angular factor $s^{2}(1+3\mu^{2})$. The algebra is sound; the discrepancy is confined to the numerical evaluation of Equation~(\ref{eq:xidef}). The verification scripts and the Monte Carlo drivers are prepared for a Zenodo deposit (deposit pending; DOI to be added before submission).
 
@@ -87,7 +86,7 @@ I also re-derived Equations~B4--B10 through the characteristic function, reprodu
 
 \section{Provenance in the published sources} \label{sec:prov}
 
-The derivation survives in full only in version~1 of the arXiv posting of \citet{Prager2017} (1612.04395v1), where Appendix~B carries Equations~B1--B10 and Equation~B7 defines $\xi$ as the double integral. In the v1 source the defining equation reads, for $s\geq0$\footnote{As printed, this equation is dimensionally inconsistent with Equation~(\ref{eq:a0}): both sides carry no factor of the stellar number density $n$, so $C(s)$ has dimensions of volume rather than being dimensionless. Reducing the right-hand side with $x\equiv r^{3}/(sGm\sigma)$, so that $d^{3}r=2\pi(sGm\sigma/3)\,dx\,d\mu$, gives $C(|s|)=(2\pi/3)\,n\,G\langle m\rangle\sigma |s|\,\xi$; the reduction also pulls $\sigma$ outside $\int{\rm d}m\,P(m)$, which holds only if the velocity dispersion is assumed independent of stellar mass, an assumption Prager et al. leave implicit. I reproduce the source equation as printed and note the omission here rather than silently inserting $n$ into a quotation.}
+The derivation survives in full only in version~1 of the arXiv posting of \citet{Prager2017} (1612.04395v1), where Appendix~B carries Equations~B1--B10 and Equation~B7 defines $\xi$ as the double integral. In the v1 source the defining equation reads, for $s\geq0$\footnote{As printed, this equation is dimensionally inconsistent with Equation~(\ref{eq:a0}): both sides carry no factor of the stellar number density $n$, so $C(s)$ has dimensions of volume rather than being dimensionless. Reducing the right-hand side with $x\equiv r^{3}/(sGm\sigma)$, so that $d^{3}r=2\pi(sGm\sigma/3)\,dx\,d\mu$, gives $C(|s|)=(2\pi/3)\,n\,G\langle m\rangle\sigma |s|\,\xi$; the reduction also pulls $\sigma$ outside $\int{\rm d}m\,P(m)$, which holds only if the velocity dispersion is assumed independent of stellar mass, an assumption Prager et al. leave implicit. I reproduce the source equation as printed.}
 \begin{equation}
 \begin{split}
 C(s)={2\pi Gs\over 3}\int {\rm d}m\,P(m)\,m\sigma\int_0^{\infty}{\rm d}x\int_{-1}^{1}{\rm d}\mu\\[2pt]
@@ -98,17 +97,23 @@ C(s)={2\pi Gs\over 3}\int {\rm d}m\,P(m)\,m\sigma\int_0^{\infty}{\rm d}x\int_{-1
 \end{equation}
 where $C(s)$ is the cumulant of the line-of-sight jerk's characteristic function at conjugate variable $s\geq0$ (the full symmetric-Cauchy cumulant is linear in $|s|$, not $s$), followed, in the same paragraph, by the sentence ``where $\langle m\rangle=\int{\rm d}m\,mP(m)$ and $\xi\simeq3.04$ is the numerical value of the integral.'' Integral and number share a sentence, so no alternative convention can reconcile them: the text offers 3.04 as the value of this integral, and the integral equals 3.4596.
 
-The published article (ApJ, 845, 148) truncates Appendix~B after Equation~B3 and so removes the definition of $\xi$, while main-text Equation~8 retains $\xi\simeq3.04$ and points to Appendix~B for its origin; a reader checking the constant against the journal version alone cannot reproduce it from what is printed. Equation~6 of \citet{Abbate2019} carries the same constant, citing \citet{Prager2017}. I queried the Semantic Scholar Graph API (\texttt{GET /graph/v1/paper/arXiv:1612.04395/citations}, \texttt{fields=title,abstract,year,externalIds}) for the works citing \citet{Prager2017} on 2026 September~2 and again on September~3; the second pass hit persistent rate-limiting before a complete, auditable per-title disposition list could be assembled\footnote{TODO(before submission): re-run to completion with a paced schedule or an API key; list every citing work invoking the jerk or jounce formalism with its disposition; do not publish a count without an auditable list behind it.}, so I report only that \citet{Abbate2019}'s Equation~6 carries the same $\xi\simeq3.04$, citing \citet{Prager2017} directly.
+The published article (ApJ, 845, 148) truncates Appendix~B after Equation~B3 and so removes the definition of $\xi$, while main-text Equation~8 retains $\xi\simeq3.04$ and points to Appendix~B for its origin; a reader checking the constant against the journal version alone cannot reproduce it from what is printed. Equation~6 of \citet{Abbate2019} carries the same constant, citing \citet{Prager2017}. A citation screen of the works citing \citet{Prager2017} or \citet{Abbate2019} (OpenAlex, 2026 October~3; 102 works; per-title dispositions deposited with the verification scripts) finds no published correction to the constant, and exactly three works adopt the printed value in an inference: Equation~17 of \citet{Abbate2018} (``$\xi=3.04$ is a numerical factor''), which feeds the jerk likelihood of its 47~Tuc analysis and was found by a full-text check on 2026 October~11, not by the title-and-abstract screen; Equation~6 of \citet{Abbate2019}; and \citet{Corongiu2024}, who print ``where $\xi\simeq3.04$ is a numerical constant'' in the characteristic-jerk relation and use it in a published core-mass inference for NGC~6752.
 
 \section{Consequence for jerk-based inference} \label{sec:conseq}
 
-By Equation~(\ref{eq:a0}) the floor is linear in $\xi$, so the printed constant understates the stochastic jerk floor by 12.1~per~cent. The direction of the error is the unfavourable one for inference: a floor assumed too low inflates the apparent significance of any jerk-based central-mass constraint, including the Bayes factors that \citet{Abbate2019} tabulate, which inherit the constant. I have not recomputed those values; a 12~per~cent rescaling of the neighbour term is unlikely to move qualitative conclusions, but quantitative claims near threshold deserve re-examination by the groups concerned. Any analysis using the formalism should state which value of $\xi$ it adopts.
+By Equation~(\ref{eq:a0}) the floor is linear in $\xi$, so the printed constant understates the stochastic jerk floor by 12.1~per~cent. The direction of the error is the unfavourable one for inference: a floor assumed too low inflates the apparent significance of any jerk-based central-mass constraint, including the Bayes factors that \citet{Abbate2019} tabulate and the 47~Tuc jerk likelihood of \citet{Abbate2018}, which inherit the constant. I have not recomputed those values; a 12~per~cent rescaling of the neighbour term is unlikely to move qualitative conclusions, but quantitative claims near threshold deserve re-examination by the groups concerned. Any analysis using the formalism should state which value of $\xi$ it adopts.
 
 \software{NumPy, SciPy, SymPy, mpmath, Matplotlib}
 
 \begin{thebibliography}{}
+\bibitem[{Abbate et al.(2018)}]{Abbate2018}
+Abbate, F., Possenti, A., Ridolfi, A., et al. 2018, MNRAS, 481, 627 (arXiv:1808.06621)
+
 \bibitem[{Abbate et al.(2019)}]{Abbate2019}
 Abbate, F., Spera, M., \& Colpi, M. 2019, MNRAS, 487, 769 (arXiv:1905.05209)
+
+\bibitem[{Corongiu et al.(2024)}]{Corongiu2024}
+Corongiu, A., Ridolfi, A., Abbate, F., et al. 2024, ApJ, 972, 198 (arXiv:2407.03271)
 
 \bibitem[{Condon(1974)}]{Condon1974}
 Condon, J.~J. 1974, ApJ, 188, 279

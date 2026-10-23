@@ -18,7 +18,7 @@ Black-hole mass (log axis, 10-10^7 Msun) against dimensionless spin, showing:
     safe/selected colour; Section 3.1 criteria 1-2);
   * the Thorne 1974 spin-equilibrium limit a* = 0.998;
   * a schematic LISA EMRI mass-reach curve at 5.49 kpc, anchored at the T4
-    threshold (a clean chirp measures M down to 5e3 Msun; Table 4), drawn
+    threshold (a clean chirp measures M down to 8.2e3 Msun; Table 4), drawn
     slightly deeper at high spin where the inspiral spends more cycles in
     band.  Schematic: the paper quotes the threshold, not a curve.
 
@@ -89,8 +89,8 @@ ax.text(2.0e4, 0.30, "$\\omega$ Cen\n$8{\\times}10^{3}$--$5{\\times}10^{4}\\,M_\
 # left-pointing arrows at a representative height.
 ax.annotate("", xy=(1.3e3, 0.80), xytext=(2.3e3, 0.80),
             arrowprops=dict(arrowstyle="->", color=GREY, lw=1.1))
-ax.text(2.45e3, 0.815, "47 Tuc ($\\lesssim 2.3{\\times}10^{3}\\,M_\\odot$)",
-        fontsize=7.2, color=GREY, ha="left", va="bottom")
+ax.text(2.3e3, 0.815, "47 Tuc ($\\lesssim 2.3{\\times}10^{3}\\,M_\\odot$)",
+        fontsize=7.2, color=GREY, ha="right", va="bottom")
 ax.annotate("", xy=(5.6e3, 0.66), xytext=(1.0e4, 0.66),
             arrowprops=dict(arrowstyle="->", color=GREY, lw=1.1))
 ax.text(1.15e4, 0.675, "M15 ($\\lesssim 10^{3\\text{--}4}\\,M_\\odot$, model-dep.)",
@@ -105,10 +105,10 @@ ax.annotate("Sgr A*", (4.3e6, 0.90), xytext=(5, 7), textcoords="offset points",
 # Schematic LISA EMRI mass reach at 5.49 kpc, anchored at the T4 threshold:
 # minimum detectable mass (x) as a function of spin (y).
 spins = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
-reach = [5e3 * (0.70 + 0.30 * (1.0 - s)) for s in spins]
+reach = [8.2e3 * (0.70 + 0.30 * (1.0 - s)) for s in spins]
 ax.plot(reach, spins, ls="--", lw=1.3, color=PURPLE, zorder=2)
-ax.text(5.35e3, 0.42, "LISA EMRI reach at 5.49 kpc (schematic; T4: clean chirp to $5{\\times}10^{3}\\,M_\\odot$)",
-        rotation=90, fontsize=7.2, color=PURPLE, ha="left", va="center",
+ax.text(2.6e3, 0.37, "LISA EMRI reach (schematic; T4: $8.2{\\times}10^{3}\\,M_\\odot$)",
+        rotation=90, fontsize=7.2, color=PURPLE, ha="right", va="center",
         zorder=3)
 
 ax.set_xscale("log")
@@ -129,7 +129,7 @@ record = {
     "thorne_limit": 0.998,
     "sgr_a_star": {"M_msun": 4.3e6, "a_star": 0.90, "a_err": 0.10},
     "imbh_upper_limits": {"47Tuc_msun": 2.3e3, "M15_msun": "1e3-1e4 model-dependent"},
-    "lisa_curve": "schematic, anchored at T4 threshold 5e3 Msun (Table 4)",
+    "lisa_curve": "schematic, anchored at T4 threshold 8.2e3 Msun (Table 4)",
     "spin_sources": "stellar spins: continuum fitting, compiled in Reynolds 2021",
 }
 with open(os.path.join(HERE, "fA_massspin.json"), "w", encoding="utf-8") as fh:
