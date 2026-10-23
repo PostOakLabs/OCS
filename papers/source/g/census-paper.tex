@@ -42,14 +42,14 @@
 \author{Tim Swanson\\[2pt]
 \small The Omega Centauri Society / Post Oak Labs\\
 \small \texttt{tim@postoaklabs.com}}
-\date{August 2026 \\[4pt] \small v1.5 (last revised 2026-09-03) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
+\date{August 2026 \\[4pt] \small v1.9 (last revised 2026-10-23) --- eighth paper of the set (Paper G); companion to the Macro\\ \small Transcension Hypothesis (Paper A), the inward-migration review (Paper B), the Omega Centauri campaign\\ \small (Paper C), the migration economics (Paper D), the engineered-IMBH systems paper (Paper E), the joint\\ \small accretion bound (Paper F), and the mass-tension paper (Paper H); prepared for omegacentauri.me}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 \noindent
-The deepest Chandra catalogue of Omega Centauri \citep{Henleywillis2018} lists 233 X-ray sources, 188 of them without an optical identification, and notes that more than 30 of the unidentified sources carry luminosities and X-ray colours resembling millisecond pulsars (MSPs) in other clusters. That catalogue was published when no radio MSP was known in the cluster. Nineteen are known now \citep{ColomiBernadich2026}, and the catalogue has never been cross-matched against them as a set. We supply that cross-match and the residual census it leaves behind, running the identical pipeline on 47~Tucanae first as a control. The control recovers 18 of 21 known MSP X-ray counterparts at the 95\,per~cent match radius, and the three it misses are the three rows the source catalogue itself flags as deviating beyond that radius \citep{Bhattacharya2017}, so the pipeline reproduces the control's own flag set rather than an independent error budget. In \ocen{} the Chandra astrometric frame carries a measured $+0.41\as$ declination offset relative to the radio frame; registering it takes tier-1 matches from three of eight to five of eight and, with the new timing positions, tightens two published associations from $2.65\as$ and $2.42\as$ to $0.07\as$ and $0.01\as$. All five registered associations sit between $0.01\as$ and $0.35\as$ with per-source chance-coincidence probabilities below $2.3\times10^{-3}$ under each of three independent estimators, reported separately and never combined. One published association is discrepant: the timing position of MSP~H sits $1.81\as$ from source 14c after registration, in the opposite declination sense to the other five anchors, against the $0.73\as$ offset quoted for the same pulsar in \citet{ZhaoHeinke2023}. We record that as a data-quality finding rather than reconciling it. This is a positional and colour census; variability is deferred and addressed only in the back matter. Matching the 145 unidentified sources with a tabulated soft flux at or above the adopted $1.4\times10^{-16}\,\mathrm{erg\,cm^{-2}\,s^{-1}}$ limit against a log~$N$--log~$S$ background expectation of 146.9 (92.4--215.5) sources at that same limit, the residual is $-1.9$ ($-70.5$, $+52.6$), consistent with zero and dominated by the background bracket; subtracting the same background from the full 159-source unidentified population instead, a comparison of mismatched limits, gives 12.1, a quantity this paper no longer headlines. 39 (primary bounding box) or 53 (secondary $2\sigma$ ellipse) unidentified sources fall inside a colour-flux region defined by this cluster's own confirmed counterparts, two separate constructions on the same four anchors rather than a bracket on one quantity, and neither of them interchangeable with the catalogue's own ``more than 30''. The two published population predictions disagree, predicted totals of 324 and 6 pulsars (a factor of 54), which against 19 known imply 176.6 and zero X-ray-detectable undiscovered pulsars \citep{Yin2024}. We bound that disagreement against the residual without adjudicating it. From the 39 sources inside the primary colour-flux region we publish a ranked follow-up list under a ranking rule fixed before the ranking was computed, together with the epoch-comparison depth each entry would need. The residual is an input to future identification work and is not a detection of anything.
+The Chandra astrometric frame of Omega Centauri sits $+0.42\as$ in declination from the radio timing frame, which is comparable to the $0.36\as$ to $0.49\as$ tier-1 match radii. Registering it takes tier-1 matches of the 233-source catalogue of \citet{Henleywillis2018} against the 19 pulsars of \citet{ColomiBernadich2026} from three of eight to five of eight. Five registered associations lie $0.02\as$ to $0.34\as$ from their pulsars, with chance-coincidence probabilities below $2.3\times10^{-3}$ under each of three estimators, reported separately. They are also the anchors that fix the registration, so they are not independent of it. MSP~H is not an anchor: its timing position lies $0.07\as$ from the X-ray source h1 of \citet{ZhaoHeinke2023} and $1.83\as$ from \citet{Henleywillis2018} source 14c, whose position matches the thermal source h2 to within $0.1\as$. A 47~Tucanae control run first recovers 18 of 21 known counterparts. From the 39 unidentified sources inside a colour-flux region defined by the confirmed counterparts we publish a follow-up list ranked under a rule fixed before the ranking was computed. The residual of unidentified sources above the flux limit, against a log~$N$--log~$S$ background, is $-1.9$ ($-70.5$, $+52.6$), consistent with zero. It sets the scale of what a follow-up can find and is not a detection.
 \end{abstract}
 
 \bigskip
@@ -62,9 +62,9 @@ The deepest Chandra catalogue of Omega Centauri \citep{Henleywillis2018} lists 2
 \section{Introduction}
 \label{sec:intro}
 
-\citet{Henleywillis2018} identify 233 X-ray sources in a 222\,ks Chandra ACIS-I exposure of Omega Centauri (two epochs, 173.7 and 48.5\,ks, per the source paper's own description; distinct from the deeper 290.9\,ks, four-pointing reduction \citet{ZhaoHeinke2023} use for their own X-ray analysis of the same field), 95 of them new, reaching a limiting unabsorbed flux in the core of $f_X(0.5\text{--}6.0\,\mathrm{keV}) \simeq 3\times10^{-16}\,\mathrm{erg\,s^{-1}\,cm^{-2}}$. Forty-five of those sources carry a likely optical identification. The remaining 188 do not. The catalogue's own summary of that unidentified population is the sentence this paper takes as its starting point: no radio millisecond pulsar was then known in the cluster, and more than 30 unidentified sources had luminosities and X-ray colours like those of MSPs found elsewhere.
+\citet{Henleywillis2018} identify 233 X-ray sources in a 222\,ks Chandra ACIS-I exposure of Omega Centauri (the 2012 data, in 173.7 and 48.5\,ks parts, per the source paper's own description; the other deep epoch of the field is the 2000 exposure of \citealt{Haggard2009}; the deeper 290.9\,ks, four-pointing reduction that \citet{ZhaoHeinke2023} use for their own X-ray analysis of the same field is a different data set), 95 of them new, reaching a limiting unabsorbed flux in the core of $f_X(0.5\text{--}6.0\,\mathrm{keV}) \simeq 3\times10^{-16}\,\mathrm{erg\,s^{-1}\,cm^{-2}}$. For a source at the cluster centre specifically, the 81-cluster Chandra search of \citet{Su2022} reports no detectable central point source in \ocen{}, with a $3\sigma$ upper limit of $L_X < 8.6\times10^{29}\,\mathrm{erg\,s^{-1}}$ over 0.5--8\,keV at that survey's adopted distance of 5.2\,kpc. Forty-five of those sources carry a likely optical identification. The remaining 188 do not. The catalogue's own summary of that unidentified population is the sentence this paper takes as its starting point: no radio millisecond pulsar was then known in the cluster, and more than 30 unidentified sources had luminosities and X-ray colours like those of MSPs found elsewhere.
 
-The situation has since inverted. MeerKAT found 13 pulsars in the cluster \citep{Chen2023}, and the TRAPUM and Parkes programme now reports a timing set of 19 \citep{ColomiBernadich2026}. \citet{ZhaoHeinke2023} identified X-ray counterparts for 11 of the 18 MSPs known at the time of their work, nine of them new. The catalogue of unidentified X-ray sources and the catalogue of radio pulsars therefore both exist, and neither has been confronted with the other as a set. The confrontations that have been made are partial and local. \citet{ColomiBernadich2026} report pulsar G as positionally consistent with Chandra source 24f at the $1\sigma$ level and coincident with an ATCA radio source, and name 24f among the potential counterparts in their conclusions; they report pulsar L as potentially associated with source 32d at roughly $3\sigma$. Those two statements are the prior art this paper extends, and they are credited as such.
+The situation has since inverted. MeerKAT found 13 pulsars in the cluster \citep{Chen2023}, and the TRAPUM and Parkes programme now reports a timing set of 19 \citep{ColomiBernadich2026}. \citet{ZhaoHeinke2023} identified X-ray counterparts for 11 of the 18 MSPs known at the time of their work, nine of them new. The catalogue of unidentified X-ray sources and the catalogue of radio pulsars therefore both exist, and neither has been confronted with the other as a set. The confrontations that have been made are partial and local. \citet{ColomiBernadich2026} report pulsar G as positionally consistent with Chandra source 24f at the $1\sigma$ level and coincident with an ATCA radio source\footnote{The published ATCA continuum catalogue of this field is \citet{Tudor2022}: 32 sources at 5.5--9\,GHz across the cluster field, at a median central noise of about 4\,$\mu$Jy per beam. None of the 32 lies within $10\as$ of the 13 pulsar positions carried in Section~\ref{sec:data-psr}; the nearest sits $8.9\as$ away.}, and name 24f among the potential counterparts in their conclusions; they report pulsar L as potentially associated with source 32d at roughly $3\sigma$. Those two statements are the prior art this paper extends, and they are credited as such.
 
 Doing the cross-match systematically yields a set of associations with stated false-association rates, which the partial treatments do not carry, and a residual population of unidentified sources that survives every known counterpart class and the expected extragalactic background. The residual is the object of interest and the survey's target list. A count of unidentified sources in excess of a background model is a statement about the completeness of identification work in a crowded, unevenly exposed field, and it constrains nothing on its own.
 
@@ -89,19 +89,19 @@ Pulsar positions come from \citet{ColomiBernadich2026} and are sorted into preci
 
 \begin{description}
 \item[Tier 1, eight pulsars (A, B, C, D, E, G, H, K).] Timing-derived positions at milliarcsecond scale. The radio positional uncertainty is set to zero, so the match radius is carried entirely by the X-ray error circle.
-\item[Tier 2, five pulsars (I, L, N, Q, S).] Positions from orbital solutions with no formal uncertainty quoted, plus the SeeKAT localisation of S at $\pm1.5\as$. For the four without a stated error we adopt one unit in the last quoted digit as the uncertainty. On the precision at which those positions are printed that rule yields uncertainties of order $0.1\as$, one to two orders of magnitude above the timing-tier errors, which is why tier~2 is reported separately and never merged into a headline count. That rule is ours and not the source paper's.
-\item[Null, six pulsars (F, J, M, O, P, R).] No position in \citet{ColomiBernadich2026}, attributed there to \citet{Chen2023}. These six are absent from the cross-match entirely. Recovering their positions from the discovery paper would extend the probe set by six probes and is the cheapest improvement available to this analysis.
+\item[Tier 2, six pulsars (I, J, L, N, Q, S).] Positions from orbital solutions with no formal uncertainty quoted, plus the SeeKAT localisations of S at $\pm1.5\as$ and of J, whose position is taken from \citet{Chen2023} (their Table~1) because \citet{ColomiBernadich2026} do not print it. For the four orbital-solution pulsars without a stated error we adopt one unit in the last quoted digit as the uncertainty, and the same rule is applied to the printed digits of J. On the precision at which those positions are printed that rule yields uncertainties of about $1.4\as$, three to four times the tier-1 match radii ($0.36$--$0.49\as$), which is why tier~2 is reported separately and never merged into a headline count. That rule is ours and not the source paper's.
+\item[Null, five pulsars (F, M, O, P, R).] No position in \citet{ColomiBernadich2026}, attributed there to \citet{Chen2023}. These five are absent from the cross-match entirely. The discovery paper does print a position for each, but it is a beam centre uncertain by about $\pm1$\,s in right ascension and $\pm6\as$ in declination, which the authors state cannot be improved with SeeKAT; against tier-1 radii of $0.36\as$ to $0.49\as$ those five are unusable. The sixth pulsar without a \citet{ColomiBernadich2026} position, J ($\pm1\as$ per axis), is a SeeKAT localisation and is run as the sixth tier-2 probe (Section~\ref{sec:results-match}).
 \end{description}
 
 \subsection{The published counterparts}
 \label{sec:data-counterparts}
 
-\citet{ZhaoHeinke2023} report X-ray counterparts for 11 of the 18 MSPs known at the time, of which seven carry a cross-reference to a \citet{Henleywillis2018} identifier: B$\to$13d, C$\to$23g, E$\to$11f, G$\to$24f, H$\to$14c, K$\to$21d, L$\to$32d. Their tables were read from the published PDF page by page and the positions and luminosities re-verified against that read. Five of the eleven rows required correction of the luminosity uncertainty from a symmetric placeholder to the asymmetric interval the source paper quotes; central values were unaffected. We do not re-derive the luminosity-companion-mass correlation of that paper, which is their result and not ours.
+\citet{ZhaoHeinke2023} report X-ray counterparts for 11 of the 18 MSPs known at the time, of which seven carry a cross-reference to a \citet{Henleywillis2018} identifier: B$\to$13d, C$\to$23g, E$\to$11f, G$\to$24f, H$\to$14c, K$\to$21d, L$\to$32d; both h1 and h2 carry the 14c cross-reference (Section~\ref{sec:results-h}). Their tables were read from the published PDF page by page and the positions and luminosities re-verified against that read. Five of the eleven rows required correction of the luminosity uncertainty from a symmetric placeholder to the asymmetric interval the source paper quotes; central values were unaffected. We do not re-derive the luminosity-companion-mass correlation of that paper, which is their result and not ours.
 
 \subsection{Source 24f as a classification-supersession case}
 \label{sec:data-24f}
 
-\citet{Henleywillis2018} classify source 24f as \texttt{RGB/SGB-a}, an anomalous red-giant-branch or sub-subgiant candidate. Later radio work identifies the same source as the X-ray counterpart of MSP~G \citep{ZhaoHeinke2023,ColomiBernadich2026}, and after frame registration the timing position sits $0.071\as$ from it (Section~\ref{sec:results-match}). This is the one class assignment in the catalogue known to have been superseded by later radio work.
+\citet{Henleywillis2018} classify source 24f as \texttt{RGB/SGB-a}, an anomalous red-giant-branch or sub-subgiant candidate. Later radio work identifies the same source as the X-ray counterpart of MSP~G \citep{ZhaoHeinke2023,ColomiBernadich2026}, and after frame registration the timing position sits $0.082\as$ from it (Section~\ref{sec:results-match}). This is the one class assignment in the catalogue known to have been superseded by later radio work.
 
 We carry 24f under its published class in every count reported in this paper and describe the supersession separately. Silently reclassifying one source because a later result is known would make the classification census a mixture of two epochs of knowledge, and the residual would then depend on which supersessions happened to be noticed. Reporting the case explicitly costs one paragraph and keeps the census reproducible from the published tables alone. It also sets the scale of the effect: one source in 233, in a catalogue whose identification work was done before any cluster MSP was known.
 
@@ -149,7 +149,7 @@ The limitation is structural. The anchors are published associations, so re-matc
 \subsection{Membership as a probability}
 \label{sec:method-membership}
 
-Membership is assigned from a two-component spatial model, a King-like cluster profile at the catalogue's $155\as$ core radius plus a uniform background, giving each source a probability $P_{\mathrm{member}}$ from its cluster-centric radius.
+Membership is assigned from a two-component spatial model, a King-like cluster profile at the catalogue's $155\as$ core radius plus a uniform background, giving each source a probability $P_{\mathrm{member}}$ from its cluster-centric radius. That the cluster term describes this cluster's own X-ray sources has published support: \citet{Cheng2020} model the radial distribution of 295 Chandra sources in this field against the cluster's King-model profile (their $R_c = 153\as$), subtract the expected cosmic background, and find the sources radially mixed with the normal stars, with no central concentration and no mass segregation of X-ray sources.
 
 Fitting both components to the data internally fails, and the failure is reported as a diagnostic rather than buried. The internal fit is degenerate: it returns 198.33 members out of 200 fitted sources with a background of $32.7\,\mathrm{deg^{-2}}$, an answer wrong by roughly two orders of magnitude in the background and implying near-total membership. The cause is instrumental. Chandra sensitivity falls with off-axis angle, so the observed source density declines with radius for reasons unrelated to cluster membership, and the profile term absorbs the background's own radial decline.
 
@@ -272,28 +272,28 @@ centre. Background is a plain dark rendering; no optical image is fetched.}
 \subsection{Frame registration}
 \label{sec:results-frame}
 
-Measured over all six published associations (B, C, E, G, H, K), the Chandra frame sits at $\Delta\alpha = -0.081\as$, $\Delta\delta = +0.411\as$ relative to the radio frame, with median absolute deviations of $0.103\as$ and $0.161\as$ (Table~\ref{tab:anchors}). This is the registration the analysis pipeline runs end to end: \texttt{analysis/results\_omega\_cen.json} records \texttt{n\_anchors=6} and every table, figure and cross-match number in this paper reproduces it. MSP~H's own residual after this registration is $1.814\as$, the largest of the six and in the opposite declination sense to the other five (Section~\ref{sec:results-h}); it is retained here because a registration excluding it was never run as a separate pipeline solution. As a sensitivity check computed by hand outside the pipeline over the five associations that exclude MSP~H (B, C, E, G, K), the frame instead sits at $\Delta\alpha = -0.072\as$, $\Delta\delta = +0.422\as$ (MAD $0.079\as$, $0.041\as$): both medians move by $\leq0.011\as$, inside either MAD, so no registered separation or match status in Table~\ref{tab:tier1} would change under the five-anchor solution either, at the $0.015\as$ precision quoted throughout this paper. An earlier referee round ruled for the five-anchor exclusion without a re-run of the pipeline on that basis; that ruling is superseded here by the shipped six-anchor output, which is what every subsequent number in this paper reports.
+Measured over the five published associations B, C, E, G and K, the Chandra frame sits at $\Delta\alpha = -0.072\as$, $\Delta\delta = +0.422\as$ relative to the radio frame, with median absolute deviations of $0.079\as$ and $0.042\as$ (Table~\ref{tab:anchors}). This is the registration the analysis pipeline runs end to end: \texttt{analysis/results\_omega\_cen\_5anchor.json} records the five-anchor set, and every table, figure and cross-match number in this paper reproduces it. MSP~H is not an anchor (Section~\ref{sec:results-h}); its residual against this registration is $1.825\as$. The six-anchor solution that includes H, $(-0.081\as, +0.411\as)$, moves no match status. The five registered associations are the anchors that fix this registration, so their post-registration separations are not independent tests of the match; the independent test lies in the non-anchor probes (Section~\ref{sec:method-frame}). Dropping B from the registration, with the median shift taken over the remaining four anchors, moves its separation from $0.340\as$ to $0.353\as$, inside its $0.36\as$ radius, so B's association survives a registration that excludes it.
 
 \begin{table}[tbp]
 \centering
 \small
-\caption{Frame-registration anchors: deviations of the six published associations, and the residual separation after the median shift $(-0.081\as, +0.411\as)$ is applied.}
+\caption{Frame-registration anchors: deviations of the five published associations, with MSP~H shown for reference, and the residual separation after the median shift $(-0.072\as, +0.422\as)$ is applied. $\dagger$ MSP~H is not an anchor and is excluded from the median.}
 \label{tab:anchors}
 \begin{tabular}{llccc}
 \toprule
 MSP & Chandra source & $\Delta\alpha$ (\as) & $\Delta\delta$ (\as) & residual after registration (\as) \\
 \midrule
-B & 13d & $+0.062$ & $+0.734$ & 0.353 \\
-C & 23g & $+0.111$ & $+0.142$ & 0.331 \\
-E & 11f & $-0.072$ & $+0.463$ & 0.053 \\
-G & 24f & $-0.151$ & $+0.400$ & 0.071 \\
-H & 14c & $-0.216$ & $-1.398$ & 1.814 \\
-K & 21d & $-0.090$ & $+0.422$ & 0.014 \\
+B & 13d & $+0.062$ & $+0.734$ & 0.340 \\
+C & 23g & $+0.111$ & $+0.142$ & 0.334 \\
+E & 11f & $-0.072$ & $+0.463$ & 0.042 \\
+G & 24f & $-0.151$ & $+0.400$ & 0.082 \\
+H$^{\dagger}$ & 14c & $-0.216$ & $-1.398$ & 1.825 \\
+K & 21d & $-0.090$ & $+0.422$ & 0.018 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Five of the six anchors fall between $+0.14\as$ and $+0.73\as$ in declination about a median of $+0.41\as$. The sixth sits at $-1.40\as$ and is treated in Section~\ref{sec:results-h}. A shift of this size is small compared with the field and large compared with the tier-1 match radii, which run from $0.36\as$ to $0.49\as$, so it changes the answer. Any \ocen{} cross-match number quoted without it is quoting an unregistered frame.
+The five anchors fall between $+0.14\as$ and $+0.73\as$ in declination about a median of $+0.42\as$. MSP~H, not an anchor, sits at $-1.40\as$ and is treated in Section~\ref{sec:results-h}. A shift of this size is small compared with the field and large compared with the tier-1 match radii, which run from $0.36\as$ to $0.49\as$, so it changes the answer. Any \ocen{} cross-match number quoted without it is quoting an unregistered frame.
 
 \subsection{Matches}
 \label{sec:results-match}
@@ -310,25 +310,25 @@ Registration takes the tier-1 match count from three of eight to five of eight. 
 Pulsar & Match & Sep.\ before & Sep.\ after & Match radius & \pchance{} & \pchance{} \\
  & & registration & registration & & (rotation) & (offset) \\
 \midrule
-A & --   & 23.468 & 23.309 & --   & $<5\times10^{-5}$ & $0.0003$ \\
-B & 13d  & 0.736  & 0.353  & 0.36 & $0.0022$ & $0.0004$ \\
-C & 23g  & 0.180  & 0.331  & 0.46 & $0.0006$ & $0.0008$ \\
+A & --   & 23.468 & 23.316 & --   & $<5\times10^{-5}$ & $0.0003$ \\
+B & 13d  & 0.736  & 0.340  & 0.36 & $0.0022$ & $0.0005$ \\
+C & 23g  & 0.180  & 0.334  & 0.46 & $0.0006$ & $0.0008$ \\
 D & --   & 19.915 & 19.596 & --   & $0.0010$ & $0.0004$ \\
-E & 11f  & 0.469  & 0.053  & 0.49 & $0.0022$ & $0.0001$ \\
-G & 24f  & 0.428  & 0.071  & 0.45 & $0.0013$ & $0.0006$ \\
-H & --   & 1.415  & 1.814  & --   & $<5\times10^{-5}$ & $0.0004$ \\
-K & 21d  & 0.431  & 0.014  & 0.38 & $0.0011$ & $0.0006$ \\
+E & 11f  & 0.469  & 0.042  & 0.49 & $0.0022$ & $0.0001$ \\
+G & 24f  & 0.428  & 0.082  & 0.45 & $0.0013$ & $0.0005$ \\
+H & --   & 1.415  & 1.825  & --   & $<5\times10^{-5}$ & $0.0003$ \\
+K & 21d  & 0.431  & 0.018  & 0.38 & $0.0011$ & $0.0006$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The analytic Poisson estimator returns $0.8\times10^{-3}$ to $1.2\times10^{-3}$ for all eight probes, tracking the local surface density and showing no structure the other two do not also show. The five registered associations sit at separations of $0.014\as$ to $0.353\as$ with every estimator below $2.3\times10^{-3}$, and the expected number of spurious tier-1 matches over the whole probe set is $0.009$ by rotation and $0.004$ by offset. B's match is the marginal case of the five: its $0.353\as$ separation sits close to its $0.36\as$ match radius, so it is the association most sensitive to any further refinement of either position. The associations for B, C, E, G and K agree with the published identifications for the same pulsars, an expected outcome: all five are registration anchors, so the informative content is in the separations and chance rates, not the identities.
+The analytic Poisson estimator returns $0.8\times10^{-3}$ to $1.2\times10^{-3}$ for all eight probes, tracking the local surface density and showing no structure the other two do not also show. The five registered associations sit at separations of $0.018\as$ to $0.340\as$ with every estimator below $2.3\times10^{-3}$, and the expected number of spurious tier-1 matches over the whole probe set is $0.009$ by rotation and $0.004$ by offset. B's match is the marginal case of the five: its $0.340\as$ separation sits close to its $0.36\as$ match radius, so it is the association most sensitive to any further refinement of either position; it stays inside that radius, at $0.353\as$, when B is dropped from the registration (Section~\ref{sec:results-frame}). The associations for B, C, E, G and K agree with the published identifications for the same pulsars, an expected outcome: all five are registration anchors, so the informative content is in the separations and chance rates, not the identities.
 
-Registration is what makes two of these associations tight. \citet{ZhaoHeinke2023} quote offsets of $2.65\as$ for pulsar G and $2.42\as$ for pulsar K between their radio and X-ray positions. With the timing positions of \citet{ColomiBernadich2026} and the measured frame shift applied, the same two associations sit at $0.071\as$ and $0.014\as$.
+Registration is what makes two of these associations tight. \citet{ZhaoHeinke2023} quote offsets of $2.65\as$ for pulsar G and $2.42\as$ for pulsar K between their radio and X-ray positions. With the timing positions of \citet{ColomiBernadich2026} and the measured frame shift applied, the same two associations sit at $0.082\as$ and $0.018\as$.
 
-Tier~2 returns no matches from five probes, at separations of $4.1\as$ to $24.1\as$, against an expected spurious count of 0.261 by rotation. Pulsar L, which \citet{ColomiBernadich2026} note as positionally consistent with source 32d at roughly $3\sigma$, sits $4.06\as$ from its nearest catalogue source and outside the match radius our uncertainty rule produces. That rule is ours, not the source paper's, so the non-match is reported as a consequence of a stated convention rather than as evidence against their association. L's own chance rate is small but not negligible: the nearest catalogue source lies $4.06\as$ away with a chance probability of 0.002--0.006 under the three estimators of Section~\ref{sec:method-chance}, at either reading of the tier-2 uncertainty (numbers in \texttt{paper/g/calc7/g\_calc7\_pulsarL.json}), two orders of magnitude above the registered tier-1 associations, consistent with the non-match.
+Tier~2 returns no matches from six probes, at separations of $4.1\as$ to $24.1\as$, against an expected spurious count of 0.269 by rotation (0.219 by offset). The sixth probe, pulsar J, lies $11.0\as$ from its nearest catalogue source, 22c, after registration, against a match radius of $1.46\as$; it is not a match, and its chance rates are 0.0076 by rotation, 0.0036 by offset and 0.0063 analytic (numbers in \texttt{paper/g/calc7/g\_calc7\_pulsarJ.json}). Pulsar L, which \citet{ColomiBernadich2026} note as positionally consistent with source 32d at roughly $3\sigma$, sits $4.06\as$ from its nearest catalogue source and outside the match radius our uncertainty rule produces. That rule is ours, not the source paper's, so the non-match is reported as a consequence of a stated convention rather than as evidence against their association. L's own chance rate is small but not negligible: the nearest catalogue source lies $4.06\as$ away with a chance probability of 0.002--0.005 under the three estimators of Section~\ref{sec:method-chance}, at either reading of the tier-2 uncertainty (numbers in \texttt{paper/g/calc7/g\_calc7\_pulsarL.json}), two orders of magnitude above the registered tier-1 associations, consistent with the non-match.
 
-Six pulsars (F, J, M, O, P, R) carry no position in \citet{ColomiBernadich2026} and are absent from the cross-match entirely. Every match count in this paper is conditional on that omission.
+Five pulsars (F, M, O, P, R) carry no usable position and are absent from the cross-match entirely; J, which \citet{ColomiBernadich2026} also omit, enters at tier~2 with its position from \citet{Chen2023}. Every match count in this paper is conditional on the five omissions.
 
 \begin{figure}[tbp]
 \centering
@@ -345,24 +345,24 @@ Six pulsars (F, J, M, O, P, R) carry no position in \citet{ColomiBernadich2026} 
 ]
 \addplot[only marks, mark=o, mark size=2.6pt, black!55] coordinates {(1,23.468) (2,0.736) (3,0.180) (4,19.915) (5,0.469) (6,0.428) (7,1.415) (8,0.431)};
 \addlegendentry{before registration}
-\addplot[only marks, mark=*, mark size=2.6pt, blue!70!black] coordinates {(1,23.309) (2,0.353) (3,0.331) (4,19.596) (5,0.053) (6,0.071) (7,1.814) (8,0.014)};
+\addplot[only marks, mark=*, mark size=2.6pt, blue!70!black] coordinates {(1,23.316) (2,0.340) (3,0.334) (4,19.596) (5,0.042) (6,0.082) (7,1.825) (8,0.018)};
 \addlegendentry{after registration}
 \addplot[only marks, mark=-, mark size=5pt, red!70!black, very thick] coordinates {(2,0.36) (3,0.46) (5,0.49) (6,0.45) (8,0.38)};
 \addlegendentry{match radius}
 \end{semilogyaxis}
 \end{tikzpicture}
-\caption{Tier-1 separations before and after the $(-0.081\as, +0.411\as)$ frame registration, with the match radius of each registered association marked. Registration moves B, E, G and K below their radii and moves H further away. A and D have no catalogue source within $19\as$ under either frame. Values from \texttt{analysis/results\_omega\_cen.json}.}
+\caption{Tier-1 separations before and after the $(-0.072\as, +0.422\as)$ frame registration, with the match radius of each registered association marked. Registration moves B, E, G and K below their radii and moves H further away. A and D have no catalogue source within $19\as$ under either frame. Values from \texttt{analysis/results\_omega\_cen\_5anchor.json}.}
 \label{fig:separations}
 \end{figure}
 
 \subsection{The MSP H association is discrepant}
 \label{sec:results-h}
 
-\citet{ZhaoHeinke2023} quote an offset of $0.73\as$ between MSP~H and their X-ray source h1, and cross-reference h1 to \citet{Henleywillis2018} source 14c. The timing position of \citet{ColomiBernadich2026} sits $1.415\as$ from the catalogue position of 14c, and $1.814\as$ from it after frame registration. The deviation runs in the opposite declination sense to the other five anchors, $-1.398\as$ against a $+0.41\as$ median.
+\citet{ZhaoHeinke2023} quote an offset of $0.73\as$ between MSP~H and their X-ray source h1, and cross-reference h1 to \citet{Henleywillis2018} source 14c. The timing position of \citet{ColomiBernadich2026} sits $1.415\as$ from the catalogue position of 14c, and $1.825\as$ from it after frame registration. The deviation runs in the opposite declination sense to the five anchors, $-1.398\as$ against a $+0.42\as$ median.
 
-Two explanations are available and we do not choose between them. Either 14c is not the \citet{Henleywillis2018} counterpart of source h1, in which case the cross-reference between the two catalogues is wrong for this row while both positions may be correct, or one of the two published positions is in error. Both are checkable, and the check is specific: the \citet{ZhaoHeinke2023} source list needs comparing against the \citet{Henleywillis2018} catalogue position by position. We have not done that, and it is not a question the vendored tables settle on their own.
+\citet{ZhaoHeinke2023} list two X-ray candidates near H, h1 and h2, $1.9\as$ apart, and cross-reference both to 14c. They fit h1 with a power law and assign it to H; they fit h2 with thermal plasma and rule it out as an MSP. After shifting their positions onto the \citet{Henleywillis2018} frame by the mean offset of six common sources ($+0.685\as$ in declination), 14c lies $0.09\as$ from h2 and $1.86\as$ from h1, and the registered timing position of \citet{ColomiBernadich2026} lies $0.07\as$ from h1 and $1.83\as$ from 14c. Their quoted positional uncertainties are 95\% radii of $0.40\as$ (h1) and $0.22\as$ (h2). We therefore identify 14c with h2. H is consistent with h1, which has no separate entry in the 233-source catalogue, and we drop H from the registration anchors. The flux of h1, about three times the quoted core limit, and the soft colour of 14c leave open whether h1 went undetected or contributes a minor share of 14c; an inspection of the 222\,ks image at the h1 position would settle it.
 
-The consequence for this paper is bounded. The primary frame registration (Section~\ref{sec:results-frame}) includes H, since that is the six-anchor solution the pipeline actually runs; excluding it as a hand-computed sensitivity check moves both medians by $\leq0.011\as$, well inside the six-anchor MAD of $0.103\as$/$0.161\as$, and changes no registered separation or match status at the $0.015\as$ precision quoted elsewhere in this paper, under either the six- or the five-anchor solution. The discrepancy matters as a data-quality finding about the counterpart chain rather than because it moves any number here.
+The consequence for this paper is bounded. Including H as a sixth anchor moves both medians by $\leq0.011\as$ and changes no match status in Table~\ref{tab:tier1}. The finding matters as a data-quality result about the 14c cross-reference.
 
 \subsection{Classification census}
 \label{sec:results-class}
@@ -440,6 +440,8 @@ Assumed members & Flux limit & $N(P_{\mathrm{member}}>0.5)$ & $\sum P_{\mathrm{m
 \label{fig:membership}
 \end{figure}
 
+\citet{Platais2024} supply an astrometric census of dark companions in this cluster that the X-ray census here does not capture: from 13 years of HST/WFC3 astrometry of the core, four members carry measured accelerations requiring dark companions of $0.7$--$1.4\,\msun$, at least one of them a neutron-star candidate by their classification. None of the four has a counterpart in the catalogues used here. With the five-anchor frame registration of Section~\ref{sec:results-frame} applied to each position, the nearest catalogue source to any of the four lies $15.4\as$ away, an order of magnitude beyond that source's $95\,\mathrm{per~cent}$ error radius, and the nearest pulsar position lies $32\as$ away; the astrometric and X-ray inventories of the cluster's compact objects are disjoint at this depth.
+
 \subsection{Background accounting}
 \label{sec:results-agn}
 
@@ -472,7 +474,7 @@ Inside the $480\as$ aperture the catalogue holds 200 sources, of which 41 carry 
 N_{\mathrm{residual}} = 145 - 146.9\,(92.4\text{--}215.5) = -1.9\ (-70.5,\ +52.6),
 \label{eq:residual}
 \end{equation}
-where 145 is the count of unidentified sources carrying a tabulated soft flux at or above the adopted limit exactly. On the sampled log-flux grid nearest that limit ($1.3731\times10^{-16}$), the discretised curve of Figure~\ref{fig:lognlogs} reads $145 - 148.6 = -3.6$; the two differ only by grid discretisation and both are negative. A third quantity, 159 minus 146.9 $= 12.1$, subtracts the same background from the full unidentified population rather than from the at-limit population it was fitted to, a comparison of mismatched limits; it is not the headline of this paper and is retained here only because it is the quantity earlier drafts printed.
+where 145 is the count of unidentified sources carrying a tabulated soft flux at or above the adopted limit exactly. On the sampled log-flux grid nearest that limit ($1.3731\times10^{-16}$), the discretised curve of Figure~\ref{fig:lognlogs} reads $145 - 148.6 = -3.6$; the two differ only by grid discretisation and both are negative. A third quantity, 159 minus 146.9 $= 12.1$, subtracts the same background from the full unidentified population rather than from the at-limit population it was fitted to, a comparison of mismatched limits; it is not the headline of this paper and is retained here only because it is the quantity earlier drafts printed (Appendix~\ref{app:revisions}).
 
 Three counts run through this accounting and are not interchangeable: 159, every unidentified source inside the aperture; 145, those of the 159 carrying a tabulated soft flux at or above the adopted limit, which Equation~\eqref{eq:residual} uses; and 147, an erroneous intermediate that arises from mislabelling two hard-only sources (22g, 43i, each with zero tabulated soft flux and a non-zero medium/total flux) as being at or above the limit when they are in fact below it, a code-level truthiness bug (\texttt{if flux\_soft} misreads \texttt{0.0} as ``no value'' rather than ``below limit''; the fix is \texttt{is not None}). 147 does not appear in any number this paper reports and is documented here only to close the count.
 
@@ -504,7 +506,7 @@ every limit sampled, and at the adopted limit the observed curve and the backgro
 expectation cross almost exactly. Two of the 159 unidentified sources (22g, 43i)
 carry a tabulated hard flux but a zero tabulated soft flux and so drop below the
 soft-flux limit rather than sitting above it; they are correctly excluded from the
-145-source drawn curve, and the 147 figure some drafts of this accounting carried
+145-source drawn curve, and the 147 figure quoted in earlier versions (Appendix~\ref{app:revisions})
 came from misreading their zero soft flux as ``no value'' rather than ``below
 limit'' (see the note after Equation~\eqref{eq:residual}).
 
@@ -688,15 +690,15 @@ Rank & Source & $r$ (\as) & colour & $F_{\mathrm{soft}}$ & $F_{X,\mathrm{tot}}$ 
 
 The residual is an input to identification work, and the useful output of this paper is a specific list of what that work requires. Each item below is a concrete, currently blocked step, ordered by cost.
 
-\textbf{The six missing pulsar positions.} F, J, M, O, P and R carry no position in \citet{ColomiBernadich2026}. Recovering them from \citet{Chen2023} would extend the probe set by six probes and is the cheapest available improvement to every number in Section~\ref{sec:results}.
+\textbf{The missing pulsar positions.} F, J, M, O, P and R carry no position in \citet{ColomiBernadich2026}. \citet{Chen2023} print one for each, but five of the six (F, M, O, P, R) are beam centres at about $\pm1$\,s in right ascension and $\pm6\as$ in declination, unusable against the tier-1 radii. Pulsar J ($\pm1\as$ per axis) is the one recoverable probe, and it is run here as the sixth tier-2 probe: it lies $11.0\as$ from source 22c and does not match (Section~\ref{sec:results-match}).
 
-\textbf{The counterpart-chain check.} The MSP~H discrepancy of Section~\ref{sec:results-h} is resolvable by comparing the \citet{ZhaoHeinke2023} source list against the \citet{Henleywillis2018} catalogue position by position. It requires no new observation.
+\textbf{The counterpart-chain check.} The H--14c cross-reference of Section~\ref{sec:results-h} rests on 14c being h2. The remaining routes are new Chandra astrometry of the h1/h2 pair or a blend check of 14c in the \citet{Henleywillis2018} data, and both need data beyond the published tables.
 
 \textbf{Exposure-map membership.} The degeneracy of Section~\ref{sec:method-membership} is instrumental and is fixed by the Chandra exposure map, which turns a spatial fit that cannot separate the cluster profile from the sensitivity profile into one that can. Membership would then be fitted rather than normalised externally, and the six-row sensitivity table of Table~\ref{tab:membership} would collapse to one row with an error bar.
 
-\textbf{Variability with epoch-resolved data.} No variability analysis appears in this paper. Both the 2000 and 2012 Chandra epochs exist and the catalogue tabulates a flux ratio between them, but a single ratio does not support a statistically valid variability test at these count rates, and epoch-resolved event data are not staged here. This is the clearest gap between what this paper does and what a full identification programme needs, since variability is what separates quiescent binaries from background AGN when colour does not.
+\textbf{Variability with epoch-resolved data.} No variability analysis appears in this paper. Both the 2000 and 2012 Chandra epochs exist and \citet{Henleywillis2018} tabulate a flux ratio between them, but the Chandra Source Catalog (releases 2.1 and 2.2) carries only the two 2012 observations (ObsIDs 13726, 13727; 3.1\,d baseline) for these sources, so catalogue-level epoch data reach no further back than 2012, and a single published ratio does not support a statistically valid variability test at these count rates. This is the clearest gap between what this paper does and what a full identification programme needs, since variability is what separates quiescent binaries from background AGN when colour does not.
 
-\textbf{Deeper radio positions.} Sub-arcsecond positions for the tier-2 pulsars would move five probes out of a tier whose uncertainty rule is a convention of ours rather than a measurement.
+\textbf{Deeper radio positions.} Sub-arcsecond positions for the tier-2 pulsars would move six probes out of a tier whose uncertainty rule is a convention of ours rather than a measurement.
 
 \subsection{The census as an anomaly screen}
 \label{sec:disc-anomaly}
@@ -708,7 +710,7 @@ A complete accounting of a cluster's X-ray sources doubles as a screen for sourc
 
 We have cross-matched the 233-source Chandra catalogue of \citet{Henleywillis2018} against the 19-pulsar timing set of \citet{ColomiBernadich2026}, validated the pipeline on 47~Tucanae first, and reported what is left.
 
-The control recovers 18 of 21 known counterparts at the 95\,per~cent match radius and misses the three rows the control catalogue itself flags. The \ocen{} Chandra frame carries a measured $+0.41\as$ declination offset against the radio frame; registering it takes tier-1 matches from three of eight to five of eight, and the five registered associations sit between $0.01\as$ and $0.35\as$ with chance-coincidence probabilities below $2.3\times10^{-3}$ under three independent estimators. The published association of MSP~H with source 14c does not survive registration, sitting at $1.81\as$ in the wrong declination sense, which we record as a data-quality finding requiring a position-by-position check of the counterpart chain.
+The control recovers 18 of 21 known counterparts at the 95\,per~cent match radius and misses the three rows the control catalogue itself flags. The \ocen{} Chandra frame carries a measured $+0.42\as$ declination offset against the radio frame; registering it takes tier-1 matches from three of eight to five of eight, and the five registered associations sit between $0.02\as$ and $0.34\as$ with chance-coincidence probabilities below $2.3\times10^{-3}$ under three independent estimators. MSP~H's timing position is consistent with the X-ray source h1 ($0.07\as$) and lies $1.83\as$ from 14c, which matches h2; H is not used as an anchor (Section~\ref{sec:results-h}).
 
 The residual census inside a $480\as$ aperture, matched at the same flux limit, is $-1.9$ unidentified sources $(-70.5, +52.6)$ against a background expectation of 146.9 (92.4--215.5), which is to say it is consistent with the background alone. 39 (primary box) or 53 (secondary ellipse) unidentified sources fall in a colour-flux region defined by this cluster's own confirmed counterparts, two constructions built differently from the catalogue's own ``more than 30'' and not interchangeable with it or with each other. The two published population predictions differ by a factor of 54, and the larger over-predicts the residual by more than an order of magnitude, which bounds the extrapolation, the detection fraction, or the background subtraction without deciding among them. The practical output is Table~\ref{tab:targets}, a ranked follow-up list under a rule fixed before the ranking was computed, together with the epoch-comparison depth each entry would require.
 
@@ -726,7 +728,7 @@ The following are stated as limitations of this analysis and are not corrected f
 \begin{enumerate}
 \item \textbf{Eddington bias.} Fluxes near the detection limit are biased high, so a background count computed above a limit derived from those same fluxes is a lower bound on contamination. No deboosting is possible without the detection-significance distribution, which the vendored table does not carry.
 \item \textbf{Completeness varies with off-axis angle} across the ACIS-I field. A single flux limit is applied over the whole area, which overestimates the effective depth at large radius and therefore overestimates the background count there while underestimating the true source count. This pushes the residual in the opposite direction from Eddington bias above: Eddington bias makes the background estimate too low (residual biased up), radial incompleteness makes it too high at large radius (residual biased down). Neither correction is quantified here, both are invoked only qualitatively, and their combined scale relative to the $-1.9$ (92.4--215.5-bracket) residual is unmeasured; a reader should treat the residual's true systematic uncertainty as wider than the quoted statistical bracket alone.
-\item \textbf{No variability analysis} is performed. Epoch-resolved data are not staged and the single tabulated 2012/2000 flux ratio does not support a Poisson-honest test. Explicitly out of scope, and the largest departure from what a full identification programme requires. Appendix~\ref{app:variability} states what the missing work would cost without doing it.
+\item \textbf{No variability analysis} is performed. Catalogue epoch data cover only the 3.1\,d 2012 baseline; the 2000 epoch would need reprocessing of the 2000 event data. The single tabulated 2012/2000 flux ratio does not support a test with Poisson-limited errors. Explicitly out of scope, and the largest departure from what a full identification programme requires. Appendix~\ref{app:variability} states what the missing work would cost without doing it.
 \item \textbf{The residual is an input to future identification work.} It is not a detection and it is not evidence for any hypothesis.
 \item \textbf{Chance-coincidence rates} are reported per probe by three independent estimators and are never collapsed into one number.
 \item \textbf{Membership} is reported as a probability under stated external normalisations, never as a binary label, and every published membership statement is carried alongside rather than overwritten.
@@ -737,11 +739,11 @@ The following are stated as limitations of this analysis and are not corrected f
 \item \textbf{The control is an optimistic bound.} The control catalogue was itself astrometrically registered against its MSP truth set, so control recovery bounds match performance from above rather than testing astrometry independently.
 \item \textbf{The candidate ranking is a follow-up ordering}, not a set of identifications. Its rule was fixed before it was computed, its chance-coincidence factor is numerically inert, and four of its top twenty rows are already-identified MSP counterparts that the pre-registered pool definition retains.
 \item \textbf{The epoch-comparison table of Appendix~\ref{app:variability}} assumes the shallower epoch differs from the deeper one only in exposure. It does not, so the tabulated sensitivity is a floor.
-\item \textbf{Six pulsars are absent} from the cross-match for want of a published position, so every match count is conditional on a 13-probe subset of the 19-pulsar timing set.
+\item \textbf{Five pulsars are absent} from the cross-match because \citet{ColomiBernadich2026} carry no usable position for them (they have only beam-centre positions in \citet{Chen2023}, too coarse for the tier-1 radii), so every match count is conditional on a 14-probe subset of the 19-pulsar timing set.
 \end{enumerate}
 
 
-\section{What an epoch comparison would cost}
+\section{Cost of an epoch comparison}
 \label{app:variability}
 
 Variability is absent from this paper and Appendix~\ref{app:caveats} lists that
@@ -852,6 +854,18 @@ Chart & ID & RA (J2000) & Dec (J2000) & $r$ & $\epsilon_{95}$ & $C_{0.5-4.5}$ & 
 \multicolumn{11}{l}{\footnotesize \phantom{Chart} flux ratio beyond a factor of two ($>2$). All twelve are unidentified and inside the primary box, defined on $F_{X,{\rm tot}}$.} \\
 \end{tabular}
 \end{table}
+
+
+\section{Revision record}
+\label{app:revisions}
+
+\textbf{v1.9 (2026-10-23).} The frame registration is the five-anchor solution (B, C, E, G, K; H dropped as an anchor), $(-0.072\as, +0.422\as)$ with median absolute deviations of $0.079\as$ and $0.042\as$, in place of the six-anchor $(-0.081\as, +0.411\as)$. Residuals are B 0.340, C 0.334, E 0.042, G 0.082, K 0.018 and H 1.825 arcsec; the A separation is 23.316 and the offset-estimator chance probabilities for B, G and H are 0.0005, 0.0005 and 0.0003. B's leave-one-out separation is now $0.353\as$, inside its $0.36\as$ radius, which reverses the v1.8 statement that B's association did not survive its own removal. MSP~H is described as consistent with the X-ray source h1 and 14c as matching h2. Pulsar J, the tier-2 results and all rotation chance probabilities are unchanged. The section heading ``What an epoch comparison would cost'' was changed to a plain descriptive heading.
+
+\textbf{v1.8 (2026-10-22).} Pulsar J, whose position is taken from \citet{Chen2023}, is run as the sixth tier-2 probe: it lies $11.0\as$ from source 22c after registration and is not a match, and the expected tier-2 spurious count rises from 0.261 to 0.269 by rotation. The null set is now five pulsars and the probe subset 14 of 19. The tier-2 uncertainty rule is stated as yielding about $1.4\as$, three to four times the tier-1 radii, in place of ``order $0.1\as$''. The effect of dropping B from the registration, $0.353\as$ to $0.367\as$ and outside its radius, is stated in Section~\ref{sec:results-frame} and Section~\ref{sec:results-match}. The variability caveats (Section~\ref{sec:disc-future} and the limitations list) now record that the Chandra Source Catalog, releases 2.1 and 2.2, holds only the two 2012 observations (ObsIDs 13726, 13727; 3.1\,d baseline) for the six sources and no 2000 epoch. The pulsar L chance range was recomputed after a cluster-centre RA error in its script (0.002--0.005).
+
+\textbf{v1.7 (2026-10-20).} Abstract shortened and reordered to lead with the frame registration. The six-pulsar probe set is described from the beam-centre precision of the \citet{Chen2023} positions (only J usable, as a named tier-2 probe that has not been run). The MSP~H counterpart-chain check recorded in the data report is written into Section~\ref{sec:results-h}. The exposure description of the catalogue is aligned with Appendix~\ref{app:variability}. A clause states that the registered associations are among the registration anchors.
+
+\textbf{v1.6 and earlier.} An earlier referee round ruled for a five-anchor registration excluding MSP~H without a pipeline re-run; the shipped six-anchor output superseded that ruling and every number in the paper reports it. Some earlier drafts of the residual accounting quoted a 147-source count where the at-limit count is 145 (see the note after Equation~\eqref{eq:residual}). Earlier versions also headlined a residual of 12.1 formed by subtracting the at-limit background from the full 159-source unidentified population, a comparison of mismatched limits that the body still reports as a labelled mismatched-limit comparison.
 
 
 \bibliographystyle{apalike}

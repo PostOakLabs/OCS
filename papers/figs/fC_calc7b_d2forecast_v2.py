@@ -57,7 +57,8 @@ CENSUS = [19, 25, 40, 100]
 N_REAL = 200
 SEED0 = 20260824
 
-Z_MAX, N_Z = 60.0, 301
+# D239 (V: PASS): 301 nodes (dz = 0.2 pc) is under-resolved at sigma = 3.09; dz = 0.05 pc is converged.
+Z_MAX, N_Z = 60.0, 1201
 Z = np.linspace(0.0, Z_MAX, N_Z)
 
 M_PM = np.logspace(3.0, math.log10(3.0e5), 36)      # compact family grid
