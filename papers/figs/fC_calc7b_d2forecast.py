@@ -1,4 +1,5 @@
-﻿"""R7-CALC-C2D / C-CALC-5: D2 pulsar mock-population forecast.
+﻿# FROZEN audit artefact. Omits G on every dark-mass term; also carries the per-pulsar likelihood fault. Superseded by fC_calc7b_d2forecast_v2.py on 2026-10-22. Do not cite its numbers.
+"""R7-CALC-C2D / C-CALC-5: D2 pulsar mock-population forecast.
 
 Pre-committed spec: 0xAlpha/results/R7-CALC-C2D.md section 0.1 (committed
 before this script existed; seeds 20260824 + cell index).

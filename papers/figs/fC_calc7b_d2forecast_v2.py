@@ -70,11 +70,40 @@ M_EXTENDED, A_EXTENDED = 2.5e5, 2.0
 
 
 def g_point(r, z):
-    return z / r ** 3
+    return mc.G_PC * z / r ** 3
 
 
 def g_plummer(r, z, a_pc):
-    return z / (r * r + a_pc * a_pc) ** 1.5
+    return mc.G_PC * z / (r * r + a_pc * a_pc) ** 1.5
+
+
+def dark_cell_path_gate(d, R_pc):
+    """G_D: the dark acceleration on the cell path equals G*M*z/r^3 to 1e-12
+    (point and Plummer closed forms), and the arrays the cells use agree with
+    mc.accel_los on a dark-only cluster.  Raises on failure: the cells are
+    meaningless if this fails."""
+    M0, r0, z0, a0 = 4.0e4, 0.5, 0.3, 2.0
+    ref_pt = mc.G_PC * M0 * z0 / r0 ** 3
+    ref_pl = mc.G_PC * M0 * z0 / (r0 * r0 + a0 * a0) ** 1.5
+    e_pt = abs(M0 * g_point(r0, z0) - ref_pt) / ref_pt
+    e_pl = abs(M0 * g_plummer(r0, z0, a0) - ref_pl) / ref_pl
+    worst, nchk = 0.0, 0
+    pd_pt = mc.ClusterParams(M_vis=0.0, M_dark=M_COMPACT, a_dark=A_COMPACT)
+    pd_ex = mc.ClusterParams(M_vis=0.0, M_dark=M_EXTENDED, a_dark=A_EXTENDED)
+    for i in (0, len(R_pc) // 2, len(R_pc) - 1):
+        pos = np.column_stack([R_pc[i] * np.ones(N_Z), np.zeros(N_Z), Z])
+        for arr, p_d in ((d["simpleA"][i], pd_pt), (d["simpleB"][i], pd_ex)):
+            ref = np.abs(mc.accel_los(pos[1:], p_d))     # skip z = 0 (a = 0)
+            worst = max(worst, float(np.max(np.abs(arr[1:] - ref) / ref)))
+            nchk += 1
+    out = {"closed_form_rel_err_point": float(e_pt),
+           "closed_form_rel_err_plummer": float(e_pl),
+           "cell_path_vs_accel_los_max_rel_err": worst,
+           "n_arrays_checked": nchk,
+           "pass": bool(e_pt < 1e-12 and e_pl < 1e-12 and worst < 1e-6)}
+    if not out["pass"]:
+        raise SystemExit("GATE G_D FAILED: %r" % out)
+    return out
 
 
 def logmvexp(x, axis):
@@ -174,10 +203,16 @@ def main():
                 "ext_models": ext_models,                       # (n, N_EXT, N_Z)
                 "pm_models": M_PM[None, :, None] * g_pm[:, None, :],
                 "simpleA": M_COMPACT * g_pm,                    # (n, N_Z)
-                "simpleB": M_EXTENDED * Z[None, :]
+                "simpleB": mc.G_PC * M_EXTENDED * Z[None, :]
                            / (R2 + Z[None, :] ** 2 + A_EXTENDED ** 2) ** 1.5}
 
     sets = {19: build_set(R_real)}
+
+    # G_D, cell-path units gate.  The dark terms the cells use (simpleA,
+    # simpleB, pm_models, ext_models, and the truth draw via g_point and
+    # g_plummer) must carry G.  Closed form first, then the machinery's own
+    # accel_los on a dark-only cluster at the real pulsar radii.
+    gate_D = dark_cell_path_gate(sets[19], R_real)
     rng_ext = np.random.default_rng(SEED0 - 1)
     for n in (25, 40, 100):
         r3 = md.sample_r(n - 19, rng_ext, rc=md.RC_STAR_PC,
@@ -323,9 +358,14 @@ def main():
                     a, b = sgn * c1["median_dsimple"], c2["median_dsimple"]
                     worst = max(worst, abs(a - b) / max(abs(a), 1e-30))
                     npair += 1
+        # 2026-10-22: v1 omits G on its dark terms (G_PC defined, never used),
+        # as v2 did until this date.  With G now applied here, v1 and v2 no
+        # longer agree, so this is informational and no longer a pass/fail gate.
         gate_C = {"checked": True, "n_cells_compared": npair,
-                  "max_rel_diff": worst, "pass": bool(worst < 1e-12)}
+                  "max_rel_diff": worst, "informational": True,
+                  "note": "v1 dark terms lack G; difference expected"}
     out["gates"]["G_C_v1_draw_provenance"] = gate_C
+    out["gates"]["G_D_cell_path_units"] = gate_D
 
     with open(os.path.join(HERE, "fC_calc7b_d2forecast_v2.json"), "w") as f:
         json.dump(out, f, indent=1)
