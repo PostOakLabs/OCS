@@ -140,7 +140,7 @@ out["C-R9-01_02_astrometry"] = {
 # 2. Wander amplitudes and the variance-discrimination dof (C-R9-05)
 # ---------------------------------------------------------------------
 SIGMA_STAR = 21.0                          # km/s, the paper set's fiducial
-M_EFF, M_BAR, M_BAR_EQ = 2.3, 0.54, 0.30
+M_EFF, M_BAR, M_BAR_EQ = 13.1, 0.75, 0.30   # Paper E mix, 31 Msun BHs at f_BH = 1 per cent (was 2.3, 0.54: the retired 10 Msun run)
 
 
 def wander_muasyr(M, m_eff):
