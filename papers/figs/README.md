@@ -104,7 +104,7 @@ Measured (central ln K, band over f_d ∈ [0.1, 0.9], ξ = excluded active-prior
 | soft threshold 0.5 dex | 0.770 | −0.486 | [−1.182, −0.080] |
 
 The largest lever is the P_comp floor (+0.153 nats over the fiducial), ahead of the
-transport floor (+0.103) and now the fuel ceiling (+0.121) too. The temperature-split
+transport floor (+0.103) and now the fuel ceiling (+0.101) too. The temperature-split
 prior is the weakest lever measured (+0.006 nats): total waste luminosity and swarm
 radius dominate detectability, not how that luminosity partitions between the warm and
 cool blackbody components.

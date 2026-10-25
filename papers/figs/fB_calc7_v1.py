@@ -128,9 +128,9 @@ check("G-B2 C6 distribution", VAL[grid["MTH"][5]] == 0.5
       "(reproduces the B-M6 evidence)")
 
 json.dump(dict(
-    meta=dict(wu="D212 (regenerated against Paper B v2.5; original run R9-B-1)",
-              part="Paper B scorecard robustness (supersedes R7-CALC-AB)", date="2026-10-22",
-              source="paper/inward-review.tex tab:scorecard :315-326 (v2.5, revised 2026-10-20)",
+    meta=dict(wu="D212 (regenerated against Paper B v2.9; original run R9-B-1)",
+              part="Paper B scorecard robustness (supersedes R7-CALC-AB)", date="2026-10-24",
+              source="paper/inward-review.tex tab:scorecard :315-329 (v2.9, revised 2026-10-24)",
               metric="row sums, full=1 half=0.5 none=0"),
     printed_grid={k: grid[k] for k in MEMBERS},
     codings=results,

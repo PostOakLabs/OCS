@@ -18,7 +18,7 @@ Black-hole mass (log axis, 10-10^7 Msun) against dimensionless spin, showing:
     safe/selected colour; Section 3.1 criteria 1-2);
   * the Thorne 1974 spin-equilibrium limit a* = 0.998;
   * a schematic LISA EMRI mass-reach curve at 5.49 kpc, anchored at the T4
-    threshold (a clean chirp measures M down to 8.2e3 Msun; Table 4), drawn
+    threshold (a clean chirp measures M down to 8.2e3 Msun; Table 7), drawn
     slightly deeper at high spin where the inspiral spends more cycles in
     band.  Schematic: the paper quotes the threshold, not a curve.
 
@@ -129,7 +129,7 @@ record = {
     "thorne_limit": 0.998,
     "sgr_a_star": {"M_msun": 4.3e6, "a_star": 0.90, "a_err": 0.10},
     "imbh_upper_limits": {"47Tuc_msun": 2.3e3, "M15_msun": "1e3-1e4 model-dependent"},
-    "lisa_curve": "schematic, anchored at T4 threshold 8.2e3 Msun (Table 4)",
+    "lisa_curve": "schematic, anchored at T4 threshold 8.2e3 Msun (Table 7)",
     "spin_sources": "stellar spins: continuum fitting, compiled in Reynolds 2021",
 }
 with open(os.path.join(HERE, "fA_massspin.json"), "w", encoding="utf-8") as fh:

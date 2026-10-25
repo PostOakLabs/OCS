@@ -233,7 +233,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
   <header class="tool-header">
     <div>
       <h1>Observing Campaign Planner</h1>
-      <p class="tool-subtitle">Forecast the direct astrometric acceleration test on ω Cen's fast stars: the GM/r² signal versus the least-squares curvature sensitivity of Paper C §5.3, per facility and baseline. The honest answer today is 0.21σ; this page quantifies when (and whether) that changes.</p>
+      <p class="tool-subtitle">Forecast the direct astrometric acceleration test on ω Cen's fast stars: the GM/r² signal versus the least-squares curvature sensitivity of Paper C §5.3, per facility and baseline. The answer today is 0.21σ for a star at the 0.08 pc edge of the fast-star region; this page quantifies when (and whether) that changes.</p>
     </div>
     <span class="tier-badge">⚠ Model-dependent projections</span>
   </header>
@@ -359,7 +359,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
     <div class="about-body">
       <h3>Resource Estimation Model</h3>
       <p>This is a direct port of the astrometric estimator of Paper C §5.3 (Campaign paper), which supersedes this page's original mass-resolution model. The signal is the quadrupole-beam acceleration a = GM/r² of a central mass at the target star's projected radius, expressed in mas/yr² at the cluster distance (mean projection factors of order unity absorbed). The sensitivity is one least-squares chain: for existing catalogues the catalogue's own proper-motion precision fixes the curvature term through σ_a = 7.75 σ_μ/T (Paper C eq. 3, third form), with archive extension scaled as T^-2.5; for facilities without a catalogue the uniform-cadence chain σ_a = 26.83 σ_pos/(√N T²) at 2 epochs/yr applies. Both give S/N ∝ T^2.5, which is how the goal-baseline extrapolation works.</p>
-      <p>The per-star coherent acceleration problem is not reduced by averaging many stars: the old √N_stars ensemble claim is gone, as is the epoch-count "feasible in 3 epochs" verdict. Paper C's calibrated conclusion stands: the nominal 2×10⁴ M☉ signal measures 0.21σ on the oMEGACat catalogue (σ_μ = 6.6 μas/yr at T = 20 yr) and crosses 1σ only at T ≈ 38 yr, around 2040, which is why the campaign's decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead.</p>
+      <p>The per-star coherent acceleration problem is not reduced by averaging many stars: the old √N_stars ensemble claim is gone, as is the epoch-count "feasible in 3 epochs" verdict. Paper C's calibrated conclusion stands: the nominal 2×10⁴ M☉ signal measures 0.21σ for a star at the 0.08 pc edge of the fast-star region on the oMEGACat catalogue (σ_μ = 6.6 μas/yr at T = 20 yr) and crosses 1σ only at T ≈ 38 yr, around 2040, which is why the campaign's decision-grade astrometry routes through photocentric-wander and reference-frame measurements instead.</p>
       <h3>Instrument Modes</h3>
       <p>oMEGACat: existing catalogue, σ_μ = 6.6 μas/yr inside r &lt; 1.5′ on a 20-yr baseline (Haberle et al. 2024, oMEGACat II); chain form, no assumed cadence.</p>
       <p>Roman: 15 μas/epoch forward forecast. ELT-MICADO: 80 μas/epoch. Gaia DR4: 40 μas/epoch. Custom: state either a catalogue proper-motion precision (chain form) or a per-epoch precision (forward form).</p>
@@ -486,7 +486,7 @@ function calculate(){
   } else if (T_goal <= 60) {
     color = 'amber';
     verdict_text = 'Below threshold: goal significance needs T ≈ ' + T_goal.toFixed(0) + ' yr';
-    detail_text = `At T = ${T} yr the signal stands at ${snr.toFixed(2)}σ against the ${goal.sigma}σ goal; both chains scale as T^-2.5, so it arrives near T ≈ ${T_goal.toFixed(0)} yr. Paper C's calibrated read: the nominal signal is 0.21σ today and crosses 1σ only at T ≈ 38 yr (~2040).`;
+    detail_text = `At T = ${T} yr the signal stands at ${snr.toFixed(2)}σ against the ${goal.sigma}σ goal; both chains scale as T^-2.5, so it arrives near T ≈ ${T_goal.toFixed(0)} yr. Paper C's calibrated read: the nominal signal is 0.21σ today for a star at the 0.08 pc edge of the fast-star region and crosses 1σ there only at T ≈ 38 yr (~2040).`;
   } else {
     color = 'red';
     verdict_text = 'Not reachable on any plausible baseline';
