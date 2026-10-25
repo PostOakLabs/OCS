@@ -6,18 +6,18 @@ epistemic register of Section 1.1 (Claims):
   green  = speculative postulates (P1 optimization pressure, P3 quiet migration)
   blue   = established physics (P2 thermodynamic gradient, Section 4 numbers)
   orange = selection theory (Section 3.1 criteria, applied to omega Cen in Section 5)
-  red    = falsification framework (Section 7, T1-T6, decision tree Fig. 8)
+  red    = falsification framework (Section 6, T1-T6, decision tree Fig. 7)
 
 Every quantitative anchor is transcribed from the paper's own text:
-  P2  accretion 5.7-42 per cent vs fusion 0.7 per cent  (Sec. 4.1, Eq. 1)
-      entropy sink ~10^12 vs the CMB                    (Sec. 4.2, Fig. 5)
+  P2  accretion 5.7-30 per cent (42 formal) vs fusion   (Sec. 4.1, Eq. 1)
+      entropy sink 10^3-10^7 realized (0.05 thermal)    (Sec. 4.2, Fig. 5)
       storage ~10^86 bits at 2e4 Msun                   (Sec. 4.3 / abstract)
-  Sel.  omega Cen: 4e6 Msun, 12.08 Gyr, 5.49 kpc, rho_c 3e3 Msun/pc^3
-                                                        (Table 2)
-  Fals. T1-T6 with thresholds and timelines              (Table 4)
+  Sel.  omega Cen: 4e6 Msun, 12.08 Gyr, 5.49 kpc, rho_c 4.0e3 Msun/pc^3
+                                                        (Table 4)
+  Fals. T1-T6 with thresholds and timelines              (Table 7)
 
 Branches: P4 -> the omega Cen application (Section 5); falsification
-framework -> the decision tree (Fig. 8, fig:tree).
+framework -> the decision tree (Fig. 7, fig:tree).
 
 Run:  python fA_flowchart.py
 Writes fA_flowchart.pdf / .png next to this script.
@@ -86,7 +86,7 @@ box(xs[0], ROW_Y, BOX_W, BOX_H, *C["green"],
     "computation is the\nuniversal currency")
 box(xs[1], ROW_Y, BOX_W, BOX_H, *C["blue"],
     "P2  Thermo.\ngradient",
-    "accretion 5.7\u201342%\nvs fusion 0.7%\nentropy sink $10^{12}$\nstorage $10^{86}$ bits")
+    "accretion 5.7\u201330%\nvs fusion 0.7%\nsink $10^{3}$\u2013$10^{7}$ realized\nstorage $10^{86}$ bits")
 box(xs[2], ROW_Y, BOX_W, BOX_H, *C["green"],
     "P3  Quiet\nmigration",
     "electromagnetic\nquietness is a\nselection effect")
@@ -95,7 +95,7 @@ box(xs[3], ROW_Y, BOX_W, BOX_H, *C["green"],
     "spin, depletion,\nneutrino bursts")
 box(xs[4], ROW_Y, BOX_W, BOX_H, *C["orange"],
     "Selection\ncriteria",
-    "\u03c9 Cen: $4{\\times}10^{6}\\,M_\\odot$\n12 Gyr, 5.49 kpc\n$\\rho_c$ $3{\\times}10^{3}\\,M_\\odot$/pc$^3$")
+    "\u03c9 Cen: $4{\\times}10^{6}\\,M_\\odot$\n12 Gyr, 5.49 kpc\n$\\rho_c$ $4.0{\\times}10^{3}\\,M_\\odot$/pc$^3$")
 box(xs[5], ROW_Y, BOX_W, BOX_H, *C["red"],
     "Falsification\nframework",
     "T1\u2013T6 with\nthresholds and\ntimelines")
@@ -107,10 +107,10 @@ for i in range(5):
 # --- branches --------------------------------------------------------------
 box(xs[3] + 0.35, BRANCH_Y, 2.05, 0.95, *C["orange"],
     "\u03c9 Cen application",
-    "Section 5: the optimal\ntarget (Table 2)")
+    "Section 5: the optimal\ntarget (Table 4)")
 box(xs[5] - 0.35, BRANCH_Y, 2.05, 0.95, *C["red"],
     "decision tree",
-    "Figure 8: LISA branch,\nT3\u2013T5 kills")
+    "Figure 7: LISA branch,\nT3, T5 retire; T4 demotes")
 
 arrow(xs[3] + 0.25, ROW_Y, xs[3] + 0.35, BRANCH_Y + 0.95)
 arrow(xs[5], ROW_Y, xs[5] - 0.35, BRANCH_Y + 0.95)
