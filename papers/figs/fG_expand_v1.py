@@ -870,7 +870,9 @@ def latex_tables(targets, variability):
         rows.append("%d & %s & %.1f & $%+.2f$ & %.1f & %.3f & %.1f & %.3f & %s \\\\"
                     % (r["rank"], r["id"], _round_half_up(r["radius_arcsec"], 1),
                        r["colour_log_soft_hard"], r["flux_soft_1e-19_W_m2"],
-                       r["p_member"], 1000.0 * r["p_chance_used_max"], r["score"],
+                       r["p_member"],
+                       _round_half_up(round(1000.0 * r["p_chance_used_max"], 9), 1),
+                       r["score"],
                        (fl if fl else "--")))
     with open(os.path.join(HERE, "_g4_table.tex"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(rows) + "\n")
