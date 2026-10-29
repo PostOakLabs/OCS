@@ -117,6 +117,38 @@ a:hover{color:var(--teal-glow)}
 .no-results{display:none;padding:40px 20px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:.06em}
 .no-results.visible{display:block}
 @media (max-width:560px){.search-inner{padding:0 14px}}
+/* ── How-it-fits band ── */
+.map{margin:0 0 56px}
+.map-kicker{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-bright);text-align:center;margin-bottom:6px}
+.map-title{font-family:'Orbitron',sans-serif;font-weight:600;font-size:22px;letter-spacing:.06em;color:var(--text-primary);text-align:center;margin-bottom:8px}
+.map-lede{max-width:640px;margin:0 auto 28px;text-align:center;color:var(--text-secondary);font-size:17px}
+.map-acts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.map-act{display:flex;flex-direction:column;border:1px solid var(--border-subtle);border-radius:12px;background:linear-gradient(180deg,rgb(var(--k0d0a24) / .55),rgb(var(--k070515) / .75));overflow:hidden;color:inherit;transition:border-color .2s,transform .2s}
+.map-act:hover{border-color:var(--purple-bright);transform:translateY(-2px);color:inherit}
+.map-act svg{display:block;width:100%;height:auto;background:rgb(var(--k1a1040) / .35);border-bottom:1px solid var(--border-subtle)}
+.map-tx{padding:16px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.map-n{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-bright)}
+.map-h{font-family:'Orbitron',sans-serif;font-weight:600;font-size:16px;line-height:1.25;color:var(--text-primary)}
+.map-p{font-size:15px;line-height:1.55;color:var(--text-secondary);flex:1}
+.map-go{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-glow);margin-top:4px}
+.sv-t{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.06em;fill:var(--text-secondary)}
+.sv-t.b{fill:var(--text-primary)}.sv-t.a{fill:var(--amber-glow)}.sv-t.g{fill:var(--teal-glow)}.sv-t.d{fill:var(--text-dim)}
+.sv-box{fill:var(--nebula);stroke:var(--purple-mid);stroke-width:1}
+.sv-ln{stroke:var(--purple-bright);stroke-width:1.2;fill:none}
+.sv-am{stroke:var(--amber-bright);stroke-width:1.2;fill:none}
+.sv-dot{fill:var(--teal-bright)}
+.sv-st{fill:var(--purple-dark);stroke:var(--purple-bright);stroke-width:1;opacity:.3;animation:stlit 9s ease-in-out infinite}
+.sv-st.s2{animation-delay:1s}.sv-st.s3{animation-delay:2s}.sv-st.s4{animation-delay:3s}.sv-st.s5{animation-delay:4s}
+@keyframes stlit{0%{opacity:.3}10%,70%{opacity:1;fill:var(--teal-dark);stroke:var(--teal-bright)}90%,100%{opacity:.3}}
+.map-ribbon{display:flex;justify-content:center;flex-wrap:wrap;gap:12px 44px;margin:32px 0 22px;padding:20px 0;border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)}
+.map-stat{text-align:center}
+.map-num{display:block;font-family:'Orbitron',sans-serif;font-weight:600;font-size:28px;line-height:1.15;color:var(--text-primary)}
+.map-lab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--text-dim)}
+.map-note{max-width:760px;margin:0 auto;border:1px dashed var(--border-subtle);border-radius:10px;padding:12px 18px;font-size:15px;line-height:1.55;color:var(--text-secondary)}
+.map-note .lead{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-primary);margin-right:8px}
+@media(max-width:860px){.map-acts{grid-template-columns:1fr}}
+@media(max-width:720px){.map-title{font-size:18px}.map-ribbon{gap:14px 28px}.map-num{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.sv-st{animation:none;opacity:1}.map-act{transition:none}}
 </style>
 <script>
 (function(){var t='light';try{t=localStorage.getItem('ocs-theme')||'light';}catch(e){}
@@ -255,6 +287,66 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
       <a href="#workflows">⚡ Workflows (19)</a>
     </nav>
   </header>
+
+  <!-- HOW-IT-FITS BAND. Static anchors only; no JS-built links. -->
+  <section class="map" aria-labelledby="map-title">
+    <p class="map-kicker">Three ways in</p>
+    <h2 class="map-title" id="map-title">How the tools fit together</h2>
+    <p class="map-lede">Every page is a self-contained browser calculator. Scenarios and workflows are the same calculators arranged into an argument.</p>
+
+    <div class="map-acts">
+      <a class="map-act" href="#evidence">
+        <svg viewBox="0 0 320 150" role="img" aria-label="Sliders feed a calculator and the state is written to the URL hash">
+          <line class="sv-ln" x1="26" y1="46" x2="118" y2="46"/><circle class="sv-dot" cx="84" cy="46" r="5"/><text class="sv-t" x="26" y="34">input 1</text>
+          <line class="sv-ln" x1="26" y1="92" x2="118" y2="92"/><circle class="sv-dot" cx="52" cy="92" r="5"/><text class="sv-t" x="26" y="80">input 2</text>
+          <path class="sv-am" d="M128 69 H168"/><path class="sv-am" d="M162 64 L168 69 L162 74"/>
+          <rect class="sv-box" x="176" y="40" width="120" height="58" rx="8"/>
+          <text class="sv-t b" x="190" y="62">result</text><text class="sv-t d" x="190" y="80">live, in-page</text>
+          <rect x="26" y="116" width="270" height="20" rx="10" fill="none" stroke="var(--border-subtle)"/>
+          <text class="sv-t a" x="40" y="130">page.html#input1=...&amp;input2=...</text>
+        </svg>
+        <div class="map-tx"><span class="map-n">I &middot; A tool</span><span class="map-h">One calculator, one question</span><span class="map-p">Each tool runs in the browser. Moving an input updates the result and the URL hash, so any state can be shared as a link.</span><span class="map-go">Browse the tools &darr;</span></div>
+      </a>
+
+      <a class="map-act" href="#scenarios">
+        <svg viewBox="0 0 320 150" role="img" aria-label="Three tool pages joined by links that carry parameters in the hash">
+          <rect class="sv-box" x="14" y="46" width="76" height="46" rx="8"/><text class="sv-t b" x="26" y="73">Tool A</text>
+          <rect class="sv-box" x="122" y="46" width="76" height="46" rx="8"/><text class="sv-t b" x="134" y="73">Tool B</text>
+          <rect class="sv-box" x="230" y="46" width="76" height="46" rx="8"/><text class="sv-t b" x="242" y="73">Tool C</text>
+          <path class="sv-am" d="M92 69 H120"/><path class="sv-am" d="M114 64 L120 69 L114 74"/>
+          <path class="sv-am" d="M200 69 H228"/><path class="sv-am" d="M222 64 L228 69 L222 74"/>
+          <text class="sv-t a" x="94" y="38">#hash</text><text class="sv-t a" x="202" y="38">#hash</text>
+          <text class="sv-t d" x="30" y="122">each step opens the next tool pre-loaded</text>
+        </svg>
+        <div class="map-tx"><span class="map-n">II &middot; A scenario</span><span class="map-h">Tools chained by link</span><span class="map-p">A scenario walks a scientific argument. Each step opens the next tool with its parameters already set in the hash.</span><span class="map-go">See the scenarios &darr;</span></div>
+      </a>
+
+      <a class="map-act" href="#workflows">
+        <svg viewBox="0 0 320 150" role="img" aria-label="Five stages on one page, each stage passing its output to the next">
+          <rect x="12" y="22" width="296" height="104" rx="10" fill="none" stroke="var(--border-subtle)" stroke-dasharray="3 4"/>
+          <text class="sv-t d" x="22" y="38">one page</text>
+          <rect class="sv-st" x="22" y="58" width="46" height="40" rx="6"/>
+          <rect class="sv-st s2" x="82" y="58" width="46" height="40" rx="6"/>
+          <rect class="sv-st s3" x="142" y="58" width="46" height="40" rx="6"/>
+          <rect class="sv-st s4" x="202" y="58" width="46" height="40" rx="6"/>
+          <rect class="sv-st s5" x="262" y="58" width="36" height="40" rx="6"/>
+          <path class="sv-am" d="M70 78 H80"/><path class="sv-am" d="M130 78 H140"/><path class="sv-am" d="M190 78 H200"/><path class="sv-am" d="M250 78 H260"/>
+          <text class="sv-t b" x="33" y="82">S1</text><text class="sv-t b" x="93" y="82">S2</text><text class="sv-t b" x="153" y="82">S3</text><text class="sv-t b" x="213" y="82">S4</text><text class="sv-t b" x="272" y="82">S5</text>
+          <text class="sv-t g" x="22" y="116">output of each stage feeds the next</text>
+        </svg>
+        <div class="map-tx"><span class="map-n">III &middot; A workflow</span><span class="map-h">Stages that hand off live</span><span class="map-p">A workflow keeps several stages on one page. Each stage output flows into the next as you change the inputs.</span><span class="map-go">See the workflows &darr;</span></div>
+      </a>
+    </div>
+
+    <div class="map-ribbon" id="map-ribbon">
+      <div class="map-stat"><span class="map-num" data-count="calculators">116</span><span class="map-lab">calculators</span></div>
+      <div class="map-stat"><span class="map-num" data-count="scenarios" data-live="#scenarios">33</span><span class="map-lab">scenarios</span></div>
+      <div class="map-stat"><span class="map-num" data-count="workflows" data-live="#workflows">19</span><span class="map-lab">workflows</span></div>
+      <div class="map-stat"><span class="map-num" data-count="total_tool_pages">172</span><span class="map-lab">tool pages in all</span></div>
+    </div>
+
+    <p class="map-note"><span class="lead">Reading the badges</span>Cards marked Peer-reviewed or Established rest on published data. Cards marked Theoretical or MTH are speculative engineering and are labelled as such. Where the central mass matters, both the Häberle 2024 lower limit and the Bañares-Hernández 2025 upper limit are shown.</p>
+  </section>
 
   <!-- SECTION 1: IMBH EVIDENCE -->
   <section class="section section-1" id="evidence">
@@ -1248,7 +1340,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
     <div class="tools-grid">
 
       <!-- ── TRACK 1: IMBH Evidence & History ── -->
-      <div class="scenario-track-header"><strong style="color:var(--teal-glow)">⚖ Track 1 &mdash; IMBH Evidence &amp; History</strong> &nbsp;&middot;&nbsp; 30 scenarios &nbsp;&middot;&nbsp; What is the central mass, how did it form, and how will we confirm it?</div>
+      <div class="scenario-track-header"><strong style="color:var(--teal-glow)">⚖ Track 1 &mdash; IMBH Evidence &amp; History</strong> &nbsp;&middot;&nbsp; 9 scenarios &nbsp;&middot;&nbsp; What is the central mass, how did it form, and how will we confirm it?</div>
 
       <a class="tool-card" href="scenario-imbh-evidence.html">
         <span class="tool-num">Scenario A &middot; IMBH evidence tour</span>
@@ -1319,7 +1411,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
       </a>
 
       <!-- ── TRACK 2: Black Hole Physics ── -->
-      <div class="scenario-track-header"><strong style="color:var(--purple-glow)">◉ Track 2 &mdash; Black Hole Physics</strong> &nbsp;&middot;&nbsp; 30 scenarios &nbsp;&middot;&nbsp; GR, orbital mechanics, tidal forces, and every route to extracting energy from a Kerr BH</div>
+      <div class="scenario-track-header"><strong style="color:var(--purple-glow)">◉ Track 2 &mdash; Black Hole Physics</strong> &nbsp;&middot;&nbsp; 4 scenarios &nbsp;&middot;&nbsp; GR, orbital mechanics, tidal forces, and every route to extracting energy from a Kerr BH</div>
 
       <a class="tool-card" href="scenario-bh-physics.html">
         <span class="tool-num">Scenario P &middot; black hole physics</span>
@@ -1351,7 +1443,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
       </a>
 
       <!-- ── TRACK 3: Civilisation & Computation ── -->
-      <div class="scenario-track-header"><strong style="color:var(--amber-glow)">✦ Track 3 &mdash; Civilisation &amp; Computation</strong> &nbsp;&middot;&nbsp; 30 scenarios &nbsp;&middot;&nbsp; From Kardashev scale through Matrioshka architecture to the thermodynamics of waiting</div>
+      <div class="scenario-track-header"><strong style="color:var(--amber-glow)">✦ Track 3 &mdash; Civilisation &amp; Computation</strong> &nbsp;&middot;&nbsp; 7 scenarios &nbsp;&middot;&nbsp; From Kardashev scale through Matrioshka architecture to the thermodynamics of waiting</div>
 
       <a class="tool-card" href="scenario-kardashev-three.html">
         <span class="tool-num">Scenario B &middot; macro transcension hypothesis</span>
@@ -1406,7 +1498,7 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
       </a>
 
       <!-- ── TRACK 4: Fermi Paradox & SETI ── -->
-      <div class="scenario-track-header"><strong style="color:var(--red-bright)">⚙ Track 4 &mdash; Fermi Paradox &amp; SETI</strong> &nbsp;&middot;&nbsp; 30 scenarios &nbsp;&middot;&nbsp; Are we alone, can we communicate, and what does the Great Silence imply?</div>
+      <div class="scenario-track-header"><strong style="color:var(--red-bright)">⚙ Track 4 &mdash; Fermi Paradox &amp; SETI</strong> &nbsp;&middot;&nbsp; 13 scenarios &nbsp;&middot;&nbsp; Are we alone, can we communicate, and what does the Great Silence imply?</div>
 
       <a class="tool-card" href="scenario-fermi-honest.html">
         <span class="tool-num">Scenario F &middot; Fermi Paradox</span>
@@ -1670,7 +1762,6 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
   </section>
 
 
-</main>
 
 
 
@@ -1754,6 +1845,17 @@ html[data-theme="dark"] .ocs-foot{--of-bg:#03020a;--of-ink:#e8e4ff;--of-dim:#a29
     inp.value = term;
     filter(term);
   }
+})();
+</script>
+
+<script>
+/* Ribbon: scenarios and workflows are counted from this page's own cards. The static numbers
+   (with data-count sentinels) are what verify-counts.py checks and what shows without JS. */
+(function(){
+  document.querySelectorAll('#map-ribbon [data-live]').forEach(function(el){
+    var n = document.querySelectorAll(el.getAttribute('data-live') + ' .tool-card').length;
+    if(n) el.textContent = n;
+  });
 })();
 </script>
 
