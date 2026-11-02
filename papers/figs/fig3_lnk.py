@@ -117,7 +117,7 @@ ap.add_argument("--split-ceiling", type=float, default=0.999)
 ap.add_argument("--soft-threshold", type=float, default=0.0)
 ap.add_argument("--crowding-factor", type=float, default=3.0)
 # E-R9-06: the fuel ceiling is not a constant. It carries eta(a*) and the
-# outflow-suppression state, and the fiducial 7.6e5 Lsun is the value at
+# outflow-suppression state, and the fiducial 6.86e5 Lsun is the value at
 # a* ~ 0.99 with suppression itself suppressed -- i.e. the prior silently
 # conditions H_eng on the engineered, near-extremal, unsuppressed corner. With
 # this flag the ceiling is drawn per sample from a stated mixture over the
@@ -158,9 +158,11 @@ def p_quiet_given_active():
     keep peak memory at O(N) rather than O(N x n_filters).
     """
     if args.fuel_mixture:
-        # spin: thin-disc branch at a* = 0.998, or MAD equilibrium a* ~ U(0.1, 0.3)
+        # spin: thin-disc branch at a* = 0.998, or MAD equilibrium a* ~ U(0.035, 0.07)
+        # (the band sec:spinbranch adopts from Narayan2022 S3.4 and the shorter
+        # Tchekhovskoy et al. 2012 runs; U(0.1, 0.3) is the retired value)
         thin = rng.random(N) < args.w_thindisc
-        a_star = np.where(thin, 0.998, rng.uniform(0.10, 0.30, N))
+        a_star = np.where(thin, 0.998, rng.uniform(0.035, 0.07, N))
         # eta(a*) falls roughly as a*^2 from its a* = 0.99 value (Sec. 4.2)
         eta_rel = (a_star / 0.99) ** 2
         # outflow suppression: engineered-unsuppressed, or naturally suppressed

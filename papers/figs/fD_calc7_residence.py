@@ -12,7 +12,7 @@ Discounted-payoff retention at kappa = rho + lambda:
 Corrected threshold: rho* solves rho = ln(G p_s F_res(rho)) / tau (iterate).
 P-9: everything at tau = 1e5 yr and tau = 1.19e5 yr.
 """
-import json, math, os
+import hashlib, json, math, os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -23,8 +23,10 @@ TAU_COLS = {"tau_1e5": 1.0e5, "tau_1.19e5": 1.19e5}
 RADII_ANCHOR_UJ = [10.0, 100.0, 1000.0]
 
 def main():
-    with open(os.path.join(HERE, "fig1_results.json")) as f:
-        d = json.load(f)
+    inp = os.path.join(HERE, "fig1_results.json")
+    with open(inp, "rb") as f:
+        raw = f.read()
+    d = json.loads(raw)
     bnd = d["per_config"]["bound_fid"]
     imp = d["per_config"]["fbh_0.01"]
     a_au = bnd["a_AU"]
@@ -78,6 +80,11 @@ def main():
                         "debit_frac": 1.0 - rho / rho0})
     out = {"_meta": {"script": "paper/figs/fD_calc7_residence.py",
                      "G": G_FID, "p_s": P_S,
+                     "input": "paper/figs/fig1_results.json",
+                     "input_sha256": hashlib.sha256(raw).hexdigest(),
+                     "input_commit": "5e89f89",
+                     "regenerated": "D342; the 2026-08-23 values were frozen against "
+                                    "the pre-R9 fig1_results.json (D328 4.3)",
                      "model": "S = p_bnd + (1-p_bnd) exp(-t/t_imp); "
                               "bound branch survives horizon"},
            "gates": {"G_C_rho_star": math.log(G_FID * P_S) / 1e5,
@@ -85,11 +92,16 @@ def main():
                      "G_C_pass": abs(math.log(G_FID * P_S) / 1e5 - 2.003e-4)
                                  / 2.003e-4 < 0.01,
                      "G_D_t_med_10AU_yr": t10,
-                     "G_D_readme": 6.6e7,
-                     "G_D_pass": abs(t10 / 6.6e7 - 1.0) < 0.05},
+                     "G_D_readme": 1.68e8,
+                     "G_D_baseline": "1.68e8 is fig1_results.json fbh_0.01 t_med at "
+                                     "8.39 AU (input replaced at 5e89f89, 2026-09-03); "
+                                     "the earlier 6.6e7 baseline was the pre-R9 value "
+                                     "of that same leaf",
+                     "G_D_pass": abs(t10 / 1.68e8 - 1.0) < 0.05},
            "debit_rows": rows,
            "threshold_rows": thr}
-    with open(os.path.join(HERE, "fD_calc7_residence.json"), "w") as f:
+    with open(os.path.join(HERE, "fD_calc7_residence.json"), "w",
+              newline="\n") as f:
         json.dump(out, f, indent=1)
     print(json.dumps({"gates": out["gates"], "debit_rows": rows,
                       "threshold_rows": thr}, indent=1))

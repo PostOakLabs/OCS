@@ -430,6 +430,27 @@ R_INFL_PC = 0.4             # GM/sigma^2 at 4e4 Msun, sigma = 21 km/s (Sec. 5)
 D_KPC = 5.43
 
 
+# arXiv:2603.21845 v2 (aa59916-26corr.tex) Tables A.1 to A.3 replace the v1
+# DM_0 and DM_1 cells for the eight full timing solutions (D597 Sec. 5, D598
+# Item 5). pulsars.json still carries the v1 cells (Paper H's extraction), so the
+# F-5 export overrides them here: (DM_0, err, DM_1, err, source table).
+V2_TIMING_DM = {
+    "A": (100.3267, 3e-4, 2.34e-3, 1.9e-4, "A.1"),
+    "C": (100.6680, 1.2e-3, 4.3e-5, 7e-6, "A.1"),
+    "D": (96.5467, 8e-4, 1.9e-4, 4.6e-4, "A.1"),
+    "E": (94.3966, 4e-4, 5.4e-4, 2.8e-4, "A.1"),
+    "B": (100.2859, 6e-4, 2.3e-4, 4.6e-4, "A.2"),
+    "G": (99.7431, 8e-4, -1.9e-3, 5e-4, "A.2"),
+    "H": (98.1715, 5e-4, -1.4e-3, 3e-4, "A.2"),
+    "K": (94.7892, 7e-4, -4.2e-4, 4.2e-4, "A.2"),
+}
+V2_Q_WHERE = ("TRAPUM2026 v2 Table A.3 (DM0, no uncertainty printed). Table 1 "
+              "prints 95.955 for the same pulsar; the two tables differ by "
+              "0.032 pc cm^-3, about 27 times the largest DM_0 uncertainty in "
+              "A.1 and A.2 (1.2e-3), so Table 1 is not a rounding of A.3. "
+              "This paper uses the A.3 value.")
+
+
 def f5_dm():
     # The timing-set extraction lives with Paper H. This script runs both in
     # the manuscript tree (paper/figs) and in the published mirror
@@ -455,6 +476,13 @@ def f5_dm():
             "DM1": (p.get("DM1") or {}).get("value"),
             "DM1_err": (p.get("DM1") or {}).get("uncertainty"),
         })
+    for r in rows:
+        if r["letter"] in V2_TIMING_DM:
+            dm0, e0, d1, e1, tab = V2_TIMING_DM[r["letter"]]
+            r.update(DM=dm0, DM_err=e0, DM1=d1, DM1_err=e1,
+                     DM_where="TRAPUM2026 v2 Table %s (DM0)" % tab)
+        elif r["letter"] == "Q":
+            r["DM_where"] = V2_Q_WHERE
     rows.sort(key=lambda r: r["b_pc"])
 
     def chord(b, R):

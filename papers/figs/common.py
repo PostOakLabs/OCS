@@ -12,7 +12,8 @@ AU     = 1.496e11           # m
 PC     = 3.086e16           # m
 YR     = 3.156e7            # s
 LSUN   = 3.828e26           # W
-MP     = 1.673e-27          # kg
+MP     = 1.67262e-27        # kg, CODATA 2018 proton mass
+KB     = 1.380649e-23       # J K^-1, Boltzmann constant (exact, SI 2019)
 
 M_BH    = 2.0e4 * MSUN
 GM      = G * M_BH
@@ -25,8 +26,12 @@ N_E     = 0.23e6                         # electrons m^-3; 47 Tuc analogy value
                                          # (Abbate 2018), NOT oMEGACat VII, whose
                                          # own omega Cen figure is 1.94 cm^-3 and
                                          # is a foreground-dominated upper limit
-RHO_GAS = 1.2 * N_E * MP                 # kg m^-3, He-corrected
-CS_GAS  = 1.0e4                          # m/s sound speed (1e4 K ionized)
+# Abbate et al. (2018) keep H and He fully ionized, so n_e is a free-electron density.
+T_GAS    = 1.0e4                         # K, ionized intracluster medium
+MU_E_GAS = 1.18                          # electron weight rho/(n_e m_p), X = 0.70
+MU_GAS   = 0.62                          # weight per particle, ionized H + He
+RHO_GAS  = MU_E_GAS * MP * N_E           # kg m^-3, from the electron density
+CS_GAS   = float(np.sqrt(KB * T_GAS / (MU_GAS * MP)))   # m/s, isothermal (gamma = 1)
 
 # Two-component stellar mass function: main sequence + white-dwarf tail
 MF_MASSES = np.array([0.35, 0.60]) * MSUN
