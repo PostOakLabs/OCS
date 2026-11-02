@@ -45,7 +45,7 @@ ax.text(3e0, 2.2e-5, "below the floor: disfavoured by the A.3\naccounting, not e
         fontsize=6.8, color="0.45")
 
 ax.axvline(P_FUEL, color="#3b4d8f", lw=1.5, ls="--")
-ax.text(P_FUEL * 0.5, 5e-1, "ambient Bondi ceiling\n($8\\times10^{5}\\,L_\\odot$)",
+ax.text(P_FUEL * 0.5, 5e-1, "ambient Bondi ceiling\n($6.9\\times10^{5}\\,L_\\odot$)",
         fontsize=7.5, color="#2c3a6b", ha="right")
 ax.axvline(L_EDD / LSUN, color="0.5", lw=1, ls="-.")
 ax.text(L_EDD / LSUN * 1.3, 5e-1, "$L_{\\rm Edd}$", fontsize=7.5, color="0.4")

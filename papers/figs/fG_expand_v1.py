@@ -588,9 +588,10 @@ def g1_skymap(S):
         i_h = pid.index("H")
         h14 = by_id["14c"]
         hx, hy = _tanplane([h14["ra"]], [h14["dec"]], centre)
+        h_res = S["published"]["discrepant_association"]["residual_after_registration_arcsec"]
         ax.plot([px[i_h], hx[0]], [py[i_h], hy[0]], color="#b3261e", ls="--",
                 lw=1.2, zorder=9)
-        ax.annotate("H to 14c, $1.81''$", (px[i_h], py[i_h]),
+        ax.annotate("H to 14c, $%.2f''$" % h_res, (px[i_h], py[i_h]),
                     textcoords="offset points",
                     xytext=((-16, -26) if half > 500 else (10, -6)),
                     ha=("right" if half > 500 else "left"),
