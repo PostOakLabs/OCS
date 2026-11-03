@@ -1,0 +1,61 @@
+table_name,description
+gaia_dr3.x1p5__gaia_source__smash_dr1__object,"gaia_dr3.gaia_source and smash_dr1.object crossmatch (1.5 arcsec) (4,237,374 rows)"
+gaia_dr3.x1p5__gaia_source__smash_dr2__object,"gaia_dr3.gaia_source and smash_dr2.object crossmatch (1.5 arcsec) (33,999,866 rows)"
+ivoa_calibrated.smash_dr1,Instrument calibrated images from SMASH DR1
+ivoa_calibrated.smash_dr2,Instrument calibrated images from SMASH DR2
+ivoa_coadd.smash_dr1,Stacked calibrated images from SMASH DR1
+ivoa_coadd.smash_dr2,Stacked calibrated images from SMASH DR2
+ivoa_raw.smash_dr1,Raw uncalibrated images from SMASH DR1
+ivoa_raw.smash_dr2,Raw uncalibrated images from SMASH DR2
+ivoa_smash_dr1.exposure,Exposure information
+ivoa_smash_dr1.obscore,ObsCore metadata table
+ivoa_smash_dr1.siav1,SIA v1 metadata table
+ivoa_smash_dr1.siav2,SIA v2 metadata table
+ivoa_smash_dr2.exposure,Exposure information
+ivoa_smash_dr2.obscore,ObsCore metadata table
+ivoa_smash_dr2.siav1,SIA v1 metadata table
+ivoa_smash_dr2.siav2,SIA v2 metadata table
+ivoa_stripe82.smash_dr1,Images from SMASH DR1 that overlap with SDSS Stripe 82
+ivoa_stripe82.smash_dr2,Images from SMASH DR2 that overlap with SDSS Stripe 82
+smash_dr1.chip,"Info on each chip in the frame (149,165 rows)"
+smash_dr1.exposure,"Info on each exposure (2,480 rows)"
+smash_dr1.field,"Info on each target field (position, Num exposures, etc) (61 rows)"
+smash_dr1.object,"Average photometry of each unique object (101,425,210 rows)"
+smash_dr1.source,"All of the individual source measurements (722,653,189 rows)"
+smash_dr1.stars,"View of object table to select for stars (24,074,789 rows)"
+smash_dr1.galaxies,"View of object table to select for galaxies (5,937,616 rows)"
+smash_dr1.xmatch,"Crossmatch of object against GAIA DR1 and WISE (4,443,547 rows)"
+smash_dr2.chip,"Info on each chip in the frame (359,393 rows)"
+smash_dr2.exposure,"Info on each exposure (5,982 rows)"
+smash_dr2.field,"Info on each target field (position, Num exposures, etc) (197 rows)"
+smash_dr2.object,"Average photometry of each unique object (360,363,299 rows)"
+smash_dr2.source,"All of the individual source measurements (4,156,198,451 rows)"
+smash_dr2.deep,"Average photometry of each unique object only from deep exposures (357,535,065 rows)"
+smash_dr2.xmatch,"Crossmatch of object against GAIA DR2 and WISE (4,155,114,664 rows)"
+allwise.x1p5__source__smash_dr1__object,"allwise.source and smash_dr1.object crossmatch (1.5 arcsec) (3,871,352 rows)"
+allwise.x1p5__source__smash_dr2__object,"allwise.source and smash_dr2.object crossmatch (1.5 arcsec) (11,455,870 rows)"
+nsc_dr1.x1p5__object__smash_dr1__object,"nsc_dr1.object and smash_dr1.object crossmatch (1.5 arcsec) (21,413,917 rows)"
+nsc_dr1.x1p5__object__smash_dr2__object,"nsc_dr1.object and smash_dr2.object crossmatch (1.5 arcsec) (114,701,168 rows)"
+nsc_dr2.x1p5__object__smash_dr1__object,"nsc_dr2.object and smash_dr1.object crossmatch (1.5 arcsec) (21,632,067 rows)"
+nsc_dr2.x1p5__object__smash_dr2__object,"nsc_dr2.object and smash_dr2.object crossmatch (1.5 arcsec) (125,964,187 rows)"
+smash_dr1.x1p5__object__gaia_dr3__gaia_source,"smash_dr1.object and gaia_dr3.gaia_source crossmatch (1.5 arcsec) (4,911,581 rows)"
+smash_dr1.x1p5__object__nsc_dr2__object,"smash_dr1.object and nsc_dr2.object crossmatch (1.5 arcsec) (29,593,820 rows)"
+smash_dr1.x1p5__object__unwise_dr1__object,"smash_dr1.object and unwise_dr1.object crossmatch (1.5 arcsec) (12,989,610 rows)"
+smash_dr2.x1p5__object__allwise__source,"smash_dr2.object and allwise.source crossmatch (1.5 arcsec) (17,492,274 rows)"
+smash_dr2.x1p5__object__gaia_dr3__gaia_source,"smash_dr2.object and gaia_dr3.gaia_source crossmatch (1.5 arcsec) (47,502,954 rows)"
+smash_dr2.x1p5__object__nsc_dr2__object,"smash_dr2.object and nsc_dr2.object crossmatch (1.5 arcsec) (174,821,258 rows)"
+smash_dr2.x1p5__object__unwise_dr1__object,"smash_dr2.object and unwise_dr1.object crossmatch (1.5 arcsec) (41,010,411 rows)"
+unwise_dr1.x1p5__object__smash_dr1__object,"unwise_dr1.object and smash_dr1.object crossmatch (1.5 arcsec) (9,735,671 rows)"
+unwise_dr1.x1p5__object__smash_dr2__object,"unwise_dr1.object and smash_dr2.object crossmatch (1.5 arcsec) (30,425,371 rows)"
+mydb.smashxm_3958,"SELECT 
+ TOP 500000 
+ a.*
+    FROM mydb.smashxm_3958 AS a, smash_dr1.object as b
+    WHERE q3c_join(a.ra, a.dec, b.ra, b.dec, 1./3600.)"
+mydb.smash_in_2316,"select o.ra as t1_ra,o.dec as t1_dec,o.name as t1_name, g.*, (q3c_dist(o.ra, o.dec, g.ra, g.dec)*3600.0) as dist_arcsec from mydb."smash_in_2316" as o, smash_dr2.source as g where q3c_join(o.ra, o.dec, g.ra, g.dec, 0.0005555555555555556)"
+mydb.smash_two_xm_3609,"SELECT 
+ TOP 500000 
+  smash_xm.id AS "smash_xm_id",  smash_two_xm.id AS "smash_two_xm_id",  (q3c_dist(  smash_xm.ra, smash_xm.dec,  smash_two_xm.ra, smash_two_xm.dec  )*3600.0) AS "dist_arcsec"  FROM  mydb.smash_xm_3609 as smash_xm  INNER JOIN LATERAL (  SELECT  *  FROM  mydb.smash_two_xm_3609 as smash_two_xm  WHERE  q3c_join(  smash_xm.ra, smash_xm.dec,  smash_two_xm.ra, smash_two_xm.dec,  0.0005555555555555556  )  ORDER BY  q3c_dist(  smash_xm.ra, smash_xm.dec,  smash_two_xm.ra, smash_two_xm.dec  )  ASC LIMIT 1 ) as smash_two_xm ON true  WHERE 1=1"
+mydb.smash_xm_two_3609,"SELECT 
+ TOP 500000 
+  smash_xm_one.id as "id", smash_xm_two.id as "id_smash_xm_two",  (q3c_dist(  smash_xm_one.ra1, smash_xm_one.dec1,  smash_xm_two.ra, smash_xm_two.dec  )*3600.0) AS "dist_arcsec"  FROM  mydb.smash_xm_one_3609 as smash_xm_one  LEFT JOIN LATERAL (  SELECT  *  FROM  mydb.smash_xm_two_3609 as smash_xm_two  WHERE  q3c_join(  smash_xm_one.ra1, smash_xm_one.dec1,  smash_xm_two.ra, smash_xm_two.dec,  0.0005555555555555556  )  ORDER BY  q3c_dist(  smash_xm_one.ra1, smash_xm_one.dec1,  smash_xm_two.ra, smash_xm_two.dec  )  ASC LIMIT 1 ) as smash_xm_two ON true  WHERE 1=1"

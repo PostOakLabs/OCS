@@ -1,0 +1,12 @@
+SELECT s.source_id, s.ra, s."dec", s.phot_variable_flag,
+       a.classprob_dsc_combmod_quasar, a.classprob_dsc_combmod_galaxy, a.classprob_dsc_combmod_star,
+       a.classprob_dsc_combmod_whitedwarf, a.classprob_dsc_combmod_binarystar,
+       a.classprob_dsc_specmod_quasar, a.classprob_dsc_specmod_whitedwarf,
+       q.classlabel_dsc, q.classlabel_dsc_joint, q.classlabel_oa,
+       q.flags_qsoc, q.redshift_qsoc, q.zscore_qsoc, q.ccfratio_qsoc,
+       v.best_class_name, v.best_class_score
+FROM gaiadr3.gaia_source AS s
+LEFT JOIN gaiadr3.astrophysical_parameters AS a ON a.source_id = s.source_id
+LEFT JOIN gaiadr3.qso_candidates AS q ON q.source_id = s.source_id
+LEFT JOIN gaiadr3.vari_classifier_result AS v ON v.source_id = s.source_id
+WHERE s.source_id = 6083772968079356544
