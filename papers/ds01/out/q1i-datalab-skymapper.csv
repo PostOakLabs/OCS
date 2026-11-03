@@ -1,0 +1,51 @@
+table_name,description
+ks4_dr1.x1p5__idual_master__skymapper_dr4__master,"ks4_dr1.idual_master and skymapper_dr4.master crossmatch (1.5 arcsec) (86,869,744 rows)"
+ks4_dr1.x1p5__single_master__skymapper_dr4__master,"ks4_dr1.single_master and skymapper_dr4.master crossmatch (1.5 arcsec) (90,037,182 rows)"
+gaia_dr3.x1p5__gaia_source__skymapper_dr4__master,"gaia_dr3.gaia_source and skymapper_dr4.master crossmatch (1.5 arcsec) (716,394,116 rows)"
+skymapper_dr4.master,"Primary table of mean astrometric, photometric, and shape measurements per object, with cross-match information to external tables. (724,329,344 rows)"
+skymapper_dr4.photometry,"Table of individual photometric, astrometric, and shape measurements for every detection. Can be joined to the master table using the object_id column. (15,101,099,413 rows)"
+allwise.x1p5__source__skymapper_dr4__master,"allwise.source and skymapper_dr4.master crossmatch (1.5 arcsec) (256,495,140 rows)"
+nsc_dr2.x1p5__object__skymapper_dr4__master,"nsc_dr2.object and skymapper_dr4.master crossmatch (1.5 arcsec) (669,538,243 rows)"
+sdss_dr17.x1p5__specobj__skymapper_dr4__master,"sdss_dr17.specobj and skymapper_dr4.master crossmatch (1.5 arcsec) (985,926 rows)"
+skymapper_dr4.x1p5__master__allwise__source,"skymapper_dr4.master and allwise.source crossmatch (1.5 arcsec) (258,381,342 rows)"
+skymapper_dr4.x1p5__master__gaia_dr3__gaia_source,"skymapper_dr4.master and gaia_dr3.gaia_source crossmatch (1.5 arcsec) (636,320,888 rows)"
+skymapper_dr4.x1p5__master__ks4_dr1__idual_master,"skymapper_dr4.master and ks4_dr1.idual_master crossmatch (1.5 arcsec) (85,654,347 rows)"
+skymapper_dr4.x1p5__master__ks4_dr1__single_master,"skymapper_dr4.master and ks4_dr1.single_master crossmatch (1.5 arcsec) (86,596,724 rows)"
+skymapper_dr4.x1p5__master__nsc_dr2__object,"skymapper_dr4.master and nsc_dr2.object crossmatch (1.5 arcsec) (618,508,280 rows)"
+skymapper_dr4.x1p5__master__sdss_dr17__specobj,"skymapper_dr4.master and sdss_dr17.specobj crossmatch (1.5 arcsec) (987,299 rows)"
+skymapper_dr4.x1p5__master__unwise_dr1__object,"skymapper_dr4.master and unwise_dr1.object crossmatch (1.5 arcsec) (453,099,800 rows)"
+unwise_dr1.x1p5__object__skymapper_dr4__master,"unwise_dr1.object and skymapper_dr4.master crossmatch (1.5 arcsec) (485,310,250 rows)"
+mydb.skymapperdr4_2_2730,"SELECT 
+    S.object_id, S.gaia_dr3_id1, S.raj2000, S.dej2000,
+              S.g_psf, S.i_psf, S.v_psf, S.g_i,
+              S.ebmv_sfd, S.metallicity, S.radius, S.angle,
+    G.parallax, G.pmra, G.pmdec, G.radial_velocity
+FROM
+    mydb."skymapperdr4_2_2730" AS S
+JOIN
+    gaia_dr3.gaia_source AS G ON S.gaia_dr3_id1 = G.source_id
+WHERE
+    G.parallax BETWEEN -0.2 AND 0.2
+    AND SQRT(1.7*POWER(G.pmra - 1.80, 2) + 0.8*POWER(G.pmdec - 0.37, 2)) <= 1.0"
+mydb.skymapperdr4_pt1_2730,"SELECT
+    object_id, gaia_dr3_id1, raj2000, dej2000, g_psf,
+    i_psf, v_psf, g_i, ebmv_sfd, metallicity, radius,
+    (ATAN((81.28*(PI()/180) - raj2000*(PI()/180))/(-69.78*(PI()/180) - dej2000*(PI()/180))))*(180/PI()) AS angle
+FROM
+    mydb."skymapperdr4_pt1_2730"
+WHERE
+    radius BETWEEN 5 AND 20
+    AND ((v_psf - g_psf) - 1.5*g_i) BETWEEN -0.2 AND 0.4
+    AND g_i BETWEEN 0.7 AND 1.24"
+mydb.skymapperdr4_pt2_2730,"SELECT 
+    S.object_id, S.gaia_dr3_id1, S.raj2000, S.dej2000,
+    S.g_psf, S.i_psf, S.v_psf, S.g_i, S.ebmv_sfd,
+    S.metallicity, S.radius, S.angle, G.parallax,
+    G.pmra, G.pmdec, G.radial_velocity
+FROM
+    mydb."skymapperdr4_pt2_2730" AS S
+JOIN
+    gaia_dr3.gaia_source AS G ON S.gaia_dr3_id1 = G.source_id
+WHERE
+    G.parallax BETWEEN -0.2 AND 0.2
+    AND SQRT(1.7*POWER(G.pmra - 1.80, 2) + 0.8*POWER(G.pmdec - 0.37, 2)) <= 1.0"
