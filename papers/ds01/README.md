@@ -11,6 +11,7 @@ at the repository root. A Zenodo DOI for this directory is added at publication.
 | `scripts/`, `out/` | Archival query scripts and their outputs (Gaia, survey cone searches, HEASARC, Swift, MAST, eROSITA, Einstein) |
 | `bounds/pm-member/` | Proper-motion membership statistics: scripts and JSON outputs (`out/q1_chi2.json`, `out/q5_window.json`, ...) |
 | `bounds/field-interloper/` | Field-interloper estimate: scripts and JSON outputs (`out/q5_fraction.json`, ...) |
+| `bounds/field-interloper-2/` | Rerun of the field-interloper estimate with the declared five-parameter astrometric cut (supersedes `bounds/field-interloper/` for the paper's field-CV probability): scripts and JSON outputs (`out/q5_fraction.json`, ...) |
 
 All archival inputs are public. Several scripts read raw downloads from a local cache path
 (`C:\farm\cache\omegacen\...`); those raw caches are not mirrored and are re-fetched by the
